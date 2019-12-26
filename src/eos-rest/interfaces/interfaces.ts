@@ -118,3 +118,10 @@ export interface ICachePolicy {
 //    zone?: string;
 //    izolateZone?: boolean;
 }
+
+export interface IUserParms {
+    ISN_USER_OWNER: number;
+    PARM_NAME: string;
+    PARM_GROUP: number;
+    PARM_VALUE: string;
+}

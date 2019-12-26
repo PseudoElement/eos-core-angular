@@ -57,6 +57,7 @@ import { ErrorHelperServices } from '../eos-user-params/shared/services/helper-e
 import {UserParamTransferComponent} from './user-params-set/user-param-other/user-param-transfer/user-param-transfer.component';
 import {UserParamAddressesComponent} from './user-params-set/user-param-other/user-param-addresses/user-param-addresses.component';
 import {UserParamReestrComponent} from './user-params-set/user-param-other/user-param-reestr/user-param-reestr.component';
+import {UserParamReestrCBComponent} from './user-params-set/user-param-other/user-param-reestr-cb/user-param-reestr-cb.component';
 import {UserParamShablonyComponent} from './user-params-set/user-param-other/user-param-shablony/user-param-shablony.component';
 import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
 import { OrganizEditTypeComponent } from './rights-delo/rights-delo-absolute-rights/organiz-edit-type/organiz-edit-type.component';
@@ -71,6 +72,7 @@ import { RightOrganizDepertComponent } from './rights-delo/rights-delo-absolute-
 import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-param-cb.component';
 import { CbUserRoleComponent } from './base-param/base-param-cb/cb-user-role/cb-user-role.component';
 import { DragulaModule } from 'ng2-dragula';
+import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/addGrif/addGrif.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -114,6 +116,7 @@ import { DragulaModule } from 'ng2-dragula';
         ListCardRightComponent,
         UserParamTransferComponent,
         UserParamAddressesComponent,
+        UserParamReestrCBComponent,
         UserParamReestrComponent,
         UserParamShablonyComponent,
         BaseSertsComponent,
@@ -124,8 +127,12 @@ import { DragulaModule } from 'ng2-dragula';
         EosReportProtocolComponent,
         DefaultSettingsComponent,
         RightDepertOrganizComponent,
+        AddGrifComponent,
         RightOrganizDepertComponent,
         CbUserRoleComponent
+    ],
+    entryComponents: [
+        AddGrifComponent
     ],
     imports: [
         BrowserModule,

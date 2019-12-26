@@ -9,6 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
 import { OPEN_CLASSIF_ORGANIZ_FULL } from 'app/consts/query-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-right-absolute-organiz-depart',
@@ -37,6 +38,7 @@ export class RightDepertOrganizComponent implements OnInit {
         private _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
         private apiSrv: UserParamApiSrv,
+        private _appContext: AppContext,
     ) {
     }
     ngOnInit() {
@@ -94,6 +96,12 @@ export class RightDepertOrganizComponent implements OnInit {
         } else {
             node.viewAllowed = false;
         }
+    }
+    returnOgrani(): boolean {
+        if (this._appContext.limitCardsUser.length > 0) {
+            return true;
+        }
+        return false;
     }
     selectNode(dep: NodeDocsTree) {
         this.listUserDep.forEach(node => {

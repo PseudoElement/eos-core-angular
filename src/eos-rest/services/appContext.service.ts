@@ -3,10 +3,12 @@ import { PipRX } from './pipRX.service';
 import { USER_CL, SYS_PARMS, SRCH_VIEW } from '../interfaces/structures';
 import { ALL_ROWS } from '../core/consts';
 import { Deferred } from '../core/pipe-utils';
+import { IUserParms } from 'eos-rest';
 
 export const CB_FUNCTIONS = 'CB_FUNCTIONS';
 @Injectable()
 export class AppContext {
+
     /**
      * залогиненый пользователь
      */
@@ -20,6 +22,7 @@ export class AppContext {
      * Настройки отображения
      */
     public UserViews: SRCH_VIEW[];
+    public User99Parms: any;
 
     /**
      * рабочие столы
@@ -31,11 +34,17 @@ export class AppContext {
 
     constructor(private pip: PipRX) { }
 
+    static isIE(): boolean {
+        const ua = window.navigator.userAgent;
+        return /MSIE|Trident/.test(ua);
+    }
+
     ready(): Promise<any> {
         return this._ready.promise;
     }
 
     init(): Promise<any> {
+        this.User99Parms = {};
         const p = this.pip;
         // раз присоеденились сбрасываем подавление ругательства о потере соединения
         // @igiware: потенциальная ошибка, тк PipeRX - singleton, параллельный запрос данных пропустит ошибку,
@@ -93,5 +102,33 @@ export class AppContext {
         }
         return null;
     }
+
+    public get99UserParms(key: string, forceRefresh = false): Promise<IUserParms> {
+        return Promise.resolve(this.User99Parms[key]).then((cached) => {
+            if (forceRefresh || !cached) {
+                const req = {
+                    USER_PARMS: {
+                        criteries: {
+                            ISN_USER_OWNER: '-99',
+                            PARM_NAME: key
+                        }}};
+
+                return this.pip.read(req)
+                .then((r) => {
+                    if (r && r[0] && r[0]) {
+                        this.User99Parms[key] = r[0];
+                        return r[0];
+                    } else {
+                        return null;
+                    }
+                });
+
+            } else {
+                return cached;
+            }
+        });
+    }
+
+
 
 }

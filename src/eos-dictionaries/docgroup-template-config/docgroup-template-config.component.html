@@ -18,7 +18,7 @@
                 <div class="item"
                     *ngFor="let item of availableItems"
                     (click)="select(item, 0)"
-                    [ngClass]="{'highlighted': (item === selected[0]), separator: isSeparator(item), disabled: !isEnabled(item)}">
+                    [ngClass]="{'highlighted': (item === selected[0]), separator: isSeparator(item), disabled: !isEnabled(item) }">
                     <span class="text">{{item?.key}} {{item?.title}}</span>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="item"
                     *ngFor="let item of templateItems"
                     (click)="select(item, 1)"
-                    [ngClass]="{'highlighted': item === selected[1]}">
+                    [ngClass]="{'highlighted': item === selected[1], invalid: !isValid(item) }">
                     <span class="text">{{item?.key}} {{item?.title}}</span>
                 </div>
             </div>

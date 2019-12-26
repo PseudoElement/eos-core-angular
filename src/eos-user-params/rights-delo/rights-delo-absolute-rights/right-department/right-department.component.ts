@@ -125,6 +125,18 @@ export class RightDepertmentComponent implements OnInit {
             this.isLoading = false;
         }
     }
+    returnOgrani(): boolean {
+        if (this._appContext.limitCardsUser.length > 0) {
+            return true;
+        }
+        return false;
+    }
+    returnDelTech() {
+        if (this._appContext.limitCardsUser.indexOf(this.selectedDep.data.dep['DEPARTMENT_DUE']) !== -1) {
+                return false;
+        }
+        return true;
+    }
     addFieldChwckProp(node: INodeDocsTreeCfg, is_node: number, deep: number) {
         if (this.selectedNode['_constData'].data.flagcheck) {
             if (is_node === 0) {
@@ -173,11 +185,11 @@ export class RightDepertmentComponent implements OnInit {
                 this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                 if (this.funcNum === 3 && this._appContext.cbBase) {
                     cfg.label = 'Все подразделения';
-                    newUserDep.ALLOWED = 1;
-                    cfg.allowed = true;
+                    newUserDep.ALLOWED = this._appContext.limitCardsUser.length > 0 ? 0 : 1;
+                    cfg.allowed = this._appContext.limitCardsUser.length > 0 ? false : true;
                     cfg.viewAllowed = true;
                 }
-                const newNode = new NodeDocsTree(cfg);
+                const newNode = new NodeDocsTree(cfg, true);
                 this.curentUser.USERDEP_List.push(newUserDep);
                     this.selectedNode.pushChange({
                         method: 'POST',
@@ -222,6 +234,9 @@ export class RightDepertmentComponent implements OnInit {
                 return this._userParmSrv.getDepartmentFromUser(data.split('|'));
             })
             .then((data: DEPARTMENT[]) => {
+                if (this._appContext.limitCardsUser.length > 0) {
+                    data = this._checkLimitCard(data);
+                }
                 if (this._checkRepeat(data)) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -578,5 +593,18 @@ export class RightDepertmentComponent implements OnInit {
             return false;
         }
         return true;
+    }
+    private _checkLimitCard(arrDep: DEPARTMENT[]) {
+        return arrDep.filter(elem => {
+            if (this._appContext.limitCardsUser.indexOf(elem['DEPARTMENT_DUE']) === -1) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: `Элемент \'${elem.CLASSIF_NAME}\' не будет добавлен\nтак как он не принадлежит вашим картотекам`
+                });
+                return false;
+            }
+            return true;
+        });
     }
 }

@@ -31,6 +31,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     public inputs: any;
     public flagBacground: boolean = false;
     public list: NodeDocsTree[] = [];
+    public saveReestrDocgroup;
     private listDocGroup: NodeDocsTree[] = [];
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;
@@ -166,7 +167,11 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
+    updateInfo() {
+        this.saveReestrDocgroup = String(this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].value);
+    }
     submit() {
+        this.updateInfo();
         this.mapChanges.clear();
         this.prepFormForSave();
         this.flagEdit = false;
@@ -197,6 +202,9 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
             paramsDoc = this.paramDocDefault;
         } else {
             paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+        }
+        if (this.saveReestrDocgroup !== undefined) {
+            paramsDoc = this.saveReestrDocgroup.replace(/,/g, '||');
         }
         this.getDocGroupName(paramsDoc, true).then(result => {
             if (result.length > 0) {

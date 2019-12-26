@@ -12,6 +12,7 @@ import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-selec
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
 import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
+import { AppContext } from 'eos-rest/services/appContext.service';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
@@ -36,7 +37,6 @@ export class UserParamApiSrv {
     stateTehUsers: boolean = false;
     stateDeleteUsers: boolean = false;
     stateOnlyThisDepart: boolean = false;
-    public Allcustomer: UserSelectNode[] = [];
     public sortDelUsers = false;
     // private helpersClass;
     get _confiList$(): Observable<IConfig> {
@@ -47,6 +47,7 @@ export class UserParamApiSrv {
         private _router: Router,
         private users_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
+        private _appContext: AppContext
     ) {
         this.initConfigTitle();
         this.flagTehnicalUsers = false;
@@ -263,7 +264,7 @@ export class UserParamApiSrv {
                 }
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
-                    this.users_pagination.UsersList = this.Allcustomer = this._getListUsers(res).slice();
+                    this.users_pagination.UsersList =  this._getListUsers(res);
                     this.initConfigTitle(dueDep);
                     this.users_pagination._initPaginationConfig(true);
                     this.users_pagination.saveUsersConf();
@@ -431,7 +432,7 @@ export class UserParamApiSrv {
 
     public _getListUsers(data): UserSelectNode[] {
         const list: UserSelectNode[] = [];
-        data.forEach(user => list.push(new UserSelectNode(user, this.sysParam)));
+        data.forEach(user => list.push(new UserSelectNode(user, this.sysParam, this._appContext.limitCardsUser)));
         return list;
     }
 }

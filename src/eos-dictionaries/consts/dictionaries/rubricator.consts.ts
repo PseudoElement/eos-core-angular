@@ -1,6 +1,6 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS, ICONS_CONTAINER } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS } from './_common';
 /*
 */
 export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
@@ -68,6 +68,6 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     fullSearchFields: ['RUBRIC_CODE', 'CLASSIF_NAME', 'NOTE', 'FULLNAME'],
     quickViewFields: ['RUBRIC_CODE', 'FULLNAME', 'NOTE', 'sev'],  // CLASSIF_NAME is in shortQuickViewFields
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: [ICONS_CONTAINER, 'CLASSIF_NAME'],
+    listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['NOTE', 'FULLNAME', 'sev', 'RUBRIC_CODE', ],
 };

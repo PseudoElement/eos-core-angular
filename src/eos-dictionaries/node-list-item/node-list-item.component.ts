@@ -7,10 +7,11 @@ import { RECENT_URL } from 'app/consts/common.consts';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
-import { IDictionaryViewParameters, IFieldView } from 'eos-dictionaries/interfaces';
+import { IDictionaryViewParameters, IFieldView, E_RECORD_ACTIONS } from 'eos-dictionaries/interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosUtils } from 'eos-common/core/utils';
 import { E_VISIBLE_TIPE } from '../interfaces/dictionary.interfaces';
+import { EosBreadcrumbsService } from 'app/services/eos-breadcrumbs.service';
 
 @Component({
     selector: 'eos-node-list-item',
@@ -36,6 +37,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         private _storageSrv: EosStorageService,
         private _dictSrv: EosDictService,
         private _router: Router,
+        private _breadcrumbsSrv: EosBreadcrumbsService,
     ) {
         this.viewFields = [];
         this.custom = [];
@@ -87,6 +89,12 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     viewNode(evt: MouseEvent, view = false) {
         evt.stopPropagation();
+        const id = this._dictSrv.currentDictionary.id;
+
+        if ((id === 'citizens' || id === 'organization') && !this.node.isNode) {
+            this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit});
+            return;
+        }
         if (!this._dictSrv.isRoot(this.node.id) && !this.node.isDeleted) {
             const _path = this.node.getPath();
             if (!this.node.isNode || view) {

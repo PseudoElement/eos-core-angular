@@ -283,7 +283,8 @@ const commonMeta = {
         ],
         relations: [
             { name: 'CITIZEN_STATUS_List', __type: 'CITIZEN_STATUS', sf: 'ISN_CITIZEN', tf: 'ISN_CITIZEN' },
-            { name: 'REGION_Ref', __type: 'REGION_CL', sf: 'ISN_REGION', tf: 'ISN_NODE' },
+            // { name: 'REGION_Ref', __type: 'REGION_CL', sf: 'ISN_REGION', tf: 'ISN_NODE' },
+            { name: 'REGION_Ref', __type: 'REGION_CL', sf: 'DUE_REGION', tf: 'DUE' },
             { name: 'ADDR_CATEGORY_Ref', __type: 'ADDR_CATEGORY_CL', sf: 'ISN_ADDR_CATEGORY', tf: 'ISN_LCLASSIF' }
         ]
     },
@@ -601,7 +602,10 @@ const commonMeta = {
             ACCESS_MODE: _t.i,
             INITIATIVE_RESOLUTION: _t.i,
             ACCESS_MODE_FIXED: _t.i,
-            REG_DATE_PROTECTED: _t.i
+            REG_DATE_PROTECTED: _t.i,
+            PROTECT_DEL_PRJ_STATUS: _t.i,
+            COPY_NUMBER_FLAG: _t.i,
+            COPY_NUMBER_FLAG_PRJ: _t.i,
         },
         readonly: [
 

@@ -9,20 +9,21 @@ export class UserSelectNode {
     name: string;
     login: string;
     department: string;
-      official: string;
+    official: string;
     deleted: boolean;
-     deletedOffFace: boolean;
+    deletedOffFace: boolean;
     oracle_id: number | string;
-     dueName: string;
-     dueDytu: string;
+    dueName: string;
+    dueDytu: string;
     blockedUser: boolean;
     blockedSystem: boolean;
-     dataDeep: DEPARTMENT;
+    dataDeep: DEPARTMENT;
     readonly id;
     deep;
     constructor(
         public data: USER_CL,
-        public sysParam
+        public sysParam,
+        public limitCards: string[],
     ) {
         this.name = data.SURNAME_PATRON;
         this.login = data.CLASSIF_NAME;
@@ -35,10 +36,10 @@ export class UserSelectNode {
         this.dueDytu = data['DEPARTMENT_DYTU'];
         this.official = this.dueDytu + '-' + this.dueName;
         this.isChecked = false;
-          this.deletedOffFace = +data['DEPARTMENT_DELETE'] > 0 ? true : false;
+        this.deletedOffFace = +data['DEPARTMENT_DELETE'] > 0 ? true : false;
         this.blockedUser = (+data.DELETED > 0) && (+data.LOGIN_ATTEMPTS < +sysParam) ? true : false;
         this.blockedSystem = (+data.DELETED > 0) && (+data.LOGIN_ATTEMPTS >= +sysParam) ? true : false;
-         this.dataDeep = data['DEEP_DATA'] ? data['DEEP_DATA'] : null;
+        this.dataDeep = data['DEEP_DATA'] ? data['DEEP_DATA'] : null;
     }
     get fullDueName() {
         let name = '';
@@ -56,7 +57,7 @@ export class UserSelectNode {
         }
 
         if (!this.deleted && !this.deletedOffFace) {
-            name =  this.dueName + '-' +  this.dueDytu;
+            name = this.dueName + '-' + this.dueDytu;
             if (name === '-') {
                 name = '...';
             }
@@ -64,4 +65,13 @@ export class UserSelectNode {
         return name;
     }
 
+    get isEditable() {
+        if (this.limitCards.length) {
+            if (this.dataDeep) {
+                return this.limitCards.indexOf(this.dataDeep.DEPARTMENT_DUE) !== -1;
+            }
+          return false;
+        }
+        return true;
+    }
 }

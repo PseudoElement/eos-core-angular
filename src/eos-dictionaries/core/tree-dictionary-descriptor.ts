@@ -28,6 +28,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
     addRecord<T extends IHierCL>(
         data: any,
         parent?: any,
+        appendToChanges: any = null,
         isLeaf = false,
         isProtected = false,
         isDeleted = false
@@ -35,7 +36,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
         let _newRec = this.preCreate(parent.rec, isLeaf, isProtected, isDeleted);
         _newRec = this.apiSrv.entityHelper.prepareAdded<T>(_newRec, this.apiInstance);
         // console.log('create tree node', _newRec);
-        return this._postChanges(_newRec, data.rec)
+        return this._postChanges(_newRec, data.rec, appendToChanges)
             .then((resp) => {
                 const results: IRecordOperationResult[] = [];
                 if (resp && resp[0]) {

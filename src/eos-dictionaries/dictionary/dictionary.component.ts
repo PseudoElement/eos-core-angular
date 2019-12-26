@@ -1,26 +1,26 @@
-import {DEPARTMENTS_DICT} from './../consts/dictionaries/department.consts';
-import {AdvCardRKEditComponent} from './../adv-card/adv-card-rk.component';
-import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subject} from 'rxjs';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
-import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
-import {CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE} from 'app/consts/confirms.const';
-import {EosDictService} from '../services/eos-dict.service';
-import {EosDictionary} from '../core/eos-dictionary';
-import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE} from 'eos-dictionaries/interfaces';
-import {EosDictionaryNode} from '../core/eos-dictionary-node';
-import {EosMessageService} from 'eos-common/services/eos-message.service';
-import {EosStorageService} from 'app/services/eos-storage.service';
-import {EosSandwichService} from '../services/eos-sandwich.service';
-import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
-import {RECENT_URL} from 'app/consts/common.consts';
-import {NodeListComponent} from '../node-list/node-list.component';
-import {CreateNodeComponent} from '../create-node/create-node.component';
-import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
-import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
-import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
-import {CustomTreeNode } from '../tree2/custom-tree.component';
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
+import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
+import { AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES } from 'app/consts/confirms.const';
+import { EosDictService } from '../services/eos-dict.service';
+import { EosDictionary } from '../core/eos-dictionary';
+import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
+import { EosDictionaryNode } from '../core/eos-dictionary-node';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { EosSandwichService } from '../services/eos-sandwich.service';
+import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
+import { RECENT_URL } from 'app/consts/common.consts';
+import { NodeListComponent } from '../node-list/node-list.component';
+import { CreateNodeComponent } from '../create-node/create-node.component';
+import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
+import { CreateNodeBroadcastChannelComponent } from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
+import { CounterNpEditComponent, E_COUNTER_TYPE } from '../counter-np-edit/counter-np-edit.component';
+import { CustomTreeNode } from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { takeUntil } from 'rxjs/operators';
@@ -49,10 +49,11 @@ import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/p
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
 import { IConfirmWindow2, IConfirmButton } from 'eos-common/confirm-window/confirm-window2.component';
-import { IMessage } from 'eos-common/interfaces';
+import { IMessage, IOpenClassifParams } from 'eos-common/interfaces';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { CopyPropertiesComponent } from 'eos-dictionaries/copy-properties/copy-properties.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -214,15 +215,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         });
 
         _sandwichSrv.currentDictState$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean[]) => this.currentState = state);
 
         _dictSrv.dictionary$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     if (this.params !== undefined) {
@@ -254,9 +255,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
 
         _dictSrv.listDictionary$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
@@ -271,9 +272,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
 
         _dictSrv.treeNode$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((node: EosDictionaryNode) => {
                 if (node) {
                     this.title = node.getTreeView().map((fld) => fld.value).join(' ');
@@ -287,9 +288,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
 
         _dictSrv.paginationConfig$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.paginationConfig = config;
@@ -297,19 +298,19 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
 
         _dictSrv.viewParameters$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((viewParameters: IDictionaryViewParameters) => {
                 this.params = viewParameters;
                 if (this.params.searchResults) {
                     if ((this._dictSrv.currentDictionary.isTreeType() || this._dictSrv.currentDictionary.id === CABINET_DICT.id)
                         && this._dictSrv.isSearchEnabled()) {
-                            if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
-                                this.title = 'Поиск во всем справочнике';
-                                this.hasParent = false;
-                                return;
-                            }
+                        if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
+                            this.title = 'Поиск во всем справочнике';
+                            this.hasParent = false;
+                            return;
+                        }
                     }
                 }
 
@@ -326,11 +327,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
 
         _dictSrv.openedNode$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(() => {
-        });
+            });
 
         _bcSrv._eventFromBc$
             .pipe(
@@ -386,7 +387,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
 
             case E_RECORD_ACTIONS.edit:
-                this._editNode();
+                if (this._checkDictionaryId()) {
+                    this._openPageCitizens(false, null);
+                } else {
+                    this._editNode();
+                }
                 break;
 
             case E_RECORD_ACTIONS.showDeleted:
@@ -399,10 +404,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.moveUp:
                 this.nodeList.moveUp();
+                this.dictionary.treeResort();
                 break;
 
             case E_RECORD_ACTIONS.moveDown:
                 this.nodeList.moveDown();
+                this.dictionary.treeResort();
                 break;
 
             case E_RECORD_ACTIONS.export:
@@ -422,7 +429,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
 
             case E_RECORD_ACTIONS.add:
-                this._openCreate(evt.params);
+                if (this._checkDictionaryId()) {
+                    this._openPageCitizens(true, evt.params);
+                } else {
+                    this._openCreate(evt.params);
+                }
                 break;
 
             case E_RECORD_ACTIONS.restore:
@@ -446,7 +457,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
             case E_RECORD_ACTIONS.counterDepartmentMain:
                 if (this.featuresDep.numcreation) {
-                   this._editCounter(E_COUNTER_TYPE.counterDepartmentMain);
+                    this._editCounter(E_COUNTER_TYPE.counterDepartmentMain);
                 }
                 break;
             case E_RECORD_ACTIONS.counterDepartment:
@@ -494,6 +505,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.importEDS:
                 this._openModalWindow();
                 break;
+            case E_RECORD_ACTIONS.cut:
+                this._cutNode();
+                break;
+            case E_RECORD_ACTIONS.combine:
+                this._combine();
+                break;
+            case E_RECORD_ACTIONS.uncheckNewEntry:
+                this._uncheckNewEntry();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -510,15 +530,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
     }
     _navigateToUC(): any {
-            const url = this._router.url;
-            this._storageSrv.setItem(RECENT_URL, url);
-            const _path = [
-                'spravochniki',
-                CA_CATEGORY_CL.id,
-                '0.'
-            ];
+        const url = this._router.url;
+        this._storageSrv.setItem(RECENT_URL, url);
+        const _path = [
+            'spravochniki',
+            CA_CATEGORY_CL.id,
+            '0.'
+        ];
 
-            this._router.navigate(_path);
+        this._router.navigate(_path);
     }
 
 
@@ -632,8 +652,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     hasFilter() {
         if (this.dictionaryId === DID_NOMENKL_CL ||
             (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
-                return true;
-            }
+            return true;
+        }
         return false;
     }
 
@@ -701,7 +721,38 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._openCreate(recParams);
         });
     }
+    private _openPageCitizens(openEdit: boolean, params) {
+        if (this.dictionaryId === 'organization') {
+            if (params && params.IS_NODE && openEdit) {
+                this.openClassifGopRc(openEdit);
+                return;
+            } else if (params && !params.IS_NODE && openEdit) {
+                this._openCreate(params);
+                return;
+            } else if (!params && !openEdit) {
+                if (this._dictSrv.listNode.isNode) {
+                    this._editNode();
+                    return;
+                } else {
+                    this.openClassifGopRc(openEdit);
+                    return;
+                }
+                return;
+            }
+        }
+        this.openClassifGopRc(openEdit);
 
+    }
+    private openClassifGopRc(openEdit) {
+        const node = this._dictSrv.listNode;
+            const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId);
+            this._waitClassif.openClassif(config).then(() => {
+                this._dictSrv.reload();
+                this._dictSrv.clearCurrentNode();
+            }).catch((e) => {
+                console.log(e);
+        });
+    }
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
         const list = [];
         // const selectedNodes = this._dictSrv.getMarkedNodes();
@@ -746,32 +797,33 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._confirmMarkedItems(selectedNodes, confirmRestore).then ((button: IConfirmButton) => {
             if (button && button.result === 2) {
 
-                    let p: Promise<any> = Promise.resolve(CONFIRM_SUBNODES_RESTORE.buttons.find(b => b.result === 1));
+                let p: Promise<any> = Promise.resolve(CONFIRM_SUBNODES_RESTORE.buttons.find(b => b.result === 1));
 
-                    if (hasFolding) {
-                        const _confrm = Object.assign({}, CONFIRM_SUBNODES_RESTORE);
-                        _confrm.body = _confrm.body.replace('{{name}}', confirmRestore.bodyList.join(', '));
-                        p = this._confirmSrv.confirm2(_confrm);
+                if (hasFolding) {
+                    const _confrm = Object.assign({}, CONFIRM_SUBNODES_RESTORE);
+                    _confrm.body = _confrm.body.replace('{{name}}', confirmRestore.bodyList.join(', '));
+                    p = this._confirmSrv.confirm2(_confrm);
+                }
+                return p.then((confirmed: IConfirmButton) => {
+                    if (confirmed) {
+                        const needInclude = confirmed.result === 2;
+                        this._dictSrv.setFlagForMarked('DELETED', needInclude, false)
+                            .then(() => {
+                                this._dictSrv.setMarkAllNone();
+                                const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                                message.msg = message.msg
+                                    .replace('{{RECS}}', confirmRestore.bodyList.join(', '))
+                                    .replace('{{OPERATION}}', 'восстановлены.');
+                                this._msgSrv.addNewMessage(message);
+                            });
                     }
-                    return p.then((confirmed: IConfirmButton) => {
-                        if (confirmed) {
-                            const needInclude = confirmed.result === 2;
-                            this._dictSrv.setFlagForMarked('DELETED', needInclude, false)
-                                .then(() => {
-                                    this._dictSrv.setMarkAllNone();
-                                    const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                                    message.msg = message.msg
-                                        .replace('{{RECS}}', confirmRestore.bodyList.join(', '))
-                                        .replace('{{OPERATION}}', 'восстановлены.');
-                                    this._msgSrv.addNewMessage(message);
-                                });
-                        }
-                    });
+                });
             }
             return Promise.resolve(null);
         });
 
     }
+
 
     /**
      * Physical delete marked elements on page
@@ -797,26 +849,27 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
+        const titleId = selectedNodes[0].nodeTitleid;
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
 
         this._confirmMarkedItems(selectedNodes, confirmDelete)
-        .then ((button: IConfirmButton) => {
-            if (button && button.result === 2) {
-                return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
-                    const deletedList = results.filter(r => !r.error)
-                        .map ( r => r.record['CLASSIF_NAME']) ;
-                    if (deletedList && deletedList.length) {
-                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                        message.msg = message.msg
-                            .replace('{{RECS}}', deletedList.join(', '))
-                            .replace('{{OPERATION}}', 'удалены навсегда.');
+            .then ((button: IConfirmButton) => {
+                if (button && button.result === 2) {
+                    return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
+                        const deletedList = results.filter(r => !r.error)
+                            .map ( r => r.record[titleId]) ;
+                        if (deletedList && deletedList.length) {
+                            const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                            message.msg = message.msg
+                                .replace('{{RECS}}', deletedList.join(', '))
+                                .replace('{{OPERATION}}', 'удалены навсегда.');
 
-                        this._msgSrv.addNewMessage(message);
-                    }
-                });
-            }
-            return Promise.resolve(null);
-        });
+                            this._msgSrv.addNewMessage(message);
+                        }
+                    });
+                }
+                return Promise.resolve(null);
+            });
     }
 
     /**
@@ -929,7 +982,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
                 } else if (type === E_COUNTER_TYPE.counterDepartment && node.data.rec['NUMCREATION_FLAG'] !== 1) {
-                        this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
+                    this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
                     this.modalWindow.content.initByNodeData(type, node.data.rec);
@@ -1022,13 +1075,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 if (renewChilds) {
                     return node.id;
                 } else {
+                    // return '0.2U9.'; // for debug
                     return this._waitClassif.chooseDocGroup();
                 }
             }).then( (from_due) => {
                 if (from_due) {
-                    this.nodeList.openCopyProperties(node, from_due, renewChilds);
+                    this.__openCopyProperties(node, from_due, renewChilds);
                 } else {
-                    this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+                    // this._msgSrv.addNewMessage(WARN_SELECT_NODE);
                 }
             });
         } else {
@@ -1036,17 +1090,67 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
     }
 
+    private __openCopyProperties(node: EosDictionaryNode, from_due: string, renewChilds: boolean) {
+        this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
+            class: 'copy-properties-modal moodal-lg'});
+        (<CopyPropertiesComponent>this.modalWindow.content).init(node.data.rec, from_due, renewChilds);
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            if (node) {
+                node.relatedLoaded = false;
+                this._dictSrv.rereadNode(node.id).then( (data) => {
+                    node.relatedLoaded = false;
+                    this._dictSrv.setMarkAllNone();
+                });
+            }
+            subscriptionClose.unsubscribe();
+        });
+    }
+
+
     private _openModalWindow() {
         this.modalWindow = null;
         const node = this._dictSrv.listNode;
         if (node) {
             if (node.data.PROTECTED) {
-              //  this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
+                //  this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
             } else {
                 this.modalWindow = this._modalSrv.show(EdsImportComponent, {class: 'adv-card-rk-modal modal-lg'});
                 this.modalWindow.content.node = node;
             }
         }
+    }
+    private _cutNode(): void {
+        // Для объединения можно выбирать только карточки организаций.
+        const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
+            return !node.isNode;
+        });
+        if (!checkNode) {
+            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения можно выбирать только карточки организаций.'});
+            return;
+        }
+        this._dictSrv.cutNode();
+    }
+    private _combine() {
+        const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isSliced);
+        const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  {
+            if (node.isNode) {
+                node.isMarked = false;
+            }
+            return node.isMarked && !node.isSliced && !node.isNode;
+        });
+        if (slicedNode.length && markedNode.length === 1) {
+            this._confirmSrv.confirm(CONFIRM_COMBINE_NODES).then(resp => {
+                if (resp) {
+                    this._dictSrv.combine(slicedNode, markedNode);
+                }
+            });
+        }   else {
+            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись'});
+        }
+    }
+    private _uncheckNewEntry() {
+        this._dictSrv.uncheckNewEntry();
     }
 
     private _copyNodesToBuffer() {
@@ -1055,6 +1159,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     private _openCopyNode() {
         this.nodeList.openCopyNode(this._dictSrv.bufferNodes);
+    }
+    private _checkDictionaryId(): boolean {
+        return ['citizens', 'organization'].some(id => {
+            return id === this.dictionaryId;
+        });
     }
 
 }

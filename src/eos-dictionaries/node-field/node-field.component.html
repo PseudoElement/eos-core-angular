@@ -41,6 +41,12 @@
                     placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
             </div>
         </ng-container>
+        <ng-container *ngSwitchCase="types.new">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
+                <span *ngIf="field.value === 1" class="small eos-icon-dot-blue eos-icon small-icon-dot" (click)="viewNode($event)"> </span>
+            </label>
+
+        </ng-container>
         <ng-container *ngSwitchDefault>
             <div class="table-field-ico" *ngIf="hasFolderIcon">
                 <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>

@@ -35,6 +35,7 @@ export class EosDictionaryNode {
     updating: boolean;
 
     relatedLoaded = false;
+    isSliced = false;
 
     /**
      * marked - node checked in list
@@ -62,6 +63,15 @@ export class EosDictionaryNode {
     set isDeleted(val: boolean) {
         if (!this.data.rec['PROTECTED']) {
             this.data.rec['DELETED'] = val;
+        }
+    }
+
+    get nodeTitleid(): string {
+        const _rec = this.getTreeView();
+        if (_rec && _rec.length) {
+            return _rec[0].key; // .map((fld) => fld.value).join(' ');
+        } else {
+            return 'CLASSIF_NAME';
         }
     }
 

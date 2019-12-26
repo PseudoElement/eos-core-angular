@@ -27,9 +27,9 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
     @Output() onSave: EventEmitter<string> = new EventEmitter<string>();
 
-    availableItems: any[] = [];
-    templateItems: any[] = [];
-    selected: any[] = [null, null];
+    availableItems: DGTplElement[] = [];
+    templateItems: DGTplElement[] = [];
+    selected: DGTplElement[] = [null, null];
     separator: string;
 
     private subscriptions: Subscription[] = [];
@@ -78,9 +78,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             }
         });
 
-        this.subscriptions.push(dragulaService.dropModel.subscribe(( [hz, el, target, source, sourceModel, targetModel, item] ) => {
-            if (target.id === 'availble') {
-            }
+        this.subscriptions.push(dragulaService.dropModel.subscribe(([hz, el, target, source, sourceModel, targetModel, item]) => {
             this.updateTemplate();
         }));
 
@@ -120,6 +118,16 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         this.updateAvailableItems();
     }
 
+    isValid(item: DGTplElement): boolean {
+        // item - dragula рубит почемуто regexp при перетаскивании.
+        // ищем в aviableItems
+        const avItem = this.availableItems.find( i => i.key === item.key);
+
+        if (!avItem) { return false; }
+
+        return avItem.possibleRKType ? avItem.possibleRKType.test(String(this.rcType)) : true;
+    }
+
     isEnabled(item: DGTplElement): boolean {
         // check if complex elements already in template
         if (((item.isNotUnique === void 0) || !item.isNotUnique) && this.templateItems.findIndex((elem) => elem.key === item.key) !== -1) {
@@ -139,9 +147,13 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             res = !ORDER_NUM_TEMPLATE_ITEM_EXPR.test(item.key);
         }
 
-        if (item.key === '{N}' && res) {
-            res = (this.rcType === 3);
+        if (res && item.possibleRKType) {
+            return item.possibleRKType ? item.possibleRKType.test(String(this.rcType)) : true;
         }
+
+        // if (item.key === '{N}' && res) {
+        //     res = (this.rcType === 3);
+        // }
 
         return res;
     }
@@ -268,6 +280,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
     private updateAvailableItems() {
         const items = (this.forProject ? PRJ_TEMPLATE_ELEMENTS : DOC_TEMPLATE_ELEMENTS).slice(0);
+        // .filter (
+        //     i => i.possibleRKType ? i.possibleRKType.test(String(this.rcType)) : true
+        // );
+
         this.availableItems = items;
     }
 

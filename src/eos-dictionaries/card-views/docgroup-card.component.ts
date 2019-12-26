@@ -15,6 +15,7 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
 })
 export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     isCBBase: boolean;
+    isSignatura: boolean;
     private _prev = {};
     private _appctx: AppContext;
 
@@ -44,6 +45,10 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         super(injector);
         this.modalSrv = injector.get(BsModalService);
         this._appctx = injector.get(AppContext);
+        this._appctx.get99UserParms('ANCUD').then((value) => {
+            this.isSignatura = value && value.PARM_VALUE === 'SIGNATURA';
+        });
+
     }
 
     ngOnChanges(changes: SimpleChanges) {

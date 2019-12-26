@@ -5,7 +5,7 @@ import { Injectable, Injector } from '@angular/core';
 // import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {EosDictionary} from '../core/eos-dictionary';
+import {EosDictionary, CUSTOM_SORT_FIELD} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {
     E_DICT_TYPE,
@@ -46,7 +46,6 @@ import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 
 export const SORT_USE_WEIGHT = true;
-export const CUSTOM_SORT_FIELD = 'WEIGHT';
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
 
 export class MarkedInformation {
@@ -296,9 +295,9 @@ export class EosDictService {
                 const value = changeList[id];
                 const key = dict.descriptor.PKForEntity(id);
                 changes.push ({
-                        method: 'MERGE',
-                        data: { [weightField]: String(value) },
-                        requestUri: key,
+                    method: 'MERGE',
+                    data: { [weightField]: String(value) },
+                    requestUri: key,
                 });
             }
         }
@@ -465,7 +464,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach( n => n.isMarked = false);
+            this._currentList.forEach( n => {n.isMarked = false; n.isSliced = false; } );
         }
         this._currentMarkInfo.nodes = [];
 
@@ -712,7 +711,7 @@ export class EosDictService {
 
     selectTemplateNode() {
         const dictionary = this._dictionaries[0];
-            this._selectTreeNode(dictionary.root);
+        this._selectTreeNode(dictionary.root);
         this._reloadList().then(() => {
             this.updateViewParameters({updatingList: false});
         });
@@ -789,8 +788,8 @@ export class EosDictService {
 
         if (this._treeNode) {
             return this.preSave(dictionary, data, true)
-                .then(() => {
-                    return dictionary.descriptor.addRecord(data, this._treeNode.data);
+                .then((appendChanges) => {
+                    return dictionary.descriptor.addRecord(data, this._treeNode.data, appendChanges);
                 })
                 .then((results) => {
                     this.updateViewParameters({updatingList: true});
@@ -826,9 +825,9 @@ export class EosDictService {
                     }
                     this._errHandler(err);
                 });
-            } else {
-                return Promise.reject('No selected node');
-            }
+        } else {
+            return Promise.reject('No selected node');
+        }
     }
 
     errHandler(err: RestError | any) {
@@ -911,6 +910,7 @@ export class EosDictService {
             return Promise.resolve(null);
         }
     }
+
 
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
@@ -1151,6 +1151,46 @@ export class EosDictService {
     isPaginationVisible(): boolean {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
+    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
+        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        markedNodes.forEach((node: EosDictionaryNode) => {
+            node.isSliced = !node.isSliced;
+        });
+    }
+    public combine(slicedNodes, markedNodes): Promise<any> {
+        return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
+            this._msgSrv.addNewMessage({ type: 'success', title: 'Сообщение', msg: 'Объединение завершенно' });
+            this.reload();
+        }).catch(e => {
+            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
+        });
+    }
+    public uncheckNewEntry() {
+        this.currentDictionary.descriptor.updateUncheckCitizen(this.getMarkedNodes()).then(data => {
+            this._reloadList();
+        });
+
+    }
+
+
+    rereadNode(nodeId: any): Promise<any>  {
+        return this._apiSrv
+        .read({
+            DOCGROUP_CL: PipRX.criteries({'DUE': nodeId}),
+            foredit: true,
+        })
+        .then(([docGroup]) => {
+
+
+
+        // return this.descriptor.getRecord(nodeId)
+            // .then((records) => {
+                // this.updateNodes(records, true);
+                // return this._nodes.get(nodeId);
+            // });
+        });
+    }
+
 
     public getStoredSearchSettings(): SearchFormSettings {
         const res = this._storageSrv.getItem('lastSearchSetting');
@@ -1159,6 +1199,9 @@ export class EosDictService {
 
     public setStoredSearchSettings(data: SearchFormSettings) {
         this._storageSrv.setItem('lastSearchSetting', data);
+    }
+    public reload() {
+        this._reloadList();
     }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
@@ -1301,15 +1344,15 @@ export class EosDictService {
                         };
 
                         return this.confirmSrv.confirm(confirmObj)
-                        .then((confirm: boolean) => {
+                            .then((confirm: boolean) => {
 
-                            if (confirm) {
-                                return changes.fixE;
+                                if (confirm) {
+                                    return changes.fixE;
 
-                            } else {
-                                return null;
-                            }
-                        });
+                                } else {
+                                    return null;
+                                }
+                            });
                     }
                     return Promise.resolve(null);
                 }).catch(err => {
@@ -1607,6 +1650,7 @@ export class EosDictService {
     private _emitListDictionary() {
         this._listDictionary$.next(this.currentDictionary);
     }
+
 
 }
 

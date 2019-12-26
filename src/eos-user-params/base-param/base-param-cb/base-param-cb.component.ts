@@ -67,7 +67,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
-    private _uncheckedAvBtn: boolean = false;
 
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
@@ -352,7 +351,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
 
     saveAfterSystems(newD: any, accessStr: string, id: number, query: any): Promise<any> {
         this.isLoading = true;
-        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+        if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
                 if (cab) {
                     return true;
@@ -471,6 +470,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
+            this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
             this.isLoading = false;
             this.editModeF();
             this._pushState();
@@ -490,6 +490,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     cancel() {
         this.isLoading = false;
         this.editMode = !this.editMode;
+        this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
@@ -597,6 +598,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             })
             .then((data: DEPARTMENT[]) => {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
+                if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
+                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                    });
+                    return data[0];
+                }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                     if (data) {
                         this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
@@ -638,10 +646,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
     checRadioB() {
-        if (this._uncheckedAvBtn === true && (this.gt()['delo'] || this.gt()['delo_web_delo'] || this.gt()['delo_web'])) {
-            this.formAccess.enable({ onlySelf: true, emitEvent: false });
-            this._uncheckedAvBtn = false;
-        }
         if (!this.gt()['delo_web']) {
             this.formAccess.controls['1-27'].patchValue(null, { emitEvent: false });
         } else {
@@ -650,15 +654,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
             this.formAccess.controls['26'].disable({ emitEvent: false });
             this.formAccess.controls['26'].patchValue(false, { emitEvent: false });
-            this._toggleFormControl(this.formAccess.controls['23'], false);
-            this._toggleFormControl(this.formAccess.controls['21'], false);
-            this._toggleFormControl(this.formAccess.controls['25'], false);
+            ['2', '5', '15', '17', '21', '23', '25'].forEach(numberControl => {
+                this._toggleFormControl(this.formAccess.controls[numberControl], false);
+            });
         }
         if (this.gt()['delo']) {
+            ['2', '5', '15', '17', '25', '26'].forEach(numberControl => {
+                this._toggleFormControl(this.formAccess.controls[numberControl], false);
+            });
             this._toggleFormControl(this.formAccess.controls['23'], true);
             this._toggleFormControl(this.formAccess.controls['21'], true);
-            this._toggleFormControl(this.formAccess.controls['25'], false);
-            this._toggleFormControl(this.formAccess.controls['26'], false);
             this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
             this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
         }
@@ -668,15 +673,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (!this.gt()['delo'] && !this.gt()['delo_web'] && !this.gt()['delo_web_delo']) {
             this.patchVal();
             this.disableAccessSyst(true);
-        }
-        if (this.uncheckedAvSystems()) {
-            const arrNotBlockAv = ['delo_web', '0-1', '0', '16', '3'];
-            Object.keys(this.formAccess.controls).forEach(key => {
-                if (arrNotBlockAv.indexOf(key) === -1) {
-                    this._toggleFormControl(this.formAccess.controls[key], true);
-                }
-            });
-            this._uncheckedAvBtn = true;
         }
     }
 
@@ -689,22 +685,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
     private patchVal() {
-        this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
-        this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
-        this.formAccess.controls['25'].patchValue(false, { emitEvent: false });
-        this.formAccess.controls['26'].patchValue(false, { emitEvent: false });
+        ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
+            this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
+        });
     }
     private disableAccessSyst(flag) {
         if (flag) {
-            this._toggleFormControl(this.formAccess.controls['23'], true);
-            this._toggleFormControl(this.formAccess.controls['21'], true);
-            this._toggleFormControl(this.formAccess.controls['25'], true);
-            this._toggleFormControl(this.formAccess.controls['26'], true);
+            ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
+                this._toggleFormControl(this.formAccess.controls[numberControl], true);
+            });
         } else {
-            this._toggleFormControl(this.formAccess.controls['23'], false);
-            this._toggleFormControl(this.formAccess.controls['21'], false);
-            this._toggleFormControl(this.formAccess.controls['25'], false);
-            this._toggleFormControl(this.formAccess.controls['26'], false);
+            ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
+                this._toggleFormControl(this.formAccess.controls[numberControl], false);
+            });
         }
     }
 

@@ -459,6 +459,12 @@ export abstract class AbstractDictionaryDescriptor {
                 }
             });
     }
+    combine(slicedNodes: EosDictionaryNode[], marked: EosDictionaryNode[]): Promise<any> {
+        return Promise.resolve();
+    }
+    getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
+        return null;
+    }
 
     findTreeParent(data: CustomTreeNode[], id: any): any {
         return null;
@@ -495,11 +501,18 @@ export abstract class AbstractDictionaryDescriptor {
     defaultTreePath(data: CustomTreeNode[]): any {
         return null;
     }
+    updateUncheckCitizen(node?: EosDictionaryNode[]): Promise<any> {
+        return Promise.resolve();
+    }
 
-    protected _postChanges(data: any, updates: any): Promise<any[]> {
+    protected _postChanges(data: any, updates: any, appendToChanges: any = null ): Promise<any[]> {
         // console.log('_postChanges', data, updates);
         Object.assign(data, updates);
-        const changes = this.apiSrv.changeList([data]);
+        let changes = this.apiSrv.changeList([data]);
+        if (appendToChanges) {
+            changes = changes.concat(appendToChanges);
+        }
+
         // console.log('changes', changes);
         return this.apiSrv.batch(changes, '');
     }

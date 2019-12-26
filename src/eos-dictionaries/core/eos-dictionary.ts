@@ -17,6 +17,7 @@ import {OrganizationDictionaryDescriptor} from 'eos-dictionaries/core/organizati
 import {EosUtils} from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 
+export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 
 export class EosDictionary {
@@ -511,9 +512,68 @@ export class EosDictionary {
     }
 
     reorderList(nodes: EosDictionaryNode[], subnodesCtrl: boolean, parentId?: string): EosDictionaryNode[] {
-        return this._orderByField(nodes);
+        this.treeResort();
+        return this.orderNodesByField(nodes);
     }
 
+
+    treeResort(): any {
+        if (this.nodes && this.root) {
+
+            const order = { fieldKey: CUSTOM_SORT_FIELD, ascend: true };
+            if (this.orderBy.fieldKey !== CUSTOM_SORT_FIELD) {
+                const treeOrderKey = this.root.getTreeView()[0];
+                order.fieldKey = treeOrderKey.foreignKey;
+            }
+
+            // this.treeResort();
+            // this.nodes.forEach((node) => {
+            //     if (treeOrderKey && node.children && node.children.length > 0) {
+            //         node.children = this.orderNodesByField(node.children, { fieldKey: /*treeOrderKey.foreignKey*/ 'WEIGTH', ascend: true });
+            //     }
+            // });
+
+            this.nodes.forEach( n => {
+                this.nodeChildResort(n, order);
+            });
+        }
+    }
+
+    nodeChildResort(n: EosDictionaryNode, orderBy?: IOrderBy): any {
+        n.children = this.orderNodesByField(n.children, orderBy);
+        n.children.forEach( c => this.nodeChildResort(c));
+    }
+
+    public orderNodesByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
+        const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
+
+        return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
+            const _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id) || '';
+            const _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id) || '';
+
+            let res = 0;
+            switch (typeof _a) {
+                case 'number':
+                    res = _a < 0 ?
+                        ((_a < _b && 1) || (_a > _b && -1) || 0) :
+                        ((_a < _b && -1) || (_a > _b && 1) || 0);
+                    break;
+                case 'string':
+                    if (!_a && !_b) {
+                        res = 0;
+                    } else if (!_a) {
+                        res = 1;
+                    } else if (!_b) {
+                        res = -1;
+                    } else {
+                        res = _a.localeCompare(_b); // (_a < _b && -1) || (_a > _b && 1) || 0;
+                    }
+                    break;
+            }
+
+            return res * (_orderBy.ascend ? 1 : -1);
+        });
+    }
     private _updateTree(nodes: EosDictionaryNode[]) {
         /* build tree */
         nodes.forEach((_node) => {
@@ -553,12 +613,13 @@ export class EosDictionary {
             }
         });
 
-        const treeOrderKey = this.root.getTreeView()[0];
-        this.nodes.forEach((node) => {
-            if (treeOrderKey && node.children && node.children.length > 0) {
-                node.children = this._orderByField(node.children, { fieldKey: treeOrderKey.foreignKey, ascend: true });
-            }
-        });
+        // const treeOrderKey = this.root.getTreeView()[0];
+        this.treeResort();
+        // this.nodes.forEach((node) => {
+        //     if (treeOrderKey && node.children && node.children.length > 0) {
+        //         node.children = this.orderNodesByField(node.children, { fieldKey: /*treeOrderKey.foreignKey*/ 'WEIGTH', ascend: true });
+        //     }
+        // });
         this._nodes.forEach((node) => node.updateExpandable(this._showDeleted));
     }
 
@@ -611,36 +672,7 @@ export class EosDictionary {
         }
     }
 
-    private _orderByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
-        const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 
-        return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
-            const _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id) || '';
-            const _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id) || '';
-
-            let res = 0;
-            switch (typeof _a) {
-                case 'number':
-                    res = _a < 0 ?
-                        ((_a < _b && 1) || (_a > _b && -1) || 0) :
-                        ((_a < _b && -1) || (_a > _b && 1) || 0);
-                    break;
-                case 'string':
-                    if (!_a && !_b) {
-                        res = 0;
-                    } else if (!_a) {
-                        res = 1;
-                    } else if (!_b) {
-                        res = -1;
-                    } else {
-                        res = _a.localeCompare(_b); // (_a < _b && -1) || (_a > _b && 1) || 0;
-                    }
-                    break;
-            }
-
-            return res * (_orderBy.ascend ? 1 : -1);
-        });
-    }
 
     private getNodeRelatedData(node: EosDictionaryNode): Promise<EosDictionaryNode> {
         if (node && !node.relatedLoaded) {

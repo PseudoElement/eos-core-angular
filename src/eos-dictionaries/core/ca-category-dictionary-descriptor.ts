@@ -18,7 +18,8 @@ export class CaCategoryDictionaryDescriptor extends DictionaryDescriptor {
 
         return this.apiSrv.read<CA_CATEGORY>({'CA_CATEGORY': PipRX.criteries({
             'CA_SERIAL': nodeData.rec.CA_SERIAL,
-            'CA_SUBJECT': nodeData.rec.CA_SUBJECT,
+            // 'CA_SUBJECT': nodeData.rec.CA_SUBJECT,
+            'CA_CATEGORY.CA_SUBJECT_1024': nodeData.rec.CA_SUBJECT,
             'ISN_EDS_CATEGORY': nodeData.rec.ISN_EDS_CATEGORY}), })
             .then((data) => {
                 if (data && data. length) {
