@@ -70,6 +70,8 @@ import { DefaultSettingsComponent } from './default-options/default-settings.com
 import { RightDepertOrganizComponent } from './rights-delo/rights-delo-absolute-rights/right-organiz/right-organiz.component';
 import { RightOrganizDepertComponent } from './rights-delo/rights-delo-absolute-rights/right-dep-org/right-dep-org.component';
 import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-param-cb.component';
+import { CbUserRoleComponent } from './base-param/base-param-cb/cb-user-role/cb-user-role.component';
+import { DragulaModule } from 'ng2-dragula';
 import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/addGrif/addGrif.component';
 @NgModule({
     declarations: [
@@ -127,6 +129,7 @@ import { AddGrifComponent } from './user-params-set/user-param-other/user-param-
         RightDepertOrganizComponent,
         AddGrifComponent,
         RightOrganizDepertComponent,
+        CbUserRoleComponent
     ],
     entryComponents: [
         AddGrifComponent
@@ -142,7 +145,8 @@ import { AddGrifComponent } from './user-params-set/user-param-other/user-param-
         AccordionModule,
         PopoverModule,
         BsDropdownModule,
-        BsDatepickerModule.forRoot()
+        BsDatepickerModule.forRoot(),
+        DragulaModule
     ],
     providers: [
         UserParamApiSrv,
