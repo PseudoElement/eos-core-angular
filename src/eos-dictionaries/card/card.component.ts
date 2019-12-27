@@ -36,6 +36,7 @@ import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.compo
 import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { RestError } from 'eos-rest/core/rest-error';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -241,7 +242,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 if (res) {
                     this.disableSave = true;
                     this._save(_data)
-                        .then((node: EosDictionaryNode) => this._afterSaving(node));
+                        .then((node: EosDictionaryNode) => this._afterSaving(node))
+                        .catch ((err) => {
+                            // console.log("TCL: CardComponent -> err", err)
+                            this._windowInvalidSave ([err.message]);
+                            this.disableSave = false;
+                        });
                 }
              });
     }
@@ -478,7 +484,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     return null;
                 } else if (err === 'cancel') {
                     return null;
+                } else if (err && err.error instanceof RestError) {
+                    return Promise.reject(err.error);
                 }
+
                 this._errHandler(err);
             });
     }
@@ -548,12 +557,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         });
         return null;
     }
-    private _windowInvalidSave(): Promise<boolean> {
+    private _windowInvalidSave(errors: string[] = []): Promise<boolean> {
         if (this.isChanged) {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
 
             confirmParams.body = '';
-            confirmParams.bodyList = EosUtils.getValidateMessages(this.cardEditRef.inputs);
+            confirmParams.bodyList = [ ... errors, ... EosUtils.getValidateMessages(this.cardEditRef.inputs)];
 
             return this._confirmSrv.confirm2(confirmParams, )
                 .then((doSave) => {

@@ -1,6 +1,7 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 /*
 */
 export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
@@ -63,7 +64,9 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
         type: 'dictionary',
     }]),
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['RUBRIC_CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'sev'],
+    editFields: ['RUBRIC_CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE',
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+    ],
     searchFields: ['RUBRIC_CODE', 'CLASSIF_NAME'/*, 'NOTE'*/],
     fullSearchFields: ['RUBRIC_CODE', 'CLASSIF_NAME', 'NOTE', 'FULLNAME'],
     quickViewFields: ['RUBRIC_CODE', 'FULLNAME', 'NOTE', 'sev'],  // CLASSIF_NAME is in shortQuickViewFields
