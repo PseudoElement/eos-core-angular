@@ -42,7 +42,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         }
     };
 
-    protected isSevIndexes: boolean = false;
+    public isSevIndexes: boolean = false;
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
 
