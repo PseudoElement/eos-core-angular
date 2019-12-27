@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PipRX } from './pipRX.service';
-import { USER_CL, SYS_PARMS, SRCH_VIEW } from '../interfaces/structures';
+import { USER_CL, SYS_PARMS, SRCH_VIEW, USER_TECH } from '../interfaces/structures';
 import { ALL_ROWS } from '../core/consts';
 import { Deferred } from '../core/pipe-utils';
 import { IUserParms } from 'eos-rest';
@@ -37,6 +37,9 @@ export class AppContext {
     static isIE(): boolean {
         const ua = window.navigator.userAgent;
         return /MSIE|Trident/.test(ua);
+    }
+    updateLimitCardsUser(newLimitCard: USER_TECH[]) {
+        this.limitCardsUser = newLimitCard;
     }
 
     ready(): Promise<any> {
