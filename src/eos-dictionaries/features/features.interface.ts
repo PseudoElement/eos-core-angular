@@ -16,7 +16,12 @@ export interface IOESDictsFeatures {
     };
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;
+    SEV: IEOSSevConfig;
 
+}
+
+export interface IEOSSevConfig {
+    isIndexesEnable: boolean; /* Нужны ли Поля "индекс СЭВ" в справочниках, (SEV_ASSOCIATION)*/
 }
 
 export interface IEOSRKDefaults {

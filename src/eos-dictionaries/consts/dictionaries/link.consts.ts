@@ -1,6 +1,7 @@
 import { IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const LINK_TYPES = [{
     value: 2,
@@ -63,13 +64,19 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     }, {
         key: 'LINK_DIR',
         type: 'number',
+    }, {
+        key: 'sev',
+        title: 'Индекс СЭВ',
+        type: 'dictionary',
     }],
 
     defaultOrder: 'WEIGHT',
     keyField: 'ISN_LCLASSIF',
     editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'NOTE',
-        'PARE_LINK_Ref', 'ISN_PARE_LINK'],
+        'PARE_LINK_Ref', 'ISN_PARE_LINK',
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+        ],
     listFields: ['LINK', 'PAIR_LINK', 'TYPE', ],
     quickViewFields: ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE', 'TYPE'],
-    allVisibleFields: ['LINK_INDEX', 'NOTE'],
+    allVisibleFields: ['LINK_INDEX', 'NOTE', 'sev', ],
 });

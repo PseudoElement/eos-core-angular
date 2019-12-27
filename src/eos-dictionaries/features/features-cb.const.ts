@@ -1,13 +1,16 @@
-import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates, IEOSRKDefaults, EOSDICTS_VARIANT } from './features.interface';
+import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates, IEOSRKDefaults, EOSDICTS_VARIANT, IEOSSevConfig } from './features.interface';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
-export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures>{
+export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures> {
     version: 'ЦБ',
     variant : EOSDICTS_VARIANT.CB,
     departments: {
         numcreation: false,
         reestr_send: false,
         gas_ps: false,
+    },
+    SEV: <IEOSSevConfig> {
+        isIndexesEnable: true,
     },
     docgroups: <IEOSFDocGroups>{
         templates: <IEOSFDocGroupsTemplates>{

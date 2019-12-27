@@ -52,13 +52,13 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
                         data.rec['ISN_NODE'] = resp[0].FixedISN;
                     }
                     const changeData = [];
-                    let pSev = Promise.resolve(null);
+                    let pSev: Promise<boolean> = Promise.resolve(true);
 
                     Object.keys(data).forEach((key) => {
                         if (key !== 'rec' && data[key]) {
                             switch (key) {
                                 case 'sev':
-                                    pSev = this.checkSevIsNew(data[key], data.rec);
+                                    pSev = this.presaveSevRoutine(data[key], data.rec, changeData, results);
                                     /*
                                     const sevRec = this.apiSrv.entityHelper.prepareForEdit<SEV_ASSOCIATION>(undefined, 'SEV_ASSOCIATION');
                                     data[key] = Object.assign(sevRec, data[key]);
@@ -85,18 +85,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
                             }
                         }
                     });
-                    return pSev
-                        .then((result) => {
-                            if (result) {
-                                if (result.success) {
-                                    changeData.push(result.record);
-                                } else {
-                                    result.record = data.rec;
-                                    results.push(result);
-                                }
-                            }
-                        })
-                        .then(() => {
+                    return pSev.then(() => {
                             const changes = this.apiSrv.changeList(changeData);
                             if (changes) {
                                 return this.apiSrv.batch(changes, '')
