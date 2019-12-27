@@ -1,6 +1,6 @@
 import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
-import { CONTACT, ORGANIZ_CL, SEV_ASSOCIATION } from 'eos-rest';
+import { CONTACT, ORGANIZ_CL, SEV_ASSOCIATION, ADDR_CATEGORY_CL } from 'eos-rest';
 import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { TreeDictionaryDescriptor } from './tree-dictionary-descriptor';
@@ -9,7 +9,7 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     getRoot(): Promise<any[]> {
-        return this.getData({ criteries: {IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
+        return this.getData({ criteries: { IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
@@ -17,7 +17,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             query = ALL_ROWS;
         }
 
-        const req = {[this.apiInstance]: query};
+        const req = { [this.apiInstance]: query };
 
         if (limit) {
             req.top = limit;
@@ -120,6 +120,16 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             config['due'] = node.id;
         }
         return config;
+    }
+    public getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+        return super.getRelatedFields2(tables, nodes, loadAll, ignoreMetadata).then(result => {
+            if (result.hasOwnProperty('ADDR_CATEGORY_CL')) {
+                result['ADDR_CATEGORY_CL'] = result['ADDR_CATEGORY_CL'].filter((data: ADDR_CATEGORY_CL) => {
+                    return data.ISN_LCLASSIF > 0;
+                });
+            }
+            return result;
+        });
     }
 
     /**

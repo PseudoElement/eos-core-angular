@@ -5,6 +5,7 @@ import { COMMON_FIELDS, COMMON_FIELD_NAME, } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';
+import { ADDR_CATEGORY_DICT } from './addr-category.consts';
 
 
 export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
@@ -78,6 +79,16 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
                 {value: 2, title: 'рабоч.'},
             ],
         },
+        {
+            key: 'ISN_ADDR_CATEGORY',
+            type: 'select',
+            title: 'Категория',
+            length: 150,
+          //  required: true,
+            dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
+            options: [],
+            default: 0,
+    },
     ] : [],
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование организации',
@@ -212,7 +223,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     //     'MAIL_FOR_ALL', 'NOTE', 'OKPO', 'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
     //     'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
     editFields: ['CLASSIF_NAME', 'NOTE',
-        ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [ 'TERM_EXEC', 'TERM_EXEC_TYPE' ] : [],
+        ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [ 'TERM_EXEC', 'TERM_EXEC_TYPE', 'ISN_ADDR_CATEGORY'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
     fullSearchFields: [],
