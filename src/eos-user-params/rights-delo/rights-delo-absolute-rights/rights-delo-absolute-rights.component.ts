@@ -279,9 +279,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                             return this._userParamsSetSrv.getUserIsn({
                                 expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List'
                             })
-                                .then(() => {
-                                    this.init();
-                                });
+                            .then(() => {
+                                this.init();
+                                if (this._appContext.CurrentUser.ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                                    this._appContext.updateLimitCardsUser(this.curentUser.USER_TECH_List.filter(card => card.FUNC_NUM === 1));
+                                }
+                            });
                         }
                     }).catch((e) => {
                         this._errorSrv.errorHandler(e);
