@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export class TabOptions {
     id: string;
@@ -41,6 +42,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         }
     };
 
+    public isSevIndexes: boolean = false;
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
 
@@ -49,6 +51,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         this.dictSrv = injector.get(EosDictService);
         this.currTab = this.dictSrv.currentTab ? this.dictSrv.currentTab : 0;
         this.prevValues = [];
+        this.isSevIndexes = Features.cfg.SEV.isIndexesEnable;
     }
 
     public static autoFocusOnFirstStringElement(parentTag: string) {

@@ -176,7 +176,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
 
     private checkTabScan(): void {
         if (this._appContext.limitCardsUser.length > 0) {
-            if (this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['TECH_DUE_DEP']) === -1) {
+            if (this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['DEPARTMENT_DUE']) === -1) {
                 this.accordionList[0].disabled = true;
                 this.accordionList[1].disabled = true;
                 this.accordionList[2].disabled = true;
@@ -219,9 +219,9 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.hideIcon = false;
             }
         }
-        if (this._appContext.limitCardsUser.length > 0 && this._userParamService.curentUser) {
-            if (this.pageId !== 'protocol' && this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['TECH_DUE_DEP']) === -1) {
-                this._router.navigate(['user_param']);
+        if (this._appContext.limitCardsUser.length > 0 && this._userParamService.curentUser !== undefined) {
+            if (this.pageId !== 'protocol' && this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['DEPARTMENT_DUE']) === -1) {
+                this._router.navigateByUrl('user_param');
             }
         }
     }

@@ -147,7 +147,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         const confUsers = this._storage.getItem('users');
         this._pagSrv.paginationConfig = confUsers;
         this.buttons = Allbuttons;
-        this.rtUserService.flagDeleteSelectedUser = true;
         //  this.helpersClass = new HelpersSortFunctions();
         this._apiSrv.initSort();
         this._route.params
@@ -340,7 +339,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         }
         /*  setTimeout(() => { */
-        if (this.selectedUser && !this.selectedUser.deleted) {
+        if (this.selectedUser && !this.selectedUser.deleted && this.selectedUser.isEditable) {
             this._storage.setItem('selected_user_save', this.selectedUser);
             this._router.navigate(['user-params-set'], {
                 queryParams: { isn_cl: this.selectedUser.id }
@@ -577,7 +576,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this.selectedUser = checkUser[0];
             this.selectedUser.isSelected = true;
             this.rtUserService.changeSelectedUser(this.selectedUser);
-            this.rtUserService.flagDeleteSelectedUser = true;
         }
         this.rtUserService._updateBtn.next(this.optionsBtn);
     }
@@ -595,17 +593,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (event.target.checked) {
             this.rtUserService.changeSelectedUser(user);
             this.selectedUser = user;
-            this.rtUserService.flagDeleteSelectedUser = false;
         } else {
             const chekUsers = this.getCheckedUsers();
             if (chekUsers.length) {
                 this.selectedUser = chekUsers[0];
                 this.rtUserService.changeSelectedUser(chekUsers[0]);
-                this.rtUserService.flagDeleteSelectedUser = false;
             } else {
                 this.selectedUser = undefined;
                 this.rtUserService.changeSelectedUser(null);
-                this.rtUserService.flagDeleteSelectedUser = true;
             }
         }
         this._userParamSrv.checkedUsers = this.getCheckedUsers();

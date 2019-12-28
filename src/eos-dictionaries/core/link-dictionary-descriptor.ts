@@ -79,29 +79,56 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         _newPare['ISN_PARE_LINK'] = _newRec[ISN_LCLASSIF];
         _newPare['LINK_TYPE'] = _newRec['LINK_TYPE'];
 
-        const changes = this.apiSrv.changeList([_newRec, _newPare]);
-
-        if (changes) {
-            return this._appendCategoryOldChange(changes, data)
-                .then(() => {
-                    return this.apiSrv.batch(changes, '')
-                        .then((res) => {
-                            res.forEach((r) => results.push({success: true, record: r.ID}));
-                            return results;
-                        });
-            });
-        } else {
-            return Promise.resolve(results);
+        let pSev: Promise<boolean> = Promise.resolve(true);
+        const changeData = [];
+        if (data['sev']) {
+            pSev = this.presaveSevRoutine(data['sev'], _newRec, changeData, results);
         }
+
+        return pSev.then(() => {
+            const changes = this.apiSrv.changeList([_newRec, _newPare, ... changeData]);
+
+            if (changes) {
+                return this._appendCategoryOldChange(changes, data)
+                    .then(() => {
+                        return this.apiSrv.batch(changes, '')
+                            .then((res) => {
+                                res.forEach((r) => results.push({success: true, record: r.ID}));
+                                return results;
+                            });
+                });
+            } else {
+                return Promise.resolve(results);
+            }
+
+            // const changes = this.apiSrv.changeList(changeData);
+            // if (changes) {
+            //     return this.apiSrv.batch(changes, '')
+            //         .then(() => {
+            //             return results;
+            //         });
+            // } else {
+            //     return results;
+            // }
+        });
+
+
+
     }
 
     updateRecord(originalData: any, updates: any): Promise<IRecordOperationResult[]> {
         const changeData = [];
+        let pSev: Promise<boolean> = Promise.resolve(true);
         const results: IRecordOperationResult[] = [];
         Object.keys(updates).forEach((key) => {
             if (updates[key]) {
                 switch (key) {
+                    case 'sev': // do nothing handle sev later
+                        const d = EosUtils.deepUpdate(originalData[key], updates[key]);
+                        pSev = this.presaveSevRoutine(d, originalData.rec, changeData, results);
+                        break;
                     case 'rec':
+                    case 'sev':
                     case 'PARE_LINK_Ref':
                         const data = EosUtils.deepUpdate(originalData[key], updates[key]);
                         changeData.push(data);
@@ -111,19 +138,21 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         });
 
         const record = EosUtils.deepUpdate(originalData.rec, updates.rec);
-        const changes = this.apiSrv.changeList(changeData);
-        if (changes.length) {
-            return this._appendCategoryOldChange(changes, updates)
-                .then(() => {
-                    return this.apiSrv.batch(changes, '')
-                        .then(() => {
-                            results.push({success: true, record: record});
-                            return results;
-                        });
-                });
-        } else {
-            return Promise.resolve(results);
-        }
+        return pSev.then((cont) => {
+            const changes = this.apiSrv.changeList(changeData);
+            if (changes.length) {
+                return this._appendCategoryOldChange(changes, updates)
+                    .then(() => {
+                        return this.apiSrv.batch(changes, '')
+                            .then(() => {
+                                results.push({success: true, record: record});
+                                return results;
+                            });
+                    });
+            } else {
+                return Promise.resolve(results);
+            }
+        });
     }
 
     markBooleanData(records: any[], fieldName: string, boolValue, cascade = false): Promise<any[]> {

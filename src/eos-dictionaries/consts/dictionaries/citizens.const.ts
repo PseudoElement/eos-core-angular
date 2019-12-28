@@ -144,7 +144,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     }, {
         key: 'NEW',
         title: 'Нов.',
-        type: 'boolean',
+        type: 'new',
     }, {
         key: 'N_PASPORT',
         title: 'Паспорт №',
@@ -214,6 +214,6 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         'ENCRYPT_FLAG', 'ID_CERTIFICATE', 'MAIL_FORMAT', 'SNILS', ],
     /** customize view fields */
     allVisibleFields: [ 'CITIZEN_CITY', 'DUE_REGION', 'CITIZEN_ADDR', 'ZIPCODE', 'INN', 'SNILS', 'PHONE', 'SEX',
-        'SERIES', 'N_PASPORT', 'GIVEN', 'E_MAIL', 'NOTE' ],
+        'SERIES', 'N_PASPORT', 'GIVEN', 'E_MAIL', 'NOTE', 'NEW' ],
 };
 /* tslint:enable:max-line-length */

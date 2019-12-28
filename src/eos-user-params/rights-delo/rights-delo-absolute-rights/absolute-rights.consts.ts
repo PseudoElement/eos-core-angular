@@ -177,7 +177,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 19
         key: '9',
-        label: 'Редактирование регистрационного номера РК',
+        label: 'Редактирование рег. данных РК',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
@@ -230,7 +230,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
-    {
+    /* {
         controlType: E_FIELD_TYPE.boolean, // 25
         key: '30',
         label: 'Удаление реестров',
@@ -238,7 +238,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
-    },
+    }, */
     {
         controlType: E_FIELD_TYPE.boolean, // 26
         key: '19',

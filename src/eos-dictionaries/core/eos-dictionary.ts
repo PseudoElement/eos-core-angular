@@ -710,14 +710,25 @@ export class EosDictionary {
                             node.relatedLoaded = true;
                             return node;
                         });
+                case 'link':
+                    return Promise.all([
+                        this.descriptor.getRelated(node.data.rec, orgDUE),
+                        this.descriptor.getRelatedSev(node.data.rec)
+                    ]).then(([related, sev]) => {
+                        node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]}, { sev: sev });
+                        node.relatedLoaded = true;
+                        return node;
+                    });
+
                 default:
                     return this.descriptor.getRelated(node.data.rec)
                         .then((related) => {
-                            if (node.dictionaryId === 'link') {
-                                node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]});
-                            } else {
+                            // if (node.dictionaryId === 'link') {
+
+                            //     node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]});
+                            // } else {
                                 node.data = Object.assign(node.data, related);
-                            }
+                            // }
                             node.relatedLoaded = true;
                             return node;
                         });

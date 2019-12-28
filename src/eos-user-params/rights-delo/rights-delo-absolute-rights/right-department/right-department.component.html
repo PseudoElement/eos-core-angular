@@ -19,7 +19,7 @@
                 placement="bottom"
                 triggers="hover"
                 containerClass="tooltip-info"
-                [disabled]="!selectedDep || !selectNoAllDep()"
+                [disabled]="!selectedDep || !selectNoAllDep() || returnDelTech()"
                 (click)="itemTooltip.hide(); DeleteDep()"
             >
                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>
@@ -40,7 +40,7 @@
         <div *ngIf="getAllDep">
             <label class="checkbox" >
                 <input type="checkbox"
-                [disabled]="!editMode || selectedNode.control.disabled"
+                [disabled]="(!editMode || selectedNode.control.disabled) || returnOgrani()"
                 [checked]="checkFlag"
                 hide
                 (change)="checkForAll()">
