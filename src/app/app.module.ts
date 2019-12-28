@@ -54,7 +54,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
-import { SopsHelper } from 'eos-dictionaries/helpers/sops.helper';
+import { StaticHelper } from './app.static';
 /* end guards */
 
 @NgModule({
@@ -119,9 +119,10 @@ import { SopsHelper } from 'eos-dictionaries/helpers/sops.helper';
     ],
     bootstrap: [AppComponent],
 })
+
 export class AppModule {
     constructor(private injector: Injector) {
-        SopsHelper.InjectorInstance = this.injector;
+        StaticHelper.setInjectorInstance(this.injector);
     }
 }
 

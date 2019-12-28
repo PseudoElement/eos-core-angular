@@ -298,7 +298,15 @@ export class CounterNpEditComponent {
             return Promise.resolve(true);
         }
 
-        return SopsHelper.sopExistsDocRcByOrderNum(this._node['DUE'], this.editValueNum, this.editValueYear).then( docsexist => {
+        let check = Promise.resolve(false);
+
+        if (this._decl.type === E_COUNTER_TYPE.counterDocgroup) {
+            check = SopsHelper.sopExistsDocRcByOrderNum(this._node['DUE'], this.editValueNum, this.editValueYear);
+        } else if (this._decl.type === E_COUNTER_TYPE.counterDocgroupRKPD) {
+            check = SopsHelper.sopExistsPrjRcByOrderNum(this._node['DUE'], this.editValueNum, this.editValueYear);
+        }
+
+        return check.then( docsexist => {
             if (docsexist) {
                 return this._confirmSrv.confirm2(CONFIRM_NUMCREATION_CANT)
                     .then(() => {
@@ -308,47 +316,8 @@ export class CounterNpEditComponent {
                 return true;
             }
         });
-
-        // const old_value = this._getNodeValue(this.editValueYear);
-        // if (old_value) {
-        //     if (Number(this.editValueNum) <= Number (old_value)) {
-        //         return this._confirmSrv.confirm2(CONFIRM_NUMCREATION_CANT)
-        //             .then(() => {
-        //                 return false;
-        //             });
-        //     }
-        // }
-
-        // return Promise.resolve(true);
     }
 
-    // _minNumberValidation(due, order_num, year): Promise<boolean> {
-
-
-    //     // Сопы выдают 1, когда что-то есть, начиная с данного номера, для данного года, для данной группы документов (включая дочерние без других нумераторов), 0 - когда ничего нет
-    //     // ExistsDocRcByOrderNum
-    //     // ExistsPrjRcByOrderNum
-    //     // new KeyValuePair<string, Type>("due", typeof(string)),
-    //     // new KeyValuePair<string, Type>("order_num", typeof(int)),
-    //     // new KeyValuePair<string, Type>("year", typeof(int)));
-    //     // const query = { args: { due: due, order_num: order_num, year: year } };
-    //     // const req = { ValidateUserList4DefaultValues: query};
-    //     // this._apiSrv.read(req).then((response) => {
-    //     //         if (String(response) === 'ok') {
-
-    //     //         } else {
-    //     //         const opt = dict.options.find((dopt) => dopt.value === el.value);
-    //     //             if (opt) {
-    //     //                 if (String(response) === 'LIST_IS_EMPTY') {
-    //     //                     opt.isEmpty = true;
-    //     //                 } else if (String(response) === 'LIST_CONTAINS_DELETED') {
-    //     //                     opt.hasDeleted = true;
-    //     //                 }
-    //     //             }
-    //     //         }
-    //     //     })
-    //     // );
-    // }
     public getNodeTitle() {
         return this._node[NODE_LABEL_NAME];
     }
