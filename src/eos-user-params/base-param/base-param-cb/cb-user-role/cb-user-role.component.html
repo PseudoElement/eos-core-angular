@@ -2,7 +2,7 @@
     <span class="pull-left title xl-font">Настройка ролей</span> 
     <div class="pull-right srch-btns"> 
         <button class="btn btn-primary s-font upper" (click)="closeModal.emit()">Закрыть</button>
-        <button class="btn btn-primary-full s-font upper">Сохранить</button>
+        <button class="btn btn-primary-full s-font upper" (click)="save()">Сохранить</button>
     </div>
 </div>
 <div class="modal-body-cb">
@@ -36,20 +36,24 @@
         </div>
         <div class="col-r">
                 <span class="long-title xl-font">Назначение роли:</span>
-                    <div class="title-dir-role">
-                        <div class="modal-block-cb-r">
-                            <span class="inst-role-header"><b>Роль</b></span>
-                            <div class="info-block-cb-r" [dragula]='"bag-one"'  [dragulaModel]="currentFields" id="current">
-                                <div class="item-cb" *ngFor="let item of currentFields" (click)="select(item, 2)" [ngClass]="{'highlighted': item === selectedCurrRole}">
-                                    <span class="text-cb">{{item}}</span>
+                    <div class="modal-block-cb-r">
+                        <div class="title-dir-role">
+                            <span><b>Роль</b></span>
+                            <span><b>ДЛ руководителя</b></span>
+                            <span><b>Помощники руководителя</b></span>
+                        </div>
+                        <div class="info-block-cb-r" [dragula]='"bag-one"'  [dragulaModel]="currentFields" id="current">
+                            <div class="item-cb-r" id="cur-item" *ngFor="let item of currentFields" (click)="select(item, 2)" [ngClass]="{'highlighted': item === selectedCurrRole}">
+                                <div class="text-cb-r">
+                                    <span>{{item?.role}}</span>
+                                </div>
+                                <div class="text-cb-r">
+                                    <span>{{item?.dueName}}</span>
+                                </div>
+                                <div class="text-cb-r">
+                                    <span>{{item?.asistMan}}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-block-cb-r">
-                            <span class="inst-role-header"><b>ДЛ руководителя</b></span>
-                        </div>
-                        <div class="modal-block-cb-r">
-                            <span class="inst-role-header"><b>Помощники руководителя</b></span>
                         </div>
                     </div>
                 </div>

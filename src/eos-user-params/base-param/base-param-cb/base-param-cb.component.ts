@@ -81,9 +81,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
-    // get getCbRole() {
-    //     return this.editMode && !this.singleOwnerCab && (this.gt()['delo_web_delo'] || this.gt()['delo_web']) && !this.curentUser.isTechUser;
-    // }
+    get getCbRole() {
+        return this.editMode && !this.singleOwnerCab && (this.gt()['delo_web_delo'] || this.gt()['delo_web']) && !this.curentUser.isTechUser;
+    }
     constructor(
         private _router: Router,
         private _msgSrv: EosMessageService,
@@ -684,6 +684,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     closeSerts() {
         this.modalRef.hide();
     }
+
+    saveCbRoles(evnt: any) {
+        console.log(evnt);
+    }
+
     private patchVal() {
         ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
