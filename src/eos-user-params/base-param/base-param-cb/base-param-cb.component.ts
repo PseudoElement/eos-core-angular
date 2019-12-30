@@ -346,17 +346,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.uncheckedAvSystems()) {
             return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
                 if (res) {
-                    return this.saveAfterSystems(newD, accessStr, id, query);
+                    return this.saveAfterSystems(accessStr, id, query);
                 } else {
                     return;
                 }
             });
         }
-        return this.saveAfterSystems(newD, accessStr, id, query);
+        return this.saveAfterSystems(accessStr, id, query);
     }
 
-    saveAfterSystems(newD: any, accessStr: string, id: number, query: any): Promise<any> {
-        this.isLoading = true;
+    saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
         if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
                 if (cab) {
@@ -366,20 +365,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
             }).then(data => {
                 if (!data) {
-                    this.clearMap();
                     this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
-                    this.isLoading = false;
                     return;
                 } else {
-                    return this.saveData(newD, accessStr, id, query);
+                    return this.saveData(accessStr, id, query);
                 }
             });
         } else {
-            return this.saveData(newD, accessStr, id, query);
+            return this.saveData(accessStr, id, query);
         }
     }
 
-    saveData(newD: any, accessStr: string, id: number, query: any): Promise<any> {
+    saveData(accessStr: string, id: number, query: any): Promise<any> {
+        this.isLoading = true;
         const pass = this._newDataformControls.get('pass');
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
