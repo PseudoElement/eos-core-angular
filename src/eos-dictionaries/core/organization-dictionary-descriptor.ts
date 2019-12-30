@@ -131,6 +131,23 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             return result;
         });
     }
+    public updateUncheckCitizen(nodes: EosDictionaryNode[]): Promise<any> {
+        const change = [];
+        nodes.forEach(node => {
+            if (node.data.rec.NEW_RECORD === 1) {
+                change.push({
+                    method: 'MERGE',
+                    requestUri: `ORGANIZ_CL('${node.id}')`,
+                    data: {
+                        NEW_RECORD: 0
+                    }});
+                }
+        });
+        if (change.length) {
+            return this.apiSrv.batch(change, '');
+        }
+        return Promise.resolve();
+    }
 
     /**
      * мы ориентировались на то что такого класса логику пишем на клиенте.

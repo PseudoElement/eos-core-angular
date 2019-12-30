@@ -62,7 +62,7 @@ export class NodeActionsComponent implements OnDestroy {
         return this._visibleList.filter(node => node.isSliced);
     }
     get checkNewCitizen(): EosDictionaryNode[] {
-        return this._markedNodes.filter(node => node.data.rec.NEW);
+        return this._markedNodes.filter(node => node.data.rec.NEW || node.data.rec.NEW_RECORD);
     }
 
     private ngUnsubscribe: Subject<any> = new Subject();
