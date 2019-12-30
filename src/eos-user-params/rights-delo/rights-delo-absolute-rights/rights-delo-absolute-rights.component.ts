@@ -574,7 +574,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         } else {
             const mas_rigth = this.curentUser.TECH_RIGHTS.split('');
             mas_rigth[21] = '0';
-            const pos_in = mas_rigth.join().indexOf('1');
+            const pos_in = mas_rigth.join('').indexOf('1');
             if (pos_in === -1 || pos_in >= 37) {
                 this.returnElemListRight('0').control.patchValue(false);
                 this.returnElemListRight('0').value = 0;
