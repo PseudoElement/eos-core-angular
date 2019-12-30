@@ -58,6 +58,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     dueDepName: string = '';
     singleOwnerCab: boolean = true;
     public isShell: boolean = false;
+    public criptoView: boolean = true;
     public userSertsDB: USER_CERTIFICATE;
     public errorPass: boolean = false;
     public checkPass: string = '';
@@ -105,6 +106,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
+                this._userParamSrv.curentUser.USER_PARMS_List.forEach( elem => {
+                    if (elem.PARM_NAME === 'CRYPTO_ACTIVEX' && elem.PARM_VALUE !== 'EosUtils.EosCryptoSvc') {
+                        this.criptoView = false;
+                    }
+                });
                 this._userParamSrv.getPasswordСonditions();
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
