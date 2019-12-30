@@ -310,11 +310,11 @@ export const OTHER_USER_SHABLONY: IBaseUsers = {
             type: 'string',
             title: ''
         },
-        {
+        /* {
             key: 'Вставка файла',
             type: 'string',
             title: ''
-        },
+        }, */
         {
             key: 'Выгрузка РКПД',
             type: 'string',
@@ -330,11 +330,11 @@ export const OTHER_USER_SHABLONY: IBaseUsers = {
             type: 'string',
             title: ''
         },
-        {
+        /* {
             key: 'Журнал ознакомления',
             type: 'string',
             title: ''
-        },
+        }, */
         {
             key: 'Запуск печатных форм',
             type: 'string',
@@ -355,11 +355,11 @@ export const OTHER_USER_SHABLONY: IBaseUsers = {
             type: 'string',
             title: ''
         },
-        {
+        /* {
             key: 'Недоступные РК',
             type: 'string',
             title: ''
-        },
+        }, */
 
         {
             key: 'Опись дел',
@@ -441,7 +441,7 @@ export const OTHER_USER_SHABLONY: IBaseUsers = {
             type: 'string',
             title: ''
         },
-        {
+        /* {
             key: 'Сводный журнал',
             type: 'string',
             title: ''
@@ -455,7 +455,7 @@ export const OTHER_USER_SHABLONY: IBaseUsers = {
             key: 'Синхронизация СЭВ',
             type: 'string',
             title: ''
-        },
+        }, */
         {
             key: 'Сканирование',
             type: 'string',
