@@ -1043,7 +1043,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const node = this._dictSrv.listNode;
         if (node) {
             this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
-                class: 'prj-default-values-modal moodal-lg'});
+                class: 'prj-default-values-modal moodal-lg', backdrop: true, ignoreBackdropClick: true});
             const content = {
                 nodeDescription: node.title,
                 isnNode: node.data.rec['ISN_NODE'],
@@ -1061,7 +1061,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             if (node.data.PROTECTED) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
             } else {
-                this.modalWindow = this._modalSrv.show(AdvCardRKEditComponent, {class: 'adv-card-rk-modal modal-lg'});
+                this.modalWindow = this._modalSrv.show(AdvCardRKEditComponent, {class: 'adv-card-rk-modal modal-lg', backdrop: true, ignoreBackdropClick: true });
                 this.modalWindow.content.initByNodeData(node.data.rec);
             }
         } else {
