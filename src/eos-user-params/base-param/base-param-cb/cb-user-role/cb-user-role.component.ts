@@ -1,14 +1,15 @@
-import { Component, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, Output, OnInit, OnDestroy, EventEmitter, Input } from '@angular/core';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE_ROLE } from 'eos-dictionaries/consts/confirm.consts';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { PipRX, USER_CL } from 'eos-rest';
 import { IRoleCB } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
+import { DEPARTMENT, PipRX } from 'eos-rest';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 @Component({
     selector: 'eos-cb-user-role',
     templateUrl: 'cb-user-role.component.html',
@@ -17,58 +18,29 @@ import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 export class CbUserRoleComponent implements OnInit, OnDestroy {
     @Output() closeModal: EventEmitter<any> = new EventEmitter();
     @Output() saveCbRoles: EventEmitter<any> = new EventEmitter();
+    @Input() currentFields: IRoleCB[];
+    @Input() asistMansStr: string;
+    startRolesCb: IRoleCB[];
     basicFields: string[] = [
         'Председатель', 'Заместитель Председателя', 'Директор департамента и заместитель директора департамента', 'Помощник Председателя',
         'Помощник заместителя предстедателя и директоров', 'Исполнитель'
     ];
-    currentFields: IRoleCB[] = [];
     fixedFields: string[] = [];
     selectedBasicRole: string;
     selectedCurrRole: IRoleCB;
     selectedFixedItem: string;
     curPreDelete: IRoleCB;
-    asistMansStr: string = '';
+    rightsDueRole: boolean = false;
     private _subscriptionDrop: Subscription;
     private _subscriptionDrag: Subscription;
     constructor(private _dragulaService: DragulaService, private _confirmSrv: ConfirmWindowService,
-        private _waitClassifSrv: WaitClassifService, private _userParamSrv: UserParamsService, private _pipRx: PipRX) {
+        private _waitClassifSrv: WaitClassifService, private _pipRx: PipRX, private _msgSrv: EosMessageService, private _userParamSrv: UserParamsService) {
     }
 
     ngOnInit() {
-        this.init();
+        this._fixInitRoles();
         this._subscription();
-    }
-
-    init() {
-        this._pipRx.read({CBR_USER_ROLE: {
-            criteries: {DUE_PERSON: this._userParamSrv.curentUser.DUE_DEP}
-        }}).then((data: any) => {
-             const asistMansData = data.filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
-            if (asistMansData.length > 0) {
-                this._getUserCl(asistMansData).then((users: USER_CL[]) => {
-                    users.forEach(user => this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`);
-                    const curRoles = data.filter(el => el.ISN_USER === this._userParamSrv.curentUser.ISN_LCLASSIF);
-                    this.parseData(curRoles);
-                    this._fixInitRoles();
-                });
-            } else {
-                this.parseData(data);
-                this._fixInitRoles();
-            }
-        });
-    }
-
-    parseData(data: any[]) {
-        data.forEach(el => {
-            if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
-                this.currentFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: this._userParamSrv.curentUser.DUE_DEP_NAME,
-                due: this._userParamSrv.curentUser.DUE_DEP});
-            } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
-                this.currentFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr});
-            } else {
-                this.currentFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1]});
-            }
-        });
+        this.startRolesCb = [...this.currentFields];
     }
 
     ngOnDestroy() {
@@ -189,8 +161,20 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     }
 
     save() {
-         this.saveCbRoles.emit(this.currentFields);
+         this.saveCbRoles.emit([this.currentFields, this.rightsDueRole]);
          this.closeModal.emit();
+    }
+
+    close() {
+        this.currentFields = this.startRolesCb;
+        this.saveCbRoles.emit([this.currentFields, this.rightsDueRole]);
+        this.closeModal.emit();
+    }
+
+    changeDueRole() {
+        if (this.selectedCurrRole && this.selectedCurrRole.hasOwnProperty('due')) {
+            this._showDepRole(this.selectedCurrRole.role, true);
+        }
     }
 
     private _addRole(role: string) {
@@ -218,7 +202,6 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     }
 
     private _fixedRoles(role: string, typeMove: string , init?: boolean): void {
-        const checkField = this.currentFields.filter(field => field.role === 'Исполнитель' || field.role === 'Директор департамента и заместитель директора департамент');
         if (typeMove === 'add') {
             switch (role) {
                 case 'Председатель':
@@ -248,19 +231,11 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     }
                     break;
                 case 'Помощник Председателя':
-                    if (checkField.length === 0) {
-                        this.fixedFields = !this.fixedFields.length ? this.basicFields.filter(field => field === 'Председатель' || field === 'Заместитель Председателя') : this.fixedFields;
-                        this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
-                    }
                     if (!init) {
                         this._showDepRole(role);
                     }
                     break;
                 case 'Помощник заместителя предстедателя и директоров':
-                    if (checkField.length === 0) {
-                        this.fixedFields = !this.fixedFields.length ? this.basicFields.filter(field => field === 'Председатель' || field === 'Заместитель Председателя') : this.fixedFields;
-                        this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
-                    }
                     if (!init) {
                         this._showDepRole(role);
                     }
@@ -338,29 +313,72 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
         });
     }
 
-    private _showDepRole(role: string): Promise<any> {
+    private _showDepRole(role: string, changeRole?: boolean): Promise<any> {
         return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
                 }
-                return this._userParamSrv.getDepartmentFromUser([data]);
-            })
-            .then((depD: any) => {
-                this.currentFields.push({
-                    role: role,
-                    due: depD[0].DUE,
-                    dueName: depD[0].SURNAME
-                });
+                if (data === this._userParamSrv.curentUser.DUE_DEP) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение:',
+                        msg: 'Невозможно добавить выбранное ДЛ роль: ДЛ совпадает с ассоциированным ДЛ пользователя',
+                        dismissOnTimeout: 6000,
+                    });
+                    return;
+                }
+                return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: {
+                    criteries: {
+                        DUE: data,
+                        ISN_CABINET: 'isnotnull'
+                    }
+                }});
+            }).then((depD: any) => {
+                if (depD.length) {
+                    return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: {
+                        criteries: {
+                            ISN_CABINET: depD[0].ISN_CABINET
+                        }
+                    }}).then(dep => {
+                        if (dep.length === 1) {
+                            if (changeRole) {
+                                const indxRole = this.currentFields.indexOf(this.selectedCurrRole);
+                                this.selectedCurrRole.due = dep[0].DUE;
+                                this.selectedCurrRole.dueName = dep[0].SURNAME;
+                                this.currentFields.splice(indxRole, 1, this.selectedCurrRole);
+                            } else {
+                                const checkField = this.currentFields.filter(field => field.role === 'Исполнитель' || field.role === 'Директор департамента и заместитель директора департамент');
+                                if (checkField.length === 0) {
+                                    this.fixedFields = !this.fixedFields.length ? this.basicFields.filter(field => field === 'Председатель' || field === 'Заместитель Председателя') : this.fixedFields;
+                                    this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
+                                }
+                                this.currentFields.push({
+                                    role: role,
+                                    due: dep[0].DUE,
+                                    dueName: dep[0].SURNAME
+                                });
+                            }
+                        } else {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение:',
+                                msg: 'Невозможно добавить выбранное ДЛ роль: ДЛ не явлется единственным владельцем кабинета',
+                                dismissOnTimeout: 6000,
+                            });
+                        }
+                    });
+                } else {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение:',
+                        msg: 'Невозможно добавить выбранное ДЛ роль: ДЛ не явлется единственным владельцем кабинета',
+                        dismissOnTimeout: 6000,
+                    });
+                }
             }).catch((e) => {
                 console.log('Ошибка', e);
             });
     }
 
-    private _getUserCl(isn): Promise<any> {
-        const queryUser = {
-          USER_CL: isn
-        };
-        return this._pipRx.read<USER_CL>(queryUser);
-    }
 }

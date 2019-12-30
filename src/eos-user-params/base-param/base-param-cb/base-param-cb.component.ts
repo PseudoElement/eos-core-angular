@@ -11,7 +11,7 @@ import { DEPARTMENT, USER_CERTIFICATE, USER_CL } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS_CB, BASE_PARAM_ACCESS_INPUT, BASE_PARAM_CONTROL_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IInputParamControl, IParamUserCl, IRoleCB } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from '../shared/base-param-curent.descriptor';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
@@ -26,6 +26,7 @@ import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/conf
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { CONFIRM_AVSYSTEMS_UNCHECKED } from 'eos-dictionaries/consts/confirm.consts';
+import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -57,6 +58,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     selfLink = null;
     dueDepName: string = '';
     singleOwnerCab: boolean = true;
+    currentCbFields: IRoleCB[] = [];
+    asistMansStr: string = '';
+    startRolesCb: IRoleCB[];
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public errorPass: boolean = false;
@@ -231,15 +235,48 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     getCabinetOwnUser(): void {
-        this._rtUserSel.getUserCabinets(this.curentUser.ISN_LCLASSIF).then(cab => {
-            if (cab.length > 0) {
-                return this.apiSrvRx.read({
-                    DEPARTMENT: {criteries : {ISN_CABINET: cab[0].ISN_CABINET}}
-                }).then((allCab: any) => {
-                    if (allCab.length === 1) {
-                        this.singleOwnerCab = false;
-                    }
+        this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
+            criteries: {
+                DUE: this.curentUser.DUE_DEP,
+                ISN_CABINET: 'isnotnull'
+            }
+        }}).then((depD: any) => {
+            if (depD.length === 1) {
+                this.singleOwnerCab = false;
+                this.getUserCbRoles();
+            }
+        });
+    }
+
+    getUserCbRoles() {
+        this.apiSrvRx.read({CBR_USER_ROLE: {
+            criteries: {DUE_PERSON: this._userParamSrv.curentUser.DUE_DEP}
+        }}).then((data: any) => {
+             const asistMansData = data.filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
+            if (asistMansData.length > 0) {
+                this._getUserCl(asistMansData).then((users: USER_CL[]) => {
+                    const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
+                    sortUsers.forEach(user => this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`);
+                    const curRoles = data.filter(el => el.ISN_USER === this._userParamSrv.curentUser.ISN_LCLASSIF);
+                    this.parseData(curRoles);
                 });
+            } else {
+                this.parseData(data);
+            }
+        //    this.patchCbRoles();
+            this.startRolesCb = [... this.currentCbFields];
+        });
+    }
+
+    parseData(data: any[]) {
+        data.forEach(el => {
+            if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
+                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: this._userParamSrv.curentUser.DUE_DEP_NAME,
+                due: this._userParamSrv.curentUser.DUE_DEP});
+            } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
+                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr});
+            } else {
+                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1]});
             }
         });
     }
@@ -685,8 +722,48 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
 
-    saveCbRoles(evnt: any) {
-        console.log(evnt);
+    saveCbRoles(evnt: [IRoleCB[], boolean]) {
+        if (this.currentCbFields !== evnt[0]) {
+            this.currentCbFields = evnt[0];
+            // if (this.currentCbFields.length) {
+            //     this.patchCbRoles();
+            // } else {
+            //     this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+            //     this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+            //     this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
+            // }
+        }
+    //    if (evnt[1]) {}
+        // const query = [{
+        //     method: 'DELETE',
+        //     requestUri: `CBR_USER_ROLE(30)`,
+        //     data: {
+        //         WEIGHT: 2,
+        //         DUE_PERSON: '0.2FI18.2FI19.',
+        //         KIND_ROLE: 4,
+        //         ISN_USER: 4082391,
+        //         ISN_USER_ROLE: 30
+        //     }
+        // }];
+        // this.apiSrvRx.batch(query, '').catch(error => {
+        //     this._errorSrv.errorHandler(error);
+        // });
+    }
+
+    patchCbRoles() {
+        let str;
+        if (this.currentCbFields.length === 1) {
+            str = this.currentCbFields[0].role;
+        } else {
+            str = this.currentCbFields[0].role + ' ...';
+        }
+        this.controlField[3].options = [{
+            title: str,
+            value: str
+        }];
+        this.controlField[3].value = str;
+        this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+        this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
     }
 
     private patchVal() {
@@ -856,6 +933,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 return Promise.resolve(null);
             }
         });
+    }
+
+    private _getUserCl(isn: number[]): Promise<any> {
+        const queryUser = {
+          USER_CL: isn,
+        };
+        return this.apiSrvRx.read<USER_CL>(queryUser);
     }
 
 }

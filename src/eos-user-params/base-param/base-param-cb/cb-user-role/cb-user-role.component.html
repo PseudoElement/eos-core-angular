@@ -1,7 +1,7 @@
 <div class="full-search-top usual-border">
     <span class="pull-left title xl-font">Настройка ролей</span> 
     <div class="pull-right srch-btns"> 
-        <button class="btn btn-primary s-font upper" (click)="closeModal.emit()">Закрыть</button>
+        <button class="btn btn-primary s-font upper" (click)="close()">Закрыть</button>
         <button class="btn btn-primary-full s-font upper" (click)="save()">Сохранить</button>
     </div>
 </div>
@@ -23,6 +23,13 @@
                     </div>
                 </div>
             </div>
+            <div class="checkbox-due-top">
+                <label class="checkbox">
+                    <input type="checkbox" [checked]="rightsDueRole" (change)="rightsDueRole = !rightsDueRole">
+                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    Добавлять права за ДЛ роли
+                </label>
+            </div>
         </div>
         <div class="driver-r">
             <span>
@@ -35,27 +42,30 @@
             </span>
         </div>
         <div class="col-r">
-                <span class="long-title xl-font">Назначение роли:</span>
-                    <div class="modal-block-cb-r">
-                        <div class="title-dir-role">
-                            <span><b>Роль</b></span>
-                            <span><b>ДЛ руководителя</b></span>
-                            <span><b>Помощники руководителя</b></span>
+            <span class="long-title xl-font">Назначение роли:</span>
+            <div class="modal-block-cb-r">
+                <div class="title-dir-role">
+                    <span><b>Роль</b></span>
+                    <span><b>ДЛ руководителя</b></span>
+                    <span><b>Помощники руководителя</b></span>
+                </div>
+                <div class="info-block-cb-r" [dragula]='"bag-one"'  [dragulaModel]="currentFields" id="current">
+                    <div class="item-cb-r" id="cur-item" *ngFor="let item of currentFields" (click)="select(item, 2)" [ngClass]="{'highlighted': item === selectedCurrRole}">
+                        <div class="text-cb-r">
+                            <span>{{item?.role}}</span>
                         </div>
-                        <div class="info-block-cb-r" [dragula]='"bag-one"'  [dragulaModel]="currentFields" id="current">
-                            <div class="item-cb-r" id="cur-item" *ngFor="let item of currentFields" (click)="select(item, 2)" [ngClass]="{'highlighted': item === selectedCurrRole}">
-                                <div class="text-cb-r">
-                                    <span>{{item?.role}}</span>
-                                </div>
-                                <div class="text-cb-r">
-                                    <span>{{item?.dueName}}</span>
-                                </div>
-                                <div class="text-cb-r">
-                                    <span>{{item?.asistMan}}</span>
-                                </div>
-                            </div>
+                        <div class="text-cb-r">
+                            <span>{{item?.dueName}}</span>
+                        </div>
+                        <div class="text-cb-r">
+                            <span>{{item?.asistMan}}</span>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="change-due">
+                <span class="eos-icon eos-icon-DeepUser-Blue icon-due" (click)="changeDueRole()"></span><span>Изменить должностное лицо</span>
+            </div>
+        </div>
     </div>
 </div>

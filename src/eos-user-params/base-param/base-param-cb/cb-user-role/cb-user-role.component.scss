@@ -31,6 +31,9 @@
             }
         }
     }
+    .checkbox-due-top {
+        margin-top: 10px;
+    }
 }
 
 .col-r {
@@ -67,6 +70,15 @@
                     background-color: #e3f2fd;
                 }
             }
+        }
+    }
+    .change-due {
+        display: flex;
+        margin-top: 10px;
+        align-items: center;
+        .icon-due {
+            cursor: pointer;
+            margin-right: 15px;
         }
     }
 }

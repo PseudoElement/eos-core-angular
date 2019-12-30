@@ -125,6 +125,6 @@
     </ng-template>
 
     <ng-template #cbRole>
-        <eos-cb-user-role (closeModal)="closeSerts()" (saveCbRoles)="saveCbRoles($event)"></eos-cb-user-role>
+        <eos-cb-user-role (closeModal)="closeSerts()" (saveCbRoles)="saveCbRoles($event)" [currentFields]="currentCbFields" [asistMansStr]="asistMansStr"></eos-cb-user-role>
     </ng-template>
     
