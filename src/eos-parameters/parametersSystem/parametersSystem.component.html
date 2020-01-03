@@ -80,6 +80,14 @@
                 [btnError] = "disableSave"
             ></eos-param-logging>
         </ng-container>
+        <ng-container *ngSwitchCase="'now-organiz'">
+            <eos-parameters-organiz-now
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-parameters-organiz-now>
+        </ng-container>
     </ng-container>
 </div>
 
