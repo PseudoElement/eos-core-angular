@@ -105,7 +105,7 @@
             <div class="access-syst-part">
                 <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
                 <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
-                <span (click)="getTemplateUser(template, 'serts')" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+                <span *ngIf="criptoView" (click)="getTemplateUser(template, 'serts')" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
                 placement="bottom" containerClass="tooltip-info"></span>
             </div>
           </div>
