@@ -9,12 +9,12 @@ import {
     SEARCH_MODES,
     IFieldView,
 } from 'eos-dictionaries/interfaces';
-import {AbstractDictionaryDescriptor} from './abstract-dictionary-descriptor';
-import {EosDictionaryNode} from './eos-dictionary-node';
+import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
+import { EosDictionaryNode } from './eos-dictionary-node';
 
-import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
-import {OrganizationDictionaryDescriptor} from 'eos-dictionaries/core/organization-dictionary-descriptor';
-import {EosUtils} from 'eos-common/core/utils';
+import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
+import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
+import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -88,8 +88,8 @@ export class EosDictionary {
 
     isTreeType(): any {
         return this.descriptor.dictionaryType === E_DICT_TYPE.custom ||
-               this.descriptor.dictionaryType === E_DICT_TYPE.tree ||
-               this.descriptor.dictionaryType === E_DICT_TYPE.department;
+            this.descriptor.dictionaryType === E_DICT_TYPE.tree ||
+            this.descriptor.dictionaryType === E_DICT_TYPE.department;
     }
 
 
@@ -352,7 +352,7 @@ export class EosDictionary {
      */
     deleteMarked(): Promise<IRecordOperationResult[]> {
         const records = this._getMarkedRecords();
-        return this.descriptor.deleteRecords(records).then (r => {
+        return this.descriptor.deleteRecords(records).then(r => {
             this._nodes.forEach((node) => {
                 if (node.isMarked) {
                     node.delete();
@@ -447,7 +447,7 @@ export class EosDictionary {
 
                         if (related && related[field.dictionaryId]) {
                             related[field.dictionaryId].forEach((rel) => {
-                                const el: ISelectOption = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
+                                const el: ISelectOption = { value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
                                 if (type_fk === 's') {
                                     el.value = String(el.value);
                                 }
@@ -466,7 +466,7 @@ export class EosDictionary {
         // const fields = this.descriptor.record.getFieldSet(E_FIELD_SET.list);
         const infoFields = this.descriptor.record.getInfoView({});
         const updatefields = fields.concat(customFields).concat(infoFields);
-        return this.loadRelatedFieldsOptions(updatefields, nodes, false).then (() => {
+        return this.loadRelatedFieldsOptions(updatefields, nodes, false).then(() => {
             return fields;
         });
 
@@ -534,7 +534,7 @@ export class EosDictionary {
             //     }
             // });
 
-            this.nodes.forEach( n => {
+            this.nodes.forEach(n => {
                 this.nodeChildResort(n, order);
             });
         }
@@ -543,7 +543,7 @@ export class EosDictionary {
     nodeChildResort(n: EosDictionaryNode, orderBy?: IOrderBy): any {
         if (n.children && n.children.length) {
             n.children = this.orderNodesByField(n.children, orderBy);
-            n.children.forEach( c => this.nodeChildResort(c));
+            n.children.forEach(c => this.nodeChildResort(c));
         }
     }
 
@@ -680,6 +680,11 @@ export class EosDictionary {
                 }
                 break;
             }
+            case E_DICT_TYPE.linear:
+                if (this.id === 'citizens') {
+                    this.descriptor.extendCritery(critery, params, selectedNode);
+                }
+                break;
             case E_DICT_TYPE.custom: {
                 this.descriptor.extendCritery(critery, params, selectedNode);
                 break;
@@ -715,7 +720,7 @@ export class EosDictionary {
                         this.descriptor.getRelated(node.data.rec, orgDUE),
                         this.descriptor.getRelatedSev(node.data.rec)
                     ]).then(([related, sev]) => {
-                        node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]}, { sev: sev });
+                        node.data = Object.assign(node.data, { PARE_LINK_Ref: related['PARE_LINK_Ref'][0] }, { sev: sev });
                         node.relatedLoaded = true;
                         return node;
                     });
@@ -727,7 +732,7 @@ export class EosDictionary {
 
                             //     node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]});
                             // } else {
-                                node.data = Object.assign(node.data, related);
+                            node.data = Object.assign(node.data, related);
                             // }
                             node.relatedLoaded = true;
                             return node;

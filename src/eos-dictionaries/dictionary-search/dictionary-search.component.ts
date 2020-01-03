@@ -55,7 +55,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     constructor(
         private _dictSrv: EosDictService,
         private _classif: WaitClassifService
-        ) {
+    ) {
     }
 
     ngOnChanges () {
@@ -126,6 +126,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     private clearModel(modelName: string) {
         this.mode = 0;
         this.settings.opts.deleted = false;
+        this.settings.opts.onlyNew = false;
         const model = this.searchData[modelName];
         if (model) {
             Object.keys(model).forEach((prop) => model[prop] = null);
@@ -197,7 +198,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 }).then(data => {
                     return { data, isnNode };
                 });
-             }
+            }
         }).catch((e) => {
             return { data: [], isnNode: null };
         });

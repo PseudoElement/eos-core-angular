@@ -176,31 +176,18 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         type: 'string',
         length: 12,
     },
+    {
+        key: 'ISN_REGION',
+        title: 'ISN_Регион',
+        type: 'dictionary',
+            dictionaryId: 'REGION_CL',
+            dictionaryLink: {
+                pk: 'ISN_NODE',
+                fk: 'ISN_REGION',
+                label: 'CLASSIF_NAME',
+            },
+    },
 
-
-
-
-
-
-    // {
-    //     key: 'ISN_REGION',
-    //     title: 'ISN_Регион',
-    //     type: 'dictionary',
-    //         dictionaryId: 'REGION_CL',
-    //         dictionaryLink: {
-    //             pk: 'ISN_NODE',
-    //             fk: 'ISN_REGION',
-    //             label: 'CLASSIF_NAME',
-    //         },
-    //     options: [],
-    // },
-
-    // {
-    //     key: 'REGION_NAME',
-    //     title: 'Регион',
-    //     type: 'string',
-    //     length: 255,
-    // },
 
     ]),
     treeFields: ['CITIZEN_SURNAME'],
