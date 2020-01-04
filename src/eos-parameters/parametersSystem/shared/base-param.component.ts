@@ -13,11 +13,13 @@ import { IBaseParameters } from './interfaces/parameters.interfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { WaitClassifService } from 'app/services/waitClassif.service';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
+    _waitClassifSrv: WaitClassifService;
     constParam: IBaseParameters;
     paramApiSrv: ParamApiSrv;
     dataSrv: EosDataConvertService;
@@ -47,6 +49,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
         this.msgSrv = injector.get(EosMessageService);
+        this._waitClassifSrv = injector.get(WaitClassifService);
     }
     ngOnDestroy() {
         this.unsubscribe();
