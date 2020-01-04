@@ -92,7 +92,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             method: 'MERGE',
             requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
             data: {
-                DELETED: 0
+                DELETED: 1
             }
         }];
         slicedNodes.forEach((node, i) => {
@@ -103,6 +103,13 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
         });
         PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'ORGANIZ_CL', 'ids': paramsSop }, 'POST', false);
+        preSave.push({
+            method: 'MERGE',
+            requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
+            data: {
+                DELETED: 0
+            }
+        });
         change = change.concat(preSave);
         return this.apiSrv.batch(change, '');
     }
@@ -140,8 +147,9 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                     requestUri: `ORGANIZ_CL('${node.id}')`,
                     data: {
                         NEW_RECORD: 0
-                    }});
-                }
+                    }
+                });
+            }
         });
         if (change.length) {
             return this.apiSrv.batch(change, '');
