@@ -15,6 +15,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 // import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 @Component({
     selector: 'eos-param-create-user',
@@ -36,6 +37,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     tehnicUser: boolean = false;
     isn_prot: any;
     titleNow: string;
+    cbBase: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -45,10 +47,12 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _pipeSrv: PipRX,
+        private _appContext: AppContext
     ) {
     }
 
     ngOnInit() {
+        this.cbBase = this._appContext.cbBase;
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.inputs['SELECT_ROLE'].options = [];
         this.isLoading = true;
@@ -101,7 +105,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     submit() {
-        if (this.createUser()) {
+        if (this.createUser() || this.cbBase) {
             const url = this._createUrlForSop();
             this.btnDisabled = true;
             this.isLoading = true;
