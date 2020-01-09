@@ -791,10 +791,11 @@
             <div class="search-fld">
                 <input id="region-name"
                     (click)="openDict()"
+                    onfocus="this.blur()"
                     readonly
                     name="region-name"
                     type="text"
-                    style="cursor:pointer"
+                    style="cursor:pointer;background-color: #bababa;"
                     class="form-control light"
                     [(ngModel)]="searchModel['REGION_NAME']"
                     placeholder="..."
@@ -821,7 +822,7 @@
             </div>
         </div>
         <div class="form-group unimportant-text">
-            <label class="checkbox-inline"><input type="checkbox" name="seeNew" [(ngModel)]="settings.opts.onlyNew"><span></span><span class="m-font">Только новые</span></label>
+            <label class="checkbox-inline"><input type="checkbox" name="seeNew" (change)="rest($event)" [(ngModel)]="settings.opts.onlyNew"><span></span><span class="m-font">Только новые</span></label>
         </div>
     </form>
 </div>
