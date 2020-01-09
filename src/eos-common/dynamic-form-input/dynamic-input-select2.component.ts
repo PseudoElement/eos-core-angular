@@ -120,7 +120,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
             this._hoverNext();
         } else if (code === 'ArrowUp' || code === 'Up') {
             this._hoverPrev();
-        } else if (code === 'Enter') {
+        } else if (code === 'Enter' && this._dropDown.isOpen) {
             this.selectAction(null, this.focusedItem);
             this._dropDown.hide();
         } else if (this.inputCheck(event)) {
