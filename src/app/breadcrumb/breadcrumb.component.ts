@@ -120,7 +120,11 @@ export class BreadcrumbsComponent implements OnDestroy {
                 if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true &&
                 (!this._appContext.cbBase || (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0))) {
                     this.isNavigationEnabled = true;
-                    this.isEditGranted =  true;
+                    if (this.returnLimitCard(data)) {
+                        this.isEditGranted =  true;
+                    } else {
+                        this.isEditGranted =  false;
+                    }
                 } else {
                     this.isNavigationEnabled = false;
                 }
@@ -130,6 +134,16 @@ export class BreadcrumbsComponent implements OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next(null);
         this.ngUnsubscribe.complete();
+    }
+
+    returnLimitCard(data): boolean {
+        if (this._appContext.limitCardsUser.length > 0 && data) {
+            if (this._appContext.limitCardsUser.indexOf(data.dataDeep['DEPARTMENT_DUE']) !== -1) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     actionHandler(action) {
