@@ -110,6 +110,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         return this.settings && this.settings.lastSearch === SEARCHTYPE.quick;
     }
 
+    public rest($event) {
+        /* console.log($event); */
+        $event.target.checked ?  this.searchModel['NEW'] = '1' : delete this.searchModel['NEW'];
+    }
+
     public considerDel() {
         this._dictSrv.updateViewParameters({ showDeleted: this.settings.opts.deleted });
     }
