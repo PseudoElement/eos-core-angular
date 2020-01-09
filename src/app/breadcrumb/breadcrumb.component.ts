@@ -118,7 +118,7 @@ export class BreadcrumbsComponent implements OnDestroy {
             .subscribe(data => {
                 this.showUserInfo = !!data;
                 if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true &&
-                (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0)) {
+                (!this._appContext.cbBase || (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0))) {
                     this.isNavigationEnabled = true;
                     this.isEditGranted =  true;
                 } else {
