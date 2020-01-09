@@ -25,6 +25,13 @@
             background-size: 24px;
             padding-right: 24px;
         }
+        .form-control:focus{
+            border-color: #e6e6e6;
+            box-shadow: none;
+        }
+        option:disabled {
+                color: red;
+        }
     }
     
     .autentification-control-type{
@@ -38,9 +45,6 @@
     .base-text-input {
         width: 250px;
         display: inline-block;
-        &.pos > li{
-            background-color: red;
-        }
     }
     .text-pass-input {
         margin-left: 30px;
@@ -54,11 +58,4 @@
         -webkit-box-pack: justify;
         justify-content: flex-start;
     }
-    
-    .bs-dropdown-container {
-        color: red !important;
-    }
-}
-bs-dropdown-container{
-    color: red !important;
 }

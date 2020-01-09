@@ -90,6 +90,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         return !this.editMode;
     }
     optionDisable(num: number) {
+        /* if (num === 1) { // блокируем кнопки к которым не должно быть доступа
+            return true;
+        } */
         return false;
     }
     onChangeAuntef($event) {
@@ -128,6 +131,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
     }
     edit($event) {
+        this.autentif.nativeElement.disabled = false;
         this.formUpdate(false);
         this.editMode = true;
     }
