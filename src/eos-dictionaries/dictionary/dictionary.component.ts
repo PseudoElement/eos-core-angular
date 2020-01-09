@@ -981,7 +981,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
         this.modalWindow = null;
         if (type === E_COUNTER_TYPE.counterDepartmentMain) {
-            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
+            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg', animated: false});
             this.modalWindow.content.initByNodeData(type, null);
         } else {
             const node = this._dictSrv.listNode;
@@ -991,7 +991,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 } else if (type === E_COUNTER_TYPE.counterDepartment && node.data.rec['NUMCREATION_FLAG'] !== 1) {
                     this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
-                    this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
+                    this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg', animated: false});
                     this.modalWindow.content.initByNodeData(type, node.data.rec);
                 }
             } else {
