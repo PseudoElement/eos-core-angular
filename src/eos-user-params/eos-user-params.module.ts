@@ -73,6 +73,7 @@ import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-para
 import { CbUserRoleComponent } from './base-param/base-param-cb/cb-user-role/cb-user-role.component';
 import { DragulaModule } from 'ng2-dragula';
 import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/addGrif/addGrif.component';
+import { AutenteficationComponent } from './auntefication/auntefication.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -129,7 +130,8 @@ import { AddGrifComponent } from './user-params-set/user-param-other/user-param-
         RightDepertOrganizComponent,
         AddGrifComponent,
         RightOrganizDepertComponent,
-        CbUserRoleComponent
+        CbUserRoleComponent,
+        AutenteficationComponent,
     ],
     entryComponents: [
         AddGrifComponent
