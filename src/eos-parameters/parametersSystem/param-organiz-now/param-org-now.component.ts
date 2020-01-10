@@ -4,6 +4,7 @@ import { PipRX, ORGANIZ_CL } from 'eos-rest';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
 import { ORGAN_PARAM } from '../shared/consts/organ-now.const';
 import { IOpenClassifParams } from 'eos-common/interfaces';
+import { Validators } from '@angular/forms';
 @Component({
     selector: 'eos-parameters-organiz-now',
     templateUrl: 'param-org-now.component.html',
@@ -85,6 +86,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.prepareData = {rec: DELO};
             this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+            this.form.controls['rec.NAME'].setValidators(Validators.required);
             if (data[0]['ISN_ORGANIZ']) {
                 this.getOrganization(data[0]['ISN_ORGANIZ'], false);
             }
