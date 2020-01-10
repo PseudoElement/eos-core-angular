@@ -100,6 +100,11 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'protocol',
         disabled: false,
     },
+    {
+        title: 'Аутентификация',
+        url: 'auntefication',
+        disabled: false,
+    },
     // {
     //     title: 'Данные по отмеченным пользователям',
     //     url: 'users-info',
