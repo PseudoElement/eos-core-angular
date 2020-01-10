@@ -107,11 +107,60 @@
          padding: 20px;
          max-height: calc(100vh - 260px);
          overflow-y: scroll;
+         .top-base-align {
+            display: flex;
+            position: relative;
+            .avatar-base {
+                position: absolute;
+                width: 170px;
+                height: 170px;
+                min-width: 170px;
+                .av-link-b {
+                    width: 170px;
+                    height: 170px;
+                    display: flex;
+                    align-items: center;
+                }
+                .avatar-img-b {
+                    width: 100%;
+                    height: 100%;
+                    display: inline-block;
+                    border-radius: 50%;
+                    background-size: cover;
+                    background-position: center;
+                }
+            }
+            .wrapper-password {
+                display: flex;
+                justify-content: space-between;
+                .vision {
+                    position: relative;
+                    >span {
+                        position: absolute;
+                        top: 5px;
+                        right: 9px;
+                        cursor: pointer;
+                    }
+                    .vision-close {
+                        right: 32px;
+                    }
+                }
+                .mar-fio-r {
+                    margin-left: 33px;
+                }
+            }
+         }
+         
          .base-text-input {
              width: 250px;
              margin-left: 33px;
              display: inline-block;
          }
+         .base-text-input {
+        //    width: 250px;
+            margin-left: 195px;
+        //    display: inline-block;
+        }
          .mt-ceck {
              margin-top: 30px;
              .form-group{
@@ -119,7 +168,7 @@
              }
          }
          .base-login-input {
-             margin-left: 212px;
+             margin-left: 195px;
          }
          .elem-input-radio {
              font-size: 14px;
@@ -162,6 +211,12 @@
                  margin-bottom: -7px;
              }
          }
+         .note-textarea {
+            textarea.form-control,
+            textarea.form-control-static {
+                height: 70px;
+            }
+        }
      }
  }
 
@@ -180,22 +235,6 @@
     box-shadow: none !important;
 }
 
- .wrapper-password {
-     display: flex;
-     justify-content: space-between;
-     .vision {
-         position: relative;
-         >span {
-             position: absolute;
-             top: 5px;
-             right: 9px;
-             cursor: pointer;
-         }
-         .vision-close {
-             right: 32px;
-         }
-     }
- }
  .access-syst-wr{
      display: flex;
     .access-syst-part {
@@ -207,6 +246,9 @@
 
 
  }
+ .settings-copy-top {
+    margin-top: 20px;
+}
  .serts {
      top: 30%;
  }

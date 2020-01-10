@@ -113,6 +113,12 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             this.role = savedUser.role;
             this.CurrentUser = savedUser.CurrentUser;
             this.chooseTemplate = 'main';
+            if (this.CurrentUser.deep) {
+                this.isPhoto = this.departmentInfo['ISN_PHOTO'];
+                if (this.isPhoto) {
+                    this.urlPhoto = savedUser.urlPhoto;
+                }
+            }
             this.getObjectForSystems();
         } else {
             this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
@@ -163,7 +169,8 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                 DueInfo: this.DueInfo,
                 departmentInfo: this.departmentInfo,
                 UserCabinetInfo: this.UserCabinetInfo,
-                role: this.role
+                role: this.role,
+                urlPhoto: this.urlPhoto
             };
             this._selectedUser.hashUsers.set(this.CurrentUser.id, user);
         }
