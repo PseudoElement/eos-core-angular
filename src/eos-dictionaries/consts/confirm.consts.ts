@@ -51,3 +51,10 @@ export const CONFIRM_DELETE_ROLE: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_REDIRECT_AUNT: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'У пользователя не задан пароль.\n Хотите задать пароль?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

@@ -1,0 +1,61 @@
+:host {
+    display: block;
+    width: 800px;
+    margin: auto;
+    .autentification-window{
+        min-height: calc(100vh - 300px);
+        .autentification-control{
+            padding: 26px;
+            padding-bottom: 0;
+            margin-bottom: 0px;      
+        }
+        
+    }
+    .select-auntef{
+        width: 250px;
+        position: relative;
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('../../assets/icons/Arrow-V-Blue-Bottom.png');
+            background-repeat: no-repeat;
+            background-position-x: right;
+            background-position-y: center;
+            background-size: 24px;
+            padding-right: 24px;
+        }
+        .form-control:focus{
+            border-color: #e6e6e6;
+            box-shadow: none;
+        }
+        option:disabled {
+                color: red;
+        }
+    }
+    
+    .autentification-control-type{
+        padding: 0 26px;
+        margin-bottom: 0px;
+    }
+
+    eos-dynamic-input{
+        font-size: 14px;
+    }
+    .base-text-input {
+        width: 250px;
+        display: inline-block;
+    }
+    .text-pass-input {
+        margin-left: 30px;
+    }
+    elem-password-date{
+        width: 100%;
+    }
+    .wrapper-password{
+        display: -webkit-box;
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: flex-start;
+    }
+}
