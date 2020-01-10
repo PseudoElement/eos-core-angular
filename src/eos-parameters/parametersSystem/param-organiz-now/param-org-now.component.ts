@@ -31,16 +31,48 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             },
         } })
         .then((data: ORGANIZ_CL[]) => {
-            this.organOld = data[0];
-            this.form.controls['rec.INN'].setValue(data[0]['INN'], {emitEvent: false});
-            this.form.controls['rec.ADDRES'].setValue(data[0]['ADDRESS'], {emitEvent: false});
-            this.form.controls['rec.INDEX'].setValue(data[0]['ZIPCODE'], {emitEvent: false});
-            this.form.controls['rec.OKPO'].setValue(data[0]['OKPO'], {emitEvent: false});
-            this.form.controls['rec.OKVED'].setValue(data[0]['OKONH'], {emitEvent: false});
-            this.form.controls['rec.NAME'].setValue(data[0]['CLASSIF_NAME'], {emitEvent: add});
+            if (data[0]) {
+                this.organOld = data[0];
+                this.form.controls['rec.INN'].setValue(data[0]['INN'], {emitEvent: false});
+                this.form.controls['rec.ADDRES'].setValue(data[0]['ADDRESS'], {emitEvent: false});
+                this.form.controls['rec.INDEX'].setValue(data[0]['ZIPCODE'], {emitEvent: false});
+                this.form.controls['rec.OKPO'].setValue(data[0]['OKPO'], {emitEvent: false});
+                this.form.controls['rec.OKVED'].setValue(data[0]['OKONH'], {emitEvent: false});
+                this.form.controls['rec.FULLNAME'].setValue(data[0]['FULLNAME'], {emitEvent: false});
+                this.form.controls['rec.NAME'].setValue(data[0]['CLASSIF_NAME'], {emitEvent: add});
+                if (add && data[0]['INN'] && !this.form.controls['rec.ORG_ID'].value) {
+                    this.form.controls['rec.ORG_ID'].patchValue(data[0]['INN']);
+                }
+            }
         })
         .catch(err => {
-            throw err;
+                throw err;
+        });
+    }
+    getOrganizationDUE(DUE: String, add: boolean) {
+        this.pip.read({ ORGANIZ_CL: {
+            criteries: {
+                DUE: DUE
+            },
+        } })
+        .then((data: ORGANIZ_CL[]) => {
+            if (data[0]) {
+                this.organOld = data[0];
+                this.form.controls['rec.INN'].setValue(data[0]['INN'], {emitEvent: false});
+                this.form.controls['rec.ADDRES'].setValue(data[0]['ADDRESS'], {emitEvent: false});
+                this.form.controls['rec.INDEX'].setValue(data[0]['ZIPCODE'], {emitEvent: false});
+                this.form.controls['rec.OKPO'].setValue(data[0]['OKPO'], {emitEvent: false});
+                this.form.controls['rec.OKVED'].setValue(data[0]['OKONH'], {emitEvent: false});
+                this.form.controls['rec.FULLNAME'].setValue(data[0]['FULLNAME'], {emitEvent: false});
+                this.form.controls['rec.NAME'].setValue(data[0]['CLASSIF_NAME'], {emitEvent: add});
+                this.form.controls['rec.ISN_ORGANIZ'].patchValue(data[0]['ISN_LCLASSIF']);
+                if (add && data[0]['INN'] && !this.form.controls['rec.ORG_ID'].value) {
+                    this.form.controls['rec.ORG_ID'].patchValue(data[0]['INN']);
+                }
+            }
+        })
+        .catch(err => {
+                throw err;
         });
     }
     initProt(): Promise<any> {
@@ -60,6 +92,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.version = data[0]['SYS_VERSION'];
             this.subscribeChangeForm();
             this.cancelEdit();
+            // this._subscribe();
         })
         .catch(err => {
             this.prepareData = this.convData([]);
@@ -74,13 +107,14 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         this.form.controls['rec.NAME'].enable({ emitEvent: false });
         this.form.controls['rec.ISN_ORGANIZ'].enable({ emitEvent: false });
         this.form.controls['rec.ORG_ID'].enable({ emitEvent: false });
+        this.form.controls['rec.FULLNAME'].enable({ emitEvent: false });
     }
     openOrganiz() {
         if (!this.form.controls['rec.ISN_ORGANIZ'].disabled) {
             const OPEN_CLASSIF_ORGANIZ_FULL: IOpenClassifParams = {
                 classif: 'CONTACT',
-                return_due: false,
-                skipDeleted: false,
+                return_due: true,
+                skipDeleted: true,
                 selectNodes: false,
                 selectLeafs: true,
                 selectMulty: false,
@@ -88,12 +122,27 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             };
             return this._waitClassifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_FULL)
             .then((data) => {
-                this.form.controls['rec.ISN_ORGANIZ'].patchValue(data);
-                this.getOrganization(Number(data), true);
+                this.getOrganizationDUE(data, true);
             })
             .catch(er => {
-                throw er;
+                if (er) {
+                    throw er;
+                }
             });
+        }
+    }
+    chenge($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        if ($event.code === 'Delete') {
+            this.form.controls['rec.INN'].setValue('', {emitEvent: false});
+            this.form.controls['rec.ADDRES'].setValue('', {emitEvent: false});
+            this.form.controls['rec.INDEX'].setValue('', {emitEvent: false});
+            this.form.controls['rec.OKPO'].setValue('', {emitEvent: false});
+            this.form.controls['rec.OKVED'].setValue('', {emitEvent: false});
+            this.form.controls['rec.FULLNAME'].setValue('', {emitEvent: false});
+            this.form.controls['rec.NAME'].setValue('', {emitEvent: true});
+            this.form.controls['rec.ISN_ORGANIZ'].patchValue('');
         }
     }
     cancelEdit() {
@@ -106,6 +155,10 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         this.form.disable({ emitEvent: false });
     }
     submit() {
+        /* if (this.form.controls['rec.ISN_ORGANIZ'].value === '') {
+            alert('Введите наименование организации');
+            return ;
+        } */
         if (this.organOld && this.newData.rec['NAME'] !== this.organOld['CLASSIF_NAME']) {
             const flag = confirm(`Значение поля \'Наименование\' не соответсвует полю \'Название\' организации из справочника.
                                     \n Ссылка на спровочник \'Организации\' будет удалена
@@ -119,7 +172,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
                 this.form.controls['rec.OKVED'].setValue('', {emitEvent: true});
             } else {
                 this.form.controls['rec.NAME'].patchValue(this.organOld['CLASSIF_NAME'], {emitEvent: true});
-                this.newData.rec['NAME'] = this.organOld['CLASSIF_NAME'];
+                this.newData.rec['NAME'] = this.organOld['CLASSIF_NAME'] === '' ? null : this.organOld['CLASSIF_NAME'];
             }
         }
         const dateMerg = {
@@ -139,6 +192,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
                 this.prepareData.rec = Object.assign({}, this.newData.rec);
                 this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 this.formChanged.emit(false);
+                this.cancelEdit();
             })
             .catch(er => {
                 this.formChanged.emit(true);
@@ -158,5 +212,6 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.ngOnDestroy();
             this.initProt();
         }
+        this.cancelEdit();
     }
 }
