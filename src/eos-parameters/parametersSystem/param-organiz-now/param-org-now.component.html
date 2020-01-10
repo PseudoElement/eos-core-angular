@@ -1,10 +1,10 @@
 <div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs"><!--  -->
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit(); cancelEdit()"
-        (cancelForm)="cancel(); cancelEdit()"
-        [statusBtnSub]="btnError"
-        [editBtn]="true"
+        (submitForm)="submit();"
+        (cancelForm)="cancel();"
+        [statusBtnSub]="!this.form.controls['rec.NAME'].value"
+        [editBtn]="!editMode"
         (editForm)="edit()"
     ></eos-param-header>
     <div class="param-input-group">
@@ -15,12 +15,18 @@
         ></eos-dynamic-input>
         <div style="position: relative;">
             <eos-dynamic-input
-                [input]="inputs['rec.ORG']"
+                [input]="inputs['rec.FULLNAME']"
                 [form]="form"
                 [readonly]="false"
+                (keydown)="chenge($event)"
             ></eos-dynamic-input>
             <div class="organ-new-now">
-                <span (click)="openOrganiz()" class = "eos-icon" 
+                <span (click)="openOrganiz()" 
+                class = "eos-icon" 
+                tooltip="Выбрать организацию"
+                containerClass="tooltip-info"
+                placement="left"
+                container="body"
                 [ngClass]="{
                     'eos-icon-building-blue': !form.controls['rec.ISN_ORGANIZ'].disabled, 
                     'eos-icon-building-grey': form.controls['rec.ISN_ORGANIZ'].disabled,

@@ -11,7 +11,7 @@ export const ORGAN_PARAM: IBaseParameters = {
             title: 'Наименование'
         },
         {
-            key: 'ORG',
+            key: 'FULLNAME',
             type: 'string',
             readonly: true,
             title: 'Организации'
