@@ -11,16 +11,16 @@
             #autentif
             [disabled]="returnEdit()"
             (change)="onChangeAuntef()">
-                    <option value="0" [disabled]="optionDisable(0)">
+                    <option value="0" [disabled]="optionDisable(0)" [selected]="optionSelected(0)">
                         СУБД-аутентификация
                     </option>
-                    <option value="1" [disabled]="optionDisable(1)">
+                    <option value="1" [disabled]="optionDisable(1)" [selected]="optionSelected(1)">
                         ОС-аутентификация
                     </option>
-                    <option value="2" [disabled]="optionDisable(2)">
+                    <option value="2" [disabled]="optionDisable(2)" [selected]="optionSelected(2)">
                         Системная аутентификация
                     </option>
-                    <option value="3" [disabled]="optionDisable(3)">
+                    <option value="3" [disabled]="optionDisable(3)" [selected]="optionSelected(3)">
                         Веб-аутентификация
                     </option>
             </select>

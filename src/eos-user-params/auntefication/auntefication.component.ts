@@ -28,6 +28,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     isLoading = false;
     curentUser: IParamUserCl;
     public checkPass: string = '';
+    public originAutent: string = '0';
     public type: string = 'password';
     public type1: string = 'password';
     public editMode: boolean = false;
@@ -67,6 +68,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                         console.log('elem', elem);
                     }
                 }); */
+                // когда будет понятно как this.originAutent = '0';
                 this.form.controls['SELECT_AUTENT'].setValue( '0', { emitEvent: false });
                 this.form.controls['PASSWORD_DATE'].setValue( new Date(this.curentUser.PASSWORD_DATE), { emitEvent: false });
                 this.getTitle();
@@ -135,12 +137,21 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.formUpdate(false);
         this.editMode = true;
     }
+    optionSelected(num: number) {
+        if (num === +this.form.get('SELECT_AUTENT').value) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     cancel($event) {
         this.editMode = false;
         this.isLoading = false;
         this.editMode = !this.editMode;
         this.cancelValues(this.inputs, this.form);
         this.autentif.nativeElement.disabled = true;
+        this.form.get('SELECT_AUTENT').patchValue(this.originAutent);
+        this.autentif.nativeElement.value = this.originAutent;
         /* this._pushState(); */
         this.formUpdate(true);
     }
@@ -157,19 +168,29 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
         this.isLoading = true;
         const promAll = [];
+        let flag = false;
         promAll.push(this.updateUser(this._userParamSrv.userContextId, {'USERTYPE': value}));
         if (value === 0 || value === 2) {
-            promAll.push(this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId));
+            if (this.curentUser.IS_PASSWORD === 0) {
+                promAll.push(this.createLogin(this.form.get('pass').value, this._userParamSrv.userContextId));
+                flag = true;
+            } else {
+                promAll.push(this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId));
+            }
         }
         Promise.all(promAll)
         .then((arr) => {
             this.formUpdate(true);
             this.cancelValues(this.inputs, this.form);
+            this.originAutent = this.form.get('SELECT_AUTENT').value;
             this.isLoading = false;
+            if (flag) {
+                this.curentUser.IS_PASSWORD = 1;
+            }
             this.editMode = false;
         })
         .catch((arr) => {
-            this._errorSrv.errorHandler('Ошибка сохранения');
+            this._errorSrv.errorHandler(arr);
             /* this.cancelValues(this.inputs, this.form); */
             this.isLoading = false;
         });
@@ -226,6 +247,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
 
     private changePassword(pass, id): Promise<any> {
         const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
+        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    }
+    private createLogin(pass, id): Promise<any> {
+        const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
 }
