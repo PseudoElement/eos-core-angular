@@ -381,6 +381,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (!this.curentUser['IS_PASSWORD']) {
             return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                 if (res) {
+                    this._router.navigate(['/user-params-set/auntefication']);
                 } else {
                     return this.ConfirmAvSystems(accessStr, id, query);
                 }

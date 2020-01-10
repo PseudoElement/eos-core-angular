@@ -3,14 +3,21 @@
         <div class="base-param-main">
             <!-- Логин , фото, ФИО -->
             <div class="top-base-align">
-                <div class="avatar-base" *ngIf="curentUser.DUE_DEP">
+                <div class="avatar-base" *ngIf="curentUser.DUE_DEP else tech">
                     <a class="av-link-b" [routerLink]="['/spravochniki','departments', curentUser.DUE_DEP, 'view' ]">
                         <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
                         <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-icon eos-icon-Man-Blue small"></span>
                     </a>
                 </div>
+                <ng-template #tech>
+                    <div class="avatar-base">
+                        <div class="av-link-b">
+                            <span class="avatar-img-b" class="avatar-img-b eos-icon eos-icon-Techman-Blue small"></span>
+                        </div>
+                    </div>
+                </ng-template>
                 <div class="wrapper-password">
-                    <div style="width: 200px" class="base-text-input base-login-input" [formGroup]="form" [tooltip]="!curentUser['IS_PASSWORD'] ? 'Для смены логина задайте пароль' : validClassif" container="body" placement="bottom" containerClass="tooltip-error">
+                    <div style="width: 200px" class="base-text-input base-login-input" [formGroup]="form" [tooltip]="!curentUser['IS_PASSWORD'] && editMode ? 'Для смены логина задайте пароль' : validClassif" container="body" placement="bottom" containerClass="tooltip-error">
                         <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label >
                         <input class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
                     </div>
@@ -37,7 +44,7 @@
                 <eos-dynamic-input class="base-text-input-cb base-input-role"
                     [input]="controls['SELECT_ROLE']"
                     [form]="formControls"
-                    container="body"
+                    [container]="body"
                     [readonly]="curentUser.isTechUser || !editMode"
                     [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
                 <button
