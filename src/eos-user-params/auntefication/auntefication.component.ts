@@ -176,6 +176,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 flag = true;
             } else {
                 promAll.push(this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId));
+                flag = true;
             }
         }
         Promise.all(promAll)
@@ -186,6 +187,8 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.isLoading = false;
             if (flag) {
                 this.curentUser.IS_PASSWORD = 1;
+                const newDate = new Date();
+                this.form.controls['PASSWORD_DATE'].setValue( newDate, { emitEvent: false });
             }
             this.editMode = false;
         })
