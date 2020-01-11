@@ -1,0 +1,16 @@
+<div class="image-uploader-record">
+    <div class="current-image" [ngStyle]="{ 'background-image': imageUrl }">
+        <label *ngIf="!imageUrl" class="xl-font primary-text no-image-label">Нет изображения</label>
+    </div>
+    <div class="inline-buttons">
+        <eos-photo-uploader
+            #imgUploader
+            [buttons]="false"
+            class="photo-uploader"
+            (endUploading)="newImage($event)"
+        ></eos-photo-uploader>
+        <button class="abutton btn btn-primary" (click)="onUploadClick()">Добавить/Заменить</button>
+        <button class="abutton btn btn-primary" [disabled]="!imageUrl" (click)="onSaveClick()">Сохранить на диск</button>
+        <button class="abutton btn btn-primary" (click)="onClearClick()">Очистить</button>
+    </div>
+</div>

@@ -5,6 +5,9 @@ import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerfa
 import { IImage } from '../interfaces/image.interface';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/messages.consts';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { BsModalService } from 'ngx-bootstrap';
+import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
 
 
 interface IToDeclineFields {
@@ -22,14 +25,19 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения'];
 
     photo: any;
+    isStampEnable = Features.cfg.departments.stamp;
 
     private bossWarning: boolean;
 
     constructor(
-        injector: Injector,
+        private injector: Injector,
         private _msgSrv: EosMessageService
     ) {
         super(injector);
+    }
+
+    get hasStamp(): boolean {
+        return this.getValue('rec.ISN_STAMP');
     }
 
     ngOnInit () {
@@ -54,6 +62,20 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
                 this.updateForm(formChanges);
                 this.updateValidTabs();
+            });
+        }
+    }
+
+
+    stampClick() {
+        const isn = this.data.rec['ISN_STAMP'];
+        const _modalSrv = this.injector.get(BsModalService);
+        const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
+        (<StampBlobFormComponent>modalWindow.content).init(isn);
+        if (modalWindow) {
+            const subscription = (<StampBlobFormComponent>modalWindow.content).onClose.subscribe((savedisn) => {
+                subscription.unsubscribe();
+                this.setValue('rec.ISN_STAMP', savedisn);
             });
         }
     }

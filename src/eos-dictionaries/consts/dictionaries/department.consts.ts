@@ -322,6 +322,13 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Номерообразование НП',
             type: 'boolean',
         } ],
+        ... !Features.cfg.departments.stamp ? [] : [
+            {
+                key: 'ISN_STAMP',
+                title: 'Угловой штамп',
+                type: 'number',
+            }
+        ],
         ... !Features.cfg.departments.reestr_send ? [] : [
         {
             key: 'EXPEDITION_FLAG',
@@ -349,7 +356,9 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
-        'nametitleDep', 'nametitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
+        'nametitleDep', 'nametitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG',
+        'ISN_STAMP',
+    ],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
     allVisibleFields: ['fullTitle', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
         // 'CARD_FLAG',

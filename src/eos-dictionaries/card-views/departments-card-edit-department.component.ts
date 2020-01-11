@@ -6,6 +6,8 @@ import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
+import { BsModalService } from 'ngx-bootstrap';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -14,13 +16,19 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponent implements OnChanges, OnInit {
 
     featuresDep = Features.cfg.departments;
+    isStampEnable = Features.cfg.departments.stamp;
+    directGrant;
 
     private _orgName = '';
     private previousValues: SimpleChanges;
 
-    constructor(injector: Injector, private _zone: NgZone, private msgSrv: EosMessageService) {
+    constructor(private injector: Injector, private _zone: NgZone, private msgSrv: EosMessageService) {
         super(injector);
         this.previousValues = {};
+    }
+
+    get hasStamp(): boolean {
+        return this.getValue('rec.ISN_STAMP');
     }
 
     get hasCard(): boolean {
@@ -59,6 +67,19 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
             }
             return error ? {valueError: error} : null;
         };
+    }
+
+    stampClick() {
+        const isn = this.data.rec['ISN_STAMP'];
+        const _modalSrv = this.injector.get(BsModalService);
+        const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
+        (<StampBlobFormComponent>modalWindow.content).init(isn);
+        if (modalWindow) {
+            const subscription = (<StampBlobFormComponent>modalWindow.content).onClose.subscribe((savedisn) => {
+                subscription.unsubscribe();
+                this.setValue('rec.ISN_STAMP', savedisn);
+            });
+        }
     }
 
     clickNumcreation () {

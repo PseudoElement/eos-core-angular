@@ -11,34 +11,35 @@ const maxFileSize = 102400; // 100kb
     templateUrl: 'photo-uploader.component.html',
 })
 export class PhotoUploaderComponent implements OnInit {
+    static genid = 0;
     @Input() disableEdit = false;
+    @Input() buttons = true;
     @Output() endUploading: EventEmitter<IImage> = new EventEmitter<IImage>();
 
     @ViewChild('fileInput') inputEl: ElementRef;
-
     // contactUrl = 'http://localhost/Eos.Delo.OData/Services/DELO_BLOB.asmx/Upload';
     // uploading = false;
     // multiple = false;
 
     imageSrc = '';
-    // currentUrl = '';
 
     nativeInputEl: HTMLInputElement;
-    // fileCount: number;
     file: File;
     multiple = false;
 
+    componentId: string;
+
     @ViewChild('confirmModal') private confirmModalRef: ModalDirective;
 
-    constructor(private _msgSrv: EosMessageService) { }
+    constructor(private _msgSrv: EosMessageService) {
+        this.componentId = 'file' + PhotoUploaderComponent.genid++;
+    }
 
     ngOnInit() {
         this.nativeInputEl = this.inputEl.nativeElement;
     }
 
     chooseFile(e) {
-        // this.fileCount = this.nativeInputEl.files.length;
-        // const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
         const file: File = e.target.files[0];
         if (file) {
             if (file.type.indexOf('image') === -1) {
@@ -77,7 +78,7 @@ export class PhotoUploaderComponent implements OnInit {
         this.endUploading.emit({
             data: data,
             extension: fileStr.substring(pos2 + 1, pos3).toUpperCase(),
-            url: `url(${this.file})`
+            url: `url(${this.file})`,
         });
 
         this.nativeInputEl.value = null;
@@ -86,6 +87,10 @@ export class PhotoUploaderComponent implements OnInit {
     cancel() {
         this.confirmModalRef.hide();
         this.nativeInputEl.value = null;
+    }
+
+    public addFileDialogStart() {
+        document.getElementById(this.componentId).click();
     }
 
     private _handleReaderLoaded(e) {

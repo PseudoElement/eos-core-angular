@@ -471,6 +471,7 @@ const commonMeta = {
             NUM_CAB: _t.s,
             DUE_LINK_ORGANIZ: _t.s,
             ISN_PHOTO: _t.i,
+            ISN_STAMP: _t.i,
             WDUE: _t.s,
             INS_DATE: _t.d,
             UPD_DATE: _t.d,
@@ -489,7 +490,9 @@ const commonMeta = {
             { name: 'CONTACT_Ref', __type: 'CONTACT', sf: 'ISN_CONTACT', tf: 'ISN_CONTACT' },
             { name: 'LINK_ORGANIZ_Ref', __type: 'ORGANIZ_CL', sf: 'DUE_LINK_ORGANIZ', tf: 'DUE' },
             { name: 'ORGANIZ_Ref', __type: 'ORGANIZ_CL', sf: 'DUE_ORGANIZ', tf: 'DUE' },
-            { name: 'PHOTO_Ref', __type: 'DELO_BLOB', sf: 'ISN_PHOTO', tf: 'ISN_BLOB' }
+            { name: 'PHOTO_Ref', __type: 'DELO_BLOB', sf: 'ISN_PHOTO', tf: 'ISN_BLOB' },
+            // { name: 'STAMP_Ref', __type: 'DELO_BLOB', sf: 'ISN_STAMP', tf: 'ISN_BLOB' }
+
         ]
     },
     DG_FILE_CONSTRAINT: {
