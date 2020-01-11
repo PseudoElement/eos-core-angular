@@ -94,6 +94,8 @@ import { TemplatesCardComponent } from './card-views/templates-card/templates-ca
 import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component';
 import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
 import { EdsImportComponent } from './eds-import/eds-import.component';
+import { StampBlobFormComponent } from './shablon-blob-form/stamp-blob-form.component';
+import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-record/image-blob-record.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -158,6 +160,9 @@ import { EdsImportComponent } from './eds-import/eds-import.component';
         TemplatesCardComponent,
         TemplateTreeComponent,
         EdsImportComponent,
+        StampBlobFormComponent,
+        ImageBlobRecordComponent,
+
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -175,6 +180,7 @@ import { EdsImportComponent } from './eds-import/eds-import.component';
         CopyPropertiesComponent,
         CopyNodeComponent,
         EdsImportComponent,
+        StampBlobFormComponent,
     ],
     imports: [
         BrowserModule,
