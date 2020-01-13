@@ -378,16 +378,42 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const accessStr = '';
         this.setQueryNewData(accessStr, newD, query);
         this.setNewDataFormControl(query, id);
-        if (!this.curentUser['IS_PASSWORD']) {
-            return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                if (res) {
-                    this._router.navigate(['/user-params-set/auntefication']);
+        if (this._newData.get('IS_SECUR_ADM') === false) { // IS_SECUR_ADM приватный критерий
+            this.apiSrvRx.read<USER_CL>({
+                USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1' }),
+                orderby: 'ISN_LCLASSIF',
+                top: 2,
+                loadmode: 'Table'
+              }).then((admns: USER_CL[]) => {
+                if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                    this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
+                    return;
                 } else {
-                    return this.ConfirmAvSystems(accessStr, id, query);
+                    if (!this.curentUser['IS_PASSWORD']) {
+                        return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                            if (res) {
+                                this._router.navigate(['/user-params-set/auntefication']);
+                            } else {
+                                return this.ConfirmAvSystems(accessStr, id, query);
+                            }
+                        });
+                    } else {
+                        return this.ConfirmAvSystems(accessStr, id, query);
+                    }
                 }
             });
         } else {
-            return this.ConfirmAvSystems(accessStr, id, query);
+            if (!this.curentUser['IS_PASSWORD']) {
+                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                    if (res) {
+                        this._router.navigate(['/user-params-set/auntefication']);
+                    } else {
+                        return this.ConfirmAvSystems(accessStr, id, query);
+                    }
+                });
+            } else {
+                return this.ConfirmAvSystems(accessStr, id, query);
+            }
         }
     }
 
