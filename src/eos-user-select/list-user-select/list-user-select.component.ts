@@ -20,7 +20,7 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
-import { PipRX, /* USER_CL */ IRequest } from 'eos-rest';
+import { PipRX, /* USER_CL */ IRequest, USER_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
@@ -645,37 +645,57 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     BlockUser() {
         this.isLoading = true;
         const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
-        this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
-            this.listUsers = this.listUsers.map(users => {
-                if ((users.isChecked || users.selectedMark) && users.id !== +idMain) {
-                    if (users.blockedUser) {
-                        users.blockedUser = false;
-                        this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                    } else {
-                        if (!users.blockedUser && !users.blockedSystem) {
-                            users.blockedUser = true;
-                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
-                        }
-                        if (users.blockedSystem) {
-                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
+        this._pipeSrv.read<USER_CL>({
+            USER_CL: {
+                criteries: {
+                    ORACLE_ID: 'isnotnull',
+                    IS_SECUR_ADM: '1',
+                    DELETED: '0',
+                }
+            }
+        }).then((data: USER_CL[]) => {
+            const blockedUsers = this.listUsers.filter(user => !user.blockedUser && !user.blockedSystem && (user.selectedMark || user.isChecked) && user.data.IS_SECUR_ADM === 1);
+            if (data['TotalRecords'] === blockedUsers.length) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение:',
+                    msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
+                });
+                this.isLoading = false;
+                return;
+            }
+            this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
+                this.listUsers = this.listUsers.map(users => {
+                    if ((users.isChecked || users.selectedMark) && users.id !== +idMain) {
+                        if (users.blockedUser) {
                             users.blockedUser = false;
-                            users.blockedSystem = false;
+                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
+                        } else {
+                            if (!users.blockedUser && !users.blockedSystem) {
+                                users.blockedUser = true;
+                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
+                            }
+                            if (users.blockedSystem) {
+                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
+                                users.blockedUser = false;
+                                users.blockedSystem = false;
+                            }
                         }
                     }
+                    users.isChecked = false;
+                    return users;
+                });
+                if (this.listUsers && this.listUsers.length) {
+                    this.selectedNode(this.listUsers[0]);
+                } else {
+                    this.selectedUser = undefined;
+                    this.updateFlafListen();
                 }
-                users.isChecked = false;
-                return users;
+                this.isLoading = false;
+            }).catch(error => {
+                error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
+                this.cathError(error);
             });
-            if (this.listUsers && this.listUsers.length) {
-                this.selectedNode(this.listUsers[0]);
-            } else {
-                this.selectedUser = undefined;
-                this.updateFlafListen();
-            }
-            this.isLoading = false;
-        }).catch(error => {
-            error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
-            this.cathError(error);
         });
     }
     getLoginDeleted(): string {
