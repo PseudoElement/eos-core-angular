@@ -47,7 +47,7 @@ build_job:
     - '$TF add "${BUILD_URI_PATH}" || true'
     - '$TF checkin "${BUILD_URI_PATH}" -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
   only:
-    - dev
+    - /^release/.*$/@dev/nadzor/classif
     - tags
   artifacts:
     expire_in: 1 week
