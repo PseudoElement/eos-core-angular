@@ -13,6 +13,7 @@ export class CardRight {
     public type: E_CARD_TYPE;
     public listNodes: NodeDocsTree[];
     public curentSelectedNode: NodeDocsTree;
+    public limitcard: boolean;
     private _value: number;
     private _funcIndex: number;
     private _funcNum: number;
@@ -54,6 +55,7 @@ export class CardRight {
         this.expandable = this._srv.selectedFuncNum.type !== E_CARD_TYPE.none;
         this.isLimit = this._srv.selectedFuncNum.type === E_CARD_TYPE.docGroup;
         this._value = +this._card.FUNCLIST[this._funcIndex];
+        this.limitcard = this._srv.limitCardAccess(this._card.DUE);
     }
     expanded() {
         this.isExpanded = !this.isExpanded;

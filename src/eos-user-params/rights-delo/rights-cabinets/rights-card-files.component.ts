@@ -118,7 +118,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return answer.join('|');
     }
     updateCardLimit() {
-        if (this._appContext.limitCardsUser.indexOf(this.currentCard.cardDue) === -1) {
+        if (this._appContext.limitCardsUser.indexOf(this.currentCard.cardDue) === -1 && this._appContext.limitCardsUser.length > 0) {
             return true;
         }
         return false;
@@ -132,7 +132,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 return;
             });
         } else {
-            const transformString = dueCards.split('|');
+            const transformString = dueCards.length ? dueCards.split('|') : [];
             return this.searchMathes(transformString);
         }
     }
