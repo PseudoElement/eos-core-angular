@@ -11,7 +11,7 @@
 
         <label class="checkbox card-node-checked">
             <input type="checkbox"
-                [disabled]="!editMode"
+                [disabled]="!editMode || !node.limitcard"
                 hide
                 [(ngModel)]="node.value"
             >

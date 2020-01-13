@@ -11,6 +11,7 @@ import { OPEN_CLASSIF_DOCGROUP_CL } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Injectable()
 export class CardRightSrv {
@@ -34,6 +35,7 @@ export class CardRightSrv {
         private _pipSrv: PipRX,
         private _waitClassifSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
+        private _appContext: AppContext
     ) {
         this._selectingNode$ = new Subject<void>();
         this._chengeState$ = new Subject<boolean>();
@@ -54,6 +56,13 @@ export class CardRightSrv {
     }
     selectFuncnum() {
         this._selectingNode$.next();
+    }
+    limitCardAccess(due: string): boolean {
+        if (this._appContext.limitCardsUser.indexOf(due) !== -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
     getlistTreeNode$(docs: USER_CARD_DOCGROUP[]): Promise<NodeDocsTree[]> {
         const listDG: string[] = [];
