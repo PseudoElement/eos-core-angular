@@ -1,0 +1,84 @@
+<div *ngIf="!isLoading" class="autentification-window">
+    <eos-user-params-header [editMode]="editMode" [title]='titleHeader' [disableBtn]="false" [defaultBtn]='false' [errorSave] = "false"
+        (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'
+        ></eos-user-params-header><!-- (defaultEmit)='default($event)' -->
+    <div class="autentification-control">
+        <div class="select-auntef" >
+            <label>Система аунтентификации</label>
+            <select 
+            class="form-control m-font" 
+            id="selectAut" 
+            #autentif
+            [disabled]="returnEdit()"
+            (change)="onChangeAuntef()">
+                    <option value="0" [disabled]="optionDisable(0)" [selected]="optionSelected(0)">
+                        СУБД-аутентификация
+                    </option>
+                    <option value="1" [disabled]="optionDisable(1)" [selected]="optionSelected(1)">
+                        ОС-аутентификация
+                    </option>
+                    <option value="2" [disabled]="optionDisable(2)" [selected]="optionSelected(2)">
+                        Системная аутентификация
+                    </option>
+                    <option value="3" [disabled]="optionDisable(3)" [selected]="optionSelected(3)">
+                        Веб-аутентификация
+                    </option>
+            </select>
+        </div>
+        <!-- <eos-dynamic-input class="base-text-input pos" [form]="form" [input]="inputs['SELECT_AUTENT']" container="body"></eos-dynamic-input> -->
+        <hr>
+        <!-- <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['USERTYPE']" container="body"></eos-dynamic-input> -->
+        <!-- <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['pass']" container="body"></eos-dynamic-input>
+        <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['passRepeated']" container="body"></eos-dynamic-input> -->
+    </div> 
+    <div *ngIf="getPassDate()" class="autentification-control-type">
+        <div class="elem-password-date">
+            <eos-dynamic-input style="width: 180px" class="inline-block" [form]="form" [input]="inputs['PASSWORD_DATE']" [readonly]="inputs['PASSWORD_DATE'].readonly || !editMode"></eos-dynamic-input>
+        </div>
+        <div class="wrapper-password">
+            <!-- что бы не вставлялся логин в поле даты -->
+            <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none">
+            <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none">
+            <div [formGroup]="form" class="dynamic-input-wrapper base-text-input">
+                <label [hidden]="inputs['pass'].hideLabel" [attr.for]="inputs['pass'].key">{{inputs['pass'].label}}</label>
+                <div class="vision" [ngClass]="{'disabled': inputs['pass'].disabled}">
+                    <input class="form-control m-font" maxlength="30"
+                    [formControlName]="inputs['pass'].key"
+                    [id]="inputs['pass'].key" [type]="type"
+                    [readonly]="inputs['pass'].readonly"
+                    [ngClass]="{'error-focus': checkPass !== '', 'readonly': readonly}"
+                    [tooltip]="checkPass !== '' ? checkPass : null"
+                    placement="bottom"
+                    [containerClass]="checkPass !== '' ? 'tooltip-error' : 'tooltip-info'"
+                    [placeholder]="curentUser.IS_PASSWORD ? '*******' : inputs['pass'].label"
+                    autocomplete="off">
+                    <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
+                </div>
+            </div>
+
+            <div  [formGroup]="form" class="dynamic-input-wrapper base-text-input text-pass-input">
+                <label [hidden]="inputs['passRepeated'].hideLabel" [attr.for]="inputs['passRepeated'].key">{{inputs['passRepeated'].label}}</label>
+                <div class="vision" [ngClass]="{'disabled': inputs['passRepeated'].disabled}">
+                    <input class="form-control m-font" maxlength="30" [formControlName]="inputs['passRepeated'].key" 
+                    [id]="inputs['passRepeated'].key" [type]="type1" 
+                    [readonly]="inputs['passRepeated'].readonly" 
+                    [ngClass]="{'error-focus': errorPass, 'readonly': readonly}" 
+                    [placeholder]="curentUser.IS_PASSWORD ? '*******' : inputs['passRepeated'].label"
+                    [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'" 
+                    placement="bottom" 
+                    [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'" 
+                    autocomplete="off">
+                    <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div *ngIf="form.get('SELECT_AUTENT').value === '2'" class="autentification-control-type">
+        <eos-dynamic-input class="inline-block" [form]="form" [input]="inputs['ID_USER']" [readonly]="inputs['ID_USER'].readonly"></eos-dynamic-input>
+    </div> -->
+</div>
+<div  class="base-param-wrapper">
+    <div class="spinner-wrapper" *ngIf="isLoading">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
+</div >

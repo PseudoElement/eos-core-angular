@@ -155,6 +155,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             });
             return;
         }
+
         this.editMode = true;
         this.selectFuncNum(this.selectedList || this.funcList[0]);
     }

@@ -478,6 +478,19 @@ export const RECORD_UNCHECK_NEW_ENTRY: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+const RECORD_ACTIONS_DOP_REC: IAction = {
+    type: E_RECORD_ACTIONS.dopRequisites,
+    group: E_ACTION_GROUPS.item,
+    title: 'Дополнительные реквизиты',
+    hint: 'Дополнительные реквизиты',
+    iconClass: 'eos-icon eos-icon-property-extra-blue small',
+    disabledIconClass: 'eos-icon eos-icon-property-extra-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-property-extra-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -523,6 +536,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
+    RECORD_ACTIONS_DOP_REC,
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_ADVCARDRK,
     RECORD_DETAILS_RKPD,

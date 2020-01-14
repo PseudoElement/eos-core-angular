@@ -30,6 +30,9 @@ export const EOS_PARAMETERS_TAB = [{
 }, {
     title: 'Протоколирование',
     url: 'logging'
+}, {
+    title: 'Текущая организация',
+    url: 'now-organiz'
 }];
 
 

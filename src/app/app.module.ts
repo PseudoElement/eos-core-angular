@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
+import { NgModule, ErrorHandler, LOCALE_ID, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -54,8 +54,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { StaticHelper } from './app.static';
 /* end guards */
-
 
 @NgModule({
     declarations: [
@@ -119,4 +119,10 @@ import { PermissionsGuard } from './guards/permissions.guard';
     ],
     bootstrap: [AppComponent],
 })
-export class AppModule { }
+
+export class AppModule {
+    constructor(private injector: Injector) {
+        StaticHelper.setInjectorInstance(this.injector);
+    }
+}
+

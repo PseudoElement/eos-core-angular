@@ -107,11 +107,6 @@
         padding: 20px;
         max-height: calc(100vh - 260px);
         overflow-y: scroll;
-        .base-text-input {
-            width: 250px;
-            margin-left: 33px;
-            display: inline-block;
-        }
         .base-text-input-cb {
             width: 324px;
             margin-right: 20px;
@@ -128,7 +123,7 @@
             }
         }
         .base-login-input {
-            margin-left: 212px;
+            margin-left: 195px;
         }
         .elem-input-radio {
             font-size: 14px;
@@ -160,7 +155,7 @@
         .base-department-input {
             input {
                 background: $light-grey-1;
-                width: 457px;
+                width: 530px;
                 padding-right: 34px;
                 cursor: default;
             }
@@ -169,6 +164,12 @@
                 display: inline-block;
                 margin-left: -34px;
                 margin-bottom: -7px;
+            }
+        }
+        .note-textarea {
+            textarea.form-control,
+            textarea.form-control-static {
+                height: 70px;
             }
         }
     }
@@ -192,6 +193,7 @@
 .wrapper-password {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 20px;
     .vision {
         position: relative;
         >span {
@@ -215,6 +217,9 @@
     }
 
 
+}
+.settings-copy-top {
+    margin-top: 20px;
 }
 .serts {
     top: 30%;

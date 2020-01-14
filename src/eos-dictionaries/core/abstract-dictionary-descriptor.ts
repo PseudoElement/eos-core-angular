@@ -22,6 +22,8 @@ import {ContactHelper} from '../../eos-rest/services/contact-helper';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import {EosDictionaryNode} from 'eos-dictionaries/core/eos-dictionary-node';
 import {DictionaryComponent} from 'eos-dictionaries/dictionary/dictionary.component';
+import { RestError } from 'eos-rest/core/rest-error';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export abstract class AbstractDictionaryDescriptor {
 
@@ -122,36 +124,7 @@ export abstract class AbstractDictionaryDescriptor {
 
     }
 
-    checkSevIsNew(sevData: SEV_ASSOCIATION, record: any): Promise<IRecordOperationResult> {
-        return this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({OBJECT_NAME: this.apiInstance})})
-            .then((sevs) => {
-                let result: IRecordOperationResult;
-                if (!sevData.__metadata) { // if new SEV
-                    const sevRec = this.apiSrv.entityHelper.prepareForEdit<SEV_ASSOCIATION>(undefined, 'SEV_ASSOCIATION');
-                    sevData = Object.assign(sevRec, sevData);
-                }
-                result = {
-                    record: sevData,
-                    success: true
-                };
-                if (SevIndexHelper.PrepareForSave(sevData, record)) {
-                    const exist = sevs.find((existSev) =>
-                        (sevData.OBJECT_ID === existSev.OBJECT_ID) && (sevData.GLOBAL_ID === existSev.GLOBAL_ID));
 
-                    if (exist) {
-                        result = null;
-                        // result.success = false;
-                        // result.error = new RestError({
-                        //     isLogicException: true,
-                        //     message: 'Индекс СЭВ создан ранее!'
-                        // });
-                    }
-                } else {
-                    result = null;
-                }
-                return result;
-            });
-    }
 
     deleteRecords(records: IEnt[]): Promise<IRecordOperationResult[]> {
         const pDelete = records.map((record) => this.deleteRecord(record));
@@ -324,14 +297,14 @@ export abstract class AbstractDictionaryDescriptor {
      */
     updateRecord(originalData: any, updates: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
         const changeData = [];
-        let pSev: Promise<IRecordOperationResult> = Promise.resolve(null);
+        let pSev: Promise<boolean> = Promise.resolve(true);
         const results: IRecordOperationResult[] = [];
         Object.keys(updates).forEach((key) => {
             if (updates[key]) {
                 const data = EosUtils.deepUpdate(originalData[key], updates[key]);
                 switch (key) {
                     case 'sev': // do nothing handle sev later
-                        pSev = this.checkSevIsNew(data, originalData.rec);
+                        pSev = this.presaveSevRoutine(data, originalData.rec, changeData, results);
                         break;
                     case 'photo':
                         break;
@@ -366,21 +339,8 @@ export abstract class AbstractDictionaryDescriptor {
             }
         });
 
-        // console.log('originalData', originalData);
-        // console.log('changeData', changeData);
         const record = EosUtils.deepUpdate(originalData.rec, updates.rec);
-        return pSev
-            .then((result) => {
-                if (result) {
-                    if (result.success) {
-                        changeData.push(result.record);
-                    } else {
-                        result.record = record;
-                        results.push(result);
-                    }
-                }
-            })
-            .then(() => {
+        return pSev.then((continueSave) => {
                 let changes = this.apiSrv.changeList(changeData);
                 if (appendToChanges) {
                     changes = changes.concat(appendToChanges);
@@ -505,6 +465,55 @@ export abstract class AbstractDictionaryDescriptor {
         return Promise.resolve();
     }
 
+    presaveSevRoutine(sevData: SEV_ASSOCIATION, record: any, changeData: any[], results: IRecordOperationResult[]): Promise<boolean> {
+        if (!Features.cfg.SEV.isIndexesEnable) {
+            return Promise.resolve(true);
+        }
+
+        return this.checkSevIndexNew(sevData, record).then (sevResult => {
+            if (sevResult) {
+                if (sevResult.success) {
+                    changeData.push(sevResult.record);
+                    return Promise.resolve(true);
+                } else {
+                    sevResult.record = record;
+                    results.push(sevResult);
+                    return Promise.reject(sevResult);
+                }
+            }
+            return Promise.resolve(true);
+        });
+    }
+
+    protected checkSevIndexNew(sevData: SEV_ASSOCIATION, record: any): Promise<IRecordOperationResult> {
+        return this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({OBJECT_NAME: this.apiInstance})})
+            .then((sevs) => {
+                let result: IRecordOperationResult;
+                if (!sevData.__metadata) { // if new SEV
+                    const sevRec = this.apiSrv.entityHelper.prepareForEdit<SEV_ASSOCIATION>(undefined, 'SEV_ASSOCIATION');
+                    sevData = Object.assign(sevRec, sevData);
+                }
+                result = {
+                    record: sevData,
+                    success: true
+                };
+                if (SevIndexHelper.PrepareForSave(sevData, record)) {
+                    const exist = sevs.find((existSev) =>
+                        (sevData.OBJECT_ID !== existSev.OBJECT_ID) && (sevData.GLOBAL_ID === existSev.GLOBAL_ID));
+
+                    if (exist) {
+                        result.success = false;
+                        result.error = new RestError({
+                            isLogicException: true,
+                            message: 'Индекс СЭВ создан ранее!'
+                        });
+                    }
+                } else {
+                    result = null;
+                }
+                return result;
+            });
+    }
     protected _postChanges(data: any, updates: any, appendToChanges: any = null ): Promise<any[]> {
         // console.log('_postChanges', data, updates);
         Object.assign(data, updates);

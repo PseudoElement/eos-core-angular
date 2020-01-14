@@ -7,13 +7,13 @@ import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { DEPARTMENT, USER_CERTIFICATE, USER_CL } from 'eos-rest';
+import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { BASE_PARAM_INPUTS_CB, BASE_PARAM_ACCESS_INPUT, BASE_PARAM_CONTROL_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
+import { BASE_PARAM_INPUTS_CB, BASE_PARAM_ACCESS_INPUT, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_SETTINGS_COPY } from 'eos-user-params/shared/consts/base-param.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl, IRoleCB } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from '../shared/base-param-curent.descriptor';
-import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_USER_CL } from 'eos-user-select/shered/consts/create-user.consts';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -25,8 +25,9 @@ import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm
 import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
-import { CONFIRM_AVSYSTEMS_UNCHECKED } from 'eos-dictionaries/consts/confirm.consts';
+import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT } from 'eos-dictionaries/consts/confirm.consts';
 import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
+
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -36,35 +37,39 @@ import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
 export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     editMode = false;
-    type: string = 'password';
-    type1: string = 'password';
     curentUser: IParamUserCl;
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
+    copyField: IInputParamControl[];
     title: string;
     /* инпуты */
     inputs;
     controls;
     accessInputs;
+    settingsCopyInputs;
     /* инпуты */
 
     /* формы */
     form: FormGroup;
     formControls: FormGroup;
     formAccess: FormGroup;
+    formSettingsCopy: FormGroup;
     /* формы */
     isLoading: Boolean = true;
     selfLink = null;
     dueDepName: string = '';
+    dueDepSurname: string = '';
     singleOwnerCab: boolean = true;
     currentCbFields: IRoleCB[] = [];
     asistMansStr: string = '';
     startRolesCb: IRoleCB[];
+    user_copy_isn: number;
+    isPhoto: boolean | number = false;
+    urlPhoto: string = '';
     public isShell: boolean = false;
+    public criptoView: boolean = true;
     public userSertsDB: USER_CERTIFICATE;
-    public errorPass: boolean = false;
-    public checkPass: string = '';
     private _sysParams;
     private _descSrv;
     private _newData: Map<string, any> = new Map();
@@ -109,7 +114,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
-                this._userParamSrv.getPasswordСonditions();
+                this._userParamSrv.curentUser.USER_PARMS_List.forEach( elem => {
+                    if (elem.PARM_NAME === 'CRYPTO_ACTIVEX' && elem.PARM_VALUE !== 'EosUtils.EosCryptoSvc') {
+                        this.criptoView = false;
+                    }
+                });
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
                 this.getTitle();
@@ -145,29 +154,54 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return null;
     }
     get getValidDate() {
-        return this.form.controls['PASSWORD_DATE'].valid && this.form.controls['NOTE2'].valid && this.form.controls['CLASSIF_NAME'].valid;
+        return this.form.controls['NOTE2'].valid && this.form.controls['CLASSIF_NAME'].valid;
     }
 
     init() {
-    //    this.apiSrvRx.read({CBR_USER_ROLE: ALL_ROWS}).then(data => console.log(data));
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
+        if (this.curentUser.DUE_DEP) {
+            this.getPhotoUser(this.curentUser.DUE_DEP);
+        }
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS_CB, !this.editMode);
         this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
+        this.copyField = this._descSrv.fillValueAccessField(BASE_PARAM_SETTINGS_COPY, !this.editMode);
 
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
+        this.settingsCopyInputs = this._inputCtrlSrv.generateInputs(this.copyField);
 
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
+        this.formSettingsCopy = this._inputCtrlSrv.toFormGroup(this.settingsCopyInputs, false);
         this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+        this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
         return Promise.resolve();
+    }
+
+    getPhotoUser(due: string) {
+        const query = {
+            DEPARTMENT: {
+                criteries: {
+                    DUE: `${due}`
+                }
+            }
+        };
+        return this.apiSrvRx.read(query).then(data => {
+            this.isPhoto = data[0]['ISN_PHOTO'];
+            if (this.isPhoto) {
+                this._rtUserSel.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
+                    const url = `url(data:image/${res[0].EXTENSION};base64,${res[0].CONTENTS})`;
+                    this.urlPhoto = url;
+                });
+            }
+        });
     }
 
     subscribeForms() {
@@ -187,25 +221,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     checkChangeForm(data): void {
         Object.keys(data).forEach((val, index) => {
-            if (val === 'PASSWORD_DATE') {
-                if (String(data[val]).toString() === String(this.inputs[val].value).toString()) {
-                    this._newData.delete(val);
-                } else {
-                    const newDate = data[val] ? this._descSrv.dateToString(data[val]) : null;
-                    this._newData.set(val, newDate);
-                }
+            if (data[val] !== this.inputs[val].value) {
+                this._newData.set(val, data[val]);
             } else {
-                if (data[val] !== this.inputs[val].value) {
-                    this._newData.set(val, data[val]);
-                } else {
-                    this._newData.delete(val);
-                }
+                this._newData.delete(val);
             }
         });
         this._pushState();
     }
     checkChangeFormControls(data): void {
-        this.checkchangPass(data['pass'], data['passRepeated']);
         Object.keys(data).forEach((val, index) => {
             if (data[val] !== this.controls[val].value) {
                 this._newDataformControls.set(val, data[val]);
@@ -335,7 +359,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     setNewDataFormControl(query, id) {
         if (this._newDataformControls.size) {
-            if (this._newDataformControls.has('SELECT_ROLE')) {
+            if (this._newDataformControls.has('SELECT_ROLE') && !this.user_copy_isn) {
                 query.push({
                     method: 'MERGE',
                     requestUri: `USER_CL(${id})/USER_PARMS_List('${id} CATEGORY')`,
@@ -357,6 +381,27 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return false;
     }
 
+    selectUser() {
+        if (this.editMode) {
+            OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+            OPEN_CLASSIF_USER_CL['selectMulty'] = false;
+            OPEN_CLASSIF_USER_CL['skipDeleted'] = null;
+            this.isShell = true;
+            this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+                .then(data => {
+                    this.user_copy_isn = +data;
+                    return this._getUserCl(this.user_copy_isn);
+                })
+                .then(data => {
+                    this.isShell = false;
+                    this.formControls.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                })
+                .catch(() => {
+                    this.isShell = false;
+                });
+        }
+    }
+
     submit(meta?: string): Promise<any> {
         if (this.cheackCtech()) {
             return;
@@ -365,29 +410,65 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.messageAlert({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
             return;
         }
-        if (this.checkPass !== '') {
-            return;
-        }
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
         const accessStr = '';
         this.setQueryNewData(accessStr, newD, query);
         this.setNewDataFormControl(query, id);
+        if (this._newData.get('IS_SECUR_ADM') === false) { // IS_SECUR_ADM приватный критерий
+            this.apiSrvRx.read<USER_CL>({
+                USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1' }),
+                orderby: 'ISN_LCLASSIF',
+                top: 2,
+                loadmode: 'Table'
+              }).then((admns: USER_CL[]) => {
+                if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                    this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
+                    return;
+                } else {
+                    if (!this.curentUser['IS_PASSWORD']) {
+                        return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                            if (res) {
+                                this._router.navigate(['/user-params-set/auntefication']);
+                            } else {
+                                return this.ConfirmAvSystems(accessStr, id, query);
+                            }
+                        });
+                    } else {
+                        return this.ConfirmAvSystems(accessStr, id, query);
+                    }
+                }
+            });
+        } else {
+            if (!this.curentUser['IS_PASSWORD']) {
+                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                    if (res) {
+                        this._router.navigate(['/user-params-set/auntefication']);
+                    } else {
+                        return this.ConfirmAvSystems(accessStr, id, query);
+                    }
+                });
+            } else {
+                return this.ConfirmAvSystems(accessStr, id, query);
+            }
+        }
+    }
+
+    ConfirmAvSystems(accessStr: string, id: number, query: any[]): Promise<any> {
         if (this.uncheckedAvSystems()) {
             return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
                 if (res) {
-                    return this.saveAfterSystems(newD, accessStr, id, query);
+                    return this.saveAfterSystems(accessStr, id, query);
                 } else {
                     return;
                 }
             });
         }
-        return this.saveAfterSystems(newD, accessStr, id, query);
+        return this.saveAfterSystems(accessStr, id, query);
     }
 
-    saveAfterSystems(newD: any, accessStr: string, id: number, query: any): Promise<any> {
-        this.isLoading = true;
+    saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
         if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
                 if (cab) {
@@ -397,21 +478,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
             }).then(data => {
                 if (!data) {
-                    this.clearMap();
                     this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
-                    this.isLoading = false;
                     return;
                 } else {
-                    return this.saveData(newD, accessStr, id, query);
+                    return this.saveData(accessStr, id, query);
                 }
             });
         } else {
-            return this.saveData(newD, accessStr, id, query);
+            return this.saveData(accessStr, id, query);
         }
     }
 
-    saveData(newD: any, accessStr: string, id: number, query: any): Promise<any> {
-        const pass = this._newDataformControls.get('pass');
+    saveData(accessStr: string, id: number, query: any): Promise<any> {
+        this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
                 this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
@@ -426,59 +505,37 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                if (pass) {
-                    this.dropLogin(id).then(() => {
-                        return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            return this.sendData(query, accessStr).then(() => {
-                                return this.createLogin(pass, id).then(() => {
-                                    return this.changePassword(pass, id).then(() => {
-                                        this.AfterSubmit(accessStr);
-                                    });
-                                });
-                            });
-                        });
-                    }).catch(error => {
-                        this._errorSrv.errorHandler(error);
-                        this.cancel();
+                this.dropLogin(id).then(() => {
+                    this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
+                    return this.apiSrvRx.batch(queryPas, '').then(() => {
+                        return this.sendData(query, accessStr);
                     });
-                } else {
-                    this.dropLogin(id).then(() => {
-                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
-                        return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            return this.sendData(query, accessStr);
-                        });
-                    }).catch(error => {
-                        this._errorSrv.errorHandler(error);
-                        this.cancel();
-                    });
-                }
+                }).catch(error => {
+                    this._errorSrv.errorHandler(error);
+                    this.cancel();
+                });
             }
         } else {
-            if (pass) {
-                if (this.curentUser['IS_PASSWORD'] === 0) {
-                    this.createLogin(pass, id).then(() => {
-                        return this.sendData(query, accessStr);
-                    }).catch(error => {
-                        this._errorSrv.errorHandler(error);
-                        this.cancel();
-                    });
-                } else {
-                    this.changePassword(pass, id).then(() => {
-                        return this.sendData(query, accessStr);
-                    }).catch(error => {
-                        this._errorSrv.errorHandler(error);
-                        this.cancel();
-                    });
-                }
-            } else {
-                this.sendData(query, accessStr);
-            }
+            this.sendData(query, accessStr);
         }
     }
 
     sendData(query, accessStr): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
-            this.AfterSubmit(accessStr);
+            if (this.user_copy_isn) {
+                let url = `FillUserCl?isn_user=${this.curentUser.ISN_LCLASSIF}`;
+                url += `&role='${this.formControls.controls['SELECT_ROLE'].value ? encodeURI(this.formControls.controls['SELECT_ROLE'].value) : ''}'`;
+                url += `&isn_user_copy_from=${this.user_copy_isn}`;
+                return this.apiSrvRx.read({
+                    [url]: ALL_ROWS,
+                }).then(() => {
+                    this.user_copy_isn = null;
+                    this.formControls.get('USER_COPY').patchValue('');
+                    this.AfterSubmit(accessStr);
+                });
+            } else {
+                this.AfterSubmit(accessStr);
+            }
             return;
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
@@ -490,10 +547,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
-        }
-        if (this._newDataformControls.has('pass')) {
-            this.formControls.get('pass').reset('');
-            this.formControls.get('passRepeated').reset('');
         }
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
@@ -508,6 +561,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
             this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+            this.dueDepSurname = this.form.controls['SURNAME_PATRON'].value;
             this.isLoading = false;
             this.editModeF();
             this._pushState();
@@ -528,16 +582,18 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
+        this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
+        this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.clearMap();
         this._pushState();
         this.editModeF();
     }
     cancelValues(inputs, form: FormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
-            form.controls[key].patchValue(inputs[key].value, { emitEvent: true });
+            form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
         });
     }
     gt(): any {
@@ -598,10 +654,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.form.enable({ onlySelf: true, emitEvent: false });
             this.formControls.enable({ onlySelf: true, emitEvent: false });
             this.formAccess.enable({ onlySelf: true, emitEvent: false });
+            this.formSettingsCopy.enable({ onlySelf: true, emitEvent: false });
         } else {
             this.form.disable({ onlySelf: true, emitEvent: false });
             this.formControls.disable({ onlySelf: true, emitEvent: false });
             this.formAccess.disable({ onlySelf: true, emitEvent: false });
+            this.formSettingsCopy.disable({ onlySelf: true, emitEvent: false });
         }
     }
     close() {
@@ -655,7 +713,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
                 this.dueDepName = dep['CLASSIF_NAME'];
+                this.dueDepSurname = dep['SURNAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
             })
             .catch(() => {
@@ -663,20 +723,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             });
     }
 
-    setVision(flag?) {
-        if (flag) {
-            this.type = 'text';
-        } else {
-            this.type1 = 'text';
-        }
-    }
-    resetVision(flag?) {
-        if (flag) {
-            this.type = 'password';
-        } else {
-            this.type1 = 'password';
-        }
-    }
     selectDepartment() {
         if (!this.curentUser.isTechUser && this.editMode) {
             this.showDepartment();
@@ -831,27 +877,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return newArr.join('');
     }
 
-
-    private checkchangPass(pass, passrepeat) {
-        this.checkPass = pass !== '' ? this._userParamSrv.checkPasswordСonditions(pass) : '';
-        if (this.checkPass !== '') {
-            this.formControls.get('pass').setErrors({ repeat: true });
-        }
-        if (pass !== '' && passrepeat !== '') {
-            this.errorPass = pass !== passrepeat;
-            if (this.errorPass) {
-                this.formControls.get('passRepeated').setErrors({ repeat: true });
-            } else {
-                this.errorPass = false;
-            }
-        } else if (pass !== '' || passrepeat !== '') {
-            this.errorPass = true;
-        } else {
-            this.errorPass = false;
-        }
-    }
     private _pushState() {
-        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass });
+        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate});
     }
 
     private _subscribe() {
@@ -879,14 +906,25 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             console.log('Ошибка', error);
                         });
                     }
+                    this.form.get('SURNAME_PATRON').patchValue(this.form.get('CLASSIF_NAME').value, { emitEvent: false });
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
+                    this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
+                }
+            });
+        this.form.get('CLASSIF_NAME').valueChanges
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(data => {
+                if (f.get('teсhUser').value) {
+                    this.form.get('SURNAME_PATRON').patchValue(data, { emitEvent: false });
                 }
             });
     }
@@ -899,21 +937,25 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         );
     }
-    private createLogin(pass, id): Promise<any> {
-        const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
-        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    private _getUserCl(isn) {
+        const queryUser = {
+            USER_CL: {
+                criteries: {
+                    ISN_LCLASSIF: isn
+                }
+            }
+        };
+        return this.apiSrvRx.read<USER_CL>(queryUser);
     }
-    private changePassword(pass, id): Promise<any> {
-        const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
-        return this.apiSrvRx.read({ [url]: ALL_ROWS });
-    }
-
     private dropLogin(id): Promise<any> {
         const url = `DropLogin?isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
+            if (!this.curentUser['IS_PASSWORD']) {
+                this.inputs['CLASSIF_NAME'].readonly = true;
+            }
             if (control.value === this.inputs['CLASSIF_NAME'].value) {
                 return Promise.resolve(null);
             } else if ((control.value).trim() !== '') {

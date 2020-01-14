@@ -42,6 +42,7 @@ export enum E_RECORD_ACTIONS {
     cut,
     combine,
     uncheckNewEntry,
+    dopRequisites,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

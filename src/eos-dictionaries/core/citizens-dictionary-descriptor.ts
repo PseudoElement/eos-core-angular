@@ -33,7 +33,10 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public hasTemplateTree() {
         return true;
     }
-    public extendCritery(critery, { mode, deleted }, selectedNode) {
+    public extendCritery(critery, { mode, deleted, onlyNew }, selectedNode) {
+        if (onlyNew) {
+            critery['NEW'] = '1';
+        }
         return super.extendCritery(critery, { mode, deleted }, selectedNode);
     }
 
@@ -115,8 +118,9 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
                     requestUri: `CITIZEN(${node.id})`,
                     data: {
                         NEW: 0
-                    }});
-                }
+                    }
+                });
+            }
         });
         if (change.length) {
             return this.apiSrv.batch(change, '');

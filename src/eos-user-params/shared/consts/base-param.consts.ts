@@ -9,15 +9,10 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         required: true,
     },
     {
-        controlType: E_FIELD_TYPE.date,
-        key: 'PASSWORD_DATE',
-        label: 'ДАТА СМЕНЫ ПАРОЛЯ',
-        readonly: true,
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'USERTYPE',
-        label: 'Аутентификация с помощью ОС',
+        controlType: E_FIELD_TYPE.string,
+        key: 'SURNAME_PATRON',
+        label: 'ФАМИЛИЯ И.О.',
+        required: true,
     },
     {
         controlType: E_FIELD_TYPE.text,
@@ -55,20 +50,6 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         readonly: true,
     },
     {
-        controlType: E_FIELD_TYPE.string,
-        key: 'pass',
-        label: 'ПАРОЛЬ',
-        pattern: /^\S+$/,
-        value: '',
-    },
-    {
-        controlType: E_FIELD_TYPE.string,
-        key: 'passRepeated',
-        label: 'ПОВТОРИТЕ ПАРОЛЬ',
-        pattern: /^\S+$/,
-        value: '',
-    },
-    {
         controlType: E_FIELD_TYPE.select,
         key: 'SELECT_ROLE',
         label: 'РОЛЬ',
@@ -81,6 +62,12 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
             }
         ],
     },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'USER_COPY',
+        label: 'Скопировать настройки от:',
+        value: '',
+    },
 ];
 
 export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
@@ -91,15 +78,10 @@ export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
         required: true,
     },
     {
-        controlType: E_FIELD_TYPE.date,
-        key: 'PASSWORD_DATE',
-        label: 'ДАТА СМЕНЫ ПАРОЛЯ',
-        readonly: true,
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'USERTYPE',
-        label: 'Аутентификация с помощью ОС',
+        controlType: E_FIELD_TYPE.string,
+        key: 'SURNAME_PATRON',
+        label: 'ФАМИЛИЯ И.О.',
+        required: true,
     },
     {
         controlType: E_FIELD_TYPE.text,
@@ -213,6 +195,34 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.boolean,
         key: '21',
         label: 'EOS Desktop Service',
+    },
+];
+
+export const BASE_PARAM_SETTINGS_COPY: IInputParamControl[] = [
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'copy_0',
+        label: 'Права "Дело"',
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'copy_1',
+        label: 'Списки справочников',
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'copy_2',
+        label: 'Стандартные тексты',
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'copy_3',
+        label: 'Параметры',
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'copy_4',
+        label: 'Права поточного сканирования',
     },
 ];
 

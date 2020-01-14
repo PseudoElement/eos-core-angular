@@ -144,7 +144,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     }, {
         key: 'NEW',
         title: 'Нов.',
-        type: 'boolean',
+        type: 'new',
     }, {
         key: 'N_PASPORT',
         title: 'Паспорт №',
@@ -176,31 +176,18 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         type: 'string',
         length: 12,
     },
+    {
+        key: 'ISN_REGION',
+        title: 'ISN_Регион',
+        type: 'dictionary',
+            dictionaryId: 'REGION_CL',
+            dictionaryLink: {
+                pk: 'ISN_NODE',
+                fk: 'ISN_REGION',
+                label: 'CLASSIF_NAME',
+            },
+    },
 
-
-
-
-
-
-    // {
-    //     key: 'ISN_REGION',
-    //     title: 'ISN_Регион',
-    //     type: 'dictionary',
-    //         dictionaryId: 'REGION_CL',
-    //         dictionaryLink: {
-    //             pk: 'ISN_NODE',
-    //             fk: 'ISN_REGION',
-    //             label: 'CLASSIF_NAME',
-    //         },
-    //     options: [],
-    // },
-
-    // {
-    //     key: 'REGION_NAME',
-    //     title: 'Регион',
-    //     type: 'string',
-    //     length: 255,
-    // },
 
     ]),
     treeFields: ['CITIZEN_SURNAME'],
@@ -214,6 +201,6 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         'ENCRYPT_FLAG', 'ID_CERTIFICATE', 'MAIL_FORMAT', 'SNILS', ],
     /** customize view fields */
     allVisibleFields: [ 'CITIZEN_CITY', 'DUE_REGION', 'CITIZEN_ADDR', 'ZIPCODE', 'INN', 'SNILS', 'PHONE', 'SEX',
-        'SERIES', 'N_PASPORT', 'GIVEN', 'E_MAIL', 'NOTE' ],
+        'SERIES', 'N_PASPORT', 'GIVEN', 'E_MAIL', 'NOTE', 'NEW' ],
 };
 /* tslint:enable:max-line-length */

@@ -22,6 +22,7 @@ import { ParamPrjRcComponent } from './parametersSystem/param-prj-rc/param-prj-r
 import { ParamRcComponent } from './parametersSystem/param-rc/param-rc.component';
 import { CertStoresComponent } from './parametersSystem/param-web/cert-stores/cert-stores.component';
 import { AddCertStoresComponent } from './parametersSystem/param-web/cert-stores/add-cert-stores/add-cert-stores.component';
+import { ParamOrganizNowComponent } from './parametersSystem/param-organiz-now/param-org-now.component';
 
 
 
@@ -49,7 +50,8 @@ import { ParamLoggingComponent } from './parametersSystem/param-logging/param-lo
         ParamRcComponent,
         CertStoresComponent,
         AddCertStoresComponent,
-        ParamLoggingComponent
+        ParamLoggingComponent,
+        ParamOrganizNowComponent,
     ],
     entryComponents: [
         AuthenticationCollectionComponent

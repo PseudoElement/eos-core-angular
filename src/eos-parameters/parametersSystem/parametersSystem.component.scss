@@ -56,6 +56,18 @@
     }
 }
 
+.organ-new-now{
+    position: absolute; 
+    top: 38px; 
+    right: 3px;
+    .organ-new-now-en {
+        cursor: pointer;
+    }
+    .organ-new-now-dis {
+        cursor: not-allowed;
+    }
+}
+
 .params-nav-list {
     position: absolute;
     left: -300px;

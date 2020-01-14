@@ -1,0 +1,91 @@
+<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs"><!--  -->
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit();"
+        (cancelForm)="cancel();"
+        [statusBtnSub]="!this.form.controls['rec.NAME'].value"
+        [editBtn]="!editMode"
+        (editForm)="edit()"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.NAME']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <div style="position: relative;">
+            <eos-dynamic-input
+                [input]="inputs['rec.FULLNAME']"
+                [form]="form"
+                [readonly]="false"
+                (keydown)="chenge($event)"
+            ></eos-dynamic-input>
+            <div class="organ-new-now">
+                <span (click)="openOrganiz()" 
+                class = "eos-icon" 
+                tooltip="Выбрать организацию"
+                containerClass="tooltip-info"
+                placement="left"
+                container="body"
+                [ngClass]="{
+                    'eos-icon-building-blue': !form.controls['rec.ISN_ORGANIZ'].disabled, 
+                    'eos-icon-building-grey': form.controls['rec.ISN_ORGANIZ'].disabled,
+                    'organ-new-now-dis': form.controls['rec.ISN_ORGANIZ'].disabled,
+                    'organ-new-now-en': !form.controls['rec.ISN_ORGANIZ'].disabled
+                }"
+                ></span>
+            </div>
+            
+        </div>
+        
+        <div style="display: flex;">
+            <div style="width: 400px; margin-right: 20px;">
+                <eos-dynamic-input
+                [input]="inputs['rec.INDEX']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+            <div style="width: 400px;">
+                <eos-dynamic-input
+                [input]="inputs['rec.ADDRES']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+        </div>
+        <div style="display: flex;">
+            <div style="width: 250px; margin-right: 20px;">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INN']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+            <div style="width: 250px; margin-right: 20px;">
+                <eos-dynamic-input
+                    [input]="inputs['rec.OKPO']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+            <div style="width: 250px;">
+                <eos-dynamic-input
+                    [input]="inputs['rec.OKVED']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+        <eos-dynamic-input
+            [input]="inputs['rec.ORG_ID']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <hr/>
+        <div style="padding: 15px;">
+            <span>Система {{sys}} версии {{version}}</span>
+        </div>
+        
+    </div>
+</div>

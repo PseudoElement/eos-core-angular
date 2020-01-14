@@ -10,7 +10,7 @@ import { BaseCardEditComponent } from './base-card-edit.component';
 export class SimpleCardEditComponent extends BaseCardEditComponent {
 
     get styleModeEdit() {
-        if (this.dictSrv.currentDictionary.id === 'ca-category' && this.editMode && !this.isNewRecord) {
+        if (this.dictSrv.currentDictionary && this.dictSrv.currentDictionary.id === 'ca-category' && this.editMode && !this.isNewRecord) {
             return { 'height': 'calc(100vh - 225px)' };
         }
         return '';

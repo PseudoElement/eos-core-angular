@@ -3,7 +3,7 @@
     width: 800px;
     .card-time-perfom {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: flex-start;
         .card-label-end {
             display: flex;
@@ -20,6 +20,7 @@
         }
         > eos-dynamic-input {
             padding-left: 5px;
+            height: 34px;
         }
         span {
             padding-left: 10px;

@@ -9,6 +9,7 @@ import { CONFIRM_NUMCREATION_CANT, CONFIRM_NUMCREATION_CHANGE } from 'app/consts
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { SopsHelper } from 'eos-dictionaries/helpers/sops.helper';
 
 const NODE_ID_NAME = 'ISN_NODE';
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
@@ -165,7 +166,7 @@ export class CounterNpEditComponent {
             if (val_number) {
                 val_number.focus();
             }
-        }, 100);
+        }, 200);
     }
 
     /**
@@ -192,9 +193,9 @@ export class CounterNpEditComponent {
             const highId = dndata[NODE_HIGH_NAME];
             if (!this._decl.isCounterRK && !dndata[this._decl.dbNodeName] && highId !== null) {
                 this.isUpdating = false;
-                CounterNpEditComponent._autoFocusOnValNumber();
                 this._dictSrv.currentDictionary.getFullNodeInfo(highId)
                     .then(highNode => {
+                        CounterNpEditComponent._autoFocusOnValNumber();
                         if (highNode) {
                             this.initByNodeData(type, highNode.data.rec);
                         }
@@ -297,17 +298,24 @@ export class CounterNpEditComponent {
             return Promise.resolve(true);
         }
 
-        const old_value = this._getNodeValue(this.editValueYear);
-        if (old_value) {
-            if (Number(this.editValueNum) <= Number (old_value)) {
+        let check = Promise.resolve(false);
+
+        if (this._decl.type === E_COUNTER_TYPE.counterDocgroup) {
+            check = SopsHelper.sopExistsDocRcByOrderNum(this._node['DUE'], this.editValueNum, this.editValueYear);
+        } else if (this._decl.type === E_COUNTER_TYPE.counterDocgroupRKPD) {
+            check = SopsHelper.sopExistsPrjRcByOrderNum(this._node['DUE'], this.editValueNum, this.editValueYear);
+        }
+
+        return check.then( docsexist => {
+            if (docsexist) {
                 return this._confirmSrv.confirm2(CONFIRM_NUMCREATION_CANT)
                     .then(() => {
                         return false;
                     });
+            } else {
+                return true;
             }
-        }
-
-        return Promise.resolve(true);
+        });
     }
 
     public getNodeTitle() {
@@ -318,6 +326,8 @@ export class CounterNpEditComponent {
         this.editValueNum = node[NUM_VALUE_NAME];
         this.editValueYear = node[NUM_YEAR_NAME];
     }
+
+
 
     private _readRecords(): Promise<any> {
         const criteries = { [this._decl.dbNumIdName]: String(this._baseId), [FLAG_MAX]: String(1) };
@@ -330,9 +340,9 @@ export class CounterNpEditComponent {
         return this._fillDocGroup()
             .then(() => {
                 this.isUpdating = false;
-                CounterNpEditComponent._autoFocusOnValNumber();
                 this.apiSrv.read(req)
                     .then((cnts) => {
+                        CounterNpEditComponent._autoFocusOnValNumber();
                         this.nodes = cnts.filter(d => {
                             let res = String(d[this._decl.dbNumIdName]) === this._baseId;
                             if (res && this._decl.isCounterRK) {

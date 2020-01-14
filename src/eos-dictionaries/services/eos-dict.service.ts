@@ -753,7 +753,7 @@ export class EosDictService {
         return this.getDictionaryById(node.dictionaryId)
             .then((dictionary) => {
                 let resNode: EosDictionaryNode = null;
-                return this.preSave(dictionary, data, false)
+                return this._preSave(dictionary, data, false)
                     .then((appendChanges) => {
                         return dictionary.updateNodeData(node, data, appendChanges);
                     })
@@ -778,8 +778,11 @@ export class EosDictService {
             .catch((err) => {
                 if (err === 'cancel') {
                     return Promise.reject('cancel');
+                } else if (err && err.error instanceof RestError) {
+                    return Promise.reject(err);
                 }
                 this._errHandler(err);
+                return Promise.reject(err);
             });
     }
 
@@ -787,7 +790,7 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
 
         if (this._treeNode) {
-            return this.preSave(dictionary, data, true)
+            return this._preSave(dictionary, data, true)
                 .then((appendChanges) => {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data, appendChanges);
                 })
@@ -1326,7 +1329,11 @@ export class EosDictService {
         return true;
     }
 
-    private preSave(dictionary: EosDictionary, data: any, isNewRecord: boolean): Promise<any> {
+    private _preSave(dictionary: EosDictionary, data: any, isNewRecord: boolean): Promise<any> {
+        if (data && data.sev) {
+            // console.log("TCL: data.sev", data.sev)
+        }
+
         if (data && data.rec) {
             if (dictionary.id === PARTICIPANT_SEV_DICT.id) {
 
@@ -1380,7 +1387,7 @@ export class EosDictService {
                                     .then((confirm: boolean) => {
                                         if (confirm) {
                                             boss.data.rec['POST_H'] = 0;
-                                            return dictionary.updateNodeData(boss, boss.data);
+                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
                                         } else {
                                             data.rec['POST_H'] = 0;
                                             return Promise.reject('cancel');
