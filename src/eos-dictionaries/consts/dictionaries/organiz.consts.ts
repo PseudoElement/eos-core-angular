@@ -18,7 +18,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine', 'dopRequisites',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'],
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes', 'uncheckNewEntry'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick /*, SEARCH_TYPES.full*/],
