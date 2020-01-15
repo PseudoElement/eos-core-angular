@@ -8,6 +8,8 @@ import {EosDictionary} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-department-node-info',
@@ -22,19 +24,24 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
 
     boss: EosDictionaryNode;
     department: string;
+    isCBBase: boolean;
 
     constructor(
         private _modalSrv: BsModalService,
         private _descrSrv: DictionaryDescriptorService,
         private _eaps: EosAccessPermissionsService,
         private _msgSrv: EosMessageService,
+        private _appctx: AppContext,
     ) {
         super();
-
-        this._eaps.isAccessGrantedForUsers()
+        this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
+        this.canCreateUser = false;
+        if (!this.isCBBase && Features.cfg.departments.userCreateButton) {
+            this._eaps.isAccessGrantedForUsers()
             .then((res) => {
                 this.canCreateUser = res;
             });
+        }
     }
 
     ngOnChanges() {

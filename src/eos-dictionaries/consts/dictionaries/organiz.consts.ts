@@ -2,6 +2,8 @@ import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-d
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_NAME, } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';
 import { ADDR_CATEGORY_DICT } from './addr-category.consts';
 
@@ -16,7 +18,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine', 'dopRequisites',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes', 'uncheckNewEntry'],
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick /*, SEARCH_TYPES.full*/],
@@ -53,6 +55,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         pattern: NOT_EMPTY_STRING,
         length: 248,
     },
+    ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [
     {
         key: 'TERM_EXEC',
         title: 'Срок исполнения',
@@ -83,9 +86,15 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         length: 150,
         //  required: true,
         dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
+            dictionaryLink: {
+                pk: 'ISN_LCLASSIF',
+                fk: 'ISN_ADDR_CATEGORY',
+                label: 'CLASSIF_NAME',
+            },
         options: [],
         default: 0,
     },
+    ] : [],
     {
         key: 'NEW_RECORD',
         title: 'Нов.',
@@ -224,7 +233,9 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
     //     'MAIL_FOR_ALL', 'NOTE', 'OKPO', 'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
     //     'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'TERM_EXEC', 'TERM_EXEC_TYPE', 'ISN_ADDR_CATEGORY'],
+    editFields: ['CLASSIF_NAME', 'NOTE',
+        ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [ 'TERM_EXEC', 'TERM_EXEC_TYPE', 'ISN_ADDR_CATEGORY'] : [],
+    ],
     searchFields: ['CLASSIF_NAME'],
     fullSearchFields: [],
     // quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',

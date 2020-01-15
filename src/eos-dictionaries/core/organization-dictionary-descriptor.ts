@@ -6,8 +6,26 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { TreeDictionaryDescriptor } from './tree-dictionary-descriptor';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosDictionaryNode } from './eos-dictionary-node';
+import { EosUtils } from 'eos-common/core/utils';
+
+const inheritFiields = [
+    'ISN_ADDR_CATEGORY',
+];
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
+
+    getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
+        const newPreset = {};
+        EosUtils.deepUpdate(newPreset, preSetData);
+        if (parentNode) {
+            [
+                ... inheritFiields,
+            ]
+            .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
+        }
+        return super.getNewRecord(newPreset, parentNode);
+    }
+
     getRoot(): Promise<any[]> {
         return this.getData({ criteries: { IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
     }

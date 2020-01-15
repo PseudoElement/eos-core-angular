@@ -53,7 +53,7 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
                 ... inheritFiields,
                 ... isCBFunc ? ['REG_DATE_PROTECTED'] : [], // 'Запрещено редактировать рег. дату'
             ]
-            .forEach((f) => this._fillParentField(newPreset, parentNode.data, f));
+            .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
             if (newPreset['rec']['IS_NODE'] === 1 && parentNode.data.rec['RC_TYPE'] === 0) {
                 newPreset['rec']['RC_TYPE'] = 1;
             }
@@ -81,8 +81,8 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
         let result = Promise.resolve(true);
 
-        const index = this._getRecField(nodeData, DOCGROUP_INDEX);
-        const due = this._getRecField(nodeData, 'DUE');
+        const index = this.getRecField(nodeData, DOCGROUP_INDEX);
+        const due = this.getRecField(nodeData, 'DUE');
         if (index) {
             result = result.then( () => {
                 return this._checkIndexDublicates(due, index).then ( res => {
@@ -135,15 +135,5 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
                 return doSave;
             });
     }
-
-    private _fillParentField(preset: any, parentData: any, fieldName: string) {
-        if (this._getRecField(parentData, fieldName)) {
-            Object.assign(preset['rec'], {[fieldName]: this._getRecField(parentData, fieldName)});
-        }
-    }
-
-    private _getRecField(data: any, fieldName: string): any {
-        return data['rec'] ? data['rec'][fieldName] : null;
-     }
 
 }

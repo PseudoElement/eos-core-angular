@@ -167,4 +167,15 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         return _res;
     }
+
+    protected fillParentField(preset: any, parentData: any, fieldName: string) {
+        if (this.getRecField(parentData, fieldName)) {
+            Object.assign(preset['rec'], {[fieldName]: this.getRecField(parentData, fieldName)});
+        }
+    }
+
+    protected getRecField(data: any, fieldName: string): any {
+        return data['rec'] ? data['rec'][fieldName] : null;
+     }
+
 }
