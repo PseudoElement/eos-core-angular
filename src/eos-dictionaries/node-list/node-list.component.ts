@@ -591,7 +591,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         if (!this.nodeListElement) {
             this.hasOverflowedColumns = false;
         } else {
-            this.hasOverflowedColumns = (this.nodeListElement.scrollWidth > this.nodeListElement.clientWidth);
+            this.hasOverflowedColumns = (this.nodeListElement.scrollWidth > (this.nodeListElement.clientWidth + 22 /* order arrow */));
         }
 
         if (this.isOverflowed()) {
