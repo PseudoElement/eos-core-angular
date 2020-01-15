@@ -83,13 +83,17 @@ export class CopyNodeComponent implements OnDestroy {
                 STATUS: '',
             };
 
-            console.log(_newRec);
+            // console.log(_newRec);
             if (!this.form.controls['C_YEAR'].value) {
                 _newRec.YEAR_NUMBER = this.form.controls['YEAR'].value;
             }
 
-            if (!this.form.controls['C_ONE_YEAR'].value) {
-                _newRec.END_YEAR = _newRec.YEAR_NUMBER;
+            if (this.form.controls['C_ONE_YEAR'].value) { /* как в исходных */
+                if (_newRec.END_YEAR && Number (_newRec.END_YEAR < Number(_newRec.YEAR_NUMBER))) {
+                    _newRec.END_YEAR = _newRec.YEAR_NUMBER;
+                }
+            } else { /* текущие */
+                _newRec.END_YEAR = null;
             }
 
             if (!this.form.controls['C_CLOSED'].value) {

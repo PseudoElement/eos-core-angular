@@ -868,7 +868,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 if (button && button.result === 2) {
                     return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
                         const deletedList = results.filter(r => !r.error)
-                            .map(r => r.record[titleId]);
+                            .map ( r => r.record[titleId] || r.record['CLASSIF_NAME']) ;
                         if (deletedList && deletedList.length) {
                             const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                             message.msg = message.msg
@@ -1047,8 +1047,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const node = this._dictSrv.listNode;
         if (node) {
             this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
-                class: 'prj-default-values-modal moodal-lg', backdrop: true, ignoreBackdropClick: true
-            });
+                class: 'prj-default-values-modal moodal-lg', backdrop: true, ignoreBackdropClick: true});
             const content = {
                 nodeDescription: node.title,
                 isnNode: node.data.rec['ISN_NODE'],
@@ -1104,8 +1103,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     private __openCopyProperties(node: EosDictionaryNode, from_due: string, renewChilds: boolean) {
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
-            class: 'copy-properties-modal moodal-lg'
-        });
+            class: 'copy-properties-modal moodal-lg'});
         (<CopyPropertiesComponent>this.modalWindow.content).init(node.data.rec, from_due, renewChilds);
         const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
             this.modalWindow = null;
