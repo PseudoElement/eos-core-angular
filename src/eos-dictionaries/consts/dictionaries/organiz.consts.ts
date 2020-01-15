@@ -86,6 +86,11 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
             length: 150,
           //  required: true,
             dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
+            dictionaryLink: {
+                pk: 'ISN_LCLASSIF',
+                fk: 'ISN_ADDR_CATEGORY',
+                label: 'CLASSIF_NAME',
+            },
             options: [],
             default: 0,
     },
