@@ -62,6 +62,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     user_copy_isn: number;
     isPhoto: boolean | number = false;
     urlPhoto: string = '';
+    errorSave: boolean;
     public isShell: boolean = false;
     public criptoView: boolean = true;
     public userSertsDB: USER_CERTIFICATE;
@@ -150,6 +151,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     get getValidDate() {
         return this.form.controls['NOTE2'].valid && this.form.controls['CLASSIF_NAME'].valid;
+    }
+    get getErrorSave() {
+        const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
+        if (this.editMode && (val !== null || !this.form.controls['SURNAME_PATRON'].value)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     init() {

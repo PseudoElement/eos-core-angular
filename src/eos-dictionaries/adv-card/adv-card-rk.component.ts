@@ -127,7 +127,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         // this.dataController.zone.run(() => {
         //     this.rereadUserLists();
         // });
-        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
+        this._waitClassifSrv.openClassif({classif: 'COMMON_LIST'})
         .then(() => {
             // console.log('result: ', result);
             // this.dataController.zone.run(() => {
