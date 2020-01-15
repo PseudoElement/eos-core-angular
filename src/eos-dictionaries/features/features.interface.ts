@@ -14,6 +14,7 @@ export interface IOESDictsFeatures {
         reestr_send: boolean; /* галка Отправлять документы по реестрам */
         gas_ps: boolean; /* ГАС ПС */
         stamp: boolean; /* угловой штамп */
+        userCreateButton: boolean; /* кнопка "создать юзера" для ДЛ */
     };
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;

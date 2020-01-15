@@ -8,6 +8,7 @@ import {EosDictionary} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     selector: 'eos-department-node-info',
@@ -31,10 +32,13 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     ) {
         super();
 
-        this._eaps.isAccessGrantedForUsers()
+        this.canCreateUser = false;
+        if (Features.cfg.departments.userCreateButton) {
+            this._eaps.isAccessGrantedForUsers()
             .then((res) => {
                 this.canCreateUser = res;
             });
+        }
     }
 
     ngOnChanges() {
