@@ -499,6 +499,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         /* }, 0); */
     }
 
+    CommonTechLists() {
+        const param: IOpenClassifParams = {
+            classif: 'COMMON_LIST',
+        };
+        this.shadow = true;
+        this._waitCl.openClassif(param).then(data => {
+            this.shadow = false;
+        }).catch(error => {
+            this.shadow = false;
+        });
+    }
+
     GeneralLists() {
         const param: IOpenClassifParams = {
             classif: 'StdText',
