@@ -139,6 +139,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     get getValidDate() {
         return this.form.controls['NOTE2'].valid && this.form.controls['CLASSIF_NAME'].valid;
     }
+    get getErrorSave() {
+        const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
+        if (this.editMode && (val !== null || !this.form.controls['SURNAME_PATRON'].value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     init() {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);

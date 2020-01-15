@@ -649,7 +649,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
 
     public userListsEdit() {
-        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
+        this._waitClassifSrv.openClassif({classif: 'COMMON_LIST'})
             .then()
             .catch(() => {
                 console.log('window closed');
