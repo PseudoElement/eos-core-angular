@@ -155,10 +155,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             });
             return;
         }
-        // не даю редактировать ограниченному технологу
-        if (this._appContext.limitCardsUser.length === 0) {
-            this.editMode = true;
-        }
+
+        this.editMode = true;
         this.selectFuncNum(this.selectedList || this.funcList[0]);
     }
     selectFuncNum(node: FuncNum) {
