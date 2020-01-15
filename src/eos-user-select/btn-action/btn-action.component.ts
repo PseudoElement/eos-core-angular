@@ -213,6 +213,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             if (this.limitCards.length) {
                 UsersInfo.disabled = !this.selectUser.isEditable;
+            } else {
+                UsersInfo.disabled = false;
             }
         }
         this._rtSrv.usersInfo = UsersInfo;
