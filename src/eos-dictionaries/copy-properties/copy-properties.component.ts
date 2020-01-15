@@ -471,15 +471,15 @@ export class CopyPropertiesComponent implements OnDestroy {
             }, {
                 key: 'a_default_rek_prj',
                 label: 'Правила заполнения реквизитов РКПД по умолчанию',
-                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom[PRJ_DEFAULTS_LIST_NAME] && this._dgFrom[PRJ_DEFAULTS_LIST_NAME].length),
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG /* && this._dgFrom[PRJ_DEFAULTS_LIST_NAME] && this._dgFrom[PRJ_DEFAULTS_LIST_NAME].length */),
             }, {
                 key: 'a_mand_rek_prj',
                 label: 'Перечень реквизитов РКПД, обязательных для заполнения',
-                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom[PRJ_DEFAULTS_LIST_NAME] && this._dgFrom[PRJ_DEFAULTS_LIST_NAME].length),
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG /* && this._dgFrom[PRJ_DEFAULTS_LIST_NAME] && this._dgFrom[PRJ_DEFAULTS_LIST_NAME].length */),
             }, {
                 key: 'a_fc_prj',
                 label: 'Ограничения файлов для РКПД',
-                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom[FILE_CONSTRAINT_LIST_NAME] && this._dgFrom[FILE_CONSTRAINT_LIST_NAME].length),
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG /* && this._dgFrom[FILE_CONSTRAINT_LIST_NAME] && this._dgFrom[FILE_CONSTRAINT_LIST_NAME].length */),
             }, {
                 key: 'a_add_rek',
                 label: 'Дополнительные реквизиты и правила их заполнения',
