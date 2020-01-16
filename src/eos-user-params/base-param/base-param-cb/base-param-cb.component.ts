@@ -63,11 +63,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     singleOwnerCab: boolean = true;
     currentCbFields: IRoleCB[] = [];
     asistMansStr: string = '';
-    startRolesCb: IRoleCB[];
+    startRolesCb: IRoleCB[] = [];
     user_copy_isn: number;
     isPhoto: boolean | number = false;
     urlPhoto: string = '';
     errorSave: boolean;
+    queryRoles: any[] = [];
     public isShell: boolean = false;
     public criptoView: boolean = true;
     public userSertsDB: USER_CERTIFICATE;
@@ -79,7 +80,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private modalRef: BsModalRef;
 
     get newInfo() {
-        if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
+        if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size || this.queryRoles.length) {
             return false;
         }
         return true;
@@ -282,22 +283,30 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     getUserCbRoles() {
-        this.apiSrvRx.read({CBR_USER_ROLE: {
-            criteries: {DUE_PERSON: this._userParamSrv.curentUser.DUE_DEP}
-        }}).then((data: any) => {
-             const asistMansData = data.filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
+        const reqs = [
+            this.apiSrvRx.read({CBR_USER_ROLE: {
+                criteries: {DUE_PERSON: this.curentUser.DUE_DEP}
+            }}),
+            this.apiSrvRx.read({CBR_USER_ROLE: {
+                criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
+                orderby: 'WEIGHT'
+            }})
+        ];
+        return Promise.all(reqs).then((data: any) => {
+            const asistMansData = data[0].filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
             if (asistMansData.length > 0) {
                 this._getUserCl(asistMansData).then((users: USER_CL[]) => {
                     const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
                     sortUsers.forEach(user => this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`);
-                    const curRoles = data.filter(el => el.ISN_USER === this._userParamSrv.curentUser.ISN_LCLASSIF);
-                    this.parseData(curRoles);
+                    if (data[1].length) {
+                        this.parseData(data[1]);
+                    }
                 });
             } else {
-                this.parseData(data);
+                if (data.length) {
+                    this.parseData(data);
+                }
             }
-        //    this.patchCbRoles();
-            this.startRolesCb = [... this.currentCbFields];
         });
     }
 
@@ -305,13 +314,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         data.forEach(el => {
             if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
                 this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: this._userParamSrv.curentUser.DUE_DEP_NAME,
-                due: this._userParamSrv.curentUser.DUE_DEP});
+                due: this._userParamSrv.curentUser.DUE_DEP, isnRole: el.ISN_USER_ROLE});
             } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
-                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr});
+                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr, isnRole: el.ISN_USER_ROLE});
             } else {
-                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1]});
+                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], isnRole: el.ISN_USER_ROLE});
             }
         });
+        this.startRolesCb = JSON.parse(JSON.stringify(this.startRolesCb));
+        this.patchCbRoles();
     }
 
     getTitle(): void {
@@ -530,7 +541,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     sendData(query, accessStr): Promise<any> {
-        return this._apiSrv.setData(query).then(() => {
+        return Promise.all([
+            this.apiSrvRx.batch(this.queryRoles, ''),
+            this._apiSrv.setData(query)])
+        .then(() => {
+            this.queryRoles = [];
+            this.startRolesCb = this.currentCbFields;
             if (this.user_copy_isn) {
                 let url = `FillUserCl?isn_user=${this.curentUser.ISN_LCLASSIF}`;
                 url += `&role='${this.formControls.controls['SELECT_ROLE'].value ? encodeURI(this.formControls.controls['SELECT_ROLE'].value) : ''}'`;
@@ -592,6 +608,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
+        if (this.currentCbFields !== this.startRolesCb) {
+            this.currentCbFields = this.startRolesCb;
+            this.patchCbRoles();
+        }
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
@@ -777,46 +797,110 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
 
-    saveCbRoles(evnt: [IRoleCB[], boolean]) {
-        if (this.currentCbFields !== evnt[0]) {
-            this.currentCbFields = evnt[0];
-            // if (this.currentCbFields.length) {
-            //     this.patchCbRoles();
-            // } else {
-            //     this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
-            //     this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
-            //     this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
-            // }
+    saveCbRoles(evnt) {
+        this.currentCbFields = evnt;
+        if (this.currentCbFields.length) {
+            this.patchCbRoles();
+        } else {
+            this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+            this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+            this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
-    //    if (evnt[1]) {}
-        // const query = [{
-        //     method: 'DELETE',
-        //     requestUri: `CBR_USER_ROLE(30)`,
+        if (this.startRolesCb !== this.currentCbFields) {
+            this.getQueryFromRoles();
+        }
+      //  console.log(queryRoles);
+        // const query = [{ // post query
+        //     method: 'POST',
+        //     requestUri: `CBR_USER_ROLE(-99)`,
         //     data: {
-        //         WEIGHT: 2,
-        //         DUE_PERSON: '0.2FI18.2FI19.',
-        //         KIND_ROLE: 4,
-        //         ISN_USER: 4082391,
-        //         ISN_USER_ROLE: 30
+        //         DUE_PERSON: '0.2SN.2TX.',
+        //         KIND_ROLE: 1,
+        //         ISN_USER: 4084775,
         //     }
         // }];
-        // this.apiSrvRx.batch(query, '').catch(error => {
-        //     this._errorSrv.errorHandler(error);
-        // });
+        // const query = [{ // delete query
+        //     method: 'DELETE',
+        //     requestUri: `CBR_USER_ROLE(isn)`,
+        // }];
+        // const query = [{ // merge query
+        //     method: 'MERGE',
+        //     requestUri: `CBR_USER_ROLE(isn_role)`,
+        //     data: {
+        //         DUE_PERSON: '0.2SN.2TX.',
+        //         KIND_ROLE: 1,
+        //     }
+        // }];
+    }
+
+    getQueryFromRoles() {
+        this.currentCbFields.forEach(field => {
+            if (!field.isnRole) {
+            this.queryRoles.push({
+                method: 'POST',
+                requestUri: `CBR_USER_ROLE(-99)`,
+                data: {
+                    WEIGHT: this.currentCbFields.length + 1,
+                    DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
+                    KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
+                    ISN_USER: this.curentUser.ISN_LCLASSIF,
+                }
+            });
+           }
+        });
+        this.startRolesCb.forEach(old => {
+            if ((KIND_ROLES_CB.indexOf(old.role) === 3 || KIND_ROLES_CB.indexOf(old.role) === 4)) {
+                const repeatRole = this.currentCbFields.find(cur => old.due !== cur.due && cur.isnRole === old.isnRole);
+                if (repeatRole) {
+                    this.queryRoles.push({
+                        method: 'MERGE',
+                        requestUri: `CBR_USER_ROLE(${repeatRole.isnRole})`,
+                        data: {
+                            WEIGHT: this.currentCbFields.length + 1,
+                            DUE_PERSON: repeatRole.due,
+                            KIND_ROLE: KIND_ROLES_CB.indexOf(repeatRole.role) + 1,
+                            ISN_USER: this.curentUser.ISN_LCLASSIF,
+                        }
+                    });
+                } else {
+                    const checkArr = this.queryRoles.map(q => q.requestUri);
+                    if (checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                        this.queryRoles.push({
+                            method: 'DELETE',
+                            requestUri: `CBR_USER_ROLE(${old.isnRole})`,
+                        });
+                    }
+                }
+            } else {
+                if (this.currentCbFields.indexOf(old) === -1) {
+                    const checkArr = this.queryRoles.map(q => q.requestUri);
+                    if (checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                        this.queryRoles.push({
+                            method: 'DELETE',
+                            requestUri: `CBR_USER_ROLE(${old.isnRole})`,
+                        });
+                    }
+                }
+            }
+        });
     }
 
     patchCbRoles() {
         let str;
         if (this.currentCbFields.length === 1) {
             str = this.currentCbFields[0].role;
+        } else if (this.currentCbFields.length === 0) {
+            this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+            this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+            this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         } else {
             str = this.currentCbFields[0].role + ' ...';
         }
-        this.controlField[3].options = [{
+        this.controlField[1].options = [{
             title: str,
             value: str
         }];
-        this.controlField[3].value = str;
+        this.controlField[1].value = str;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
     }
@@ -946,16 +1030,25 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         );
     }
-    private _getUserCl(isn) {
-        const queryUser = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: isn
+
+    private _getUserCl(isn: number|number[]) {
+        let queryUser;
+        if (typeof isn === 'number') {
+            queryUser = {
+                USER_CL: {
+                    criteries: {
+                        ISN_LCLASSIF: isn
+                    }
                 }
-            }
-        };
+            };
+        } else {
+            queryUser = {
+                USER_CL: isn,
+            };
+        }
         return this.apiSrvRx.read<USER_CL>(queryUser);
     }
+
     private dropLogin(id): Promise<any> {
         const url = `DropLogin?isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
@@ -985,12 +1078,4 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         });
     }
-
-    private _getUserCl(isn: number[]): Promise<any> {
-        const queryUser = {
-          USER_CL: isn,
-        };
-        return this.apiSrvRx.read<USER_CL>(queryUser);
-    }
-
 }
