@@ -68,16 +68,25 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
         Object.assign(_newRec, data.rec);
 
-        let _newPare = this.preCreate(isProtected, isDeleted);
-        _newPare = this.apiSrv.entityHelper.prepareAdded<any>(_newPare, this.apiInstance);
-        Object.assign(_newPare, data['PARE_LINK_Ref']);
 
         _newRec[ISN_LCLASSIF] = this.apiSrv.sequenceMap.GetTempISN();
-        _newPare[ISN_LCLASSIF] = this.apiSrv.sequenceMap.GetTempISN();
+        let _newPare = null;
+        if (data['PARE_LINK_Ref']['CLASSIF_NAME'] === data['rec']['CLASSIF_NAME']
+            || !data['PARE_LINK_Ref']['CLASSIF_NAME']) {
+            _newRec['ISN_PARE_LINK'] = _newRec[ISN_LCLASSIF];
 
-        _newRec['ISN_PARE_LINK'] = _newPare[ISN_LCLASSIF];
-        _newPare['ISN_PARE_LINK'] = _newRec[ISN_LCLASSIF];
-        _newPare['LINK_TYPE'] = _newRec['LINK_TYPE'];
+        } else {
+            _newPare = this.preCreate(isProtected, isDeleted);
+            _newPare = this.apiSrv.entityHelper.prepareAdded<any>(_newPare, this.apiInstance);
+            Object.assign(_newPare, data['PARE_LINK_Ref']);
+            _newPare[ISN_LCLASSIF] = this.apiSrv.sequenceMap.GetTempISN();
+
+            _newRec['ISN_PARE_LINK'] = _newPare[ISN_LCLASSIF];
+            _newPare['ISN_PARE_LINK'] = _newRec[ISN_LCLASSIF];
+            _newPare['LINK_TYPE'] = _newRec['LINK_TYPE'];
+        }
+
+
 
         let pSev: Promise<boolean> = Promise.resolve(true);
         const changeData = [];
@@ -86,7 +95,7 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         }
 
         return pSev.then(() => {
-            const changes = this.apiSrv.changeList([_newRec, _newPare, ... changeData]);
+            const changes = this.apiSrv.changeList([_newRec, ... _newPare || [], ... changeData]);
 
             if (changes) {
                 return this._appendCategoryOldChange(changes, data)
@@ -101,15 +110,6 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
                 return Promise.resolve(results);
             }
 
-            // const changes = this.apiSrv.changeList(changeData);
-            // if (changes) {
-            //     return this.apiSrv.batch(changes, '')
-            //         .then(() => {
-            //             return results;
-            //         });
-            // } else {
-            //     return results;
-            // }
         });
 
 

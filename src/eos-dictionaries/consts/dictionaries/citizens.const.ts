@@ -73,7 +73,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         pattern: NOT_EMPTY_STRING,
         required: true,
         preferences: <IFieldPreferences>{
-            columnWidth: 200,
+            minColumnWidth: 200,
         }
     }, {
         key: 'CITIZEN_SURNAME',
@@ -94,7 +94,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         },
         options: [],
         preferences: <IFieldPreferences>{
-            columnWidth: 200,
+            minColumnWidth: 200,
         }
     }, {
         key: 'EDS_FLAG',

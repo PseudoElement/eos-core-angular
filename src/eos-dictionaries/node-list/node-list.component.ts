@@ -574,11 +574,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
                 let itemWidth;
-                if (_f.preferences && _f.preferences.columnWidth) {
-                    itemWidth = _f.preferences.columnWidth;
+
+                itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
+
+                if (_f.preferences && _f.preferences.minColumnWidth) {
+                    itemWidth = Math.max (_f.preferences.minColumnWidth, itemWidth);
                     presetLength[_f.key] = itemWidth;
-                } else {
-                    itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
                 }
 
                 calcLength[_f.key] = itemWidth;

@@ -132,7 +132,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
             length: 2000,
             type: 'text',
             preferences: <IFieldPreferences>{
-                columnWidth: 250,
+                minColumnWidth: 250,
             }
         }),
     ]),

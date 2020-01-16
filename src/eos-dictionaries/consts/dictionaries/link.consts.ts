@@ -1,4 +1,4 @@
-import { IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
+import { IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
@@ -27,15 +27,22 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
         uniqueInDict: true,
+        required: false,
         length: 64,
     }), {
         key: 'LINK',
         title: 'Связка',
         type: 'string',
+        preferences: <IFieldPreferences>{
+            minColumnWidth: 200,
+        }
     }, {
         key: 'PAIR_LINK',
         title: 'Обратная связка',
         type: 'string',
+        preferences: <IFieldPreferences>{
+            minColumnWidth: 200,
+        }
     }, {
         key: 'PARE_LINK_Ref',
         type: 'dictionary',

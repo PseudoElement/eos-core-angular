@@ -1,6 +1,6 @@
 import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
-import {AbstractControl, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import {EosUtils} from '../../eos-common/core/utils';
 import {EosDictService} from '../services/eos-dict.service';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
@@ -125,12 +125,14 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         [
             this._unicValueValidator('rec.CLASSIF_NAME'),
             this._pairNameUnique(),
+            Validators.required,
         ]);
 
         ValidatorsControl.appendValidator(this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
         [
             this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'),
             this._pairNameUnique(),
+            ... !this.isNewRecord ? [Validators.required] : [],
         ]);
     }
 
@@ -138,6 +140,9 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         return (control: AbstractControl): { [key: string]: any } => {
             const isn = this.getValue('rec.ISN_LCLASSIF');
             const isn_pair = this.getValue('rec.ISN_PARE_LINK');
+            if (this.isNewRecord) {
+                return null;
+            }
             if (isn === isn_pair && isn !== null) {
                 return null;
             }

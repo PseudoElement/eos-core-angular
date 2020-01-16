@@ -60,7 +60,7 @@ export interface IDictionaryLink {
 }
 
 export interface IFieldPreferences {
-    columnWidth?: number; /* node-list style: min-width.px */
+    minColumnWidth?: number; /* node-list style: min-width.px */
     hasIcon?: boolean; /* flag for enable icon (department, docgroups) */
 }
 export interface IFieldDescriptor {
