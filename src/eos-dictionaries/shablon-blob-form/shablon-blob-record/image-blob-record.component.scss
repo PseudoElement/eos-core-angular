@@ -1,0 +1,51 @@
+.current-image {
+    height: 200px;
+    width: 350px;
+    display: inline-block;
+    align-items: center;
+    border: 1px solid;
+    // border-radius: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    margin: 0 30px 20px;
+    .current-image-no-user{
+        height: 120px;
+        width: 120px;
+        border-radius: 100%;
+    }
+    .blob-image-uploader {
+        position: absolute;
+        bottom: -8px;
+        right: -30px;
+    }
+
+    .input-file-label {
+        vertical-align: middle;
+    }
+    .eos-icon {
+        vertical-align: middle;
+    }
+    .no-image-label {
+        vertical-align: middle;
+        justify-content: center;
+        width: 100%;
+        height: 200px;
+        align-content: center;
+        display: grid;
+    }
+}
+
+.image-uploader-record {
+    display: flex;
+    .inline-buttons {
+        margin-left: 10px;
+        margin-right: 20px;
+        width: 200px;
+        .abutton {
+            min-width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+}

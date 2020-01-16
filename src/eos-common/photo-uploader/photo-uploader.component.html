@@ -3,15 +3,16 @@
         type="file"
         #fileInput
         name="file"
-        id="file"
+        [id]="componentId"
         [multiple]="multiple"
         (change)="chooseFile($event)"
         placeholder="Upload file"
         accept="image/jpeg,image/png">
-    <label for="file"
+    <label [for]="componentId" *ngIf="buttons"
         class="input-file-label">
         <span *ngIf="!disableEdit" class="eos-icon eos-icon-edit-blue small"></span>
     </label>
+
 </div>
 
 <div bsModal

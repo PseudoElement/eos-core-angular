@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h4 class="xl-font modal-title pull-left">{{ getTitleLabel() }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeWithoutSave()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating">
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="modal-body-container">
+        <eos-image-blob-record (onChange)="onImageUpload($event)" [isnBlob]="isnBlob" [editMode]="true"></eos-image-blob-record>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="abutton btn btn-primary-full" (click)="confirm()">Закрыть</button>
+</div>
+

@@ -2,6 +2,15 @@
 <div class="card-content-wrapper">
     <div class="clearfix">
         <div class="col-1 pull-left">
+            <div class="stamp-button" *ngIf="isStampEnable">
+                <div class="form-group">
+                    <label [ngClass]="{'unimportant-text': !editMode }" style="vertical-align: middle;">
+                        <span class="eos-icon eos-icon-checkbox-grey small" *ngIf="hasStamp"></span>
+                        <a
+                        *ngIf="editMode"
+                        (click)="stampClick()">[ Угловой штамп ]</a></label>
+                </div>
+            </div>
             <eos-dynamic-input [input]="inputs['rec.indexDep']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
@@ -24,6 +33,7 @@
     </div>
     <div class="clearfix">
         <div class="col-1 pull-left">
+
             <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>

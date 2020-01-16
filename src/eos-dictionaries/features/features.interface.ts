@@ -13,6 +13,7 @@ export interface IOESDictsFeatures {
         numcreation: boolean; /* галка Номерообразование */
         reestr_send: boolean; /* галка Отправлять документы по реестрам */
         gas_ps: boolean; /* ГАС ПС */
+        stamp: boolean; /* угловой штамп */
     };
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;

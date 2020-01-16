@@ -992,7 +992,7 @@ export interface DEPARTMENT extends IHierCL, IStamp {
      * WDUE
      */
     WDUE: string;
-
+    ISN_STAMP: number;
     EXPEDITION_FLAG: number;
 
 }

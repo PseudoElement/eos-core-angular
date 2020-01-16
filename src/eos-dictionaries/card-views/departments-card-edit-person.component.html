@@ -21,6 +21,17 @@
                     <a class="eos-icon eos-icon-close-blue small" (click)="removePhoto()"></a>
                 </div>
             </div>
+
+            <div class="stamp-button" *ngIf="isStampEnable">
+                <div class="form-group">
+                    <label [ngClass]="{'unimportant-text': !editMode }" style="vertical-align: middle;">
+                        <span class="eos-icon eos-icon-checkbox-grey small" *ngIf="hasStamp"></span>
+                        <a
+                        *ngIf="editMode"
+                        (click)="stampClick()">[ Угловой штамп ]</a></label>
+                </div>
+            </div>
+
             <eos-dynamic-input [input]="inputs['printInfo.GENDER']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
