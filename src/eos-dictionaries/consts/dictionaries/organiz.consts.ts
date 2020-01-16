@@ -56,43 +56,43 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         length: 248,
     },
     ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [
-        {
-            key: 'TERM_EXEC',
-            title: 'Срок исполнения',
-            length: 3,
-            minValue: 1,
-            maxValue: 999,
-            pattern: DIGIT3_PATTERN,
-            default: 1,
-            type: 'numberIncrement',
-        },
-        {
-            key: 'TERM_EXEC_TYPE',
-            type: 'select',
-            title: '',
-            default: 3,
-            options: [
-                // {value: '', title: ''},
-               { value: 3, title: 'календарн.+' },
-               { value: 4, title: 'календарн.-' },
-               { value: 1, title: 'календарн.' },
-               { value: 2, title: 'рабоч.' },
-            ],
-        },
-        {
-            key: 'ISN_ADDR_CATEGORY',
-            type: 'select',
-            title: 'Категория',
-            length: 150,
-          //  required: true,
-            dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
+    {
+        key: 'TERM_EXEC',
+        title: 'Срок исполнения',
+        length: 3,
+        minValue: 1,
+        maxValue: 999,
+        pattern: DIGIT3_PATTERN,
+        default: 1,
+        type: 'numberIncrement',
+    },
+    {
+        key: 'TERM_EXEC_TYPE',
+        type: 'select',
+        title: '',
+        default: 3,
+        options: [
+            // {value: '', title: ''},
+            { value: 3, title: 'календарн.+' },
+            { value: 4, title: 'календарн.-' },
+            { value: 1, title: 'календарн.' },
+            { value: 2, title: 'рабоч.' },
+        ],
+    },
+    {
+        key: 'ISN_ADDR_CATEGORY',
+        type: 'select',
+        title: 'Категория',
+        length: 150,
+        //  required: true,
+        dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
             dictionaryLink: {
                 pk: 'ISN_LCLASSIF',
                 fk: 'ISN_ADDR_CATEGORY',
                 label: 'CLASSIF_NAME',
             },
-            options: [],
-            default: 0,
+        options: [],
+        default: 0,
     },
     ] : [],
     {
@@ -105,7 +105,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         title: 'Наименование организации',
         groupLabel: 'Наименование группы',
         length: 255,
-        preferences: <IFieldPreferences> { hasIcon: true, },
+        preferences: <IFieldPreferences>{ hasIcon: true, },
     }), /* {
         key: 'CLASSIF_NAME_SEARCH',
         title: 'Поиск наименование организации',
@@ -113,121 +113,121 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         length: 255,
         pattern: NOT_EMPTY_STRING,
     }*/
-    // ,
-    // Object.assign({}, COMMON_FIELD_FULLNAME, {
-    //     title: 'Полное наименование',
-    //     type: 'string',
-    //     length: 255,
-    //     pattern: NOT_EMPTY_STRING,
-    // }), {
-    //     key: 'ZIPCODE',
-    //     title: 'Почтовый индекс',
-    //     type: 'string',
-    //     length: 12,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'CITY',
-    //     title: 'Город',
-    //     type: 'string',
-    //     length: 255,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'ADDRESS',
-    //     title: 'Почтовый адрес',
-    //     type: 'string',
-    //     length: 255,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'MAIL_FOR_ALL',
-    //     title: 'Признак использования e-mail для всех представителей',
-    //     type: 'boolean',
-    //     length: 1,
-    // }, {
-    //     key: 'NEW_RECORD',
-    //     title: 'Признак новой записи',
-    //     type: 'number',
-    //     length: 1,
-    // }, {
-    //     key: 'OKPO',
-    //     title: 'ОКПО',
-    //     type: 'string',
-    //     length: 16,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'INN',
-    //     title: 'ИНН',
-    //     type: 'string',
-    //     length: 64,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'ISN_REGION',
-    //     title: 'Регион',
-    //     type: 'dictionary',
-    //     dictionaryId: REGION_DICT.id,
-    // }, {
-    //     key: 'OKONH',
-    //     title: 'ОКОНХ',
-    //     type: 'string',
-    //     length: 16,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'LAW_ADRESS',
-    //     title: 'Юридический адрес',
-    //     type: 'string',
-    //     length: 255,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'ISN_ORGANIZ_TYPE',
-    //     title: 'Форма Собственности',
-    //     type: 'number',
-    //     pattern: NOT_EMPTY_STRING,
-    //     length: 10,
-    // }, {
-    //     key: 'SERTIFICAT',
-    //     title: 'Регистрационное свидетельство',
-    //     type: 'string',
-    //     length: 255,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'ISN_ADDR_CATEGORY',
-    //     title: 'Категория адресата',
-    //     type: 'select',
-    //     dictionaryId: ADDR_CATEGORY_DICT.id,
-    //     length: 200,
-    //
-    // }, {
-    //     key: 'CODE',
-    //     title: 'поле для формирования выписок для ЦБ',
-    //     type: 'number',
-    //     length: 4,
-    //     pattern: NOT_EMPTY_STRING,
-    //
-    // }, {
-    //     key: 'OGRN',
-    //     title: 'ОГРН',
-    //     type: 'string',
-    //     length: 64,
-    //     pattern: NOT_EMPTY_STRING,
-    // }, {
-    //     key: 'contact',
-    //     type: 'array',
-    //     title: '',
-    //
-    // }, {
-    //     key: 'bank-recvisit',
-    //     type: 'dictionary',
-    //     title: '',
-    //
-    // }, {
-    //     key: 'ar-organiz-value',
-    //     type: 'dictionary',
-    //     title: '',
-    // }, {
-    //     key: 'sev',
-    //     type: 'dictionary',
-    //     title: '',
+        // ,
+        // Object.assign({}, COMMON_FIELD_FULLNAME, {
+        //     title: 'Полное наименование',
+        //     type: 'string',
+        //     length: 255,
+        //     pattern: NOT_EMPTY_STRING,
+        // }), {
+        //     key: 'ZIPCODE',
+        //     title: 'Почтовый индекс',
+        //     type: 'string',
+        //     length: 12,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'CITY',
+        //     title: 'Город',
+        //     type: 'string',
+        //     length: 255,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'ADDRESS',
+        //     title: 'Почтовый адрес',
+        //     type: 'string',
+        //     length: 255,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'MAIL_FOR_ALL',
+        //     title: 'Признак использования e-mail для всех представителей',
+        //     type: 'boolean',
+        //     length: 1,
+        // }, {
+        //     key: 'NEW_RECORD',
+        //     title: 'Признак новой записи',
+        //     type: 'number',
+        //     length: 1,
+        // }, {
+        //     key: 'OKPO',
+        //     title: 'ОКПО',
+        //     type: 'string',
+        //     length: 16,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'INN',
+        //     title: 'ИНН',
+        //     type: 'string',
+        //     length: 64,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'ISN_REGION',
+        //     title: 'Регион',
+        //     type: 'dictionary',
+        //     dictionaryId: REGION_DICT.id,
+        // }, {
+        //     key: 'OKONH',
+        //     title: 'ОКОНХ',
+        //     type: 'string',
+        //     length: 16,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'LAW_ADRESS',
+        //     title: 'Юридический адрес',
+        //     type: 'string',
+        //     length: 255,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'ISN_ORGANIZ_TYPE',
+        //     title: 'Форма Собственности',
+        //     type: 'number',
+        //     pattern: NOT_EMPTY_STRING,
+        //     length: 10,
+        // }, {
+        //     key: 'SERTIFICAT',
+        //     title: 'Регистрационное свидетельство',
+        //     type: 'string',
+        //     length: 255,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'ISN_ADDR_CATEGORY',
+        //     title: 'Категория адресата',
+        //     type: 'select',
+        //     dictionaryId: ADDR_CATEGORY_DICT.id,
+        //     length: 200,
+        //
+        // }, {
+        //     key: 'CODE',
+        //     title: 'поле для формирования выписок для ЦБ',
+        //     type: 'number',
+        //     length: 4,
+        //     pattern: NOT_EMPTY_STRING,
+        //
+        // }, {
+        //     key: 'OGRN',
+        //     title: 'ОГРН',
+        //     type: 'string',
+        //     length: 64,
+        //     pattern: NOT_EMPTY_STRING,
+        // }, {
+        //     key: 'contact',
+        //     type: 'array',
+        //     title: '',
+        //
+        // }, {
+        //     key: 'bank-recvisit',
+        //     type: 'dictionary',
+        //     title: '',
+        //
+        // }, {
+        //     key: 'ar-organiz-value',
+        //     type: 'dictionary',
+        //     title: '',
+        // }, {
+        //     key: 'sev',
+        //     type: 'dictionary',
+        //     title: '',
 
-    // }
+        // }
     ]),
     treeFields: ['CLASSIF_NAME'],
     // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',

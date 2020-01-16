@@ -129,7 +129,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         }
     }
     ngOnDestroy() {
-        if (this._dictSrv.currentDictionary.descriptor['dataNewFile']) {
+        if (this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor['dataNewFile']) {
             this._dictSrv.currentDictionary.descriptor.deleteTempRc();
         }
         this._ref.detach();

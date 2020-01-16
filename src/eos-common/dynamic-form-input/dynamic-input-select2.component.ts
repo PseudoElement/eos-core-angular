@@ -112,7 +112,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
             event.preventDefault();
         }
 
-        if (!this.dropdownElement) {
+        if (!this.dropdownElement || !this.focusedItem) {
             return;
         }
 

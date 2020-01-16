@@ -1,6 +1,6 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELD_NAME, COMMON_FIELDS, COMMON_FIELD_CODE } from './_common';
+import { COMMON_FIELD_NAME, COMMON_FIELDS } from './_common';
 
 export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
     id: 'cistatus',
@@ -40,7 +40,7 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         title: 'LAYER',
         type: 'number'
     },
-    Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
+    // Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование статуса',
         isUnique: true,
@@ -53,11 +53,11 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         type: 'number'
     }]),
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'CODE'],
+    editFields: ['CLASSIF_NAME', 'NOTE'],
     searchFields: ['CLASSIF_NAME', /*'NOTE'*/],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['CODE', 'NOTE'],
+    allVisibleFields: ['NOTE'],
 };

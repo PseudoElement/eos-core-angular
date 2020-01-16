@@ -439,7 +439,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 if (element.isMarked) {
                     let targ_idx = m + 1;
                     for (let i = targ_idx; i < this.nodes.length; i++) {
-                        if (this.nodes[m].originalId !== this.nodes[i].originalParentId) {
+                        if (element.originalParentId === this.nodes[i].originalParentId) {
                             targ_idx = i;
                             if (targ_idx < this.nodes.length) {
                                 const item = this.nodes[targ_idx];
@@ -574,11 +574,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
                 let itemWidth;
-                if (_f.preferences && _f.preferences.columnWidth) {
-                    itemWidth = _f.preferences.columnWidth;
+
+                itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
+
+                if (_f.preferences && _f.preferences.minColumnWidth) {
+                    itemWidth = Math.max (_f.preferences.minColumnWidth, itemWidth);
                     presetLength[_f.key] = itemWidth;
-                } else {
-                    itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
                 }
 
                 calcLength[_f.key] = itemWidth;
