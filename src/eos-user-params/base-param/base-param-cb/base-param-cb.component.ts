@@ -299,29 +299,37 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
                     sortUsers.forEach(user => this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`);
                     if (data[1].length) {
-                        this.parseData(data[1]);
+                        this.ParseRoles(data[1]);
                     }
                 });
             } else {
-                if (data.length) {
-                    this.parseData(data);
+                if (data[1].length) {
+                    this.ParseRoles(data[1]);
                 }
             }
         });
     }
 
-    parseData(data: any[]) {
+    ParseRoles(roles: any[]): Promise<any> {
+        return this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: roles.map(due => due.DUE_PERSON)}).then((dueName: any) => {
+            const dueNames = new Map<string, string>();
+            dueName.forEach((dep) => dueNames.set(dep.DUE, dep.CLASSIF_NAME));
+            this.parseData(roles, dueNames);
+        });
+    }
+
+    parseData(data: any[], dueNames: Map<string, string>) {
         data.forEach(el => {
             if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
-                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: this._userParamSrv.curentUser.DUE_DEP_NAME,
-                due: this._userParamSrv.curentUser.DUE_DEP, isnRole: el.ISN_USER_ROLE});
+                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: dueNames.get(el.DUE_PERSON),
+                due: el.DUE_PERSON, isnRole: el.ISN_USER_ROLE});
             } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
                 this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr, isnRole: el.ISN_USER_ROLE});
             } else {
                 this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], isnRole: el.ISN_USER_ROLE});
             }
         });
-        this.startRolesCb = JSON.parse(JSON.stringify(this.startRolesCb));
+        this.startRolesCb = JSON.parse(JSON.stringify(this.currentCbFields));
         this.patchCbRoles();
     }
 
@@ -812,13 +820,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     getQueryFromRoles() {
-        this.currentCbFields.forEach(field => {
+        this.currentCbFields.forEach((field, indx) => {
             if (!field.isnRole) {
             this.queryRoles.push({
                 method: 'POST',
                 requestUri: `CBR_USER_ROLE(-99)`,
                 data: {
-                    WEIGHT: this.currentCbFields.length + 1,
+                    WEIGHT: indx + 1,
                     DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
                     KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
                     ISN_USER: this.curentUser.ISN_LCLASSIF,
@@ -835,7 +843,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         method: 'MERGE',
                         requestUri: `CBR_USER_ROLE(${repeatRole.isnRole})`,
                         data: {
-                            WEIGHT: this.currentCbFields.length + 1,
+                            WEIGHT: this.currentCbFields.indexOf(repeatRole) + 1,
                             DUE_PERSON: repeatRole.due,
                             KIND_ROLE: kindRole + 1,
                             ISN_USER: this.curentUser.ISN_LCLASSIF,
@@ -843,7 +851,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     const checkArr = this.queryRoles.map(q => q.requestUri);
-                    if (checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                    if (checkArr && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
                         this.queryRoles.push({
                             method: 'DELETE',
                             requestUri: `CBR_USER_ROLE(${old.isnRole})`,

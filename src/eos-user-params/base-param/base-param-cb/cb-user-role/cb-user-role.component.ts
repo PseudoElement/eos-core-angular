@@ -197,7 +197,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                 case 'Директор департамента и заместитель директора департамента':
                     if (!this.fixedFields.length) {
                         this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' && field !== 'Помощник Председателя');
-                        this.basicFields = this.basicFields.filter(field => field === 'Помощник заместителя предстедателя и директоров' || field === 'Помощник Председателя');
+                        this.basicFields = ['Помощник заместителя предстедателя и директоров', 'Помощник Председателя'];
                     } else {
                         this.basicFields.splice(this.basicFields.indexOf('Исполнитель'), 1);
                         this.fixedFields.push('Исполнитель');
@@ -206,7 +206,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                 case 'Исполнитель':
                     if (!this.fixedFields.length) {
                         this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' && field !== 'Помощник Председателя');
-                        this.basicFields = this.basicFields.filter(field => field === 'Помощник заместителя предстедателя и директоров' || field === 'Помощник Председателя');
+                        this.basicFields = ['Помощник заместителя предстедателя и директоров', 'Помощник Председателя'];
                     } else {
                         this.basicFields.splice(this.basicFields.indexOf('Директор департамента и заместитель директора департамента'), 1);
                         this.fixedFields.push('Директор департамента и заместитель директора департамента');
@@ -217,13 +217,9 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this._showDepRole(role);
                     } else {
                         const seniorMan = this.currentFields.find(field => field.role === 'Директор департамента и заместитель директора департамента' || field.role === 'Исполнитель');
-                        if (seniorMan) {
-                            this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' &&
-                            field !== 'Помощник Председателя' && field !== seniorMan.role);
-                            this.basicFields = this.basicFields.filter(field => field === 'Помощник заместителя предстедателя и директоров' || field === 'Помощник Председателя');
-                        } else {
-                            this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' && field !== 'Помощник Председателя');
-                            this.basicFields = this.basicFields.filter(field => field === 'Помощник заместителя предстедателя и директоров' || field === 'Помощник Председателя');
+                        if (!seniorMan) {
+                            this.fixedFields = ['Председатель', 'Заместитель Председателя'];
+                            this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
                         }
                     }
                     break;
@@ -232,13 +228,9 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this._showDepRole(role);
                     } else {
                         const seniorMan = this.currentFields.find(field => field.role === 'Директор департамента и заместитель директора департамента' || field.role === 'Исполнитель');
-                        if (seniorMan) {
-                            this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' &&
-                            field !== 'Помощник Председателя' && field !== seniorMan.role);
-                            this.basicFields = this.basicFields.filter(field => field === 'Помощник заместителя предстедателя и директоров' || field === 'Помощник Председателя');
-                        } else {
-                            this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' && field !== 'Помощник Председателя');
-                            this.basicFields = this.basicFields.filter(field => field === 'Помощник заместителя предстедателя и директоров' || field === 'Помощник Председателя');
+                        if (!seniorMan) {
+                            this.fixedFields = ['Председатель', 'Заместитель Председателя'];
+                            this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
                         }
                     }
                     break;
@@ -341,7 +333,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                             if (changeRole) {
                                 const indxRole = this.currentFields.indexOf(this.selectedCurrRole);
                                 this.selectedCurrRole.due = dep[0].DUE;
-                                this.selectedCurrRole.dueName = dep[0].SURNAME;
+                                this.selectedCurrRole.dueName = dep[0].CLASSIF_NAME;
                                 this.currentFields.splice(indxRole, 1, this.selectedCurrRole);
                             } else {
                                 const checkField = this.currentFields.filter(field => field.role === 'Исполнитель' || field.role === 'Директор департамента и заместитель директора департамент');
@@ -353,7 +345,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                                 this.currentFields.push({
                                     role: role,
                                     due: dep[0].DUE,
-                                    dueName: dep[0].SURNAME,
+                                    dueName: dep[0].CLASSIF_NAME,
                                     isnRole : repeatRole ? repeatRole.isnRole : null
                                 });
                             }
