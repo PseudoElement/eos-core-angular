@@ -389,7 +389,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.setNewDataFormControl(query, id);
         if (this._newData.get('IS_SECUR_ADM') === false) { // IS_SECUR_ADM приватный критерий
             this.apiSrvRx.read<USER_CL>({
-                USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1' }),
+                USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1',  'ORACLE_ID': 'isnotnull', 'DELETED': '0'}),
                 orderby: 'ISN_LCLASSIF',
                 top: 2,
                 loadmode: 'Table'
