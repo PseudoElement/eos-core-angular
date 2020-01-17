@@ -129,7 +129,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (val.required) {
                 return 'Поле логин не может быть пустым';
             } else if (val.isUnique) {
-                return 'Поле логин должно быть уникальныи';
+                return 'Поле логин должно быть уникальным';
             } else {
                 return 'не коректное значение';
             }
@@ -141,7 +141,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     get getErrorSave() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
-        if (this.editMode && (val !== null || !this.form.controls['SURNAME_PATRON'].value)) {
+        if (this.editMode && (val !== null || (this.form.controls['CLASSIF_NAME'].value).trim() === '' || (this.form.controls['SURNAME_PATRON'].value).trim() === '')) {
             return true;
         } else {
             return false;
@@ -362,7 +362,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (!this.curentUser['IS_PASSWORD']) {
             return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                 if (res) {
-                    this._router.navigate(['/user-params-set/auntefication']);
+                    return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                        this._router.navigate(['/user-params-set/auntefication']);
+                    });
                 } else {
                     return this.ConfirmAvSystems(accessStr, id, query);
                 }
@@ -422,7 +424,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                    this.dropLogin(id).then(() => {
+                    return this.dropLogin(id).then(() => {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
                             return this.sendData(query, accessStr);
@@ -433,7 +435,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     });
             }
         } else {
-            this.sendData(query, accessStr);
+            return this.sendData(query, accessStr);
         }
     }
 
@@ -451,23 +453,22 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.AfterSubmit(accessStr);
                 });
             } else {
-                this.AfterSubmit(accessStr);
+                return this.AfterSubmit(accessStr);
             }
-            return;
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });
     }
-    AfterSubmit(accessStr: string): void {
+    AfterSubmit(accessStr: string): Promise<any> {
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
         }
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
-        this._userParamSrv.getUserIsn({
+        return this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
         }).then(() => {
