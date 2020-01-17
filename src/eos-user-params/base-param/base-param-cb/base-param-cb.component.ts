@@ -292,7 +292,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 orderby: 'WEIGHT'
             }})
         ];
-        return Promise.all(reqs).then((data: any) => {
+        return Promise.all(reqs).then((data: any[]) => {
             const asistMansData = data[0].filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
             if (asistMansData.length > 0) {
                 this._getUserCl(asistMansData).then((users: USER_CL[]) => {
@@ -797,7 +797,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
 
-    saveCbRoles(evnt) {
+    saveCbRoles(evnt: IRoleCB[]) {
         this.currentCbFields = evnt;
         if (this.currentCbFields.length) {
             this.patchCbRoles();
@@ -809,28 +809,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.startRolesCb !== this.currentCbFields) {
             this.getQueryFromRoles();
         }
-      //  console.log(queryRoles);
-        // const query = [{ // post query
-        //     method: 'POST',
-        //     requestUri: `CBR_USER_ROLE(-99)`,
-        //     data: {
-        //         DUE_PERSON: '0.2SN.2TX.',
-        //         KIND_ROLE: 1,
-        //         ISN_USER: 4084775,
-        //     }
-        // }];
-        // const query = [{ // delete query
-        //     method: 'DELETE',
-        //     requestUri: `CBR_USER_ROLE(isn)`,
-        // }];
-        // const query = [{ // merge query
-        //     method: 'MERGE',
-        //     requestUri: `CBR_USER_ROLE(isn_role)`,
-        //     data: {
-        //         DUE_PERSON: '0.2SN.2TX.',
-        //         KIND_ROLE: 1,
-        //     }
-        // }];
     }
 
     getQueryFromRoles() {
@@ -849,7 +827,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
            }
         });
         this.startRolesCb.forEach(old => {
-            if ((KIND_ROLES_CB.indexOf(old.role) === 3 || KIND_ROLES_CB.indexOf(old.role) === 4)) {
+            const kindRole = KIND_ROLES_CB.indexOf(old.role);
+            if (kindRole === 3 || kindRole === 4) {
                 const repeatRole = this.currentCbFields.find(cur => old.due !== cur.due && cur.isnRole === old.isnRole);
                 if (repeatRole) {
                     this.queryRoles.push({
@@ -858,7 +837,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         data: {
                             WEIGHT: this.currentCbFields.length + 1,
                             DUE_PERSON: repeatRole.due,
-                            KIND_ROLE: KIND_ROLES_CB.indexOf(repeatRole.role) + 1,
+                            KIND_ROLE: kindRole + 1,
                             ISN_USER: this.curentUser.ISN_LCLASSIF,
                         }
                     });
