@@ -1,4 +1,4 @@
-<div class="table-wrapper usual-border" id="sizeholder">
+<div class="table-wrapper usual-border">
     <div class="table-header">
             <!-- (window:resize)="onResize($event)" -->
         <div class="table-header-content"
@@ -25,7 +25,9 @@
             <div *ngIf="!params.markItems"
                  class="node-left">
             </div>
-            <div class="node-title">
+            <div class="node-title" id="nodeListElement"
+                #nodeListElement
+                >
                 <div *ngFor="let field of viewFields"
                      class="item l-font"
                      [attr.id]="'vf_'+field.key"
