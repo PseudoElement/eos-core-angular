@@ -56,9 +56,19 @@
     }
 }
 
+.note-textarea-div{
+    .note-textarea-fullname{
+        textarea.form-control,
+        textarea.form-control-static {
+            height: 70px;
+            width: 715px;
+        }
+    }
+}
+
 .organ-new-now{
     position: absolute; 
-    top: 38px; 
+    top: 3px; 
     right: 3px;
     .organ-new-now-en {
         cursor: pointer;

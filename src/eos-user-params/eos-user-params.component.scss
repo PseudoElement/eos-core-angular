@@ -7,6 +7,7 @@
 }
 
 .nav-accordion {
+    height: calc(100vh - 97px);
     min-width: $dictionary-block-width;
     height: 100vh;
     background: $white;
@@ -16,6 +17,7 @@
     border-right: 1px solid $border-color-main-theme;
     transition: .3s;
     z-index: 5;
+    overflow-y: auto;
     &.show-accordion {
         left: 0;
     }
