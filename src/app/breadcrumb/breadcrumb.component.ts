@@ -126,6 +126,7 @@ export class BreadcrumbsComponent implements OnDestroy {
                         this.isEditGranted =  false;
                     }
                 } else {
+                    this.isEditGranted = true;
                     this.isNavigationEnabled = false;
                 }
             });
