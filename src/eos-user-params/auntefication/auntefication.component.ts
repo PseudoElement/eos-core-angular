@@ -158,7 +158,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     submit($event) {
         const value = +this.form.get('SELECT_AUTENT').value;
-        if (this.errorPass && (value === 0 || value === 2)) {
+        if (this.errorPass && (value === 0 || value === 3)) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение:',
