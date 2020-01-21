@@ -17,8 +17,8 @@ export const PARM_SUCCESS_SAVE: IMessage = {
 
 export const PARM_CANCEL_CHANGE: IMessage = {
     type: 'warning',
-    title: 'Изменения не сохранены',
-    msg: 'Предупреждение',
+    title: 'Предупреждение:',
+    msg: 'Изменения не сохранены',
     dismissOnTimeout: 15000
 };
 
