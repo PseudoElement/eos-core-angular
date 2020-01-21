@@ -331,6 +331,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
             }
             rec.currentStores = this.storesConfig;
         }
+
         return this.http.post(this.serverAddress, rec, this.carmaOptions)/* .map(res => res.json()) */;
     }
 
