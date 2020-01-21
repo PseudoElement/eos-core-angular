@@ -69,8 +69,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     }
                 }); */
                 // когда будет понятно как this.originAutent = '0';
-                this.form.controls['SELECT_AUTENT'].setValue( '0', { emitEvent: false });
-                this.form.controls['PASSWORD_DATE'].setValue( new Date(this.curentUser.PASSWORD_DATE), { emitEvent: false });
+                const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) : '';
+                this.form.controls['SELECT_AUTENT'].setValue( '' + this.curentUser.USERTYPE, { emitEvent: false });
+                this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
                 this.getTitle();
                 this.subscribeForms();
                 this.isLoading = false;
@@ -157,7 +158,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     submit($event) {
         const value = +this.form.get('SELECT_AUTENT').value;
-        if (this.errorPass && (value === 0 || value === 2)) {
+        if (this.errorPass && (value === 0 || value === 3)) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение:',
@@ -170,13 +171,15 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         const promAll = [];
         let flag = false;
         promAll.push(this.updateUser(this._userParamSrv.userContextId, {'USERTYPE': value}));
-        if (value === 0 || value === 2) {
-            if (this.curentUser.IS_PASSWORD === 0) {
-                promAll.push(this.createLogin(this.form.get('pass').value, this._userParamSrv.userContextId));
-                flag = true;
-            } else {
-                promAll.push(this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId));
-                flag = true;
+        if (value === 0 || value === 3) {
+            if (this.form.get('pass').value) {
+                if (this.curentUser.IS_PASSWORD === 0) {
+                    promAll.push(this.createLogin(this.form.get('pass').value, this._userParamSrv.userContextId));
+                    flag = true;
+                } else {
+                    promAll.push(this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId));
+                    flag = true;
+                }
             }
         }
         Promise.all(promAll)
@@ -191,6 +194,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 this.form.controls['PASSWORD_DATE'].setValue( newDate, { emitEvent: false });
             }
             this.editMode = false;
+            this._msgSrv.addNewMessage({
+                type: 'success',
+                title: 'Сохранение:',
+                msg: 'Изменения успешно сохранены',
+                dismissOnTimeout: 6000,
+            });
         })
         .catch((arr) => {
             this._errorSrv.errorHandler(arr);
@@ -230,6 +239,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 this.form.get('passRepeated').setErrors({ repeat: true });
             } else {
                 this.errorPass = false;
+                this.form.get('passRepeated').setErrors(null);
             }
         } else if (pass !== '' || passrepeat !== '') {
             this.errorPass = true;
