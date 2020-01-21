@@ -401,7 +401,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 this._dictSrv.toggleDeleted();
                 break;
 
+            case E_RECORD_ACTIONS.showAllSubnodes:
+                if (this.params.userOrdered) {
+                    this._dictSrv.toggleWeightOrder();
+                }
+                this._dictSrv.toggleAllSubnodes();
+                break;
+
             case E_RECORD_ACTIONS.userOrder:
+                if (this.params.showAllSubnodes) {
+                    this._dictSrv.toggleAllSubnodes();
+                }
                 this._dictSrv.toggleWeightOrder();
                 break;
 
@@ -442,10 +452,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.restore:
                 this._restoreItems();
                 break;
-            case E_RECORD_ACTIONS.showAllSubnodes:
-                this._dictSrv.toggleAllSubnodes();
-                break;
-
             case E_RECORD_ACTIONS.createRepresentative:
                 this._createRepresentative();
                 break;

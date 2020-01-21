@@ -35,6 +35,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     @ViewChild(SortableComponent) sortableComponent: SortableComponent;
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
     @ViewChild('eosNodeList') eosNodeList;
+    @ViewChild('nodeListElement') nodeListElement;
+
 
     customFields: IFieldView[] = [];
     length = {};
@@ -52,9 +54,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     public hasOverflowedColumns: boolean;
     public firstColumnIndex: number;
     private ngUnsubscribe: Subject<any> = new Subject();
-    private nodeListElement: Element;
     private _recalcW: number;
-    private _holder;
+    private _recalcSW: number;
     private _recalcEvent: any;
     private _dictId: string;
     private _repaintFlag: any;
@@ -135,18 +136,21 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     ngOnInit() {
-        this._holder = document.getElementById('sizeholder');
     }
 
     ngAfterContentChecked() {
-        if ((this._recalcW !== this._holder.clientWidth)) {
-            this._recalcW = this._holder.clientWidth;
+        const holder = this.nodeListElement.nativeElement;
+        if ((this._recalcW !== holder.clientWidth)) {
+            this._recalcW = holder.clientWidth;
+            this._countColumnWidth();
+        } else if ((this._recalcSW !== holder.scrollWidth)) {
+            this._recalcSW = holder.scrollWidth;
             this._countColumnWidth();
         }
+
     }
 
     ngAfterContentInit() {
-        this.nodeListElement = document.querySelector('.node-title');
         this._countColumnWidth();
     }
 
@@ -564,6 +568,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     private _countColumnWidthUnsafe() {
+        const listElement = this.nodeListElement.nativeElement;
         const calcLength = [];
         const presetLength = [];
         let fullWidth = 0;
@@ -589,10 +594,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
         this.length = calcLength;
 
-        if (!this.nodeListElement) {
+        if (!listElement) {
             this.hasOverflowedColumns = false;
         } else {
-            this.hasOverflowedColumns = (this.nodeListElement.scrollWidth > (this.nodeListElement.clientWidth + 22 /* order arrow */));
+            this.hasOverflowedColumns = (listElement.scrollWidth > (listElement.clientWidth + 22 /* order arrow */));
         }
 
         if (this.isOverflowed()) {
@@ -601,7 +606,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             const minLength = presetLength;
             const lastField = fields[fields.length - 1];
             if (lastField && lastField.type !== E_FIELD_TYPE.boolean) {
-                minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
+                minLength[lastField.key] = (listElement.clientWidth - (fullWidth - this.length[lastField.key]))/* - 50*/;
                 this.length[lastField.key] = minLength[lastField.key];
             }
             this.min_length = minLength;
