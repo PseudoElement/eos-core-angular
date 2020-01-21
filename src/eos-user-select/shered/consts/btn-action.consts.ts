@@ -61,7 +61,7 @@ export const ViewDeletedUsers: BtnActionFields = {
 
 export const ViewTechicalUsers: BtnActionFields = {
     name: 'ViewTechicalUsers',
-    title: 'Отображение технических пользователей',
+    title: 'Отображение техн. пользователей',
     disabledClass: 'eos-icon eos-icon-Techuser-Grey small',
     enableClass: 'eos-icon eos-icon-Techuser-Blue small',
     tooltip: 'Включить/выключить режим отображения  технических пользователей',
@@ -119,11 +119,11 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
 export const CommonTechLists: BtnActionFields = {
     name: 'CommonTechLists',
     title: 'Ведение общих и технологических списков',
-    disabledClass: 'eos-icon eos-icon-signature-gray small',
-    enableClass: 'eos-icon eos-icon-signature-blue small',
+    disabledClass: 'eos-icon eos-icon-template-gray small',
+    enableClass: 'eos-icon eos-icon-template-blue small',
     tooltip: 'Ведение общих и технологических списков',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-signature-blue small',
+    activeClass: 'eos-icon eos-icon-template-blue small',
     activeBtnClass: '',
     isActive: false,
 };
@@ -131,11 +131,11 @@ export const CommonTechLists: BtnActionFields = {
 export const GeneralLists: BtnActionFields = {
     name: 'GeneralLists',
     title: 'Ведение общих списков стандартных текстов',
-    disabledClass: 'eos-icon eos-icon-signature-gray small',
-    enableClass: 'eos-icon eos-icon-signature-blue small',
+    disabledClass: 'eos-icon eos-icon-text-list-grey small',
+    enableClass: 'eos-icon eos-icon-text-list-blue small',
     tooltip: 'Ведение общих списков стандартных текстов',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-signature-blue small',
+    activeClass: 'eos-icon eos-icon-text-list-blue small',
     activeBtnClass: '',
     isActive: false,
 };
