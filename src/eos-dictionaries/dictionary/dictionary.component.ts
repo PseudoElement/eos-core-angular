@@ -198,11 +198,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                     this.dictionary.descriptor['top'] = this._nodeId;
                                     this._dictSrv.selectTemplateNode().then(() => { });
                                 } else {
-                                    this._dictSrv.selectCustomTreeNode(this._nodeId).then (() => {
+                                    this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
                                     });
                                 }
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
-                                if (this._nodeId === '0.' ) {
+                                if (this._nodeId === '0.') {
                                     this._nodeId = '';
                                 }
                                 this._dictSrv.selectTreeNode(this._nodeId);
@@ -262,7 +262,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
                     const setParams = this.params === undefined;
-                    this.params = Object.assign({}, this.params, {userSort: this._dictSrv.userOrdered});
+                    this.params = Object.assign({}, this.params, { userSort: this._dictSrv.userOrdered });
                     this.params.markItems = dictionary.canDo(E_RECORD_ACTIONS.markRecords);
                     if (setParams) {
                         this.params.hideTopMenu = dictionary.descriptor.hideTopMenu;
@@ -318,7 +318,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     if (this.dictionaryId === NOMENKL_DICT.id) {
                         const n = this.dictionary.descriptor.getActive();
                         if (n) { this.title = n.title; }
-                    }  else {
+                    } else {
                         this.title = this.treeNode.title;
                         this.hasParent = !!this.treeNode.parent;
                     }
@@ -557,7 +557,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     resetSearch() {
         this.clearFindSettings();
         this._dictSrv.resetSearch();
-        this._dictSrv.updateViewParameters({searchResults: false });
+        this._dictSrv.updateViewParameters({ searchResults: false });
         this.forcedCloseFastSrch();
     }
 
@@ -638,7 +638,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._sandwichSrv.resize();
     }
 
-    isDictModeEnabled (mode: number): boolean {
+    isDictModeEnabled(mode: number): boolean {
         const dict = this._dictSrv.dictionaryByMode(mode).id;
         return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
@@ -664,7 +664,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     hasFilter() {
         if (this.dictionaryId === DID_NOMENKL_CL ||
-            (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
+            (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0)) {
             return true;
         }
         return false;
@@ -701,7 +701,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         let dictionary: EosDictionary;
         dictionary = this._dictSrv.currentDictionary;
         editDescr = dictionary.getEditDescriptor();
-        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+        data = dictionary.getNewNode({ rec: recParams }, this.treeNode);
 
         this._dictSrv.setMarkAllNone();
         const createWarning = dictionary.descriptor.preCreateCheck(this);
@@ -711,7 +711,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
 
         if (dictionary.descriptor.id === 'broadcast-channel') {
-            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
+            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, { class: 'creating-modal' });
         } else {
             let config = { class: 'creating-modal' };
             if (dictionary.id === 'templates') {
@@ -758,13 +758,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
     private openClassifGopRc(openEdit) {
         const node = this._dictSrv.listNode;
-            const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId);
-            this._waitClassif.openClassif(config).then(() => {
-                this._dictSrv.reload();
-                this._dictSrv.clearCurrentNode();
-            }).catch((e) => {
-                console.log(e);
+        node.relatedLoaded = false;
+        const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId);
+        this._waitClassif.openClassif(config).then(() => {
+            this.updateRigthFields(node);
+            this._dictSrv.reload();
+            this._dictSrv.clearCurrentNode();
+        }).catch((e) => {
+            this.updateRigthFields(node);
+            console.log(e);
         });
+    }
+    private updateRigthFields(node: EosDictionaryNode): void {
+        if (node) {
+            if (node.dictionaryId === 'citizens') {
+                this._dictSrv.currentDictionary.getFullNodeInfo(node.id).then(() => {
+                    this._dictSrv.updateRigth.next(null);
+                });
+            }
+        }
     }
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
         const list = [];
@@ -788,9 +800,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _restoreItems(): void {
         let hasFolding = false;
 
-        this._dictSrv.getMarkedNodes().filter( n => !n.isDeleted).forEach( n => n.isMarked = false );
+        this._dictSrv.getMarkedNodes().filter(n => !n.isDeleted).forEach(n => n.isMarked = false);
 
-        const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => n.isDeleted);
+        const selectedNodes = this._dictSrv.getMarkedNodes().filter(n => n.isDeleted);
 
         for (let i = 0; i < selectedNodes.length; i++) {
             const node = selectedNodes[i];
@@ -807,7 +819,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         const confirmRestore: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_RESTORE);
 
-        this._confirmMarkedItems(selectedNodes, confirmRestore).then ((button: IConfirmButton) => {
+        this._confirmMarkedItems(selectedNodes, confirmRestore).then((button: IConfirmButton) => {
             if (button && button.result === 2) {
 
                 let p: Promise<any> = Promise.resolve(CONFIRM_SUBNODES_RESTORE.buttons.find(b => b.result === 1));
@@ -866,11 +878,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
 
         this._confirmMarkedItems(selectedNodes, confirmDelete)
-            .then ((button: IConfirmButton) => {
+            .then((button: IConfirmButton) => {
                 if (button && button.result === 2) {
                     return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
                         const deletedList = results.filter(r => !r.error)
-                            .map ( r => r.record[titleId] || r.record['CLASSIF_NAME']) ;
+                            .map(r => r.record[titleId] || r.record['CLASSIF_NAME']);
                         if (deletedList && deletedList.length) {
                             const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                             message.msg = message.msg
@@ -891,7 +903,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _deleteItems(): void {
 
         // let delCount = 0, allCount = 0;
-        const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => !n.isDeleted);
+        const selectedNodes = this._dictSrv.getMarkedNodes().filter(n => !n.isDeleted);
 
         if (selectedNodes.length === 0) {
             // this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
@@ -912,7 +924,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
 
-        this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
+        this._confirmMarkedItems(selectedNodes, confirmDelete).then((button: IConfirmButton) => {
             if (button && button.result === 2) {
                 const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                 message.msg = message.msg
@@ -987,7 +999,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
         this.modalWindow = null;
         if (type === E_COUNTER_TYPE.counterDepartmentMain) {
-            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg', animated: false});
+            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, { class: 'counter-np-modal modal-lg', animated: false });
             this.modalWindow.content.initByNodeData(type, null);
         } else {
             const node = this._dictSrv.listNode;
@@ -997,7 +1009,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 } else if (type === E_COUNTER_TYPE.counterDepartment && node.data.rec['NUMCREATION_FLAG'] !== 1) {
                     this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
-                    this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg', animated: false});
+                    this.modalWindow = this._modalSrv.show(CounterNpEditComponent, { class: 'counter-np-modal modal-lg', animated: false });
                     this.modalWindow.content.initByNodeData(type, node.data.rec);
                 }
             } else {
@@ -1049,7 +1061,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const node = this._dictSrv.listNode;
         if (node) {
             this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
-                class: 'prj-default-values-modal moodal-lg', backdrop: true, ignoreBackdropClick: true});
+                class: 'prj-default-values-modal moodal-lg', backdrop: true, ignoreBackdropClick: true
+            });
             const content = {
                 nodeDescription: node.title,
                 isnNode: node.data.rec['ISN_NODE'],
@@ -1060,14 +1073,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
     }
 
-    private _openAdvancedCardRK () {
+    private _openAdvancedCardRK() {
         this.modalWindow = null;
         const node = this._dictSrv.listNode;
         if (node) {
             if (node.data.PROTECTED) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
             } else {
-                this.modalWindow = this._modalSrv.show(AdvCardRKEditComponent, {class: 'adv-card-rk-modal modal-lg', backdrop: true, ignoreBackdropClick: true });
+                this.modalWindow = this._modalSrv.show(AdvCardRKEditComponent, { class: 'adv-card-rk-modal modal-lg', backdrop: true, ignoreBackdropClick: true });
                 this.modalWindow.content.initByNodeData(node.data.rec);
             }
         } else {
@@ -1084,14 +1097,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _openCopyProperties(renewChilds = false) {
         const node = this._dictSrv.listNode;
         if (node) {
-            Promise.resolve(null).then (() => {
+            Promise.resolve(null).then(() => {
                 if (renewChilds) {
                     return node.id;
                 } else {
                     // return '0.2U9.'; // for debug
                     return this._waitClassif.chooseDocGroup();
                 }
-            }).then( (from_due) => {
+            }).then((from_due) => {
                 if (from_due) {
                     this.__openCopyProperties(node, from_due, renewChilds);
                 } else {
@@ -1105,13 +1118,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     private __openCopyProperties(node: EosDictionaryNode, from_due: string, renewChilds: boolean) {
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
-            class: 'copy-properties-modal moodal-lg'});
+            class: 'copy-properties-modal moodal-lg'
+        });
         (<CopyPropertiesComponent>this.modalWindow.content).init(node.data.rec, from_due, renewChilds);
         const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
             this.modalWindow = null;
             if (node) {
                 node.relatedLoaded = false;
-                this._dictSrv.rereadNode(node.id).then( (data) => {
+                this._dictSrv.rereadNode(node.id).then((data) => {
                     node.relatedLoaded = false;
                     this._dictSrv.setMarkAllNone();
                 });
@@ -1128,7 +1142,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             if (node.data.PROTECTED) {
                 //  this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
             } else {
-                this.modalWindow = this._modalSrv.show(EdsImportComponent, {class: 'adv-card-rk-modal modal-lg'});
+                this.modalWindow = this._modalSrv.show(EdsImportComponent, { class: 'adv-card-rk-modal modal-lg' });
                 this.modalWindow.content.node = node;
             }
         }
@@ -1139,14 +1153,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             return !node.isNode;
         });
         if (!checkNode) {
-            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения можно выбирать только карточки организаций.'});
+            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения можно выбирать только карточки организаций.' });
             return;
         }
         this._dictSrv.cutNode();
     }
     private _combine() {
-        const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isSliced);
-        const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  {
+        const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
+        const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => {
             if (node.isNode) {
                 node.isMarked = false;
             }
@@ -1158,8 +1172,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     this._dictSrv.combine(slicedNode, markedNode);
                 }
             });
-        }   else {
-            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись'});
+        } else {
+            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись' });
         }
     }
     private _uncheckNewEntry() {
@@ -1169,7 +1183,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = {
             classif: 'AR_EDITOR',
         };
-        this._waitClassif.openClassif(config).then(() => {}).catch(e => {console.log(e); } );
+        this._waitClassif.openClassif(config).then(() => { }).catch(e => { console.log(e); });
     }
 
     private _copyNodesToBuffer() {

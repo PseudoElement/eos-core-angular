@@ -66,6 +66,7 @@ export class EosDictService {
     currentTab: number;
 
     public editFromForm: boolean;
+    public updateRigth = new BehaviorSubject(null);
     // private dictionary: EosDictionary;
     private _treeNode: EosDictionaryNode; // record selected in tree
     private _listNode: EosDictionaryNode; // record selected in list
