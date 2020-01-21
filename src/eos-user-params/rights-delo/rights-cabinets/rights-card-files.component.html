@@ -20,10 +20,10 @@
                     ></span>
                 </button>
                 <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="removeCards()" tooltip="Удалить картотеку" placement="bottom" containerClass="tooltip-info" triggers="hover:click" container="body"><span
-                        class="eos-icon  small"
-                        [ngClass]="flagEdit ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
+                    class="eos-icon  small"
+                    [ngClass]="flagEdit ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                 </button>
-                <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="homeCardMoov()" tooltip="Главная" container="body" placement="bottom" containerClass="tooltip-info" triggers="hover:click"><span  
+                <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="homeCardMoov()" tooltip="Главная" container="body" placement="bottom" containerClass="tooltip-info" triggers="hover:click"><span
                         class="eos-icon  small"
                         [ngClass]="flagEdit ? 'eos-icon-keyfile-blue' : 'eos-icon-keyfile-grey'"
                     ></span>
