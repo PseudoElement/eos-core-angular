@@ -178,7 +178,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.cancel();
             return ;
         }
-        if (this.organOld && this.newData.rec['NAME'] !== this.organOld['CLASSIF_NAME']) {
+        if (this.organOld && this.newData.rec['NAME'] !== this.organOld['CLASSIF_NAME'] && this.newData.rec['ISN_ORGANIZ']) {
             const flag = confirm(`Значение поля \'Наименование\' не соответсвует полю \'Название\' организации из справочника.
                                     \n Ссылка на спровочник \'Организации\' будет удалена
                                     \n Подтвердждаете изменение?`);

@@ -7,9 +7,8 @@
 }
 
 .nav-accordion {
-    height: calc(100vh - 97px);
     min-width: $dictionary-block-width;
-    height: 100vh;
+    height: calc(100vh - 97px);
     background: $white;
     position: absolute;
     top: 97px;
