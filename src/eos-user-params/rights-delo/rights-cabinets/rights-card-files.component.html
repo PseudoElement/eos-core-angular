@@ -19,19 +19,11 @@
                         [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"
                     ></span>
                 </button>
-                <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="removeCards()"><span
-                        tooltip="Удалить картотеку"
-                        placement="bottom"
-                        containerClass="tooltip-info"
-                        triggers="hover:click"
+                <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="removeCards()" tooltip="Удалить картотеку" placement="bottom" containerClass="tooltip-info" triggers="hover:click" container="body"><span
                         class="eos-icon  small"
                         [ngClass]="flagEdit ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                 </button>
-                <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="homeCardMoov()"><span
-                        tooltip="Главная"
-                        placement="bottom"
-                        containerClass="tooltip-info"
-                        triggers="hover:click"
+                <button [disabled]="!currentCard || !flagEdit || updateCardLimit()" class="btn btn-primary-light" (click)="homeCardMoov()" tooltip="Главная" container="body" placement="bottom" containerClass="tooltip-info" triggers="hover:click"><span  
                         class="eos-icon  small"
                         [ngClass]="flagEdit ? 'eos-icon-keyfile-blue' : 'eos-icon-keyfile-grey'"
                     ></span>

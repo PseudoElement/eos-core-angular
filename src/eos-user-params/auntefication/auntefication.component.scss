@@ -11,6 +11,9 @@
         }
         
     }
+    select::-ms-expand {
+        display: none;
+    }
     .select-auntef{
         width: 250px;
         position: relative;

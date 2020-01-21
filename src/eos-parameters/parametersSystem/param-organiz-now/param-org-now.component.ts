@@ -11,6 +11,8 @@ import { Validators } from '@angular/forms';
 })
 export class ParamOrganizNowComponent extends BaseParamComponent implements OnInit {
     @Input() btnError;
+    public editMode = false;
+    public isLoading = true;
     public sys = '';
     public version = '';
     public organOld: ORGANIZ_CL;
@@ -44,6 +46,9 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
                 if (add && data[0]['INN'] && !this.form.controls['rec.ORG_ID'].value) {
                     this.form.controls['rec.ORG_ID'].patchValue(data[0]['INN']);
                 }
+                if (add && data[0]['OKPO']) {
+                    this.form.controls['rec.ORG_ID'].patchValue(data[0]['OKPO']);
+                }
             }
         })
         .catch(err => {
@@ -70,6 +75,9 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
                 if (add && data[0]['INN'] && !this.form.controls['rec.ORG_ID'].value) {
                     this.form.controls['rec.ORG_ID'].patchValue(data[0]['INN']);
                 }
+                if (add && data[0]['OKPO']) {
+                    this.form.controls['rec.ORG_ID'].patchValue(data[0]['OKPO']);
+                }
             }
         })
         .catch(err => {
@@ -77,6 +85,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         });
     }
     initProt(): Promise<any> {
+        this.isLoading = false;
         this.prepareDataParam();
         return  this.pip.read({
             DELO_OWNER: -99
@@ -94,6 +103,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.version = data[0]['SYS_VERSION'];
             this.subscribeChangeForm();
             this.cancelEdit();
+            this.isLoading = true;
             // this._subscribe();
         })
         .catch(err => {
@@ -102,6 +112,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
             this.subscribeChangeForm();
             this.cancelEdit();
+            this.isLoading = true;
             throw err;
         });
     }
@@ -110,6 +121,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         this.form.controls['rec.ISN_ORGANIZ'].enable({ emitEvent: false });
         this.form.controls['rec.ORG_ID'].enable({ emitEvent: false });
         this.form.controls['rec.FULLNAME'].enable({ emitEvent: false });
+        this.editMode = true;
     }
     openOrganiz() {
         if (!this.form.controls['rec.ISN_ORGANIZ'].disabled) {
@@ -161,7 +173,12 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             alert('Введите наименование организации');
             return ;
         } */
-        if (this.organOld && this.newData.rec['NAME'] !== this.organOld['CLASSIF_NAME']) {
+        this.isLoading = false;
+        if (!this.newData) {
+            this.cancel();
+            return ;
+        }
+        if (this.organOld && this.newData.rec['NAME'] !== this.organOld['CLASSIF_NAME'] && this.newData.rec['ISN_ORGANIZ']) {
             const flag = confirm(`Значение поля \'Наименование\' не соответсвует полю \'Название\' организации из справочника.
                                     \n Ссылка на спровочник \'Организации\' будет удалена
                                     \n Подтвердждаете изменение?`);
@@ -172,6 +189,8 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
                 this.form.controls['rec.INDEX'].setValue('', {emitEvent: true});
                 this.form.controls['rec.OKPO'].setValue('', {emitEvent: true});
                 this.form.controls['rec.OKVED'].setValue('', {emitEvent: true});
+                this.form.controls['rec.FULLNAME'].setValue('', {emitEvent: false});
+                this.form.controls['rec.ISN_ORGANIZ'].setValue('', {emitEvent: true});
             } else {
                 this.form.controls['rec.NAME'].patchValue(this.organOld['CLASSIF_NAME'], {emitEvent: true});
                 this.newData.rec['NAME'] = this.organOld['CLASSIF_NAME'] === '' ? null : this.organOld['CLASSIF_NAME'];
@@ -179,7 +198,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         }
         const dateMerg = {
             NAME: this.newData.rec['NAME'],
-            ISN_ORGANIZ: this.newData.rec['ISN_ORGANIZ'],
+            ISN_ORGANIZ: this.newData.rec['ISN_ORGANIZ'] ? this.newData.rec['ISN_ORGANIZ'] : null,
             ORG_ID: this.newData.rec['ORG_ID'],
         };
         const query = [
@@ -195,10 +214,14 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
                 this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 this.formChanged.emit(false);
                 this.cancelEdit();
+                this.isLoading = true;
+                this.editMode = false;
             })
             .catch(er => {
                 this.formChanged.emit(true);
                 this.isChangeForm = false;
+                this.editMode = true;
+                this.isLoading = true;
                 this.msgSrv.addNewMessage({
                     type: 'danger',
                     title: 'Ошибка сервера',
@@ -207,6 +230,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             });
     }
     cancel() {
+        this.isLoading = false;
         if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
@@ -215,5 +239,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.initProt();
         }
         this.cancelEdit();
+        this.isLoading = true;
+        this.editMode = true;
     }
 }

@@ -1,4 +1,4 @@
-<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs"><!--  -->
+<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs && isLoading"><!--  -->
     <eos-param-header
         [title]="titleHeader"
         (submitForm)="submit();"
@@ -14,12 +14,15 @@
             [readonly]="false"
         ></eos-dynamic-input>
         <div style="position: relative;">
-            <eos-dynamic-input
-                [input]="inputs['rec.FULLNAME']"
-                [form]="form"
-                [readonly]="false"
-                (keydown)="chenge($event)"
-            ></eos-dynamic-input>
+            <div class="note-textarea-div">
+                <eos-dynamic-input
+                    [input]="inputs['rec.FULLNAME']"
+                    [form]="form"
+                    [readonly]="false"
+                    (keydown)="chenge($event)"
+                    class="note-textarea-fullname"
+                ></eos-dynamic-input>
+            </div>
             <div class="organ-new-now">
                 <span (click)="openOrganiz()" 
                 class = "eos-icon" 

@@ -8,6 +8,7 @@ const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
     'ORGANIZ_CL',
+    'CONTACT',
 ];
 const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';

@@ -107,7 +107,6 @@ export interface IPassRegExp {
 
 export interface IRoleCB {
     role: string;
-    weight: number;
     due?: string;
     dueName?: string;
     isnRole?: number;

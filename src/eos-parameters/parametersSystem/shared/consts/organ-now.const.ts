@@ -12,9 +12,10 @@ export const ORGAN_PARAM: IBaseParameters = {
         },
         {
             key: 'FULLNAME',
-            type: 'string',
+            type: 'text',
             readonly: true,
-            title: 'Организации'
+            title: '',
+            length: 2000
         },
         {
             key: 'INDEX',
