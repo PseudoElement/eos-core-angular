@@ -26,6 +26,14 @@ export class ReestrtypeDictionaryDescriptor extends DictionaryDescriptor {
                 return records;
             });
     }
+
+    getRecord(nodeId: string | number): Promise<any> {
+        // вынуждены грузить все из-за IS_UNIQUE (кешировать тут прям последние данные от getdata?)
+        return this.getData().then(res => {
+            return res.filter( r => r.ISN_LCLASSIF === nodeId);
+        });
+    }
+
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
         const res = super.getData(query, order, limit);
         return res.then(d => {

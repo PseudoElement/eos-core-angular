@@ -204,6 +204,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             key: 'START_DATE',
             title: 'Начало действия',
             type: 'date',
+            required: Features.cfg.departments.datesReq,
         }, {
             key: 'END_DATE',
             title: 'Окончание действия',
