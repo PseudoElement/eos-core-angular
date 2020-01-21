@@ -5,6 +5,8 @@ import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/doc
 import { Validators } from '@angular/forms';
 import { RK_TYPE_OPTIONS } from '../consts/dictionaries/docgroup.consts';
 import { AppContext, CB_FUNCTIONS } from 'eos-rest/services/appContext.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -15,6 +17,7 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
 })
 export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     isCBBase: boolean;
+    isNadzor: boolean;
     isSignatura: boolean;
     private _prev = {};
     private _appctx: AppContext;
@@ -66,6 +69,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         this._setRequired('rec.SHABLON', !this.isNode);
 
         this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
+        this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
     }
 
     editTemplate(forProject = false) {

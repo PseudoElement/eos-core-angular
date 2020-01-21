@@ -289,6 +289,7 @@ export class EosDataConvertService {
                                 case E_FIELD_TYPE.date:
                                     inputs[_dict + '.' + _key] = new DateInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
+                                        required: descr[_key].required,
                                         label: descr[_key].title,
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey],

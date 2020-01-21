@@ -33,9 +33,8 @@
         class="show-by">
         <button type="button"
             dropdownToggle
-            class="drop-btn btn btn-transparent selected-text"
-            style="height: 48px; width: 336px;">
-            <span>Показывать по {{config?.length}}</span>
+            class="drop-btn btn btn-transparent selected-text">
+            <div class="show-by-label">Показывать по {{config?.length}}</div>
             <div class="arrow">
                 <span class="icon-btn eos-icon small"
                     [ngClass]="{'eos-icon-arrow-v-blue-top': !dd.isOpen, 'eos-icon-arrow-v-blue-bottom': dd.isOpen}"></span>

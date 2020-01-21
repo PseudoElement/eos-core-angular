@@ -20,7 +20,7 @@ export class CaCategoryDictionaryDescriptor extends DictionaryDescriptor {
             'CA_SERIAL': nodeData.rec.CA_SERIAL,
             // 'CA_SUBJECT': nodeData.rec.CA_SUBJECT,
             'CA_CATEGORY.CA_SUBJECT_1024': nodeData.rec.CA_SUBJECT,
-            'ISN_EDS_CATEGORY': nodeData.rec.ISN_EDS_CATEGORY}), })
+            'ISN_EDS_CATEGORY': String(nodeData.rec.ISN_EDS_CATEGORY)}), })
             .then((data) => {
                 if (data && data. length) {
                     const uniqueMessage: IConfirmWindow2 = {

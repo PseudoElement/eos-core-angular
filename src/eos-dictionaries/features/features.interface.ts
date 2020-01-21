@@ -15,6 +15,7 @@ export interface IOESDictsFeatures {
         gas_ps: boolean; /* ГАС ПС */
         stamp: boolean; /* угловой штамп */
         userCreateButton: boolean; /* кнопка "создать юзера" для ДЛ */
+        datesReq: boolean; /* требовать дату начала */
     };
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;
