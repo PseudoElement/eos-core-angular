@@ -10,6 +10,7 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
         gas_ps: false,
         stamp: false,
         userCreateButton: true, /* в цб не должно быть, пока привязано к cb_func */
+        datesReq: true,
     },
     SEV: <IEOSSevConfig> {
         isIndexesEnable: true,
