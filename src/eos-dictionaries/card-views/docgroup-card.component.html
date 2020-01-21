@@ -127,7 +127,7 @@
                         [form]="form"
                         [readonly]="!editMode"
                     ></eos-dynamic-input>
-                    <eos-dynamic-input *ngIf="isCBBase"
+                    <eos-dynamic-input *ngIf="!isNadzor"
                         [ngStyle]="{ 'width.px': 210 }"
                         [input]="inputs['rec.REG_DATE_PROTECTED']"
                         [form]="form"
@@ -158,7 +158,7 @@
             ></eos-dynamic-input>
         </div>
     </ng-container>
-    <ng-container *ngIf="isPrjFlag && !isNode && isCBBase">
+    <ng-container *ngIf="isPrjFlag && !isNode && !isNadzor">
         <div class="row-wrapper">
             <label class="string-inline">Запретить удаление РКПД при статусе</label>
             <eos-dynamic-input
