@@ -419,7 +419,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                 });
             }
         }).catch(error => {
-            this._errorSrv.errorHandler(error);
+            if (error) {
+                this._errorSrv.errorHandler(error);
+            }
             this.flagBacground = false;
         });
     }
