@@ -29,7 +29,7 @@
                         tooltip="Добавить"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        [disabled]="!editMode"
+                        [disabled]="!editMode || !node.limitcard"
                         (click)="[node.addInstance()]"
                     >
                         <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode}">
@@ -41,7 +41,7 @@
                         containerClass="tooltip-info">
                         <button
                             class="btn"
-                            [disabled]="!node.curentSelectedNode || !editMode"
+                            [disabled]="!node.curentSelectedNode || !editMode || !node.limitcard"
                             (click)="[node.deleteInstance()]">
                             <span class="eos-icon small"  [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode}">
                             </span>
@@ -53,7 +53,7 @@
                 <div *ngIf="node.isLimit" class="card-limit">
                     <label class="checkbox">
                         <input type="checkbox"
-                            [disabled]="!editMode"
+                            [disabled]="!editMode || !node.limitcard"
                             hide
                             [(ngModel)]="node.limit"
                         >
@@ -66,7 +66,7 @@
                     <eos-list-doc-tree
                         *ngIf="!node.isLoading; else loaderSm"
                         [listNode]="node.listNodes"
-                        [editMode]="editMode"
+                        [editMode]="editMode && node.limitcard"
                         (select)="node.select($event)"
                         (checkedNode)="node.checkedNode($event)"
                     ></eos-list-doc-tree>
