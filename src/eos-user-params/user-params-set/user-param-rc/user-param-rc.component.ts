@@ -209,7 +209,13 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         updateVield.join(',') === '' ? valToSave = '' : valToSave = updateVield.join(',');
         this.form.controls['rec.OPEN_AR'].patchValue(valToSave);
     }
-
+    disableDelet() {
+        if (this.cutentTab && this.dopRec) {
+            return ((this.cutentTab + 1) > this.dopRec.length);
+        } else {
+            return false;
+        }
+    }
     editMode() {
         if (this.flagEdit) {
             this.form.enable({ emitEvent: false });
