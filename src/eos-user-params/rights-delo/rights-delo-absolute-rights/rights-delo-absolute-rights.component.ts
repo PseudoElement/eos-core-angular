@@ -157,7 +157,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
             this.listRight.forEach(elem => {
                 if (arr.indexOf(elem.key) !== -1) {
-                    elem.control.disable();
+                    elem.control.disable({emitEvent: false});
                 }
             });
         }
@@ -282,7 +282,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                             .then(() => {
                                 this.init();
                                 if (this._appContext.CurrentUser.ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
-                                    this._appContext.updateLimitCardsUser(this.curentUser.USER_TECH_List.filter(card => card.FUNC_NUM === 1));
+                                    this._appContext.updateLimitCardsUser(this.curentUser.USER_TECH_List.filter(card => card.FUNC_NUM === 1).map(card => card.DUE));
                                 }
                             });
                         }
