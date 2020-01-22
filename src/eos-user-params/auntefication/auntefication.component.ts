@@ -87,8 +87,18 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
         ).subscribe(data => {
             this.checkChangeForm(data);
+            this.checkUpdate();
         });
     }
+
+    checkUpdate() {
+        if (this.originAutent !== this.form.get('SELECT_AUTENT').value || ( this.form.controls['pass'].value || this.form.controls['pass'].value)) {
+            this._pushState(true);
+        } else {
+            this._pushState(false);
+        }
+    }
+
     returnEdit() {
         return !this.editMode;
     }
@@ -148,7 +158,6 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     cancel($event) {
         this.editMode = false;
         this.isLoading = false;
-        this.editMode = !this.editMode;
         this.cancelValues(this.inputs, this.form);
         this.autentif.nativeElement.disabled = true;
         this.form.get('SELECT_AUTENT').patchValue(this.originAutent);
@@ -265,5 +274,8 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     private createLogin(pass, id): Promise<any> {
         const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    }
+    private _pushState(date) {
+        this._userParamSrv.setChangeState({ isChange: date });
     }
 }
