@@ -124,7 +124,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return false;
     }
     prepareWarnindMessage(dueCards: string): Promise<any> {
-        if (!this.mainArrayCards.length) {
+        if (!this.mainArrayCards.length && dueCards.trim().length) {
             return this.getInfoForNewCards(dueCards.split('|')).then(() => {
                 if (this.mainArrayCards.length) {
                     this.mainArrayCards[0].homeCard = true;
