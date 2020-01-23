@@ -8,6 +8,7 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { BsModalService } from 'ngx-bootstrap';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
+import { Validators } from '@angular/forms';
 
 
 interface IToDeclineFields {
@@ -41,7 +42,13 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     }
 
     ngOnInit () {
-
+        super.ngOnInit();
+        if (this.isCBBase) {
+            this.inputs['rec.START_DATE'].required = true;
+            this.form.controls['rec.START_DATE'].setValidators(
+                [this.form.controls['rec.START_DATE'].validator, Validators.required]
+            );
+        }
     }
 
     ngOnChanges() {

@@ -12,18 +12,20 @@ export class NomenkNodeInfoComponent extends NodeInfoComponent implements OnChan
 
     ngOnChanges () {
         super.ngOnChanges();
-        this.depTitle = '';
-        let ptr = this.node.dictionary.descriptor.getParentFor(this.node.data['rec']['DUE']);
-        if (ptr) {
-            do {
-                if (this.depTitle !== '') {
-                    this.depTitle = ptr.title + ' >\n' + this.depTitle;
-                } else {
-                    this.depTitle = ptr.title;
-                }
+        if (this.node) {
+            this.depTitle = '';
+            let ptr = this.node.dictionary.descriptor.getParentFor(this.node.data['rec']['DUE']);
+            if (ptr) {
+                do {
+                    if (this.depTitle !== '') {
+                        this.depTitle = ptr.title + ' >\n' + this.depTitle;
+                    } else {
+                        this.depTitle = ptr.title;
+                    }
 
-                ptr = this.node.dictionary.descriptor.getParentFor(ptr.parent);
-            } while (ptr.parent);
+                    ptr = this.node.dictionary.descriptor.getParentFor(ptr.parent);
+                } while (ptr.parent);
+            }
         }
 
     }
