@@ -138,7 +138,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     returnLimitCard(data): boolean {
-        if (this._appContext.limitCardsUser.length > 0 && data) {
+        if (this._appContext.limitCardsUser.length > 0 && data && data.dataDeep) {
             if (this._appContext.limitCardsUser.indexOf(data.dataDeep['DEPARTMENT_DUE']) !== -1) {
                 return true;
             }
