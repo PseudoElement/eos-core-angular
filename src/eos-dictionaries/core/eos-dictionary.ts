@@ -405,7 +405,8 @@ export class EosDictionary {
             const _searchFields = this.descriptor.record.getFieldSet(E_FIELD_SET.search);
             const _criteries = _searchFields.map((fld) => {
                 const _crit: any = {
-                    [fld.foreignKey]: '%' + search + '%'
+                    // [fld.foreignKey]: '%' + search + '%'
+                    [fld.foreignKey]: String(search).replace(/ /g, '_'),
                 };
                 this._extendCritery(_crit, params, selectedNode);
                 return _crit;
