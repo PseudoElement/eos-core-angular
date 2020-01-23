@@ -531,15 +531,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
     }
     _downloadDocTemplates() {
-        this.dictionary.descriptor.downloadFile(this._dictSrv.listNode)
-            .then(info => {
-                if (!info) {
-                    this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
-                }
-            })
-            .catch(() => {
-                this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
-            });
+        this._dictSrv.getMarkedNodes().forEach(
+            (node) => {
+                this.dictionary.descriptor.downloadFile(node)
+                .then(info => {
+                    if (!info) {
+                        this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
+                    }
+                })
+                .catch(() => {
+                    this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
+                });
+        });
     }
     _navigateToUC(): any {
         const url = this._router.url;
