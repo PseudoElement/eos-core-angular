@@ -7,6 +7,8 @@ import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 export class TabOptions {
     id: string;
@@ -35,6 +37,8 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     prevValues: any[];
     tabOptions: Array<TabOptions> = [];
 
+
+
     selOpts: IDynamicInputOptions = {
         defaultValue: {
             value: '',
@@ -42,9 +46,12 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         }
     };
 
+    public isCBBase: boolean;
+    public isNadzor: boolean;
     public isSevIndexes: boolean = false;
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
+    protected appctx: AppContext;
 
     /* private _dates: any = {}; */
     constructor(injector: Injector) {
@@ -52,6 +59,11 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         this.currTab = this.dictSrv.currentTab ? this.dictSrv.currentTab : 0;
         this.prevValues = [];
         this.isSevIndexes = Features.cfg.SEV.isIndexesEnable;
+        this.appctx = injector.get(AppContext);
+
+        this.isCBBase = this.appctx.getParams(CB_FUNCTIONS) === 'YES';
+        this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
+
     }
 
     public static autoFocusOnFirstStringElement(parentTag: string) {

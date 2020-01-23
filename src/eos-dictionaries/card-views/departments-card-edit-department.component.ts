@@ -3,7 +3,7 @@ import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
-import {AbstractControl, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
@@ -50,11 +50,18 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     ngOnInit () {
+        super.ngOnInit();
         const v = this.featuresDep.numcreation ? [this.validatorNumcreationFlag()] : [];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }
         this.form.controls['rec.DEPARTMENT_INDEX'].setValidators(v);
+        if (this.isCBBase) {
+            this.inputs['rec.START_DATE'].required = true;
+            this.form.controls['rec.START_DATE'].setValidators(
+                [this.form.controls['rec.START_DATE'].validator, Validators.required]
+            );
+        }
     }
 
     validatorNumcreationFlag(): ValidatorFn {
