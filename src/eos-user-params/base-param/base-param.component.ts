@@ -828,6 +828,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         const url = `DropLogin?isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
+    private AddUnderscore(string: string): string {
+        return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
+    }
+    private SEARCH_INCORRECT_SYMBOLS() {
+        return  new RegExp('["|\']', 'g');
+    }
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
             if (!this.curentUser['IS_PASSWORD']) {
@@ -839,7 +845,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._apiSrv.getData<USER_CL[]>({
                     USER_CL: {
                         criteries: {
-                            CLASSIF_NAME: `=${(control.value).trim().replace(/[!@$&^=]/g, '')}`,
+                            CLASSIF_NAME: `="${this.AddUnderscore(`${(control.value).trim().replace(/[!@$&^=]/g, '').replace(this.SEARCH_INCORRECT_SYMBOLS(), '')}`)}"`,
                         }
                     }
                 }).then(data => {
