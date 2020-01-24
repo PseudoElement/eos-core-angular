@@ -319,7 +319,7 @@ export class UserParamApiSrv {
         const ARRAY_QUERY_SET_DELETE = [];
         let data = {};
         users.forEach((user: UserSelectNode) => {
-            if ((user.isChecked || user.selectedMark) && user.id !== +mainUser) {
+            if ((user.isChecked || user.selectedMark) && user.id !== +mainUser && user.isEditable) {
                 if (user.blockedUser) {
                     data = {
                         DELETED: 0,
@@ -343,11 +343,7 @@ export class UserParamApiSrv {
             }
         });
         if (ARRAY_QUERY_SET_DELETE.length > 0) {
-            return this.setData(ARRAY_QUERY_SET_DELETE).then(response => {
-                return response;
-            }).catch(error => {
-                console.log(error);
-            });
+            return this.setData(ARRAY_QUERY_SET_DELETE);
         } else {
             return Promise.resolve(false);
         }
