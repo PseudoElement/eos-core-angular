@@ -678,7 +678,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
                 this.listUsers = this.listUsers.map(users => {
-                    if (users.id === +idMain) {
+                    if (users.id === +idMain && (users.isChecked || users.selectedMark)) {
                         this._msgSrv.addNewMessage({
                             type: 'warning',
                             title: 'Предупреждение:',
