@@ -9,7 +9,7 @@
             <button class="btn btn-primary-light" [disabled]="!flagEdit" tooltip="Добавить" containerClass="tooltip-info" placement="bottom" triggers="hover" (click)="addRcDoc()">
                     <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
                 </button>
-            <button [disabled]="disabledFlagDelite || !flagEdit || disableDelet()" class="btn btn-primary-light" tooltip="Удалить" containerClass="tooltip-info" placement="bottom" (click)="deleteRcDoc()">
+            <button [disabled]="disabledFlagDelite || !flagEdit || disableDelet()" class="btn btn-primary-light" [tooltip]="!disabledFlagDelite && !disableDelet() ? 'Удалить' : null" containerClass="tooltip-info" placement="bottom" (click)="deleteRcDoc()">
                     <span class="eos-icon small" [ngClass] = "flagEdit && !disabledFlagDelite && !disableDelet() ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                 </button>
         </div>
