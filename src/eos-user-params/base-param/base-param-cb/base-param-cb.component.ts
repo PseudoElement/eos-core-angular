@@ -70,6 +70,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     errorSave: boolean;
     queryRoles: any[] = [];
     public isShell: boolean = false;
+    public userCanUseRole: boolean = false;
     public criptoView: boolean = true;
     public userSertsDB: USER_CERTIFICATE;
     private _sysParams;
@@ -160,7 +161,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     get getErrorSave() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
-        if (this.editMode && (val !== null || (this.form.controls['CLASSIF_NAME'].value).trim() === '' || (this.form.controls['SURNAME_PATRON'].value).trim() === '')) {
+        const clName = this.form.controls['CLASSIF_NAME'].value ? this.form.controls['CLASSIF_NAME'].value : '';
+        const suPatron = this.form.controls['SURNAME_PATRON'].value ? this.form.controls['SURNAME_PATRON'].value : '';
+        if (this.editMode && (val !== null || (clName).trim() === '' || (suPatron).trim() === '')) {
             return true;
         } else {
             return false;
@@ -269,15 +272,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     getCabinetOwnUser(): void {
+        // изменил DUE => DEPARTMENT_DUE и curentUser.DUE_DEP => curentUser['DEPARTMENT_DUE']
         this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
             criteries: {
-                DUE: this.curentUser.DUE_DEP,
+                DEPARTMENT_DUE: this.curentUser['DEPARTMENT_DUE'],
                 ISN_CABINET: 'isnotnull'
             }
         }}).then((depD: any) => {
             if (depD.length === 1) {
                 this.singleOwnerCab = false;
                 this.getUserCbRoles();
+                this.userCanUseRole = true;
             }
         });
     }
@@ -288,16 +293,21 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 criteries: {DUE_PERSON: this.curentUser.DUE_DEP}
             }}),
             this.apiSrvRx.read({CBR_USER_ROLE: {
-                criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
-                orderby: 'WEIGHT'
-            }})
+                    criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
+                },
+                orderby: 'WEIGHT',
+            })
         ];
         return Promise.all(reqs).then((data: any[]) => {
             const asistMansData = data[0].filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
             if (asistMansData.length > 0) {
                 this._getUserCl(asistMansData).then((users: USER_CL[]) => {
                     const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
-                    sortUsers.forEach(user => this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`);
+                    sortUsers.forEach(user => {
+                        if (this.asistMansStr.indexOf(user.SURNAME_PATRON) === -1) {
+                            this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`;
+                        }
+                    });
                     if (data[1].length) {
                         this.ParseRoles(data[1]);
                     }
@@ -319,6 +329,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     parseData(data: any[], dueNames: Map<string, string>) {
+        this.currentCbFields = [];
         data.forEach(el => {
             if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
                 this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: dueNames.get(el.DUE_PERSON),
@@ -503,7 +514,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
         if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
-                if (cab) {
+                if (cab || cab === undefined) {
                     return true;
                 } else {
                     return false;
@@ -602,6 +613,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.editModeF();
             this._pushState();
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
+            if (this.userCanUseRole) {
+                this.singleOwnerCab = false;
+                this.getUserCbRoles();
+            }
         });
     }
     clearMap() {
@@ -817,30 +832,35 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
             this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
-        if (this.startRolesCb !== this.currentCbFields) {
+        if (this.startRolesCb !== this.currentCbFields || (!this.startRolesCb.length && !this.currentCbFields.length)) {
             this.getQueryFromRoles();
         }
     }
 
     getQueryFromRoles() {
+        this.queryRoles = [];
         this.currentCbFields.forEach((field, indx) => {
             if (!field.isnRole) {
-            this.queryRoles.push({
-                method: 'POST',
-                requestUri: `CBR_USER_ROLE(-99)`,
-                data: {
-                    WEIGHT: indx + 1,
-                    DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
-                    KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
-                    ISN_USER: this.curentUser.ISN_LCLASSIF,
+                const newElem = {
+                    method: 'POST',
+                    requestUri: `CBR_USER_ROLE(-99)`,
+                    data: {
+                        WEIGHT: indx + 1,
+                        DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
+                        KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
+                        ISN_USER: this.curentUser.ISN_LCLASSIF,
+                    }
+                };
+                if (this.queryRoles.filter(elem => JSON.stringify(newElem) === JSON.stringify(elem)).length === 0) {
+                    this.queryRoles.push(newElem);
                 }
-            });
            }
         });
-        this.startRolesCb.forEach(old => {
+        this.startRolesCb.forEach((old, index) => {
             const kindRole = KIND_ROLES_CB.indexOf(old.role);
-            if (kindRole === 3 || kindRole === 4) {
-                const repeatRole = this.currentCbFields.find(cur => old.due !== cur.due && cur.isnRole === old.isnRole);
+            const weigthNow = this.currentCbFields[index] && this.currentCbFields[index].isnRole === old.isnRole ? false : true;
+            if (kindRole === 3 || kindRole === 4 || weigthNow) {
+                const repeatRole = this.currentCbFields.filter(cur => cur.isnRole === old.isnRole)[0];
                 if (repeatRole) {
                     this.queryRoles.push({
                         method: 'MERGE',
@@ -854,7 +874,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     const checkArr = this.queryRoles.map(q => q.requestUri);
-                    if (checkArr && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                    if (old.isnRole && checkArr && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
                         this.queryRoles.push({
                             method: 'DELETE',
                             requestUri: `CBR_USER_ROLE(${old.isnRole})`,
@@ -862,9 +882,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     }
                 }
             } else {
-                if (this.currentCbFields.indexOf(old) === -1) {
+                if (this.currentCbFields.filter(cur => cur.isnRole === old.isnRole).length === 0) {
                     const checkArr = this.queryRoles.map(q => q.requestUri);
-                    if (checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                    if (old.isnRole && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
                         this.queryRoles.push({
                             method: 'DELETE',
                             requestUri: `CBR_USER_ROLE(${old.isnRole})`,
@@ -1043,7 +1063,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const url = `DropLogin?isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
-   private AddUnderscore(string: string): string {
+    private AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
     private SEARCH_INCORRECT_SYMBOLS() {

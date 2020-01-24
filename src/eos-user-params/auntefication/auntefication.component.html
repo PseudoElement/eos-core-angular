@@ -1,5 +1,5 @@
 <div *ngIf="!isLoading" class="autentification-window">
-    <eos-user-params-header [editMode]="editMode" [title]='titleHeader' [disableBtn]="false" [defaultBtn]='false' [errorSave] = "false"
+    <eos-user-params-header [editMode]="editMode" [title]='titleHeader' [disableBtn]="false" [defaultBtn]='false' [errorSave] = "this.form.status === 'INVALID'"
         (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'
         ></eos-user-params-header><!-- (defaultEmit)='default($event)' -->
     <div class="autentification-control">
@@ -33,7 +33,7 @@
     </div> 
     <div *ngIf="getPassDate()" class="autentification-control-type">
         <div class="elem-password-date">
-            <eos-dynamic-input style="width: 180px" class="inline-block" [form]="form" [input]="inputs['PASSWORD_DATE']" [readonly]="inputs['PASSWORD_DATE'].readonly || !editMode"></eos-dynamic-input>
+            <eos-dynamic-input style="width: 180px" class="inline-block" [form]="form" [input]="inputs['PASSWORD_DATE']" [readonly]="getEditDate() || !editMode"></eos-dynamic-input>
         </div>
         <div class="wrapper-password">
             <!-- что бы не вставлялся логин в поле даты -->
