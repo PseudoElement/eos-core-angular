@@ -23,7 +23,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     startRolesCb: IRoleCB[];
     basicFields: string[] = [
         'Председатель', 'Заместитель Председателя', 'Директор департамента и заместитель директора департамента', 'Помощник Председателя',
-        'Помощник заместителя предстедателя и директоров', 'Исполнитель'
+        'Помощник заместителя председателя и директоров департаментов', 'Исполнитель'
     ];
     fixedFields: string[] = [];
     selectedBasicRole: string;
@@ -76,7 +76,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
 
     parseToCurRole(role: string): IRoleCB {
         let curObj: IRoleCB;
-        const repeatRole = this.startRolesCb.find(field => field.role === role);
+        const repeatRole = this.startRolesCb.filter(field => field.role === role)[0];
         if (role === 'Исполнитель') {
             curObj = {
                 role: role,
@@ -97,7 +97,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
 
     addToCurrent() {
         if (this.selectedBasicRole) {
-            if (this.selectedBasicRole !== 'Помощник заместителя предстедателя и директоров' && this.selectedBasicRole !== 'Помощник Председателя') {
+            if (this.selectedBasicRole !== 'Помощник заместителя председателя и директоров департаментов' && this.selectedBasicRole !== 'Помощник Председателя') {
                 this.currentFields.push(this.parseToCurRole(this.selectedBasicRole));
                 this.basicFields.splice(this.basicFields.indexOf(this.selectedBasicRole), 1);
             } else {
@@ -114,7 +114,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
             return this._confirmSrv.confirm(CONFIRM_DELETE_ROLE).then(res => {
                 if (res) {
                     if (this.selectedCurrRole) {
-                        if (this.selectedCurrRole.role !== 'Помощник заместителя предстедателя и директоров' && this.selectedCurrRole.role !== 'Помощник Председателя') {
+                        if (this.selectedCurrRole.role !== 'Помощник заместителя председателя и директоров департаментов' && this.selectedCurrRole.role !== 'Помощник Председателя') {
                             this.basicFields.push(this.selectedCurrRole.role);
                         }
                         this.currentFields.splice(this.currentFields.indexOf(this.selectedCurrRole), 1);
@@ -122,7 +122,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this.selectedCurrRole = null;
                     } else {
                         this.basicFields.push(this.curPreDelete.role);
-                        if (item === 'Помощник заместителя предстедателя и директоров' || item === 'Помощник Председателя') {
+                        if (item === 'Помощник заместителя председателя и директоров департаментов' || item === 'Помощник Председателя') {
                             this.basicFields.splice(this.basicFields.lastIndexOf(item), 1);
                         }
                         this._fixedRoles(item, 'del');
@@ -131,7 +131,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     if (item) {
                         this.basicFields.push(this.curPreDelete.role);
                         this.currentFields.push(this.curPreDelete);
-                        if (item !== 'Помощник заместителя предстедателя и директоров' && item !== 'Помощник Председателя') {
+                        if (item !== 'Помощник заместителя председателя и директоров департаментов' && item !== 'Помощник Председателя') {
                             this.basicFields.splice(this.basicFields.indexOf(item), 1);
                         } else {
                             this.basicFields.splice(this.basicFields.indexOf(item), 1);
@@ -162,7 +162,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     private _addRole(role: string) {
         this._fixedRoles(role, 'add');
         this.currentFields = this.currentFields.filter(field => typeof field !== 'string');
-        if (role === 'Помощник Председателя' || role === 'Помощник заместителя предстедателя и директоров') {
+        if (role === 'Помощник Председателя' || role === 'Помощник заместителя председателя и директоров департаментов') {
             setTimeout(() => {
                 this.basicFields.push(role);
             }, 0);
@@ -175,7 +175,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
         const arrRoles = this.currentFields.map(field => field.role);
         KIND_ROLES_CB.forEach(role => {
             if (arrRoles.indexOf(role) !== -1) {
-                if (role !== 'Помощник заместителя предстедателя и директоров' && role !== 'Помощник Председателя') {
+                if (role !== 'Помощник заместителя председателя и директоров департаментов' && role !== 'Помощник Председателя') {
                     this.basicFields.splice(this.basicFields.indexOf(role), 1);
                 }
                 this._fixedRoles(role, 'add', true);
@@ -196,8 +196,8 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     break;
                 case 'Директор департамента и заместитель директора департамента':
                     if (!this.fixedFields.length) {
-                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' && field !== 'Помощник Председателя');
-                        this.basicFields = ['Помощник заместителя предстедателя и директоров', 'Помощник Председателя'];
+                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя председателя и директоров департаментов' && field !== 'Помощник Председателя');
+                        this.basicFields = ['Помощник заместителя председателя и директоров департаментов', 'Помощник Председателя'];
                     } else {
                         this.basicFields.splice(this.basicFields.indexOf('Исполнитель'), 1);
                         this.fixedFields.push('Исполнитель');
@@ -205,8 +205,8 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     break;
                 case 'Исполнитель':
                     if (!this.fixedFields.length) {
-                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя предстедателя и директоров' && field !== 'Помощник Председателя');
-                        this.basicFields = ['Помощник заместителя предстедателя и директоров', 'Помощник Председателя'];
+                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя председателя и директоров департаментов' && field !== 'Помощник Председателя');
+                        this.basicFields = ['Помощник заместителя председателя и директоров департаментов', 'Помощник Председателя'];
                     } else {
                         this.basicFields.splice(this.basicFields.indexOf('Директор департамента и заместитель директора департамента'), 1);
                         this.fixedFields.push('Директор департамента и заместитель директора департамента');
@@ -216,18 +216,18 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     if (!init) {
                         this._showDepRole(role);
                     } else {
-                        const seniorMan = this.currentFields.find(field => field.role === 'Директор департамента и заместитель директора департамента' || field.role === 'Исполнитель');
+                        const seniorMan = this.currentFields.filter(field => field.role === 'Директор департамента и заместитель директора департамента' || field.role === 'Исполнитель')[0];
                         if (!seniorMan) {
                             this.fixedFields = ['Председатель', 'Заместитель Председателя'];
                             this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
                         }
                     }
                     break;
-                case 'Помощник заместителя предстедателя и директоров':
+                case 'Помощник заместителя председателя и директоров департаментов':
                     if (!init) {
                         this._showDepRole(role);
                     } else {
-                        const seniorMan = this.currentFields.find(field => field.role === 'Директор департамента и заместитель директора департамента' || field.role === 'Исполнитель');
+                        const seniorMan = this.currentFields.filter(field => field.role === 'Директор департамента и заместитель директора департамента' || field.role === 'Исполнитель')[0];
                         if (!seniorMan) {
                             this.fixedFields = ['Председатель', 'Заместитель Председателя'];
                             this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
@@ -273,7 +273,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this.fixedFields = [];
                     }
                     break;
-                case 'Помощник заместителя предстедателя и директоров':
+                case 'Помощник заместителя председателя и директоров департаментов':
                     if (!this.currentFields.length) {
                         this.basicFields = this.fixedFields.concat(this.basicFields);
                         this.fixedFields = [];
@@ -296,9 +296,9 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
         this._subscriptionDrag = this._dragulaService.drag.subscribe((val) => {
             if (val[1].id === 'cur-item') {
                 if (val[1].children[1].innerText !== '') {
-                    this.curPreDelete = this.currentFields.find(item => item.dueName === val[1].children[1].innerText);
+                    this.curPreDelete = this.currentFields.filter(item => item.dueName === val[1].children[1].innerText)[0];
                 } else {
-                    this.curPreDelete = this.currentFields.find(item => item.role === val[1].children[0].innerText);
+                    this.curPreDelete = this.currentFields.filter(item => item.role === val[1].children[0].innerText)[0];
                 }
             }
             this.selectedBasicRole = null;
@@ -331,29 +331,49 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     }}).then(dep => {
                         if (dep.length === 1) {
                             if (changeRole) {
-                                const indxRole = this.currentFields.indexOf(this.selectedCurrRole);
-                                this.selectedCurrRole.due = dep[0].DUE;
-                                this.selectedCurrRole.dueName = dep[0].CLASSIF_NAME;
-                                this.currentFields.splice(indxRole, 1, this.selectedCurrRole);
+                                const repeatRole = this.currentFields.filter(field => /* field.role === role && */ field.due === dep[0].DUE)[0];
+                                if (!repeatRole) {
+                                    const indxRole = this.currentFields.indexOf(this.selectedCurrRole);
+                                    this.selectedCurrRole.due = dep[0].DUE;
+                                    this.selectedCurrRole.dueName = dep[0].CLASSIF_NAME;
+                                    this.currentFields.splice(indxRole, 1, this.selectedCurrRole);
+                                } else {
+                                    this._msgSrv.addNewMessage({
+                                        type: 'warning',
+                                        title: 'Предупреждение:',
+                                        msg: 'Невозможно добавить выбранное ДЛ в роль: у пользователя уже есть роль ' + role + ' с выбранным ДЛ',
+                                        dismissOnTimeout: 6000,
+                                    });
+                                }
                             } else {
                                 const checkField = this.currentFields.filter(field => field.role === 'Исполнитель' || field.role === 'Директор департамента и заместитель директора департамент');
-                                const repeatRole = this.startRolesCb.find(field => field.role === role && field.due === dep[0].DUE);
+                                // проверка на дублирование при добавлении
+                                const repeatRole = this.currentFields.filter(field => /* field.role === role && */ field.due === dep[0].DUE)[0];
                                 if (checkField.length === 0) {
                                     this.fixedFields = !this.fixedFields.length ? this.basicFields.filter(field => field === 'Председатель' || field === 'Заместитель Председателя') : this.fixedFields;
                                     this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
                                 }
-                                this.currentFields.push({
-                                    role: role,
-                                    due: dep[0].DUE,
-                                    dueName: dep[0].CLASSIF_NAME,
-                                    isnRole : repeatRole ? repeatRole.isnRole : null
-                                });
+                                if (!repeatRole) {
+                                    this.currentFields.push({
+                                        role: role,
+                                        due: dep[0].DUE,
+                                        dueName: dep[0].CLASSIF_NAME,
+                                        isnRole : repeatRole ? repeatRole.isnRole : null
+                                    });
+                                } else {
+                                    this._msgSrv.addNewMessage({
+                                        type: 'warning',
+                                        title: 'Предупреждение:',
+                                        msg: 'Невозможно добавить выбранное ДЛ в роль: у пользователя уже есть роль ' + role + ' с выбранным ДЛ',
+                                        dismissOnTimeout: 6000,
+                                    });
+                                }
                             }
                         } else {
                             this._msgSrv.addNewMessage({
                                 type: 'warning',
                                 title: 'Предупреждение:',
-                                msg: 'Невозможно добавить выбранное ДЛ роль: ДЛ не явлется единственным владельцем кабинета',
+                                msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ не являтся единственным владельцем кабинета',
                                 dismissOnTimeout: 6000,
                             });
                         }
@@ -362,7 +382,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение:',
-                        msg: 'Невозможно добавить выбранное ДЛ роль: ДЛ не явлется единственным владельцем кабинета',
+                        msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ не являтся единственным владельцем кабинета',
                         dismissOnTimeout: 6000,
                     });
                 }
@@ -371,7 +391,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение:',
-                        msg: 'Невозможно добавить выбранное ДЛ роль: ДЛ совпадает с ассоциированным ДЛ пользователя',
+                        msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ совпадает с ассоциированным ДЛ пользователя',
                         dismissOnTimeout: 6000,
                     });
                 } else {
