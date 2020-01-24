@@ -3,11 +3,13 @@ import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
-import {AbstractControl, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
 import { BsModalService } from 'ngx-bootstrap';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -50,11 +52,25 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     ngOnInit () {
+        super.ngOnInit();
         const v = this.featuresDep.numcreation ? [this.validatorNumcreationFlag()] : [];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }
         this.form.controls['rec.DEPARTMENT_INDEX'].setValidators(v);
+        const  _eaps = this.injector.get(EosAccessPermissionsService);
+        if (this.isNewRecord) {
+            this.directGrant = APS_DICT_GRANT.denied;
+        } else {
+            this.directGrant = _eaps.isAccessGrantedForDictionary(DEPARTMENTS_DICT.id, this.data.rec.DUE);
+        }
+
+        if (this.isCBBase) {
+            this.inputs['rec.START_DATE'].required = true;
+            this.form.controls['rec.START_DATE'].setValidators(
+                [this.form.controls['rec.START_DATE'].validator, Validators.required]
+            );
+        }
     }
 
     validatorNumcreationFlag(): ValidatorFn {
