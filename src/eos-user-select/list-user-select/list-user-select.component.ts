@@ -385,11 +385,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         }
         if (sortSearch && sortSearch === 'sortSearch') {
-            this._apiSrv.srtConfig[nameSort].upDoun =  false;
+            this._apiSrv.srtConfig[nameSort].upDoun = false;
         } else {
             this._apiSrv.srtConfig[nameSort].upDoun = !this._apiSrv.srtConfig[nameSort].upDoun;
         }
-        this._storage.setItem('SortPageList', {'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[nameSort].upDoun });
+        this._storage.setItem('SortPageList', { 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[nameSort].upDoun });
         this._apiSrv.stateTehUsers = false;
         this._apiSrv.stateDeleteUsers = false;
         const id = this._route.params['value'].nodeId;
@@ -678,7 +678,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
                 this.listUsers = this.listUsers.map(users => {
-                    if ((users.isChecked || users.selectedMark) && users.id !== +idMain) {
+                    if (users.id === +idMain) {
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение:',
+                            msg: `Нельзя заблокировать самого себя.`
+                        });
+                    }
+                    if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
                         if (users.blockedUser) {
                             users.blockedUser = false;
                             this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
@@ -705,8 +712,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 }
                 this.isLoading = false;
             }).catch(error => {
-                error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
-                this.cathError(error);
+                error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
+                this.cathError(error.message);
+                this.isLoading = false;
             });
         });
     }
@@ -736,8 +744,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             this.deleteOwnUser = null;
-                if (confirmation) {
-                    if (this._appContext.cbBase) {
+            if (confirmation) {
+                if (this._appContext.cbBase) {
                     this._pipeSrv.read({
                         USER_CL: {
                             criteries: {
@@ -788,42 +796,42 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     deleteConfirm(names: string): Promise<any> {
         this.isLoading = true;
-            let arrayRequests = [];
-            const deletedUsers = [];
-            const arrayProtocol = [];
-            this.listUsers.forEach((user: UserSelectNode) => {
-                if (((user.isChecked && !user.deleted) || (user.selectedMark)) && user.id !== this._appContext.CurrentUser.ISN_LCLASSIF) {
-                    let url = this._createUrlForSop(user.id);
-                    deletedUsers.push(user.id);
-                    arrayRequests.push(
-                        this._pipeSrv.read({
-                            [url]: ALL_ROWS,
-                        })
-                    );
-                    url = '';
-                }
-            });
-            if (arrayRequests.length > 0) {
-                return Promise.all([...arrayRequests]).then(result => {
-                    this._msgSrv.addNewMessage({
-                        title: 'Сообщение',
-                        msg: `Пользователи: ${names} \n\r удалены`,
-                        type: 'success'
-                    });
-                    this.initView(this.currentDue);
-                    arrayRequests = [];
-                    deletedUsers.forEach(el => {
-                        arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
-                    });
-                    return Promise.all([...arrayProtocol]).then(() => {
-                        this.isLoading = false;
-                    });
-                }).catch(error => {
-                    this.isLoading = false;
-                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                    this.cathError(error);
-                });
+        let arrayRequests = [];
+        const deletedUsers = [];
+        const arrayProtocol = [];
+        this.listUsers.forEach((user: UserSelectNode) => {
+            if (((user.isChecked && !user.deleted) || (user.selectedMark)) && user.id !== this._appContext.CurrentUser.ISN_LCLASSIF) {
+                let url = this._createUrlForSop(user.id);
+                deletedUsers.push(user.id);
+                arrayRequests.push(
+                    this._pipeSrv.read({
+                        [url]: ALL_ROWS,
+                    })
+                );
+                url = '';
             }
+        });
+        if (arrayRequests.length > 0) {
+            return Promise.all([...arrayRequests]).then(result => {
+                this._msgSrv.addNewMessage({
+                    title: 'Сообщение',
+                    msg: `Пользователи: ${names} \n\r удалены`,
+                    type: 'success'
+                });
+                this.initView(this.currentDue);
+                arrayRequests = [];
+                deletedUsers.forEach(el => {
+                    arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
+                });
+                return Promise.all([...arrayProtocol]).then(() => {
+                    this.isLoading = false;
+                });
+            }).catch(error => {
+                this.isLoading = false;
+                error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                this.cathError(error);
+            });
+        }
     }
 
     get getflagChecked() {
