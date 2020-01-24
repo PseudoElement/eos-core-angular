@@ -105,6 +105,21 @@
                 background: $highlight-color-main-theme;
             }
         }
+        .list-group-item-disable {
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #eeee;
+            height: 42px;
+            padding: 10px 15px;
+            border-right: 1px solid #ddd;
+            &:focus {
+                outline: none;
+            }
+
+            &.active-element-param {
+                background-color: #eeee;
+            }
+        }
     }
 }
 
