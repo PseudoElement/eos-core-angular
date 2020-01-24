@@ -40,6 +40,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public storeParams = new Set();
     public errorPass: boolean = false;
     public disableSave: boolean = false;
+    public updateData: boolean = false;
     inputFields: IInputParamControl[];
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     constructor(
@@ -69,7 +70,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     }
                 }); */
                 // когда будет понятно как this.originAutent = '0';
-                const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) : '';
+                const d = new Date();
+                const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
+                    this.curentUser.IS_PASSWORD === 0 ? new Date(d.setDate(d.getDate() - 1)) : '';
                 this.form.controls['SELECT_AUTENT'].setValue( '' + this.curentUser.USERTYPE, { emitEvent: false });
                 this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
                 this.getTitle();
@@ -90,12 +93,19 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.checkUpdate();
         });
     }
-
+    getEditDate(): boolean {
+        if (this.curentUser && this.curentUser.IS_PASSWORD === 2) {
+            return false;
+        }
+        return true;
+    }
     checkUpdate() {
         if (this.originAutent !== this.form.get('SELECT_AUTENT').value || ( this.form.controls['pass'].value || this.form.controls['pass'].value)) {
             this._pushState(true);
+            this.updateData = true;
         } else {
             this._pushState(false);
+            this.updateData = false;
         }
     }
 
@@ -164,6 +174,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.autentif.nativeElement.value = this.originAutent;
         /* this._pushState(); */
         this.formUpdate(true);
+        this._pushState(false);
     }
     submit($event) {
         const value = +this.form.get('SELECT_AUTENT').value;
@@ -179,7 +190,13 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.isLoading = true;
         const promAll = [];
         let flag = false;
-        promAll.push(this.updateUser(this._userParamSrv.userContextId, {'USERTYPE': value}));
+        const n_d = new Date(this.form.controls['PASSWORD_DATE'].value);
+        if (this.form.controls['PASSWORD_DATE'].value !== new Date(this.curentUser.PASSWORD_DATE)) {
+            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${n_d.getMonth()}-${n_d.getDate()}`}));
+        }
+        if (this.updateData) {
+            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'USERTYPE': value}));
+        }
         if (value === 0 || value === 3) {
             if (this.form.get('pass').value) {
                 if (this.curentUser.IS_PASSWORD === 0) {
@@ -191,36 +208,51 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 }
             }
         }
-        Promise.all(promAll)
-        .then((arr) => {
-            this.formUpdate(true);
-            this.cancelValues(this.inputs, this.form);
-            this.originAutent = this.form.get('SELECT_AUTENT').value;
-            this.isLoading = false;
-            if (flag) {
-                this.curentUser.IS_PASSWORD = 1;
-                const newDate = new Date();
-                this.form.controls['PASSWORD_DATE'].setValue( newDate, { emitEvent: false });
-            }
-            this.editMode = false;
-            this._msgSrv.addNewMessage({
-                type: 'success',
-                title: 'Сохранение:',
-                msg: 'Изменения успешно сохранены',
-                dismissOnTimeout: 6000,
+        if (promAll.length > 0) {
+            Promise.all(promAll)
+            .then((arr) => {
+                this.formUpdate(true);
+                this.cancelValues(this.inputs, this.form);
+                this.originAutent = this.form.get('SELECT_AUTENT').value;
+                this.isLoading = false;
+                if (flag) {
+                    this.curentUser.IS_PASSWORD = 1;
+                    const d = new Date();
+                    this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() - 1)), { emitEvent: false });
+                }
+                this.editMode = false;
+                this._msgSrv.addNewMessage({
+                    type: 'success',
+                    title: 'Сохранение:',
+                    msg: 'Изменения успешно сохранены',
+                    dismissOnTimeout: 6000,
+                });
+                this._pushState(false);
+            })
+            .catch((arr) => {
+                this._errorSrv.errorHandler(arr);
+                /* this.cancelValues(this.inputs, this.form); */
+                this.isLoading = false;
             });
-        })
-        .catch((arr) => {
-            this._errorSrv.errorHandler(arr);
-            /* this.cancelValues(this.inputs, this.form); */
+        } else {
+            this.cancelValues(this.inputs, this.form);
+            this.formUpdate(true);
+            this.editMode = false;
             this.isLoading = false;
-        });
+            this._pushState(false);
+        }
     }
 
     cancelValues(inputs, form: FormGroup) {
         form.controls['pass'].patchValue(inputs['pass'].value, { emitEvent: false });
         form.controls['passRepeated'].patchValue(inputs['passRepeated'].value, { emitEvent: false });
         form.controls['ID_USER'].patchValue(inputs['ID_USER'].value, { emitEvent: false });
+        if (this.form.controls['PASSWORD_DATE'].value !== new Date(this.curentUser.PASSWORD_DATE)) {
+            const d = new Date();
+            const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
+                this.curentUser.IS_PASSWORD === 0 ? new Date(d.setDate(d.getDate() - 1)) : '';
+            form.controls['PASSWORD_DATE'].patchValue(date_new, { emitEvent: false });
+        }
     }
 
     checkChangeForm(data): void {
