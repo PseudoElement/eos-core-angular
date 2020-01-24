@@ -12,7 +12,8 @@ export const VISUALIZATION_USER: IBaseUsers = {
             options: [
                 {value: '-1', title: 'Ассоциированное приложение'},
                 {value: '0', title: 'Оригинальный файл'},
-                {value: 'collage', title: 'Образ документа'}
+                {value: 'collage', title: 'Образ документа'},
+                {value: 'ses', title: 'Простые ЭП'}
             ]
         }
     ]
