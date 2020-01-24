@@ -71,7 +71,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     queryRoles: any[] = [];
     public isShell: boolean = false;
     public userCanUseRole: boolean = false;
-    public criptoView: boolean = true;
+    public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     private _sysParams;
     private _descSrv;
@@ -118,8 +118,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }).then((data) => {
             if (data) {
                 this._userParamSrv.curentUser.USER_PARMS_List.forEach( elem => {
-                    if (elem.PARM_NAME === 'CRYPTO_ACTIVEX' && elem.PARM_VALUE !== 'EosUtils.EosCryptoSvc') {
-                        this.criptoView = false;
+                    if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
+                        this.criptoView = true;
                     }
                 });
                 this.selfLink = this._router.url.split('?')[0];

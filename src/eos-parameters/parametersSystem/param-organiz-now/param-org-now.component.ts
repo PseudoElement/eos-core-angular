@@ -103,6 +103,8 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.version = data[0]['SYS_VERSION'];
             this.subscribeChangeForm();
             this.cancelEdit();
+            this.form.controls['rec.NAME'].setValidators([Validators.required, Validators.maxLength(255)]);
+            this.form.controls['rec.ORG_ID'].setValidators(Validators.maxLength(64));
             this.isLoading = true;
             // this._subscribe();
         })
