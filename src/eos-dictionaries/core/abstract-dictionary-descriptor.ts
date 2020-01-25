@@ -106,6 +106,7 @@ export abstract class AbstractDictionaryDescriptor {
     getMetadata(): any {
         return this.metadata;
     }
+
     addBlob(ext: string, blobData: string): Promise<string | number> {
         const delo_blob = this.apiSrv.entityHelper.prepareAdded<DELO_BLOB>({
             ISN_BLOB: this.apiSrv.sequenceMap.GetTempISN(),
@@ -119,7 +120,7 @@ export abstract class AbstractDictionaryDescriptor {
 
         PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content, 'POST', false);
 
-        return this.apiSrv.batch(chl, '')
+        return this.apiSrv.batchVariant(chl, '')
             .then((ids) => (ids[0] ? ids[0] : null));
 
     }
