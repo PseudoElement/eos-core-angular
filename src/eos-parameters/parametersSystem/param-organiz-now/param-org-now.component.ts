@@ -221,7 +221,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             })
             .catch(er => {
                 this.formChanged.emit(true);
-                this.isChangeForm = false;
+                this.isChangeForm = true;
                 this.editMode = true;
                 this.isLoading = true;
                 this.msgSrv.addNewMessage({
@@ -232,6 +232,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             });
     }
     cancel() {
+        this.cancelEdit();
         this.isLoading = false;
         if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
@@ -240,8 +241,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             this.ngOnDestroy();
             this.initProt();
         }
-        this.cancelEdit();
-        this.isLoading = true;
         this.editMode = true;
+        this.isLoading = true;
     }
 }
