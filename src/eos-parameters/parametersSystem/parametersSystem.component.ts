@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 // import { ParamDescriptorSrv } from './shared/service/param-descriptor.service';
 import { EOS_PARAMETERS_TAB } from './shared/consts/eos-parameters.const';
 import { NavParamService } from 'app/services/nav-param.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -25,6 +26,7 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     constructor(
         private _navSrv: NavParamService,
         private _route: ActivatedRoute,
+        private _appContext: AppContext,
     //    private _confirmSrv: ConfirmWindowService,
     //    private _paramDescSrv: ParamDescriptorSrv
     ) {
@@ -62,6 +64,12 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
         this.disableSave = val;
     }
 
+    disabledAutent(param): boolean {
+        if (param.url === 'authentication' && this._appContext.limitCardsUser.length > 0 ) {
+            return false;
+        }
+        return true;
+    }
     private _askForSaving(): Promise<boolean> {
         if (this.isChanged) {
             return new Promise((res, rej) => {
