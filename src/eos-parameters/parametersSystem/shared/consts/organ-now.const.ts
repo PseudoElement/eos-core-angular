@@ -8,7 +8,9 @@ export const ORGAN_PARAM: IBaseParameters = {
             key: 'NAME',
             type: 'string',
             readonly: true,
-            title: 'Наименование'
+            title: 'Наименование',
+            length: 255,
+            required: true,
         },
         {
             key: 'FULLNAME',
@@ -51,13 +53,14 @@ export const ORGAN_PARAM: IBaseParameters = {
             key: 'ORG_ID',
             type: 'string',
             readonly: true,
-            title: 'Идент. №'
+            title: 'Идент. №',
+            length: 64,
         },
         {
             key: 'ISN_ORGANIZ',
             type: 'string',
             readonly: true,
-            title: 'ISN_ORGANIZ'
+            title: 'ISN_ORGANIZ',
         },
     ]
 };
