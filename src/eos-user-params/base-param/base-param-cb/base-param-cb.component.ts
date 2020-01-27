@@ -642,7 +642,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
-        this.form.controls['NOTE2'].setErrors(null);
+        this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
         this.clearMap();
         this._pushState();
         this.editModeF();
