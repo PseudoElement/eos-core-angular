@@ -41,9 +41,10 @@ export class ParamHeaderComponent implements OnInit {
         this.submitForm.emit();
     }
     cancel() {
-        if (this.flag) {
+        /* отменить изменения можно всегда
+        if (this.flag) { */
             this.editMode = false;
-        }
+        /* } */
         this.cancelForm.emit();
     }
 }
