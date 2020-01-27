@@ -26,7 +26,7 @@
                 </li>
             </ul>
         </div>
-        <div [hidden]="currTab !== 0"
+        <div *ngIf="currTab===0"
                 class="eos-broadcast-channel-tab">
             <table class="table usual-border border-bottom table-owners">
                 <tr>
@@ -37,7 +37,7 @@
                         <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
                                            [form]="form"
                                            [readonly]="!editMode"></eos-dynamic-input>
-                        <span [hidden]="authMethod == 0">
+                        <span *ngIf="!(authMethod == 0)">
                             <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
                                                [form]="form"
                                                [readonly]="!editMode"></eos-dynamic-input>
@@ -54,7 +54,7 @@
                         <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
                                            [form]="form"
                                            [readonly]="!editMode"></eos-dynamic-input>
-                        <span [hidden]="authMethod == 0">
+                        <span *ngIf="!(authMethod == 0)">
                             <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
                                                [form]="form"
                                                [readonly]="!editMode"></eos-dynamic-input>
@@ -66,7 +66,7 @@
                 </tr>
             </table>
         </div>
-        <div [hidden]="currTab !== 1"
+        <div *ngIf="currTab===1"
              class="eos-broadcast-channel-tab">
             <table class="table usual-border border-bottom table-owners">
                 <tr>

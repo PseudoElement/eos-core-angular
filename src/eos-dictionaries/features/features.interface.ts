@@ -25,6 +25,7 @@ export interface IOESDictsFeatures {
 
 export interface IEOSSevConfig {
     isIndexesEnable: boolean; /* Нужны ли Поля "индекс СЭВ" в справочниках, (SEV_ASSOCIATION)*/
+    isDictsEnabled: boolean; /* Доступны ли справочники СЭВ */
 }
 
 export interface IEOSRKDefaults {

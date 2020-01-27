@@ -1,14 +1,12 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">Добавление записи</h4>
-    <button type="button"
-        class="close pull-right"
-        aria-label="Close"
-        (click)="cancelCreate()">
+    <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCreate()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="create-new-node modal-body">
-    <eos-card-edit #cardEditEl
+    <eos-card-edit
+        #cardEditEl
         [dictionaryId]="dictionaryId"
         [fieldsDescription]="fieldsDescription"
         [data]="nodeData"
@@ -17,15 +15,18 @@
         [isNewRecord]="true"
         editMode="true"
         (formInvalid)="validate($event)"
-        (formChanged)="recordChanged($event)"></eos-card-edit>
+        (formChanged)="recordChanged($event)"
+    ></eos-card-edit>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary"
-         (click)="cancelCreate()">Отмена</button>
-    <button class="btn btn-primary-full" *ngIf="dictionaryId !== 'templates'"
+    <button class="btn btn-primary" (click)="cancelCreate()">Отмена</button>
+    <button
+        class="btn btn-primary-full"
+        *ngIf="dictionaryId !== 'templates'"
         [disabled]="this.upadating"
-        (click)="create(false)">Добавить ещё</button>
-    <button class="btn btn-primary-full"
-        [disabled]="this.upadating"
-        (click)="create(true)">Добавить</button>
+        (click)="create(false)"
+    >
+        Добавить ещё
+    </button>
+    <button class="btn btn-primary-full" [disabled]="this.upadating" (click)="create(true)">Добавить</button>
 </div>

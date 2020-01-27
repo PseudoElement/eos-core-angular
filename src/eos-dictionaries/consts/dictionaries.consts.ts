@@ -28,6 +28,7 @@ import {CITIZENS_DICT} from './dictionaries/citizens.const';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { NADZOR } from './dictionaries/nadzor.consts';
+import { SEV_DICTIONARIES } from './dictionaries/sev.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -59,10 +60,7 @@ export const DICTIONARIES = [
     ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR, ] : [CITIZENS_DICT, ],
     // SEV
     // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
-    // RULES_SEV_DICT,
-    // COLLISIONS_SEV_DICT,
-    // PARTICIPANT_SEV_DICT,
-    // BROADCAST_CHANNEL_DICT,
+    ... Features.cfg.SEV.isDictsEnabled ? SEV_DICTIONARIES : [],
 
     REESTRTYPE_DICT,
 

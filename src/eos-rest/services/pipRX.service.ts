@@ -96,7 +96,12 @@ export class PipRX extends PipeUtils {
     }
 
     batch(changeSet: any[], vc: string): Promise<any[]> {
-        return this._batch(changeSet, vc).toPromise();
+        return this._batch(changeSet, vc, this._cfg.dataApiUrl).toPromise();
+    }
+
+    batchVariant(changeSet: any[], vc: string): Promise<any[]> {
+        // return this._batch(changeSet, vc, this._cfg.dataApiUrl).toPromise();
+        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + '/OData.ashx/').toPromise();
     }
 
     private makeArgs(args: IKeyValuePair): string {
@@ -237,7 +242,7 @@ export class PipRX extends PipeUtils {
             );
     }
 
-    private _batch(changeSet: any[], vc: string): Observable<any> {
+    private _batch(changeSet: any[], vc: string, dataApiUrl): Observable<any> {
         if (changeSet.length === 0) {
             return of([]);
         }
@@ -254,7 +259,7 @@ export class PipRX extends PipeUtils {
         const d = this.buildBatch(changeSet);
         // console.log(this._cfg.dataSrv + '$batch?' + vc, d, _options);
         return this.http
-            .post(this._cfg.dataApiUrl + '$batch?' + vc, d, {
+            .post(dataApiUrl + '$batch?' + vc, d, {
                 observe: 'response', responseType: 'text', headers: {
                     'Accept': 'multipart/mixed',
                     'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,

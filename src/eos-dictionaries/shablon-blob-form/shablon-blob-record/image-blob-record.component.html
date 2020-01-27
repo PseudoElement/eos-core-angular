@@ -5,6 +5,8 @@
     <div class="inline-buttons">
         <eos-photo-uploader
             #imgUploader
+            [maxFileSize]="1048576"
+            [maxFileSizeText]="'1Mb'"
             [buttons]="false"
             class="photo-uploader"
             (endUploading)="newImage($event)"

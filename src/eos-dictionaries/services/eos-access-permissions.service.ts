@@ -28,8 +28,9 @@ import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-
 import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.const';
+import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev.consts';
 
-const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } [] = [
+const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* проверить дерево USER_TECH */, } [] = [
     // Рубрикатор
     {   id: RUBRICATOR_DICT.id,       tech: E_TECH_RIGHT.Rubrics,
         listedUT: true },
@@ -105,6 +106,9 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } []
     // Ведение календаря
     { id: CALENDAR_DICT.id,         tech: E_TECH_RIGHT.CalendarSettings,
         listedUT: false},
+    // Справочники СЭВ
+    { id: 'SEV',         tech: E_TECH_RIGHT.SevCL,
+        listedUT: false},
     // Шаблоны
     { id: Templates.id,    tech: E_TECH_RIGHT.Templates,
         listedUT: false },
@@ -147,10 +151,17 @@ export class EosAccessPermissionsService {
             return grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
 
-        const dNadzor =  NADZORDICTIONARIES.find (n => n.id === dictId);
-        if (dNadzor) {
+        let dict =  NADZORDICTIONARIES.find (n => n.id === dictId);
+        if (dict) {
             return this._checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+        } else {
+            dict = SEV_DICTIONARIES.find (n => n.id === dictId);
+            if (dict) {
+                return this._checkAccessTech(E_TECH_RIGHT.SevCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            }
         }
+
+
 
         return APS_DICT_GRANT.denied;
     }
