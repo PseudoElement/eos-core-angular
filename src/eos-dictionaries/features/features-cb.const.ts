@@ -14,6 +14,8 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
     },
     SEV: <IEOSSevConfig> {
         isIndexesEnable: true,
+        isDictsEnabled: true, /* Доступны ли справочники СЭВ */
+
     },
     docgroups: <IEOSFDocGroups>{
         templates: <IEOSFDocGroupsTemplates>{

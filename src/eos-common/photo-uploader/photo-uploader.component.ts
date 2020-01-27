@@ -4,8 +4,6 @@ import { FILE_IS_NOT_IMAGE, FILE_IS_BIG, WARN_WRONG_IMAGE_TYPE } from '../../eos
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IImage } from '../../eos-dictionaries/interfaces/image.interface';
 
-const maxFileSize = 102400; // 100kb
-
 @Component({
     selector: 'eos-photo-uploader',
     templateUrl: 'photo-uploader.component.html',
@@ -14,6 +12,8 @@ export class PhotoUploaderComponent implements OnInit {
     static genid = 0;
     @Input() disableEdit = false;
     @Input() buttons = true;
+    @Input()  maxFileSize = 102400;
+    @Input()  maxFileSizeText = '100Kb';
     @Output() endUploading: EventEmitter<IImage> = new EventEmitter<IImage>();
 
     @ViewChild('fileInput') inputEl: ElementRef;
@@ -52,8 +52,10 @@ export class PhotoUploaderComponent implements OnInit {
                 return;
             }
 
-            if (file.size > maxFileSize) {
-                this._msgSrv.addNewMessage(FILE_IS_BIG);
+            if (file.size > this.maxFileSize) {
+                const mess = Object.assign({}, FILE_IS_BIG);
+                mess.msg = mess.msg.replace('{maxFileSize}', this.maxFileSizeText);
+                this._msgSrv.addNewMessage(mess);
                 return;
             }
 

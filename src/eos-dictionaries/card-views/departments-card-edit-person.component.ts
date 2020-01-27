@@ -42,7 +42,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     }
 
     ngOnInit () {
-        super.ngOnInit();
+        // super.ngOnInit();
         if (this.isCBBase) {
             this.inputs['rec.START_DATE'].required = true;
             this.form.controls['rec.START_DATE'].setValidators(
