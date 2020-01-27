@@ -642,6 +642,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
+        this.form.controls['NOTE2'].setErrors(null);
         this.clearMap();
         this._pushState();
         this.editModeF();
@@ -649,7 +650,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     cancelValues(inputs, form: FormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
             form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
-            form.controls[key].setErrors(null); //  обнуляю не только изменения но и убираю ошибки
         });
     }
     gt(): any {
