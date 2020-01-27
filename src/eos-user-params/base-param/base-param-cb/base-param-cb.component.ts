@@ -28,7 +28,6 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT } from 'eos-dictionaries/consts/confirm.consts';
 import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
-
 @Component({
     selector: 'eos-params-base-param-cb',
     templateUrl: './base-param-cb.component.html'
@@ -73,6 +72,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     public userCanUseRole: boolean = false;
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
+    public maxLoginLength: string;
     private _sysParams;
     private _descSrv;
     private _newData: Map<string, any> = new Map();
@@ -108,7 +108,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
-        private _rtUserSel: RtUserSelectService
+        private _rtUserSel: RtUserSelectService,
     ) {
     }
     ngOnInit() {
@@ -163,7 +163,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
         const clName = this.form.controls['CLASSIF_NAME'].value ? this.form.controls['CLASSIF_NAME'].value : '';
         const suPatron = this.form.controls['SURNAME_PATRON'].value ? this.form.controls['SURNAME_PATRON'].value : '';
-        if (this.editMode && (val !== null || (clName).trim() === '' || (suPatron).trim() === '')) {
+        const formError = this.form.status === 'INVALID' ? true : false;
+        if (this.editMode && (val !== null || (clName).trim() === '' || (suPatron).trim() === '') || formError) {
             return true;
         } else {
             return false;
@@ -192,6 +193,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.formSettingsCopy = this._inputCtrlSrv.toFormGroup(this.settingsCopyInputs, false);
         this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
+        this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
@@ -272,11 +274,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     getCabinetOwnUser(): void {
-        // изменил DUE => DEPARTMENT_DUE и curentUser.DUE_DEP => curentUser['DEPARTMENT_DUE']
         this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
             criteries: {
-                DEPARTMENT_DUE: this.curentUser['DEPARTMENT_DUE'],
-                ISN_CABINET: 'isnotnull'
+                ISN_CABINET: this._userParamSrv['_userContextDeparnment']['ISN_CABINET'],
             }
         }}).then((depD: any) => {
             if (depD.length === 1) {
@@ -642,6 +642,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
+        this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
         this.clearMap();
         this._pushState();
         this.editModeF();
@@ -896,7 +897,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     patchCbRoles() {
-        let str;
+        let str = '';
         if (this.currentCbFields.length === 1) {
             str = this.currentCbFields[0].role;
         } else if (this.currentCbFields.length === 0) {
