@@ -94,9 +94,9 @@
 <div [ngClass]="{'list-show' : isWide}" class="params-nav-list">
     <ul class="list-group">
         <li
-            class="list-group-item"
+            [ngClass]="disabledAutent(param) ? 'list-group-item' : 'list-group-item-disable'"
             *ngFor="let param of listParams"
-            [routerLink]="['/parameters', param.url]"
+            [routerLink]="disabledAutent(param) ? ['/parameters', param.url] : null"
             routerLinkActive="active-element-param"
         >{{param.title}}</li>
     </ul>

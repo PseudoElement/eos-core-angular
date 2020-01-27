@@ -3,7 +3,7 @@
         [title]="titleHeader"
         (submitForm)="submit();"
         (cancelForm)="cancel();"
-        [statusBtnSub]="!this.form.controls['rec.NAME'].value"
+        [statusBtnSub]="(this.form.status === 'INVALID')"
         [editBtn]="!editMode"
         (editForm)="edit()"
     ></eos-param-header>
