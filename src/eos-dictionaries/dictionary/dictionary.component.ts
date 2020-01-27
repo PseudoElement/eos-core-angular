@@ -18,7 +18,6 @@ import { RECENT_URL } from 'app/consts/common.consts';
 import { NodeListComponent } from '../node-list/node-list.component';
 import { CreateNodeComponent } from '../create-node/create-node.component';
 import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
-import { CreateNodeBroadcastChannelComponent } from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { CounterNpEditComponent, E_COUNTER_TYPE } from '../counter-np-edit/counter-np-edit.component';
 import { CustomTreeNode } from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
@@ -54,6 +53,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CopyPropertiesComponent } from 'eos-dictionaries/copy-properties/copy-properties.component';
+import { CreateNodeBroadcastChannelComponent } from 'eos-dictionaries/create-node-broadcast-channel/create-node-broadcast-channel.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
