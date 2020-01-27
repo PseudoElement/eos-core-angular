@@ -1063,7 +1063,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const url = `DropLogin?isn_user=${id}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
-    private AddUnderscore(string: string): string {
+   private AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
     private SEARCH_INCORRECT_SYMBOLS() {
