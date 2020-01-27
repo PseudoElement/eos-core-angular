@@ -26,6 +26,7 @@ import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.compone
 import { EosReportUsersStatsComponent } from 'eos-user-params/report/users-stats/users-stats.component';
 import { EosReportSummaryProtocolComponent } from 'eos-user-params/report/sum-protocol/sum-protocol.component';
 import { DefaultSettingsComponent } from 'eos-user-params/default-options/default-settings.component';
+import { CurrentUserSetComponent } from 'eos-user-params/current-user-set/current-user-set.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -272,6 +273,25 @@ const routes: Routes = [{
                     path: '',
                     pathMatch: 'full',
                     redirectTo: 'registration',
+                },
+            ]
+        },
+        {
+            path: 'current-settings',
+            canActivate: [AuthorizedGuard],
+            children: [
+                {
+                    path: '',
+                    pathMatch: 'full',
+                    redirectTo: 'registration',
+                },
+                {
+                    path: ':field-id',
+                    component: CurrentUserSetComponent,
+                    canDeactivate: [CanDeactivateGuard],
+                    // data: {
+                    //     showNav: true
+                    // },
                 },
             ]
         },

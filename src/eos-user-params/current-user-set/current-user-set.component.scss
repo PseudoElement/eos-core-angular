@@ -1,0 +1,22 @@
+.current-settings {
+    display: flex;
+    .left {
+        position: absolute;
+        left: 0;
+        .params-nav-list {
+            left: 0;
+            height: auto;
+            ul {
+                margin: 0;
+            }
+        }
+    }
+    .main {
+        width: 800px;
+        max-height: calc(100vh - 172px);
+        margin-left: calc(50vw - 420px);
+        margin-left: 300px;
+        overflow: auto;
+        background: #fff;
+    }
+}

@@ -18,6 +18,7 @@ import { VISUALIZATION_USER } from '../shared-user-param/consts/visualization.co
 export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     public form: FormGroup;
@@ -58,9 +59,11 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             this.allData = this.defaultUser;
             this.inint();
         } else {
-            this._userParamsSetSr.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userParamsSetSr.getUserIsn(config)
             .then(() => {
                 this.currentUser = this._userParamsSetSr.curentUser;
                 this.allData = this._userParamsSetSr.hashUserContext;

@@ -20,6 +20,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
+    @Input() mainUser?;
     prepInputsAttach;
     flagEdit: boolean;
     public inputs;
@@ -75,9 +76,11 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
                 });
             });
         } else {
-            this._userParamsSetSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userParamsSetSrv.getUserIsn(config)
                 .then(() => {
                     this.allData = this._userParamsSetSrv.hashUserContext;
                     this.currentUser = this._userParamsSetSrv.curentUser;

@@ -18,6 +18,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
+    @Input() mainUser?;
     prepInputsAttach;
     public form: FormGroup;
     public inputs;
@@ -58,9 +59,11 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             this.allData = this.defaultUser;
             this.inint();
         } else {
-            this._userParamsSetSr.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userParamsSetSr.getUserIsn(config)
                 .then((d) => {
                     this.allData = this._userParamsSetSr.hashUserContext;
                     this.currentUser = this._userParamsSetSr.curentUser;

@@ -16,6 +16,7 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];
     public currTab = 0;
@@ -67,9 +68,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.accessSustem = `1111111111111111111111111111111111111111`.split('');
             this.isLoading = true;
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
             .then(() => {
                 this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
                 this.hash = this._userSrv.hashUserContext;

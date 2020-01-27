@@ -17,6 +17,7 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parameters
 export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
     public currTab = 0;
@@ -59,9 +60,11 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this.hash = this.defaultUser;
             this.isLoading = true;
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
             .then(() => {
                 this.hash = this._userSrv.hashUserContext;
                 this.currentUser = this._userSrv.curentUser;

@@ -20,6 +20,7 @@ import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public control: AbstractControl;
     public form: FormGroup;
@@ -75,9 +76,11 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
             this.certStoresService.init(null, store);
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            }).then(() => {
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config).then(() => {
                 this.currentUser = this._userSrv.curentUser;
                 this.init();
             })

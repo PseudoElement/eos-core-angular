@@ -21,6 +21,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 export class UserParamEAComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public btnDisabled: boolean = true;
     public _fieldsType = {};
@@ -51,9 +52,11 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             this.allData = this.defaultUser;
             this.init();
         } else {
-            this._userParamsSetSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userParamsSetSrv.getUserIsn(config)
             .then(() => {
                 this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Десктопное приложение';
                 this.init();

@@ -16,6 +16,7 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public userId: string;
     public disableSave: boolean;
@@ -63,9 +64,11 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         if (this.defaultUser) {
             this.currentUser = this.defaultTitle;
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
                 .then(() => {
                     this.currentUser = this._userSrv.curentUser;
                     const prep = this._formHelper.getObjQueryInputsField();

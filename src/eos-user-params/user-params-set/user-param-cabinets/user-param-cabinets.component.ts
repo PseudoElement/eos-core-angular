@@ -26,6 +26,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
+    @Input() mainUser?;
     userId: string;
     isChanged: boolean;
     prepInputsAttach;
@@ -107,9 +108,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 }
             });
         } else {
-            this._userParamsSetSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            }).then(() => {
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userParamsSetSrv.getUserIsn(config).then(() => {
                 this.currentUser = this._userParamsSetSrv.curentUser;
                 this.allData = this._userParamsSetSrv.hashUserContext;
                 this.init();

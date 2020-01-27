@@ -4,6 +4,7 @@ import { USER_CL, SYS_PARMS, SRCH_VIEW } from '../interfaces/structures';
 import { ALL_ROWS } from '../core/consts';
 import { Deferred } from '../core/pipe-utils';
 import { IUserParms } from 'eos-rest';
+import { Subject } from 'rxjs';
 
 export const CB_FUNCTIONS = 'CB_FUNCTIONS';
 @Injectable()
@@ -30,6 +31,7 @@ export class AppContext {
     public workBanches: any[];
 
     public cbBase: boolean;
+    public setHeader = new Subject();
     private _ready = new Deferred<any>();
 
     constructor(private pip: PipRX) { }
