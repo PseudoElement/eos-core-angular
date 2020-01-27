@@ -28,7 +28,6 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT } from 'eos-dictionaries/consts/confirm.consts';
 import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
-
 @Component({
     selector: 'eos-params-base-param-cb',
     templateUrl: './base-param-cb.component.html'
@@ -109,7 +108,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
-        private _rtUserSel: RtUserSelectService
+        private _rtUserSel: RtUserSelectService,
     ) {
     }
     ngOnInit() {
@@ -275,11 +274,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     getCabinetOwnUser(): void {
-        // изменил DUE => DEPARTMENT_DUE и curentUser.DUE_DEP => curentUser['DEPARTMENT_DUE']
         this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
             criteries: {
-                DEPARTMENT_DUE: this.curentUser['DEPARTMENT_DUE'],
-                ISN_CABINET: 'isnotnull'
+                ISN_CABINET: this._userParamSrv['_userContextDeparnment']['ISN_CABINET'],
             }
         }}).then((depD: any) => {
             if (depD.length === 1) {
