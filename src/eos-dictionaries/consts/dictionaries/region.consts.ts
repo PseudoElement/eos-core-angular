@@ -2,6 +2,7 @@ import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-d
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 /*
 */
 export const REGION_DICT: ITreeDictionaryDescriptor = {
@@ -71,9 +72,17 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
         type: 'string',
         length: 248,
         pattern: NOT_EMPTY_STRING,
-    }]),
+    }, {
+        key: 'sev',
+        title: 'Индекс СЭВ',
+        type: 'dictionary',
+        isUnique: true,
+    }
+    ]),
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['CODE', 'COD_OKATO', 'CLASSIF_NAME', 'NOTE'],
+    editFields: ['CODE', 'COD_OKATO', 'CLASSIF_NAME', 'NOTE',
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+    ],
     searchFields: [/*'CODE', 'COD_OKATO',*/ 'CLASSIF_NAME', /*'NOTE'*/],
     fullSearchFields: ['CODE', 'COD_OKATO', 'CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['CODE', 'NOTE', 'COD_OKATO'],

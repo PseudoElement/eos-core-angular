@@ -826,8 +826,11 @@ export class EosDictService {
                 .catch((err) => {
                     if (err === 'cancel') {
                         return Promise.reject('cancel');
+                    } else if (err && err.error instanceof RestError) {
+                        return Promise.reject(err);
                     }
                     this._errHandler(err);
+                    return Promise.reject(err);
                 });
         } else {
             return Promise.reject('No selected node');

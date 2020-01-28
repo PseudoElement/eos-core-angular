@@ -151,15 +151,18 @@ export class EosAccessPermissionsService {
             return grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
 
-        let dict =  NADZORDICTIONARIES.find (n => n.id === dictId);
+        let dict;
+
+        dict =  NADZORDICTIONARIES.find (n => n.id === dictId);
         if (dict) {
             return this._checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-        } else {
-            dict = SEV_DICTIONARIES.find (n => n.id === dictId);
-            if (dict) {
-                return this._checkAccessTech(E_TECH_RIGHT.SevCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-            }
         }
+
+        dict = SEV_DICTIONARIES.find (n => n.id === dictId);
+        if (dict) {
+            return this._checkAccessTech(E_TECH_RIGHT.SevCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+        }
+
 
 
 

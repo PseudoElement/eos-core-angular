@@ -1,6 +1,7 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { NOT_EMPTY_STRING } from 'eos-dictionaries/consts/input-validation';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'security',
@@ -48,11 +49,21 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
         title: 'Конфиденциальность',
         length: 20,
         pattern: NOT_EMPTY_STRING,
-    }]),
+    }, {
+        key: 'sev',
+        title: 'Индекс СЭВ',
+        type: 'dictionary',
+        isUnique: true,
+    }
+
+    ]),
     treeFields: ['GRIF_NAME'],
     allVisibleFields: ['EDS_FLAG', 'ENCRYPT_FLAG', 'SEC_INDEX', 'NOTE'],
     listFields: ['GRIF_NAME'],
-    editFields: ['SEC_INDEX', 'GRIF_NAME', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE'],
+    editFields: ['SEC_INDEX', 'GRIF_NAME', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE',
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+    ],
     shortQuickViewFields: ['GRIF_NAME'],
     quickViewFields: ['SEC_INDEX', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE'],
 });
+
