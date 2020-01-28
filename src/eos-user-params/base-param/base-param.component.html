@@ -19,7 +19,7 @@
             <div class="wrapper-password">
                 <div style="width: 200px" class="base-text-input base-login-input" [formGroup]="form" [tooltip]="!curentUser['IS_PASSWORD'] && editMode ? 'Для смены логина задайте пароль' : validClassif" container="body" placement="bottom" containerClass="tooltip-error">
                     <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label >
-                    <input class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
+                    <input class="form-control m-font" maxlength="maxLoginLength" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
                 </div>
                 <div style="width: 315px" class="mar-fio-r" [formGroup]="form" [tooltip]="!form.controls['SURNAME_PATRON'].value ? 'Поле ФАМИЛИЯ И.О. не может быть пустым' : null"
                 container="body" placement="bottom" containerClass="tooltip-error">

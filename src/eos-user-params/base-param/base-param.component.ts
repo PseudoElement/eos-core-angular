@@ -64,6 +64,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     public noIsTech: string;
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
+    public maxLoginLength: string;
     private _sysParams;
     private _descSrv;
     private _newData: Map<string, any> = new Map();
@@ -141,7 +142,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     get getErrorSave() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
-        if (this.editMode && (val !== null || (this.form.controls['CLASSIF_NAME'].value).trim() === '' || (this.form.controls['SURNAME_PATRON'].value).trim() === '')) {
+        const formError = this.form.status === 'INVALID' ? true : false;
+        if (this.editMode && (val !== null || (this.form.controls['CLASSIF_NAME'].value).trim() === '' || (this.form.controls['SURNAME_PATRON'].value).trim() === '') || formError) {
             return true;
         } else {
             return false;
@@ -170,6 +172,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.formSettingsCopy = this._inputCtrlSrv.toFormGroup(this.settingsCopyInputs, false);
         this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
+        this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
@@ -514,6 +517,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
+        this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
         this.clearMap();
         this._pushState();
         this.editModeF();
