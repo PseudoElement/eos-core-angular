@@ -31,7 +31,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     selectedFixedItem: string;
     curPreDelete: IRoleCB;
     rightsDueRole: boolean = false;
-    public updateElem: boolean = true;
+    public deletRole: boolean = true;
     private _subscriptionDrop: Subscription;
     private _subscriptionDrag: Subscription;
     constructor(private _dragulaService: DragulaService, private _confirmSrv: ConfirmWindowService,
@@ -112,6 +112,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     removeFromCurrent(item?: string, dueN?: string) {
         this.basicFields = this.basicFields.filter(field => typeof field === 'string');
         if (this.selectedCurrRole || item) {
+            this.deletRole = false;
             return this._confirmSrv.confirm(CONFIRM_DELETE_ROLE).then(res => {
                 if (res) {
                     if (this.selectedCurrRole) {
@@ -139,6 +140,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         }
                     }
                 }
+                this.deletRole = true;
             });
         }
     }
