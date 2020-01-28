@@ -95,7 +95,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
         let _newRec = {};
         _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
-        data.rec['ISN_TEMPLATE'] = -10000;
+         data.rec['ISN_TEMPLATE'] = -10000;
         return this._postChanges(_newRec, data.rec)
             .then((resp: any[]) => {
                 if (resp && resp[0]) {
