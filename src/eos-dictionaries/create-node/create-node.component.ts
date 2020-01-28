@@ -13,6 +13,7 @@ import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { EosUtils } from 'eos-common/core/utils';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Component({
     selector: 'eos-create-node',
@@ -109,30 +110,33 @@ export class CreateNodeComponent {
         this._dictSrv.addNode(data)
             .then((node: EosDictionaryNode) => this._afterAdding(node, hide))
             .catch((err) => {
-                if (err === 'cancel') {
-                    this.upadating = false;
+                if (err && err.error instanceof RestError) {
+                    this._windowInvalidSave ([err.error.message]);
+                } else if (err === 'cancel') {
+
                 } else {
                     return this._errHandler(err);
                 }
+                this.upadating = false;
             });
     }
 
-    private _windowInvalidSave(): Promise<boolean> {
-            const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
+    private _windowInvalidSave(errors: string[] = []): Promise<boolean> {
 
-            // confirmParams.body = confirmParams.body.replace('{{errors}}',
-            //     EosUtils.getValidateMessages(this.cardEditRef.inputs).join('\n'));
-            confirmParams.body = '';
-            confirmParams.bodyList = EosUtils.getValidateMessages(this.cardEditRef.inputs);
+        const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
 
-            return this._confirmSrv.confirm2(confirmParams, )
-                .then((doSave) => {
-                    return true;
-                })
-                .catch(() => {
-                    return false;
-                });
+        confirmParams.body = '';
+        confirmParams.bodyList = [ ... errors, ... EosUtils.getValidateMessages(this.cardEditRef.inputs)];
+
+        return this._confirmSrv.confirm2(confirmParams, )
+            .then((doSave) => {
+                return true;
+            })
+            .catch(() => {
+                return false;
+            });
     }
+
 
     private _afterAdding(node: EosDictionaryNode, hide: boolean): void {
         if (node) {

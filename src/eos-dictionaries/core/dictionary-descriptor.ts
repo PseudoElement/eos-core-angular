@@ -3,14 +3,25 @@ import { RecordDescriptor } from './record-descriptor';
 import { ILinearCL } from 'eos-rest';
 import { SEV_ASSOCIATION } from 'eos-rest/interfaces/structures';
 import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
+import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
 
 export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: RecordDescriptor;
 
     addRecord(data: any, _useless: any, appendToChanges: any = null, isProtected = false, isDeleted = false): Promise<any> {
+        const results: IRecordOperationResult[] = [];
+
         let _newRec = this.preCreate(isProtected, isDeleted);
         _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
-        return this._postChanges(_newRec, data.rec, appendToChanges)
+
+        let pSev: Promise<boolean> = Promise.resolve(true);
+        const changeData = [];
+        if (data['sev']) {
+            pSev = this.presaveSevRoutine(data['sev'], _newRec, changeData, results);
+        }
+
+        return pSev.then(() => {
+            return this._postChanges(_newRec, data.rec, appendToChanges)
             .then((resp: any[]) => {
                 if (resp && resp[0]) {
                     return resp[0].ID;
@@ -18,6 +29,7 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
                     return null;
                 }
             });
+        });
     }
 
     getChildren(): Promise<any[]> {

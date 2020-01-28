@@ -33,12 +33,24 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
         isProtected = false,
         isDeleted = false
     ): Promise<IRecordOperationResult[]> {
+        const results: IRecordOperationResult[] = [];
         let _newRec = this.preCreate(parent.rec, isLeaf, isProtected, isDeleted);
         _newRec = this.apiSrv.entityHelper.prepareAdded<T>(_newRec, this.apiInstance);
-        // console.log('create tree node', _newRec);
-        return this._postChanges(_newRec, data.rec, appendToChanges)
+
+        let pSev: Promise<boolean> = Promise.resolve(true);
+        const changeData = [];
+        if (data['sev']) {
+            pSev = this.presaveSevRoutine(data['sev'], _newRec, changeData, results);
+        }
+
+        return pSev.then(() => {
+            let updates = this.apiSrv.changeList(changeData);
+            if (appendToChanges) {
+                updates = updates.concat(appendToChanges);
+            }
+            return this._postChanges(_newRec, data.rec, updates)
             .then((resp) => {
-                const results: IRecordOperationResult[] = [];
+                // const results: IRecordOperationResult[] = [];
                 if (resp && resp[0]) {
                     data.rec = Object.assign(_newRec, data.rec);
                     results.push({
@@ -51,14 +63,13 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
                     if (resp[0].FixedISN !== undefined) {
                         data.rec['ISN_NODE'] = resp[0].FixedISN;
                     }
-                    const changeData = [];
-                    let pSev: Promise<boolean> = Promise.resolve(true);
+                    // const changeData = [];
 
                     Object.keys(data).forEach((key) => {
                         if (key !== 'rec' && data[key]) {
                             switch (key) {
-                                case 'sev':
-                                    pSev = this.presaveSevRoutine(data[key], data.rec, changeData, results);
+                                // case 'sev':
+                                    // pSev = this.presaveSevRoutine(data[key], data.rec, changeData, results);
                                     /*
                                     const sevRec = this.apiSrv.entityHelper.prepareForEdit<SEV_ASSOCIATION>(undefined, 'SEV_ASSOCIATION');
                                     data[key] = Object.assign(sevRec, data[key]);
@@ -66,7 +77,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
                                         changeData.push(data[key]);
                                     }
                                     */
-                                    break;
+                                    // break;
                                 case 'printInfo':
                                     const printInfoRec = this.apiSrv.entityHelper.prepareForEdit<CB_PRINT_INFO>(undefined, 'CB_PRINT_INFO');
                                     data[key] = Object.assign(printInfoRec, data[key]);
@@ -85,21 +96,24 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
                             }
                         }
                     });
-                    return pSev.then(() => {
-                            const changes = this.apiSrv.changeList(changeData);
-                            if (changes) {
-                                return this.apiSrv.batch(changes, '')
-                                    .then(() => {
-                                        return results;
-                                    });
-                            } else {
+
+                    const changes = this.apiSrv.changeList(changeData);
+                    if (changes) {
+                        return this.apiSrv.batch(changes, '')
+                            .then(() => {
                                 return results;
-                            }
-                        });
+                            });
+                    } else {
+                        return results;
+                    }
+
                 } else {
                     return null;
                 }
             });
+        });
+
+
     }
 
     getChildren(record: IHierCL): Promise<any[]> {

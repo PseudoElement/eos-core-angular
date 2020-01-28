@@ -519,7 +519,7 @@ export abstract class AbstractDictionaryDescriptor {
         // console.log('_postChanges', data, updates);
         Object.assign(data, updates);
         let changes = this.apiSrv.changeList([data]);
-        if (appendToChanges) {
+        if (appendToChanges && appendToChanges.length) {
             changes = changes.concat(appendToChanges);
         }
 

@@ -62,6 +62,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
         key: 'sev',
         title: 'Индекс СЭВ',
         type: 'dictionary',
+        isUnique: true,
     }]),
     treeFields: ['CLASSIF_NAME'],
     editFields: ['RUBRIC_CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE',
