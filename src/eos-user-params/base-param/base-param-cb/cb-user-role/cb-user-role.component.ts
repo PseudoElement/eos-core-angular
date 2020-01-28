@@ -31,6 +31,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     selectedFixedItem: string;
     curPreDelete: IRoleCB;
     rightsDueRole: boolean = false;
+    public updateElem: boolean = true;
     private _subscriptionDrop: Subscription;
     private _subscriptionDrag: Subscription;
     constructor(private _dragulaService: DragulaService, private _confirmSrv: ConfirmWindowService,
@@ -364,7 +365,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                                     this._msgSrv.addNewMessage({
                                         type: 'warning',
                                         title: 'Предупреждение:',
-                                        msg: 'Невозможно добавить выбранное ДЛ в роль: у пользователя уже есть роль ' + role + ' с выбранным ДЛ',
+                                        msg: 'Невозможно добавить выбранное ДЛ в роль: у пользователя уже есть роль ' + repeatRole.role + ' с выбранным ДЛ',
                                         dismissOnTimeout: 6000,
                                     });
                                 }
@@ -373,7 +374,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                             this._msgSrv.addNewMessage({
                                 type: 'warning',
                                 title: 'Предупреждение:',
-                                msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ не являтся единственным владельцем кабинета',
+                                msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ не является единственным владельцем кабинета',
                                 dismissOnTimeout: 6000,
                             });
                         }
@@ -382,7 +383,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение:',
-                        msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ не являтся единственным владельцем кабинета',
+                        msg: 'Невозможно добавить выбранное ДЛ в роль: ДЛ не является единственным владельцем кабинета',
                         dismissOnTimeout: 6000,
                     });
                 }
