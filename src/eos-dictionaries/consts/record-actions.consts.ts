@@ -303,8 +303,8 @@ export const RECORD_ACTIONS_NAVIGATION_DOWN = {
 const RECORD_ACTIONS_ADDITIONAL_FIELDS: IAction = {
     type: E_RECORD_ACTIONS.additionalFields,
     group: E_ACTION_GROUPS.item,
-    title: 'Дополнительные реквизиты РК',
-    hint: 'Дополнительные реквизиты РК',
+    title: 'Дополнительные реквизиты',
+    hint: 'Дополнительные реквизиты',
     iconClass: 'eos-icon eos-icon-property-extra-blue small',
     disabledIconClass: 'eos-icon eos-icon-property-extra-grey small',
     activeIconClass: '',

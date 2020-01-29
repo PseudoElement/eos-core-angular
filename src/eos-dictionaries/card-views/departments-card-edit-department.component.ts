@@ -65,7 +65,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
             this.directGrant = _eaps.isAccessGrantedForDictionary(DEPARTMENTS_DICT.id, this.data.rec.DUE);
         }
 
-        if (this.isCBBase) {
+        if (this.isCBBase && this.isNewRecord) {
             this.inputs['rec.START_DATE'].required = true;
             this.form.controls['rec.START_DATE'].setValidators(
                 [this.form.controls['rec.START_DATE'].validator, Validators.required]

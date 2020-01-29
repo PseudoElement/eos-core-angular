@@ -290,6 +290,10 @@ export abstract class AbstractDictionaryDescriptor {
             .then((results) => [].concat(...results));
     }
 
+    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+        return Promise.resolve(true);
+    }
+
     /**
      * @description Post chages from all conected dictionaries
      * @param originalData data before changes
@@ -374,20 +378,25 @@ export abstract class AbstractDictionaryDescriptor {
     //         });
     // }
 
-    getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    getRelatedFields2(tables: {table: string, order?: string } [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const reqs = [];
         const tablesWReq = [];
-        tables.forEach( t => {
-            if (t) {
+        tables.forEach( trec => {
+            if (trec && trec.table) {
                 if (loadAll) {
-                    const md = this.metadata.relations.find( rel => t === rel.__type);
+                    const md = this.metadata.relations.find( rel => trec.table === rel.__type);
+
                 if (md || ignoreMetadata) {
-                        tablesWReq.push(t);
+                        tablesWReq.push(trec.table);
+                        const req: any = {[trec.table]: []};
+                        if (trec.order) {
+                            req.orderby = trec.order;
+                        }
                         reqs.push(this.apiSrv
-                            .read({[t]: []}));
+                            .read(req));
                     }
                 } if (nodes && nodes.length) {
-                    const md = this.metadata.relations.find( rel => t === rel.__type);
+                    const md = this.metadata.relations.find( rel => trec.table === rel.__type);
                     if (md) {
                         const pktype = this._allMetadata[md.__type].properties[md.tf];
                         const idset = new Set();
@@ -403,9 +412,9 @@ export abstract class AbstractDictionaryDescriptor {
                         });
                         if (idset.size > 0) {
                             const uniq_ids = Array.from(idset);
-                            tablesWReq.push(t);
+                            tablesWReq.push(trec.table);
                             reqs.push(this.apiSrv
-                                .read({[t]: uniq_ids}));
+                                .read({[trec.table]: uniq_ids}));
                         }
                     }
                 }

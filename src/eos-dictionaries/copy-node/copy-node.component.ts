@@ -93,7 +93,7 @@ export class CopyNodeComponent implements OnDestroy {
                     _newRec.END_YEAR = _newRec.YEAR_NUMBER;
                 }
             } else { /* текущие */
-                _newRec.END_YEAR = null;
+                _newRec.END_YEAR = _newRec.YEAR_NUMBER;
             }
 
             if (!this.form.controls['C_CLOSED'].value) {

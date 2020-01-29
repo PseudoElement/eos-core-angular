@@ -1198,6 +1198,9 @@ export class EosDictService {
         });
     }
 
+    public checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+        return this.currentDictionary.descriptor.checkPreDelete(selectedNodes);
+    }
 
     public getStoredSearchSettings(): SearchFormSettings {
         const res = this._storageSrv.getItem('lastSearchSetting');

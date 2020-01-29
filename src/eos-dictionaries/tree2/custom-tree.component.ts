@@ -18,6 +18,7 @@ export class CustomTreeNode {
     isActive: boolean;
     expandable: boolean;
     isExpanded: boolean;
+    isClickable: boolean;
     updating: boolean;
     path: string[];
     data?: {};
@@ -95,6 +96,9 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
 
     onSelect(evt: Event, node: CustomTreeNode) {
         evt.stopPropagation();
+        if (!node.isClickable) {
+            return;
+        }
         if (!node.isDeleted) {
             this._router.navigate(node.path);
         }

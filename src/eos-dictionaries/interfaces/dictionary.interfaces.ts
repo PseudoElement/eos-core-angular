@@ -81,6 +81,7 @@ export interface IFieldDescriptor {
     default?: any;
     dictionaryId?: string;
     dictionaryLink?: IDictionaryLink;
+    dictionaryOrder?: string;
     password?: boolean;
     groupLabel?: string;
     minValue?: number;
@@ -111,6 +112,7 @@ export interface IFieldDescriptorBase {
     readonly password?: boolean;
     readonly groupLabel?: string;
     readonly dictionaryLink?: IDictionaryLink;
+    readonly dictionaryOrder?: string;
     readonly preferences: IFieldPreferences;
 }
 

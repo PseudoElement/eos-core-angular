@@ -455,7 +455,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
         }, {
             key: 'TERM_EXEC_TYPE',
             type: FeaturesRK.calendarControl,
-            value: '1',
+            value: FeaturesRK.calendarValuesDefault,
             page: 'D',
             options: FeaturesRK.calendarValues,
             title: ' Срок исполнения РК в каких днях',
@@ -543,7 +543,7 @@ export const RKDefaultFields: TDefaultField[] = [
         title: 'от даты регистрации',
         order: 15,
         options: FeaturesRK.calendarValues,
-        default: '1',
+        default: FeaturesRK.calendarValuesDefault,
         // classif_id: NULL
     }, {
         key: 'SND_M',

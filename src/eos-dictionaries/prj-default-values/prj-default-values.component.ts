@@ -224,7 +224,7 @@ export const RKPDDefaultFields: any[] = [
 }, {
     DEFAULT_ID: 'TERM_EXEC_TYPE',
     DEFAULT_TYPE: FeaturesRK.calendarControl,
-    DEFAULT_VALUE: '1',
+    DEFAULT_VALUE: FeaturesRK.calendarValuesDefault,
     options: FeaturesRK.calendarValues,
     DESCRIPTION: ' Срок исполнения РК в каких днях',
 }, {

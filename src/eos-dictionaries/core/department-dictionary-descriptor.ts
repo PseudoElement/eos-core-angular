@@ -14,7 +14,18 @@ import { CB_PRINT_INFO } from 'eos-rest/interfaces/structures';
 import { TreeDictionaryDescriptor } from 'eos-dictionaries/core/tree-dictionary-descriptor';
 import { IImage } from 'eos-dictionaries/interfaces/image.interface';
 import { IHierCL } from 'eos-rest';
+import { EosDictionaryNode } from './eos-dictionary-node';
+import { InjectorInstance } from 'app/app.static';
+import { AppContext, CB_FUNCTIONS } from 'eos-rest/services/appContext.service';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { CONFIRM_OPERATION_FILL_ENDDATE } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { EosUtils } from 'eos-common/core/utils';
 
+const inheritFiields = [
+  'START_DATE',
+  'END_DATE'
+];
 export class DepartmentRecordDescriptor extends RecordDescriptor {
     dictionary: DepartmentDictionaryDescriptor;
     parentField: FieldDescriptor;
@@ -143,6 +154,25 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
     }
 
+    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+        const injector = InjectorInstance;
+        const appctx = injector.get(AppContext);
+        const isCBBase = appctx.getParams(CB_FUNCTIONS) === 'YES';
+        if (isCBBase) {
+            for (let i = 0; i < selectedNodes.length; i++) {
+                const node = selectedNodes[i];
+                if (!node.data.rec['END_DATE']) {
+                    const cantDeleteWarning: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_FILL_ENDDATE);
+                    const confirmSrv = InjectorInstance.get(ConfirmWindowService);
+                    return confirmSrv.confirm2(cantDeleteWarning).then (() => {
+                        return Promise.resolve(false);
+                    });
+                }
+            }
+        }
+        return Promise.resolve(true);
+    }
+
     getRoot(): Promise<any[]> {
         return this.getData({ criteries: { DUE: '0%', LAYER: '0:2'/*, IS_NODE: '0'*/ } }, 'WEIGHT');
     }
@@ -204,6 +234,18 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
 
     getContacts(orgISN: string): Promise<any> {
         return this.apiSrv.read({ 'CONTACT': PipRX.criteries({ 'ISN_ORGANIZ': orgISN }) });
+    }
+
+    getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
+        const newPreset = {};
+        EosUtils.deepUpdate(newPreset, preSetData);
+        if (parentNode) {
+            [
+                ... inheritFiields,
+            ]
+            .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
+        }
+        return super.getNewRecord(newPreset, parentNode);
     }
 
     public onPreparePrintInfo(dec: FieldsDecline): Promise<any[]> {
