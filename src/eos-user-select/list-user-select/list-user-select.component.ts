@@ -654,30 +654,53 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             return user.isChecked || user.selectedMark;
         }).length;
     }
+    getQuery(): any {
+        let query = {};
+        if (this._appContext.cbBase) {
+            query = {
+                ORACLE_ID: 'isnotnull',
+                IS_SECUR_ADM: '1',
+                DELETED: '0',
+            };
+        } else {
+            query = {
+                ISN_LCLASSIF: '0',
+            };
+        }
+        return query;
+    }
+    getUsersBlocked(lastAdmin: boolean): UserSelectNode[] {
+        if (this._appContext.cbBase && lastAdmin) {
+            return this.listUsers.filter((user: UserSelectNode) => {
+                return user.data.IS_SECUR_ADM !== 1 || (user.blockedUser || user.blockedSystem && user.data.IS_SECUR_ADM === 1);
+            }
+            );
+        }
+        return this.listUsers;
+    }
     BlockUser() {
-        this.isLoading = true;
         const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
         this._pipeSrv.read<USER_CL>({
             USER_CL: {
-                criteries: {
-                    ORACLE_ID: 'isnotnull',
-                    IS_SECUR_ADM: '1',
-                    DELETED: '0',
-                }
+                criteries: this.getQuery(),
             }
         }).then((data: USER_CL[]) => {
+            this.isLoading = true;
             const blockedUsers = this.listUsers.filter(user => !user.blockedUser && !user.blockedSystem && (user.selectedMark || user.isChecked) && user.data.IS_SECUR_ADM === 1);
-            if (data['TotalRecords'] === blockedUsers.length) {
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: 'Предупреждение:',
-                    msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
-                });
-                this.isLoading = false;
-                return;
+            let lastAdmin = false;
+            if (this._appContext.cbBase) {
+                if (data['TotalRecords'] === blockedUsers.length) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение:',
+                        msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
+                    });
+                    lastAdmin = true;
+                }
             }
-            this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
-                this.listUsers = this.listUsers.map(users => {
+
+            this._apiSrv.blokedUser(this.getUsersBlocked(lastAdmin), idMain).then(user => {
+                this.getUsersBlocked(lastAdmin).forEach(users => {
                     if (users.id === +idMain && (users.isChecked || users.selectedMark)) {
                         this._msgSrv.addNewMessage({
                             type: 'warning',
@@ -713,8 +736,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
             }).catch(error => {
                 error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
-                this.cathError(error.message);
                 this.isLoading = false;
+                this.cathError(error.message);
             });
         });
     }
