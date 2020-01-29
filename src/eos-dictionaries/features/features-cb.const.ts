@@ -49,6 +49,7 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
             },
         ],
         calendarControl: E_FIELD_TYPE.select,
+        calendarValuesDefault: '3',
         calendarValues: [
             {
                 value: '3',

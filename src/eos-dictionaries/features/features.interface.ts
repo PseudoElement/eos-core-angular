@@ -31,6 +31,7 @@ export interface IEOSSevConfig {
 export interface IEOSRKDefaults {
     calendarControl: E_FIELD_TYPE;
     calendarValues: any[];
+    calendarValuesDefault: string;
     appendFields: TDefaultField[];
 }
 
