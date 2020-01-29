@@ -713,13 +713,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             return;
         }
 
+        const config = { class: 'creating-modal', ignoreBackdropClick: true };
+
         if (dictionary.descriptor.id === 'broadcast-channel') {
-            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
+            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, config);
         } else {
-            let config = { class: 'creating-modal' };
-            if (dictionary.id === 'templates') {
-                config = Object.assign(config, { ignoreBackdropClick: true });
-            }
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, config);
         }
 
