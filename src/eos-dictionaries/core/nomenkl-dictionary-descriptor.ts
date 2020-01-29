@@ -240,6 +240,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isNode: true,
                 isDeleted: dd.DELETED === 0 ? false : true,
                 isActive: dd.DUE === this._filterDUE,
+                isClickable: (dd.DUE !== NP_NOM_ROOT_DUE),
                 expandable: false,
                 isExpanded: false,
                 updating: false,
