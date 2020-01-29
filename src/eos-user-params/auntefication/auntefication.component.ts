@@ -11,6 +11,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { USER_PARMS } from 'eos-rest';
 
 // Input, Output, EventEmitter
 @Component({
@@ -32,6 +33,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public type: string = 'password';
     public type1: string = 'password';
     public editMode: boolean = false;
+    public masDisabled: string[];
     public titleHeader: string;
     public inputsInfo: any;
     public inputs;
@@ -63,16 +65,26 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
-                this.curentUser = this._userParamSrv.curentUser;
-                /* this.curentUser.USER_PARMS_List.forEach(elem => {
-                    if (elem.PARM_NAME === 'SUPPORTED_USER_TYPES') {
-                        console.log('elem', elem);
+                const req = {
+                    USER_PARMS: {
+                        criteries: {
+                            ISN_USER_OWNER: '-99',
+                            PARM_NAME: 'SUPPORTED_USER_TYPES'
+                        }}};
+                this.apiSrvRx.read<USER_PARMS>(req)
+                .then(param => {
+                    if (param.length > 0) {
+                        this.masDisabled = param[0].PARM_VALUE.split(',');
                     }
-                }); */
-                // когда будет понятно как this.originAutent = '0';
+                })
+                .catch(er => {
+                    console.log('ER', er);
+                });
+                this.curentUser = this._userParamSrv.curentUser;
                 const d = new Date();
                 const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
                     this.curentUser.IS_PASSWORD === 0 ? new Date(d.setDate(d.getDate() - 1)) : '';
+                this.originAutent = '' + this.curentUser.USERTYPE;
                 this.form.controls['SELECT_AUTENT'].setValue( '' + this.curentUser.USERTYPE, { emitEvent: false });
                 this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
                 this.getTitle();
@@ -113,9 +125,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         return !this.editMode;
     }
     optionDisable(num: number) {
-        /* if (num === 1) { // блокируем кнопки к которым не должно быть доступа
+        if (this.masDisabled && this.masDisabled.indexOf(String(num)) === -1) { // блокируем кнопки к которым не должно быть доступа
             return true;
-        } */
+        }
         return false;
     }
     onChangeAuntef($event) {
@@ -190,10 +202,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.isLoading = true;
         const promAll = [];
         let flag = false;
-        const n_d = new Date(this.form.controls['PASSWORD_DATE'].value);
-        if (this.form.controls['PASSWORD_DATE'].value !== new Date(this.curentUser.PASSWORD_DATE)) {
-            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${n_d.getMonth()}-${n_d.getDate()}`}));
-        }
+        let flagDate = false;
         if (this.updateData) {
             promAll.push(this.updateUser(this._userParamSrv.userContextId, {'USERTYPE': value}));
         }
@@ -208,18 +217,27 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 }
             }
         }
+        const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
+        if (!flag && n_d && String(this.form.controls['PASSWORD_DATE'].value) !== String(new Date(this.curentUser.PASSWORD_DATE))) {
+            flagDate = true;
+            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${n_d.getMonth() + 1}-${n_d.getDate()}`}));
+        }
         if (promAll.length > 0) {
             Promise.all(promAll)
             .then((arr) => {
-                this.formUpdate(true);
-                this.cancelValues(this.inputs, this.form);
                 this.originAutent = this.form.get('SELECT_AUTENT').value;
                 this.isLoading = false;
                 if (flag) {
                     this.curentUser.IS_PASSWORD = 1;
                     const d = new Date();
                     this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() - 1)), { emitEvent: false });
+                    this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
                 }
+                if (flagDate) {
+                    this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
+                }
+                this.formUpdate(true);
+                this.cancelValues(this.inputs, this.form);
                 this.editMode = false;
                 this._msgSrv.addNewMessage({
                     type: 'success',

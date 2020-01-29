@@ -17,6 +17,25 @@ export class RemasterService {
 
     }
 
+    getOrgGroupNameDUE(node: any): Promise<any> {
+        const query = {
+            ORGANIZ_CL: {
+                criteries: {
+                    DUE: node
+                }
+            }
+        };
+        return this._apiSrv.read(query).then(res => {
+            return res;
+        }).catch(error => {
+            this._msg.addNewMessage({
+                title: 'Ошибка',
+                type: 'danger',
+                msg: error.message || 'Не установленно соединение с базой'
+            });
+        });
+    }
+
     getOrgGroupName(node: any): Promise<any> {
         const query = {
             ORGANIZ_CL: {
