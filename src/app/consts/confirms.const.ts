@@ -122,6 +122,15 @@ export const CONFIRM_OPERATION_LOGICDELETE: IConfirmWindow2 = {
     ],
 };
 
+export const CONFIRM_OPERATION_FILL_ENDDATE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Заполните, пожалуйста, поле «Дата окончания действия» у удаляемого (логически) подразделения.',
+    buttons: [
+        {title: 'Ok', result: BUTTON_RESULT_OK, isDefault: true, },
+    ],
+};
+
 export const CONFIRM_OPERATION_HARDDELETE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],

@@ -713,13 +713,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             return;
         }
 
+        const config = { class: 'creating-modal', ignoreBackdropClick: true };
+
         if (dictionary.descriptor.id === 'broadcast-channel') {
-            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, { class: 'creating-modal' });
+            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, config);
         } else {
-            let config = { class: 'creating-modal' };
-            if (dictionary.id === 'templates') {
-                config = Object.assign(config, { ignoreBackdropClick: true });
-            }
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, config);
         }
 
@@ -925,21 +923,27 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
-        const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
+        this._dictSrv.checkPreDelete(selectedNodes).then((continueDelete) => {
+            if (!continueDelete) {
+                return;
+            } else {
+                const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
 
-        this._confirmMarkedItems(selectedNodes, confirmDelete).then((button: IConfirmButton) => {
-            if (button && button.result === 2) {
-                const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                message.msg = message.msg
-                    .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
-                    .replace('{{OPERATION}}', 'удалены логически.');
+                return this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
+                    if (button && button.result === 2) {
+                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                        message.msg = message.msg
+                            .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
+                            .replace('{{OPERATION}}', 'удалены логически.');
 
-                return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
-                    this._dictSrv.setMarkAllNone();
-                    this._msgSrv.addNewMessage(message);
+                        return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
+                            this._dictSrv.setMarkAllNone();
+                            this._msgSrv.addNewMessage(message);
+                        });
+                    }
+                    return Promise.resolve(null);
                 });
             }
-            return Promise.resolve(null);
         });
     }
 
@@ -1034,7 +1038,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (node) {
             if (node.data.PROTECTED) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
-            } else if (node.isDeleted) {
+            } else if (node.isDeleted && !Features.cfg.canEditLogicDeleted) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_DELETED_ERROR);
             } else /*(!node.data.PROTECTED && !node.isDeleted) */ {
                 const url = this._router.url;

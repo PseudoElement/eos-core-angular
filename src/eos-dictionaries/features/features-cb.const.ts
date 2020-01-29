@@ -4,6 +4,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures> {
     version: 'ЦБ',
     variant : EOSDICTS_VARIANT.CB,
+    canEditLogicDeleted: true,
     departments: {
         numcreation: false,
         reestr_send: false,
@@ -49,6 +50,7 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
             },
         ],
         calendarControl: E_FIELD_TYPE.select,
+        calendarValuesDefault: '3',
         calendarValues: [
             {
                 value: '3',

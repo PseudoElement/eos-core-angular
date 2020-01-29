@@ -192,9 +192,9 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         return null;
     }
 
-    getRelatedFields2 (tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    getRelatedFields2(tables: {table: string, order?: string } [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const ignoreMeta = loadAll || ignoreMetadata;
-        return super.getRelatedFields2(tables, nodes, loadAll, ignoreMeta).then( (r) => {
+        return super.getRelatedFields2 (tables, nodes, loadAll, ignoreMeta).then( (r) => {
             // if (loadAll) {
             // console.log("TCL: loadAll", loadAll)
 
@@ -240,6 +240,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isNode: true,
                 isDeleted: dd.DELETED === 0 ? false : true,
                 isActive: dd.DUE === this._filterDUE,
+                isClickable: (dd.DUE !== NP_NOM_ROOT_DUE),
                 expandable: false,
                 isExpanded: false,
                 updating: false,

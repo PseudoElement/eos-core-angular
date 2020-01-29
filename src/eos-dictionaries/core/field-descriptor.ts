@@ -24,6 +24,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly minValue?: number;
     readonly maxValue?: number;
     readonly dictionaryLink?: IDictionaryLink;
+    readonly dictionaryOrder?: string;
     readonly preferences: IFieldPreferences;
 
     constructor(data: IFieldDescriptor) {
@@ -68,6 +69,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
 
         this.password = !!data.password;
         this.dictionaryLink = data.dictionaryLink;
+        this.dictionaryOrder = data.dictionaryOrder;
         if (data.groupLabel) {
             this.groupLabel = data.groupLabel;
         }

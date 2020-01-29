@@ -36,7 +36,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     }),
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Краткое наименование',
-        length: 250,
+        length: 2000,
         preferences: <IFieldPreferences> { hasIcon: true, },
         // isUnique: true,
         // uniqueInDict: true,

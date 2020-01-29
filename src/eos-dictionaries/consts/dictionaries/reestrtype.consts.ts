@@ -30,6 +30,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             title: 'Вид отправки',
             length: 100,
             dictionaryId: DELIVERY_DICT.apiInstance,
+            dictionaryOrder: 'WEIGHT',
             options: [],
             default: 1,
     }, {

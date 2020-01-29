@@ -25,6 +25,7 @@ import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/serv
 import {takeUntil} from 'rxjs/operators';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     selector: 'eos-node-actions',
@@ -291,7 +292,7 @@ export class NodeActionsComponent implements OnDestroy {
                     }
 
                     // _enabled = _enabled && !opts.listHasDeleted;
-                    if (this._dictSrv.listNode) {
+                    if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
 

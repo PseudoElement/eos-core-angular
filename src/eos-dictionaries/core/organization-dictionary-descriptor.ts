@@ -146,7 +146,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
         return config;
     }
-    public getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    public getRelatedFields2(tables: {table: string, order?: string } [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         return super.getRelatedFields2(tables, nodes, loadAll, ignoreMetadata).then(result => {
             if (result.hasOwnProperty('ADDR_CATEGORY_CL')) {
                 result['ADDR_CATEGORY_CL'] = result['ADDR_CATEGORY_CL'].filter((data: ADDR_CATEGORY_CL) => {

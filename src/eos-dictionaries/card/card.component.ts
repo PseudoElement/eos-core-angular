@@ -37,6 +37,7 @@ import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { RestError } from 'eos-rest/core/rest-error';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -426,7 +427,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     private _preventDeletedEdit(): boolean {
-        if (!this.node.isDeleted) {
+        if (!this.node.isDeleted || Features.cfg.canEditLogicDeleted) {
             return true;
         } else {
             /* show warn */
