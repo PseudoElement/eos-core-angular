@@ -5,7 +5,7 @@
         <button class="btn btn-primary-full s-font upper" (click)="save()">Сохранить</button>
     </div>
 </div>
-<div class="modal-body-cb">
+<div class="modal-body-cb" *ngIf="deletRole">
     <div class="modal-b-cont-role">
         <div class="col-l">
             <span class="long-title xl-font">Выберите роль:</span>
@@ -67,5 +67,10 @@
                 <span class="eos-icon eos-icon-DeepUser-Blue icon-due" (click)="changeDueRole()"></span><span>Изменить должностное лицо</span>
             </div>
         </div>
+    </div>
+</div>
+<div class="modal-body-cb">
+    <div class="spinner-wrapper" *ngIf="!deletRole">
+        <eos-spinner [size]="'lg'"></eos-spinner>
     </div>
 </div>
