@@ -17,6 +17,7 @@ import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-us
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 
 @Component({
     selector: 'eos-breadcrumb',
@@ -88,7 +89,7 @@ export class BreadcrumbsComponent implements OnDestroy {
                         if (this._dictSrv.currentDictionary) {
                             if (this._eaps.isAccessGrantedForDictionary(n.dictionaryId,
                                 this._dictSrv.getDueForNode(n)) >= APS_DICT_GRANT.readwrite) {
-                                    this.isEditGranted = true;
+                                this.isEditGranted = true;
                             }
                         }
                     }
@@ -99,7 +100,7 @@ export class BreadcrumbsComponent implements OnDestroy {
         this._dictSrv.markInfo$
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((info) => {
-                    this.isNavigationEnabled = (info && info.nodes.length > 1);
+                this.isNavigationEnabled = (info && info.nodes.length > 1);
             });
 
         this._rtSrv.setFlagBtnHeader
@@ -117,16 +118,19 @@ export class BreadcrumbsComponent implements OnDestroy {
             )
             .subscribe(data => {
                 this.showUserInfo = !!data;
-                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true &&
-                (!this._appContext.cbBase || (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0))) {
-                    this.isNavigationEnabled = true;
+                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' &&
+                    (!this._appContext.cbBase || (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0))) {
                     if (this.returnLimitCard(data)) {
-                        this.isEditGranted =  true;
+                        this.isEditGranted = true;
                     } else {
-                        this.isEditGranted =  false;
+                        this.isEditGranted = false;
                     }
                 } else {
                     this.isEditGranted = true;
+                }
+                if (!this._rtSrv.btnDisabled) {
+                    this.isNavigationEnabled = true;
+                } else {
                     this.isNavigationEnabled = false;
                 }
             });
@@ -137,12 +141,16 @@ export class BreadcrumbsComponent implements OnDestroy {
         this.ngUnsubscribe.complete();
     }
 
-    returnLimitCard(data): boolean {
+    returnLimitCard(data: UserSelectNode): boolean {
         if (this._appContext.limitCardsUser.length > 0 && data && data.dataDeep) {
             if (this._appContext.limitCardsUser.indexOf(data.dataDeep['DEPARTMENT_DUE']) !== -1) {
                 return true;
             }
             return false;
+        } else {
+            if (data && !data.deep) {
+                return false;
+            }
         }
         return true;
     }
