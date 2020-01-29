@@ -290,6 +290,10 @@ export abstract class AbstractDictionaryDescriptor {
             .then((results) => [].concat(...results));
     }
 
+    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+        return Promise.resolve(true);
+    }
+
     /**
      * @description Post chages from all conected dictionaries
      * @param originalData data before changes

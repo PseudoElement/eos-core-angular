@@ -911,21 +911,27 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
-        const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
+        this._dictSrv.checkPreDelete(selectedNodes).then((continueDelete) => {
+            if (!continueDelete) {
+                return;
+            } else {
+                const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
 
-        this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
-            if (button && button.result === 2) {
-                const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                message.msg = message.msg
-                    .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
-                    .replace('{{OPERATION}}', 'удалены логически.');
+                return this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
+                    if (button && button.result === 2) {
+                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                        message.msg = message.msg
+                            .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
+                            .replace('{{OPERATION}}', 'удалены логически.');
 
-                return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
-                    this._dictSrv.setMarkAllNone();
-                    this._msgSrv.addNewMessage(message);
+                        return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
+                            this._dictSrv.setMarkAllNone();
+                            this._msgSrv.addNewMessage(message);
+                        });
+                    }
+                    return Promise.resolve(null);
                 });
             }
-            return Promise.resolve(null);
         });
     }
 
