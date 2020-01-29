@@ -195,11 +195,13 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         });
     }
     openClassif() {
+        // чтобы нельзы было выбрать человека нужно поставить return_due: true
         const query: IOpenClassifParams = {
             classif: 'CONTACT',
             selectMulty: false,
             selectLeafs: false,
             selectNodes: true,
+            return_due: true,
         };
         this.flagBacground = true;
         this._waitClassifSrv.openClassif(query)
@@ -213,10 +215,10 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 });
                 throw new Error();
             } else {
-                this._RemasterService.getOrgGroupName(data).then(list => {
+                this._RemasterService.getOrgGroupNameDUE(data).then(list => {
                     if (list.length) {
                         this.orgName = list[0]['CLASSIF_NAME'];
-                        this.form.controls['rec.ORGGROUP'].patchValue(data);
+                        this.form.controls['rec.ORGGROUP'].patchValue(list[0].ISN_NODE);
                     }
                    this.flagBacground = false;
                 });

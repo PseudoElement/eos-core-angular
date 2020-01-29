@@ -16,8 +16,7 @@ export const ORGAN_PARAM: IBaseParameters = {
             key: 'FULLNAME',
             type: 'text',
             readonly: true,
-            title: '',
-            length: 2000
+            title: ''
         },
         {
             key: 'INDEX',
