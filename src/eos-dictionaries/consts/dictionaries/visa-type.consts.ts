@@ -2,6 +2,8 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { ISelectOption } from 'eos-common/interfaces';
 import { COMMON_FIELD_NAME } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 export const STATUS_OPTIONS: ISelectOption[] = [{
     value: 'Положительный',
@@ -41,5 +43,7 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
         }]),
     quickViewFields: ['NOTE', 'IS_FINAL', 'STATUS'],  // CLASSIF_NAME is in shortQuickViewFields
     allVisibleFields: ['NOTE', 'IS_FINAL', 'STATUS'],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'IS_FINAL', 'STATUS']
+    editFields: ['CLASSIF_NAME', 'NOTE',
+        ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? ['IS_FINAL', 'STATUS'] : [],
+    ]
 });
