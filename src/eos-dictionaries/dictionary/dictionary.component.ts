@@ -1020,7 +1020,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (node) {
             if (node.data.PROTECTED) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
-            } else if (node.isDeleted) {
+            } else if (node.isDeleted && !Features.cfg.canEditLogicDeleted) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_DELETED_ERROR);
             } else /*(!node.data.PROTECTED && !node.isDeleted) */ {
                 const url = this._router.url;

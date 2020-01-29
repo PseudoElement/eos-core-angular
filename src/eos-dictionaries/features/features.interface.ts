@@ -20,6 +20,7 @@ export interface IOESDictsFeatures {
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;
     SEV: IEOSSevConfig;
+    canEditLogicDeleted: boolean;
 
 }
 
