@@ -15,6 +15,8 @@ import { RK_SELECTED_VALUE_INCORRECT } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -127,13 +129,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         // this.dataController.zone.run(() => {
         //     this.rereadUserLists();
         // });
-        this._waitClassifSrv.openClassif({classif: 'COMMON_LIST'})
+        this._waitClassifSrv.openClassif({classif:
+            (Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? 'TECH_LISTS' : 'COMMON_LIST')
+        })
         .then(() => {
             // console.log('result: ', result);
-            // this.dataController.zone.run(() => {
-            //     console.log('zone');
-            //     this.rereadUserLists();
-            // });
+            this.dataController.zone.run(() => {
+                // console.log('zone');
+                this.rereadUserLists();
+            });
         })
         .catch(() => {
             // console.log('window closed');
@@ -142,6 +146,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             });
         });
     }
+
 
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
