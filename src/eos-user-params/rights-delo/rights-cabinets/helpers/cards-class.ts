@@ -169,6 +169,7 @@ export class CardsClass {
             cabinet.forEach((cab: CABINET) => {
                     this.cabinets.push(new Cabinets(this.isnClassif, cab, this, user_cab ));
             });
+            this.cabinets.sort((a, b) => a.name.localeCompare(b.name));
         }
     }
 }
