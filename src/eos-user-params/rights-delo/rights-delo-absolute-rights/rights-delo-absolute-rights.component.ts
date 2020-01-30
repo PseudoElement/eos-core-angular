@@ -61,7 +61,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
-    private DELETE_RCPD = 'У пользователя назначено право \'Содзание РКПД\' .Без права \'Исполнение поручений\' оно не работает. Снять это право?';
+    private DELETE_RCPD = 'У пользователя назначено право \'Создание РКПД\' .Без права \'Исполнение поручений\' оно не работает. Снять это право?';
     private CREATE_RCPD = 'У пользователя нет права \'Исполнения поручений\', добавить его?';
     private GRUP_DEL_RK = 'Назначить права пользователю на выполнение операции «Удаление РК» в доступных ему картотеках?';
     private GRUP_NOT_DEL_RK = 'У пользователя назначены права на выполнение операции «Удаление РК» в доступных ему картотеках. Снять?';
