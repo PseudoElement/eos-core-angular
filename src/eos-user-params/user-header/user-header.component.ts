@@ -45,6 +45,9 @@ export class UserHeaderComponent {
         this.editEmit.emit(this.editMode);
     }
     close() {
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
+        const queryRout = JSON.parse(localStorage.getItem('lastNodeDue'));
+        let id;
+        queryRout ? id = queryRout : id = '0.';
+        this._router.navigate(['user_param', id]);
     }
 }
