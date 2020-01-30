@@ -456,8 +456,8 @@ export const RECORD_ACTION_CUT: IAction = {
 export const RECORD_ACTION_COMBINE: IAction = {
     type: E_RECORD_ACTIONS.combine,
     group: E_ACTION_GROUPS.common,
-    title: 'Соеденить',
-    hint: 'Соеденить',
+    title: 'Соединить',
+    hint: 'Соединить',
     iconClass: 'eos-icon eos-icon-combine-blue small',
     disabledIconClass: 'eos-icon eos-icon-combine-grey small',
     hoverIconClass: 'eos-icon eos-icon-combine-grey small',
