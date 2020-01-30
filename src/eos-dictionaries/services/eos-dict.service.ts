@@ -174,7 +174,7 @@ export class EosDictService {
             const stored: [] = this._customFields[dictionary.id];
             if (stored && stored.length) {
                 const allList = dictionary.descriptor.record.getCustomListView({});
-                const fies = stored.map( s => allList.find( a => a.key === s));
+                const fies = stored.map( s => allList.find( a => a.key === s)).filter( s => !!s);
                 return fies;
             } else {
                 return [];
