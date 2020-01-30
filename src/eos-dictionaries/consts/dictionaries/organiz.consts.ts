@@ -63,7 +63,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         minValue: 1,
         maxValue: 999,
         pattern: DIGIT3_PATTERN,
-        default: 1,
+        default: '',
         type: 'numberIncrement',
     },
     {
