@@ -353,7 +353,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                                     this._msgSrv.addNewMessage({
                                         type: 'warning',
                                         title: 'Предупреждение:',
-                                        msg: 'Невозможно добавить выбранное ДЛ в роль: у пользователя уже есть роль ' + role + ' с выбранным ДЛ',
+                                        msg: 'Невозможно добавить выбранное ДЛ в роль: у пользователя уже есть роль ' + repeatRole.role + ' с выбранным ДЛ',
                                         dismissOnTimeout: 6000,
                                     });
                                 }
