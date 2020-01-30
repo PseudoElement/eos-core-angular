@@ -1346,31 +1346,7 @@ export class EosDictService {
             }
 
             if (!isNewRecord && dictionary.id === DOCGROUP_DICT.id) {
-                const ctrl = new AdvCardRKDataCtrl(this.injector);
-                return ctrl.doCorrectsRKToDG(data).then(changes => {
-                    if (!this.isObjEmpty(changes.fixE)) {
-                        const confirmObj: IConfirmWindow = {
-                            title: 'Ведение справочников:',
-                            body: 'Новое значение флага "Оригинал в электронном виде" не соответствует заданным правилам заполнения реквизитов РК. Отредактировать эти правила?',
-                            okTitle: 'Да',
-                            cancelTitle: 'Нет'
-                        };
-
-                        return this.confirmSrv.confirm(confirmObj)
-                            .then((confirm: boolean) => {
-
-                                if (confirm) {
-                                    return changes.fixE;
-
-                                } else {
-                                    return null;
-                                }
-                            });
-                    }
-                    return Promise.resolve(null);
-                }).catch(err => {
-                    this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
-                });
+                return Promise.resolve(data._appendChanges || null);
             }
 
             if (dictionary.id === DEPARTMENTS_DICT.id && data.rec.IS_NODE) {
