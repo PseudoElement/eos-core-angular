@@ -1,5 +1,5 @@
 <header>
-    <eos-param-header [title]='title' [statusBtnSub]="" (submitForm)="btnDisable() ? cancel() :submit()" (cancelForm)="cancel()"></eos-param-header>
+    <eos-param-header [title]='title' [statusBtnSub]="" (submitForm)="btnDisable() || submitDisable ? cancel() :submit()" (cancelForm)="cancel()"></eos-param-header>
 </header>
 <div class="collection-action">
     <button class="btn" tooltip="Добавить" placement="bottom" containerClass="tooltip-info" (click)="addWord()">
@@ -14,8 +14,8 @@
 </div>
 <div class="collection-param">
     <div class="checkbox-inline">
-        <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'" placement="bottom" containerClass="tooltip-info">
-                <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
+        <label [tooltip]="checkCheckList ? 'Снять пометки' : 'Пометить все'" placement="bottom" containerClass="tooltip-info">
+                <input type="checkbox" [checked]='checkCheckList' (change)="toggleAllMarks($event)">
                 <span></span>
             </label>
     </div>

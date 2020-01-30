@@ -36,8 +36,12 @@ export class AuthenticationCollectionComponent implements OnInit {
     errorUnique: boolean = false;
     title = 'Словарь недопустимых паролей';
     validPattern: boolean = true;
+    submitDisable = false;
     get disableCollection() {
         return this.inputWordValue === '' || this.inputWordValue.length > 64 || this.errorUnique || !this.validPattern;
+    }
+    get checkCheckList() {
+        return this.collectionList.every(node => node.marked || node.selectedMark);
     }
     constructor(
         // private _confirmSrv: ConfirmWindowService,
@@ -70,6 +74,7 @@ export class AuthenticationCollectionComponent implements OnInit {
             });
     }
     submit() {
+        this.submitDisable = true;
         this.collectionList.forEach(list => {
             if (list.state === 'new') {
                 this.qureyForChenge.push(this._createRequestForCreate(list.CLASSIF_NAME));
@@ -81,6 +86,7 @@ export class AuthenticationCollectionComponent implements OnInit {
         });
         this._collectionSrv.changeWords(this.qureyForChenge)
             .then((state: Boolean) => {
+                this.submitDisable = false;
                 this.collectionList.map(list => {
                     list.state = 'old';
                     return list;
@@ -103,6 +109,7 @@ export class AuthenticationCollectionComponent implements OnInit {
                 ISN_PASS_STOP_LIST: null,
             });
             this.isNewWord = false;
+            this._orderByField();
         } else {
             this.currentSelectedWord.CLASSIF_NAME = this.inputWordValue;
             if (this.currentSelectedWord.ISN_PASS_STOP_LIST) {
