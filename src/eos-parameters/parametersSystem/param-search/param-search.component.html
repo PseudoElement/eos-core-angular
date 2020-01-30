@@ -5,7 +5,7 @@ class="input-param-wrapper input-param-search-wrapper">
         [title]="titleHeader"
         (submitForm)="btnDisabled ? cancel() : submit(); cancelEdit()"
         (cancelForm)="cancel()"
-        [statusBtnSub]="submitError"
+        [statusBtnSub]="btnError"
         [editBtn]="true"
         (editForm)="edit()"
     ></eos-param-header>
