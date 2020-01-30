@@ -763,10 +763,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._waitClassif.openClassif(config).then(() => {
             this.updateRigthFields(node);
             this._dictSrv.reload();
-            this._dictSrv.clearCurrentNode();
         }).catch((e) => {
             this.updateRigthFields(node);
-            console.log(e);
+            this._dictSrv.reload();
         });
     }
     private updateRigthFields(node: EosDictionaryNode): void {
