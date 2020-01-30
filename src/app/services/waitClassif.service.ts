@@ -118,6 +118,9 @@ export class WaitClassifService {
         if (params.id === 'CITIZEN_dict') {
             url = CITIZEN_dict;
             url += `#rc_id=` + params.user_id;
+            if (params.editMode) {
+                url += `&editMode=` + params.editMode;
+            }
         } else if (params.id === 'ORGANIZ_dict') {
             url = ORGANIZ_dict;
             url += `#rc_id=` + params.user_id;
@@ -126,6 +129,9 @@ export class WaitClassifService {
             }
             if (params.due) {
                 url += `&due=` + params.due;
+            }
+            if (params.editMode) {
+                url += `&editMode=` + params.editMode;
             }
         }
         return url;

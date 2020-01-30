@@ -131,7 +131,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         change = change.concat(preSave);
         return this.apiSrv.batch(change, '');
     }
-    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
+    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, paramsMode) {
         const config = {
             classif: 'gop_rc',
             id: 'ORGANIZ_dict',
@@ -143,6 +143,9 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             config['user_id'] = node.getFieldValue(node._descriptor.fieldsMap.get('ISN_NODE') as any);
             config['folder_due'] = nodeId;
             config['due'] = node.id;
+            if (!paramsMode) {
+                config['editMode'] = true;
+            }
         }
         return config;
     }

@@ -432,7 +432,7 @@ export abstract class AbstractDictionaryDescriptor {
     combine(slicedNodes: EosDictionaryNode[], marked: EosDictionaryNode[]): Promise<any> {
         return Promise.resolve();
     }
-    getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
+    getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, mode?) {
         return null;
     }
 

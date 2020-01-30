@@ -391,7 +391,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.edit:
                 if (this._checkDictionaryId()) {
-                    this._openPageCitizens(false, null);
+                    this._openPageCitizens(false, evt.params);
                 } else {
                     this._editNode();
                 }
@@ -738,7 +738,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _openPageCitizens(openEdit: boolean, params) {
         if (this.dictionaryId === 'organization') {
             if (params && params.IS_NODE && openEdit) {
-                this.openClassifGopRc(openEdit);
+                this.openClassifGopRc(openEdit, params);
                 return;
             } else if (params && !params.IS_NODE && openEdit) {
                 this._openCreate(params);
@@ -748,18 +748,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     this._editNode();
                     return;
                 } else {
-                    this.openClassifGopRc(openEdit);
+                    this.openClassifGopRc(openEdit, params);
                     return;
                 }
                 return;
             }
         }
-        this.openClassifGopRc(openEdit);
+        this.openClassifGopRc(openEdit, params);
 
     }
-    private openClassifGopRc(openEdit) {
+    private openClassifGopRc(openEdit, params) {
         const node = this._dictSrv.listNode;
-        const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId);
+        const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId, params);
         this._waitClassif.openClassif(config).then(() => {
             this.updateRigthFields(node);
             this._dictSrv.reload();

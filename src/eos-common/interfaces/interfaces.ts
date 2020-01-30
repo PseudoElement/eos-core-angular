@@ -36,6 +36,7 @@ export interface IOpenClassifParams {
     curdue?: string;
     folder_due?: string;
     due?: string;
+    editMode?: boolean;
     // name?: string;
     // form?: string;
     // id_std?: string;

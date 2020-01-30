@@ -94,7 +94,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         return super.search(criteries);
     }
-    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
+    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, paramsMode) {
         const config = {
             classif: 'gop_rc',
             id: 'CITIZEN_dict',
@@ -103,6 +103,9 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
             config['user_id'] = -1;
         } else {
             config['user_id'] = node.id;
+            if (!paramsMode) {
+                config['editMode'] = true;
+            }
         }
         return config;
     }
