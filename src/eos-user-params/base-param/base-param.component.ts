@@ -801,7 +801,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
                     this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
-                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
                 }
