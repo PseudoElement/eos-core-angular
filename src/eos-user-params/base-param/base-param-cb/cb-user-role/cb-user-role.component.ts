@@ -128,16 +128,25 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                             this.basicFields.splice(this.basicFields.lastIndexOf(item), 1);
                         }
                         this._fixedRoles(item, 'del');
+                        const delFild = this.currentFields.filter(elem => JSON.stringify(this.curPreDelete) === JSON.stringify(elem));
+                        if (delFild.length === 0) {
+                            this.currentFields = this.currentFields.filter(elem => JSON.stringify(this.curPreDelete) !== JSON.stringify(elem));
+                        }
                     }
                 } else {
                     if (item) {
-                        this.basicFields.push(this.curPreDelete.role);
-                        this.currentFields.push(this.curPreDelete);
-                        if (item !== 'Помощник заместителя председателя и директоров департаментов' && item !== 'Помощник Председателя') {
+                        // убрал добавление в левую часть так как мы ничего не меняем
+                        /* if (this.basicFields.filter(elem => this.curPreDelete.role === elem).length === 0) {
+                            this.basicFields.push(this.curPreDelete.role);
+                        } */
+                        if (this.currentFields.filter(elem => JSON.stringify(this.curPreDelete) === JSON.stringify(elem)).length === 0) {
+                            this.currentFields.push(this.curPreDelete);
+                        }
+                        /* if (item !== 'Помощник заместителя председателя и директоров департаментов' && item !== 'Помощник Председателя') {
                             this.basicFields.splice(this.basicFields.indexOf(item), 1);
                         } else {
                             this.basicFields.splice(this.basicFields.indexOf(item), 1);
-                        }
+                        } */
                     }
                 }
                 this.deletRole = true;
