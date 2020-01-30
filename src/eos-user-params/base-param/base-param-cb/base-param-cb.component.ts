@@ -634,7 +634,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
-        if (this.currentCbFields !== this.startRolesCb) {
+        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb)) {
             this.currentCbFields = this.startRolesCb;
             this.patchCbRoles();
         }
@@ -831,7 +831,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         } else {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
             this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
-            this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
+            this.cancelValues(this.controls, this.formControls);
+            // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
         if (this.startRolesCb !== this.currentCbFields || (!this.startRolesCb.length && !this.currentCbFields.length)) {
             this.getQueryFromRoles();
@@ -903,6 +904,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         } else if (this.currentCbFields.length === 0) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
             this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+            this.cancelValues(this.controls, this.formControls);
             this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         } else {
             str = this.currentCbFields[0].role + ' ...';
@@ -912,8 +914,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             value: str
         }];
         this.controlField[1].value = str;
+        if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
+            this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+        }
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
-        this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
+        this.cancelValues(this.controls, this.formControls);
+        // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
     }
 
     private patchVal() {
@@ -1017,7 +1023,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
                     this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
-                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
                 }

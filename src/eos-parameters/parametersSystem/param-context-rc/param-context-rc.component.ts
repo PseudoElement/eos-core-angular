@@ -12,6 +12,8 @@ import { debounceTime } from 'rxjs/operators';
     templateUrl: 'param-context-rc.component.html'
 })
 export class ParamContextRcComponent extends BaseParamComponent implements OnInit, OnDestroy {
+    message = `Были изменены параметры формирования контекста РК/РКПД.
+Для того, чтобы они вступили в силу, необходимо запустить скрипт "Корректировка индекса для поиска по всем реквизитам РК (РКПД)"`;
     @Input() btnError;
     masDisable: any[] = [];
     masDisableContextChoice: any[] = [];
@@ -121,6 +123,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     }
     submit() {
         if (this.newData) {
+            alert(this.message);
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv
