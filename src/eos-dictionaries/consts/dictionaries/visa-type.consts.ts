@@ -16,6 +16,8 @@ export const STATUS_OPTIONS: ISelectOption[] = [{
     title: 'Промежуточный',
 }];
 
+const LIST_BY_VARIANT = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? ['IS_FINAL', 'STATUS'] : [];
+
 export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'visa-type',
     apiInstance: 'VISA_TYPE_CL',
@@ -30,20 +32,26 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             uniqueInDict: true,
             length: 64,
         }),
-        {
-            key: 'IS_FINAL',
-            type: 'boolean',
-            title: 'Является финальной',
-        }, {
-            key: 'STATUS',
-            type: 'select',
-            title: 'Статус визы',
-            options: STATUS_OPTIONS,
-            required: true,
-        }]),
-    quickViewFields: ['NOTE', 'IS_FINAL', 'STATUS'],  // CLASSIF_NAME is in shortQuickViewFields
-    allVisibleFields: ['NOTE', 'IS_FINAL', 'STATUS'],
+        ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [
+            {
+                key: 'IS_FINAL',
+                type: 'boolean',
+                title: 'Является финальной',
+            }, {
+                key: 'STATUS',
+                type: 'select',
+                title: 'Статус визы',
+                options: STATUS_OPTIONS,
+                required: true,
+            }] : []
+        ]),
+    quickViewFields: ['NOTE',
+        ... LIST_BY_VARIANT,
+    ],
+    allVisibleFields: ['NOTE',
+        ... LIST_BY_VARIANT,
+    ],
     editFields: ['CLASSIF_NAME', 'NOTE',
-        ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? ['IS_FINAL', 'STATUS'] : [],
+        ... LIST_BY_VARIANT,
     ]
 });
