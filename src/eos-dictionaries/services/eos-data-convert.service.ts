@@ -266,7 +266,7 @@ export class EosDataConvertService {
                                         length: descr[_key].length,
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict] && data[_dict][descr[_key].foreignKey] !== undefined ?
+                                        value: data[_dict] && data[_dict][descr[_key].foreignKey] ?
                                             data[_dict][descr[_key].foreignKey] :
                                             (descr[_key].default === undefined ? null : descr[_key].default),
                                         readonly: descr[_key].readonly,
