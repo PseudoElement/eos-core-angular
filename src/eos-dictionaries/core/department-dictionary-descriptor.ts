@@ -161,7 +161,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         if (isCBBase) {
             for (let i = 0; i < selectedNodes.length; i++) {
                 const node = selectedNodes[i];
-                if (!node.data.rec['END_DATE']) {
+                if (!node.data.rec['END_DATE'] && node.data.rec['IS_NODE'] === 0) {
                     const cantDeleteWarning: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_FILL_ENDDATE);
                     const confirmSrv = InjectorInstance.get(ConfirmWindowService);
                     return confirmSrv.confirm2(cantDeleteWarning).then (() => {
