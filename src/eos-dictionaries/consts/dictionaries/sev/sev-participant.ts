@@ -43,6 +43,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         key: 'rules',
         type: 'string',
         title: 'Используемые правила',
+        required: true,
         // foreignKey: 'SEV_PARTICIPANT_RULE_List'
     }]),
     editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME'],

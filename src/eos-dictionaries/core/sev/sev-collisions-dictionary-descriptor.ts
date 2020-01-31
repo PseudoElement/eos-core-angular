@@ -1,5 +1,4 @@
-import {DictionaryDescriptor} from './dictionary-descriptor';
-
+import { DictionaryDescriptor } from '../dictionary-descriptor';
 
 export class SevCollisionsDictionaryDescriptor extends DictionaryDescriptor {
 

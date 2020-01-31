@@ -13,10 +13,10 @@ import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dic
 import {NADZOR_DICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
-import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
+import {SevCollisionsDictionaryDescriptor} from './sev/sev-collisions-dictionary-descriptor';
 import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
-import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
+import {SevRulesDictionaryDescriptor} from './sev/sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
@@ -27,6 +27,8 @@ import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
 import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
 import { CitizensDictionaryDescriptor } from './citizens-dictionary-descriptor';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
+import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-participant';
+import { SevParticipantDictionaryDescriptor } from './sev/sev-participant-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -124,6 +126,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'sev-collisions':
                         res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case PARTICIPANT_SEV_DICT.id:
+                        res = new SevParticipantDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'link':
                         res = new LinkDictionaryDescriptor(descr, this.apiSrv);
