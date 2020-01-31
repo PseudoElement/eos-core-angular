@@ -215,7 +215,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         });
     }
     public downloadFile(node: any) {
-        return ft(node, this);
+        return this._ft(node);
         // return fetch(`http://localhost/X1807/getdoctemplate.ashx/${node.id}`).then(resp => {
         //     return resp.text().then((data) => {
         //         if (data.length > 0 && data !== 'empty_mss_blob') {
@@ -240,29 +240,54 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         return this.hashTree;
     }
 
-}
 
-function ft(node: any, param): Promise<any> {
-    return param.apiSrv.getHttp_client().get(`../getdoctemplate.ashx/${node.id}`, { responseType: 'blob' }).toPromise().then((data: Blob) => {
-        if (data.size) {
-            createLink(node, data);
-            return true;
+    private _readFile(file) {
+        return new Promise((resolve, reject) => {
+            const fr = new FileReader();
+            fr.onload = x => resolve(fr.result);
+            fr.readAsText(file);
+        });
+    }
+
+    private _ft(node: any): Promise<any> {
+        return this.apiSrv.getHttp_client().get(`../getdoctemplate.ashx/${node.id}`, { responseType: 'blob' }).toPromise().then((data: Blob) => {
+            return new Promise((resolve, reject) => {
+                if (data.size) {
+                    if (data.size === 14) {
+                        return this._readFile(data).then((text) => {
+                            if (text === 'empty_mss_blob') {
+                                return resolve(false);
+                            }
+                            return resolve(true);
+                        });
+                    }
+                    return resolve(true);
+                }
+                return resolve(false);
+            }).then((result) => {
+                if (result) {
+                    this._createLink(node, data);
+                }
+                return result;
+            }).catch(error => {
+                return (error);
+            });
+
+        });
+    }
+
+    private _createLink(node: any, data: Blob): void {
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveBlob(data, node.title);
+        } else {
+            const elem = window.document.createElement('a');
+            elem.href = `../getdoctemplate.ashx/${node.id}`;
+            elem.download = node.title;
+            document.body.appendChild(elem);
+            elem.click();
+            document.body.removeChild(elem);
         }
-        return false;
-    }).catch(error => {
-        return (error);
-    });
-}
 
-function createLink(node: any, data: Blob): void {
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(data, node.title);
-    } else {
-        const elem = window.document.createElement('a');
-        elem.href = `../getdoctemplate.ashx/${node.id}`;
-        elem.download = node.title;
-        document.body.appendChild(elem);
-        elem.click();
-        document.body.removeChild(elem);
     }
 }
+
