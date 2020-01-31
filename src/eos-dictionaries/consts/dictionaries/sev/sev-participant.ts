@@ -35,14 +35,19 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         title: 'Адрес',
         pattern: NOT_EMPTY_STRING
     }, {
+        key: 'CRYPT',
+        type: 'boolean',
+        title: 'Шифровать',
+
+    }, {
         key: 'rules',
         type: 'string',
         title: 'Используемые правила',
         // foreignKey: 'SEV_PARTICIPANT_RULE_List'
     }]),
-    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'rules', 'CLASSIF_NAME'],
+    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'rules'],
-    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'ADDRESS', 'rules'],
+    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'CRYPT', 'rules'],
+    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS',  'rules'],
     searchFields: [],
 });

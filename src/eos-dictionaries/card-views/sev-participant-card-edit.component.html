@@ -29,6 +29,10 @@
                             [input]="inputs['rec.ISN_CHANNEL']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="inputs['rec.CRYPT']"
+                            [input]="inputs['rec.CRYPT']"
+                            [form]="form"
+                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.ADDRESS']"
                             [input]="inputs['rec.ADDRESS']"
                             [form]="form"
