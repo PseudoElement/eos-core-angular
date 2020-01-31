@@ -1,7 +1,7 @@
 import { DICTIONARIES } from 'eos-dictionaries/consts/dictionaries.consts';
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, } from '@angular/core';
 // import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 
@@ -30,14 +30,13 @@ import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosDepartmentsService} from './eos-department-service';
 import {RestError} from 'eos-rest/core/rest-error';
 import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
-import {IAppCfg, IConfirmWindow} from 'eos-common/interfaces';
+import {IAppCfg} from 'eos-common/interfaces';
 import {CabinetDictionaryDescriptor} from '../core/cabinet-dictionary-descriptor';
 import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
-import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-participant';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
@@ -239,8 +238,6 @@ export class EosDictService {
 
 
     constructor(
-        // private _router: Router,
-        private injector: Injector,
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
@@ -955,7 +952,7 @@ export class EosDictService {
     fullSearch(data: any, params: ISearchSettings) {
 
         try {
-            this.fixSearchSymbols(data, SEARCH_INCORRECT_SYMBOLS);
+            this.fixSearchSymbols(data);
         } catch (e) {
         }
 
@@ -971,7 +968,7 @@ export class EosDictService {
         }
     }
 
-    fixSearchSymbols(data: any, reg: RegExp): any {
+    fixSearchSymbols(data: any): any {
         for (const key in data) {
             if (key !== 'srchMode' && data.hasOwnProperty(key)) {
                 const list = data[key];
@@ -1172,7 +1169,7 @@ export class EosDictService {
         });
     }
     public uncheckNewEntry() {
-        this.currentDictionary.descriptor.updateUncheckCitizen(this.getMarkedNodes()).then(data => {
+        this.currentDictionary.descriptor.updateUncheckCitizen(this.getMarkedNodes()).then(() => {
             this._reloadList();
         });
 
@@ -1185,7 +1182,7 @@ export class EosDictService {
             DOCGROUP_CL: PipRX.criteries({'DUE': nodeId}),
             foredit: true,
         })
-        .then(([docGroup]) => {
+        .then(([]) => {
 
 
 
@@ -1325,15 +1322,6 @@ export class EosDictService {
         return _p;
     }
 
-    private isObjEmpty(v): boolean {
-        if (!v) { return true; }
-        for (const key in v) {
-            if (v.hasOwnProperty(key)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private _preSave(dictionary: EosDictionary, data: any, isNewRecord: boolean): Promise<any> {
         if (data && data.sev) {
