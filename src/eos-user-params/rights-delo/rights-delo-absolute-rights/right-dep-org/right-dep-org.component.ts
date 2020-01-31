@@ -293,7 +293,7 @@ export class RightOrganizDepertComponent implements OnInit {
         return false;
     }
     returnDelTech() {
-        if (this._appContext.limitCardsUser.indexOf(this.selectedDep.data.dep['DEPARTMENT_DUE']) !== -1) {
+        if (!this._appContext.limitCardsUser.length || this._appContext.limitCardsUser.indexOf(this.selectedDep.data.dep['DEPARTMENT_DUE']) !== -1) {
             return false;
         }
         return true;
