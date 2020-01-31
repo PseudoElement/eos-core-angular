@@ -31,6 +31,8 @@ import {LINEAR_TEMPLATE} from './_linear-template';
 import {NP_SUD_RESHEN_TYPE_CL} from './nadzor/reshen-suda.const';
 import {NP_RESHEN_CL} from './nadzor/reshen.consts';
 import {NP_OSN_PRED_DELA_CL} from './nadzor/osn-pred-dela';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 
 
@@ -71,12 +73,12 @@ export const NADZORDICTIONARIES_TREE = [
     NP_OSN_PRED_DELA_CL,
 ];
 
-export const NADZORDICTIONARIES = NADZORDICTIONARIES_LINEAR . concat(NADZORDICTIONARIES_TREE);
+export const NADZOR_DICTIONARIES = NADZORDICTIONARIES_LINEAR . concat(NADZORDICTIONARIES_TREE);
 
-export const NADZOR: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const NADZOR_FOLDER: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'nadzor',
     title: 'Справочники Надзора',
-    visible: false,
+    visible: Features.cfg.variant === EOSDICTS_VARIANT.Nadzor,
     apiInstance: 'nadzor',
     iconName: 'eos-icon-review-blue'
 });

@@ -27,8 +27,8 @@ import { CA_CATEGORY_CL } from './dictionaries/ca-category.consts';
 import {CITIZENS_DICT} from './dictionaries/citizens.const';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
-import { NADZOR } from './dictionaries/nadzor.consts';
-import { SEV_DICTIONARIES } from './dictionaries/sev.consts';
+import { NADZOR_FOLDER } from './dictionaries/nadzor.consts';
+import { SEV_FOLDER } from './dictionaries/sev.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -57,12 +57,11 @@ export const DICTIONARIES = [
     EDS_CATEGORY_CL,
     LINK_DICT,
     Templates,
-    ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR, ] : [CITIZENS_DICT, ],
-    // SEV
-    // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
-    ... Features.cfg.SEV.isDictsEnabled ? SEV_DICTIONARIES : [],
+
+    ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR_FOLDER, ] : [CITIZENS_DICT, ],
+
+    ... Features.cfg.SEV.isDictsEnabled ? [SEV_FOLDER] : [],
 
     REESTRTYPE_DICT,
-
 
 ];

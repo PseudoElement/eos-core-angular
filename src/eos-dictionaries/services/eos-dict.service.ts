@@ -41,8 +41,9 @@ import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-p
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
-import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
+import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev.consts';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
@@ -271,8 +272,15 @@ export class EosDictService {
                 return dict;
             }
         }
-        for (let i = 0; i < NADZORDICTIONARIES.length; i++) {
-            const dict = NADZORDICTIONARIES[i];
+        for (let i = 0; i < NADZOR_DICTIONARIES.length; i++) {
+            const dict = NADZOR_DICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+
+        for (let i = 0; i < SEV_DICTIONARIES.length; i++) {
+            const dict = SEV_DICTIONARIES[i];
             if (dict.id === dictionaryId) {
                 return dict;
             }
@@ -557,6 +565,7 @@ export class EosDictService {
         let allDicts = this._descrSrv.visibleDictionaries();
         if (deskId !== 'system') {
             allDicts = allDicts.concat(this._descrSrv.visibleNadzorDictionaries());
+            allDicts = allDicts.concat(this._descrSrv.visibleSevDictionaries());
         }
         return Promise.resolve(allDicts);
     }
@@ -567,6 +576,10 @@ export class EosDictService {
 
     getNadzorDictionariesList(): Promise<IDictionaryDescriptor[]> {
         return Promise.resolve(this._descrSrv.visibleNadzorDictionaries());
+    }
+
+    getSevDictionariesList(): Promise<IDictionaryDescriptor[]> {
+        return Promise.resolve(this._descrSrv.visibleSevDictionaries());
     }
 
     defaultOrder() {
