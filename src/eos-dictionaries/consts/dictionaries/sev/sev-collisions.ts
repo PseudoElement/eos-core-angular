@@ -1,6 +1,7 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
-import { LINEAR_TEMPLATE } from './_linear-template';
-import { NOT_EMPTY_STRING } from '../input-validation';
+import { LINEAR_TEMPLATE } from '../_linear-template';
+import { NOT_EMPTY_STRING } from '../../input-validation';
+import { SEV_ACTIONS } from './dicts-sev.consts';
 
 export const RESOLVE_DESCRIPTIONS = [
     {type: 1, text: 'Отказать в регистрации'},
@@ -13,7 +14,7 @@ export const RESOLVE_DESCRIPTIONS = [
 export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-collisions',
     apiInstance: 'SEV_COLLISION',
-    actions: [],
+    actions: SEV_ACTIONS,
     visible: true,
     iconName: 'eos-icon-alert-blue',
     defaultOrder: 'COLLISION_NAME',

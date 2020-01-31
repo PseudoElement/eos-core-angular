@@ -1,5 +1,5 @@
 import {DictionaryDescriptor} from './dictionary-descriptor';
-import {RESOLVE_DESCRIPTIONS} from '../consts/dictionaries/sev-collisions';
+import {RESOLVE_DESCRIPTIONS} from '../consts/dictionaries/sev/sev-collisions';
 
 export class SevCollisionsDictionaryDescriptor extends DictionaryDescriptor {
 

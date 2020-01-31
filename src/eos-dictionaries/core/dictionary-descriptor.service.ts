@@ -26,8 +26,7 @@ import { CALENDAR_DICT } from 'eos-dictionaries/consts/dictionaries/calendar.con
 import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
 import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
 import { CitizensDictionaryDescriptor } from './citizens-dictionary-descriptor';
-import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev.consts';
-// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 
 @Injectable()
 export class DictionaryDescriptorService {

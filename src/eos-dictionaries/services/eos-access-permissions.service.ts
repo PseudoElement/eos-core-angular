@@ -28,7 +28,7 @@ import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-
 import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.const';
-import { SEV_DICTIONARIES, SEV_FOLDER } from 'eos-dictionaries/consts/dictionaries/sev.consts';
+import { SEV_FOLDER, SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 
 const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* проверить дерево USER_TECH */, } [] = [
     // Рубрикатор

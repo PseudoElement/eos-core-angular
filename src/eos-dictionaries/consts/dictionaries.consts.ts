@@ -28,7 +28,7 @@ import {CITIZENS_DICT} from './dictionaries/citizens.const';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { NADZOR_FOLDER } from './dictionaries/nadzor.consts';
-import { SEV_FOLDER } from './dictionaries/sev.consts';
+import { SEV_FOLDER } from './dictionaries/sev/folder-sev.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */

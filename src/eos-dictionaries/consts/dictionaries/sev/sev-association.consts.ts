@@ -1,5 +1,6 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
-import { LINEAR_TEMPLATE } from './_linear-template';
+import { LINEAR_TEMPLATE } from '../_linear-template';
+import { SEV_ACTIONS } from './dicts-sev.consts';
 
 export const SEV_ASSOCIATION_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-association',
@@ -7,6 +8,7 @@ export const SEV_ASSOCIATION_DICT: IDictionaryDescriptor = Object.assign({}, LIN
     title: 'Индексы СЭВ',
     defaultOrder: 'OBJECT_NAME',
     visible: false,
+    actions: SEV_ACTIONS,
     fields: [{
         key: 'OBJECT_ID',
         type: 'string',

@@ -37,13 +37,13 @@ import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.ser
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
-import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-participant';
+import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-participant';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
 import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
-import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev.consts';
+import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
