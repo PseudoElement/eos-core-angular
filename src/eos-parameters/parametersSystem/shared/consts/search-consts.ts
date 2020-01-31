@@ -37,6 +37,7 @@ export const SEARCH_PARAM: IBaseParameters = {
             type: 'string',
             // readonly: true,
             title: 'Форматы файлов, индексируемых внешней службой',
+            length: 2000
         },
     ]
 };

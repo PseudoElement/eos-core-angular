@@ -123,6 +123,7 @@ export class EosUtils {
                         case 'maxDate':
                         case 'pattern':
                         case 'required':
+                        case 'errorPattern':
                             return INPUT_ERROR_MESSAGES[key];
                         case 'isUnique':
                             return INPUT_ERROR_MESSAGES[key][(params.uniqueInDict ? 1 : 0)];

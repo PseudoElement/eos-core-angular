@@ -4,6 +4,7 @@ import { debounceTime } from 'rxjs/operators';
 import { PARM_CANCEL_CHANGE } from './../shared/consts/eos-parameters.const';
 import { SEARCH_PARAM } from './../shared/consts/search-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'eos-param-search',
@@ -17,6 +18,7 @@ export class ParamSearchComponent extends BaseParamComponent {
         this.init()
             .then(() => {
                 this.afterInitRC();
+                this.setValidators();
             });
     }
     cancel() {
@@ -27,8 +29,9 @@ export class ParamSearchComponent extends BaseParamComponent {
             this.ngOnDestroy();
             this.init()
                 .then(() => {
-                    this.cancelEdit();
+                    // this.cancelEdit();
                     this.afterInitRC();
+                    this.setValidators();
                 })
                 .catch(err => {
                     if (err.code !== 434) {
@@ -46,7 +49,9 @@ export class ParamSearchComponent extends BaseParamComponent {
             )
             .subscribe(value => {
                 if (this.changeByPath('rec.FULLTEXT_EXTENSIONS', value)) {
-                    this.form.controls['rec.FULLTEXT_EXTENSIONS'].patchValue(value.toUpperCase());
+                    if (value !== value.toUpperCase()) {
+                        this.form.controls['rec.FULLTEXT_EXTENSIONS'].patchValue(value.toUpperCase());
+                    }
                 } else {
                     this.formChanged.emit(false);
                 }
@@ -69,5 +74,21 @@ export class ParamSearchComponent extends BaseParamComponent {
             }
         });
         this.form.disable({ emitEvent: false });
+    }
+    private setValidators() {
+        this.form.controls['rec.FULLTEXT_EXTENSIONS'].setAsyncValidators((control: AbstractControl) => {
+            if (control.value.search(/^[^\\\/\|\:\.\*?]{0,2000}$/) !== -1) {
+                for (let index = 0; index < control.value.length; index++) {
+                    if (control.value[index].charCodeAt(0) < 31) {
+                        control.setErrors({ errorPattern: true });
+                        return Promise.resolve({ errorPattern: true });
+                    }
+                }
+            } else {
+                control.setErrors({ errorPattern: true });
+                return Promise.resolve({ errorPattern: true });
+            }
+            return Promise.resolve(null);
+        });
     }
 }

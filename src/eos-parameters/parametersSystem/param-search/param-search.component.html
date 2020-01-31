@@ -36,10 +36,12 @@ class="input-param-wrapper input-param-search-wrapper">
             [form]="form"
             [readonly]="inputs['rec.ELNPATH'].readonly"
         ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
-            [form]="form"
-            [readonly]="inputs['rec.FULLTEXT_EXTENSIONS'].readonly"
-        ></eos-dynamic-input>
+        <div style='padding-bottom: 100px;'>
+            <eos-dynamic-input
+                [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
+                [form]="form"
+                [readonly]="inputs['rec.FULLTEXT_EXTENSIONS'].readonly"
+            ></eos-dynamic-input>
+        </div>
     </div>
 </div>

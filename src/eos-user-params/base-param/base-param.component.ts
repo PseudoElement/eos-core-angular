@@ -142,8 +142,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     get getErrorSave() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
+        const clName = this.form.controls['CLASSIF_NAME'].value ? this.form.controls['CLASSIF_NAME'].value : '';
+        const suPatron = this.form.controls['SURNAME_PATRON'].value ? this.form.controls['SURNAME_PATRON'].value : '';
         const formError = this.form.status === 'INVALID' ? true : false;
-        if (this.editMode && (val !== null || (this.form.controls['CLASSIF_NAME'].value).trim() === '' || (this.form.controls['SURNAME_PATRON'].value).trim() === '') || formError) {
+        if (this.editMode && (val !== null || (clName).trim() === '' || (suPatron).trim() === '') || formError) {
             return true;
         } else {
             return false;
