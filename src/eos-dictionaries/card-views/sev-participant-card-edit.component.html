@@ -5,7 +5,7 @@
                 <label [ngClass]="{'unimportant-text': !editMode }">Организация <a
                     *ngIf="editMode"
                     (click)="chooseOrganiz()">[выбрать]</a> <a
-                    *ngIf="editMode"
+                    *ngIf="editMode && hasOrganization"
                     (click)="unbindOrganization()">[удалить]</a></label>
         <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
                     [input]="inputs['rec.CLASSIF_NAME']"
