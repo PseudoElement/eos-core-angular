@@ -12,6 +12,7 @@ import { HintConfiguration } from '../long-title-hint/hint-configuration.interfa
 import { EosUtils } from 'eos-common/core/utils';
 import { E_VISIBLE_TIPE } from '../interfaces/dictionary.interfaces';
 import { EosBreadcrumbsService } from 'app/services/eos-breadcrumbs.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     selector: 'eos-node-list-item',
@@ -95,7 +96,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
             this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit});
             return;
         }
-        if (!this._dictSrv.isRoot(this.node.id) && !this.node.isDeleted) {
+        if (!this._dictSrv.isRoot(this.node.id) && (!this.node.isDeleted || Features.cfg.canEditLogicDeleted)) {
             const _path = this.node.getPath();
             if (!this.node.isNode || view) {
                 this._storageSrv.setItem(RECENT_URL, this._router.url);
