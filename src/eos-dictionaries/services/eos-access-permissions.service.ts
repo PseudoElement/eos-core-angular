@@ -7,7 +7,7 @@ import { CABINET_DICT } from './../consts/dictionaries/cabinet.consts';
 import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import { Injectable } from '@angular/core';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { NADZORDICTIONARIES, NADZOR } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZOR_DICTIONARIES as NADZOR_DICTIONARIES, NADZOR_FOLDER } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
 import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
 import { SIGN_KIND_DICT } from 'eos-dictionaries/consts/dictionaries/sign-kind.consts';
@@ -28,7 +28,7 @@ import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-
 import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.const';
-import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev.consts';
+import { SEV_FOLDER, SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 
 const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* проверить дерево USER_TECH */, } [] = [
     // Рубрикатор
@@ -95,7 +95,7 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* п
     { id: LINK_DICT.id,             tech: E_TECH_RIGHT.LinkTypes,
         listedUT: false },
     // Группа справочников Надзора
-    { id: NADZOR.id,                tech: E_TECH_RIGHT.NadzorCL,
+    { id: NADZOR_FOLDER.id,                tech: E_TECH_RIGHT.NadzorCL,
         listedUT: false },
     // Категории поручений
     { id: RESOL_CATEGORY_DICT.id,   tech: E_TECH_RIGHT.ResCategories,
@@ -107,7 +107,7 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* п
     { id: CALENDAR_DICT.id,         tech: E_TECH_RIGHT.CalendarSettings,
         listedUT: false},
     // Справочники СЭВ
-    { id: 'SEV',         tech: E_TECH_RIGHT.SevCL,
+    { id: SEV_FOLDER.id,         tech: E_TECH_RIGHT.SevCL,
         listedUT: false},
     // Шаблоны
     { id: Templates.id,    tech: E_TECH_RIGHT.Templates,
@@ -153,7 +153,7 @@ export class EosAccessPermissionsService {
 
         let dict;
 
-        dict =  NADZORDICTIONARIES.find (n => n.id === dictId);
+        dict =  NADZOR_DICTIONARIES.find (n => n.id === dictId);
         if (dict) {
             return this._checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }

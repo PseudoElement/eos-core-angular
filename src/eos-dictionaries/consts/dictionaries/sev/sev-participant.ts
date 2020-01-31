@@ -1,14 +1,15 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
-import { LINEAR_TEMPLATE } from './_linear-template';
-import { NOT_EMPTY_STRING } from '../input-validation';
-import { BROADCAST_CHANNEL_DICT } from './broadcast-channel';
-import { COMMON_FIELD_NAME } from './_common';
+import { LINEAR_TEMPLATE } from '../_linear-template';
+import { NOT_EMPTY_STRING } from '../../input-validation';
+import { COMMON_FIELD_NAME } from '../_common';
+import { SEV_ACTIONS } from './templates-sev.consts';
+import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
 
 export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-participant',
     apiInstance: 'SEV_PARTICIPANT',
     title: 'Участники СЭВ',
-    actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']), // ??
+    actions: SEV_ACTIONS,
     visible: true,
     iconName: 'eos-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
@@ -34,14 +35,20 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         title: 'Адрес',
         pattern: NOT_EMPTY_STRING
     }, {
+        key: 'CRYPT',
+        type: 'boolean',
+        title: 'Шифровать',
+
+    }, {
         key: 'rules',
         type: 'string',
         title: 'Используемые правила',
+        required: true,
         // foreignKey: 'SEV_PARTICIPANT_RULE_List'
     }]),
-    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'rules', 'CLASSIF_NAME'],
+    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'rules'],
-    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'ADDRESS', 'rules'],
+    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'CRYPT', 'rules'],
+    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS',  'rules'],
     searchFields: [],
 });

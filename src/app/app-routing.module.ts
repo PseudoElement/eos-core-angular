@@ -112,6 +112,11 @@ const childrenDictionariesComponent = [{
 }];
 
 const routes: Routes = [{
+    path: 'spravochniki/SEV',
+    data: { title: 'СЭВ', showInBreadcrumb: true },
+    canActivate: [AuthorizedGuard],
+    children: childrenDictionariesComponent,
+}, {
     path: 'spravochniki/nadzor',
     data: { title: 'Надзор', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],

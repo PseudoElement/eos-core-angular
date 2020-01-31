@@ -10,13 +10,13 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
-import {NADZORDICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
+import {NADZOR_DICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
-import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
+import {SevCollisionsDictionaryDescriptor} from './sev/sev-collisions-dictionary-descriptor';
 import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
-import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
+import {SevRulesDictionaryDescriptor} from './sev/sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
@@ -26,7 +26,9 @@ import { CALENDAR_DICT } from 'eos-dictionaries/consts/dictionaries/calendar.con
 import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
 import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
 import { CitizensDictionaryDescriptor } from './citizens-dictionary-descriptor';
-// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
+import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-participant';
+import { SevParticipantDictionaryDescriptor } from './sev/sev-participant-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -55,7 +57,18 @@ export class DictionaryDescriptorService {
                 }
             })
             .forEach((dict) => this._mDicts.set(dict.id, dict));
-        NADZORDICTIONARIES
+        NADZOR_DICTIONARIES
+            .sort((a, b) => {
+                if (a.title > b.title) {
+                    return 1;
+                } else if (a.title < b.title) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            })
+            .forEach((dict) => this._mDicts.set(dict.id, dict));
+        SEV_DICTIONARIES
             .sort((a, b) => {
                 if (a.title > b.title) {
                     return 1;
@@ -73,7 +86,11 @@ export class DictionaryDescriptorService {
     }
 
     visibleNadzorDictionaries(): IDictionaryDescriptor[] {
-        return NADZORDICTIONARIES.filter((dict) => dict.visible);
+        return NADZOR_DICTIONARIES.filter((dict) => dict.visible);
+    }
+
+    visibleSevDictionaries(): IDictionaryDescriptor[] {
+        return SEV_DICTIONARIES.filter((dict) => dict.visible);
     }
 
     getDescriptorData(name: string): IDictionaryDescriptor {
@@ -109,6 +126,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'sev-collisions':
                         res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case PARTICIPANT_SEV_DICT.id:
+                        res = new SevParticipantDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'link':
                         res = new LinkDictionaryDescriptor(descr, this.apiSrv);
@@ -148,6 +168,14 @@ export class DictionaryDescriptorService {
                     }
                 }
 
+                // if (!res) {
+                //     for (const d of SEV_DICTIONARIES) {
+                //         if (d.id && d.id === descr.id) {
+                //             res = new NadzorLinearDictionaryDescriptor(descr, this.apiSrv);
+                //             break;
+                //         }
+                //     }
+                // }
 
 
                 if (!res) {

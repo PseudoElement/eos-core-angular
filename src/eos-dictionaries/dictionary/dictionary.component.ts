@@ -536,7 +536,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 this.dictionary.descriptor.downloadFile(node)
                 .then(info => {
                     if (!info) {
-                        this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
+                        const msg = Object.assign({}, DANGER_EMPTY_FILE);
+                        msg.msg = 'Шаблон ' + node.title + ' в базе отсутствует';
+                        this._msgSrv.addNewMessage(msg);
                     }
                 })
                 .catch(() => {

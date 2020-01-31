@@ -5,7 +5,7 @@
                 <label [ngClass]="{'unimportant-text': !editMode }">Организация <a
                     *ngIf="editMode"
                     (click)="chooseOrganiz()">[выбрать]</a> <a
-                    *ngIf="editMode"
+                    *ngIf="editMode && hasOrganization"
                     (click)="unbindOrganization()">[удалить]</a></label>
         <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
                     [input]="inputs['rec.CLASSIF_NAME']"
@@ -27,6 +27,10 @@
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.ISN_CHANNEL']"
                             [input]="inputs['rec.ISN_CHANNEL']"
+                            [form]="form"
+                            [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="inputs['rec.CRYPT']"
+                            [input]="inputs['rec.CRYPT']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.ADDRESS']"

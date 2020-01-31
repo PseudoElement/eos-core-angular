@@ -27,6 +27,8 @@ export class DictionariesComponent {
             dictList = this._dictSrv.getDictionariesList();
         } else if (this._router.url === '/spravochniki/nadzor') {
             dictList = this._dictSrv.getNadzorDictionariesList();
+        } else if (this._router.url === '/spravochniki/SEV') {
+            dictList = this._dictSrv.getSevDictionariesList();
         }
 
         this._storageSrv.setItem(RECENT_URL, this._router.url);

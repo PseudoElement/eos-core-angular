@@ -1,7 +1,7 @@
 import {IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
-import {LINEAR_TEMPLATE } from './_linear-template';
-import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from './_common';
-import {DOCGROUP_DICT} from './docgroup.consts';
+import {LINEAR_TEMPLATE } from '../_linear-template';
+import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from '../_common';
+import {DOCGROUP_DICT} from '../docgroup.consts';
 import {
     ADDRESS_REPLACE,
     ADDRESSEE_KIND,
@@ -11,16 +11,17 @@ import {
     KOR_RULE_SEND, ORDERS_KIND,
     RESOLUTION_KIND, SIGNATURES_KIND,
     TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE
-} from '../sev-const';
-import {SECURITY_DICT} from './security.consts';
-import {ORG_TYPE_DICT} from './org-type.consts';
-import {CONTACT_DICT} from './contact.consts';
-import {ORGANIZ_DICT} from './organiz.consts';
+} from './types.consts';
+import {SECURITY_DICT} from '../security.consts';
+import {ORG_TYPE_DICT} from '../org-type.consts';
+import {CONTACT_DICT} from '../contact.consts';
+import {ORGANIZ_DICT} from '../organiz.consts';
+import { SEV_ACTIONS } from './templates-sev.consts';
 
 export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-rules',
     apiInstance: 'SEV_RULE',
-    // actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']), // ??
+    actions: SEV_ACTIONS,
     visible: true,
     iconName: 'eos-icon-rules-blue',
     title: 'Правила СЭВ',

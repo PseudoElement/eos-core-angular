@@ -15,7 +15,6 @@ import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 })
 export class SevParticipantCardEditComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     _orgName: any;
-    hasOrganization: any;
     modalWindow: BsModalRef;
 
     private _usedRulesString;
@@ -66,6 +65,10 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         }
     }
 
+    get hasOrganization(): boolean {
+        return this.getValue('rec.DUE_ORGANIZ');
+    }
+
     chooseOrganiz() {
         const config = this.dictSrv.getApiConfig();
         if (config) {
@@ -103,9 +106,10 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
 
     unbindOrganization() {
         if (this.hasOrganization) {
+            this.dictSrv.unbindOrganization();
             this._orgName = '';
-            this.data.organization = null;
-            this.setValue('rec.DUE_LINK_ORGANIZ', null);
+            this.setValue('rec.CLASSIF_NAME', null);
+            this.setValue('rec.DUE_ORGANIZ', null);
         } else {
             this._msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
         }
