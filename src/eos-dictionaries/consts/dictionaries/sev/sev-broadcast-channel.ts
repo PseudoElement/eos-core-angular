@@ -3,7 +3,7 @@ import { LINEAR_TEMPLATE } from '../_linear-template';
 import { EMAIL } from '../../input-validation';
 import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from '../_common';
 import {AUTH_METHOD, CHANNEL_TYPE, ENCRYPTION_TYPE} from './types.consts';
-import { SEV_ACTIONS } from './dicts-sev.consts';
+import { SEV_ACTIONS } from './templates-sev.consts';
 
 export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'broadcast-channel',

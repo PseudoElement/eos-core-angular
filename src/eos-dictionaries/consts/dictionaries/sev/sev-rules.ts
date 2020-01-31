@@ -16,7 +16,7 @@ import {SECURITY_DICT} from '../security.consts';
 import {ORG_TYPE_DICT} from '../org-type.consts';
 import {CONTACT_DICT} from '../contact.consts';
 import {ORGANIZ_DICT} from '../organiz.consts';
-import { SEV_ACTIONS } from './dicts-sev.consts';
+import { SEV_ACTIONS } from './templates-sev.consts';
 
 export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-rules',
