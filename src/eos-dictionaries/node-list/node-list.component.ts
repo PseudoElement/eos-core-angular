@@ -214,6 +214,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
             if (!this.isCorrectOrderBy()) {
                 this.orderBy = this._dictSrv.currentDictionary.orderDefault();
+                this._dictSrv.orderBy(this.orderBy);
             }
 
             this.updateViewFields(this.customFields, []);

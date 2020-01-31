@@ -40,17 +40,20 @@ export class SevRulesDictionaryDescriptor extends DictionaryDescriptor {
                     const value = data[i];
                     processors.push(
                         new Promise<any>((resolve) => {
-                            this._rulesSrv.parseSendDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
-                                .then(result => {
-                                    if (result) {
-                                        for (const prop in result) {
-                                            if (result.hasOwnProperty(prop)) {
-                                                value[prop] = result[prop];
+                            if (value['RULE_KIND'] === 3) {
+                                return this._rulesSrv.parseSendDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
+                                    .then(result => {
+                                        if (result) {
+                                            for (const prop in result) {
+                                                if (result.hasOwnProperty(prop)) {
+                                                    value[prop] = result[prop];
+                                                }
                                             }
                                         }
-                                    }
-                                    return resolve(value);
-                                });
+                                        return resolve(value);
+                                    });
+                            }
+                            return resolve(value);
                         })
                     );
                 }

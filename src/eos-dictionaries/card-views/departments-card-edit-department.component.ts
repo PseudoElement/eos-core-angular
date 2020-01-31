@@ -66,10 +66,13 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         }
 
         if (this.isCBBase && this.isNewRecord) {
-            this.inputs['rec.START_DATE'].required = true;
-            this.form.controls['rec.START_DATE'].setValidators(
-                [this.form.controls['rec.START_DATE'].validator, Validators.required]
-            );
+            const control = this.form.controls['rec.START_DATE'];
+            if (control) {
+                this.inputs['rec.START_DATE'].required = true;
+                control.setValidators(
+                    [control.validator, Validators.required]
+                );
+            }
         }
     }
 

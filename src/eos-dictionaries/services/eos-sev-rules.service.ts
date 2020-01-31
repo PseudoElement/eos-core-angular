@@ -47,6 +47,10 @@ export class EosSevRulesService {
                         return reject(err);
                     }
                     const sendDocumentRule = result['SendDocumentRule'];
+                    if (!sendDocumentRule) {
+                        const e = {message: 'отсутствует SendDocumentRule'};
+                        return reject(e);
+                    }
                     const document = sendDocumentRule['ScriptConfig'][0]['Document'][0];
                     this._data = {};
                     this._data['type'] = (kindRule - kindRule % 4) / 4;
