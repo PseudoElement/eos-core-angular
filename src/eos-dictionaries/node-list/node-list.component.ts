@@ -576,7 +576,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
         const fields: IFieldView[] = this.viewFields.concat(this.customFields);
 
-        fields.forEach((_f) => {
+        fields.forEach((_f, _i) => {
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
                 let itemWidth;
@@ -584,7 +584,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
 
                 if (_f.preferences && _f.preferences.minColumnWidth) {
-                    itemWidth = Math.max (_f.preferences.minColumnWidth, itemWidth);
+                    if (_i === fields.length - 1) {
+                        itemWidth = Math.max (_f.preferences.minColumnWidth, itemWidth);
+                    } else {
+                        itemWidth = _f.preferences.minColumnWidth;
+                    }
+
                     presetLength[_f.key] = itemWidth;
                 }
 
