@@ -173,6 +173,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         }   else {
             this.sendNewValues.emit(false);
         }
+        this._updateSelect(true);
     }
     findHomeCabinet() {
      const findCabinet =   this.Cabinet.parent.cabinets.filter((cabinet: Cabinets) => {
@@ -199,12 +200,12 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         this.unSubscribe.next();
         this.unSubscribe.complete();
     }
-    private _updateSelect(): void {
+    private _updateSelect(flag?): void {
         const opts = this.card.cabinets.map( (c, i) => ({ value: i, title: c.name, cabinet: c,
             style: {color: c.homeCabinet ? 'red' : 'black'}
         }));
         this.selectCabinetInput.options = opts;
-        if (opts.length) {
+        if (!flag && opts.length) {
             this.form.controls['selectedCabinet'].setValue(opts[0].value);
         }
     }

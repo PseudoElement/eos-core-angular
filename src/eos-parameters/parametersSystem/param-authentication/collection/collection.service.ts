@@ -52,8 +52,8 @@ export class CollectionService {
             })
             .catch(err => {
                 this.msgSrv.addNewMessage({
-                    type: 'success',
-                    title: 'Изменения сохранены',
+                    type: 'danger',
+                    title: 'Ошибка соединения',
                     msg: err.message ? err.message : err
                 });
                 return false;
