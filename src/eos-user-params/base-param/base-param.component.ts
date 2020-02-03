@@ -61,7 +61,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     user_copy_isn: number;
     isPhoto: boolean | number = false;
     urlPhoto: string = '';
-    public noIsTech: string;
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public maxLoginLength: string;
@@ -265,12 +264,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-    checkSurname() {
-        if (this.curentUser.SURNAME_PATRON === this.curentUser.CLASSIF_NAME) {
-            return true;
-        }
-        return false;
-    }
     setQueryNewData(accessStr, newD, query): void {
         const id = this._userParamSrv.userContextId;
         if (this._newDataformAccess.size || this._newData.size) {
@@ -289,15 +282,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         if (this.curentUser.isTechUser) {
                             this.inputs['DUE_DEP_NAME'].data = '';
                             this.form.get('NOTE').patchValue('');
-                            newD['SURNAME_PATRON'] = this.curentUser.CLASSIF_NAME;
                         }
                         newD['NOTE'] = '' + this.form.get('NOTE').value;
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
-                        if (!this.curentUser.isTechUser && this.checkSurname()) {
-                            if (this.noIsTech) {
-                                newD['SURNAME_PATRON'] = this.noIsTech;
-                            }
-                        }
                     }
                     delete newD['DUE_DEP_NAME'];
                 });
@@ -625,8 +612,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
-                // сохраняю для того чтобы сделать его не техническим
-                this.noIsTech = data[0]['SURNAME'];
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
                 if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
                     this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);

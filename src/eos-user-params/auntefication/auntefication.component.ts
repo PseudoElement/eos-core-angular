@@ -11,7 +11,8 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { USER_PARMS } from 'eos-rest';
+/* import { USER_PARMS } from 'eos-rest'; */
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 // Input, Output, EventEmitter
 @Component({
@@ -51,6 +52,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         private apiSrvRx: PipRX,
         private _errorSrv: ErrorHelperServices,
         private _msgSrv: EosMessageService,
+        private _appContext: AppContext,
     ) {
 
     }
@@ -65,7 +67,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
-                const req = {
+                if (this._appContext.SysParms._more_json && this._appContext.SysParms._more_json.ParamsDic['SUPPORTED_USER_TYPES']) {
+                    this.masDisabled = this._appContext.SysParms._more_json.ParamsDic['SUPPORTED_USER_TYPES'].split(',');
+                }
+                /* const req = {
                     USER_PARMS: {
                         criteries: {
                             ISN_USER_OWNER: '-99',
@@ -79,7 +84,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 })
                 .catch(er => {
                     console.log('ER', er);
-                });
+                }); */
                 this.curentUser = this._userParamSrv.curentUser;
                 const d = new Date();
                 const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
@@ -203,7 +208,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         const promAll = [];
         let flag = false;
         let flagDate = false;
-        if (this.updateData) {
+        if (this.updateData && this.curentUser.USERTYPE !== value) {
             promAll.push(this.updateUser(this._userParamSrv.userContextId, {'USERTYPE': value}));
         }
         if (value === 0 || value === 3) {
@@ -220,7 +225,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
         if (!flag && n_d && String(this.form.controls['PASSWORD_DATE'].value) !== String(new Date(this.curentUser.PASSWORD_DATE))) {
             flagDate = true;
-            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${n_d.getMonth() + 1}-${n_d.getDate()}`}));
+            let month: string = String(n_d.getMonth() + 1);
+            month = month.length === 1 ? '0' + month : month;
+            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${month}-${n_d.getDate()}T00:00:00`}));
         }
         if (promAll.length > 0) {
             Promise.all(promAll)
@@ -236,6 +243,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 if (flagDate) {
                     this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
                 }
+                this.curentUser.USERTYPE = value;
                 this.formUpdate(true);
                 this.cancelValues(this.inputs, this.form);
                 this.editMode = false;

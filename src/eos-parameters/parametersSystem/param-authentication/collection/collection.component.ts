@@ -24,6 +24,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 export class AuthenticationCollectionComponent implements OnInit {
     @Output() closeCollection = new EventEmitter();
     @ViewChild('modalWord') modalWord: TemplateRef<any>;
+    @ViewChild('checkAllMarkes') checkAllMarkes;
     modalWordRef: BsModalRef;
     isMarkNode: boolean = false;
     isNewWord: boolean;
@@ -183,14 +184,25 @@ export class AuthenticationCollectionComponent implements OnInit {
         this.inputWordValue = this.currentSelectedWord.CLASSIF_NAME;
         this._openModal();
     }
+    selectOneNode() {
+        // проверка выделена ли только одна запись, для блокирования кнопки если да ставим кнопку редактирования
+        const countSelect = this.collectionList.filter(elem => elem.isSelected === true);
+        if (countSelect.length === 1) {
+            this.currentSelectedWord = countSelect[0];
+            return false;
+        }
+        return true;
+    }
     toggleAllMarks(event) {
         if (event.target.checked) {
             this.collectionList.forEach(node => {
+                node.isSelected = event.target.checked; //
                 node.marked = event.target.checked;
             });
         } else {
             this.collectionList.forEach(node => {
                 node.marked = event.target.checked;
+                node.isSelected = event.target.checked; //
                 node.selectedMark = event.target.checked;
                 // node.isSelected = false;
             });
@@ -207,24 +219,40 @@ export class AuthenticationCollectionComponent implements OnInit {
             if (node === word) {
                 node.isSelected = true;
                 node.selectedMark = true;
+                this.currentSelectedWord = word;
             } else {
+                node.marked = false;
                 node.isSelected = false;
                 node.selectedMark = false;
             }
         });
-        this.currentSelectedWord = word;
+        this.updateChecAll();
     }
     checkboxStopPropagation(event) {
         event.stopPropagation();
     }
+
     markWord(event, word) {
         if (!event) {
             word.marked = event;
+            word.isSelected = event;
             word.selectedMark = event;
             this._checkMarkNode();
         } else {
             word.marked = event;
+            word.isSelected = event;
             this.isMarkNode = true;
+        }
+        this.currentSelectedWord = word;
+        this.updateChecAll();
+    }
+    updateChecAll() {
+        const allcount = this.collectionList.length;
+        const check_count = this.collectionList.filter(elem => elem.marked === true).length;
+        if (allcount === check_count) {
+            this.checkAllMarkes.nativeElement.checked = true;
+        } else {
+            this.checkAllMarkes.nativeElement.checked = false;
         }
     }
     private _closed() {

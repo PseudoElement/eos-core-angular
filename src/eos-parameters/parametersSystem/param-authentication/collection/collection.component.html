@@ -8,14 +8,14 @@
     <button class="btn" #dTolltip="bs-tooltip" tooltip="Удалить" placement="bottom" containerClass="tooltip-info" (click)="dTolltip.hide(); deleteWords()" [disabled]="!isMarkNode">
             <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>
-    <button class="btn" tooltip="Редактировать" placement="bottom" containerClass="tooltip-info" (click)="editWord()" [disabled]="!currentSelectedWord">
+    <button class="btn" tooltip="Редактировать" placement="bottom" containerClass="tooltip-info" (click)="editWord()" [disabled]="selectOneNode() || !currentSelectedWord">
             <span class="eos-icon eos-icon-edit-blue small"></span>
     </button>
 </div>
 <div class="collection-param">
     <div class="checkbox-inline">
         <label [tooltip]="checkCheckList ? 'Снять пометки' : 'Пометить все'" placement="bottom" containerClass="tooltip-info">
-                <input type="checkbox" [checked]='checkCheckList' (change)="toggleAllMarks($event)">
+                <input type="checkbox" #checkAllMarkes [checked]='checkCheckList' (change)="toggleAllMarks($event)">
                 <span></span>
             </label>
     </div>
