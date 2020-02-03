@@ -130,9 +130,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
                 this.editModeF();
                 this._subscribe();
-                if (!this.curentUser.isTechUser) {
-                    this.getCabinetOwnUser();
-                }
             }
         });
         // if (localStorage.getItem('lastNodeDue') == null) {
@@ -210,6 +207,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         };
         return this.apiSrvRx.read(query).then(data => {
             this.isPhoto = data[0]['ISN_PHOTO'];
+            if (!this.curentUser.isTechUser) {
+                this.getCabinetOwnUser(data[0]['ISN_CABINET']);
+            }
             if (this.isPhoto) {
                 this._rtUserSel.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
                     const url = `url(data:image/${res[0].EXTENSION};base64,${res[0].CONTENTS})`;
@@ -273,18 +273,20 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    getCabinetOwnUser(): void {
-        this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
-            criteries: {
-                ISN_CABINET: this._userParamSrv['_userContextDeparnment']['ISN_CABINET'],
-            }
-        }}).then((depD: any) => {
-            if (depD.length === 1) {
-                this.singleOwnerCab = false;
-                this.getUserCbRoles();
-                this.userCanUseRole = true;
-            }
-        });
+    getCabinetOwnUser(isnCabinet): void {
+        if (isnCabinet) {
+            this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
+                criteries: {
+                    ISN_CABINET: isnCabinet,
+                }
+            }}).then((depD: any) => {
+                if (depD.length === 1) {
+                    this.singleOwnerCab = false;
+                    this.getUserCbRoles();
+                    this.userCanUseRole = true;
+                }
+            });
+        }
     }
 
     getUserCbRoles() {
