@@ -120,22 +120,24 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     submit(flag?) {
-        this.pageState = 'LOADING';
-     return  this._cardSrv.saveChenge$()
-            .then(() => {
-                this._userParamsSetSrv.ProtocolService(this._userParamsSetSrv.userContextId, 5);
-                this.pageState = 'VIEW';
-                this.btnDisabled = true;
-                if (!flag) {
-                    this.afterSubmit();
-                }
-                //  this.ngOnInit();
-                this._clearView();
-            }).catch(error => {
-                this._errorSrv.errorHandler(error);
-                this._clearView();
-                this.ngOnInit();
-            });
+        if (this._cardSrv.provPrevSubmit()) {
+            this.pageState = 'LOADING';
+            return  this._cardSrv.saveChenge$()
+                .then(() => {
+                    this._userParamsSetSrv.ProtocolService(this._userParamsSetSrv.userContextId, 5);
+                    this.pageState = 'VIEW';
+                    this.btnDisabled = true;
+                    if (!flag) {
+                        this.afterSubmit();
+                    }
+                    //  this.ngOnInit();
+                    this._clearView();
+                }).catch(error => {
+                    this._errorSrv.errorHandler(error);
+                    this._clearView();
+                    this.ngOnInit();
+                });
+        }
     }
     cancel() {
         this._clearView();

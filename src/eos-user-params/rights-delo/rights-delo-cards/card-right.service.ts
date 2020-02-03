@@ -78,6 +78,34 @@ export class CardRightSrv {
                 return nodeList;
             });
     }
+    provPrevSubmit() {
+        // проверяю есть ли право, и если ни у одного парава нет ALLOWED = 1 то выдавать ошибку и не давать сохранять
+        let flag = true;
+        this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+            let countFN = 0;
+            let countFNA = 0;
+            card.USER_CARD_DOCGROUP_List.forEach(elem => {
+                if (elem.FUNC_NUM === 1 && elem._State !== _ES.Deleted) {
+                    countFN++;
+                    if (elem.ALLOWED === 1 ) {
+                        countFNA++;
+                    }
+                }
+            });
+            if (countFN > 0 && countFNA === 0) {
+                flag = false;
+            }
+        });
+        if (!flag) {
+            this._msgSrv.addNewMessage({
+                type: 'danger',
+                title: 'Предупреждение',
+                msg: 'Пользователю дано право на регистрацию документов, но нет разрешения ни на одну группу документов!\nУкажите группу документов для регистрации'
+            });
+            return false;
+        }
+        return true;
+    }
     saveChenge$() {
         const chl = [];
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
