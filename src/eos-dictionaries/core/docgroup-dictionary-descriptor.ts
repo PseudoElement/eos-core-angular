@@ -85,18 +85,18 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         const index = this.getRecField(nodeData, DOCGROUP_INDEX);
         const due = this.getRecField(nodeData, 'DUE');
         if (index) {
-            result = result.then( () => {
+            result = result.then( (r) => {
                 return this._checkIndexDublicates(due, index).then ( res => {
                     if (res === 'NOT_UNIQUE') {
                         return this._confimDuplindex(index, confirmSrv);
                     }
-                    return true;
+                    return r;
                 });
             });
         }
 
         if (!isNewRecord) {
-            result = result.then( () => {
+            result = result.then( (r) => {
                 const ctrl = new AdvCardRKDataCtrl(this._injector);
                 return ctrl.doCorrectsRKToDG(nodeData).then(changes => {
                     if (!EosUtils.isObjEmpty(changes.fixE)) {
@@ -113,8 +113,8 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
                     if (!EosUtils.isObjEmpty(changes.fixRCTYPE)) {
                         const warn = Object.assign( {}, CONFIRM_DG_FIXE_V2);
                         warn.bodyList = [];
-                        changes.fixRCTYPE_d.forEach(r => {
-                            const title = (<TDefaultField>r.descriptor).longTitle || (<TDefaultField>r.descriptor).title;
+                        changes.fixRCTYPE_d.forEach( (rec) => {
+                            const title = (<TDefaultField>rec.descriptor).longTitle || (<TDefaultField>rec.descriptor).title;
                             if (title) {
                                 warn.bodyList.push(title);
                             }
@@ -129,7 +129,7 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
                             }
                         });
                     }
-                    return Promise.resolve(true);
+                    return Promise.resolve(r);
                 }).catch(err => {
                     const _msgSrv = this._injector.get(EosMessageService);
                     _msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
@@ -144,7 +144,7 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         // return canChangeClassifRequest('DOCGROUP_CL', 'DOCGROUP_INDEX_UNIQUE', { id: String(due), data: String(index) });
         const query = { args: { type: 'DOCGROUP_CL', oper: 'DOCGROUP_INDEX_UNIQUE', data: String(index) } };
         if (due) {
-            query['id'] = String(due);
+            query.args['id'] = String(due);
         }
         const req = { CanChangeClassif: query};
         return this.apiSrv.read(req);
