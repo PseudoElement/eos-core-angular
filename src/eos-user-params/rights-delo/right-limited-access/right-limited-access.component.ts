@@ -14,6 +14,7 @@ import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -36,10 +37,15 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public myElem: any[] = [];
     public LinksForm: FormGroup;
     public myForm: FormGroup;
-    public tabsForAccessLimited = ['Группы документов', 'Грифы', /* 'Связки' */];
+    public tabsForAccessLimited;
     public currTab = 0;
     public currentUser;
     public editFlag: boolean = false;
+    public checkCB;
+    public grifsFiles: any[] = [];
+    public grifsFileForm: FormGroup;
+    public myElemFiles: any[] = [];
+    public flagFileGrifs: boolean = true;
     grifInput: any[] = [];
     get checkGriffs() {
         let flag = false;
@@ -58,7 +64,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         }
         return flag;
     }
-
     get title() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -80,11 +85,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
         private _snap: ActivatedRoute,
+        private _appContext: AppContext,
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
+        this.tabsForAccessLimited = _appContext.cbBase ? ['Группы документов', 'Грифы РК/РКПД', 'Грифы файлов'] : ['Группы документов', 'Грифы'];
         this._snap.queryParams
         .pipe(
             takeUntil(this._ngUnsubscribe)
@@ -96,8 +103,10 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         });
     }
     ngOnInit() {
+        this.checkCB = this._appContext.cbBase;
+        const query = this.checkCB ? 'USERCARD_List,USERSECUR_List,USER_FILESECUR_List' : 'USERCARD_List,USERSECUR_List';
         this._userServices.getUserIsn({
-            expand: 'USERCARD_List,USERSECUR_List'
+            expand: query
         })
         .then(() => {
             this.currentUser = this._userServices.curentUser;
@@ -105,6 +114,10 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this._limitservise.getGrifsName()
             .then(result => {
+                if (this.currentUser['USER_FILESECUR_List']) {
+                    this.grifsFiles[0] = this.currentUser['USER_FILESECUR_List'];
+                    this.grifsFiles[1] = result;
+                }
                 this.grifInput[1] = result;
                 this.grifInput[0] = this.currentUser['USERSECUR_List'];
                 this.checkGrifs = this.currentUser['USERSECUR_List'];
@@ -162,6 +175,9 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         if (this.myElem.length > 0) {
             promise_all.push(this._limitservise.postGrifs(this.myElem), this._limitservise.deliteGrifs(this.myElem));
         }
+        if (this.myElemFiles.length > 0) {
+            promise_all.push(this._limitservise.postGrifsFiles(this.myElemFiles), this._limitservise.deliteGrifsFiles(this.myElemFiles));
+        }
         return Promise.all([...promise_all])
             .then(result => {
                 this._userServices.ProtocolService(this._userServices.userContextId, 5);
@@ -169,10 +185,14 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 .then(res => {
                     this.grifInput[0] = res[0]['USERSECUR_List'];
                     this.checkGrifs = res[0]['USERSECUR_List'];
+                    if (res[0]['USER_FILESECUR_List']) {
+                        this.grifsFiles[0] = res[0]['USER_FILESECUR_List'];
+                    }
                 });
                 this._limitservise.getAccessCode()
                     .then((params) => {
                         if (params) {
+                            this.flagFileGrifs = true;
                             this.umailsInfo.splice(0, this.umailsInfo.length);
                             this.saveParams = params.slice();
                             this.sortArray(this.saveParams);
@@ -192,6 +212,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                                 });
                                 this.checkGrifs = elem;
                             }
+                            this.grifsFileForm = null;
                             this.grifsForm = null;
                             this.myElem = [];
                             this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
@@ -219,8 +240,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.myElem = [];
         this._limitservise.getDataGrifs()
         .then(result => {
+            this.flagFileGrifs = true;
             this.grifInput[0] = result[0]['USERSECUR_List'];
             this.checkGrifs = result[0]['USERSECUR_List'];
+            if (result[0]['USER_FILESECUR_List']) {
+                this.grifsFiles[0] = result[0]['USER_FILESECUR_List'];
+            }
         })
         .then(() => {
             this.delitedSetStore.clear();
@@ -228,6 +253,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this.editModeForm();
             this._pushState();
             this.grifsForm = null;
+            this.grifsFileForm = null;
             this._limitservise.subscribe.next(true);
         });
     }
@@ -400,6 +426,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.myElem = event.data;
         this._pushState();
     }
+    SubscribFiles(event) {
+        this.flagFileGrifs = event.flag;
+        this.grifsFileForm = event.form;
+        this.myElemFiles = event.data;
+        this._pushState();
+    }
     // SubscribLInks(event) {
     //     this.flagLinks = event.flag;
     //     this.LinksForm = event.form;
@@ -418,7 +450,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this._limitservise.editEmit.next();
     }
     get getBtn() {
-        if (!this.statusBtnSub || !this.flagGrifs) {
+        if (!this.statusBtnSub || !this.flagGrifs || !this.flagFileGrifs) {
             return false;
         }
         return true;
