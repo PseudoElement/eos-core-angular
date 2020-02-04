@@ -73,7 +73,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
 
     onInput(event) {
         event.stopPropagation();
-        this._delayedTooltip();
+        this.delayedTooltip();
         if (this.viewOpts.selectionEditable) {
             this.control.setValue(event.target.value);
         }
@@ -205,7 +205,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
     }
 
     onMenuHidden() {
-        this._delayedTooltip();
+        this.delayedTooltip();
     }
 
     private _hoverNext(): any {

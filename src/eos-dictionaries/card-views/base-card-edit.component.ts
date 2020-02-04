@@ -9,6 +9,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 
 export class TabOptions {
     id: string;
@@ -87,6 +88,30 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                 }
             }
         }, 500);
+    }
+
+    public tooltipsHide() {
+        for (const key in this.inputs) {
+            if (this.inputs.hasOwnProperty(key)) {
+                const el = this.inputs[key];
+                const elDib: DynamicInputBase = el.dib;
+                if (elDib && elDib.inputTooltip) {
+                    elDib.inputTooltip.visible = false;
+                }
+            }
+        }
+    }
+
+    public tooltipsRestore() {
+        for (const key in this.inputs) {
+            if (this.inputs.hasOwnProperty(key)) {
+                const el = this.inputs[key];
+                const elDib: DynamicInputBase = el.dib;
+                if (elDib && elDib.inputTooltip) {
+                    elDib.delayedTooltip();
+                }
+            }
+        }
     }
 
     getCardTitle(): any {
