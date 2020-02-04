@@ -24,7 +24,9 @@ export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestro
         if (this.values.hasOwnProperty(key)) {
             return this.values[key];
         }
-
+        if (!this.node) {
+            return null;
+        }
         let res = this.nodeDataFull.rec[key];
 
         const field = this.fieldsDescriptionFull.rec[key];

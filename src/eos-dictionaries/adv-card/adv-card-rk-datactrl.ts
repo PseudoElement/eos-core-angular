@@ -409,6 +409,8 @@ export class AdvCardRKDataCtrl {
             const chlist = {};
             const changes = {
                 fixE: {},
+                fixRCTYPE: {},
+                fixRCTYPE_d: {},
             };
             const isEDoc = dg['E_DOCUMENT'];
             changes.fixE[DEFAULTS_LIST_NAME] = {};
@@ -425,6 +427,28 @@ export class AdvCardRKDataCtrl {
             }
 
             changes.fixE = this._calcChangesFor(dgSaved[0], chlist);
+
+            // изменения для вида РК
+
+            const rk_type = dg['RC_TYPE'];
+            const rk_type_saved = dgSaved[0]['RC_TYPE'];
+            if (rk_type !== rk_type_saved) {
+                const descrs = this.getDescriptionsRK()[DEFAULTS_LIST_NAME];
+                const saved = dgSaved[0][DEFAULTS_LIST_NAME];
+                const rec = saved.map( (s) => {
+                    return {
+                        descriptor: descrs.find(d => d.key === s.DEFAULT_ID),
+                        value: s,
+                    };
+                });
+                const chlist1 = {[DEFAULTS_LIST_NAME]: {}};
+                rec.forEach(e => {
+                    chlist1[DEFAULTS_LIST_NAME][e.descriptor.key] = null;
+                });
+                changes.fixRCTYPE = this._calcChangesFor(dgSaved[0], chlist1);
+                changes.fixRCTYPE_d = rec;
+
+            }
 
             return changes;
         });
