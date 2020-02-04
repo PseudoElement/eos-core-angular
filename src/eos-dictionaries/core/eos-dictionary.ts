@@ -16,6 +16,7 @@ import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-de
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
+import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
@@ -709,6 +710,7 @@ export class EosDictionary {
                         node.relatedLoaded = true;
                         return node;
                     });
+                case SECURITY_DICT.id:
                 case 'rubricator':
                     return this.descriptor.getRelatedSev(node.data.rec)
                         .then((sev) => {
