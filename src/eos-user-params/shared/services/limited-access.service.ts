@@ -6,6 +6,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Injectable()
 export class LimitedAccesseService {
     CurrentUser: any;
@@ -16,7 +17,8 @@ export class LimitedAccesseService {
     constructor(
         private _userServices: UserParamsService,
         private _pipSrv: UserParamApiSrv,
-        private _msgSrv: EosMessageService
+        private _msgSrv: EosMessageService,
+        private _appContext: AppContext,
         // private _piprx: PipRX
     ) {
         this.CurrentUser = this._userServices.curentUser;
@@ -158,10 +160,11 @@ preAddNewDocument(form) {
     // грифы
 
     getDataGrifs() {
+        const exp = this._appContext.cbBase ? 'USERSECUR_List,USER_FILESECUR_List' : 'USERSECUR_List';
         const user = this._userServices.userContextId;
         const query = {
             USER_CL: [user],
-            expand: 'USERSECUR_List'
+            expand: exp
         };
      return   this._pipSrv.getData(query);
     }
@@ -188,6 +191,37 @@ preAddNewDocument(form) {
                     ISN_LCLASSIF: String(this._userServices.userContextId),
                     SECURLEVEL: String(element.key)
                 }
+            });
+        });
+        return   this._pipSrv.setData(data);
+    }
+
+    postGrifsFiles(dataInput) {
+        const data = [];
+        const chengedFields = dataInput.filter(element => {
+            return !element.value;
+        });
+        chengedFields.forEach(element => {
+            data.push({
+                method: 'POST',
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USER_FILESECUR_List`,
+                data: {
+                    ISN_LCLASSIF: String(this._userServices.userContextId),
+                    SECURLEVEL: String(element.key)
+                }
+            });
+        });
+        return   this._pipSrv.setData(data);
+    }
+    deliteGrifsFiles(dataInput) {
+        const data = [];
+        const chengedFields = dataInput.filter(element => {
+            return element.value;
+        });
+        chengedFields.forEach(element => {
+            data.push({
+                method: 'DELETE',
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USER_FILESECUR_List(\'${element.key} ${this._userServices.userContextId}\')`,
             });
         });
         return   this._pipSrv.setData(data);
