@@ -15,6 +15,10 @@ export class DictionariesComponent implements OnDestroy {
     r: number = 0;
     modalWindow: Window;
 
+    get path() {
+        return this._router.url;
+    }
+
     constructor(
         private _dictSrv: EosDictService,
         private _router: Router,

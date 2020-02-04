@@ -6,7 +6,7 @@
         </span>
         <span class="text">{{dictionary.title}}</span>
     </button>
-    <button *ngIf="_router.url === '/spravochniki/SEV'" class="dictionary btn block xl-font" (click)="openModalSynchro()">
+    <button *ngIf="path === '/spravochniki/SEV'" class="dictionary btn block xl-font" (click)="openModalSynchro()">
         <span class="icon-wrapper">
             <span class="icon disabled eos-icon eos-icon-synchro-blue"></span>
         </span>
