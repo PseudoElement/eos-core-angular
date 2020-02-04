@@ -199,6 +199,15 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
     onButtonClick () {
         setTimeout(() => this.textInputSelect.nativeElement.focus(), 0);
     }
+
+    onMenuShown() {
+        this.inputTooltip.visible = false;
+    }
+
+    onMenuHidden() {
+        this._delayedTooltip();
+    }
+
     private _hoverNext(): any {
         if (!this.input.options || !this.input.options.length) {
             return;
