@@ -74,11 +74,18 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
 
     stampClick() {
+        this.tooltipsHide();
         const isn = this.data.rec['ISN_STAMP'];
         const _modalSrv = this.injector.get(BsModalService);
         const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
         (<StampBlobFormComponent>modalWindow.content).init(isn);
+
         if (modalWindow) {
+            const hideWaitSubscr = _modalSrv.onHide.subscribe( () => {
+                this.tooltipsRestore();
+                hideWaitSubscr.unsubscribe();
+            });
+
             const subscription = (<StampBlobFormComponent>modalWindow.content).onClose.subscribe((savedisn) => {
                 subscription.unsubscribe();
                 this.setValue('rec.ISN_STAMP', savedisn);

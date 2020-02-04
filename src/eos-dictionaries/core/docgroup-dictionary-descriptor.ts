@@ -5,12 +5,13 @@ import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-wind
 import {CONFIRM_DOCGROUP_CHECK_DUPLINDEXES} from '../consts/confirm.consts';
 import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 import { Injector } from '@angular/core';
-import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES, CONFIRM_DG_SHABLONRK } from 'app/consts/confirms.const';
+import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES, CONFIRM_DG_SHABLONRK, CONFIRM_DG_FIXE_V2 } from 'app/consts/confirms.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { PipRX } from 'eos-rest';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 import { DocgroupTemplateChecker } from 'eos-dictionaries/docgroup-template-config/docgroup-template-checker';
+import { TDefaultField } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
 
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
@@ -84,18 +85,18 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         const index = this.getRecField(nodeData, DOCGROUP_INDEX);
         const due = this.getRecField(nodeData, 'DUE');
         if (index) {
-            result = result.then( () => {
+            result = result.then( (r) => {
                 return this._checkIndexDublicates(due, index).then ( res => {
                     if (res === 'NOT_UNIQUE') {
                         return this._confimDuplindex(index, confirmSrv);
                     }
-                    return true;
+                    return r;
                 });
             });
         }
 
         if (!isNewRecord) {
-            result = result.then( () => {
+            result = result.then( (r) => {
                 const ctrl = new AdvCardRKDataCtrl(this._injector);
                 return ctrl.doCorrectsRKToDG(nodeData).then(changes => {
                     if (!EosUtils.isObjEmpty(changes.fixE)) {
@@ -109,7 +110,26 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
                             }
                         });
                     }
-                    return Promise.resolve(true);
+                    if (!EosUtils.isObjEmpty(changes.fixRCTYPE)) {
+                        const warn = Object.assign( {}, CONFIRM_DG_FIXE_V2);
+                        warn.bodyList = [];
+                        changes.fixRCTYPE_d.forEach( (rec) => {
+                            const title = (<TDefaultField>rec.descriptor).longTitle || (<TDefaultField>rec.descriptor).title;
+                            if (title) {
+                                warn.bodyList.push(title);
+                            }
+                        });
+                        return confirmSrv.confirm2(warn)
+                        .then((button) => {
+                            if (button && button.result === BUTTON_RESULT_YES) {
+                                nodeData['_appendChanges'] = changes.fixRCTYPE;
+                                return changes.fixRCTYPE;
+                            } else {
+                                return false;
+                            }
+                        });
+                    }
+                    return Promise.resolve(r);
                 }).catch(err => {
                     const _msgSrv = this._injector.get(EosMessageService);
                     _msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
@@ -124,7 +144,7 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         // return canChangeClassifRequest('DOCGROUP_CL', 'DOCGROUP_INDEX_UNIQUE', { id: String(due), data: String(index) });
         const query = { args: { type: 'DOCGROUP_CL', oper: 'DOCGROUP_INDEX_UNIQUE', data: String(index) } };
         if (due) {
-            query['id'] = String(due);
+            query.args['id'] = String(due);
         }
         const req = { CanChangeClassif: query};
         return this.apiSrv.read(req);

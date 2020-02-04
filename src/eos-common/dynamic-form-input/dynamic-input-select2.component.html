@@ -17,6 +17,8 @@
             [ngClass]="{ required: isRequired, disabled: disabled }"
             [ngClass]="{ readonly: readonly }"
             [autoClose]="true"
+            (onShown)="onMenuShown($event)"
+            (onHidden)="onMenuHidden($event)"
         >
             <input
                 #textInputSelect

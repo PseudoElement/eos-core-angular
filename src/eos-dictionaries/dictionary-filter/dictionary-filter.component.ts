@@ -11,6 +11,7 @@ import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
 import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { IBaseInput } from 'eos-common/interfaces';
 import { YEAR_PATTERN } from 'eos-common/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
         }, {
             controlType: 'numberIncrement',
             key: 'filter.stateYear',
-            value: new Date().getFullYear(),
+            value: String(this._storageSrv.getItem('filter.stateYear') || new Date().getFullYear()).trim(),
             label: 'Состояние на',
             pattern: YEAR_PATTERN,
             hideLabel: true,
@@ -67,6 +68,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
     constructor(
         private _dictSrv: EosDictService,
         private inputCtrlSrv: InputControlService,
+        private _storageSrv: EosStorageService,
     ) {
         this.inputs = this.inputCtrlSrv.generateInputs(this.filterInputs);
         this.searchForm = this.inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -84,8 +86,14 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
     }
     applyFilters(): any {
         const dateFilter = this.searchForm.controls['filter.stateDate'];
+        this._storageSrv.setItem('filter.stateDate', dateFilter.value);
+
         const yearFilter = this.searchForm.controls['filter.stateYear'];
+        this._storageSrv.setItem('filter.stateYear', yearFilter.value || ' ');
+
         const cb1Filter = this.searchForm.controls['filter.CB1'];
+        this._storageSrv.setItem('filter.CB1', cb1Filter.value);
+
         this._dictSrv.setMarkAllNone();
         if (this.dictId === NOMENKL_DICT.id) {
             const nomenklFilt = {};

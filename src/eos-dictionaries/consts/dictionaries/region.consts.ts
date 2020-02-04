@@ -54,12 +54,13 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     }, {
         key: 'CODE',
         title: 'Код региона',
-        pattern: /^\s*\d{0,4}\s*$/,
+        pattern: /^\s*\d{1,4}\s*$/,
         type: 'number',
         length: 4,
     }, {
         key: 'COD_OKATO',
         title: 'Код ОКАТО',
+        pattern: /^\s*\d{1,11}\s*$/,
         type: 'string',
         length: 11,
     }, {

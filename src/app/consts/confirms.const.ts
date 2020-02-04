@@ -180,6 +180,17 @@ export const CONFIRM_DG_FIXE: IConfirmWindow2 = {
     ]
 };
 
+export const CONFIRM_DG_FIXE_V2: IConfirmWindow2 = {
+    title: 'Вид РК:',
+    body: 'Вид РК не может быть отредактирован, поскольку в правилах регистрации заданы следующие специфические реквизиты:',
+    // bodyList: [],
+    bodyAfterList: 'Удалить реквизит(ы)?',
+    buttons: [
+        {title: 'Да', result: BUTTON_RESULT_YES, },
+        {title: 'Нет', result: BUTTON_RESULT_NO, isDefault: true },
+    ]
+};
+
 export const CONFIRM_COMBINE_NODES: IConfirmWindow = {
     title: 'Подтверждение объединения',
     body: 'Вы действительно хотите соединить объекты? ',

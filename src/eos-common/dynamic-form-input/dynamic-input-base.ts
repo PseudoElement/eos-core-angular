@@ -60,10 +60,10 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     onInput(event) {
         event.stopPropagation();
-        this._delayedTooltip();
+        this.delayedTooltip();
     }
 
-    _delayedTooltip(): void {
+    delayedTooltip(): void {
         this._updateMessage();
         if (this.inputTooltip.message !== '' && !this._syncTimer) {
             this.inputTooltip.visible = false;
