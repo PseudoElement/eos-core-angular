@@ -1,5 +1,5 @@
 <header>
-    <eos-param-header [title]='title' [statusBtnSub]="" (submitForm)="btnDisable() || submitDisable ? cancel() :submit()" (cancelForm)="cancel()"></eos-param-header>
+    <eos-param-header [title]='title' [statusBtnSub]="submitDisable" (submitForm)="btnDisable() ? cancel() :submit()" (cancelForm)="cancel()"></eos-param-header>
 </header>
 <div class="collection-action">
     <button class="btn" tooltip="Добавить" placement="bottom" containerClass="tooltip-info" (click)="addWord()">
