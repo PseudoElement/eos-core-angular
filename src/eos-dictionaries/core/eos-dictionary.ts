@@ -19,7 +19,7 @@ import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { ICONS_CONTAINER } from 'eos-dictionaries/consts/dictionaries/_common';
-import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
+
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
@@ -723,9 +723,9 @@ export class EosDictionary {
                 case 'link':
                     return Promise.all([
                         this.descriptor.getRelated(node.data.rec, orgDUE),
-                        // this.descriptor.getRelatedSev(node.data.rec)
+                        this.descriptor.getRelatedSev(node.data.rec)
                     ]).then(([related, sev]) => {
-                        node.data = Object.assign(node.data, { PARE_LINK_Ref: related['PARE_LINK_Ref'][0] }, { /*sev: sev*/ });
+                        node.data = Object.assign(node.data, { PARE_LINK_Ref: related['PARE_LINK_Ref'][0] }, { sev: sev });
                         node.relatedLoaded = true;
                         return node;
                     });

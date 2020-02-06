@@ -21,7 +21,7 @@ import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.compone
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
-import { takeUntil, skip } from 'rxjs/operators';
+import { takeUntil, } from 'rxjs/operators';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
 import {CopyNodeComponent} from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';

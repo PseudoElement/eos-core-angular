@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { COMMON_FIELD_NAME, ICONS_CONTAINER, COMMON_FIELD_ICONS, COMMON_FIELD_ICONS_SEV } from './_common';
+import { COMMON_FIELD_NAME, ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const LINK_TYPES = [{
