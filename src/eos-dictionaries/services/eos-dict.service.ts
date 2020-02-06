@@ -1354,7 +1354,9 @@ export class EosDictService {
 
         if (data && data.rec) {
             if (dictionary.id === PARTICIPANT_SEV_DICT.id) {
-
+                if (!isNewRecord) {
+                    return this.currentDictionary.descriptor['UpdateSaveParticipantRule'](data);
+                }
             }
 
             if (!isNewRecord && dictionary.id === DOCGROUP_DICT.id) {
