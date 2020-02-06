@@ -88,6 +88,7 @@ export class ParamRcComponent extends BaseParamComponent {
     }
     edit() {
         this.form.enable({ emitEvent: false });
+        this._updateValidators(this.form.controls);
     }
     afterInitRC() {
         this.checkDataToDisabled('RC_CTRL', '1');

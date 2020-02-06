@@ -77,16 +77,18 @@ export class ParamSearchComponent extends BaseParamComponent {
     }
     private setValidators() {
         this.form.controls['rec.FULLTEXT_EXTENSIONS'].setAsyncValidators((control: AbstractControl) => {
-            if (control.value.search(/^[^\\\/\|\:\.\*?]{0,2000}$/) !== -1) {
-                for (let index = 0; index < control.value.length; index++) {
-                    if (control.value[index].charCodeAt(0) < 31) {
-                        control.setErrors({ errorPattern: true });
-                        return Promise.resolve({ errorPattern: true });
+            if (control.value) {
+                if (control.value.search(/^[^\\\/\|\:\.\*?]{0,2000}$/) !== -1) {
+                    for (let index = 0; index < control.value.length; index++) {
+                        if (control.value[index].charCodeAt(0) < 31) {
+                            control.setErrors({ errorPattern: true });
+                            return Promise.resolve({ errorPattern: true });
+                        }
                     }
+                } else {
+                    control.setErrors({ errorPattern: true });
+                    return Promise.resolve({ errorPattern: true });
                 }
-            } else {
-                control.setErrors({ errorPattern: true });
-                return Promise.resolve({ errorPattern: true });
             }
             return Promise.resolve(null);
         });

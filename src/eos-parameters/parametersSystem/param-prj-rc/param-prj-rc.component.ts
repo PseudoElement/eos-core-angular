@@ -4,6 +4,7 @@ import { PRJ_RC_PARAM } from '../shared/consts/prj-rc.consts';
 import { USER_LISTS } from 'eos-rest';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
 
 @Component({
     selector: 'eos-param-prj-rc',
@@ -28,7 +29,7 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
             this.fiillInputForCB(list);
             this.init()
                 .then(() => {
-                    this.cancelEdit();
+                    this.cancel();
                     this.subscribeUnputs();
                 })
                 .catch(err => {
@@ -77,8 +78,12 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
     edit() {
         this.form.enable({ emitEvent: false });
     }
-    cancelEdit() {
-        this.form.disable({ emitEvent: false });
+    cancel() {
+        this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+        this.isChangeForm = false;
+        this.formChanged.emit(false);
+        this.ngOnDestroy();
+        this.init().then(() => this.form.disable({ emitEvent: false }));
     }
     ngOnDestroy() {
         this._unsubscribe.next();

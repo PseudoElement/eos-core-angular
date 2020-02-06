@@ -1,15 +1,16 @@
 <div class="eos-dictionaries">
-    <button *ngFor="let dictionary of dictionariesList"
-            class="dictionary btn block xl-font"
-            [disabled]="!isAccessEnabled(dictionary)"
-            [routerLink]="routeForDict(dictionary.id)">
+    <button *ngFor="let dictionary of dictionariesList" class="dictionary btn block xl-font"
+        [disabled]="!isAccessEnabled(dictionary)" [routerLink]="routeForDict(dictionary.id)">
         <span class="icon-wrapper">
             <span class="icon disabled eos-icon {{dictionary.iconName}}"></span>
         </span>
         <span class="text">{{dictionary.title}}</span>
     </button>
-    <div *ngFor="let i of [1,2,3,4,5]"
-        disabled
-        class="dictionary btn fict"
-    ></div>
+    <button *ngIf="path === '/spravochniki/SEV'" class="dictionary btn block xl-font" (click)="openModalSynchro()">
+        <span class="icon-wrapper">
+            <span class="icon disabled eos-icon eos-icon-synchro-blue"></span>
+        </span>
+        <span class="text">Синхронизация</span>
+    </button>
+    <div *ngFor="let i of [1,2,3,4,5]" disabled class="dictionary btn fict"></div>
 </div>

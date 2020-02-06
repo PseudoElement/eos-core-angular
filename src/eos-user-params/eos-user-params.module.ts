@@ -31,6 +31,7 @@ import { LinksLimitedComponent } from './rights-delo/right-limited-access/links/
 import { LimitedAccesseService } from './shared/services/limited-access.service';
 import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
 import { GrifsComponent } from './rights-delo/right-limited-access/grifs/grifs-component';
+import { GrifsFilesComponent } from './rights-delo/right-limited-access/grifs-files/grifs-files-component';
 import { RightAbsoluteDocGroupComponent } from './rights-delo/rights-delo-absolute-rights/right-doc-group/right-doc-group.component';
 import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.component';
 import { AbsoluteRightsClassifComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-classif/absolute-rights-classif.component';
@@ -96,6 +97,7 @@ import { AutenteficationComponent } from './auntefication/auntefication.componen
         ParamsBaseParamCBComponent,
         RightDepertmentComponent,
         GrifsComponent,
+        GrifsFilesComponent,
         RightAbsoluteDocGroupComponent,
         ListDocsTreeComponent,
         LinksLimitedComponent,

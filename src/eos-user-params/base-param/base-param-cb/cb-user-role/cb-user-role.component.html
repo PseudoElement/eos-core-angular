@@ -64,7 +64,9 @@
                 </div>
             </div>
             <div class="change-due">
-                <span class="eos-icon eos-icon-DeepUser-Blue icon-due" (click)="changeDueRole()"></span><span>Изменить должностное лицо</span>
+                <button class="btn s-font upper" [ngClass]="[btnChangeDue ? 'btn-primary' : 'btn-not-active']" [disabled]="!btnChangeDue" (click)="changeDueRole()">
+                    <span [ngClass]="[btnChangeDue ? 'eos-icon-DeepUser-Blue' : 'eos-icon-DeepUser-Grey']" class="eos-icon icon-due"></span>
+                    Изменить должностное лицо</button> 
             </div>
         </div>
     </div>

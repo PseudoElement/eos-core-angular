@@ -31,6 +31,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     selectedFixedItem: string;
     curPreDelete: IRoleCB;
     rightsDueRole: boolean = false;
+    btnChangeDue: boolean;
     public deletRole: boolean = true;
     private _subscriptionDrop: Subscription;
     private _subscriptionDrag: Subscription;
@@ -61,16 +62,23 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                 this.selectedBasicRole = item;
                 this.selectedCurrRole = null;
                 this.selectedFixedItem = null;
+                this.btnChangeDue = false;
                 break;
             case 2:
                 this.selectedBasicRole = null;
                 this.selectedCurrRole = item;
                 this.selectedFixedItem = null;
+                if (this.selectedCurrRole && this.selectedCurrRole.hasOwnProperty('due')) {
+                    this.btnChangeDue = true;
+                } else {
+                    this.btnChangeDue = false;
+                }
                 break;
             case 3:
                 this.selectedBasicRole = null;
                 this.selectedCurrRole = null;
                 this.selectedFixedItem = item;
+                this.btnChangeDue = false;
                 break;
         }
     }
@@ -166,9 +174,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     }
 
     changeDueRole() {
-        if (this.selectedCurrRole && this.selectedCurrRole.hasOwnProperty('due')) {
-            this._showDepRole(this.selectedCurrRole.role, true);
-        }
+        this._showDepRole(this.selectedCurrRole.role, true);
     }
 
     private _addRole(role: string) {
@@ -316,6 +322,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
             this.selectedBasicRole = null;
             this.selectedCurrRole = null;
             this.selectedFixedItem = null;
+            this.btnChangeDue = false;
         });
     }
 

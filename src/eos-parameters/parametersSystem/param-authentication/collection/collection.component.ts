@@ -87,7 +87,6 @@ export class AuthenticationCollectionComponent implements OnInit {
         });
         this._collectionSrv.changeWords(this.qureyForChenge)
             .then((state: Boolean) => {
-                this.submitDisable = false;
                 this.collectionList.map(list => {
                     list.state = 'old';
                     return list;
