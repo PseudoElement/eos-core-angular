@@ -6,7 +6,7 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { PipRX } from 'eos-rest';
 import { INFO_REESTR_NOT_UNIQUE } from 'eos-dictionaries/consts/messages.consts';
 import { ValidatorsControl } from 'eos-dictionaries/validators/validators-control';
-import { AbstractControl, AsyncValidatorFn, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 
 @Component({
     selector: 'eos-reestrtype-card',
