@@ -28,10 +28,10 @@
                         </ng-container>
                     </ng-container>
                 </div>
-                <div *ngIf="nodeDataFull['sev']"
-                    class="field">
+                <div class="field"
+                    *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
                     <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
-                    <p class="field-value m-font">{{nodeDataFull['sev']['GLOBAL_ID']}}</p>
+                    <p class="field-value m-font">{{nodeDataFull.sev?.GLOBAL_ID || '...'}}</p>
                 </div>
             </div>
         </div>

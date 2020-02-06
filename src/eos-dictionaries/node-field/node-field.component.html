@@ -1,6 +1,7 @@
 <div
     #el
     class="node-field"
+    [class.no-padding-left]="field.preferences?.noLeftPadding"
     [ngClass]="{ 'no-padding': node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME') }"
 >
 <!-- id="{{ field.foreignKey }}" -->
@@ -33,7 +34,7 @@
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
-        <ng-container *ngSwitchCase="types.icon">
+        <ng-container *ngSwitchCase="types.icon"> <!-- ICONS_CONTAINER -->
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
                 <span class="folder small eos-icon"
                     [ngClass]="icon.class"

@@ -21,7 +21,7 @@ import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.compone
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, skip } from 'rxjs/operators';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
 import {CopyNodeComponent} from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
@@ -73,6 +73,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.firstColumnIndex = 0;
         _dictSrv.visibleList$
         .pipe(
+            // skip(1),
             takeUntil(this.ngUnsubscribe)
         )
             .subscribe((nodes: EosDictionaryNode[]) => {

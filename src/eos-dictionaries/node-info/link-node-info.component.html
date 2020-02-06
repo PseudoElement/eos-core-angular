@@ -49,6 +49,11 @@
                         >{{value('TYPE') || '...'}}</p>
                 </div>
             </div>
+            <div class="field"
+                *ngIf="isSevIndexesEnable">
+                <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
+                <p class="field-value m-font">{{nodeDataFull.sev?.GLOBAL_ID || '...'}}</p>
+            </div>
 
             <!-- <div *ngIf="nodeDataShort"
                 class="short-info l-font">

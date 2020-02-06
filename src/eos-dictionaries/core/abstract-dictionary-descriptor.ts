@@ -25,6 +25,12 @@ import {DictionaryComponent} from 'eos-dictionaries/dictionary/dictionary.compon
 import { RestError } from 'eos-rest/core/rest-error';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
+
+export interface IDictionaryDescriptorRelatedInfo {
+    table: string;
+    order?: string;
+    data?: any; /* additional data */
+}
 export abstract class AbstractDictionaryDescriptor {
 
     /**
@@ -378,7 +384,7 @@ export abstract class AbstractDictionaryDescriptor {
     //         });
     // }
 
-    getRelatedFields2(tables: {table: string, order?: string } [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    getRelatedFields2(tables: IDictionaryDescriptorRelatedInfo [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const reqs = [];
         const tablesWReq = [];
         tables.forEach( trec => {
@@ -386,7 +392,7 @@ export abstract class AbstractDictionaryDescriptor {
                 if (loadAll) {
                     const md = this.metadata.relations.find( rel => trec.table === rel.__type);
 
-                if (md || ignoreMetadata) {
+                    if (md || ignoreMetadata) {
                         tablesWReq.push(trec.table);
                         const req: any = {[trec.table]: []};
                         if (trec.order) {
@@ -395,7 +401,7 @@ export abstract class AbstractDictionaryDescriptor {
                         reqs.push(this.apiSrv
                             .read(req));
                     }
-                } if (nodes && nodes.length) {
+                } else if (nodes && nodes.length) {
                     const md = this.metadata.relations.find( rel => trec.table === rel.__type);
                     if (md) {
                         const pktype = this._allMetadata[md.__type].properties[md.tf];
@@ -417,6 +423,12 @@ export abstract class AbstractDictionaryDescriptor {
                                 .read({[trec.table]: uniq_ids}));
                         }
                     }
+                }
+                if (trec.data && trec.data.req) /* table in table */{
+                    // по ключам пока не умеем загружать.
+                    const sev =  this.apiSrv.read<SEV_ASSOCIATION>({[trec.table]: PipRX.criteries(trec.data.req)});
+                    tablesWReq.push(trec.table);
+                    reqs.push(sev);
                 }
             }
         });
