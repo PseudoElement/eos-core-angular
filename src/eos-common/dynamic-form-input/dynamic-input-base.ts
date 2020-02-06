@@ -53,7 +53,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     onBlur() {
         this.isFocused = false;
-        this._updateMessage();
+        this.updateMessage();
         this.toggleTooltip();
         this.onControlBlur.emit(this);
     }
@@ -64,7 +64,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     }
 
     delayedTooltip(): void {
-        this._updateMessage();
+        this.updateMessage();
         if (this.inputTooltip.message !== '' && !this._syncTimer) {
             this.inputTooltip.visible = false;
             this._syncTimer = setTimeout(() => {
@@ -90,7 +90,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
             this.ngOnDestroy();
             this.subscriptions.push(control.statusChanges.subscribe(() => {
                 if (this.inputTooltip.force) {
-                    this._updateMessage();
+                    this.updateMessage();
                     this.inputTooltip.visible = true;
                     this.inputTooltip.force = false;
                 } else {
@@ -132,7 +132,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     }
 
 
-    private _updateMessage() {
+    protected updateMessage() {
         this.inputTooltip.message = this.getErrorMessage();
     }
 
@@ -140,7 +140,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         if (!this.readonly) {
             const control = this.control;
             if (control) {
-                this._updateMessage();
+                this.updateMessage();
                 this.inputTooltip.visible = /*!focused &&*/ control.invalid /*&& control.dirty*/;
                 this.inputTooltip.force = true;
             } else {

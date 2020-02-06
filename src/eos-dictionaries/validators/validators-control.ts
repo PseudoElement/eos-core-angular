@@ -1,4 +1,4 @@
-import { ValidatorFn, AbstractControl } from '@angular/forms';
+import { ValidatorFn, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 
 export enum VALIDATOR_TYPE  {
     EXTENSION_DOT = 0,
@@ -11,6 +11,18 @@ export interface ValidatorOptions {
 export class ValidatorsControl {
 
     static optionInvalidValue = -0xDEADBEEF;
+
+    static appendAsyncValidator(control: AbstractControl, fn: AsyncValidatorFn | AsyncValidatorFn[]): any {
+        const v = Array.isArray(fn) ? fn : [fn];
+        if (control.asyncValidator) {
+            v.push(control.asyncValidator);
+        }
+        control.setAsyncValidators(v);
+        control.updateValueAndValidity();
+        if (!control.valid) {
+            control.markAsDirty();
+        }
+    }
 
     static appendValidator(control: AbstractControl, fn: ValidatorFn | ValidatorFn[]): any {
         const v = Array.isArray(fn) ? fn : [fn];

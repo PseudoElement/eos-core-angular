@@ -1,4 +1,4 @@
-import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
+import { IFieldDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 
 export const COMMON_FIELD_CODE: IFieldDescriptor = {
@@ -44,6 +44,13 @@ export const COMMON_FIELD_ICONS = {
     type: 'icon',
     length: 5,
 };
+
+export const COMMON_FIELD_ICONS_SEV = Object.assign({}, COMMON_FIELD_ICONS, {
+        title: '',
+        preferences: <IFieldPreferences>{
+            noLeftPadding: true,
+        }
+});
 
 export const COMMON_FIELDS: IFieldDescriptor[] = [{
     key: 'DELETED',

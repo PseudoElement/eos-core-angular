@@ -32,7 +32,6 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             dictionaryId: DELIVERY_DICT.apiInstance,
             dictionaryOrder: 'WEIGHT',
             options: [],
-            default: 1,
     }, {
             key: 'GROUP_MAIL',
             type: 'boolean',

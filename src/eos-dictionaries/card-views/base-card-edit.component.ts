@@ -137,13 +137,14 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                     }
                 }
             }
+            this.onAfterLoadRelated();
         });
-
-        setTimeout(() => {
-            this.updateValidTabs();
-        }, 0);
-
     }
+
+    onAfterLoadRelated() {
+        this.updateValidTabs();
+    }
+
 
     /**
      * switch tabs

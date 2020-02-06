@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { COMMON_FIELD_NAME } from './_common';
+import { COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
@@ -9,15 +9,13 @@ export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINE
     title: 'Категории поручений',
     visible: true,
     iconName: 'eos-icon-category-blue',
-    listFields: ['CLASSIF_NAME'],
-
     fields: [...LINEAR_TEMPLATE.fields,
+        COMMON_FIELD_ICONS_SEV,
         Object.assign({}, COMMON_FIELD_NAME, {
             length: 64,
             isUnique: true,
             uniqueInDict: true,
         }),
-
         {
             key: 'sev',
             title: 'Индекс СЭВ',
@@ -25,8 +23,13 @@ export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINE
             isUnique: true,
         }
     ],
-
+    listFields: [
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        'CLASSIF_NAME'],
     editFields: [ ... LINEAR_TEMPLATE.editFields,
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+    ],
+    quickViewFields: ['CLASSIF_NAME',
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
 

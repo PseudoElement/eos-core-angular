@@ -9,7 +9,7 @@ import {
     SEARCH_MODES,
     IFieldView,
 } from 'eos-dictionaries/interfaces';
-import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
+import { AbstractDictionaryDescriptor, IDictionaryDescriptorRelatedInfo } from './abstract-dictionary-descriptor';
 import { EosDictionaryNode } from './eos-dictionary-node';
 
 import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
@@ -17,6 +17,9 @@ import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organiza
 import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { ICONS_CONTAINER } from 'eos-dictionaries/consts/dictionaries/_common';
+
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
@@ -433,8 +436,12 @@ export class EosDictionary {
 
     loadRelatedFieldsOptions(updatefields: IFieldView[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
         const tablelist = updatefields.filter(i => i.dictionaryId)
-            .map(i => i.dictionaryId ? { table: i.dictionaryId, order: i.dictionaryOrder} : null);
+            .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder} : null);
         const tablesUniq = Array.from(new Set(tablelist));
+
+        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex( f => f.key === ICONS_CONTAINER) !== -1) {
+            tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: {OBJECT_NAME: this.descriptor.apiInstance }}} );
+        }
 
         return this.descriptor.getRelatedFields2(tablesUniq, nodes, loadAll)
             .then((related) => {
@@ -458,6 +465,18 @@ export class EosDictionary {
                                 field.options.push(el);
                             });
                         }
+                    } else if (Features.cfg.SEV.isIndexesEnable && field.key === ICONS_CONTAINER && nodes.length) {
+                        if (nodes && nodes.length && related && related['SEV_ASSOCIATION']) {
+                            // this.descriptor.getRelatedSev(node.data.rec)
+                            nodes.forEach(node => {
+                                const id = node.data.rec['DUE'] || ('ISN#' + node.data.rec['ISN_LCLASSIF']);
+                                const sev = related['SEV_ASSOCIATION'].find( s => s['OBJECT_ID'] === id);
+                                if (sev) {
+                                    node.data.sev = sev;
+                                }
+                            });
+
+                        }
                     }
                 });
             });
@@ -465,28 +484,11 @@ export class EosDictionary {
 
     getListViewWithRelated(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         const fields = this.descriptor.record.getListView({});
-        // const fields = this.descriptor.record.getFieldSet(E_FIELD_SET.list);
         const infoFields = this.descriptor.record.getInfoView({});
         const updatefields = fields.concat(customFields).concat(infoFields);
         return this.loadRelatedFieldsOptions(updatefields, nodes, false).then(() => {
             return fields;
         });
-
-        // const descriptor = this.dictSrv.currentDictionary.descriptor;
-        // const list = descriptor.record.getEditView({});
-
-        // this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId), [], true).then((d) => {
-        //     for (const key in this.inputs) {
-        //         if (this.inputs.hasOwnProperty(key)) {
-        //             const input = this.inputs[key];
-        //             if (input && input.options && input.controlType === E_FIELD_TYPE.select) {
-        //                 const value = this.getValue(key);
-        //                 input.options = input.options.filter(o => (!o.disabled || String(value) === String(o.value)));
-        //             }
-        //         }
-        //     }
-        // });
-
     }
 
     getEditDescriptor(): {} {

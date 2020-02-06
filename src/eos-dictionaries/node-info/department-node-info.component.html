@@ -120,9 +120,9 @@
                             [routerLink]="'/spravochniki/organization/'+nodeDataFull.organization?.DUE + '/view'">{{nodeDataFull.organization?.CLASSIF_NAME}}</a></p>
                 </div>
                 <div class="field"
-                    *ngIf="nodeDataFull['sev']">
+                    *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
                     <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
-                    <p class="field-value m-font">{{nodeDataFull['sev']['GLOBAL_ID']}}</p>
+                    <p class="field-value m-font">{{nodeDataFull.sev?.GLOBAL_ID || '...'}}</p>
                 </div>
             </div>
         </div>

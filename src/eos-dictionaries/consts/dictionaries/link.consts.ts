@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { COMMON_FIELD_NAME } from './_common';
+import { COMMON_FIELD_NAME, ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const LINK_TYPES = [{
@@ -24,12 +24,13 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     visible: true,
     iconName: 'eos-icon-chain-blue',
     fields: [...LINEAR_TEMPLATE.fields,
-    Object.assign({}, COMMON_FIELD_NAME, {
-        isUnique: true,
-        uniqueInDict: true,
-        required: false,
-        length: 64,
-    }), {
+        COMMON_FIELD_ICONS_SEV,
+        Object.assign({}, COMMON_FIELD_NAME, {
+            isUnique: true,
+            uniqueInDict: true,
+            required: false,
+            length: 64,
+        }), {
         key: 'LINK',
         title: 'Связка',
         type: 'string',
@@ -83,7 +84,11 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         'PARE_LINK_Ref', 'ISN_PARE_LINK',
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
         ],
-    listFields: ['LINK', 'PAIR_LINK', 'TYPE', ],
-    quickViewFields: ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE', 'TYPE'],
+    listFields: [
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        'LINK', 'PAIR_LINK', 'TYPE', ],
+    quickViewFields: ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE', 'TYPE',
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+    ],
     allVisibleFields: ['LINK_INDEX', 'NOTE', 'sev', ],
 });
