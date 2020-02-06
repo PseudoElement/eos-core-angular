@@ -117,6 +117,26 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            if (elem.label === 'Подписание проектов') {
+                array.push({
+                    controlType: E_FIELD_TYPE.boolean,
+                    key: '31',
+                    label: 'Исполнение проектов',
+                    data: {
+                        isSelected: false,
+                        rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+                    }
+                });
+                array.push({
+                    controlType: E_FIELD_TYPE.boolean,
+                    key: '32',
+                    label: 'Чтение проектов',
+                    data: {
+                        isSelected: false,
+                        rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+                    }
+                });
+            }
         });
         return array;
     }
