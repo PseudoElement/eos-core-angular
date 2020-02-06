@@ -68,6 +68,12 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
         if (param.url === 'authentication' && (this._appContext.limitCardsUser.length > 0 || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0')) {
             return false;
         }
+        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS[1] === '0')) {
+            return false;
+        }
+        if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
+            return false;
+        }
         return true;
     }
     private _askForSaving(): Promise<boolean> {
