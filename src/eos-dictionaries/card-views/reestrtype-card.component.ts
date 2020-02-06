@@ -28,7 +28,10 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
 
     ngOnInit(): void {
         super.ngOnInit();
+    }
 
+    onAfterLoadRelated() {
+        super.onAfterLoadRelated();
         const req = { REESTRTYPE_CL: ''};
         this._apiSrv.read(req).then ( data => {
             ValidatorsControl.appendValidator(this.form.controls['rec.ISN_DELIVERY'], this._isReestrsUniqueValidator(data));
@@ -39,6 +42,11 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
                     o.disabled = true;
                 }
             });
+            if (this.isNewRecord && this.inputs['rec.ISN_DELIVERY'].options[0]) {
+                this.setValue('rec.ISN_DELIVERY', this.inputs['rec.ISN_DELIVERY'].options[0].value);
+                // this.form.controls['rec.ISN_DELIVERY'].updateValueAndValidity();
+                this.inputs['rec.ISN_DELIVERY'].dib.delayedTooltip();
+            }
         });
     }
 
