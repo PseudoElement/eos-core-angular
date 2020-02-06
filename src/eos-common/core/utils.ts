@@ -143,7 +143,7 @@ export class EosUtils {
 
     static getValidateMessages(inputs: any): string[] {
         const invalid = [];
-        // const inputs = this.cardEditRef.inputs;
+
         for (const inputKey of Object.keys(inputs)) {
             const input = inputs[inputKey];
             const inputDib = input.dib;

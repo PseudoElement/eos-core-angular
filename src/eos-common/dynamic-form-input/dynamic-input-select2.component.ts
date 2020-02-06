@@ -205,7 +205,9 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
     }
 
     onMenuHidden() {
-        this.delayedTooltip();
+        setTimeout(() => {
+            this.updateMessage();
+        }, 100);
     }
 
     private _hoverNext(): any {

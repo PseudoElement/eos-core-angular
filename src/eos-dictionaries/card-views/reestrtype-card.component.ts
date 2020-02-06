@@ -1,17 +1,19 @@
-import { Component, Injector, OnChanges } from '@angular/core';
+import { Component, Injector, OnChanges, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { CONFIRM_REESTRTYPE_DELIVERY_CHANGE } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { PipRX } from 'eos-rest';
 import { INFO_REESTR_NOT_UNIQUE } from 'eos-dictionaries/consts/messages.consts';
+import { ValidatorsControl } from 'eos-dictionaries/validators/validators-control';
+import { AbstractControl, AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 
 @Component({
     selector: 'eos-reestrtype-card',
     templateUrl: 'reestrtype-card.component.html',
     styleUrls: ['./reestrtype-card.component.scss']
 })
-export class ReestrtypeCardComponent extends BaseCardEditComponent implements OnChanges {
+export class ReestrtypeCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
 
     private _deliv_checkneed: boolean;
 
@@ -24,11 +26,46 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
         this._deliv_checkneed = true;
     }
 
+    ngOnInit(): void {
+        super.ngOnInit();
+
+        const req = { REESTRTYPE_CL: ''};
+        this._apiSrv.read(req).then ( data => {
+            ValidatorsControl.appendValidator(this.form.controls['rec.ISN_DELIVERY'], this._isReestrsUniqueValidator(data));
+            this.inputs['rec.ISN_DELIVERY'].options.forEach( o => {
+                const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
+                const ex = data.find (d => d['ISN_LCLASSIF'] !== isn && d['ISN_DELIVERY'] === o.value);
+                if (ex) {
+                    o.disabled = true;
+                }
+            });
+        });
+    }
+
     ngOnChanges() {
         if (this.form) {
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
+    }
+
+    private _isReestrsUniqueValidator (data: any[]): ValidatorFn {
+        return (control: AbstractControl) => {
+            const deliv_id = Number(control.value);
+            const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
+            let res = null;
+            for (let i = 0; i < data.length; i++) {
+                const e = data[i];
+                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn) {
+                    res = e;
+                    const msg = Object.assign({}, INFO_REESTR_NOT_UNIQUE);
+                    msg.msg = msg.msg
+                        .replace('{{exists}}', String(res['CLASSIF_NAME']));
+                    return {valueError: msg.msg};
+                }
+            }
+            return null;
+        };
     }
 
     private updateForm(formChanges: any) {
@@ -37,14 +74,6 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
         const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
 
         if (oldDelivery !== newDeliv) {
-            this._checkReestrsUnique(isn, Number(newDeliv)).then ( res => {
-                if (res) {
-                    const msg = Object.assign({}, INFO_REESTR_NOT_UNIQUE);
-                    msg.msg = msg.msg
-                        .replace('{{exists}}', String(res['CLASSIF_NAME']));
-                    this._msgSrv.addNewMessage(msg);
-                }
-            });
 
             if (!this.isNewRecord && this._deliv_checkneed) {
                 this._checkReestrs(isn).then ( res => {
@@ -70,18 +99,6 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
 
     }
 
-    private _checkReestrsUnique (isn, deliv_id): Promise<any> {
-        const req = { REESTRTYPE_CL: ''};
-        return this._apiSrv.read(req).then (data => {
-            for (let i = 0; i < data.length; i++) {
-                const e = data[i];
-                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn) {
-                    return Promise.resolve(e);
-                }
-            }
-            return Promise.resolve(null);
-        });
-    }
 
     private _checkReestrs(isn): Promise<any> {
         // OData.svc/CanChangeClassif?type=%27REESTRTYPE_CL%27&oper=%27CHANGE_ISN_DELIVERY%27&id=%273780%27
