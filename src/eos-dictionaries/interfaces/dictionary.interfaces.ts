@@ -62,6 +62,7 @@ export interface IDictionaryLink {
 export interface IFieldPreferences {
     minColumnWidth?: number; /* node-list style: min-width.px */
     hasIcon?: boolean; /* flag for enable icon (department, docgroups) */
+    noLeftPadding?: boolean; /* flag for icons without padding (ex: sev) */
 }
 export interface IFieldDescriptor {
     key: string;

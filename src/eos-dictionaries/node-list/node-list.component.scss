@@ -39,6 +39,7 @@
     line-height: unset;
 }
 
+
 .eos-table {
     min-width: 100%;
 }
@@ -94,6 +95,9 @@
         .eos-icon {
             margin: -5px 0 0;
             vertical-align: middle;
+        }
+        &.no-padding-left {
+            padding-left: 0;
         }
     }
 }

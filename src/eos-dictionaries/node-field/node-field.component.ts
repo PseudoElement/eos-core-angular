@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, } from '@angular/core';
 import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 interface ISpecialIcon {
     class: string;
@@ -50,6 +51,13 @@ export class NodeFieldComponent implements OnInit {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-checkbox-grey' : 'eos-icon-checkbox-blue',
                     tooltip: 'Номерообразование',
+                });
+            }
+
+            if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-shared-folder-grey' : 'eos-icon-shared-folder-blue',
+                    tooltip: 'Индекс СЭВ',
                 });
             }
 

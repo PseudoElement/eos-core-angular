@@ -1,7 +1,7 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { ISelectOption } from 'eos-common/interfaces';
-import { COMMON_FIELD_NAME } from './_common';
+import { COMMON_FIELD_NAME, COMMON_FIELD_NOTE } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
@@ -26,6 +26,10 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
     visible: true,
     iconName: 'eos-icon-visa-blue',
     fields: LINEAR_TEMPLATE.fields.concat([
+        Object.assign({}, COMMON_FIELD_NOTE,
+        {
+            length: 255,
+        }),
         Object.assign({}, COMMON_FIELD_NAME,
         {
             isUnique: true,

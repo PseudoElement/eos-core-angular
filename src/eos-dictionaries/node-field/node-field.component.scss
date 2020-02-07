@@ -29,6 +29,9 @@
     .no-padding {
         padding: 0;
     }
+    &.no-padding-left {
+        padding-left: 0;
+    }
     .node-field-checkbox {
         padding-right: 24px;
         text-align: center;

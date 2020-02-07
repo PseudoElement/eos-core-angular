@@ -23,6 +23,11 @@
                     <p class="field-value m-font">{{nodeDataFull.rec['NOTE'] || '...'}}</p>
                 </div>
             </div>
+            <div class="field"
+                *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
+                <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
+                <p class="field-value m-font">{{nodeDataFull.sev?.GLOBAL_ID || '...'}}</p>
+            </div>
         </div>
     </div>
 </div>

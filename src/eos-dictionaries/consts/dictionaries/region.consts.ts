@@ -1,7 +1,7 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 /*
 */
@@ -19,7 +19,9 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
-    fields: COMMON_FIELDS.concat([{
+    fields: COMMON_FIELDS.concat([
+        COMMON_FIELD_ICONS_SEV,
+    {
         key: 'DUE',
         type: 'string',
         title: 'ID',
@@ -86,8 +88,12 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     ],
     searchFields: [/*'CODE', 'COD_OKATO',*/ 'CLASSIF_NAME', /*'NOTE'*/],
     fullSearchFields: ['CODE', 'COD_OKATO', 'CLASSIF_NAME', 'NOTE'],
-    quickViewFields: ['CODE', 'NOTE', 'COD_OKATO'],
+    quickViewFields: ['CODE', 'NOTE', 'COD_OKATO',
+        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+    ],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CLASSIF_NAME'],
+    listFields: [
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        'CLASSIF_NAME'],
     allVisibleFields: ['CODE', 'NOTE', 'COD_OKATO'],
 };
