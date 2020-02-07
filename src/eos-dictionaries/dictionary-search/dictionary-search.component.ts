@@ -64,6 +64,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     ngOnInit(): void {
         this.subscriptions.push(this._dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
+        this.subscriptions.push(this._dictSrv.searchInfo$.subscribe((_d) => this.clearForm()));
     }
     get dictId(): string {
         return this.dictionary.id;

@@ -194,12 +194,6 @@ export const DANGER_ACCESS_DENIED_DICT: IMessage = {
     msg: 'Недостаточно прав доступа к справочнику'
 };
 
-export const INFO_REESTR_NOT_UNIQUE: IMessage = {
-    type: 'info',
-    title: 'Внимание:',
-    msg: 'Значение реестра не уникально. Существует {{exists}}'
-};
-
 export const INFO_OPERATION_COMPLETE: IMessage = {
     type: 'info',
     title: 'Внимание:',

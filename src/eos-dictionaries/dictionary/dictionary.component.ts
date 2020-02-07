@@ -176,6 +176,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     return;
                 }
                 this.accessDenied = false;
+                if (this._nodeId && this._nodeId !== params.nodeId) {
+                    this.clearFindSettings();
+                }
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
@@ -358,6 +361,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     clearFindSettings() {
         this.searchSettings = new SearchFormSettings;
         this.fastSearch = false;
+        this._dictSrv.emitResetSearch();
         this._dictSrv.setStoredSearchSettings(this.searchSettings);
     }
 
