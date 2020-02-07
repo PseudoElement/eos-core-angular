@@ -8,6 +8,10 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { BsModalService } from 'ngx-bootstrap';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
+import { EosUtils } from 'eos-common/core/utils';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 
 
 interface IToDeclineFields {
@@ -15,6 +19,7 @@ interface IToDeclineFields {
     gender?: boolean;
     dep?: boolean;
     adv?: boolean;
+    nomenative?: boolean;
 }
 
 @Component({
@@ -31,7 +36,8 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
     constructor(
         private injector: Injector,
-        private _msgSrv: EosMessageService
+        private _msgSrv: EosMessageService,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         super(injector);
     }
@@ -48,6 +54,59 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         //         [this.form.controls['rec.START_DATE'].validator, Validators.required]
         //     );
         // }
+        // this.data
+
+        if (!this.isNewRecord) {
+            const changes = [];
+            const inObj: any = {};
+            let fio;
+            if (this.data.rec['SURNAME'] && !this.data.printInfo['NAME'] && !this.data.printInfo['SURNAME'] && !this.data.printInfo['PATRON'] ) {
+
+                fio = this.data.rec['SURNAME'].replace(/\./g, ' ');
+                changes.push('фамилия, имя, отчество');
+                inObj.fio = true;
+
+                changes.push('Дополнительные сведения');
+                inObj.nomenative = true;
+            } else {
+                fio = this.data.printInfo['SURNAME'] + ' ' + this.data.printInfo['NAME'] + ' ' + this.data.printInfo['PATRON'];
+            }
+
+            if (this.data.printInfo['GENDER'] === null) {
+                inObj.gender = true;
+            }
+
+            if (!EosUtils.isObjEmpty(inObj)) {
+                this.fillDeclineFields(inObj, fio);
+                if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
+                    changes.push('пол');
+                }
+                const warn: IConfirmWindow2 = {
+                    title: 'Ведение справочников',
+                    body: 'Новые поля карточки ДЛ:',
+                    bodyList: changes,
+                    bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
+                    buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+                };
+                setTimeout(() => {
+                    this._confirmSrv.confirm2(warn);
+                }, 10);
+
+            }
+
+
+        }
+
+        this.prevValues = this.makePrevValues(this.data);
+        this.tabsToArray(this.fieldGroups);
+        if (this.form) {
+            this.unsubscribe();
+            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
+                this.updateForm(formChanges);
+                this.updateValidTabs();
+            });
+        }
+
     }
 
     ngOnChanges() {
@@ -60,16 +119,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.photo = null;
         }
 
-        this.prevValues = this.makePrevValues(this.data);
-        this.tabsToArray(this.fieldGroups);
 
-        if (this.form) {
-            this.unsubscribe();
-            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
-                this.updateForm(formChanges);
-                this.updateValidTabs();
-            });
-        }
     }
 
 
@@ -248,10 +298,16 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             // if (n === null || n === '') {
             //     this.setValue('printInfo.SURNAME', res.SURNAME);
             // }
-            delete data.SURNAME;
             delete data.DUTY;
-            delete data.NAME;
-            delete data.PATRON;
+            if (!opt.nomenative) {
+                delete data.SURNAME;
+                delete data.NAME;
+                delete data.PATRON;
+            } else {
+                data.NAME = rn.firstName(rn.gcaseNom);
+                data.SURNAME = rn.lastName(rn.gcaseNom);
+                data.PATRON = rn.middleName(rn.gcaseNom);
+            }
 
             // console.log(data);
 
