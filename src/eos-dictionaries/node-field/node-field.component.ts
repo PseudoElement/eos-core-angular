@@ -4,6 +4,7 @@ import { HintConfiguration } from '../long-title-hint/hint-configuration.interfa
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 interface ISpecialIcon {
     class: string;
@@ -29,7 +30,7 @@ export class NodeFieldComponent implements OnInit {
     iconsArray: ISpecialIcon[] = [];
     private _hasFolderIcon: boolean;
 
-    constructor() {
+    constructor(private _appCntext: AppContext) {
     }
 
     viewNode(evt: Event) {
@@ -38,7 +39,6 @@ export class NodeFieldComponent implements OnInit {
 
     ngOnInit(): void {
         this._hasFolderIcon = this.field.preferences && this.field.preferences.hasIcon;
-
         if (this.field.type === E_FIELD_TYPE.icon) {
             if (this.node.data.rec['CARD_FLAG']) {
                 this.iconsArray.push({
@@ -51,6 +51,12 @@ export class NodeFieldComponent implements OnInit {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-checkbox-grey' : 'eos-icon-checkbox-blue',
                     tooltip: 'Номерообразование',
+                });
+            }
+            if (this.node.data.rec['CONFIDENTIONAL'] && this._appCntext.cbBase) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
+                    tooltip: 'ДСП файлы',
                 });
             }
 
