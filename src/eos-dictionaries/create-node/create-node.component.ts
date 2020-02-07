@@ -155,7 +155,12 @@ export class CreateNodeComponent {
     }
 
     private _confirmSave(data, isNewRecord: boolean): Promise<boolean> {
-        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord);
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord).then( res => {
+            if (res && this.cardEditRef) {
+                return this.cardEditRef.confirmSave();
+            }
+            return res;
+        });
     }
 
     /**

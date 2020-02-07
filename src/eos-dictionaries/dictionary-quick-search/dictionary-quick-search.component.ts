@@ -1,6 +1,8 @@
 import {AfterViewInit, Component, ElementRef, ViewChild, EventEmitter, Output, OnInit, Input} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, SearchFormSettings } from 'eos-dictionaries/interfaces';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { SEARCH_EMPTY } from 'eos-dictionaries/consts/messages.consts';
 
 @Component({
     selector: 'eos-dictionary-quick-search',
@@ -25,7 +27,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
 
     constructor(
         private _dictSrv: EosDictService,
-        // private _msgSrv: EosMessageService,
+        private _msgSrv: EosMessageService,
         // private _storage: EosStorageService,
     ) { }
 
@@ -51,8 +53,13 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
             this.closeQuickForm();
         }
         if (evt.keyCode === 13) {
-            // if (this.searchDone) {
+            if (this.settings.quick.data) {
                 this.searchRun.emit(this.settings);
+            } else {
+                this._msgSrv.addNewMessage(SEARCH_EMPTY);
+            }
+            // if (this.searchDone) {
+
                 // this.srch.quickString = (this.srch.quickString) ? this.srch.quickString.trim() : '';
                 // if (this.srch.quickString !== '') {
                 //     this._dictSrv.setMarkAllNone();

@@ -285,7 +285,23 @@ export class RussianName {
     getSex () {
         if (this.mn.length > 2) {
             switch (this.mn.substr(this.mn.length - 2)) {
+                case 'лы': return this.sexM;
                 case 'ич': return this.sexM;
+                case 'на': return this.sexF;
+                case 'зы': return this.sexF;
+                case 'ва': return this.sexF;
+            }
+        }
+
+        if (this.ln.length > 2) {
+            switch (this.ln.substr(this.ln.length - 2)) {
+                case 'ов': return this.sexM;
+                case 'ёв': return this.sexM;
+                case 'ев': return this.sexM;
+                case 'ий': return this.sexM;
+                case 'ин': return this.sexM;
+                case 'ая': return this.sexF;
+                case 'ва': return this.sexF;
                 case 'на': return this.sexF;
             }
         }

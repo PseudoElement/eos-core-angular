@@ -22,19 +22,22 @@ export class CaCategoryDictionaryDescriptor extends DictionaryDescriptor {
             'CA_CATEGORY.CA_SUBJECT_1024': nodeData.rec.CA_SUBJECT,
             'ISN_EDS_CATEGORY': String(nodeData.rec.ISN_EDS_CATEGORY)}), })
             .then((data) => {
-                if (data && data. length) {
-                    const uniqueMessage: IConfirmWindow2 = {
-                        title: 'Не удалось сохранить',
-                        body: 'Корневой сертификат уже был добавлен ранее',
-                        buttons: [{
-                            title: 'ОК',
-                            result: BUTTON_RESULT_CANCEL,
-                            isDefault: true,
-                        }, ],
-                    };
-                    return confirmSrv.confirm2(uniqueMessage).then( (button) => {
-                        return false;
-                    });
+                if (data && data.length) {
+                    const ex = data.filter(d => nodeData.rec['ISN_CA_CATEGORY'] !== d['ISN_CA_CATEGORY']);
+                    if (ex.length) {
+                        const uniqueMessage: IConfirmWindow2 = {
+                            title: 'Не удалось сохранить',
+                            body: 'Корневой сертификат уже был добавлен ранее',
+                            buttons: [{
+                                title: 'ОК',
+                                result: BUTTON_RESULT_CANCEL,
+                                isDefault: true,
+                            }, ],
+                        };
+                        return confirmSrv.confirm2(uniqueMessage).then( (button) => {
+                            return false;
+                        });
+                    }
                 }
                 return true;
             });

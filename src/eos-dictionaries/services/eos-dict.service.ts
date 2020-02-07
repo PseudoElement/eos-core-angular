@@ -80,6 +80,7 @@ export class EosDictService {
     private _currentList$: BehaviorSubject<EosDictionaryNode[]>;
     private _visibleList$: BehaviorSubject<EosDictionaryNode[]>;
     private _markInfo$: BehaviorSubject<MarkedInformation>;
+    private _searchInfo$: BehaviorSubject<any>;
     private _viewParameters$: BehaviorSubject<IDictionaryViewParameters>;
     private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
     private _mDictionaryPromise: Map<string, Promise<EosDictionary>>;
@@ -114,6 +115,10 @@ export class EosDictService {
 
     get listDictionary$(): Observable<EosDictionary> {
         return this._listDictionary$.asObservable();
+    }
+
+    get searchInfo$(): Observable<EosDictionary> {
+        return this._searchInfo$.asObservable();
     }
 
     /* Observable treeNode for subscribing on updates in components */
@@ -254,6 +259,7 @@ export class EosDictService {
         this._listNode$ = new BehaviorSubject<EosDictionaryNode>(null);
         this._dictionary$ = new BehaviorSubject<EosDictionary>(null);
         this._listDictionary$ = new BehaviorSubject<EosDictionary>(null);
+        this._searchInfo$ = new BehaviorSubject<any>(null);
         this._mDictionaryPromise = new Map<string, Promise<EosDictionary>>();
         this._currentList$ = new BehaviorSubject<EosDictionaryNode[]>([]);
         this._viewParameters$ = new BehaviorSubject<IDictionaryViewParameters>(this.viewParameters);
@@ -928,10 +934,14 @@ export class EosDictService {
         }
     }
 
+    emitResetSearch() {
+        this._searchInfo$.next(null);
+    }
 
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
         this.setMarkAllNone();
+        this.emitResetSearch();
         return this._reloadList();
     }
 
