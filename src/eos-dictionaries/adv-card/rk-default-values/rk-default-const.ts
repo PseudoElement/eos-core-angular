@@ -1449,7 +1449,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         title: 'Экз №',
         pattern: DIGIT4_WITH_PERIOD_LIST_SEPARATED,
-        length: 2000,
+        length: 64,
         order: 10,
         // classif_id: NULL
     },
