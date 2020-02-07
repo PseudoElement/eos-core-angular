@@ -75,6 +75,13 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         return newData;
     }
 
+    confirmSave(): Promise<boolean> {
+        if (this.baseCardEditRef) {
+            return this.baseCardEditRef.confirmSave();
+        }
+        return Promise.resolve(true);
+    }
+
     @HostListener('window:beforeunload', ['$event'])
     canWndUnload(evt: BeforeUnloadEvent): any {
         if (this.isChanged) {

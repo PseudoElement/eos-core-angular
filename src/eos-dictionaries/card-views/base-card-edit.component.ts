@@ -67,6 +67,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
 
     }
 
+
     public static autoFocusOnFirstStringElement(parentTag: string) {
         setTimeout( () => {
             let autofocusFlag = false;
@@ -88,6 +89,10 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                 }
             }
         }, 500);
+    }
+
+    public confirmSave(): Promise<boolean> {
+        return Promise.resolve(true);
     }
 
     public tooltipsHide() {

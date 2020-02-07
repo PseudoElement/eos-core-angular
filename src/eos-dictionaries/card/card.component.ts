@@ -466,7 +466,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
 
     private _confirmSave(data, isNewRecord): Promise<boolean> {
-        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord);
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord).then( res => {
+            if (res && this.cardEditRef) {
+                return this.cardEditRef.confirmSave();
+            }
+            return res;
+        });
     }
 
     private _save(data: any): Promise<any> {
