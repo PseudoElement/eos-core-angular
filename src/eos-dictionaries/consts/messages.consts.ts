@@ -98,6 +98,12 @@ export const SEARCH_NOT_DONE: IMessage = {
     msg: 'Пожалуйста подождите.'
 };
 
+export const SEARCH_EMPTY: IMessage = {
+    title: 'Справочники',
+    type: 'warning',
+    msg: 'Не заданы поисковые критерии'
+};
+
 export const FILE_IS_NOT_IMAGE: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
