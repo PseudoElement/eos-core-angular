@@ -11,7 +11,6 @@ import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
 @Component({
     selector: 'eos-remaster-seb',
-    styleUrls: ['remaster-seb.component.scss'],
     templateUrl: 'remaster-seb.component.html',
     providers: [FormHelperService]
 })

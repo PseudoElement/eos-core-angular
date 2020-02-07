@@ -3,7 +3,7 @@ const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
 const REG_MIN_VAL_MORE: RegExp = /^([1-9]{1}[0-9]{0,1}[0-9]{0,1})$/;
 export const OTHER_USER_TRANSFER: IBaseUsers = {
     id: 'other',
-    title: 'Прочие',
+    title: 'Передача',
     apiInstance: 'USER_PARMS',
     fields: [
         {
@@ -53,7 +53,7 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
 };
 export const OTHER_USER_ADDRESSES: IBaseUsers = {
     id: 'other',
-    title: 'Прочие',
+    title: 'Передача',
     apiInstance: 'USER_PARMS',
     fields: [
         {
@@ -106,7 +106,7 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
 };
 export const OTHER_USER_REESTR: IBaseUsers = {
     id: 'other',
-    title: 'Прочие',
+    title: 'Передача',
     apiInstance: 'USER_PARMS',
    fields: [
     {
@@ -172,7 +172,7 @@ export const OTHER_USER_REESTR: IBaseUsers = {
 };
 export const OTHER_USER_REESTR_CB: IBaseUsers = {
     id: 'other',
-    title: 'Прочие',
+    title: 'Передача',
     apiInstance: 'USER_PARMS',
    fields: [
     {
@@ -297,7 +297,7 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
 };
 export const OTHER_USER_SHABLONY: IBaseUsers = {
     id: 'other',
-    title: 'Прочие',
+    title: 'Передача',
     apiInstance: 'USER_PARMS',
     fields: [
         {
@@ -476,7 +476,7 @@ export const OTHER_USER_SHABLONY: IBaseUsers = {
 };
 export const OTHER_USER: IBaseUsers = {
     id: 'other',
-    title: 'Прочие',
+    title: 'Передача',
     apiInstance: 'USER_PARMS',
     fields: [
         {

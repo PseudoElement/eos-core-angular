@@ -42,13 +42,11 @@ import { UserParamElSignatureComponent } from '../eos-user-params/user-params-se
 import { SignaturePopupComponent } from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
 import { SignatureAddComponent } from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
 import { UserParamsProfSertComponent } from '../eos-user-params/user-params-set/user-param-prof-sert/user-params-prof-sert.component';
-import { RemasterEmailComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component';
 import { RemasterService } from '../eos-user-params/user-params-set/shared-user-param/services/remaster-service';
 import { RemasterDopOperationComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-dop/remaster-dop-operation.component';
 import { RemasterAddressesComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-addresses/remaster-addresses.conponent';
 import { RemasterScanComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-scan/remaster-scan.conponent';
 import { RemasterAutoSearchComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
-import { RemasterSebComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
 import { RemasterRcComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
 import { RtCabinetsFoldersComponent } from './rights-delo/rights-cabinets/rt-cabinets-folders/rt-cabinets-folders.component';
 import { RigthsCabinetsServices } from '../eos-user-params/shared/services/rigths-cabinets.services';
@@ -59,7 +57,7 @@ import {UserParamTransferComponent} from './user-params-set/user-param-other/use
 import {UserParamAddressesComponent} from './user-params-set/user-param-other/user-param-addresses/user-param-addresses.component';
 import {UserParamReestrComponent} from './user-params-set/user-param-other/user-param-reestr/user-param-reestr.component';
 import {UserParamReestrCBComponent} from './user-params-set/user-param-other/user-param-reestr-cb/user-param-reestr-cb.component';
-import {UserParamShablonyComponent} from './user-params-set/user-param-other/user-param-shablony/user-param-shablony.component';
+import {UserParamShablonyComponent} from './user-params-set/user-param-shablony/user-param-shablony.component';
 import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
 import { OrganizEditTypeComponent } from './rights-delo/rights-delo-absolute-rights/organiz-edit-type/organiz-edit-type.component';
 import { EosReportSummaryProtocolComponent } from './report/sum-protocol/sum-protocol.component';
@@ -75,11 +73,16 @@ import { CbUserRoleComponent } from './base-param/base-param-cb/cb-user-role/cb-
 import { DragulaModule } from 'ng2-dragula';
 import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/addGrif/addGrif.component';
 import { AutenteficationComponent } from './auntefication/auntefication.component';
+import { UserParamExtendExchComponent } from './user-params-set/user-param-ext-exch/user-param-ext-exch.component';
+import { RemasterSebComponent } from './user-params-set/user-param-ext-exch/remaster-seb/remaster-seb.component';
+import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/remaster-email/remaster-email.component';
+
 @NgModule({
     declarations: [
         UserParamsComponent,
         UserParamHeaderComponent,
         UserParamRegistrationRemasterComponent,
+        UserParamExtendExchComponent,
         UserParamCabinetsComponent,
         UserParamRCComponent,
         UserParamDirectoriesComponent,

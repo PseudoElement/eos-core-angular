@@ -17,17 +17,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Эл. почта', 'Сканирование', 'Автопоиск', 'СЭВ', 'РКПД'];
+    readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Сканирование', 'Автопоиск', 'РКПД'];
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
     public isLoading: boolean = false;
-    public EmailChangeFlag: boolean = false;
     public DopOperationChangeFlag: boolean = false;
     public AddressesChengeFlag: boolean = false;
     public ScanChengeFlag: boolean = false;
     public AutoSearchChangeFlag: boolean = false;
-    public SabChangeFlag: boolean = false;
     public RcChangeflag: boolean = false;
     public editFlag: boolean = false;
     public accessSustem: Array<string>;
@@ -41,19 +39,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         return '';
     }
-    private EmailChangeValue: any;
     private DopOperationChangeValue: any;
     private AddressesChengeValue: any;
     private ScanChengeValue: any;
     private AutoSearchChangeValue: any;
-    private SabChangeValue: any;
     private RcChangeValue: any;
-    private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
     private newValuesAddresses: Map<string, any> = new Map();
     private newValuesScan: Map<string, any> = new Map();
     private newValuesAutoSearch: Map<string, any> = new Map();
-    private newValuesSab: Map<string, any> = new Map();
     private newValuesRc: Map<string, any> = new Map();
 
     constructor(
@@ -92,12 +86,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     }
     ngOnDestroy() {}
     get btnDisabled(): boolean {
-        if (this.EmailChangeFlag
-            || this.DopOperationChangeFlag
+        if ( this.DopOperationChangeFlag
             || this.AddressesChengeFlag
             || this.ScanChengeFlag
             || this.AutoSearchChangeFlag
-            || this.SabChangeFlag
             || this.RcChangeflag
         ) {
             return true;
@@ -106,25 +98,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     }
     setTab(i: number) {
         this.currTab = i;
-    }
-
-    getChanges($event) {
-        const value = $event[0];
-        if (this.defaultUser) {
-            this.EmailChangeValue = $event[1];
-        }
-        if (value) {
-            this.EmailChangeFlag = true;
-            value.forEach(val => {
-                this.newValuesMap.set(val['key'], val.value);
-            });
-        } else {
-            this.EmailChangeFlag = false;
-            this.newValuesMap.delete('RCSEND');
-            this.newValuesMap.delete('MAILRECIVE');
-            this.newValuesMap.delete('RECEIP_EMAIL');
-        }
-        this._pushState();
     }
 
     emitChanges($event) {
@@ -179,19 +152,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         this._pushState();
     }
-    emitChangesSab($event) {
-        if (this.defaultUser) {
-            this.SabChangeValue = $event[1];
-        }
-        if ($event) {
-            this.SabChangeFlag = $event[0].btn;
-            this.newValuesSab = $event[0].data;
-        } else {
-            this.SabChangeFlag = false;
-            this.newValuesSab.clear();
-        }
-        this._pushState();
-    }
     emitChangesRc($event) {
         if (this.defaultUser) {
             this.RcChangeValue = $event[1];
@@ -208,9 +168,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
 
     defaultUserSubmit() {
         let obj = {};
-        if (this.EmailChangeValue !== undefined) {
-            obj = Object.assign(this.EmailChangeValue, obj);
-        }
         if (this.DopOperationChangeValue !== undefined) {
             obj = Object.assign(this.DopOperationChangeValue, obj);
         }
@@ -222,9 +179,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         if (this.AutoSearchChangeValue !== undefined) {
             obj = Object.assign(this.AutoSearchChangeValue, obj);
-        }
-        if (this.SabChangeValue !== undefined) {
-            obj = Object.assign(this.SabChangeValue, obj);
         }
         if (this.RcChangeValue !== undefined) {
             obj = Object.assign(this.RcChangeValue, obj);
@@ -255,21 +209,16 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         });
     }
     defaultSetFlagBtn() {
-        this.getChanges(false);
         this.emitChanges(false);
         this.emitChangesAddresses(false);
         this.emitChangesScan(false);
         this.emitChangesAutoSearch(false);
-        this.emitChangesSab(false);
         this.emitChangesRc(false);
     }
 
     createObjRequest(): any[] {
         const req = [];
         if (this.defaultUser) {
-            if (this.newValuesMap.size) {
-                req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesMap));
-            }
             if (this.newValuesDopOperation.size) {
                 req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesDopOperation));
             }
@@ -282,17 +231,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             if (this.newValuesAutoSearch.size) {
                 req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesAutoSearch));
             }
-            if (this.newValuesSab.size) {
-                req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesSab));
-            }
             if (this.newValuesRc.size) {
                 req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesRc));
             }
         } else {
             const userId = this._userSrv.userContextId;
-            if (this.newValuesMap.size) {
-                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesMap, userId));
-            }
             if (this.newValuesDopOperation.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesDopOperation, userId));
             }
@@ -305,9 +248,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             if (this.newValuesAutoSearch.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesAutoSearch, userId));
             }
-            if (this.newValuesSab.size) {
-                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesSab, userId));
-            }
             if (this.newValuesRc.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesRc, userId));
             }
@@ -317,12 +257,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     cancel(event) {
         if (this.btnDisabled) {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            this.getChanges(false);
             this.emitChanges(false);
             this.emitChangesAddresses(false);
             this.emitChangesScan(false);
             this.emitChangesAutoSearch(false);
-            this.emitChangesSab(false);
             this.emitChangesRc(false);
             this._pushState();
         }

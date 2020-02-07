@@ -30,13 +30,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
-                return this.defaultTitle ? 'Прочее по умолчанию' : this.currentUser.CLASSIF_NAME + '- Прочее';
+                return this.defaultTitle ? 'Передача по умолчанию' : this.currentUser.CLASSIF_NAME + '- Передача';
             }
-            return this.defaultTitle ? 'Прочее по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Прочее`;
+            return this.defaultTitle ? 'Передача по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Передача`;
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
+    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
