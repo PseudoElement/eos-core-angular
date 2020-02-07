@@ -129,6 +129,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         }
                         this.currentFields.splice(this.currentFields.indexOf(this.selectedCurrRole), 1);
                         this._fixedRoles(this.selectedCurrRole.role, 'del');
+                        this.btnChangeDue = false;
                         this.selectedCurrRole = null;
                     } else {
                         this.basicFields.push(this.curPreDelete.role);
