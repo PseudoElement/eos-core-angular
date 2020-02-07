@@ -63,10 +63,10 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             if (this.data.rec['SURNAME'] && !this.data.printInfo['NAME'] && !this.data.printInfo['SURNAME'] && !this.data.printInfo['PATRON'] ) {
 
                 fio = this.data.rec['SURNAME'].replace(/\./g, ' ');
-                changes.push('фамилия, имя, отчество');
+                changes.push('Фамилия, имя, отчество');
                 inObj.fio = true;
 
-                changes.push('Дополнительные сведения');
+                changes.push('Дополнительные сведения (склонения ФИО)');
                 inObj.nomenative = true;
             } else {
                 fio = this.data.printInfo['SURNAME'] + ' ' + this.data.printInfo['NAME'] + ' ' + this.data.printInfo['PATRON'];
@@ -76,10 +76,15 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 inObj.gender = true;
             }
 
+            if (this.data.rec['DUTY'] && !this.data.printInfo['DUTY_RP'] && !this.data.printInfo['DUTY_DP'] && !this.data.printInfo['DUTY_VP'] ) {
+                inObj.dep = true;
+                changes.push('Дополнительные сведения (склонение должности)');
+            }
+
             if (!EosUtils.isObjEmpty(inObj)) {
                 this.fillDeclineFields(inObj, fio);
                 if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
-                    changes.push('пол');
+                    changes.push('Пол');
                 }
                 const warn: IConfirmWindow2 = {
                     title: 'Ведение справочников',
