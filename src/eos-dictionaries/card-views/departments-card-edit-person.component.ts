@@ -262,21 +262,21 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             let rn = null;
             if (fio === null) {
                 rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
-                    data['GENDER'] === 0 ? RussianNameProcessor.sexM :
-                    data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    data['GENDER'] === 1 ? RussianNameProcessor.sexM :
+                    data['GENDER'] === 2 ? RussianNameProcessor.sexF :
                     null
                 );
             } else {
                 rn = new RussianName(fio, '', '',
-                    data['GENDER'] === 0 ? RussianNameProcessor.sexM :
-                    data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    data['GENDER'] === 1 ? RussianNameProcessor.sexM :
+                    data['GENDER'] === 2 ? RussianNameProcessor.sexF :
                     null
                 );
             }
 
             if (opt.gender) {
-                data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
-                                rn.sex === RussianNameProcessor.sexM ? 0 : null;
+                data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 2 :
+                                rn.sex === RussianNameProcessor.sexM ? 1 : null;
             }
 
             data.NAME_DP = rn.firstName(rn.gcaseDat);
