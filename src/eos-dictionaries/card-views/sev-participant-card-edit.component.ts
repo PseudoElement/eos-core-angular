@@ -47,6 +47,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     ngOnInit(): void {
         this._usedRules = [];
         this._listRules = [];
+        this.data.SEV_PARTICIPANT_RULE_CHANGES_LIST = [];
         const i = this.inputs['rec.ISN_CHANNEL'];
         i.options = [];
 
