@@ -10,11 +10,12 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
     title: 'Участники СЭВ',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
     'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
-    'removeHard', 'edit', 'view'],
+    'removeHard', 'edit', 'view', 'showDeleted'],
     visible: true,
     iconName: 'eos-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
     defaultOrder: 'ADDRESS',
+    showDeleted: true,
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE_ORGANIZ',
         title: 'Организация',

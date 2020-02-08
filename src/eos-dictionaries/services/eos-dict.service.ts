@@ -1323,6 +1323,7 @@ export class EosDictService {
                             userOrdered: this.userOrdered,
                             markItems: this._dictionaries[0].canMarkItems,
                             updatingList: false,
+                            showDeleted: this.currentDictionary.descriptor.showDeleted
                             // tableCustomization: true,
                         });
                         // this._dictionaries[0].initUserOrder(

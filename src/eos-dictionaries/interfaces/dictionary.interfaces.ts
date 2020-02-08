@@ -152,6 +152,7 @@ export interface IDictionaryDescriptor {
 
     hideTopMenu?: boolean;
     editOnlyNodes?: boolean;
+    showDeleted?: boolean;
 }
 
 export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
