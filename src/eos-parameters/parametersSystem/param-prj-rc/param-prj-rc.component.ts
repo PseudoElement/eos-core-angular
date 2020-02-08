@@ -29,7 +29,7 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
             this.fiillInputForCB(list);
             this.init()
                 .then(() => {
-                    this.cancel();
+                    this.cancelEdit();
                     this.subscribeUnputs();
                 })
                 .catch(err => {
@@ -79,12 +79,21 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
         this.form.enable({ emitEvent: false });
     }
     cancel() {
-        this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-        this.isChangeForm = false;
-        this.formChanged.emit(false);
-        this.ngOnDestroy();
-        this.init().then(() => this.form.disable({ emitEvent: false }));
+        if (this.newData) {
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.isChangeForm = false;
+            this.formChanged.emit(false);
+            this.ngOnDestroy();
+            this.init().then(() => this.cancelEdit());
+        } else {
+            this.cancelEdit();
+        }
     }
+
+    cancelEdit() {
+        this.form.disable({ emitEvent: false });
+    }
+
     ngOnDestroy() {
         this._unsubscribe.next();
         this._unsubscribe.complete();
