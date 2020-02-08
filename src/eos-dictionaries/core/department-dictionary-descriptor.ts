@@ -10,7 +10,7 @@ import { FieldDescriptor } from './field-descriptor';
 import { RecordDescriptor } from './record-descriptor';
 import { ModeFieldSet } from './record-mode';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { CB_PRINT_INFO } from 'eos-rest/interfaces/structures';
+import { CB_PRINT_INFO, ORGANIZ_CL } from 'eos-rest/interfaces/structures';
 import { TreeDictionaryDescriptor } from 'eos-dictionaries/core/tree-dictionary-descriptor';
 import { IImage } from 'eos-dictionaries/interfaces/image.interface';
 import { IHierCL } from 'eos-rest';
@@ -23,8 +23,8 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { EosUtils } from 'eos-common/core/utils';
 
 const inheritFiields = [
-  'START_DATE',
-  'END_DATE'
+    'START_DATE',
+    'END_DATE'
 ];
 export class DepartmentRecordDescriptor extends RecordDescriptor {
     dictionary: DepartmentDictionaryDescriptor;
@@ -185,13 +185,15 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         return this.getData({ criteries: _children }, 'DUE');
     }
 
-    getRelated(rec: any, orgDUE: string): Promise<any> {
+    getRelated(rec: any, orgDUE: string, refresh: boolean = false): Promise<any> {
         const pUser = this.apiSrv
             .read({ 'USER_CL': PipRX.criteries({ 'DUE_DEP': rec['DUE'] }) })
             .then((items) => this.apiSrv.entityHelper.prepareForEdit(items[0]));
 
-        const pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
-
+        let pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
+        pOrganization = refresh ? this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: [orgDUE] }).then((data) => {
+            return data && data.length ? data[0] : null;
+         }) : pOrganization;
         const pCabinet = (rec['ISN_CABINET']) ? this.getCachedRecord({ 'CABINET': rec['ISN_CABINET'] }) : Promise.resolve(null);
         const pCabinets = this.getCachedRecord({ 'CABINET': { 'criteries': { DUE: rec.DUE } } });
 
@@ -243,7 +245,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
             [
                 ... inheritFiields,
             ]
-            .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
+                .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
         }
         return super.getNewRecord(newPreset, parentNode);
     }

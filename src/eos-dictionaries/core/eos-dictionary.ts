@@ -215,7 +215,7 @@ export class EosDictionary {
         return nodes;
     }
 
-    getFullNodeInfo(nodeId: string): Promise<EosDictionaryNode> {
+    getFullNodeInfo(nodeId: string, refresh: boolean = false): Promise<EosDictionaryNode> {
         // TODO: обьеденить концепции getNodeRelatedData и loadRelatedFieldsOptions
 
         // const infoFields = this.descriptor.record.getInfoView({});
@@ -228,7 +228,7 @@ export class EosDictionary {
         const existNode = this.getNode(nodeId);
         if (!existNode || !existNode.relatedLoaded) {
             return this.getNodeByNodeId(nodeId)
-                .then((node) => this.getNodeRelatedData(node));
+                .then((node) => this.getNodeRelatedData(node, refresh));
         } else {
             return Promise.resolve(existNode);
         }
@@ -698,14 +698,14 @@ export class EosDictionary {
 
 
 
-    private getNodeRelatedData(node: EosDictionaryNode): Promise<EosDictionaryNode> {
+    private getNodeRelatedData(node: EosDictionaryNode, refresh: boolean = false): Promise<EosDictionaryNode> {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
                 case 'departments':
                     // const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
                     const orgDUE = node.data.rec.DUE_LINK_ORGANIZ;
                     return Promise.all([
-                        this.descriptor.getRelated(node.data.rec, orgDUE),
+                        this.descriptor.getRelated(node.data.rec, orgDUE, refresh),
                         this.descriptor.getRelatedSev(node.data.rec)
                     ]).then(([related, sev]) => {
                         node.data = Object.assign(node.data, related, { sev: sev });
