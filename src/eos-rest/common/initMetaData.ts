@@ -1264,7 +1264,7 @@ const commonMeta = {
         ]
     },
     SEV_PARTICIPANT_RULE: {
-        pk: 'ISN_PARTICIPANT',
+        pk: 'ISN_PARTICIPANT ISN_RULE',
         properties: {
             ISN_PARTICIPANT: _t.i,
             ISN_RULE: _t.i,

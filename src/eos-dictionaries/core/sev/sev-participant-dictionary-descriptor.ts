@@ -22,7 +22,15 @@ export class SevParticipantDictionaryDescriptor extends DictionaryDescriptor {
                 changes.push(value);
             });
         }
-        changes = this.apiSrv.changeList(changes);
+        changes = this.apiSrv.changeList(changes).map((ch: {method: string, requestUri: string, data?: string}) => {
+            const idPartisipant =  ID ? ID : data.rec['ISN_LCLASSIF'];
+            if (ch.method === 'POST') {
+                ch.requestUri = `SEV_PARTICIPANT(${idPartisipant})/SEV_PARTICIPANT_RULE_List`;
+            }   else {
+                ch.requestUri = `SEV_PARTICIPANT(${idPartisipant})/${ch.requestUri.replace(/SEV_PARTICIPANT_RULE/ig, 'SEV_PARTICIPANT_RULE_List')}`;
+            }
+            return ch;
+        });
         return this.apiSrv.batch(changes, '');
     }
     public getData(query?: any, order?: string, limit?: number): Promise<any> {
