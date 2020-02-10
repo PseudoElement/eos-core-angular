@@ -1,13 +1,18 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces/index';
 import {NADZOR_TEMPLATE} from './nadzor-template';
 import {NP_CODEX_TYPE_CL} from './codex-type.consts';
+import { COMMON_FIELD_NAME } from '../_common';
 
 export const NP_OSNZADER_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLATE, {
     id: 'osnzader',
     apiInstance: 'NP_OSNZADER_CL',
     title: 'Основания задержаний',
     visible: true,
-    fields: [...NADZOR_TEMPLATE.fields, {
+    fields: [...NADZOR_TEMPLATE.fields,
+        Object.assign({}, COMMON_FIELD_NAME, {
+            isUnique: true,
+            uniqueInDict: true,
+        }), {
         key: 'ISN_CODEX_TYPE',
         type: 'select',
         title: 'Тип кодекса',
@@ -17,6 +22,7 @@ export const NP_OSNZADER_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TE
             fk: 'ISN_CODEX_TYPE',
             label: 'CLASSIF_NAME_SHORT',
         },
+
 
         options: [],
     }],

@@ -4,6 +4,7 @@ import {SEARCH_TYPES} from '../../search-types';
 
 export const NP_OSN_PRED_DELA_CL: ITreeDictionaryDescriptor = /*Object.assign({}, NADZOR_TEMPLATE, */{
     id: 'osn-pred-dela',
+    folder: 'nadzor',
     apiInstance: 'NP_OSN_PRED_DELA_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Основания представления дела',

@@ -1,12 +1,18 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces/index';
 import {NADZOR_TEMPLATE} from './nadzor-template';
+import { COMMON_FIELD_NAME } from '../_common';
 
 export const NP_OB_OTZIV_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLATE, {
     id: 'ob-otziv',
     apiInstance: 'NP_OB_OTZIV_CL',
     title: 'Причины отзыва',
     visible: true,
-    fields: [...NADZOR_TEMPLATE.fields, {
+    fields: [...NADZOR_TEMPLATE.fields,
+        Object.assign({}, COMMON_FIELD_NAME, {
+            isUnique: true,
+            uniqueInDict: true,
+        }),
+    {
         key: 'USE_C',
         title: 'Кассации',
         type: 'boolean',
