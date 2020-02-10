@@ -253,7 +253,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             }
         }
 
-        if (opt.fio) {
+        if (opt.fio || opt.gender || opt.nomenative) {
             if (gender !== null) {
                 field['GENDER'] = gender;
             }
@@ -284,42 +284,39 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                                 rn.sex === RussianNameProcessor.sexM ? 1 : null;
             }
 
-            data.NAME_DP = rn.firstName(rn.gcaseDat);
-            data.NAME_PP = rn.firstName(rn.gcasePred);
-            data.NAME_RP = rn.firstName(rn.gcaseRod);
-            data.NAME_TP = rn.firstName(rn.gcaseTvor);
-            data.NAME_VP = rn.firstName(rn.gcaseVin);
-            data.PATRON_DP = rn.middleName(rn.gcaseDat);
-            data.PATRON_PP = rn.middleName(rn.gcasePred);
-            data.PATRON_RP = rn.middleName(rn.gcaseRod);
-            data.PATRON_TP = rn.middleName(rn.gcaseTvor);
-            data.PATRON_VP = rn.middleName(rn.gcaseVin);
-            data.SURNAME_DP = rn.lastName(rn.gcaseDat);
-            data.SURNAME_PP = rn.lastName(rn.gcasePred);
-            data.SURNAME_RP = rn.lastName(rn.gcaseRod);
-            data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
-            data.SURNAME_VP = rn.lastName(rn.gcaseVin);
+            if (opt.fio) {
+                data.NAME_DP = rn.firstName(rn.gcaseDat);
+                data.NAME_PP = rn.firstName(rn.gcasePred);
+                data.NAME_RP = rn.firstName(rn.gcaseRod);
+                data.NAME_TP = rn.firstName(rn.gcaseTvor);
+                data.NAME_VP = rn.firstName(rn.gcaseVin);
+                data.PATRON_DP = rn.middleName(rn.gcaseDat);
+                data.PATRON_PP = rn.middleName(rn.gcasePred);
+                data.PATRON_RP = rn.middleName(rn.gcaseRod);
+                data.PATRON_TP = rn.middleName(rn.gcaseTvor);
+                data.PATRON_VP = rn.middleName(rn.gcaseVin);
+                data.SURNAME_DP = rn.lastName(rn.gcaseDat);
+                data.SURNAME_PP = rn.lastName(rn.gcasePred);
+                data.SURNAME_RP = rn.lastName(rn.gcaseRod);
+                data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
+                data.SURNAME_VP = rn.lastName(rn.gcaseVin);
 
-            data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
-            data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
-            data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
+                data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
+                data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
+                data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
 
-            // const n = this.getValue('printInfo.SURNAME');
-            // if (n === null || n === '') {
-            //     this.setValue('printInfo.SURNAME', res.SURNAME);
-            // }
-            delete data.DUTY;
-            if (!opt.nomenative) {
+                delete data.DUTY;
+
                 delete data.SURNAME;
                 delete data.NAME;
                 delete data.PATRON;
-            } else {
+            }
+
+            if (opt.nomenative) {
                 data.NAME = rn.firstName(rn.gcaseNom);
                 data.SURNAME = rn.lastName(rn.gcaseNom);
                 data.PATRON = rn.middleName(rn.gcaseNom);
             }
-
-            // console.log(data);
 
             if (data) {
                 Object.keys(data).forEach((key) => {
