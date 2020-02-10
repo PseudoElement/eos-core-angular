@@ -89,6 +89,6 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                 this.masDisable.push(key);
             }
         });
-        this.form.disable({ emitEvent: false });
+        setTimeout(() => this.form.disable({ emitEvent: false }), 100);
     }
 }

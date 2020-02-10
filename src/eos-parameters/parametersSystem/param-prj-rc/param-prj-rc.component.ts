@@ -80,11 +80,15 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
     }
     cancel() {
         if (this.newData) {
-            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            this.isChangeForm = false;
-            this.formChanged.emit(false);
-            this.ngOnDestroy();
-            this.init().then(() => this.cancelEdit());
+            this.init().then(() => {
+                setTimeout(() => {
+                    this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+                    this.isChangeForm = false;
+                    this.formChanged.emit(false);
+                    this.ngOnDestroy();
+                    this.cancelEdit();
+                }, 0);
+            });
         } else {
             this.cancelEdit();
         }

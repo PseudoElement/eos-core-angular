@@ -1,4 +1,4 @@
-<eos-param-header [title]="titleHeader" (submitForm)="submit()" (cancelForm)="cancel()" [statusBtnSub]="btnDisabled || (cbBase && form.get('classifName').invalid)"></eos-param-header>
+<eos-param-header [title]="titleHeader" (submitForm)="submit()" (cancelForm)="cancel()" [statusBtnSub]="disabledSubmit"></eos-param-header>
 <main *ngIf="!isLoading; else spiner">
     <div>
         <div class="form-group create-user-login-input log">
@@ -17,7 +17,9 @@
             <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
             <div class="create-user-wr" style="width: 461px">
                 <input class="form-control m-font inline-block" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label">
-                <span class="icon eos-icon small icon-add-department" [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
+                <span class="icon eos-icon small icon-add-department" [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}" [ngStyle]="{'margin-right': !form.value['DUE_DEP_NAME'] ? '0px' : '28px'}"
+                 (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
+                <a [ngClass]="{'hide': !form.value['DUE_DEP_NAME']}" (click)="cleanDue()"><span class="eos-icon eos-icon-close-blue small"></span></a>
             </div>
         </div>
         <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']" [form]="form" [readonly]="form.get('SELECT_ROLE').disabled"></eos-dynamic-input>
