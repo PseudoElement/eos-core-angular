@@ -65,7 +65,15 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     }
 
     disabledAutent(param): boolean {
-        if (param.url === 'authentication' && (this._appContext.limitCardsUser.length > 0 || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0')) {
+        if (this._appContext.cbBase) {
+            if (param.url === 'authentication' && (this._appContext.limitCardsUser.length > 0 || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0')) {
+                return false;
+            }
+        }
+        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS[1] === '0')) {
+            return false;
+        }
+        if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
             return false;
         }
         return true;
