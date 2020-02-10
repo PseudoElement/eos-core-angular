@@ -1,6 +1,5 @@
 import { DictionaryDescriptor } from './dictionary-descriptor';
 import { _ES } from 'eos-rest/core/consts';
-import { EDS_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/category-eds.consts';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { BUTTON_RESULT_CANCEL } from 'app/consts/confirms.const';
@@ -8,10 +7,6 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { CA_CATEGORY } from 'eos-rest/interfaces/structures';
 
 export class CaCategoryDictionaryDescriptor extends DictionaryDescriptor {
-
-    getParentDictionaryId(): string {
-        return EDS_CATEGORY_CL.id;
-    }
 
     confirmSave(nodeData: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
 

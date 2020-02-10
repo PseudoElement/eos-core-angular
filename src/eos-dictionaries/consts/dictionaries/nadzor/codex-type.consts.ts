@@ -1,5 +1,5 @@
 import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces/index';
-import {NADZOR_TEMPLATE} from '../nadzor-template';
+import {NADZOR_TEMPLATE} from './nadzor-template';
 import {SEARCH_TYPES} from '../../search-types';
 import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from '../_common';
 

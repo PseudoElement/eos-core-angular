@@ -1,6 +1,6 @@
-import { DictionaryDescriptor } from '../dictionary-descriptor';
+import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 
-export class SevCollisionsDictionaryDescriptor extends DictionaryDescriptor {
+export class SevCollisionsDictionaryDescriptor extends SevDictionaryDescriptor {
 
     // protected prepareForEdit(records: any[]): any[] {
     //     const result = super.prepareForEdit(records);

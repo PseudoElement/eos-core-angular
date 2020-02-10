@@ -213,10 +213,6 @@ export abstract class AbstractDictionaryDescriptor {
         return newRec;
     }
 
-    getParentDictionaryId(): string {
-        return null;
-    }
-
     getRelated(rec: any, ..._args): Promise<any> {
         const reqs = [];
         this.metadata.relations.forEach((relation) => {

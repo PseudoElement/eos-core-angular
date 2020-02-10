@@ -16,6 +16,7 @@ export const SEV_DICTIONARIES = [
 
 export const SEV_FOLDER: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'SEV',
+    isFolder: true,
     title: 'Справочники СЭВ',
     visible: Features.cfg.SEV.isDictsEnabled,
     apiInstance: 'SEV',
