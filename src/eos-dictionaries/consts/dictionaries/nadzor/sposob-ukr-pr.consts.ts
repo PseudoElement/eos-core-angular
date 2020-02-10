@@ -1,5 +1,5 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces/index';
-import {NADZOR_TEMPLATE} from '../nadzor-template';
+import {NADZOR_TEMPLATE} from './nadzor-template';
 import { COMMON_FIELD_NAME } from '../_common';
 
 export const NP_SPOSOB_UKR_PR_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLATE, {

@@ -1,5 +1,5 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces/index';
-import {NADZOR_TEMPLATE} from '../nadzor-template';
+import {NADZOR_TEMPLATE} from './nadzor-template';
 import {NP_CODEX_TYPE_CL} from './codex-type.consts';
 
 export const NP_OSNZADER_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLATE, {

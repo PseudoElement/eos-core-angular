@@ -7,7 +7,7 @@ import { CABINET_DICT } from './../consts/dictionaries/cabinet.consts';
 import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import { Injectable } from '@angular/core';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { NADZOR_DICTIONARIES as NADZOR_DICTIONARIES, NADZOR_FOLDER } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZOR_DICTIONARIES as NADZOR_DICTIONARIES, NADZOR_FOLDER } from 'eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
 import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
 import { SIGN_KIND_DICT } from 'eos-dictionaries/consts/dictionaries/sign-kind.consts';

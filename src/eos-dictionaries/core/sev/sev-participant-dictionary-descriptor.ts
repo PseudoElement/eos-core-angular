@@ -1,10 +1,10 @@
-import {DictionaryDescriptor} from '../dictionary-descriptor';
 import { EosDictionaryNode } from '../eos-dictionary-node';
 import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 
 
-export class SevParticipantDictionaryDescriptor extends DictionaryDescriptor {
+export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor {
 
     confirmSave(nodeData: EosDictionaryNode, confirmSrv, isNewRecord: boolean): Promise<boolean> {
         if (nodeData &&

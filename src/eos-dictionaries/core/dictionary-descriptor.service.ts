@@ -10,7 +10,7 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
-import {NADZOR_DICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
+import {NADZOR_DICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {SevCollisionsDictionaryDescriptor} from './sev/sev-collisions-dictionary-descriptor';
@@ -31,6 +31,7 @@ import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/s
 import { SevParticipantDictionaryDescriptor } from './sev/sev-participant-dictionary-descriptor';
 import { ADDR_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/addr-category.consts';
 import { AddrCategoryDictionaryDescriptor } from './addr-category-dictionary-descriptor';
+import { SevDictionaryDescriptor } from './sev/sev-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -174,7 +175,14 @@ export class DictionaryDescriptorService {
                     }
                 }
 
-
+                if (!res) {
+                    for (const d of SEV_DICTIONARIES) {
+                        if (d.id && d.id === descr.id) {
+                            res = new SevDictionaryDescriptor(descr, this.apiSrv);
+                            break;
+                        }
+                    }
+                }
 
                 if (!res) {
                     switch (descr.dictType) {

@@ -16,12 +16,11 @@ import {SECURITY_DICT} from '../security.consts';
 import {ORG_TYPE_DICT} from '../org-type.consts';
 import {CONTACT_DICT} from '../contact.consts';
 import {ORGANIZ_DICT} from '../organiz.consts';
-import { SEV_ACTIONS } from './templates-sev.consts';
+import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 
-export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
     id: 'sev-rules',
     apiInstance: 'SEV_RULE',
-    actions: SEV_ACTIONS,
     visible: true,
     iconName: 'eos-icon-rules-blue',
     title: 'Правила СЭВ',

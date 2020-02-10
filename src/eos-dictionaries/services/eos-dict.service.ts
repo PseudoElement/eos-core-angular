@@ -41,7 +41,7 @@ import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/s
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
-import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 

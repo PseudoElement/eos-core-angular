@@ -9,7 +9,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
