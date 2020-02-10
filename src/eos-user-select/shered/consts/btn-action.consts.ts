@@ -119,7 +119,7 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
 export const CommonTechLists: BtnActionFields = {
     name: 'CommonTechLists',
     title: 'Ведение общих и технологических списков',
-    disabledClass: 'eos-icon eos-icon-template-gray small',
+    disabledClass: 'eos-icon eos-icon-template-grey small',
     enableClass: 'eos-icon eos-icon-template-blue small',
     tooltip: 'Ведение общих и технологических списков',
     disabled: false,
