@@ -166,7 +166,12 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
         return res;
     }
-
+    onBeforeModalPhoto($event) {
+        this.tooltipsHide();
+    }
+    onAfterModalPhoto($event) {
+        this.tooltipsRestore();
+    }
     newImage(img: IImage) {
         this.photo = img.url;
         this.dictSrv.uploadImg(img)
