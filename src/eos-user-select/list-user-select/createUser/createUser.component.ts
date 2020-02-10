@@ -50,7 +50,12 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         private _appContext: AppContext
     ) {
     }
-
+    get disabledSubmit() {
+        if (this.form && (this.form.controls['classifName'].value).trim() === '') {
+            this.form.get('classifName').setErrors({ errorPattern: true });
+        }
+        return this.btnDisabled || (this.cbBase && this.form.get('classifName').invalid);
+    }
     ngOnInit() {
         this.cbBase = this._appContext.cbBase;
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
@@ -191,6 +196,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.isShell = false;
             });
     }
+
+    cleanDue() {
+        this.form.controls['DUE_DEP_NAME'].patchValue('');
+        delete this.data['dueDL'];
+        delete this.data['SELECT_ROLE'];
+    }
+
     private _urlSegment(): string {
         const segment: UrlSegment[] = this._router.parseUrl(this._router.url).root.children.primary.segments;
         if (!segment[1]) {
