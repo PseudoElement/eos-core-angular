@@ -69,7 +69,13 @@ export class Cache extends PipeUtils {
     }
 
     public clear(_req: IRequest) {
-
+        const r = _req as IR;
+        const _et = Object.keys(_req)[0];
+        const place = this.place(_et);
+        const ids = r[_et];
+        if (place && place.hasOwnProperty(ids[0])) {
+            delete place[ids[0]];
+        }
     }
 
     public clearZone(_policy?: ICachePolicy) {

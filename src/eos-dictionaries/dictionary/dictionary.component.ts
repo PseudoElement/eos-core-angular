@@ -775,8 +775,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId, params);
         this._waitClassif.openClassif(config).then(() => {
             this.updateRigthFields(node);
+            this._dictSrv.reload();
         }).catch((e) => {
             this.updateRigthFields(node);
+            this._dictSrv.reload();
         });
     }
     private openClassifFromdepartment(params?) {
@@ -791,15 +793,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         this._waitClassif.openClassif(config).then(() => {
             this.updateRigthFields(this._dictSrv.listNode, true);
+            this._dictSrv.reload();
         }).catch((e) => {
             this.updateRigthFields(this._dictSrv.listNode, true);
+            this._dictSrv.reload();
         });
     }
     private updateRigthFields(node: EosDictionaryNode, refresh: boolean = false): Promise<any> {
         if (node) {
             node.relatedLoaded = false;
               return  this._dictSrv.currentDictionary.getFullNodeInfo(node.id, refresh).then(() => {
-                    this._dictSrv.reload();
                     this._dictSrv.updateRigth.next(null);
                 });
         }

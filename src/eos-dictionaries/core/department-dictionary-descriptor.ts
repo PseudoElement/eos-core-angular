@@ -10,7 +10,7 @@ import { FieldDescriptor } from './field-descriptor';
 import { RecordDescriptor } from './record-descriptor';
 import { ModeFieldSet } from './record-mode';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { CB_PRINT_INFO, ORGANIZ_CL } from 'eos-rest/interfaces/structures';
+import { CB_PRINT_INFO } from 'eos-rest/interfaces/structures';
 import { TreeDictionaryDescriptor } from 'eos-dictionaries/core/tree-dictionary-descriptor';
 import { IImage } from 'eos-dictionaries/interfaces/image.interface';
 import { IHierCL } from 'eos-rest';
@@ -164,7 +164,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                 if (!node.data.rec['END_DATE'] && node.data.rec['IS_NODE'] === 0) {
                     const cantDeleteWarning: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_FILL_ENDDATE);
                     const confirmSrv = InjectorInstance.get(ConfirmWindowService);
-                    return confirmSrv.confirm2(cantDeleteWarning).then (() => {
+                    return confirmSrv.confirm2(cantDeleteWarning).then(() => {
                         return Promise.resolve(false);
                     });
                 }
@@ -189,11 +189,10 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         const pUser = this.apiSrv
             .read({ 'USER_CL': PipRX.criteries({ 'DUE_DEP': rec['DUE'] }) })
             .then((items) => this.apiSrv.entityHelper.prepareForEdit(items[0]));
-
-        let pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
-        pOrganization = refresh ? this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: [orgDUE] }).then((data) => {
-            return data && data.length ? data[0] : null;
-         }) : pOrganization;
+        if (refresh) {
+            this.apiSrv.cache.clear({ ORGANIZ_CL: [orgDUE] });
+        }
+        const pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
         const pCabinet = (rec['ISN_CABINET']) ? this.getCachedRecord({ 'CABINET': rec['ISN_CABINET'] }) : Promise.resolve(null);
         const pCabinets = this.getCachedRecord({ 'CABINET': { 'criteries': { DUE: rec.DUE } } });
 
@@ -243,7 +242,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         EosUtils.deepUpdate(newPreset, preSetData);
         if (parentNode) {
             [
-                ... inheritFiields,
+                ...inheritFiields,
             ]
                 .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
         }
