@@ -36,7 +36,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов'];
+    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'ЖПД'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
@@ -44,12 +44,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     private flagAddresses: boolean = false;
     private newValuesReestr: Map<string, any> = new Map();
     private flagReestr: boolean = false;
-    private newValuesShablony: Map<string, any> = new Map();
-    private flagShablony: boolean = false;
     private TransferInputs: any;
+    private newValuesJournal: Map<string, any> = new Map();
+    private JournalInputs: any;
+    private flagJournal: boolean = false;
     private AddressesInputs: any;
     private ReestInputsr: any;
-    private ShablonyInputs: any;
     constructor(
         private _userSrv: UserParamsService,
         private _pipRx: PipRX,
@@ -84,7 +84,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     }
 
     get btnDisabled() {
-        if (this.flagAddresses || this.flagReestr || this.flagShablony || this.flagTransfer) {
+        if (this.flagAddresses || this.flagReestr || this.flagTransfer || this.flagJournal) {
             return false;
         } else {
             return true;
@@ -107,6 +107,21 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         this._pushState();
     }
+
+    emitChangesJournal($event) {
+        if ($event) {
+            if (this.defaultUser) {
+                this.JournalInputs = $event[1];
+            }
+            this.flagJournal = $event[0].btn;
+            this.newValuesJournal = $event[0].data;
+        } else {
+            this.flagJournal = false;
+            this.newValuesJournal.clear();
+        }
+        this._pushState();
+    }
+
     emitChangesAddresses($event) {
         if (this.defaultUser) {
             this.AddressesInputs = $event[1];
@@ -133,20 +148,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         this._pushState();
     }
-    emitChangesShablony($event) {
-        if (this.defaultUser) {
-            this.ShablonyInputs = $event[1];
-        }
-        if ($event) {
-            this.flagShablony = $event[0].btn;
-            this.newValuesShablony = $event[0].data;
-        } else {
-            this.flagShablony = false;
-            this.newValuesShablony.clear();
-        }
-        //   this.DefaultSubmitEmit.emit()
-        this._pushState();
-    }
+
     emitIncrementError($event) {
         this.flagIncrementError = $event;
     }
@@ -187,8 +189,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         if (this.ReestInputsr !== undefined) {
             obj = Object.assign(this.ReestInputsr, obj);
         }
-        if (this.ShablonyInputs !== undefined) {
-            obj = Object.assign(this.ShablonyInputs, obj);
+        if (this.JournalInputs !== undefined) {
+            obj = Object.assign(this.JournalInputs, obj);
         }
         this.DefaultSubmitEmit.emit(obj);
     }
@@ -196,8 +198,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     resetFlagsBtn() {
         this.emitChangesAddresses(false);
         this.emitChangesReestr(false);
-        this.emitChangesShablony(false);
         this.emitChangesTransfer(false);
+        this.emitChangesJournal(false);
         // this.emitIncrementError(false);
     }
     createObjRequest(): any[] {
@@ -212,8 +214,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             if (this.newValuesReestr.size) {
                 this._formHelper.CreateDefaultRequest(req, this.newValuesReestr);
             }
-            if (this.newValuesShablony.size) {
-                this._formHelper.CreateDefaultRequest(req, this.newValuesShablony, true);
+            if (this.newValuesJournal.size) {
+                this._formHelper.CreateDefaultRequest(req, this.newValuesJournal);
             }
         } else {
             const userId = this._userSrv.userContextId;
@@ -226,8 +228,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             if (this.newValuesReestr.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesReestr, userId));
             }
-            if (this.newValuesShablony.size) {
-                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesShablony, userId, true));
+            if (this.newValuesJournal.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesJournal, userId));
             }
         }
         return req;

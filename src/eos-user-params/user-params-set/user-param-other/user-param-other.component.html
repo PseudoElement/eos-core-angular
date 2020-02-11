@@ -26,6 +26,11 @@
             <eos-user-param-reestr *ngIf='!cbBase' (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
         </div>
         <!--------------------------2--------------------------------------------->
+        <!--------------------------3--------------------------------------------->
+        <div [hidden]="currTab !==3" class="clearfix ">
+            <eos-user-param-journal-tr-doc (pushChange)="emitChangesJournal($event)" [defaultValues]=" defaultValues" [defaultUser]="defaultUser"></eos-user-param-journal-tr-doc>
+        </div>
+        <!--------------------------3--------------------------------------------->
     </div>
 </div>
 <!-- <div class="sp " *ngIf="!isLoading ">

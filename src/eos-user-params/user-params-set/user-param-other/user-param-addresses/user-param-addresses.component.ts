@@ -190,7 +190,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         this.sendFrom = '';
         this.prepareData = {};
         this.prepareInputs = {};
-        const ADDR_EXP = String(this.defaultValues['ADDR_EXPEDITION']);
+        const ADDR_EXP = this.defaultValues['ADDR_EXPEDITION'] ? String(this.defaultValues['ADDR_EXPEDITION']) : null;
         Promise.all([this.getList(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
             const dep = result[1] as DEPARTMENT[];
             if (dep.length > 0) {
@@ -238,7 +238,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         this.sendFrom = '';
     }
     private getDepartMentName(param: string, flagWhatToChoose?: boolean): Promise<any> {
-        if (param !== 'null' && param !== '') {
+        if (param) {
             const query = {
                 DEPARTMENT: [param]
             };

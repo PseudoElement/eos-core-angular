@@ -26,29 +26,6 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
                 {value: '0', title: 'Да'}
             ]
         },
-        {
-            key: 'MARKDOC',
-            type: 'radio',
-            title: '',
-            readonly: false,
-            options: [
-                {value: '1', title: 'Не добавлять'},
-                {value: '0', title: 'Для всех документов'},
-                {value: '2', title: 'Только для документов с "бумажным" оригиналом'}
-            ]
-        },
-        {
-            key: 'MARKDOCKND',
-            type: 'radio',
-            title: '',
-            readonly: false,
-            options: [
-                {value: '0', title: 'Оригинал(ы)'},
-                {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'Вручную'}
-            ]
-        },
     ],
 };
 export const OTHER_USER_ADDRESSES: IBaseUsers = {
@@ -63,28 +40,6 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             options: [
                 {value: '', title: ''}
             ]
-        },
-        {
-            key: 'MARKDOCKND1',
-            type: 'radio',
-            title: '',
-            readonly: false,
-            options: [
-                {value: '0', title: 'Оригинал(ы)'},
-                {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'Вручную'}
-            ]
-        },
-        {
-            key: 'GPD_FLAG',
-            type: 'boolean',
-            title: 'Использовать это правило в Журнале передачи документов'
-        },
-        {
-            key: 'VOL_FLAG',
-            type: 'boolean',
-            title: 'Заполнять информацию о томах'
         },
         {
             key: 'ADDR_EXPEDITION',
@@ -964,3 +919,81 @@ export const OTHER_USER: IBaseUsers = {
         },
     ]
 };
+
+export const JOURNAL_TR_DOC_USER: IBaseUsers = {
+    id: 'journal',
+    title: 'Передача',
+    apiInstance: 'USER_PARMS',
+    fields: [
+        {
+            key: 'ADD_JOURNAL_4DOC',
+            type: 'radio',
+            title: 'для',
+            options: [
+                {value: '0', title: 'Всех документов'},
+                {value: '1', title: 'Только с "бумажным" оригиналом'},
+            ]
+        },
+        {
+            key: 'ADD_JOURNAL_RESOL_AUTHOR',
+            type: 'boolean',
+            title: 'Автора',
+        },
+        {
+            key: 'ADD_JOURNAL_CONTROLLER',
+            type: 'boolean',
+            title: 'Контролера',
+        },
+        {
+            key: 'ADD_JOURNAL_RESOL_REPLY',
+            type: 'boolean',
+            title: 'Исполнителей',
+        },
+        {
+            key: 'MARKDOCKND1',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Вручную'}
+            ]
+        },
+        {
+            key: 'GPD_FLAG',
+            type: 'boolean',
+            title: 'Использовать это правило в Журнале передачи документов'
+        },
+        {
+            key: 'VOL_FLAG',
+            type: 'boolean',
+            title: 'Заполнять информацию о томах'
+        },
+        {
+            key: 'MARKDOC',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '1', title: 'Не добавлять'},
+                {value: '0', title: 'Для всех документов'},
+                {value: '2', title: 'Только для документов с "бумажным" оригиналом'}
+            ]
+        },
+        {
+            key: 'MARKDOCKND',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Вручную'}
+            ]
+        },
+    ]
+};
+

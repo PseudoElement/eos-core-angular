@@ -1,0 +1,38 @@
+<div *ngIf="inputs" class="journal-tr-doc">
+    <div>
+        <span>При введении поручения добавлять в журнал передачи документа:</span>
+        <div class="add-to-juornal-radio">
+            <span class="add-j-title">для:</span>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_4DOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="add-to-juornal">
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_CONTROLLER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_REPLY']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <hr>
+    </div>
+    <div>
+        <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
+        <span class="l-font ">При добавлении внутреннего адресата указывать экземпляр документа:</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div>
+        <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div>
+        <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs['rec.MARKDOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
+    </div>
+    <hr>
+    <div>
+        <span class="l-font">Передавать</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs['rec.MARKDOCKND']" [form]="form" [readonly]="false"></eos-dynamic-input>
+    </div>
+</div>
