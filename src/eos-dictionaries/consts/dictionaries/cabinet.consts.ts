@@ -6,6 +6,7 @@ import {environment} from '../../../environments/environment';
 
 export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'cabinet',
+    folder: 'departments',
     apiInstance: 'CABINET',
     title: 'Кабинеты',
     keyField: 'ISN_CABINET',

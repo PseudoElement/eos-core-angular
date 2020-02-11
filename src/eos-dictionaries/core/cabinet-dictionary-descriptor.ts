@@ -125,10 +125,6 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         return rec;
     }
 
-    getParentDictionaryId(): string {
-        return 'departments';
-    }
-
     getRelated(rec: CABINET): Promise<any> {
         const reqs = [
             this.apiSrv.read({ 'FOLDER': PipRX.criteries({ 'ISN_CABINET': rec.ISN_CABINET + '' }) }),

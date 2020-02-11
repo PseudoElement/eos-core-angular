@@ -4,6 +4,7 @@ import {COMMON_FIELD_NAME, COMMON_FIELDS} from '../_common';
 
 export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
     id: 'reshen',
+    folder: 'nadzor',
     apiInstance: 'NP_RESHEN_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Принятые решения',

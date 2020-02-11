@@ -15,6 +15,8 @@ export class PhotoUploaderComponent implements OnInit {
     @Input()  maxFileSize = 102400;
     @Input()  maxFileSizeText = '100Kb';
     @Output() endUploading: EventEmitter<IImage> = new EventEmitter<IImage>();
+    @Output() onBeforeModal: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onAfterModal: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild('fileInput') inputEl: ElementRef;
     // contactUrl = 'http://localhost/Eos.Delo.OData/Services/DELO_BLOB.asmx/Upload';
@@ -64,6 +66,7 @@ export class PhotoUploaderComponent implements OnInit {
             reader.onload = this._handleReaderLoaded.bind(this);
             reader.readAsDataURL(file);
 
+            this.onBeforeModal.emit(null);
             this.confirmModalRef.show();
         }
     }
@@ -84,11 +87,13 @@ export class PhotoUploaderComponent implements OnInit {
         });
 
         this.nativeInputEl.value = null;
+        this.onAfterModal.emit(false);
     }
 
     cancel() {
         this.confirmModalRef.hide();
         this.nativeInputEl.value = null;
+        this.onAfterModal.emit(false);
     }
 
     public addFileDialogStart() {

@@ -1,4 +1,4 @@
-import { DictionaryDescriptor } from '../dictionary-descriptor';
+import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { EosDictionaryNode } from '../eos-dictionary-node';
 import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
@@ -6,7 +6,7 @@ import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL } from 'eos-rest';
 
 
 
-export class SevParticipantDictionaryDescriptor extends DictionaryDescriptor {
+export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor {
     addRecord(data: any, _useless: any, appendToChanges: any = null, isProtected = false, isDeleted = false): Promise<any> {
         return super.addRecord(data, _useless, appendToChanges = null, isProtected = false, isDeleted = false).then(ID => {
             return this.UpdateSaveParticipantRule(data, ID);

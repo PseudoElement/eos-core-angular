@@ -123,6 +123,8 @@ export interface IFieldView extends IFieldDescriptorBase {
 
 export interface IDictionaryDescriptor {
     id: string;
+    isFolder?: boolean;
+    folder?: string; // dict folder (ex, nadzor, sev). root, if null or undefined
     dictType: E_DICT_TYPE;
     apiInstance: string;
     title: string;

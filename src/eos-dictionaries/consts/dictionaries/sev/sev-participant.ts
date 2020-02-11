@@ -2,9 +2,10 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from '../_linear-template';
 import { NOT_EMPTY_STRING } from '../../input-validation';
 import { COMMON_FIELD_NAME } from '../_common';
+import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
 
-export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
     id: 'sev-participant',
     apiInstance: 'SEV_PARTICIPANT',
     title: 'Участники СЭВ',
