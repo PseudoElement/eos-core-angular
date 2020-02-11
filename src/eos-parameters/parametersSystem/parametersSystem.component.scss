@@ -108,7 +108,7 @@
         .item-disable {
             pointer-events: none;
             cursor: not-allowed;
-            background-color: #eeee !important;
+            background-color: #eeeeee !important;
             height: 42px;
             padding: 10px 15px;
             border-right: 1px solid #ddd;
@@ -119,7 +119,7 @@
                 outline: none;
             }
             &.active-element-param {
-                background-color: #eeee !important;
+                background-color: #eeeeee !important;
             }
         }
     }
