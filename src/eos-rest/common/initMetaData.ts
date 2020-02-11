@@ -1252,7 +1252,8 @@ const commonMeta = {
             ADDRESS: _t.s,
             DELETED: _t.i,
             PROTECTED: _t.i,
-            NOTE: _t.s
+            NOTE: _t.s,
+            CRYPT: _t.i
         },
         readonly: [
 

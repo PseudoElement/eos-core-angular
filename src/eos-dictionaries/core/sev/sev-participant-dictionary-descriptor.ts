@@ -3,6 +3,7 @@ import { EosDictionaryNode } from '../eos-dictionary-node';
 import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL } from 'eos-rest';
+import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
 
 
 
@@ -31,7 +32,17 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
             }
             return ch;
         });
-        return this.apiSrv.batch(changes, '');
+        return this.apiSrv.batch(changes, '').then(() => {
+            return null;
+        });
+    }
+    updateRecord(originalData: any, updates: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
+        return super.updateRecord(originalData, updates, appendToChanges).then(data => {
+            if (!data || !data.length) {
+                return [{success: true, record: originalData.rec}];
+            }
+            return data;
+        });
     }
     public getData(query?: any, order?: string, limit?: number): Promise<any> {
         return super.getData(query, order, limit).then((sev_part: SEV_PARTICIPANT[]) => {
