@@ -53,5 +53,5 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'CRYPT', 'rules'],
     quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS',  'rules'],
-    searchFields: [],
+    searchFields: ['CLASSIF_NAME'],
 });
