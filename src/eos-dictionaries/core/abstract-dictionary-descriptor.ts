@@ -504,6 +504,9 @@ export abstract class AbstractDictionaryDescriptor {
             return Promise.resolve(true);
         });
     }
+    updateDefaultValues(nodes: EosDictionaryNode[]): Promise<any> {
+        return Promise.resolve(null);
+    }
 
     protected checkSevIndexNew(sevData: SEV_ASSOCIATION, record: any): Promise<IRecordOperationResult> {
         return this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({OBJECT_NAME: this.apiInstance})})

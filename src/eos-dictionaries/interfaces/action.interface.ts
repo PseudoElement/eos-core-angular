@@ -43,6 +43,7 @@ export enum E_RECORD_ACTIONS {
     combine,
     uncheckNewEntry,
     dopRequisites,
+    defaultCollision,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

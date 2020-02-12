@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES } from 'app/consts/confirms.const';
+import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT } from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
@@ -42,6 +42,9 @@ import {
     WARN_SELECT_NODE,
     INFO_OPERATION_COMPLETE,
     SEARCH_NOT_DONE,
+    SUCCESS_SAVE,
+    WARN_SAVE_FAILED,
+    INFO_NOTHING_CHANGES,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
@@ -55,6 +58,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CopyPropertiesComponent } from 'eos-dictionaries/copy-properties/copy-properties.component';
 import { CreateNodeBroadcastChannelComponent } from 'eos-dictionaries/create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { ORGANIZ_CL } from 'eos-rest';
+import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -319,7 +323,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
 
                 if (!viewParameters.updatingList && this.treeNode) {
-                    if (this.dictionaryId === NOMENKL_DICT.id) {
+                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id) {
                         const n = this.dictionary.descriptor.getActive();
                         if (n) { this.title = n.title; }
                     } else {
@@ -536,6 +540,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
             case E_RECORD_ACTIONS.dopRequisites:
                 this._openDopRequisetes();
+                break;
+            case E_RECORD_ACTIONS.defaultCollision:
+                this._defaultSettingsCollision();
                 break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
@@ -802,9 +809,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private updateRigthFields(node: EosDictionaryNode, refresh: boolean = false): Promise<any> {
         if (node) {
             node.relatedLoaded = false;
-              return  this._dictSrv.currentDictionary.getFullNodeInfo(node.id, refresh).then(() => {
-                    this._dictSrv.updateRigth.next(null);
-                });
+            return this._dictSrv.currentDictionary.getFullNodeInfo(node.id, refresh).then(() => {
+                this._dictSrv.updateRigth.next(null);
+            });
         }
         return Promise.resolve(null);
     }
@@ -1232,6 +1239,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _checkDictionaryId(): boolean {
         return ['citizens', 'organization'].some(id => {
             return id === this.dictionaryId;
+        });
+    }
+    private _defaultSettingsCollision() {
+        const body1 = 'Применить значения по умолчанию для всех групп';
+        let body = 'Применить значения по умолчанию для коллизий группы:';
+        let mess;
+        if (this.title === 'Коллизии СЭВ') {
+            mess = body1;
+        } else {
+            mess = body += ' ' + this.title;
+        }
+
+        CONFIRM_SEV_DEFAULT.body = mess;
+        this._confirmSrv.confirm(CONFIRM_SEV_DEFAULT).then(d => {
+            if (d) {
+                this.dictionary.descriptor.updateDefaultValues(this.nodeList.nodes).then((h) => {
+                    if (h) {
+                        this._dictSrv.reload();
+                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    } else {
+                        this._msgSrv.addNewMessage(INFO_NOTHING_CHANGES);
+                    }
+                }).catch(e => {
+                    this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
+                });
+            }
         });
     }
 

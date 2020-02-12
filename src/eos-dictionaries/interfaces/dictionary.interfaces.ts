@@ -90,6 +90,7 @@ export interface IFieldDescriptor {
     parent?: any;
     keyPosition?: number| string;
     preferences?: IFieldPreferences;
+    readonly?: boolean;
 }
 
 export interface IFieldDescriptorBase {

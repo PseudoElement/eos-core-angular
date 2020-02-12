@@ -204,3 +204,9 @@ export const CONFIRM_DG_SHABLONRK: IConfirmWindow2 = {
         {title: 'OK', result: BUTTON_RESULT_OK, isDefault: true },
     ]
 };
+export const CONFIRM_SEV_DEFAULT: IConfirmWindow = {
+    title: 'Значения по умолчанию',
+    body: 'Применить значения по умолчанию для коллизий группы ',
+    okTitle: 'ПРИМЕНИТЬ',
+    cancelTitle: 'ОТМЕНИТЬ'
+};
