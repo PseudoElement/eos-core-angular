@@ -118,7 +118,6 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     }
 
     removeFromCurrent(item?: string, dueN?: string) {
-        this.basicFields = this.basicFields.filter(field => typeof field === 'string');
         if (this.selectedCurrRole || item) {
             this.deletRole = false;
             return this._confirmSrv.confirm(CONFIRM_DELETE_ROLE).then(res => {
@@ -158,6 +157,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         } */
                     }
                 }
+                this.basicFields = this.basicFields.filter(field => typeof field === 'string');
                 this.deletRole = true;
             });
         }
