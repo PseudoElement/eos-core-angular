@@ -10,8 +10,8 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     apiInstance: 'SEV_PARTICIPANT',
     title: 'Участники СЭВ',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
-    'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
-    'removeHard', 'edit', 'view', 'showDeleted'],
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
+        'removeHard', 'edit', 'view', 'showDeleted'],
     visible: true,
     iconName: 'eos-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
@@ -48,10 +48,24 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         title: 'Используемые правила',
         // required: true,
         // foreignKey: 'SEV_PARTICIPANT_RULE_List'
-    }]),
-    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME'],
+    },
+    {
+        key: 'sev_partisipant',
+        type: 'dictionary',
+        title: 'ПРАВИЛА ID',
+    },
+    {
+        key: 'sev_rule',
+        type: 'dictionary',
+        title: 'Наименования правил',
+
+    },
+
+
+    ]),
+    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME', 'sev_partisipant', 'sev_rule'],
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'CRYPT', 'rules'],
-    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS',  'rules'],
+    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'sev_partisipant', 'sev_rule'],
     searchFields: ['CLASSIF_NAME'],
 });

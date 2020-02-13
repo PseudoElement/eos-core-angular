@@ -436,11 +436,11 @@ export class EosDictionary {
 
     loadRelatedFieldsOptions(updatefields: IFieldView[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
         const tablelist = updatefields.filter(i => i.dictionaryId)
-            .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder} : null);
+            .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder } : null);
         const tablesUniq = Array.from(new Set(tablelist));
 
-        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex( f => f.key === ICONS_CONTAINER) !== -1) {
-            tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: {OBJECT_NAME: this.descriptor.apiInstance }}} );
+        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER) !== -1) {
+            tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: { OBJECT_NAME: this.descriptor.apiInstance } } });
         }
 
         return this.descriptor.getRelatedFields2(tablesUniq, nodes, loadAll)
@@ -470,7 +470,7 @@ export class EosDictionary {
                             // this.descriptor.getRelatedSev(node.data.rec)
                             nodes.forEach(node => {
                                 const id = node.data.rec['DUE'] || ('ISN#' + node.data.rec['ISN_LCLASSIF']);
-                                const sev = related['SEV_ASSOCIATION'].find( s => s['OBJECT_ID'] === id);
+                                const sev = related['SEV_ASSOCIATION'].find(s => s['OBJECT_ID'] === id);
                                 if (sev) {
                                     node.data.sev = sev;
                                 }
@@ -726,6 +726,12 @@ export class EosDictionary {
                         this.descriptor.getRelatedSev(node.data.rec)
                     ]).then(([related, sev]) => {
                         node.data = Object.assign(node.data, { PARE_LINK_Ref: related['PARE_LINK_Ref'][0] }, { sev: sev });
+                        node.relatedLoaded = true;
+                        return node;
+                    });
+                case 'sev-participant':
+                    return Promise.all([this.descriptor.getRelated(node.data.rec)]).then(([related]) => {
+                        node.data = Object.assign(node.data, related);
                         node.relatedLoaded = true;
                         return node;
                     });

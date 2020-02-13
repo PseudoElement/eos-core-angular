@@ -2,7 +2,7 @@ import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { EosDictionaryNode } from '../eos-dictionary-node';
 import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL } from 'eos-rest';
+import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE } from 'eos-rest';
 import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
 
 
@@ -23,11 +23,11 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                 changes.push(value);
             });
         }
-        changes = this.apiSrv.changeList(changes).map((ch: {method: string, requestUri: string, data?: string}) => {
-            const idPartisipant =  ID ? ID : data.rec['ISN_LCLASSIF'];
+        changes = this.apiSrv.changeList(changes).map((ch: { method: string, requestUri: string, data?: string }) => {
+            const idPartisipant = ID ? ID : data.rec['ISN_LCLASSIF'];
             if (ch.method === 'POST') {
                 ch.requestUri = `SEV_PARTICIPANT(${idPartisipant})/SEV_PARTICIPANT_RULE_List`;
-            }   else {
+            } else {
                 ch.requestUri = `SEV_PARTICIPANT(${idPartisipant})/${ch.requestUri.replace(/SEV_PARTICIPANT_RULE/ig, 'SEV_PARTICIPANT_RULE_List')}`;
             }
             return ch;
@@ -39,7 +39,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
     updateRecord(originalData: any, updates: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
         return super.updateRecord(originalData, updates, appendToChanges).then(data => {
             if (!data || !data.length) {
-                return [{success: true, record: originalData.rec}];
+                return [{ success: true, record: originalData.rec }];
             }
             return data;
         });
@@ -86,6 +86,29 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
 
 
         return Promise.resolve(true);
+    }
+
+    getRelated(data): Promise<any> {
+        return this.apiSrv.read({
+            SEV_PARTICIPANT_RULE: {
+                criteries: {
+                    ISN_PARTICIPANT: data.ISN_LCLASSIF,
+                }
+            },
+        }).then((sev_partisipant: SEV_PARTICIPANT_RULE[]) => {
+            const sev_ruleID = [];
+            sev_partisipant.forEach((rule: SEV_PARTICIPANT_RULE) => {
+                sev_ruleID.push(rule.ISN_RULE);
+            });
+            return this.apiSrv.read({
+                SEV_RULE: sev_ruleID
+            }).then((sev_rule: SEV_RULE[]) => {
+                if (sev_rule.length) {
+                    data.rules = sev_rule.map(e => e.CLASSIF_NAME).join('; ');
+                }
+                return { sev_partisipant, sev_rule };
+            });
+        });
     }
 
 }
