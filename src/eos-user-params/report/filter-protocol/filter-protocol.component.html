@@ -1,5 +1,5 @@
 <div class="filter-comp">
-    <div [popover]="searchModal" containerClass="head-protocol filter" placement="bottom" container="body"
+    <div [popover]="searchModal" (onShown)="onShown()" containerClass="head-protocol filter" placement="bottom" container="body"
         class="cust-style-mod" #full="bs-popover">
         <button [ngClass]="{'opened': formBol}" class="btn btn-primary-light search-btn" tooltip="Расширенный поиск"
             placement="bottom" container="body" (click)="isActiveButton()" containerClass="tooltip-info">
