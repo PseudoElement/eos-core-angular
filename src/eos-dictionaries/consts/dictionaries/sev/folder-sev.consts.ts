@@ -7,10 +7,10 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
 
 export const SEV_DICTIONARIES = [
-    RULES_SEV_DICT,
-    COLLISIONS_SEV_DICT,
     PARTICIPANT_SEV_DICT,
     BROADCAST_CHANNEL_DICT,
+    RULES_SEV_DICT,
+    COLLISIONS_SEV_DICT,
     // SEV_ASSOCIATION_DICT,
 ];
 

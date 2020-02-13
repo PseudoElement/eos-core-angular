@@ -73,15 +73,15 @@ export class DictionaryDescriptorService {
             })
             .forEach((dict) => this._mDicts.set(dict.id, dict));
         SEV_DICTIONARIES
-            .sort((a, b) => {
-                if (a.title > b.title) {
-                    return 1;
-                } else if (a.title < b.title) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            })
+            // .sort((a, b) => {
+            //     if (a.title > b.title) {
+            //         return 1;
+            //     } else if (a.title < b.title) {
+            //         return -1;
+            //     } else {
+            //         return 0;
+            //     }
+            // })
             .forEach((dict) => this._mDicts.set(dict.id, dict));
     }
 
