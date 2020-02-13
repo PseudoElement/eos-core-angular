@@ -122,10 +122,9 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         this.modalWindow = null;
         this.modalWindow = this._modalSrv.show(RulesSelectComponent, { class: 'sev-rules-select-modal modal-lg' });
         this.modalWindow.content.initbyLists(this._listRules, this._usedRules);
-
         if (this.modalWindow) {
             const subscription = this.modalWindow.content.onChoose.subscribe((res) => {
-
+                this._usedRules = res.used;
                 this._usedRulesString = this._updateUsedRules(res.list, res.used);
                 this.changesRrules(res.list, res.used);
                 subscription.unsubscribe();
