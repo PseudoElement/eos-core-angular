@@ -29,7 +29,7 @@
                             [input]="inputs['rec.ISN_CHANNEL']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input *ngIf="inputs['rec.CRYPT'] && !appctx.cbBase"
+        <eos-dynamic-input *ngIf="inputs['rec.CRYPT'] && !isCBBase"
                             [input]="inputs['rec.CRYPT']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
