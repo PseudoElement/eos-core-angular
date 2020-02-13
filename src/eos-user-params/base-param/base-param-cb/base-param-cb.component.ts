@@ -91,7 +91,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return this._sysParams;
     }
     get stateHeaderSubmit() {
-        return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
+        return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0 || this.queryRoles.length > 0;
     }
     get getCbRole() {
         return this.editMode && !this.singleOwnerCab && (this.gt()['delo_web_delo'] || this.gt()['delo_web']) && !this.curentUser.isTechUser;
@@ -636,15 +636,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
-        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb)) {
-            this.currentCbFields = this.startRolesCb;
-            this.patchCbRoles();
-        }
         this.cancelValues(this.inputs, this.form);
-        this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
+        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb)) {
+            this.currentCbFields = [...this.startRolesCb];
+            this.patchCbRoles();
+        } else {
+            this.cancelValues(this.controls, this.formControls);
+        }
         this.clearMap();
         this._pushState();
         this.editModeF();
@@ -836,8 +837,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.cancelValues(this.controls, this.formControls);
             // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
-        if (this.startRolesCb !== this.currentCbFields || (!this.startRolesCb.length && !this.currentCbFields.length)) {
+        if (JSON.stringify(this.startRolesCb) !== JSON.stringify(this.currentCbFields)) {
             this.getQueryFromRoles();
+            this._pushState();
         }
     }
 
@@ -907,7 +909,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
             this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
             this.cancelValues(this.controls, this.formControls);
-            this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         } else {
             str = this.currentCbFields[0].role + ' ...';
         }
