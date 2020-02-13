@@ -8,7 +8,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     },
     {
         key: 2,
-        label: 'Текущая организация',
+        label: 'Текущая организация (для пр. "Справочники")',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
@@ -148,7 +148,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     },
     {
         key: 30,
-        label: 'Настройка протокола просмотра',
+        label: 'Настройка протокола просмотра (для пр. "Справочники")',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
