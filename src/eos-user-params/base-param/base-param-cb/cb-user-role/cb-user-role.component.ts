@@ -157,7 +157,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         } */
                     }
                 }
-                this.basicFields = this.basicFields.filter(field => typeof field === 'string');
+                this.basicFields = this.basicFields.filter(field => typeof field === 'string').filter((field, index) => index === this.basicFields.indexOf(field = field.trim()));
                 this.deletRole = true;
             });
         }
