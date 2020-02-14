@@ -607,7 +607,8 @@ export class EosDictionary {
         /* find root */
         if (!this.root) {
             let rootNode: EosDictionaryNode;
-            if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear) {
+            // && this.id !== 'sev-collisions' добавил для справочника коллизии , так как справочник не иерархический и не определить id родителя стандартным способом
+            if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear && this.id !== 'sev-collisions') {
                 rootNode = nodes.find((node) => node.parentId === null || node.parentId === undefined || node.id === node.parentId);
             }
 
