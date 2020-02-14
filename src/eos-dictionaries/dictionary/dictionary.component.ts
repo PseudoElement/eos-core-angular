@@ -366,7 +366,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.ngUnsubscribe.complete();
     }
 
-    onSetActiveNode() {
+    onSetActiveNode($event) {
+        // reset pagination custom tree
+       this._dictSrv.resetPagination();
     }
 
     clearFindSettings() {

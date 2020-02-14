@@ -1233,6 +1233,9 @@ export class EosDictService {
     public reload() {
         this._reloadList();
     }
+    public resetPagination() {
+        this._initPaginationConfig();
+    }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
