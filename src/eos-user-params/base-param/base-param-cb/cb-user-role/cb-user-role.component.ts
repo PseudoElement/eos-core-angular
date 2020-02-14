@@ -23,7 +23,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     startRolesCb: IRoleCB[];
     basicFields: string[] = [
         'Председатель', 'Заместитель Председателя', 'Директор департамента и заместитель директора департамента', 'Помощник Председателя',
-        'Помощник заместителя председателя и директоров департаментов', 'Исполнитель'
+        'Помощник заместителя Председателя и директоров департаментов', 'Исполнитель'
     ];
     fixedFields: string[] = [];
     selectedBasicRole: string;
@@ -106,7 +106,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
 
     addToCurrent() {
         if (this.selectedBasicRole) {
-            if (this.selectedBasicRole !== 'Помощник заместителя председателя и директоров департаментов' && this.selectedBasicRole !== 'Помощник Председателя') {
+            if (this.selectedBasicRole !== 'Помощник заместителя Председателя и директоров департаментов' && this.selectedBasicRole !== 'Помощник Председателя') {
                 this.currentFields.push(this.parseToCurRole(this.selectedBasicRole));
                 this.basicFields.splice(this.basicFields.indexOf(this.selectedBasicRole), 1);
             } else {
@@ -123,7 +123,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
             return this._confirmSrv.confirm(CONFIRM_DELETE_ROLE).then(res => {
                 if (res) {
                     if (this.selectedCurrRole) {
-                        if (this.selectedCurrRole.role !== 'Помощник заместителя председателя и директоров департаментов' && this.selectedCurrRole.role !== 'Помощник Председателя') {
+                        if (this.selectedCurrRole.role !== 'Помощник заместителя Председателя и директоров департаментов' && this.selectedCurrRole.role !== 'Помощник Председателя') {
                             this.basicFields.push(this.selectedCurrRole.role);
                         }
                         this.currentFields.splice(this.currentFields.indexOf(this.selectedCurrRole), 1);
@@ -132,7 +132,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this.selectedCurrRole = null;
                     } else {
                         this.basicFields.push(this.curPreDelete.role);
-                        if (item === 'Помощник заместителя председателя и директоров департаментов' || item === 'Помощник Председателя') {
+                        if (item === 'Помощник заместителя Председателя и директоров департаментов' || item === 'Помощник Председателя') {
                             this.basicFields.splice(this.basicFields.lastIndexOf(item), 1);
                         }
                         this._fixedRoles(item, 'del');
@@ -181,7 +181,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     private _addRole(role: string) {
         this._fixedRoles(role, 'add');
         this.currentFields = this.currentFields.filter(field => typeof field !== 'string');
-        if (role === 'Помощник Председателя' || role === 'Помощник заместителя председателя и директоров департаментов') {
+        if (role === 'Помощник Председателя' || role === 'Помощник заместителя Председателя и директоров департаментов') {
             setTimeout(() => {
                 this.basicFields.push(role);
             }, 0);
@@ -194,7 +194,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
         const arrRoles = this.currentFields.map(field => field.role);
         KIND_ROLES_CB.forEach(role => {
             if (arrRoles.indexOf(role) !== -1) {
-                if (role !== 'Помощник заместителя председателя и директоров департаментов' && role !== 'Помощник Председателя') {
+                if (role !== 'Помощник заместителя Председателя и директоров департаментов' && role !== 'Помощник Председателя') {
                     this.basicFields.splice(this.basicFields.indexOf(role), 1);
                 }
                 this._fixedRoles(role, 'add', true);
@@ -215,8 +215,8 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     break;
                 case 'Директор департамента и заместитель директора департамента':
                     if (!this.fixedFields.length) {
-                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя председателя и директоров департаментов' && field !== 'Помощник Председателя');
-                        this.basicFields = ['Помощник заместителя председателя и директоров департаментов', 'Помощник Председателя'];
+                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя Председателя и директоров департаментов' && field !== 'Помощник Председателя');
+                        this.basicFields = ['Помощник заместителя Председателя и директоров департаментов', 'Помощник Председателя'];
                     } else {
                         this.basicFields.splice(this.basicFields.indexOf('Исполнитель'), 1);
                         this.fixedFields.push('Исполнитель');
@@ -224,8 +224,8 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     break;
                 case 'Исполнитель':
                     if (!this.fixedFields.length) {
-                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя председателя и директоров департаментов' && field !== 'Помощник Председателя');
-                        this.basicFields = ['Помощник заместителя председателя и директоров департаментов', 'Помощник Председателя'];
+                        this.fixedFields = this.basicFields.filter(field => field !== 'Помощник заместителя Председателя и директоров департаментов' && field !== 'Помощник Председателя');
+                        this.basicFields = ['Помощник заместителя Председателя и директоров департаментов', 'Помощник Председателя'];
                     } else {
                         this.basicFields.splice(this.basicFields.indexOf('Директор департамента и заместитель директора департамента'), 1);
                         this.fixedFields.push('Директор департамента и заместитель директора департамента');
@@ -242,7 +242,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         }
                     }
                     break;
-                case 'Помощник заместителя председателя и директоров департаментов':
+                case 'Помощник заместителя Председателя и директоров департаментов':
                     if (!init) {
                         this._showDepRole(role);
                     } else {
@@ -292,7 +292,7 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this.fixedFields = [];
                     }
                     break;
-                case 'Помощник заместителя председателя и директоров департаментов':
+                case 'Помощник заместителя Председателя и директоров департаментов':
                     if (!this.currentFields.length) {
                         this.basicFields = this.fixedFields.concat(this.basicFields);
                         this.fixedFields = [];
