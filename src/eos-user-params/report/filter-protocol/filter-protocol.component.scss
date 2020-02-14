@@ -37,8 +37,12 @@
         display: flex;
         justify-content: flex-end;
         bottom: 50px;
-        right: 10px;
+        // right: 10px;
         position: relative;
+        padding-right: 10px;
+        height: 35px;
+        padding-top: 4px;
+        margin-top: -4px;
     }
     .del-mar{
         height: 72px;

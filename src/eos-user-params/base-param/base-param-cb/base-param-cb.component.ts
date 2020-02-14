@@ -69,7 +69,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     errorSave: boolean;
     queryRoles: any[] = [];
     public isShell: boolean = false;
-    public userCanUseRole: boolean = false;
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public maxLoginLength: string;
@@ -283,7 +282,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 if (depD.length === 1) {
                     this.singleOwnerCab = false;
                     this.getUserCbRoles();
-                    this.userCanUseRole = true;
                 }
             });
         }
@@ -570,8 +568,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
         .then(() => {
-            this.queryRoles = [];
-            this.startRolesCb = this.currentCbFields;
+            if (!this.singleOwnerCab) {
+                this.queryRoles = [];
+                this.startRolesCb = [...this.currentCbFields];
+            }
             if (this.user_copy_isn) {
                 let url = `FillUserCl?isn_user=${this.curentUser.ISN_LCLASSIF}`;
                 url += `&role='${this.formControls.controls['SELECT_ROLE'].value ? encodeURI(this.formControls.controls['SELECT_ROLE'].value) : ''}'`;
@@ -615,10 +615,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.editModeF();
             this._pushState();
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
-            if (this.userCanUseRole) {
-                this.singleOwnerCab = false;
-                this.getUserCbRoles();
-            }
         });
     }
     clearMap() {
@@ -640,9 +636,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
-        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb)) {
+        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb) && !this.singleOwnerCab) {
             this.currentCbFields = [...this.startRolesCb];
             this.patchCbRoles();
+            this.queryRoles = [];
         } else {
             this.cancelValues(this.controls, this.formControls);
         }

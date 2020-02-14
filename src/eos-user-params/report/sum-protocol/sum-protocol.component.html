@@ -31,7 +31,7 @@
                             </button>
                         </div>
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button [disabled]="DisabledRemoveAudits()" class="btn btn-primary-light bth-size-sum" tooltip="Удалить" (click)="DeleteEventUser()"
+                            <button [disabled]="DisabledRemoveAudits()" class="btn btn-primary-light bth-size-sum" [tooltip]="DisabledRemoveAudits() ? null : 'Удалить'" (click)="DeleteEventUser()"
                                 placement="bottom" container="body" containerClass="tooltip-info">
                                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                             </button>

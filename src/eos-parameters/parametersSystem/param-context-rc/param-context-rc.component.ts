@@ -76,7 +76,8 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 if (!data) {
                     this.formContextChoice.controls.contextFile.patchValue(false);
                 }
-                this.cancelEdit();
+                this.form.disable({ emitEvent: false });
+                this.formContextChoice.disable({ emitEvent: false });
             })
             .catch(err => {
                 if (err.code !== 434) {
@@ -122,6 +123,22 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
         this.cancelEdit();
     }
     submit() {
+        if (this.formContextChoice.value.contextFile) {
+            let checkIndRk = true;
+            Object.keys(this.form.controls).forEach(key => {
+                if (this.form.controls[key].value) {
+                    checkIndRk = false;
+                }
+            });
+            if (checkIndRk) {
+                this.msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Необходимо выбрать разделы для индексирования РК(РКПД).'
+                });
+                return;
+            }
+        }
         if (this.newData) {
             alert(this.message);
             this.formChanged.emit(false);
@@ -131,6 +148,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this.cancelEdit();
                 })
                 .catch(data => {
                     this.formChanged.emit(true);
@@ -140,6 +158,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                         title: 'Ошибка сервера',
                         msg: data.message ? data.message : data
                     });
+                    this.cancelEdit();
                 });
         }
     }
