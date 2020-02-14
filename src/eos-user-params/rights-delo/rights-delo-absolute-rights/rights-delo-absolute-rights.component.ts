@@ -15,7 +15,7 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USER_TECH, PipRX, USERDEP, ORGANIZ_CL, USER_RIGHT_DOCGROUP } from 'eos-rest';
+import { USER_TECH, PipRX, USERDEP, ORGANIZ_CL, USER_RIGHT_DOCGROUP, USER_CL } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
@@ -194,32 +194,45 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             },
             loadmode: 'Table',
             expand: 'USER_TECH_List'
-        }).then((data: any) => {
-            let count = 0;
-            let sysTechBol = false;
-            const arr = this.listRight[0].change;
-            if (this.listRight[0].change.length !== 0) {
-                arr.map((val) => {
-                    if (val.hasOwnProperty('funcNum')) {
-                        sysTechBol = true;
-                    } else {
-                        if (val.data.TECH_RIGHTS.charAt(0) === '0') {
-                            sysTechBol = true;
-                        }
-                    }
-                });
-            }
+        }).then((data: USER_CL[]) => {
+            const countNotLim = [];
+            const curLimUser = data.filter(user => this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && !this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List));
             for (const user of data) {
-                if ((this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol && !this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List)) || this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List)) {
-                    count++;
+                if (!this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List) && user.TECH_RIGHTS.charAt(0) === '1') {
+                    countNotLim.push(user);
                 }
             }
-            if (data.length > count) {
+            if (countNotLim.length > curLimUser.length || (countNotLim.length === curLimUser.length  && countNotLim[0].ISN_LCLASSIF !== curLimUser[0].ISN_LCLASSIF)) {
                 this.limitUserTech = false;
             } else {
                 this.limitUserTech = true;
+                if (this.checkChangeToLimitUser(countNotLim)) {
+                    this.limitUserTech = true;
+                } else {
+                    this.limitUserTech = false;
+                }
             }
         });
+    }
+
+    checkChangeToLimitUser(curLimUser: USER_CL[]): boolean {
+        let sysTechBol = false;
+        const arr = this.listRight[0].change;
+        if (this.listRight[0].change.length !== 0) {
+            arr.map((val) => {
+                if (val.hasOwnProperty('funcNum') && val.funcNum === 1) {
+                    sysTechBol = true;
+                } else {
+                    if (val.data.hasOwnProperty('TECH_RIGHTS') && val.data.TECH_RIGHTS.charAt(0) === '0') {
+                        sysTechBol = true;
+                    }
+                }
+            });
+        }
+        if (this.arrNEWDeloRight[0] === '0') {
+            sysTechBol = true;
+        }
+        return sysTechBol;
     }
 
     submit(flag?): Promise<any> {
