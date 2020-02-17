@@ -568,10 +568,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
         .then(() => {
-            if (!this.singleOwnerCab) {
-                this.queryRoles = [];
-                this.startRolesCb = [...this.currentCbFields];
-            }
             if (this.user_copy_isn) {
                 let url = `FillUserCl?isn_user=${this.curentUser.ISN_LCLASSIF}`;
                 url += `&role='${this.formControls.controls['SELECT_ROLE'].value ? encodeURI(this.formControls.controls['SELECT_ROLE'].value) : ''}'`;
@@ -599,6 +595,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
+        if (this.queryRoles.length) {
+            return this.GetUserData().then(() =>  {
+                this.queryRoles = [];
+                this.getUserCbRoles();
+            });
+        } else {
+            return this.GetUserData();
+        }
+    }
+
+    GetUserData(): Promise<any> {
         return this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
@@ -617,6 +624,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         });
     }
+
     clearMap() {
         this._newData.clear();
         this._newDataformAccess.clear();
@@ -835,6 +843,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
         if (JSON.stringify(this.startRolesCb) !== JSON.stringify(this.currentCbFields)) {
+            console.log('sdsd');
             this.getQueryFromRoles();
             this._pushState();
         }
@@ -1006,6 +1015,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
+                                this.form.get('DUE_DEP_NAME').setValidators(null);
                                 this.formControls.controls['SELECT_ROLE'].patchValue('');
                                 this.formControls.controls['SELECT_ROLE'].disable();
                             } else {
