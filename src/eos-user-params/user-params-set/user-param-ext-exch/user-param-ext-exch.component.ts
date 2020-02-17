@@ -18,7 +18,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'Сэв'];
+    readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ'];
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
