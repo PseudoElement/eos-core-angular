@@ -13,7 +13,6 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
     actions: [
         'add',
         'markRecords',
-        'tableCustomization',
         'removeHard',
         'edit',
     ],
