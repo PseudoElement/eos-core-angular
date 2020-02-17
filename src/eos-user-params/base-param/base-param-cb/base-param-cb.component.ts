@@ -843,7 +843,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
         if (JSON.stringify(this.startRolesCb) !== JSON.stringify(this.currentCbFields)) {
-            console.log('sdsd');
             this.getQueryFromRoles();
             this._pushState();
         }
