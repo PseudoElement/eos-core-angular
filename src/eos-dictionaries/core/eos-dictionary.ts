@@ -215,7 +215,7 @@ export class EosDictionary {
         return nodes;
     }
 
-    getFullNodeInfo(nodeId: string): Promise<EosDictionaryNode> {
+    getFullNodeInfo(nodeId: string, refresh: boolean = false): Promise<EosDictionaryNode> {
         // TODO: обьеденить концепции getNodeRelatedData и loadRelatedFieldsOptions
 
         // const infoFields = this.descriptor.record.getInfoView({});
@@ -228,7 +228,7 @@ export class EosDictionary {
         const existNode = this.getNode(nodeId);
         if (!existNode || !existNode.relatedLoaded) {
             return this.getNodeByNodeId(nodeId)
-                .then((node) => this.getNodeRelatedData(node));
+                .then((node) => this.getNodeRelatedData(node, refresh));
         } else {
             return Promise.resolve(existNode);
         }
@@ -436,11 +436,11 @@ export class EosDictionary {
 
     loadRelatedFieldsOptions(updatefields: IFieldView[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
         const tablelist = updatefields.filter(i => i.dictionaryId)
-            .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder} : null);
+            .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder } : null);
         const tablesUniq = Array.from(new Set(tablelist));
 
-        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex( f => f.key === ICONS_CONTAINER) !== -1) {
-            tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: {OBJECT_NAME: this.descriptor.apiInstance }}} );
+        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER) !== -1) {
+            tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: { OBJECT_NAME: this.descriptor.apiInstance } } });
         }
 
         return this.descriptor.getRelatedFields2(tablesUniq, nodes, loadAll)
@@ -470,7 +470,7 @@ export class EosDictionary {
                             // this.descriptor.getRelatedSev(node.data.rec)
                             nodes.forEach(node => {
                                 const id = node.data.rec['DUE'] || ('ISN#' + node.data.rec['ISN_LCLASSIF']);
-                                const sev = related['SEV_ASSOCIATION'].find( s => s['OBJECT_ID'] === id);
+                                const sev = related['SEV_ASSOCIATION'].find(s => s['OBJECT_ID'] === id);
                                 if (sev) {
                                     node.data.sev = sev;
                                 }
@@ -607,7 +607,8 @@ export class EosDictionary {
         /* find root */
         if (!this.root) {
             let rootNode: EosDictionaryNode;
-            if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear) {
+            // && this.id !== 'sev-collisions' добавил для справочника коллизии , так как справочник не иерархический и не определить id родителя стандартным способом
+            if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear && this.id !== 'sev-collisions') {
                 rootNode = nodes.find((node) => node.parentId === null || node.parentId === undefined || node.id === node.parentId);
             }
 
@@ -698,14 +699,14 @@ export class EosDictionary {
 
 
 
-    private getNodeRelatedData(node: EosDictionaryNode): Promise<EosDictionaryNode> {
+    private getNodeRelatedData(node: EosDictionaryNode, refresh: boolean = false): Promise<EosDictionaryNode> {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
                 case 'departments':
                     // const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
                     const orgDUE = node.data.rec.DUE_LINK_ORGANIZ;
                     return Promise.all([
-                        this.descriptor.getRelated(node.data.rec, orgDUE),
+                        this.descriptor.getRelated(node.data.rec, orgDUE, refresh),
                         this.descriptor.getRelatedSev(node.data.rec)
                     ]).then(([related, sev]) => {
                         node.data = Object.assign(node.data, related, { sev: sev });
@@ -726,6 +727,12 @@ export class EosDictionary {
                         this.descriptor.getRelatedSev(node.data.rec)
                     ]).then(([related, sev]) => {
                         node.data = Object.assign(node.data, { PARE_LINK_Ref: related['PARE_LINK_Ref'][0] }, { sev: sev });
+                        node.relatedLoaded = true;
+                        return node;
+                    });
+                case 'sev-participant':
+                    return Promise.all([this.descriptor.getRelated(node.data.rec)]).then(([related]) => {
+                        node.data = Object.assign(node.data, related);
                         node.relatedLoaded = true;
                         return node;
                     });

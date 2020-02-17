@@ -118,9 +118,8 @@ export class BreadcrumbsComponent implements OnDestroy {
             )
             .subscribe(data => {
                 this.showUserInfo = !!data;
-                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' &&
-                    (!this._appContext.cbBase || (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0))) {
-                    if (this.returnLimitCard(data)) {
+                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи') {
+                    if (this.returnLimitCard(data) && this._appContext.CurrentUser.IS_SECUR_ADM === 0) {
                         this.isEditGranted = true;
                     } else {
                         this.isEditGranted = false;

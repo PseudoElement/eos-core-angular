@@ -1252,7 +1252,8 @@ const commonMeta = {
             ADDRESS: _t.s,
             DELETED: _t.i,
             PROTECTED: _t.i,
-            NOTE: _t.s
+            NOTE: _t.s,
+            CRYPT: _t.i
         },
         readonly: [
 
@@ -1264,7 +1265,7 @@ const commonMeta = {
         ]
     },
     SEV_PARTICIPANT_RULE: {
-        pk: 'ISN_PARTICIPANT',
+        pk: 'ISN_PARTICIPANT ISN_RULE',
         properties: {
             ISN_PARTICIPANT: _t.i,
             ISN_RULE: _t.i,

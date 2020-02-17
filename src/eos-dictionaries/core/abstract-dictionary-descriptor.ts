@@ -44,6 +44,7 @@ export abstract class AbstractDictionaryDescriptor {
     readonly type: E_DICT_TYPE;
     readonly apiInstance: string;
     readonly hideTopMenu?: boolean;
+    readonly showDeleted?: boolean;
     /**
      * rest metadata. can be used for loading related dictionaries
      */
@@ -77,6 +78,7 @@ export abstract class AbstractDictionaryDescriptor {
             this._defaultOrder = descriptor.defaultOrder;
             this.hideTopMenu = descriptor.hideTopMenu;
             this.editOnlyNodes = descriptor.editOnlyNodes;
+            this.showDeleted = descriptor.showDeleted ? true : false;
             this.apiSrv = apiSrv;
             commonMergeMeta(this);
             this._initRecord(descriptor);
@@ -209,10 +211,6 @@ export abstract class AbstractDictionaryDescriptor {
             EosUtils.deepUpdate(newRec, preSetData);
         }
         return newRec;
-    }
-
-    getParentDictionaryId(): string {
-        return null;
     }
 
     getRelated(rec: any, ..._args): Promise<any> {
@@ -505,6 +503,9 @@ export abstract class AbstractDictionaryDescriptor {
             }
             return Promise.resolve(true);
         });
+    }
+    updateDefaultValues(nodes: EosDictionaryNode[]): Promise<any> {
+        return Promise.resolve(null);
     }
 
     protected checkSevIndexNew(sevData: SEV_ASSOCIATION, record: any): Promise<IRecordOperationResult> {

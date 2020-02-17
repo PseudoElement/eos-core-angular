@@ -1,9 +1,10 @@
 import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
-import { SEARCH_TYPES } from '../search-types';
-import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from './_common';
+import { SEARCH_TYPES } from '../../search-types';
+import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from '../_common';
 
 export const NADZOR_TEMPLATE: IDictionaryDescriptor = {
     id: '',
+    folder: 'nadzor',
     iconName: '',
     apiInstance: '',
     dictType: E_DICT_TYPE.linear,

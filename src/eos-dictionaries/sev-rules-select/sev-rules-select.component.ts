@@ -23,7 +23,7 @@ export class RulesSelectComponent {
     }
     public initbyLists (list: any, used: any) {
         this.listNodes = list;
-        this.usedNodes = used;
+        this.usedNodes = [...used];
         this.isUpdating = false;
     }
 

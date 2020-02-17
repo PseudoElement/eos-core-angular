@@ -1,12 +1,18 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces/index';
-import {NADZOR_TEMPLATE} from '../nadzor-template';
+import {NADZOR_TEMPLATE} from './nadzor-template';
+import { COMMON_FIELD_NAME } from '../_common';
 
 export const NP_OB_RETURN_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLATE, {
     id: 'ob-return',
     apiInstance: 'NP_OB_RETURN_CL',
     title: 'Причины возвращения',
     visible: true,
-    fields: [...NADZOR_TEMPLATE.fields, {
+    fields: [...NADZOR_TEMPLATE.fields,
+        Object.assign({}, COMMON_FIELD_NAME, {
+            isUnique: true,
+            uniqueInDict: true,
+        }),
+    {
         key: 'USE_C',
         title: 'Кассации',
         type: 'boolean',

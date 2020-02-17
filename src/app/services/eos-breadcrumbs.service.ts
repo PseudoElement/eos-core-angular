@@ -72,31 +72,33 @@ export class EosBreadcrumbsService {
         while (_current) {
             const subpath = _current.url.map((item) => item.path).join('/');
             if (subpath && _current.data && _current.data.showInBreadcrumb) {
-                currUrl += '/' + subpath;
-                const bc: IBreadcrumb = {
-                    title: _current.data.title,
-                    url: currUrl,
-                    params: _current.params,
-                };
 
-                if (_current.params) {
-                    if (_current.params.dictionaryId && !_current.params.nodeId) {
-                        const _dictId = _current.params.dictionaryId;
-                        let descr = this.dictDescriptorSrv.getDescriptorClass(_dictId);
-                        if (descr) {
-                            bc.title = descr.title;
-
-                            if (descr.getParentDictionaryId()) {
-                                descr = this.dictDescriptorSrv.getDescriptorClass(descr.getParentDictionaryId());
-                                crumbs.push({
-                                    title: descr.title,
-                                    url: '/spravochniki/' + descr.id
-                                });
-                            }
+                if (_current.params && _current.params.dictionaryId && !_current.params.nodeId) {
+                    let _dict = this.dictDescriptorSrv.getDescriptorData(_current.params.dictionaryId);
+                    const items = [];
+                    do {
+                        items.push({
+                            title: _dict.title,
+                            url: '/spravochniki/' + _dict.id,
+                            params: _current.params,
+                        });
+                        if (!_dict.folder) {
+                            break;
                         }
-                    }
+                        _dict = this.dictDescriptorSrv.getDescriptorData(_dict.folder);
+
+                    } while (_dict);
+                    crumbs.push( ... items.reverse());
+                } else {
+                    currUrl += '/' + subpath;
+                    const bc: IBreadcrumb = {
+                        title: _current.data.title,
+                        url: currUrl,
+                        params: _current.params,
+                    };
+                    crumbs.push(bc);
                 }
-                crumbs.push(bc);
+
             }
             _current = _current.firstChild;
         }

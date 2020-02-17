@@ -37,7 +37,7 @@ const FeaturesRK = Features.cfg.rkdefaults;
 export const RKPDdictionaries = [
     {
         name: 'security',
-        req: {SECURITY_CL: {}},
+        req: {SECURITY_CL: {}, orderby: 'WEIGHT'},
         titleFieldName: 'GRIF_NAME',
         isnFieldName: 'SECURLEVEL',
     }, {
@@ -116,7 +116,7 @@ export const RKPDDefaultFields: any[] = [
     DEFAULT_ID: 'SECURLEVEL',
     DEFAULT_TYPE: E_FIELD_TYPE.select,
     DESCRIPTION: 'Доступ',
-    DEFAULT_VALUE: 1,
+    // DEFAULT_VALUE: 1,
     CLASSIF_ID: 'security',
     order: 30,
 }, {

@@ -8,6 +8,10 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { BsModalService } from 'ngx-bootstrap';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
+import { EosUtils } from 'eos-common/core/utils';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 
 
 interface IToDeclineFields {
@@ -15,6 +19,7 @@ interface IToDeclineFields {
     gender?: boolean;
     dep?: boolean;
     adv?: boolean;
+    nomenative?: boolean;
 }
 
 @Component({
@@ -31,7 +36,8 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
     constructor(
         private injector: Injector,
-        private _msgSrv: EosMessageService
+        private _msgSrv: EosMessageService,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         super(injector);
     }
@@ -48,6 +54,64 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         //         [this.form.controls['rec.START_DATE'].validator, Validators.required]
         //     );
         // }
+        // this.data
+
+        if (!this.isNewRecord) {
+            const changes = [];
+            const inObj: any = {};
+            let fio;
+            if (this.data.rec['SURNAME'] && !this.data.printInfo['NAME'] && !this.data.printInfo['SURNAME'] && !this.data.printInfo['PATRON'] ) {
+
+                fio = this.data.rec['SURNAME'].replace(/\./g, ' ');
+                changes.push('Фамилия, имя, отчество');
+                inObj.fio = true;
+
+                changes.push('Дополнительные сведения (склонения ФИО)');
+                inObj.nomenative = true;
+            } else {
+                fio = this.data.printInfo['SURNAME'] + ' ' + this.data.printInfo['NAME'] + ' ' + this.data.printInfo['PATRON'];
+            }
+
+            if (this.data.printInfo['GENDER'] === null) {
+                inObj.gender = true;
+            }
+
+            if (this.data.rec['DUTY'] && !this.data.printInfo['DUTY_RP'] && !this.data.printInfo['DUTY_DP'] && !this.data.printInfo['DUTY_VP'] ) {
+                inObj.dep = true;
+                changes.push('Дополнительные сведения (склонение должности)');
+            }
+
+            if (!EosUtils.isObjEmpty(inObj)) {
+                this.fillDeclineFields(inObj, fio);
+                if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
+                    changes.push('Пол');
+                }
+                const warn: IConfirmWindow2 = {
+                    title: 'Ведение справочников',
+                    body: 'Новые поля карточки ДЛ:',
+                    bodyList: changes,
+                    bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
+                    buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+                };
+                setTimeout(() => {
+                    this._confirmSrv.confirm2(warn);
+                }, 10);
+
+            }
+
+
+        }
+
+        this.prevValues = this.makePrevValues(this.data);
+        this.tabsToArray(this.fieldGroups);
+        if (this.form) {
+            this.unsubscribe();
+            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
+                this.updateForm(formChanges);
+                this.updateValidTabs();
+            });
+        }
+
     }
 
     ngOnChanges() {
@@ -60,16 +124,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.photo = null;
         }
 
-        this.prevValues = this.makePrevValues(this.data);
-        this.tabsToArray(this.fieldGroups);
 
-        if (this.form) {
-            this.unsubscribe();
-            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
-                this.updateForm(formChanges);
-                this.updateValidTabs();
-            });
-        }
     }
 
 
@@ -111,7 +166,12 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
         return res;
     }
-
+    onBeforeModalPhoto($event) {
+        this.tooltipsHide();
+    }
+    onAfterModalPhoto($event) {
+        this.tooltipsRestore();
+    }
     newImage(img: IImage) {
         this.photo = img.url;
         this.dictSrv.uploadImg(img)
@@ -193,7 +253,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             }
         }
 
-        if (opt.fio) {
+        if (opt.fio || opt.gender || opt.nomenative) {
             if (gender !== null) {
                 field['GENDER'] = gender;
             }
@@ -207,53 +267,56 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             let rn = null;
             if (fio === null) {
                 rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
-                    data['GENDER'] === 0 ? RussianNameProcessor.sexM :
-                    data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    data['GENDER'] === 1 ? RussianNameProcessor.sexM :
+                    data['GENDER'] === 2 ? RussianNameProcessor.sexF :
                     null
                 );
             } else {
                 rn = new RussianName(fio, '', '',
-                    data['GENDER'] === 0 ? RussianNameProcessor.sexM :
-                    data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    data['GENDER'] === 1 ? RussianNameProcessor.sexM :
+                    data['GENDER'] === 2 ? RussianNameProcessor.sexF :
                     null
                 );
             }
 
             if (opt.gender) {
-                data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
-                                rn.sex === RussianNameProcessor.sexM ? 0 : null;
+                data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 2 :
+                                rn.sex === RussianNameProcessor.sexM ? 1 : null;
             }
 
-            data.NAME_DP = rn.firstName(rn.gcaseDat);
-            data.NAME_PP = rn.firstName(rn.gcasePred);
-            data.NAME_RP = rn.firstName(rn.gcaseRod);
-            data.NAME_TP = rn.firstName(rn.gcaseTvor);
-            data.NAME_VP = rn.firstName(rn.gcaseVin);
-            data.PATRON_DP = rn.middleName(rn.gcaseDat);
-            data.PATRON_PP = rn.middleName(rn.gcasePred);
-            data.PATRON_RP = rn.middleName(rn.gcaseRod);
-            data.PATRON_TP = rn.middleName(rn.gcaseTvor);
-            data.PATRON_VP = rn.middleName(rn.gcaseVin);
-            data.SURNAME_DP = rn.lastName(rn.gcaseDat);
-            data.SURNAME_PP = rn.lastName(rn.gcasePred);
-            data.SURNAME_RP = rn.lastName(rn.gcaseRod);
-            data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
-            data.SURNAME_VP = rn.lastName(rn.gcaseVin);
+            if (opt.fio) {
+                data.NAME_DP = rn.firstName(rn.gcaseDat);
+                data.NAME_PP = rn.firstName(rn.gcasePred);
+                data.NAME_RP = rn.firstName(rn.gcaseRod);
+                data.NAME_TP = rn.firstName(rn.gcaseTvor);
+                data.NAME_VP = rn.firstName(rn.gcaseVin);
+                data.PATRON_DP = rn.middleName(rn.gcaseDat);
+                data.PATRON_PP = rn.middleName(rn.gcasePred);
+                data.PATRON_RP = rn.middleName(rn.gcaseRod);
+                data.PATRON_TP = rn.middleName(rn.gcaseTvor);
+                data.PATRON_VP = rn.middleName(rn.gcaseVin);
+                data.SURNAME_DP = rn.lastName(rn.gcaseDat);
+                data.SURNAME_PP = rn.lastName(rn.gcasePred);
+                data.SURNAME_RP = rn.lastName(rn.gcaseRod);
+                data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
+                data.SURNAME_VP = rn.lastName(rn.gcaseVin);
 
-            data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
-            data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
-            data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
+                data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
+                data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
+                data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
 
-            // const n = this.getValue('printInfo.SURNAME');
-            // if (n === null || n === '') {
-            //     this.setValue('printInfo.SURNAME', res.SURNAME);
-            // }
-            delete data.SURNAME;
-            delete data.DUTY;
-            delete data.NAME;
-            delete data.PATRON;
+                delete data.DUTY;
 
-            // console.log(data);
+                delete data.SURNAME;
+                delete data.NAME;
+                delete data.PATRON;
+            }
+
+            if (opt.nomenative) {
+                data.NAME = rn.firstName(rn.gcaseNom);
+                data.SURNAME = rn.lastName(rn.gcaseNom);
+                data.PATRON = rn.middleName(rn.gcaseNom);
+            }
 
             if (data) {
                 Object.keys(data).forEach((key) => {

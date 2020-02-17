@@ -12,6 +12,7 @@ export class ParamHeaderComponent implements OnInit {
     @Input() title: string;
     @Input() editBtn: boolean;
     @Input() statusBtnSub;
+    @Input() stayEdit: boolean = false;
     @Output() submitForm = new EventEmitter();
     @Output() cancelForm = new EventEmitter();
     @Output() editForm = new EventEmitter();
@@ -37,6 +38,9 @@ export class ParamHeaderComponent implements OnInit {
     submit() {
         if (this.flag) {
             this.editMode = false;
+        }
+        if (this.stayEdit) {
+            this.editMode = true;
         }
         this.submitForm.emit();
     }

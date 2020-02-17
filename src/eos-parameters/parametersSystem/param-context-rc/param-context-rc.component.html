@@ -1,11 +1,12 @@
 <div *ngIf="inputs" class="input-param-wrapper input-param-context-wrapper">
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel(): submit(); cancelEdit()"
+        (submitForm)="btnDisabled && !formContextChoice.value.contextFile ? cancel(): submit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnError"
         [editBtn]="true"
         (editForm)="edit()"
+        [stayEdit]="stayEdit"
     ></eos-param-header>
     <div class="param-input-group">
         <div [formGroup]="formContextChoice">

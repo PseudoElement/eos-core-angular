@@ -4,6 +4,7 @@ import {SEARCH_TYPES} from '../../search-types';
 
 export const NP_SUD_RESHEN_TYPE_CL: ITreeDictionaryDescriptor = /*Object.assign({}, NADZOR_TEMPLATE, */{
     id: 'reshen-suda',
+    folder: 'nadzor',
     apiInstance: 'NP_SUD_RESHEN_TYPE_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Решения суда',

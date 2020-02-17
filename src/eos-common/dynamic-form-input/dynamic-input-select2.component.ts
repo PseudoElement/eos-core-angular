@@ -170,9 +170,11 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
             // console.log("TCL: DynamicInputSelect2Component -> selectAction -> AppContext.isIE", AppContext.isIE())
             /* IE fix */
             this._dropDown.hide();
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            e.stopPropagation();
+            if (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+            }
         }
 
     }

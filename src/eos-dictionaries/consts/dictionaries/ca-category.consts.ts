@@ -5,6 +5,7 @@ import { EDS_CATEGORY_CL } from './category-eds.consts';
 export const CA_CATEGORY_CL: IDictionaryDescriptor =
     Object.assign({}, LINEAR_TEMPLATE, {
     id: 'ca-category',
+    folder: EDS_CATEGORY_CL.id,
     apiInstance: 'CA_CATEGORY',
     title: 'Корневые сертификаты УЦ',
     keyField: 'ISN_CA_CATEGORY',

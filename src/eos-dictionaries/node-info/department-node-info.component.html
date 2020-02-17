@@ -62,6 +62,11 @@
                     <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['E_MAIL']?.title}}</p>
                     <p class="field-value m-font"><a href="mailto:{{nodeDataFull.rec['E_MAIL']}}">{{nodeDataFull.rec['E_MAIL']}}</a></p>
                 </div>
+                <div class="field"
+                    *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
+                    <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
+                    <p class="field-value m-font">{{nodeDataFull.sev?.GLOBAL_ID || '...'}}</p>
+                </div>
                 <hr>
                 <div class="field">
                     <p class="field-title unimportant-text s-font">КАБИНЕТЫ</p>
@@ -116,8 +121,7 @@
                 </div>
                 <div class="field">
                     <p class="field-title unimportant-text s-font text-upper">Организация</p>
-                    <p class="field-value m-font"><a *ngIf="nodeDataFull.organization?.DUE"
-                            [routerLink]="'/spravochniki/organization/'+nodeDataFull.organization?.DUE + '/view'">{{nodeDataFull.organization?.CLASSIF_NAME}}</a></p>
+                    <p class="field-value m-font"><a  (click)="openCardOrganiz()" *ngIf="nodeDataFull.organization?.DUE">{{nodeDataFull.organization?.CLASSIF_NAME}}</a></p>
                 </div>
                 <div class="field"
                     *ngIf="isSevIndexesEnable && nodeDataFull['sev']">

@@ -1,4 +1,4 @@
-import {Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges, HostListener} from '@angular/core';
+import { Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges, HostListener } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -6,12 +6,14 @@ import { EosUtils } from 'eos-common/core/utils';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from '../services/eos-data-convert.service';
 import { DictionaryDescriptorService } from '../core/dictionary-descriptor.service';
-import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
-import {EosSevRulesService} from '../services/eos-sev-rules.service';
+import { EosBroadcastChannelService } from '../services/eos-broadcast-channel.service';
+import { EosSevRulesService } from '../services/eos-sev-rules.service';
 import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts';
 import { PipRX } from 'eos-rest';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { DOCGROUP_DICT } from 'eos-dictionaries/consts/dictionaries/docgroup.consts';
+import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
+import { SEV_COLLISION_OPTIONS } from 'eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 
 @Component({
     selector: 'eos-card-edit',
@@ -47,7 +49,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         private _apiSrv: PipRX,
     ) {
         this.subscriptions = [];
-     }
+    }
     /**
      * return new data, used by parent component
      */
@@ -68,11 +70,18 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             newData.rec['SCRIPT_CONFIG'] = this._rulesSrv.scriptConfigToXml();
             newData.rec['FILTER_CONFIG'] = this._rulesSrv.filterConfigToXml();
         } else if (this.dictionaryId === DOCGROUP_DICT.id) {
-            if (newData.rec['PRJ_AUTO_REG'] !== 0 ) {
+            if (newData.rec['PRJ_AUTO_REG'] !== 0) {
                 newData.rec['PRJ_AUTO_REG'] = 2;
             }
         }
         return newData;
+    }
+
+    confirmSave(): Promise<boolean> {
+        if (this.baseCardEditRef) {
+            return this.baseCardEditRef.confirmSave();
+        }
+        return Promise.resolve(true);
     }
 
     @HostListener('window:beforeunload', ['$event'])
@@ -132,7 +141,9 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                         criteries: {
                             ISN_USER_OWNER: '-99',
                             PARM_NAME: 'UNIQ_RUBRIC_CL'
-                        }}};
+                        }
+                    }
+                };
                 return this._apiSrv.read(req)
                     .then(r => {
                         if (r && r[0] && r[0]['PARM_VALUE'] === 'YES') {
@@ -142,10 +153,22 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                             }
                             this.form.controls['rec.CLASSIF_NAME'].setValidators(v);
                         }
-                });
+                    });
+            }
+        }
+        if (this.dictionaryId === COLLISIONS_SEV_DICT.id) {
+            if (inputs['rec.COLLISION_CODE']) {
+                this.setOptionsForCollisions(inputs, inputs['rec.COLLISION_CODE'].value);
             }
         }
         return Promise.resolve(null);
+    }
+    setOptionsForCollisions(input, num: number) {
+        input['rec.RESOLVE_TYPE'].options = [];
+        if (SEV_COLLISION_OPTIONS.hasOwnProperty(+num)) {
+            const options = SEV_COLLISION_OPTIONS[+num];
+            input['rec.RESOLVE_TYPE'].options.push(...options);
+        }
     }
 
     /**

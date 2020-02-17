@@ -69,7 +69,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     errorSave: boolean;
     queryRoles: any[] = [];
     public isShell: boolean = false;
-    public userCanUseRole: boolean = false;
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public maxLoginLength: string;
@@ -91,7 +90,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return this._sysParams;
     }
     get stateHeaderSubmit() {
-        return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
+        return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0 || this.queryRoles.length > 0;
     }
     get getCbRole() {
         return this.editMode && !this.singleOwnerCab && (this.gt()['delo_web_delo'] || this.gt()['delo_web']) && !this.curentUser.isTechUser;
@@ -283,7 +282,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 if (depD.length === 1) {
                     this.singleOwnerCab = false;
                     this.getUserCbRoles();
-                    this.userCanUseRole = true;
                 }
             });
         }
@@ -570,8 +568,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
         .then(() => {
-            this.queryRoles = [];
-            this.startRolesCb = this.currentCbFields;
             if (this.user_copy_isn) {
                 let url = `FillUserCl?isn_user=${this.curentUser.ISN_LCLASSIF}`;
                 url += `&role='${this.formControls.controls['SELECT_ROLE'].value ? encodeURI(this.formControls.controls['SELECT_ROLE'].value) : ''}'`;
@@ -599,6 +595,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
+        if (this.queryRoles.length) {
+            return this.GetUserData().then(() =>  {
+                this.queryRoles = [];
+                this.getUserCbRoles();
+            });
+        } else {
+            return this.GetUserData();
+        }
+    }
+
+    GetUserData(): Promise<any> {
         return this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
@@ -615,12 +622,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.editModeF();
             this._pushState();
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
-            if (this.userCanUseRole) {
-                this.singleOwnerCab = false;
-                this.getUserCbRoles();
-            }
         });
     }
+
     clearMap() {
         this._newData.clear();
         this._newDataformAccess.clear();
@@ -636,15 +640,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
-        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb)) {
-            this.currentCbFields = this.startRolesCb;
-            this.patchCbRoles();
-        }
         this.cancelValues(this.inputs, this.form);
-        this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
+        if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb) && !this.singleOwnerCab) {
+            this.currentCbFields = [...this.startRolesCb];
+            this.patchCbRoles();
+            this.queryRoles = [];
+        } else {
+            this.cancelValues(this.controls, this.formControls);
+        }
         this.clearMap();
         this._pushState();
         this.editModeF();
@@ -836,8 +842,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.cancelValues(this.controls, this.formControls);
             // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
-        if (this.startRolesCb !== this.currentCbFields || (!this.startRolesCb.length && !this.currentCbFields.length)) {
+        if (JSON.stringify(this.startRolesCb) !== JSON.stringify(this.currentCbFields)) {
             this.getQueryFromRoles();
+            this._pushState();
         }
     }
 
@@ -907,7 +914,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
             this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
             this.cancelValues(this.controls, this.formControls);
-            this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         } else {
             str = this.currentCbFields[0].role + ' ...';
         }
@@ -1008,6 +1014,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
+                                this.form.get('DUE_DEP_NAME').setValidators(null);
                                 this.formControls.controls['SELECT_ROLE'].patchValue('');
                                 this.formControls.controls['SELECT_ROLE'].disable();
                             } else {

@@ -92,7 +92,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         evt.stopPropagation();
         const id = this._dictSrv.currentDictionary.id;
 
-        if ((id === 'citizens' || id === 'organization') && !this.node.isNode) {
+        if ((id === 'citizens' || id === 'organization') && !this.node.isNode && !view) {
             this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit, params: {mode: 'view'}});
             return;
         }

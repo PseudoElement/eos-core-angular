@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES } from 'app/consts/confirms.const';
+import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT } from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
@@ -42,6 +42,9 @@ import {
     WARN_SELECT_NODE,
     INFO_OPERATION_COMPLETE,
     SEARCH_NOT_DONE,
+    SUCCESS_SAVE,
+    WARN_SAVE_FAILED,
+    INFO_NOTHING_CHANGES,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
@@ -54,6 +57,8 @@ import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.compo
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CopyPropertiesComponent } from 'eos-dictionaries/copy-properties/copy-properties.component';
 import { CreateNodeBroadcastChannelComponent } from 'eos-dictionaries/create-node-broadcast-channel/create-node-broadcast-channel.component';
+import { ORGANIZ_CL } from 'eos-rest';
+import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -176,6 +181,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     return;
                 }
                 this.accessDenied = false;
+                if (this._nodeId && this._nodeId !== params.nodeId) {
+                    this.clearFindSettings();
+                }
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
@@ -315,7 +323,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
 
                 if (!viewParameters.updatingList && this.treeNode) {
-                    if (this.dictionaryId === NOMENKL_DICT.id) {
+                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id) {
                         const n = this.dictionary.descriptor.getActive();
                         if (n) { this.title = n.title; }
                     } else {
@@ -337,7 +345,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((action: IActionEvent) => this.doAction(action));
+            .subscribe((action: IActionEvent) => {
+                if ((action.params && action.params.outside)) {
+                    this.openClassifFromdepartment();
+                } else {
+                    this.doAction(action);
+                }
+            });
     }
 
     ngOnInit(): void {
@@ -352,12 +366,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.ngUnsubscribe.complete();
     }
 
-    onSetActiveNode() {
+    onSetActiveNode($event) {
+        // reset pagination custom tree
+       this._dictSrv.resetPagination();
     }
 
     clearFindSettings() {
         this.searchSettings = new SearchFormSettings;
         this.fastSearch = false;
+        this._dictSrv.emitResetSearch();
         this._dictSrv.setStoredSearchSettings(this.searchSettings);
     }
 
@@ -526,6 +543,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.dopRequisites:
                 this._openDopRequisetes();
                 break;
+            case E_RECORD_ACTIONS.defaultCollision:
+                this._defaultSettingsCollision();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -534,17 +554,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._dictSrv.getMarkedNodes().forEach(
             (node) => {
                 this.dictionary.descriptor.downloadFile(node)
-                .then(info => {
-                    if (!info) {
-                        const msg = Object.assign({}, DANGER_EMPTY_FILE);
-                        msg.msg = 'Шаблон ' + node.title + ' в базе отсутствует';
-                        this._msgSrv.addNewMessage(msg);
-                    }
-                })
-                .catch(() => {
-                    this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
-                });
-        });
+                    .then(info => {
+                        if (!info) {
+                            const msg = Object.assign({}, DANGER_EMPTY_FILE);
+                            msg.msg = 'Шаблон ' + node.title + ' в базе отсутствует';
+                            this._msgSrv.addNewMessage(msg);
+                        }
+                    })
+                    .catch(() => {
+                        this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
+                    });
+            });
     }
     _navigateToUC(): any {
         const url = this._router.url;
@@ -770,15 +790,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._dictSrv.reload();
         });
     }
-    private updateRigthFields(node: EosDictionaryNode): void {
+    private openClassifFromdepartment(params?) {
+        const list: ORGANIZ_CL = this._dictSrv.listNode.data.organization;
+        const config: IOpenClassifParams = {
+            classif: 'gop_rc',
+            id: 'ORGANIZ_dict',
+            user_id: list.ISN_NODE,
+            folder_due: list.PARENT_DUE,
+            due: list.DUE
+        };
+
+        this._waitClassif.openClassif(config).then(() => {
+            this.updateRigthFields(this._dictSrv.listNode, true);
+            this._dictSrv.reload();
+        }).catch((e) => {
+            this.updateRigthFields(this._dictSrv.listNode, true);
+            this._dictSrv.reload();
+        });
+    }
+    private updateRigthFields(node: EosDictionaryNode, refresh: boolean = false): Promise<any> {
         if (node) {
             node.relatedLoaded = false;
-            if (node.dictionaryId === 'citizens') {
-                this._dictSrv.currentDictionary.getFullNodeInfo(node.id).then(() => {
-                    this._dictSrv.updateRigth.next(null);
-                });
-            }
+            return this._dictSrv.currentDictionary.getFullNodeInfo(node.id, refresh).then(() => {
+                this._dictSrv.updateRigth.next(null);
+            });
         }
+        return Promise.resolve(null);
     }
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
         const list = [];
@@ -930,7 +967,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             } else {
                 const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
 
-                return this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
+                return this._confirmMarkedItems(selectedNodes, confirmDelete).then((button: IConfirmButton) => {
                     if (button && button.result === 2) {
                         const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                         message.msg = message.msg
@@ -1204,6 +1241,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _checkDictionaryId(): boolean {
         return ['citizens', 'organization'].some(id => {
             return id === this.dictionaryId;
+        });
+    }
+    private _defaultSettingsCollision() {
+        const body1 = 'Применить значения по умолчанию для всех групп';
+        let body = 'Применить значения по умолчанию для коллизий группы:';
+        let mess;
+        if (this.title === 'Коллизии СЭВ') {
+            mess = body1;
+        } else {
+            mess = body += ' ' + this.title;
+        }
+
+        CONFIRM_SEV_DEFAULT.body = mess;
+        this._confirmSrv.confirm(CONFIRM_SEV_DEFAULT).then(d => {
+            if (d) {
+                this.dictionary.descriptor.updateDefaultValues(this.nodeList.nodes).then((h) => {
+                    if (h) {
+                        this._dictSrv.reload();
+                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    } else {
+                        this._msgSrv.addNewMessage(INFO_NOTHING_CHANGES);
+                    }
+                }).catch(e => {
+                    this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
+                });
+            }
         });
     }
 

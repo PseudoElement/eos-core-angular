@@ -1,10 +1,10 @@
-import {DictionaryDescriptor} from '../dictionary-descriptor';
 import {ALL_ROWS} from '../../../eos-rest/core/consts';
 import {IDictionaryDescriptor} from '../../interfaces';
 import {PipRX} from '../../../eos-rest/services/pipRX.service';
 import {EosSevRulesService} from '../../services/eos-sev-rules.service';
+import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 
-export class SevRulesDictionaryDescriptor extends DictionaryDescriptor {
+export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
 
     constructor(
         descriptor: IDictionaryDescriptor,

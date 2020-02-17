@@ -1,4 +1,4 @@
-import {Component, OnChanges} from '@angular/core';
+import {Component, OnChanges, OnDestroy} from '@angular/core';
 import {BaseNodeInfoComponent} from './base-node-info';
 import {ROLES_IN_WORKFLOW} from '../consts/dictionaries/department.consts';
 import {CreateUserComponent} from '../../eos-user-select/list-user-select/createUser/createUser.component';
@@ -10,12 +10,18 @@ import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-acces
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
+import { E_RECORD_ACTIONS } from 'eos-dictionaries/interfaces';
+import { EosBreadcrumbsService } from 'app/services/eos-breadcrumbs.service';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 
 @Component({
     selector: 'eos-department-node-info',
     templateUrl: 'department-node-info.component.html',
 })
-export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implements OnChanges {
+export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implements OnChanges, OnDestroy {
     public photo;
     public update: boolean;
     public canCreateUser: boolean;
@@ -25,6 +31,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     boss: EosDictionaryNode;
     department: string;
     isCBBase: boolean;
+    private _unsebscribe = new Subject();
 
     constructor(
         private _modalSrv: BsModalService,
@@ -32,6 +39,8 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         private _eaps: EosAccessPermissionsService,
         private _msgSrv: EosMessageService,
         private _appctx: AppContext,
+        private _breadcrumbsSrv: EosBreadcrumbsService,
+        private dictSrv: EosDictService
     ) {
         super();
         this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
@@ -42,6 +51,9 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                 this.canCreateUser = res;
             });
         }
+        this.dictSrv.updateRigth.pipe(takeUntil(this._unsebscribe)).subscribe(r => {
+            this.ngOnChanges();
+        });
     }
 
     ngOnChanges() {
@@ -69,6 +81,11 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                 }
             }
         }
+    }
+    ngOnDestroy() {
+        this._unsebscribe.next();
+        this._unsebscribe.complete();
+
     }
 
     getRole(value: number): string {
@@ -136,6 +153,9 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         res += o ? ' ' + o + (o.length === 1 ? '.' : '') : '';
 
         return res;
+    }
+    openCardOrganiz() {
+        this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit, params: {outside: true}});
     }
 
     private fioTogin(text: string) {

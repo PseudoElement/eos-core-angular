@@ -41,7 +41,7 @@ import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/s
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
-import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 
@@ -80,6 +80,7 @@ export class EosDictService {
     private _currentList$: BehaviorSubject<EosDictionaryNode[]>;
     private _visibleList$: BehaviorSubject<EosDictionaryNode[]>;
     private _markInfo$: BehaviorSubject<MarkedInformation>;
+    private _searchInfo$: BehaviorSubject<any>;
     private _viewParameters$: BehaviorSubject<IDictionaryViewParameters>;
     private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
     private _mDictionaryPromise: Map<string, Promise<EosDictionary>>;
@@ -114,6 +115,10 @@ export class EosDictService {
 
     get listDictionary$(): Observable<EosDictionary> {
         return this._listDictionary$.asObservable();
+    }
+
+    get searchInfo$(): Observable<EosDictionary> {
+        return this._searchInfo$.asObservable();
     }
 
     /* Observable treeNode for subscribing on updates in components */
@@ -254,6 +259,7 @@ export class EosDictService {
         this._listNode$ = new BehaviorSubject<EosDictionaryNode>(null);
         this._dictionary$ = new BehaviorSubject<EosDictionary>(null);
         this._listDictionary$ = new BehaviorSubject<EosDictionary>(null);
+        this._searchInfo$ = new BehaviorSubject<any>(null);
         this._mDictionaryPromise = new Map<string, Promise<EosDictionary>>();
         this._currentList$ = new BehaviorSubject<EosDictionaryNode[]>([]);
         this._viewParameters$ = new BehaviorSubject<IDictionaryViewParameters>(this.viewParameters);
@@ -928,10 +934,14 @@ export class EosDictService {
         }
     }
 
+    emitResetSearch() {
+        this._searchInfo$.next(null);
+    }
 
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
         this.setMarkAllNone();
+        this.emitResetSearch();
         return this._reloadList();
     }
 
@@ -1223,6 +1233,9 @@ export class EosDictService {
     public reload() {
         this._reloadList();
     }
+    public resetPagination() {
+        this._initPaginationConfig();
+    }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
@@ -1313,6 +1326,7 @@ export class EosDictService {
                             userOrdered: this.userOrdered,
                             markItems: this._dictionaries[0].canMarkItems,
                             updatingList: false,
+                            showDeleted: this.currentDictionary.descriptor.showDeleted
                             // tableCustomization: true,
                         });
                         // this._dictionaries[0].initUserOrder(
@@ -1344,7 +1358,9 @@ export class EosDictService {
 
         if (data && data.rec) {
             if (dictionary.id === PARTICIPANT_SEV_DICT.id) {
-
+                if (!isNewRecord) {
+                    return this.currentDictionary.descriptor['UpdateSaveParticipantRule'](data);
+                }
             }
 
             if (!isNewRecord && dictionary.id === DOCGROUP_DICT.id) {

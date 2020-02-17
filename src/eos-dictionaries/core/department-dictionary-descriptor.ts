@@ -23,8 +23,8 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { EosUtils } from 'eos-common/core/utils';
 
 const inheritFiields = [
-  'START_DATE',
-  'END_DATE'
+    'START_DATE',
+    'END_DATE'
 ];
 export class DepartmentRecordDescriptor extends RecordDescriptor {
     dictionary: DepartmentDictionaryDescriptor;
@@ -164,7 +164,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                 if (!node.data.rec['END_DATE'] && node.data.rec['IS_NODE'] === 0) {
                     const cantDeleteWarning: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_FILL_ENDDATE);
                     const confirmSrv = InjectorInstance.get(ConfirmWindowService);
-                    return confirmSrv.confirm2(cantDeleteWarning).then (() => {
+                    return confirmSrv.confirm2(cantDeleteWarning).then(() => {
                         return Promise.resolve(false);
                     });
                 }
@@ -185,13 +185,14 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         return this.getData({ criteries: _children }, 'DUE');
     }
 
-    getRelated(rec: any, orgDUE: string): Promise<any> {
+    getRelated(rec: any, orgDUE: string, refresh: boolean = false): Promise<any> {
         const pUser = this.apiSrv
             .read({ 'USER_CL': PipRX.criteries({ 'DUE_DEP': rec['DUE'] }) })
             .then((items) => this.apiSrv.entityHelper.prepareForEdit(items[0]));
-
+        if (refresh) {
+            this.apiSrv.cache.clear({ ORGANIZ_CL: [orgDUE] });
+        }
         const pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
-
         const pCabinet = (rec['ISN_CABINET']) ? this.getCachedRecord({ 'CABINET': rec['ISN_CABINET'] }) : Promise.resolve(null);
         const pCabinets = this.getCachedRecord({ 'CABINET': { 'criteries': { DUE: rec.DUE } } });
 
@@ -241,9 +242,9 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         EosUtils.deepUpdate(newPreset, preSetData);
         if (parentNode) {
             [
-                ... inheritFiields,
+                ...inheritFiields,
             ]
-            .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
+                .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
         }
         return super.getNewRecord(newPreset, parentNode);
     }

@@ -771,6 +771,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
+                                this.form.get('DUE_DEP_NAME').setValidators(null);
                                 this.formControls.controls['SELECT_ROLE'].patchValue('');
                                 this.formControls.controls['SELECT_ROLE'].disable();
                             } else {

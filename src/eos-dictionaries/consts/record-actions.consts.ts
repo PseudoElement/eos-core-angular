@@ -491,6 +491,19 @@ const RECORD_ACTIONS_DOP_REC: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+const RECORD_ACTIONS_DEFAULT_COLLISION: IAction = {
+    type: E_RECORD_ACTIONS.defaultCollision,
+    group: E_ACTION_GROUPS.item,
+    title: 'По умолчанию',
+    hint: 'По умолчанию',
+    iconClass: 'eos-icon eos-icon-default-settings-blue small',
+    disabledIconClass: 'eos-icon eos-icon-default-settings-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-default-settings-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -520,6 +533,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CUT,
     RECORD_ACTION_COMBINE,
     RECORD_UNCHECK_NEW_ENTRY,
+    RECORD_ACTIONS_DEFAULT_COLLISION,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];
@@ -548,6 +562,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_COPY_NODES,
     RECORD_PASTE_NODES,
     RECORD_ACTIONS_DOWNLOAD_FILE,
+    RECORD_ACTIONS_DEFAULT_COLLISION,
 ];
 
 export const COMMON_ADD_MENU = [{

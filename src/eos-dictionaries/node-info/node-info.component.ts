@@ -1,23 +1,35 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnChanges } from '@angular/core';
 import { BaseNodeInfoComponent } from './base-node-info';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { IRelationDef } from 'eos-rest';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-node-info',
     templateUrl: 'node-info.component.html',
 })
 
-export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestroy {
+export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestroy, OnChanges {
     private unSubscribe = new Subject();
-    constructor(private dictSrv: EosDictService) {
+    constructor(private dictSrv: EosDictService, private _appCtx: AppContext) {
         super();
         this.dictSrv.updateRigth.pipe(takeUntil(this.unSubscribe)).subscribe(r => {
             this.ngOnChanges();
         });
+    }
+    ngOnChanges() {
+        super.ngOnChanges();
+        this.updateFields(); //  костыль к багу 116332, переделать
+    }
+    updateFields() {
+        if (this.dictSrv.currentDictionary.id  === 'sev-participant') {
+            if (this._appCtx.cbBase && this.fieldsDescriptionFull.rec) {
+                delete this.fieldsDescriptionFull.rec['CRYPT'];
+            }
+        }
     }
     // TODO: объеденить  loadRelated и loadOptionsDictionary во что то одно внятное.
     value(key): string {

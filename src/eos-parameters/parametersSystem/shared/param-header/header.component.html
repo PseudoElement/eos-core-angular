@@ -2,7 +2,7 @@
     <div class="header__text-wrap">
         <span class="header__text">{{title}}</span>
     </div>
-    <div class="header__button-wrap" *ngIf="editMode">
+    <div class="header__button-wrap" *ngIf="editMode || stayEdit">
         <button
             class="btn btn-primary header__button"
             (click)="cancel()"
@@ -15,7 +15,7 @@
             >СОХРАНИТЬ
         </button>
     </div>
-    <div class="header__button-edit" *ngIf="!editMode">
+    <div class="header__button-edit" *ngIf="!editMode && !stayEdit">
         <div class="pull-right">
             <button class="btn btn-primary-light" aria-hidden="true" (click)="edit()" container="body" tooltip="Редактировать" placement="left" containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
             <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" container="body" [queryParams]="{isn_cl: link}" aria-hidden="true" tooltip="Открыть в новом окне" placement="left" container="body" containerClass="tooltip-info" target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>

@@ -25,6 +25,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly maxValue?: number;
     readonly dictionaryLink?: IDictionaryLink;
     readonly dictionaryOrder?: string;
+    readonly readonly?: boolean;
     readonly preferences: IFieldPreferences;
 
     constructor(data: IFieldDescriptor) {
@@ -74,5 +75,6 @@ export class FieldDescriptor implements IFieldDescriptorBase {
             this.groupLabel = data.groupLabel;
         }
         this.preferences = data.preferences;
+        this.readonly = data.readonly;
     }
 }

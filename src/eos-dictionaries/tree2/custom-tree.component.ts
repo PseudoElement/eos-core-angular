@@ -100,6 +100,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
             return;
         }
         if (!node.isDeleted) {
+            this.onSetActiveNode.emit(node);
             this._router.navigate(node.path);
         }
     }

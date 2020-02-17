@@ -98,6 +98,12 @@ export const SEARCH_NOT_DONE: IMessage = {
     msg: 'Пожалуйста подождите.'
 };
 
+export const SEARCH_EMPTY: IMessage = {
+    title: 'Справочники',
+    type: 'warning',
+    msg: 'Не заданы поисковые критерии'
+};
+
 export const FILE_IS_NOT_IMAGE: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
@@ -192,12 +198,6 @@ export const DANGER_ACCESS_DENIED_DICT: IMessage = {
     type: 'danger',
     title: 'Предупреждение: ',
     msg: 'Недостаточно прав доступа к справочнику'
-};
-
-export const INFO_REESTR_NOT_UNIQUE: IMessage = {
-    type: 'info',
-    title: 'Внимание:',
-    msg: 'Значение реестра не уникально. Существует {{exists}}'
 };
 
 export const INFO_OPERATION_COMPLETE: IMessage = {

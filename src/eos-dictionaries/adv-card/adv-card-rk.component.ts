@@ -172,6 +172,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 }
             }
             this._updateInputs(this.inputs);
+            this._updateOptions(this.inputs);
             this.form.updateValueAndValidity();
         });
 
@@ -181,6 +182,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.dataController.markCacheForDirty('USER_LISTS');
         return this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), 'USER_LISTS', null, () => {
             // console.log(event);
+            this._updateInputs(this.inputs);
+            this._updateOptions(this.inputs);
         }).then (() => {
             this.form.updateValueAndValidity();
 
@@ -202,6 +205,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 // if (el.dict.dictId !== 'USER_LISTS') { continue; }
 
                 const val = newdata[DEFAULTS_LIST_NAME][el.key];
+
+                if (el.key === 'SECURLEVEL_FILE' && Number(val) < 0) {
+                    continue;
+                }
+
                 if (val) {
                     const opt = el.options.find ( o => Number(o.value) === Number(val));
                     if (opt && opt.isEmpty) {

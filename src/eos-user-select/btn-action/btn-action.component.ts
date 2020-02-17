@@ -187,7 +187,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithLimitedUser(DeliteUser);
     }
     checkBtnBlockUser() {
-        this.checkWithLimitedUser(BlockUser);
+        this.checkWithBlocketUSer(BlockUser);
     }
     checkBtnOpenAdress() {
         this.checkWithLimitedUser(OpenAddressManagementWindow);
@@ -196,27 +196,10 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithLimitedUser(OpenRightsSystemCaseDelo);
     }
     checkBtnProtocol() {
-        if (!this.selectUser) {
-            Protocol.disabled = true;
-            Protocol.isActive = false;
-        } else {
-            if (this.limitCards.length) {
-                Protocol.disabled = !this.selectUser.isEditable;
-            } else {
-                Protocol.disabled = false;
-            }
-        }
+       this.checkWittAllUsers(Protocol);
     }
     checkBtnUserInfo() {
-        if (!this.selectUser) {
-            UsersInfo.disabled = true;
-        } else {
-            if (this.limitCards.length) {
-                UsersInfo.disabled = !this.selectUser.isEditable;
-            } else {
-                UsersInfo.disabled = false;
-            }
-        }
+        this.checkWittAllUsers(UsersInfo);
         this._rtSrv.usersInfo = UsersInfo;
     }
     checkBtnOpenStreamSystem() {
@@ -271,6 +254,36 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             }
         }
     }
+    checkWithBlocketUSer(button: BtnActionFields) {
+        const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected) && user.isEditable && user.data['DELETED'] === 0);
+        if (usersEdit.length) {
+            if (this.limitCards.length) {
+                button.disabled = false;
+            } else {
+                button.disabled = false;
+            }
+        } else {
+            button.disabled = true;
+            button.isActive = false;
+        }
+    }
+    checkWittAllUsers(button: BtnActionFields): void {
+        const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected) && user.isEditable);
+        if (usersEdit.length) {
+            if (this.limitCards.length) {
+                button.disabled = false;
+                if (button.name === 'DeliteUser') { // запретить огран. тех. удалять пользователей
+                    button.disabled = true;
+                }
+            } else {
+                button.disabled = false;
+            }
+        } else {
+            button.disabled = true;
+            button.isActive = false;
+        }
+    }
+
     adminDisabledBtn(admNum: number): void {
         if (admNum === 0) {
             CreateUser.disabled = true;

@@ -4,6 +4,6 @@
         [form]="form"
         [viewOpts]="selOpts"
         [container]="'body'"
-        [readonly]="!editMode">
+        [readonly]="!editMode || inputs[key]?.readonly">
     </eos-dynamic-input>
 </div>

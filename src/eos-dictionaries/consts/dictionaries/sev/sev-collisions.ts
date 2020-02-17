@@ -1,23 +1,14 @@
-import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
-import { LINEAR_TEMPLATE } from '../_linear-template';
-import { NOT_EMPTY_STRING } from '../../input-validation';
-import { SEV_ACTIONS } from './templates-sev.consts';
+import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
+import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 
-export const RESOLVE_DESCRIPTIONS = [
-    { value: 1, title: 'Отказать в регистрации'},
-    { value: 2, title: 'Регистрировать сообщение из ПП в СЭВ'},
-    { value: 3, title: 'Продолжить регистрацию'},
-    { value: 4, title: 'Создать связку с документом, не зарегистрированным'},
-    { value: 5, title: 'Разрешить редактировать'},
-];
-
-export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
     id: 'sev-collisions',
     apiInstance: 'SEV_COLLISION',
-    actions: SEV_ACTIONS,
     visible: true,
+    actions: ['edit', 'defaultCollision'],
+    dictType: E_DICT_TYPE.custom,
     iconName: 'eos-icon-alert-blue',
-    defaultOrder: 'COLLISION_NAME',
+    defaultOrder: 'COLLISION_CODE',
     keyField: 'COLLISION_CODE',
     title: 'Коллизии СЭВ',
     searchConfig: [],
@@ -25,6 +16,8 @@ export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINE
     fields: [{
         key: 'COLLISION_CODE',
         type: 'number',
+        title: 'Номер колизиии',
+        readonly: true,
         length: 5,
     }, {
         key: 'REASON_NUM',
@@ -37,15 +30,15 @@ export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINE
         type: 'string',
         title: 'Название коллизии СЭВ',
         length: 200,
-        required: true,
-        pattern: NOT_EMPTY_STRING
+        readonly: true,
+        preferences: {minColumnWidth: 350}
     }, {
         key: 'RESOLVE_TYPE',
         type: 'select',
         // length: 100,
         title: 'Способ разрешения',
         required: true,
-        options: RESOLVE_DESCRIPTIONS,
+        options: [],
     },
     // {
     //     key: 'resolve_text',
@@ -62,8 +55,8 @@ export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINE
         type: 'string'
     }],
     treeFields: ['COLLISION_NAME'],
-    editFields: ['COLLISION_NAME', 'RESOLVE_TYPE'],
-    listFields: ['REASON_NUM', 'COLLISION_NAME', 'RESOLVE_TYPE'/*'resolve_text'*/],
+    editFields: ['COLLISION_NAME', 'RESOLVE_TYPE', 'COLLISION_CODE'],
+    listFields: ['COLLISION_CODE', 'COLLISION_NAME', 'RESOLVE_TYPE'/*'resolve_text'*/],
     allVisibleFields: [],
     quickViewFields: ['RESOLVE_TYPE'], // CLASSIF_NAME is in shortQuickViewFields
     shortQuickViewFields: ['COLLISION_NAME'],

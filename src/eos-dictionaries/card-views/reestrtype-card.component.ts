@@ -1,12 +1,10 @@
 import { Component, Injector, OnChanges, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { CONFIRM_REESTRTYPE_DELIVERY_CHANGE } from 'app/consts/confirms.const';
+import { CONFIRM_REESTRTYPE_DELIVERY_CHANGE, BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { PipRX } from 'eos-rest';
-import { INFO_REESTR_NOT_UNIQUE } from 'eos-dictionaries/consts/messages.consts';
-import { ValidatorsControl } from 'eos-dictionaries/validators/validators-control';
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 @Component({
     selector: 'eos-reestrtype-card',
@@ -32,21 +30,43 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
 
     onAfterLoadRelated() {
         super.onAfterLoadRelated();
+        // const req = { REESTRTYPE_CL: ''};
+        // this._apiSrv.read(req).then ( data => {
+            // ValidatorsControl.appendValidator(this.form.controls['rec.ISN_DELIVERY'], this._isReestrsUniqueValidator(data));
+            // this.inputs['rec.ISN_DELIVERY'].options.forEach( o => {
+            //     const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
+            //     const ex = data.find (d => d['ISN_LCLASSIF'] !== isn && d['ISN_DELIVERY'] === o.value);
+            //     if (ex) {
+            //         o.disabled = true;
+            //     }
+            // });
+            // if (this.isNewRecord && this.inputs['rec.ISN_DELIVERY'].options[0]) {
+            //     this.setValue('rec.ISN_DELIVERY', this.inputs['rec.ISN_DELIVERY'].options[0].value);
+            //     // this.form.controls['rec.ISN_DELIVERY'].updateValueAndValidity();
+            //     this.inputs['rec.ISN_DELIVERY'].dib.delayedTooltip();
+            // }
+        // });
+    }
+
+    public confirmSave(): Promise<boolean> {
         const req = { REESTRTYPE_CL: ''};
-        this._apiSrv.read(req).then ( data => {
-            ValidatorsControl.appendValidator(this.form.controls['rec.ISN_DELIVERY'], this._isReestrsUniqueValidator(data));
-            this.inputs['rec.ISN_DELIVERY'].options.forEach( o => {
-                const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
-                const ex = data.find (d => d['ISN_LCLASSIF'] !== isn && d['ISN_DELIVERY'] === o.value);
-                if (ex) {
-                    o.disabled = true;
+        return this._apiSrv.read(req).then ( data => {
+            const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
+            const deliv_id = Number(this.data.rec['ISN_DELIVERY']);
+            for (let i = 0; i < data.length; i++) {
+                const e = data[i];
+                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn) {
+                    const warn: IConfirmWindow2 = {
+                        title: 'Ведение справочников',
+                        body: 'Значение реестра не уникально. Существует ' + e['CLASSIF_NAME'],
+                        buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+                    };
+                    return this._confirmSrv.confirm2(warn).then((button) => {
+                        return true;
+                    });
                 }
-            });
-            if (this.isNewRecord && this.inputs['rec.ISN_DELIVERY'].options[0]) {
-                this.setValue('rec.ISN_DELIVERY', this.inputs['rec.ISN_DELIVERY'].options[0].value);
-                // this.form.controls['rec.ISN_DELIVERY'].updateValueAndValidity();
-                this.inputs['rec.ISN_DELIVERY'].dib.delayedTooltip();
             }
+            return true;
         });
     }
 
@@ -57,24 +77,24 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
         }
     }
 
-    private _isReestrsUniqueValidator (data: any[]): ValidatorFn {
-        return (control: AbstractControl) => {
-            const deliv_id = Number(control.value);
-            const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
-            let res = null;
-            for (let i = 0; i < data.length; i++) {
-                const e = data[i];
-                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn) {
-                    res = e;
-                    const msg = Object.assign({}, INFO_REESTR_NOT_UNIQUE);
-                    msg.msg = msg.msg
-                        .replace('{{exists}}', String(res['CLASSIF_NAME']));
-                    return {valueError: msg.msg};
-                }
-            }
-            return null;
-        };
-    }
+    // private _isReestrsUniqueValidator (data: any[]): ValidatorFn {
+    //     return (control: AbstractControl) => {
+    //         const deliv_id = Number(control.value);
+    //         const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
+    //         let res = null;
+    //         for (let i = 0; i < data.length; i++) {
+    //             const e = data[i];
+    //             if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn) {
+    //                 res = e;
+    //                 const msg = Object.assign({}, INFO_REESTR_NOT_UNIQUE);
+    //                 msg.msg = msg.msg
+    //                     .replace('{{exists}}', String(res['CLASSIF_NAME']));
+    //                 return {valueError: msg.msg};
+    //             }
+    //         }
+    //         return null;
+    //     };
+    // }
 
     private updateForm(formChanges: any) {
         const oldDelivery = this.prevValues['ISN_DELIVERY'] ? this.prevValues['ISN_DELIVERY'] : (this.isNewRecord ? null : this.data.rec._orig['ISN_DELIVERY']);

@@ -13,8 +13,8 @@ export const ROLES_IN_WORKFLOW: ISelectOption[] = [
 
 export const GENDERS: ISelectOption[] = [
     {value: null, title: 'Не указан'},
-    {value: 0, title: 'Мужской'},
-    {value: 1, title: 'Женский'}
+    {value: 1, title: 'Мужской'},
+    {value: 2, title: 'Женский'}
 ];
 /* tslint:disable:max-line-length */
 export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {

@@ -54,6 +54,26 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this.init();
   }
 
+  checkResetForm() {
+    // блокируем кнопку сброса если все поля пустые
+    let flag = true;
+    Object.keys(this.filterForm.controls).forEach(key => {
+      if (this.filterForm.controls[key].value) {
+        flag = false;
+      }
+    });
+    return flag;
+  }
+
+  onShown() {
+    // обнуляю поле если открываем а поля содержат ошибки
+    if (this.filterForm.controls['rec.DATEFROM'].status === 'INVALID') {
+      this.filterForm.controls['rec.DATEFROM'].setValue('', { emitEvent: false });
+    }
+    if (this.filterForm.controls['rec.DATETO'].status === 'INVALID') {
+      this.filterForm.controls['rec.DATETO'].setValue('', { emitEvent: false });
+    }
+  }
   init() {
     this.pretInputs();
     this.filterForm = this.inpSrv.toFormGroup(this.inputs);
