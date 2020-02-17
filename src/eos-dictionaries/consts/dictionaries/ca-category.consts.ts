@@ -30,11 +30,13 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
             type: 'string',
             length: 255,
             required: true,
+            pattern: /[^\s]$/,
         }, {
             key: 'CA_SUBJECT',
             title: 'Описание',
             type: 'text',
             length: 500,
+            pattern: /[^\s]$/,
             required: true,
         }, {
             key: 'ISN_EDS_CATEGORY',

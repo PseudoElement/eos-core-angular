@@ -225,6 +225,7 @@ export class EosDataConvertService {
                                         value: data[_dict][descr[_key].foreignKey],
                                         length: descr[_key].length,
                                         disabled: !editMode,
+                                        pattern: descr[_key].pattern,
                                     });
                                     break;
                                 case E_FIELD_TYPE.toggle:
