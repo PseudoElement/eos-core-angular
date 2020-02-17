@@ -15,7 +15,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     visible: true,
     iconName: 'eos-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
-    defaultOrder: 'ADDRESS',
+    defaultOrder: 'CLASSIF_NAME',
     showDeleted: true,
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE_ORGANIZ',
