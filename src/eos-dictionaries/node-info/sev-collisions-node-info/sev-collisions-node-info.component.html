@@ -1,0 +1,21 @@
+<div class="eos-node-info">
+    <div class="opened-node-wrapper">
+        <div class="content-block">
+            <div *ngIf="nodeDataShort"
+                class="short-info l-font">
+                <span *ngFor="let key of keys(fieldsDescriptionShort.rec)">{{nodeDataShort.rec[key]}}</span>
+            </div>
+            <hr>
+            <h4>Способ разрешения</h4>
+            <div class="m-font" *ngFor="let item of fieldsResolveType">
+                <div class="field-value">
+                    <label class="checkbox">
+                        <input type="checkbox" disabled [checked]="item.default">
+                        <span></span>{{item.title}}
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

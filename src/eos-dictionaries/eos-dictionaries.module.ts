@@ -96,6 +96,7 @@ import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
 import { EdsImportComponent } from './eds-import/eds-import.component';
 import { StampBlobFormComponent } from './shablon-blob-form/stamp-blob-form.component';
 import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-record/image-blob-record.component';
+import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-info/sev-collisions-node-info.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -162,6 +163,7 @@ import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-recor
         EdsImportComponent,
         StampBlobFormComponent,
         ImageBlobRecordComponent,
+        SevCollisionsNodeInfoComponent,
 
     ],
     entryComponents: [

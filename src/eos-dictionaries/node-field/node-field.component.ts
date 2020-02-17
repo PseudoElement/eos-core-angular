@@ -5,6 +5,7 @@ import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { RESOLVE_DESCRIPTIONS } from 'eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 
 interface ISpecialIcon {
     class: string;
@@ -77,6 +78,9 @@ export class NodeFieldComponent implements OnInit {
             if (optValue) {
                 value = optValue.title;
             }
+        }
+        if (this.field.key === 'RESOLVE_TYPE') {
+            value = RESOLVE_DESCRIPTIONS[--value].title;
         }
         return value;
     }
