@@ -11,7 +11,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     title: 'Участники СЭВ',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
-        'removeHard', 'edit', 'view', 'showDeleted'],
+        'removeHard', 'edit', 'view'],
     visible: true,
     iconName: 'eos-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
@@ -65,7 +65,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     ]),
     editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME', 'sev_partisipant', 'sev_rule'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'rules'],
+    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS'],
     quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'sev_partisipant', 'sev_rule'],
     searchFields: ['CLASSIF_NAME'],
 });
