@@ -143,21 +143,13 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     if (item) {
-                        // убрал добавление в левую часть так как мы ничего не меняем
-                        /* if (this.basicFields.filter(elem => this.curPreDelete.role === elem).length === 0) {
-                            this.basicFields.push(this.curPreDelete.role);
-                        } */
                         if (this.currentFields.filter(elem => JSON.stringify(this.curPreDelete) === JSON.stringify(elem)).length === 0) {
                             this.currentFields.push(this.curPreDelete);
                         }
-                        /* if (item !== 'Помощник заместителя председателя и директоров департаментов' && item !== 'Помощник Председателя') {
-                            this.basicFields.splice(this.basicFields.indexOf(item), 1);
-                        } else {
-                            this.basicFields.splice(this.basicFields.indexOf(item), 1);
-                        } */
                     }
                 }
-                this.basicFields = this.basicFields.filter(field => typeof field === 'string').filter((field, index) => index === this.basicFields.indexOf(field = field.trim()));
+                const x  = this.basicFields.filter(field => typeof field === 'string');
+                this.basicFields = Array.from(new Set(x));
                 this.deletRole = true;
             });
         }

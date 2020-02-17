@@ -21,6 +21,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     formReadonli: boolean;
     hiddenFilesContext = false;
     hiddenInputRadioResolution: boolean;
+    stayEdit: boolean = false;
     _unsubsCribe: Subject<any> = new Subject();
     inputChoiceFiles = {
         key: 'contextFile',
@@ -131,6 +132,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 }
             });
             if (checkIndRk) {
+                this.stayEdit = true;
                 this.msgSrv.addNewMessage({
                     type: 'warning',
                     title: 'Предупреждение',
@@ -160,6 +162,8 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                     });
                     this.cancelEdit();
                 });
+        } else {
+            this.cancelEdit();
         }
     }
     changeByPath(path: string, value: any) {
@@ -231,6 +235,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     cancelEdit() {
         this.form.disable({ emitEvent: false });
         this.formContextChoice.disable({ emitEvent: false });
+        this.stayEdit = false;
     }
     subscribeChoiceForm() {
         this.subscriptions.push(

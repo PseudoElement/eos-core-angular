@@ -54,7 +54,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         if (this.form && (this.form.controls['classifName'].value).trim() === '') {
             this.form.get('classifName').setErrors({ errorPattern: true });
         }
-        return this.btnDisabled || (this.cbBase && this.form.get('classifName').invalid);
+        return this.btnDisabled || this.form.get('classifName').invalid;
     }
     ngOnInit() {
         this.cbBase = this._appContext.cbBase;
