@@ -34,7 +34,7 @@ export const COMMON_FIELD_NOTE = {
     key: 'NOTE',
     title: 'Примечание',
     type: 'text',
-    length: 250,
+    length: 255,
 };
 
 export const ICONS_CONTAINER = 'ICONS_TYPE';
