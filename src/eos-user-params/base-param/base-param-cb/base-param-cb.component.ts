@@ -596,8 +596,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
         if (this.queryRoles.length) {
+            this.queryRoles = [];
+            this.startRolesCb = [];
+            this.currentCbFields = [];
             return this.GetUserData().then(() =>  {
-                this.queryRoles = [];
                 this.getUserCbRoles();
             });
         } else {
