@@ -70,12 +70,13 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
                 return false;
             }
         }
-        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS[1] === '0')) {
+        // пока убираем проверку на эти параметры
+        /* if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS[1] === '0')) {
             return false;
         }
         if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
             return false;
-        }
+        } */
         return true;
     }
     private _askForSaving(): Promise<boolean> {
