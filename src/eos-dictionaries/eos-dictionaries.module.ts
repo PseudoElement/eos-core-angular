@@ -96,6 +96,7 @@ import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
 import { EdsImportComponent } from './eds-import/eds-import.component';
 import { StampBlobFormComponent } from './shablon-blob-form/stamp-blob-form.component';
 import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-record/image-blob-record.component';
+import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list-selector-form.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -124,6 +125,7 @@ import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-recor
         VisatypeCardComponent,
         ReestrtypeCardComponent,
         DocgroupTemplateConfigComponent,
+        ListSelectorFormComponent,
         NodeActionsComponent,
         NodeInfoComponent,
         NodeFieldComponent,
@@ -174,6 +176,7 @@ import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-recor
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
+        ListSelectorFormComponent,
         PrjDefaultValuesComponent,
         CalendarFormComponent,
         EosDatepickerInlineComponent,

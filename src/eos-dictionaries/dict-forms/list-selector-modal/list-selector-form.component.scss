@@ -1,0 +1,24 @@
+.list-selector-form {
+    &.modal-form {
+        width: 600px;
+    }
+
+    .list-selector-wapper {
+
+        .dnd-bag {
+            border: 1px solid lightgray;
+            height: 200px;
+            overflow: auto;
+            .item {
+                padding-left: 20px;
+                padding-right: 20px;
+                cursor: grab;
+            }
+        }
+
+        // .footer-buttons {
+        //     border-top: 1px solid lightgray;
+        //     height: 32px;
+        // }
+    }
+}
