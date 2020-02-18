@@ -12,9 +12,8 @@ export const DG_TPL_DEP_IDX: DGTplElement = { key: '{5}', title: 'Индекс �
 export const DG_TPL_PREFIX: DGTplElement = { key: '{6}', title: 'Префикс обращений граждан', possibleRKType: /^[2]$/, enabledMask: BASE_ENABLE_EXP};
 export const DG_TPL_ACCESS_IDX: DGTplElement = { key: '{7}', title: 'Индекс грифа доступа', enabledMask: BASE_ENABLE_EXP};
 export const DG_TPL_YEAR: DGTplElement = { key: '{8}', title: 'Год регистрации документа', enabledMask: BASE_ENABLE_EXP };
-export const DG_TPL_LINK_IDX: DGTplElement = {
-    key: '{9}', title: 'Индекс связки',
-    enabledMask: BASE_ENABLE_EXP,
+export const DG_TPL_LINK_IDX: DGTplElement = { key: '{9}', title: 'Индекс связки', enabledMask: BASE_ENABLE_EXP, };
+export const DG_TPL_LINK_IDX_WL: DGTplElement = Object.assign({}, DG_TPL_LINK_IDX, {
     infoR: true,
     additionalControls: [{
         key: '',
@@ -23,10 +22,9 @@ export const DG_TPL_LINK_IDX: DGTplElement = {
         class: '',
         storeInInfo: 'L',
     }],
-};
-export const DG_TPL_LINKED_DOC_REG_NUMBER: DGTplElement = {
-    key: '{A}', title: 'Рег. № связанного документа',
-    enabledMask: BASE_ENABLE_EXP,
+});
+export const DG_TPL_LINKED_DOC_REG_NUMBER: DGTplElement = { key: '{A}', title: 'Рег. № связанного документа', enabledMask: BASE_ENABLE_EXP, };
+export const DG_TPL_LINKED_DOC_REG_NUMBER_WRL: DGTplElement = Object.assign({}, DG_TPL_LINKED_DOC_REG_NUMBER, {
     infoR: true,
     infoL: true,
     additionalControls: [{
@@ -45,9 +43,10 @@ export const DG_TPL_LINKED_DOC_REG_NUMBER: DGTplElement = {
         storeInInfo: 'L',
     }
     ],
-};
-export const DG_TPL_LINKED_DOC_NUMBER: DGTplElement = {
-    key: '{B}', title: 'Порядковый номер связанного документа', enabledMask: BASE_ENABLE_EXP,
+});
+export const DG_TPL_LINKED_DOC_NUMBER: DGTplElement = {key: '{B}', title: 'Порядковый номер связанного документа', enabledMask: BASE_ENABLE_EXP, };
+export const DG_TPL_LINKED_DOC_NUMBER_WRL: DGTplElement = Object.assign({}, DG_TPL_LINKED_DOC_NUMBER, {
+
     infoR: true,
     infoL: true,
     additionalControls: [{
@@ -66,7 +65,7 @@ export const DG_TPL_LINKED_DOC_NUMBER: DGTplElement = {
         storeInInfo: 'L',
     }
     ],
-};
+});
 export const DG_TPL_RK_NUMBER: DGTplElement = { key: '{C}', title: 'Порядковый номер в пределах связанной РК', enabledMask: BASE_ENABLE_EXP };
 export const DG_TPL_D: DGTplElement = { key: '{D}', title: 'Исх. № корреспондента', enabledMask: BASE_ENABLE_EXP };
 export const DG_TPL_NUM_NP: DGTplElement = { key: '{N}', title: 'Номер НП', possibleRKType: /^[3]$/, enabledMask: BASE_ENABLE_EXP };
