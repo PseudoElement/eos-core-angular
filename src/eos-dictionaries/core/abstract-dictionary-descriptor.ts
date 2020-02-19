@@ -136,7 +136,13 @@ export abstract class AbstractDictionaryDescriptor {
 
 
     deleteRecords(records: IEnt[]): Promise<IRecordOperationResult[]> {
-        const pDelete = records.map((record) => this.deleteRecord(record));
+        let result = Promise.resolve(null);
+        const pDelete = records.map((record) => {
+            result = result.then((ans) => {
+                return this.deleteRecord(record);
+            });
+            return result;
+        });
         return Promise.all(pDelete);
     }
 
