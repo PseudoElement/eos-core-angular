@@ -21,8 +21,13 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
 
         return pSev.then(() => {
-            return this._postChanges(_newRec, data.rec, appendToChanges)
+            let updates = this.apiSrv.changeList(changeData);
+            if (appendToChanges) {
+                updates = updates.concat(appendToChanges);
+            }
+            return this._postChanges(_newRec, data.rec, updates)
             .then((resp: any[]) => {
+                changeData.length = 0;
                 if (resp && resp[0]) {
                     return resp[0].ID;
                 } else {
