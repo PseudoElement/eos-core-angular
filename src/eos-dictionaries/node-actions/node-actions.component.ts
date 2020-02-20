@@ -234,7 +234,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _active = false;
         let _show = false;
         let _isWriteAction = true;
-        const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
+        const _isLDSubTree = (this.isTree && this._selectedTreeNode && (this._selectedTreeNode.isDeleted && !Features.cfg.canEditLogicDeleted));
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
 
@@ -295,6 +295,7 @@ export class NodeActionsComponent implements OnDestroy {
                     if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
+                    // console.log("TCL: NodeActionsComponent -> _updateButton -> Features.cfg", Features.cfg)
 
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
