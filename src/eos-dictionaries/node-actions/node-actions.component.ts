@@ -291,11 +291,9 @@ export class NodeActionsComponent implements OnDestroy {
                         }
                     }
 
-                    // _enabled = _enabled && !opts.listHasDeleted;
                     if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
-                    // console.log("TCL: NodeActionsComponent -> _updateButton -> Features.cfg", Features.cfg)
 
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
