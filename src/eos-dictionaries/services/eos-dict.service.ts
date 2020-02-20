@@ -1638,9 +1638,9 @@ export class EosDictService {
             //         returnUrl: this._router.url
             //     }
             // });
-            let url = document.location.href.split('#')[0];
-            url = url.slice(0, url.lastIndexOf('Classif')) + 'login.aspx';
-            document.location.assign(url);
+            /* let url = document.location.href.split('#')[0];
+            url = url.slice(0, url.lastIndexOf('Classif')) + 'login.aspx'; */
+            document.location.assign('../login.aspx');
 
             return undefined;
         } else {
