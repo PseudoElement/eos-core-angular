@@ -53,7 +53,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
             this.closeQuickForm();
         }
         if (evt.keyCode === 13) {
-            if (this.settings.quick.data) {
+            if (this.settings.quick.data && this.settings.quick.data.trim()) {
                 this.searchRun.emit(this.settings);
             } else {
                 this._msgSrv.addNewMessage(SEARCH_EMPTY);
