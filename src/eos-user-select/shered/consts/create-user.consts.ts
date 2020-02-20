@@ -58,3 +58,15 @@ export const OPEN_CLASSIF_DOCGR: IOpenClassifParams = {
     return_due: true,
     skipDeleted: false,
 };
+
+export const OPEN_CLASSIF_LINK_CL: IOpenClassifParams = {
+    classif: 'LINK_CL',
+    selectMulty: true,
+    selected: '',
+};
+
+export const OPEN_CLASSIF_SECURITY_CL: IOpenClassifParams = {
+    classif: 'SECURITY_CL',
+    selectMulty: true,
+    selected: '',
+};

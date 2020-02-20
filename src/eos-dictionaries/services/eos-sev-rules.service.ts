@@ -7,7 +7,7 @@ export class EosSevRulesService {
     private _data: any;
 
     scriptConfigToXml(): string {
-        const kind = (this._data['type'] - 1) * 4 + this._data['kind'];
+        const kind = (this._data['type'] - 1) * 4 +  +this._data['kind'];
         if (kind === 1) {
             return this.sendDocumentRule();
         } else if (kind === 2) {
@@ -57,7 +57,7 @@ export class EosSevRulesService {
                     this._data['kind'] = kindRule % 4;
                     this._data['link'] = !(document['Link'][0].$['Include'] === 'None');
                     this._data['linkKind'] = document['Link'][0].$['Include'] === 'All' ? 0 : 1;
-                    // this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList'];
+                    this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList'];
                     this._data['access'] = document['Access'][0].$['Include'] === 'true';
                     this._data['rubric'] = document['Rubric'][0].$['Include'] === 'true';
                     this._data['address'] = sendDocumentRule['ScriptConfig'][0]['Contact'][0]['Address'][0].$['Include'] === 'true';
@@ -82,8 +82,8 @@ export class EosSevRulesService {
                     this._data['taskController'] = task['Controller'][0].$['Include'] === 'true';
                     this._data['taskNote'] = task['Note'][0].$['Include'] === 'true';
                     this._data['taskFile'] = task['File'][0].$['Include'] === 'true';
-                    this._data['taskFileExtensions'] = task['File'][0].$['Extensions'];
-                    this._data['taskFileMaxLength'] = task['File'][0].$['MaxLength'];
+                    this._data['taskFileExtensions'] = task['FileOptions'][0].$['Extensions'];
+                    this._data['taskFileMaxLength'] = task['FileOptions'][0].$['MaxLength'];
                     const subscriptions = sendDocumentRule['Subscriptions'][0];
                     this._data['reception'] = subscriptions['Reception'][0].$['Include'] === 'true';
                     this._data['registration'] = subscriptions['Registration'][0].$['Include'] === 'true';
@@ -93,6 +93,31 @@ export class EosSevRulesService {
                     this._data['redirection'] = subscriptions['Redirection'][0].$['Include'] === 'true';
                     this._data['answer'] = subscriptions['Answer'][0].$['Include'] === 'true';
                     this._data['stopDayCount'] = subscriptions.$['StopDayCount'];
+                    resolve(this._data);
+                });
+            });
+        }
+        return new Promise<any>((resolve) => {
+            resolve();
+        });
+    }
+    parseReseiveDocumentRule(scriptConfig, kindRule) {
+        const parseString = xml2js.parseString;
+        this._scriptConfig = scriptConfig;
+        if (this._scriptConfig) {
+            return new Promise<any>((resolve, reject) => {
+                parseString(this._scriptConfig, (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    const receiveDocumentRule = result['ReceiveDocumentRule'];
+                    if (!receiveDocumentRule) {
+                        const e = {message: 'отсутствует ReceiveDocumentRule'};
+                        return reject(e);
+                    }
+                    this._data = {};
+                    const document = receiveDocumentRule['ScriptConfig'];
+                    console.log(document);
                     resolve(this._data);
                 });
             });
@@ -118,8 +143,7 @@ export class EosSevRulesService {
         const resolutionKindText = ((resolutionKind === 0) ? 'All' : ((resolutionKind === 1) ? 'ExtractionWithParent' : 'Extraction'));
         const resolutionInclude = this._data['resolution'] ? resolutionKindText : 'None';
 
-        const linkTypeList = ''; // TODO список link_cl.isn_lclassif через символ |
-
+        const linkTypeList = this.data['linkTypeList']; // TODO список link_cl.isn_lclassif через символ |
         return `<?xml version="1.0"?>
         <SendDocumentRule>
             <ScriptConfig>

@@ -519,6 +519,9 @@ export abstract class AbstractDictionaryDescriptor {
     updateUncheckCitizen(node?: EosDictionaryNode[]): Promise<any> {
         return Promise.resolve();
     }
+    loadNames(type, data): Promise<any> {
+        return null;
+    }
 
     presaveSevRoutine(sevData: SEV_ASSOCIATION, record: any, changeData: any[], results: IRecordOperationResult[]): Promise<boolean> {
         if (!Features.cfg.SEV.isIndexesEnable) {

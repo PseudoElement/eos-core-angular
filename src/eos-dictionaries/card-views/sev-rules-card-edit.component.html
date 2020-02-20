@@ -33,12 +33,18 @@
                                        [form]="form"
                                        [disabled]="!link"
                                        [readonly]="!editMode"></eos-dynamic-input>
-                    <eos-dynamic-input class="pull-left margin-l"
+                    <span
+                        class="pull-left margin-l link-type"
+                        [ngStyle]="{'width.px': 300}"
+                    ><input readonly type="text" [value]="linkTypeListNames.join(';')"></span>
+                    <span><button [disabled]="!(link && isLinkKindWithType)" (click)="openLinkCl()">загрузить</button></span>
+                    <span><button [disabled]="!(link && isLinkKindWithType)" (click)="deleteFieldsNames('rec.linkTypeList')">удалить</button></span>
+                    <!-- <eos-dynamic-input class="pull-left margin-l"
                                        [ngStyle]="{'width.px': 300}"
                                        [input]="inputs['rec.linkTypeList']"
                                        [form]="form"
-                                       [disabled]="!(link&&isLinkKindWithType)"
-                                       [readonly]="!editMode"></eos-dynamic-input>
+                                       [disabled]="!(link && isLinkKindWithType)"
+                                       [readonly]="!editMode"></eos-dynamic-input> -->
                 </div>
                 <eos-dynamic-input class="clear-both"
                                    [input]="inputs['rec.access']"
@@ -94,10 +100,17 @@
                                        [form]="form"
                                        [disabled]="!file"
                                        [readonly]="!editMode"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.fileAccessList']"
+                    <div style="margin-bottom: 20px;">
+                        <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                            <input readonly type="text" [value]="fileAccessNames.join(';')">
+                        </span>
+                        <span><button [disabled]="!file" (click)="openSecurityCl()">загрузить</button></span>
+                        <span><button [disabled]="!file" (click)="deleteFieldsNames('rec.fileAccessList')">удалить</button></span>
+                    </div>
+                    <!-- <eos-dynamic-input [input]="inputs['rec.fileAccessList']"
                                        [form]="form"
                                        [disabled]="!file"
-                                       [readonly]="!editMode"></eos-dynamic-input>
+                                       [readonly]="!editMode"></eos-dynamic-input> -->
                     <eos-dynamic-input class="pull-left"
                                        [input]="inputs['rec.fileMaxLength']"
                                        [form]="form"

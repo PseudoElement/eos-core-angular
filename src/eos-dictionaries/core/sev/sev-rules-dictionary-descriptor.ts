@@ -1,7 +1,7 @@
-import {ALL_ROWS} from '../../../eos-rest/core/consts';
-import {IDictionaryDescriptor} from '../../interfaces';
-import {PipRX} from '../../../eos-rest/services/pipRX.service';
-import {EosSevRulesService} from '../../services/eos-sev-rules.service';
+import { ALL_ROWS } from '../../../eos-rest/core/consts';
+import { IDictionaryDescriptor } from '../../interfaces';
+import { PipRX } from '../../../eos-rest/services/pipRX.service';
+import { EosSevRulesService } from '../../services/eos-sev-rules.service';
 import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 
 export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
@@ -36,12 +36,25 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
             .then((data: any[]) => {
                 this.prepareForEdit(data);
                 const processors = [];
-                for (let i = 0; i  < data.length; i++) {
+                for (let i = 0; i < data.length; i++) {
                     const value = data[i];
                     processors.push(
                         new Promise<any>((resolve) => {
-                            if (value['RULE_KIND'] === 3) {
+                            if (value['RULE_KIND'] === 1) {
                                 return this._rulesSrv.parseSendDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
+                                    .then(result => {
+                                        if (result) {
+                                            for (const prop in result) {
+                                                if (result.hasOwnProperty(prop)) {
+                                                    value[prop] = result[prop];
+                                                }
+                                            }
+                                        }
+                                        return resolve(value);
+                                    });
+                            }
+                            if (value['RULE_KIND'] === 2) {
+                                return this._rulesSrv.parseReseiveDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
                                     .then(result => {
                                         if (result) {
                                             for (const prop in result) {
@@ -59,5 +72,17 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                 }
                 return Promise.all(processors);
             });
+    }
+    public loadNames(type, names: string) {
+        let query;
+        switch (type) {
+            case 'LINK_CL':
+                query = { LINK_CL: [names.split('|')] };
+                break;
+            case 'SECURITY_CL':
+                query = { SECURITY_CL: [names.split('|')] };
+                break;
+        }
+        return this.apiSrv.read(query);
     }
 }

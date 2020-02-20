@@ -249,6 +249,14 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
             return null;
         }
     }
+    protected getControl(path: string) {
+        const control = this.form.controls[path];
+        if (control) {
+            return control;
+        } else {
+            return null;
+        }
+    }
 
     protected setValue(path: string, value: any) {
         const control = this.form.controls[path];
