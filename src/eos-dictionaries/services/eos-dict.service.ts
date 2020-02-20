@@ -726,7 +726,11 @@ export class EosDictService {
             .catch(err => this._errHandler(err));
     }
 
-    selectTemplateNode() {
+    selectTemplateNode(treeNodes, id) {
+        if (this.currentDictionary.descriptor['top'] !== id) {
+            this._srchCriteries = null;
+        }
+        this.currentDictionary.descriptor['top'] = id;
         const dictionary = this._dictionaries[0];
         this._selectTreeNode(dictionary.root);
         this._reloadList().then(() => {
