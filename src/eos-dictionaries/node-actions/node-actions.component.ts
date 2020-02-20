@@ -152,6 +152,10 @@ export class NodeActionsComponent implements OnDestroy {
         enabled ? menu.hide() : e.stopPropagation();
     }
 
+    visibleButtonsCount() {
+        return this.buttons.filter (b => b.show).length;
+    }
+
     private _initButtons() {
         const opts: IActionUpdateOptions = this._buttonOptsCreate();
         this.buttons = RECORD_ACTIONS.map((act) => this._actionToButton(act, opts));
