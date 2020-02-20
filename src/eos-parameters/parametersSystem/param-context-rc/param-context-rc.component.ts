@@ -22,6 +22,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     hiddenFilesContext = false;
     hiddenInputRadioResolution: boolean;
     stayEdit: boolean = false;
+    emptyChoiceFiles: boolean = false;
     _unsubsCribe: Subject<any> = new Subject();
     inputChoiceFiles = {
         key: 'contextFile',
@@ -66,6 +67,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 });
                 return data;
             }
+            this.emptyChoiceFiles = true;
             return null;
         })
         .then(data => {
@@ -120,6 +122,13 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             this.formChanged.emit(false);
             this.ngOnDestroy();
             this.initContext();
+        }
+        if (!this.formContextChoice.value.contextFile && !this.emptyChoiceFiles) {
+            this.formReadonli = false;
+            this.formContextChoice.controls['contextFile'].patchValue(true, { emitEvent: false });
+        }
+        if (this.formContextChoice.value.contextFile && this.emptyChoiceFiles) {
+            this.formContextChoice.controls['contextFile'].patchValue(false);
         }
         this.cancelEdit();
     }
@@ -186,6 +195,11 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 value += key + ',';
             }
         }
+        if (value === '') {
+            this.emptyChoiceFiles = true;
+        } else {
+            this.emptyChoiceFiles = false;
+        }
         return [{
             method: 'MERGE',
             requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 CONTEXT_SECTIONS_ENABLED')`,
@@ -236,6 +250,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
         this.form.disable({ emitEvent: false });
         this.formContextChoice.disable({ emitEvent: false });
         this.stayEdit = false;
+        this.newData = null;
     }
     subscribeChoiceForm() {
         this.subscriptions.push(
