@@ -210,3 +210,22 @@ export const CONFIRM_SEV_DEFAULT: IConfirmWindow = {
     okTitle: 'ПРИМЕНИТЬ',
     cancelTitle: 'ОТМЕНИТЬ'
 };
+
+export const CONFIRM_OPERATION_NOT_DATE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Логическое удаление некоторых подразделений невозможно (не заполнена Дата окончания действия):',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Продолжить',  result: 2, },
+    ],
+};
+export const CONFIRM_OPERATION_NOT_DATE_ALL: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Логическое удаление всех отмеченных подразделений невозможно (не заполнена Дата окончания действия):',
+    buttons: [
+        {title: 'OK', result: 1, isDefault: true, },
+    ],
+};

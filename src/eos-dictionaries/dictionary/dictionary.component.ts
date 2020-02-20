@@ -368,7 +368,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     onSetActiveNode($event) {
         // reset pagination custom tree
-       this._dictSrv.resetPagination();
+        this._dictSrv.resetPagination();
     }
 
     clearFindSettings() {
@@ -942,7 +942,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _deleteItems(): void {
 
         // let delCount = 0, allCount = 0;
-        const selectedNodes = this._dictSrv.getMarkedNodes().filter(n => !n.isDeleted);
+        let selectedNodes = this._dictSrv.getMarkedNodes().filter(n => !n.isDeleted);
 
         if (selectedNodes.length === 0) {
             // this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
@@ -961,10 +961,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
-        this._dictSrv.checkPreDelete(selectedNodes).then((continueDelete) => {
+        this._dictSrv.checkPreDelete(selectedNodes).then(({ continueDelete, selectdNodeWitwoutDate }) => {
             if (!continueDelete) {
                 return;
             } else {
+                if (selectdNodeWitwoutDate) {
+                    selectedNodes = selectdNodeWitwoutDate;
+                }
                 const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
 
                 return this._confirmMarkedItems(selectedNodes, confirmDelete).then((button: IConfirmButton) => {

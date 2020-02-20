@@ -300,8 +300,8 @@ export abstract class AbstractDictionaryDescriptor {
             .then((results) => [].concat(...results));
     }
 
-    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
-        return Promise.resolve(true);
+    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {
+        return Promise.resolve({continueDelete: true});
     }
 
     /**

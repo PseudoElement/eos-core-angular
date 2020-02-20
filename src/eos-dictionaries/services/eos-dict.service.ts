@@ -1218,7 +1218,7 @@ export class EosDictService {
         });
     }
 
-    public checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+    public checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {
         return this.currentDictionary.descriptor.checkPreDelete(selectedNodes);
     }
 
