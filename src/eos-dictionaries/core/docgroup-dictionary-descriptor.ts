@@ -10,8 +10,9 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { PipRX } from 'eos-rest';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
-import { DocgroupTemplateChecker } from 'eos-dictionaries/docgroup-template-config/docgroup-template-checker';
 import { TDefaultField } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
+import { NumcreationTemplateHelper } from 'eos-dictionaries/helpers/numcreation-template.helper';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
@@ -33,7 +34,7 @@ const inheritFiields = [
 
 export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
-
+    FeatTPL = Features.cfg.docgroups.templates;
 
     constructor(
         descriptor: IDictionaryDescriptor,
@@ -72,10 +73,9 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
 
     confirmSave(nodeData: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        const shablonIsCorrect = DocgroupTemplateChecker.shablonIsCorrect(nodeData.rec.SHABLON, nodeData.rec.RC_TYPE);
-        if (!shablonIsCorrect) {
+        if (!NumcreationTemplateHelper.isTPLCorrectForRK(nodeData.rec.SHABLON, nodeData.rec.RC_TYPE, this.FeatTPL.doc)) {
             return confirmSrv.confirm2(CONFIRM_DG_SHABLONRK)
-                .then((button) => {
+                .then(() => {
                         return false;
                 });
         }

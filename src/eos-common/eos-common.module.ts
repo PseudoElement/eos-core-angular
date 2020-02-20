@@ -72,7 +72,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         DynamicInputSelect2Component,
         EosDateMaskDirective,
         EosDatePipe,
-        UserSelectPaginationComponent
+        UserSelectPaginationComponent,
     ],
     imports: [
         BrowserModule,
@@ -95,7 +95,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         UnicValidatorDirective,
         DynamicInputComponent,
         EosDatePipe,
-        UserSelectPaginationComponent
+        UserSelectPaginationComponent,
     ],
     entryComponents: [
         ConfirmWindowComponent,

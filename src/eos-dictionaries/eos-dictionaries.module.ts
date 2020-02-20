@@ -97,6 +97,7 @@ import { EdsImportComponent } from './eds-import/eds-import.component';
 import { StampBlobFormComponent } from './shablon-blob-form/stamp-blob-form.component';
 import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-record/image-blob-record.component';
 import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-info/sev-collisions-node-info.component';
+import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list-selector-form.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -125,6 +126,7 @@ import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-
         VisatypeCardComponent,
         ReestrtypeCardComponent,
         DocgroupTemplateConfigComponent,
+        ListSelectorFormComponent,
         NodeActionsComponent,
         NodeInfoComponent,
         NodeFieldComponent,
@@ -176,6 +178,7 @@ import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
+        ListSelectorFormComponent,
         PrjDefaultValuesComponent,
         CalendarFormComponent,
         EosDatepickerInlineComponent,

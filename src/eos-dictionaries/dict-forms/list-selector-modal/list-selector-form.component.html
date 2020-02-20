@@ -1,0 +1,59 @@
+
+<div class="modal-header secondary-block">
+    <div class="xl-font primary-text pull-left">{{title}}</div>
+</div>
+<div class="modal-body list-selector-wapper">
+    <div class="dnd-container">
+        <div class="dnd-content">
+            <!-- <p>Исходный список</p> -->
+            <div class="dnd-bag"
+                id="availableList"
+                [dragula]="BAG_NAME"
+                [(dragulaModel)]="availableList">
+                <div class="item"
+                    *ngFor="let item of availableList"
+                    [id]="'listItem_'+item?.key"
+                    (click)="selectItem(item, 0)"
+                    [ngClass]="{'highlighted': (item === selection.left), disabled: false }">
+                    <span class="text">{{options.showKeys ? item?.key + ' ': ''}}{{item?.title}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dnd-driver" style="height: 10px;">
+            <!-- <button class="btn btn-primary-light"
+                (click)="b1()"><span class="eos-icon eos-icon-arrow-v-blue-right"></span></button>
+            <button class="btn btn-primary-light"
+                (click)="b2()"><span class="eos-icon eos-icon-arrow-v-blue-left"></span></button> -->
+        </div>
+
+        <div class="dnd-content">
+            <!-- <p>список</p> -->
+            <div class="dnd-bag"
+                id="currentList"
+                [dragula]="BAG_NAME"
+                [(dragulaModel)]="currentList">
+                <div class="item"
+                    *ngFor="let item of currentList"
+                    (click)="selectItem(item, 1)"
+                    [ngClass]="{'highlighted': (item === selection.right), disabled: false }">
+                    <span class="text">{{showKeys ? item?.key + ' ': ''}} {{item?.title}}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-controls">
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <span class="pull-right">
+        <button type="button" class="btn btn-primary-full upper fixed-width"
+                (click)="close(true)">Выбрать</button>
+        <button type="button" class="btn btn-primary have-margin fixed-width"
+                (click)="close(false)">Выход</button>
+    </span>
+</div>
