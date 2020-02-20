@@ -152,6 +152,10 @@ export class NodeActionsComponent implements OnDestroy {
         enabled ? menu.hide() : e.stopPropagation();
     }
 
+    visibleButtonsCount() {
+        return this.buttons.filter (b => b.show).length;
+    }
+
     private _initButtons() {
         const opts: IActionUpdateOptions = this._buttonOptsCreate();
         this.buttons = RECORD_ACTIONS.map((act) => this._actionToButton(act, opts));
@@ -234,7 +238,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _active = false;
         let _show = false;
         let _isWriteAction = true;
-        const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
+        const _isLDSubTree = (this.isTree && this._selectedTreeNode && (this._selectedTreeNode.isDeleted && !Features.cfg.canEditLogicDeleted));
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
 
@@ -291,7 +295,6 @@ export class NodeActionsComponent implements OnDestroy {
                         }
                     }
 
-                    // _enabled = _enabled && !opts.listHasDeleted;
                     if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }

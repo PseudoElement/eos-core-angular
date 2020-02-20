@@ -534,7 +534,7 @@ export abstract class AbstractDictionaryDescriptor {
                         result.success = false;
                         result.error = new RestError({
                             isLogicException: true,
-                            message: 'Индекс СЭВ создан ранее!'
+                            message: 'Для данного справочника уже существует индекс СЭВ с таким значением.'
                         });
                     }
                 } else {

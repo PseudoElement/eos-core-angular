@@ -32,7 +32,7 @@ export const CONFIRM_NUMCREATION_CHANGE: IConfirmWindow = {
 
 export const CONFIRM_NUMCREATION_CANT: IConfirmWindow2 = {
     title: 'Изменение значения счетчика невозможно',
-    body: 'Указанное значение или значения больше ранее уже использовались в нумерации.',
+    body: 'Значения больше указанного ранее уже использовались в нумерации.',
     buttons: [
             {title: 'Ok', result: 1, isDefault: true, },
     ],

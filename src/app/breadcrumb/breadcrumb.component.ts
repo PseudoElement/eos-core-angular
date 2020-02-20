@@ -18,6 +18,7 @@ import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/se
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     selector: 'eos-breadcrumb',
@@ -93,7 +94,7 @@ export class BreadcrumbsComponent implements OnDestroy {
                             }
                         }
                     }
-                    this.isEditEnabled = !n.isDeleted && this.isEditGranted && this._calcisEditable(n);
+                    this.isEditEnabled = (!n.isDeleted || Features.cfg.canEditLogicDeleted) && this.isEditGranted && this._calcisEditable(n);
                 }
             });
 

@@ -56,7 +56,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         // }
         // this.data
 
-        if (!this.isNewRecord) {
+        if (!this.isNewRecord && this.editMode) {
             const changes = [];
             const inObj: any = {};
             let fio;
@@ -86,17 +86,18 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
                     changes.push('Пол');
                 }
-                const warn: IConfirmWindow2 = {
-                    title: 'Ведение справочников',
-                    body: 'Новые поля карточки ДЛ:',
-                    bodyList: changes,
-                    bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
-                    buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
-                };
-                setTimeout(() => {
-                    this._confirmSrv.confirm2(warn);
-                }, 10);
-
+                if (changes.length) {
+                    const warn: IConfirmWindow2 = {
+                        title: 'Ведение справочников',
+                        body: 'Новые поля карточки ДЛ:',
+                        bodyList: changes,
+                        bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
+                        buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+                    };
+                    setTimeout(() => {
+                        this._confirmSrv.confirm2(warn);
+                    }, 10);
+                }
             }
 
 

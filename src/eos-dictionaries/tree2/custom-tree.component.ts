@@ -2,6 +2,7 @@ import { Component, Input, OnInit, HostListener, OnDestroy, Output, EventEmitter
 import { Router } from '@angular/router';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { Subscription } from 'rxjs';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 // import {EosDictService} from '../services/eos-dict.service';
 
 const BIG_PANEL = 340,
@@ -99,7 +100,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
         if (!node.isClickable) {
             return;
         }
-        if (!node.isDeleted) {
+        if (!node.isDeleted || Features.cfg.canEditLogicDeleted) {
             this.onSetActiveNode.emit(node);
             this._router.navigate(node.path);
         }
