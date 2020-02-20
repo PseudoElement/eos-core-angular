@@ -195,7 +195,11 @@ export abstract class AbstractDictionaryDescriptor {
         const _criteries = {};
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
-                _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
+                if (fld.foreignKey !== 'CODE') {
+                      _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
+                }   else {
+                    _criteries[fld.foreignKey] =  data[fld.foreignKey].trim();
+                }
             }
         });
         return _criteries;
