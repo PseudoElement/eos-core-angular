@@ -118,18 +118,19 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         this._apiSrv.read(req).then((data) => {
 
             if (data && data.length) {
+
+                const list1: SelectorListItem[] = data.map (rec => {
+                    const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
+                    return Object.assign({}, {
+                        key: rec['ISN_LCLASSIF'],
+                        CONSTR_TYPE: rec['CONSTR_TYPE'],
+                        title: rec['CLASSIF_NAME'] + (pair ? ' - ' + pair['CLASSIF_NAME'] : ''),
+                        obj: rec });
+
+                });
+                this._cachedLinks1 = list1;
+
                 this.additionalControls.filter( c => c.storeInInfo === 'L').forEach( (ctrl: DGTplAddControl) => {
-                    const list1: SelectorListItem[] = data.map (rec => {
-                        const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
-                        return Object.assign({}, {
-                            key: rec['ISN_LCLASSIF'],
-                            CONSTR_TYPE: rec['CONSTR_TYPE'],
-                            title: rec['CLASSIF_NAME'] + (pair ? ' - ' + pair['CLASSIF_NAME'] : ''),
-                            obj: rec });
-
-                    });
-
-                    this._cachedLinks1 = list1;
 
                     const list2: SelectorListItem[] = [].concat (... this.additionalData['SHABLON_DETAIL_List']
                         .filter(s => s['element'] === this._getLetter(ctrl.item) && s.CONSTR_TYPE === 'L'));
@@ -145,7 +146,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
                     ctrl.editValue = list2;
 
                 });
-                // this._cachedLinks = data;
             }
 
         });
@@ -395,7 +395,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         this._apiSrv.read(req).then((data) => {
             if (data && data.length) {
                 const list1 = [... this._cachedLinks1];
-                const list2 = [].concat(item.editValue);
+                const list2 = [].concat(item.editValue || []);
 
                 const modalObj: ListSelectorFormComponent = ListSelectorFormComponent.showModal('Типы связок', list1, list2);
 
