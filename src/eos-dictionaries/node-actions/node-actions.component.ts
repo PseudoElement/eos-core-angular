@@ -238,7 +238,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _active = false;
         let _show = false;
         let _isWriteAction = true;
-        const _isLDSubTree = (this.isTree && this._selectedTreeNode && (this._selectedTreeNode.isDeleted && !Features.cfg.canEditLogicDeleted));
+        const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
 
@@ -287,7 +287,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && opts.listHasItems;
                     break;
                 case E_RECORD_ACTIONS.edit:
-                    _enabled = !_isLDSubTree && !this._viewParams.updatingList && opts.listHasOnlyOne;
+                    _enabled = (!_isLDSubTree || Features.cfg.canEditLogicDeleted) && !this._viewParams.updatingList && opts.listHasOnlyOne;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
                         if (this._dictSrv && this._dictSrv.listNode) {

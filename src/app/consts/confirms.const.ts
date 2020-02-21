@@ -39,6 +39,16 @@ export const CONFIRM_NUMCREATION_CANT: IConfirmWindow2 = {
     manualCR: true,
 };
 
+export const CONFIRM_DEPARTMENTS_DATES_FIX: IConfirmWindow2 = {
+    title: 'Ведение справочников',
+    body: 'Период существования элемента выходит за границы существования родительской вершины. Скорректировать даты?',
+    buttons: [
+            {title: 'Да', result: BUTTON_RESULT_YES, isDefault: true, },
+            {title: 'Нет', result: BUTTON_RESULT_NO, },
+    ],
+    // manualCR: true,
+};
+
 export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
     title: 'Подтверждение изменения',
     body: 'У данного типа реестров есть не отправленные реестры. Сменить вид отправки для всех этих реестров?',

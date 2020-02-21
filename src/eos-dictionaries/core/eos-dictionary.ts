@@ -473,6 +473,8 @@ export class EosDictionary {
                                 const sev = related['SEV_ASSOCIATION'].find(s => s['OBJECT_ID'] === id);
                                 if (sev) {
                                     node.data.sev = sev;
+                                } else if (node.data.sev) {
+                                    delete node.data.sev;
                                 }
                             });
 
