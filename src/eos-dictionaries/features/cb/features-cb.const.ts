@@ -23,7 +23,7 @@ export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
         templates: <IEOSFDocGroupsTemplates>{
             doc: <IEOSTPLVariant> {
                 list: DOC_TEMPLATE_ELEMENTS_CB,
-                validationExpr: /\{2\}|\{A\}|\{B\}|\{C\}|\{D\}|\{2#\}|\{3#\}|\{@\}|\{@2\}/,
+                validationExpr: /\{2\}|\{\*?A\*?\}|\{\*?B\*?\}|\{C\}|\{D\}|\{2#\}|\{3#\}|\{@\}|\{@2\}/,
                 invalidText: 'Обязательные элементы: {2}, {A}, {B}, {C}, {D}, {2#}, {3#}, {@}, {@2}',
             },
             prj: <IEOSTPLVariant>{

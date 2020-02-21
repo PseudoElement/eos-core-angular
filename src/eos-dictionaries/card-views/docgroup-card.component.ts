@@ -97,6 +97,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                 for (const key in outdata) {
                     if (outdata.hasOwnProperty(key)) {
                         if (key === 'SHABLON_DETAIL_List') {
+                            if (!this.data[key]) {
+                                this.data[key] = [];
+                            }
                             // добавленные
                             outdata[key].forEach( d => {
                                 const ex = this.data[key].find ( saved =>
