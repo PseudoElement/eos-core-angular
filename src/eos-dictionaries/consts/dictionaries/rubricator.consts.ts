@@ -12,7 +12,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-template-blue',
     defaultOrder: 'CLASSIF_NAME',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'paste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes',
         'export', 'import'

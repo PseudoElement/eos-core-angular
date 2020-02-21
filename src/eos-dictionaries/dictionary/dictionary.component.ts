@@ -372,6 +372,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         setTimeout(() => {
             this.setStyles();
         }, 250);
+        // удаляем данные которые относятся к копированию/вырезанию данных
+        this._storageSrv.removeItem('markedNodes');
     }
 
     ngOnDestroy() {
@@ -560,6 +562,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
             case E_RECORD_ACTIONS.combine:
                 this._combine();
+                break;
+            case E_RECORD_ACTIONS.paste:
+                this._copy();
+                break;
+            case E_RECORD_ACTIONS.copy:
+                this._cutNode();
                 break;
             case E_RECORD_ACTIONS.uncheckNewEntry:
                 this._uncheckNewEntry();
@@ -1285,19 +1293,57 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
     }
-    private _cutNode(): void {
-        // Для объединения можно выбирать только карточки организаций.
-        const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
-            return !node.isNode;
+    // MoveClassif?dueTo=0.2VK.&type=RUBRIC_CL&dues=0.2EYD3.2EZEN.%2C0.2EYD3.2EZEP.%2C0.2EYD3.2EZER.&weight=1 HTTP/1.1
+    // dueTo=0.2VK. => где мы находимся
+    // type=RUBRIC_CL => таблица где происходит копирование
+    // dues= записи которые переносим через запятую
+    // weight = пока не знаю чему он должен быть равен
+    //
+    private _copy(): void {
+        // то что вырезано и записано
+        const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
+        // хранится то куда будем вставлять данные
+        const dueTo = this._router.url.split('/').pop();
+        // скорее всего нужно ещё и откуда передать
+        this._dictSrv.paste(slicedNode, dueTo, true)
+        .then(elem => {
+            console.log('elem', elem);
+        })
+        .catch(er => {
+            console.log('er', er);
         });
-        if (!checkNode) {
-            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения можно выбирать только карточки организаций.' });
-            return;
+    }
+
+    // status-reply Состояния исполнения (исполнитель)
+    // status-exec Состояния исполнения (поручение)
+    // reprj-priority Приоритеты проектов резолюций
+    // citizens Граждане
+    private _cutNode(): void {
+        // Для объединения можно выбирать только карточки организаций. Или если по другому листья но не папки
+        switch (this.dictionaryId) {
+            /* case 'region':
+                message = 'Для объединения можно выбирать только регионы.';
+                break; */
+            case 'organization':
+                const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
+                    return !node.isNode;
+                });
+                if (!checkNode) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Для объединения можно выбирать только карточки организаций.' });
+                    return;
+                }
+                break;
+            /* case 'rubricator':
+                message = 'Для объединения можно выбирать только карточки рубрикаторов.';
+                break; */
         }
         this._dictSrv.cutNode();
     }
     private _combine() {
-        const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
+        const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes'); // this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
         const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => {
             if (node.isNode) {
                 node.isMarked = false;

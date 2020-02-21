@@ -528,6 +528,30 @@ const RECORD_ACTIONS_PROTVIEW_SECURITY: IAction = {
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.readwrite,
 };
+export const RECORD_ACTION_PASTE: IAction = {
+    type: E_RECORD_ACTIONS.paste,
+    group: E_ACTION_GROUPS.common,
+    title: 'Вставить',
+    hint: 'Вставить',
+    iconClass: 'eos-icon eos-icon-paste-blue small',
+    disabledIconClass: 'eos-icon eos-icon-paste-grey small',
+    hoverIconClass: 'eos-icon eos-icon-paste-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+export const RECORD_ACTION_COPY: IAction = {
+    type: E_RECORD_ACTIONS.copy,
+    group: E_ACTION_GROUPS.common,
+    title: 'Копировать',
+    hint: 'Копировать',
+    iconClass: 'eos-icon eos-icon-copy-blue small',
+    disabledIconClass: 'eos-icon eos-icon-copy-grey small',
+    hoverIconClass: 'eos-icon eos-icon-copy-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
 
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
@@ -560,6 +584,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_UNCHECK_NEW_ENTRY,
     RECORD_ACTIONS_DEFAULT_COLLISION,
     RECORD_ACTIONS_PROTVIEW_SECURITY,
+    RECORD_ACTION_COPY,
+    RECORD_ACTION_PASTE,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];

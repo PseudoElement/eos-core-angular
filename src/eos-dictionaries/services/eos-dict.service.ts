@@ -479,7 +479,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach(n => { n.isMarked = false; n.isSliced = false; });
+            this._currentList.forEach( n => {n.isMarked = false; /* n.isSliced = false; */ } );
         }
         this._currentMarkInfo.nodes = [];
 
@@ -1185,11 +1185,31 @@ export class EosDictService {
     isPaginationVisible(): boolean {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
-    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
-        const markedNodes: EosDictionaryNode[] = this.getMarkedNodes();
-        markedNodes.forEach((node: EosDictionaryNode) => {
-            node.isSliced = !node.isSliced;
+    // по идее нужно сюда передать нужные данные
+    // flag пока думаю использовать как показатель вырезать = true  копировать = false
+    public paste(slicedNodes: EosDictionaryNode[], dueTo: string, flag): Promise<any>  {
+        return this.currentDictionary.descriptor.paste(slicedNodes, dueTo, true)
+        .then(() => {
+            this._storageSrv.removeItem('markedNodes');
+            this.reload();
+        })
+        .catch(er => {
+            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
         });
+    }
+    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
+        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        const storageNode = [];
+        // убираем выделение
+        this._currentList.forEach((node: EosDictionaryNode) => {
+            node.isSliced = false;
+        });
+        // добавляем выделение для вырезаных/копированных
+        markedNodes.forEach((node: EosDictionaryNode) => {
+            node.isSliced = true; // !node.isSliced;
+            storageNode.push(node);
+        });
+        this._storageSrv.setItem('markedNodes', storageNode);
     }
     public combine(slicedNodes, markedNodes): Promise<any> {
         return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
@@ -1317,8 +1337,12 @@ export class EosDictService {
     private loadChildren(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode> {
         if (dictionary) {
             return dictionary.getChildren(node)
-                .then(() => node)
-                .then(() => {
+                .then((el) => {
+                    // теперь будем обновлять данные а не просто делать запрос
+                    node.children = el;
+                    return node;
+                })
+                .then (() => {
                     return node;
                 })
                 .catch((err) => this._errHandler(err));
@@ -1483,6 +1507,15 @@ export class EosDictService {
     }
 
     private _setCurrentList(dictionary: EosDictionary, nodes: EosDictionaryNode[], update = false) {
+        const markedNodes: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
+        nodes.forEach((node: EosDictionaryNode) => {
+            // filter вместо find из-за IE
+            if (markedNodes && markedNodes.filter(mark => mark.id === node.id).length > 0) {
+                node.isSliced = true;
+            } else {
+                node.isSliced = false;
+            }
+        });
         this._currentList = nodes || [];
         if (dictionary) {
             // remove duplicates
