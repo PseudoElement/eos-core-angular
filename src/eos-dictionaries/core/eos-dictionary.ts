@@ -704,6 +704,12 @@ export class EosDictionary {
     private getNodeRelatedData(node: EosDictionaryNode, refresh: boolean = false): Promise<EosDictionaryNode> {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
+                case 'resolution-category':
+                return this.descriptor.getRelatedSev(node.data.rec).then((sev) => {
+                    node.data = Object.assign(node.data, { sev: sev });
+                    node.relatedLoaded = true;
+                    return node;
+                });
                 case 'departments':
                     // const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
                     const orgDUE = node.data.rec.DUE_LINK_ORGANIZ;
