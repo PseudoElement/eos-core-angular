@@ -23,7 +23,6 @@ import {
     DANGER_NAVIGATE_TO_DELETED_ERROR,
     DANGER_EDIT_DELETED_ERROR,
     SUCCESS_SAVE,
-    WARN_SAVE_FAILED
 } from '../consts/messages.consts';
 import { NAVIGATE_TO_ELEMENT_WARN } from '../../app/consts/messages.consts';
 import { LS_EDIT_CARD } from '../consts/common';
@@ -503,6 +502,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this._initNodeData(node);
             this.cancel();
         } else {
+            this.isChanged = false;
             if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length <= 1)) {
                 this.close();
             }
@@ -523,7 +523,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             });
             this._clearEditingCardLink();
         } else {
-            this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
+            // this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
         }
         return node;
     }

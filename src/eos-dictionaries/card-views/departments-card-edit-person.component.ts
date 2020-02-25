@@ -241,7 +241,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     }
                     if (isNeedCorrectEnd) {
                         this.setValue('rec.END_DATE', new Date(this.dictSrv.currentNode.parent.data.rec['END_DATE']));
-                        this.data.rec['START_DATE'] = this.dictSrv.currentNode.parent.data.rec['END_DATE'];
+                        this.data.rec['END_DATE'] = this.dictSrv.currentNode.parent.data.rec['END_DATE'];
                     }
                     return true;
                 }
