@@ -18,7 +18,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { ICONS_CONTAINER } from 'eos-dictionaries/consts/dictionaries/_common';
+import { ICONS_CONTAINER, ICONS_CONTAINER_SEV } from 'eos-dictionaries/consts/dictionaries/_common';
 
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -439,7 +439,7 @@ export class EosDictionary {
             .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder} : null);
         const tablesUniq = Array.from(new Set(tablelist));
 
-        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex( f => f.key === ICONS_CONTAINER) !== -1) {
+        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex( f => f.key === ICONS_CONTAINER_SEV) !== -1) {
             tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: {OBJECT_NAME: this.descriptor.apiInstance }}} );
         }
 
@@ -465,7 +465,7 @@ export class EosDictionary {
                                 field.options.push(el);
                             });
                         }
-                    } else if (Features.cfg.SEV.isIndexesEnable && field.key === ICONS_CONTAINER && nodes.length) {
+                    } else if (Features.cfg.SEV.isIndexesEnable && field.key === ICONS_CONTAINER_SEV && nodes.length) {
                         if (nodes && nodes.length && related && related['SEV_ASSOCIATION']) {
                             // this.descriptor.getRelatedSev(node.data.rec)
                             nodes.forEach(node => {

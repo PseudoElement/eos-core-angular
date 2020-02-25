@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { COMMON_FIELD_NAME, ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV } from './_common';
+import { COMMON_FIELD_NAME, ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const LINK_TYPES = [{
@@ -85,7 +85,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
         ],
     listFields: [
-        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'LINK', 'PAIR_LINK', 'TYPE', ],
     quickViewFields: ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE', 'TYPE',
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],

@@ -1,6 +1,6 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS, ICONS_CONTAINER, } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS, ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV, } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 /*
 */
@@ -27,6 +27,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
         title: 'ID',
         length: 248,
     },
+    COMMON_FIELD_ICONS_SEV,
     COMMON_FIELD_ICONS,
     Object.assign({}, COMMON_FIELD_CODE, {
         key: 'RUBRIC_CODE',
@@ -76,7 +77,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     ],  // CLASSIF_NAME is in shortQuickViewFields
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [
-        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'],
     allVisibleFields: ['NOTE', 'FULLNAME', 'sev', 'RUBRIC_CODE', ],
 };

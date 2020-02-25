@@ -39,6 +39,7 @@ export enum E_FIELD_TYPE {
     text,
     date,
     icon,
+    icon_sev,
     boolean,
     buttons,
     dictionary,
@@ -63,6 +64,7 @@ export interface IFieldPreferences {
     minColumnWidth?: number; /* node-list style: min-width.px */
     hasIcon?: boolean; /* flag for enable icon (department, docgroups) */
     noLeftPadding?: boolean; /* flag for icons without padding (ex: sev) */
+    inline?: boolean; /* if true - hedden in customisable columns */
 }
 export interface IFieldDescriptor {
     key: string;

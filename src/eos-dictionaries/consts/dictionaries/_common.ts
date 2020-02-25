@@ -43,14 +43,22 @@ export const COMMON_FIELD_ICONS = {
     title: 'Тип',
     type: 'icon',
     length: 5,
+    preferences: <IFieldPreferences>{
+        noLeftPadding: true,
+    }
 };
 
-export const COMMON_FIELD_ICONS_SEV = Object.assign({}, COMMON_FIELD_ICONS, {
-        title: '',
-        preferences: <IFieldPreferences>{
-            noLeftPadding: true,
-        }
-});
+export const ICONS_CONTAINER_SEV = 'ICONS_TYPE_SEV';
+export const COMMON_FIELD_ICONS_SEV = {
+    key: ICONS_CONTAINER_SEV,
+    title: '',
+    type: 'icon_sev',
+    length: 5,
+    preferences: <IFieldPreferences>{
+        noLeftPadding: true,
+        inline: true,
+    }
+};
 
 export const COMMON_FIELDS: IFieldDescriptor[] = [{
     key: 'DELETED',

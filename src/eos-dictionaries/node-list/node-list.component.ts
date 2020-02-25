@@ -192,9 +192,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
      */
     configColumns() {
         this.modalWindow = this._modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
-        this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields);
+        this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields.filter (c => !(c.preferences && c.preferences.inline)));
         this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this._dictSrv.customTitles);
-        this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields);
+        this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields.filter (c => !(c.preferences && c.preferences.inline)));
         this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([],
             this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
 

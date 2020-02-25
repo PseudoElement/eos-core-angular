@@ -54,14 +54,16 @@ export class NodeFieldComponent implements OnInit {
                 });
             }
 
+
+        } else if (this.field.type === E_FIELD_TYPE.icon_sev) {
             if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-shared-folder-grey' : 'eos-icon-shared-folder-blue',
                     tooltip: 'Индекс СЭВ',
                 });
             }
-
         }
+
     }
 
     currentValue(): string {

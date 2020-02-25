@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER } from './_common';
+import { COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
@@ -22,7 +22,7 @@ export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR
         isUnique: true,
     }],
     listFields: [
-        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'],
     editFields: [ ... LINEAR_TEMPLATE.editFields,
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
