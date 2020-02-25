@@ -1,7 +1,7 @@
 import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER, ICONS_CONTAINER_SEV, } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV, } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';

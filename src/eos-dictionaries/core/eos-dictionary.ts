@@ -18,7 +18,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { ICONS_CONTAINER, ICONS_CONTAINER_SEV } from 'eos-dictionaries/consts/dictionaries/_common';
+import { ICONS_CONTAINER_SEV } from 'eos-dictionaries/consts/dictionaries/_common';
 
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
