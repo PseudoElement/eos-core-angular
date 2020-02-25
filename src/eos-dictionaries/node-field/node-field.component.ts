@@ -54,6 +54,13 @@ export class NodeFieldComponent implements OnInit {
                 });
             }
 
+            if (this.node.data.rec['POST_H'] === 1) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-user-ceo-grey' : 'eos-icon-user-ceo-blue',
+                    tooltip: 'Начальник',
+                });
+            }
+
 
         } else if (this.field.type === E_FIELD_TYPE.icon_sev) {
             if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
