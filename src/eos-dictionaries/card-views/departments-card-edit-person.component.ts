@@ -11,9 +11,9 @@ import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp
 import { EosUtils } from 'eos-common/core/utils';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { AbstractControl, Validators } from '@angular/forms';
+// import { InputControlService } from 'eos-common/services/input-control.service';
 import { BUTTON_RESULT_OK, CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
-import { ValidatorFn, AbstractControl } from '@angular/forms';
-import { InputControlService } from 'eos-common/services/input-control.service';
 
 
 interface IToDeclineFields {
@@ -40,7 +40,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         private injector: Injector,
         private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
-        private _intupControlSrv: InputControlService
+        //    private _intupControlSrv: InputControlService
 
     ) {
         super(injector);
@@ -122,7 +122,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         this.prevValues = this.makePrevValues(this.data);
         this.tabsToArray(this.fieldGroups);
         if (this.form) {
-            this.setValidators();
+            this.updateValidators();
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
                 this.updateForm(formChanges);
@@ -142,58 +142,50 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.photo = null;
         }
     }
-    setValidators() {
-        this.form.controls['rec.START_DATE'].setValidators([
-            this.dateEmptyValidator(),
-            this._intupControlSrv.dateValueValidator(),
-            this.dateCompareValidator(),
-            this.validatorsStartToEnd('rec.END_DATE'),
-        ]);
-
-        this.form.controls['rec.END_DATE'].setValidators([
-            this.dateEmptyValidator(),
-            this._intupControlSrv.dateValueValidator(),
-            this.dateCompareValidator(),
-            this.validatorsStartToEnd('rec.START_DATE'),
-        ]);
+    updateValidators() {
+        const extensibleValidators = this.form.controls['rec.START_DATE'].validator;
+        this.form.controls['rec.START_DATE'].setValidators(
+            Validators.compose([extensibleValidators, this.validatorsStartToEnd('rec.END_DATE')]));
+        const extensibleValidators1 = this.form.controls['rec.END_DATE'].validator;
+        this.form.controls['rec.END_DATE'].setValidators(Validators.compose([extensibleValidators1, this.validatorsStartToEnd('rec.START_DATE')]));
         this.form.updateValueAndValidity();
     }
-    dateEmptyValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } => {
-            const value = control.value;
-            if (!value) {
-                if (this.parentStart_Date) {
-                    const errMessage = 'Дата должна быть больше ' + EosUtils.dateToStringValue(new Date(this.parentStart_Date));
-                    control.setErrors({ 'dateCompare': errMessage });
-                    return { 'dateCompare': errMessage };
-                }
-            }
-            return null;
-        };
-    }
+    // dateEmptyValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [key: string]: any } => {
+    //         const value = control.value;
+    //         if (!value) {
+    //             if (this.parentStart_Date) {
+    //                 const errMessage = 'Дата должна быть больше ' + EosUtils.dateToStringValue(new Date(this.parentStart_Date));
+    //                 control.setErrors({ 'dateCompare': errMessage });
+    //                 return { 'dateCompare': errMessage };
+    //             }
+    //         }
+    //         return null;
+    //     };
+    // }
 
-    dateCompareValidator(): ValidatorFn {
-        return (control: AbstractControl): { [errKey: string]: any } => {
-            let valid = true;
-            let errMessage: string = null;
-            const value = control.value;
-            if (value && value instanceof Date) {
-                if (this.parentStart_Date && this.parentStart_Date instanceof Date) {
-                    if (value.getTime() < this.parentStart_Date.getTime()) {
-                        valid = false;
-                        errMessage = 'Дата должна быть больше ' + EosUtils.dateToStringValue(this.parentStart_Date);
-                    }
-                }
-                if (this.parentEnd_Date && this.parentEnd_Date instanceof Date) {
-                    if (value.getTime() > this.parentEnd_Date.getTime()) {
-                        valid = false;
-                        errMessage = 'Дата должна быть меньше ' + EosUtils.dateToStringValue(this.parentEnd_Date);
-                    }
-                }
-            }
-            return (valid ? null : { dateCompare: errMessage });
-        };
-    }
+    // dateCompareValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [errKey: string]: any } => {
+    //         let valid = true;
+    //         let errMessage: string = null;
+    //         const value = control.value;
+    //         if (value && value instanceof Date) {
+    //             if (this.parentStart_Date && this.parentStart_Date instanceof Date) {
+    //                 if (value.getTime() < this.parentStart_Date.getTime()) {
+    //                     valid = false;
+    //                     errMessage = 'Дата должна быть больше ' + EosUtils.dateToStringValue(this.parentStart_Date);
+    //                 }
+    //             }
+    //             if (this.parentEnd_Date && this.parentEnd_Date instanceof Date) {
+    //                 if (value.getTime() > this.parentEnd_Date.getTime()) {
+    //                     valid = false;
+    //                     errMessage = 'Дата должна быть меньше ' + EosUtils.dateToStringValue(this.parentEnd_Date);
+    //                 }
+    //             }
+    //         }
+    //         return (valid ? null : { dateCompare: errMessage });
+    //     };
+    // }
     validatorsStartToEnd(field: string) {
         return (control: AbstractControl): { [errKey: string]: any } => {
             let valid = true;
