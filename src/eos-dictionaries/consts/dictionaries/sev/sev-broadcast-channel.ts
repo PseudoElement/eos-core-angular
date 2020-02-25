@@ -15,7 +15,7 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, S
     title: 'Каналы передачи сообщений',
     fields: LINEAR_TEMPLATE.fields.concat([
         Object.assign({}, COMMON_FIELD_NAME, {length: 64}),
-        Object.assign({}, COMMON_FIELD_NOTE, {length: 150}),
+        Object.assign({}, COMMON_FIELD_NOTE, {length: 255}),
         {
             key: 'CHANNEL_TYPE',
             type: 'select',

@@ -71,8 +71,12 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                     });
             } else {
                 if (this.node.parent) {
-                    this.department = this.node.parent.getParentData('FULLNAME', 'rec') ||
-                        this.node.parent.getParentData('CLASSIF_NAME', 'rec');
+                    if (this.node.parent.id === '0.') {
+                        this.department = '...';
+                    } else {
+                        this.department = this.node.parent.getParentData('FULLNAME', 'rec') ||
+                            this.node.parent.getParentData('CLASSIF_NAME', 'rec');
+                    }
                     if (this.node.data.photo && this.node.data.photo.url) {
                         this.photo = this.node.data.photo.url;
                     } else {

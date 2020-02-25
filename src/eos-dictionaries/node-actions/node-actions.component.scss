@@ -110,9 +110,12 @@ $drop-menu-width: 300px;
         overflow-x: hidden;
     }
 
+    &.centered {
+        left: -134px;
+    }
+
     width: $drop-menu-width;
     position: relative;
-    left: -134px;
     font-size: 0;
     .menuitem {
         .dropdown-item {

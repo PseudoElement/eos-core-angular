@@ -11,7 +11,7 @@ import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp
 import { EosUtils } from 'eos-common/core/utils';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
+import { BUTTON_RESULT_OK, CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
 
 
 interface IToDeclineFields {
@@ -56,7 +56,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         // }
         // this.data
 
-        if (!this.isNewRecord) {
+        if (!this.isNewRecord && this.editMode) {
             const changes = [];
             const inObj: any = {};
             let fio;
@@ -86,17 +86,18 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
                     changes.push('Пол');
                 }
-                const warn: IConfirmWindow2 = {
-                    title: 'Ведение справочников',
-                    body: 'Новые поля карточки ДЛ:',
-                    bodyList: changes,
-                    bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
-                    buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
-                };
-                setTimeout(() => {
-                    this._confirmSrv.confirm2(warn);
-                }, 10);
-
+                if (changes.length) {
+                    const warn: IConfirmWindow2 = {
+                        title: 'Ведение справочников',
+                        body: 'Новые поля карточки ДЛ:',
+                        bodyList: changes,
+                        bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
+                        buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+                    };
+                    setTimeout(() => {
+                        this._confirmSrv.confirm2(warn);
+                    }, 10);
+                }
             }
 
 
@@ -201,6 +202,53 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             (name ? name[0].toUpperCase() + '.' : '') +
             (patron ? patron[0].toUpperCase() + '.' : '');
         return res;
+    }
+
+
+    public confirmSave(): Promise<boolean> {
+        let isNeedCorrectStart = false;
+        let isNeedCorrectEnd = false;
+        if (this.dictSrv.currentNode.parent.data.rec['START_DATE']) {
+            if (!this.data.rec['START_DATE']) {
+                isNeedCorrectStart = true;
+            } else {
+                const sd1 = new Date(this.data.rec['START_DATE']);
+                const sd2 = new Date(this.dictSrv.currentNode.parent.data.rec['START_DATE']);
+                if (sd1 < sd2) {
+                    isNeedCorrectStart = true;
+                }
+            }
+        }
+        if (this.dictSrv.currentNode.parent.data.rec['END_DATE']) {
+            if (!this.data.rec['END_DATE']) {
+                isNeedCorrectEnd = true;
+            } else {
+                const sd1 = new Date(this.data.rec['END_DATE']);
+                const sd2 = new Date(this.dictSrv.currentNode.parent.data.rec['END_DATE']);
+                if (sd1 > sd2) {
+                    isNeedCorrectEnd = true;
+                }
+            }
+        }
+
+        if (isNeedCorrectEnd || isNeedCorrectStart) {
+            return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX).then((button) => {
+                if (button.result === BUTTON_RESULT_YES) {
+                    if (isNeedCorrectStart) {
+                        this.setValue('rec.START_DATE', new Date(this.dictSrv.currentNode.parent.data.rec['START_DATE']));
+                        this.data.rec['START_DATE'] = this.dictSrv.currentNode.parent.data.rec['START_DATE'];
+
+                    }
+                    if (isNeedCorrectEnd) {
+                        this.setValue('rec.END_DATE', new Date(this.dictSrv.currentNode.parent.data.rec['END_DATE']));
+                        this.data.rec['START_DATE'] = this.dictSrv.currentNode.parent.data.rec['END_DATE'];
+                    }
+                    return true;
+                }
+                return false;
+            });
+        }
+        return Promise.resolve(true);
     }
 
     public fillDeclineFields(opt: IToDeclineFields, fio: string = null): void {

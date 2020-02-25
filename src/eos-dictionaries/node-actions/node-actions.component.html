@@ -84,6 +84,7 @@
         <!--MENU-->
         <ul *dropdownMenu
             class="dropdown-menu action-menu"
+            [ngClass]="{'centered': visibleButtonsCount()>2 }"
             role="menu">
             <ng-container *ngFor="let item of moreButtons">
                 <li *ngIf="item.show"

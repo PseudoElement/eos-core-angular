@@ -152,6 +152,10 @@ export class NodeActionsComponent implements OnDestroy {
         enabled ? menu.hide() : e.stopPropagation();
     }
 
+    visibleButtonsCount() {
+        return this.buttons.filter (b => b.show).length;
+    }
+
     private _initButtons() {
         const opts: IActionUpdateOptions = this._buttonOptsCreate();
         this.buttons = RECORD_ACTIONS.map((act) => this._actionToButton(act, opts));
@@ -283,7 +287,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && opts.listHasItems;
                     break;
                 case E_RECORD_ACTIONS.edit:
-                    _enabled = !_isLDSubTree && !this._viewParams.updatingList && opts.listHasOnlyOne;
+                    _enabled = (!_isLDSubTree || Features.cfg.canEditLogicDeleted) && !this._viewParams.updatingList && opts.listHasOnlyOne;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
                         if (this._dictSrv && this._dictSrv.listNode) {
@@ -291,7 +295,6 @@ export class NodeActionsComponent implements OnDestroy {
                         }
                     }
 
-                    // _enabled = _enabled && !opts.listHasDeleted;
                     if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
