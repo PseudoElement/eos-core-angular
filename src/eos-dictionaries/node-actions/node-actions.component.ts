@@ -392,8 +392,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.combine:
                     _enabled = _enabled && opts.listHasItems;
-                    _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
-                    _enabled = _enabled && this.slicedInfo.length > 0;
+                    _enabled = _enabled && this._dictSrv.listNode && this.slicedInfo.length > 0;
                     break;
                 case E_RECORD_ACTIONS.uncheckNewEntry:
                     _enabled = _enabled && opts.listHasItems;
