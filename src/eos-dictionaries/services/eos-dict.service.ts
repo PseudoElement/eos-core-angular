@@ -162,6 +162,9 @@ export class EosDictService {
     get treeNodeTitle(): any {
         return this._treeNode.title;
     }
+    get treeNode(): any {
+        return this._treeNode;
+    }
 
     get order() {
         return this.currentDictionary.orderBy;
