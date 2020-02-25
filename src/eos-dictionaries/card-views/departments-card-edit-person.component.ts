@@ -147,12 +147,14 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.dateEmptyValidator(),
             this._intupControlSrv.dateValueValidator(),
             this.dateCompareValidator(),
+            this.validatorsStartToEnd('rec.END_DATE'),
         ]);
 
         this.form.controls['rec.END_DATE'].setValidators([
             this.dateEmptyValidator(),
             this._intupControlSrv.dateValueValidator(),
             this.dateCompareValidator(),
+            this.validatorsStartToEnd('rec.START_DATE'),
         ]);
         this.form.updateValueAndValidity();
     }
@@ -187,6 +189,33 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                         valid = false;
                         errMessage = 'Дата должна быть меньше ' + EosUtils.dateToStringValue(this.parentEnd_Date);
                     }
+                }
+            }
+            return (valid ? null : { dateCompare: errMessage });
+        };
+    }
+    validatorsStartToEnd(field: string) {
+        return (control: AbstractControl): { [errKey: string]: any } => {
+            let valid = true;
+            const  errMessage = `Неверно заданны даты начала/окончания действия`;
+            const value = control.value;
+            const comparedField = this.getValue(field);
+            if (value && value instanceof Date) {
+                switch (field) {
+                    case 'rec.START_DATE':
+                    if (comparedField && comparedField instanceof Date) {
+                        if (value.getTime() < comparedField.getTime()) {
+                            valid = false;
+                        }
+                    }
+                    break;
+                    case 'rec.END_DATE':
+                        if (comparedField && comparedField instanceof Date) {
+                            if (value.getTime() > comparedField.getTime()) {
+                                valid = false;
+                            }
+                        }
+                        break;
                 }
             }
             return (valid ? null : { dateCompare: errMessage });
