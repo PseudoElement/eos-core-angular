@@ -575,8 +575,8 @@ export class EosDictionary {
             let res = 0;
             switch (typeof _a) {
                 case 'number':
-                    res = _a < 0 ?
-                        ((_a < _b && 1) || (_a > _b && -1) || 0) :
+                    res = // _a < 0 ?
+                        // ((_a < _b && 1) || (_a > _b && -1) || 0) :
                         ((_a < _b && -1) || (_a > _b && 1) || 0);
                     break;
                 case 'string':
