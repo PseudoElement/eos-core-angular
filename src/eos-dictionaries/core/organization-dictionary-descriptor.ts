@@ -103,34 +103,34 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 return results;
             });
     }
-    public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
-        const preSave = [];
-        let paramsSop = '';
-        let change: Array<any> = [{
-            method: 'MERGE',
-            requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
-            data: {
-                DELETED: 1
-            }
-        }];
-        slicedNodes.forEach((node, i) => {
-            preSave.push({
-                method: 'DELETE',
-                requestUri: `ORGANIZ_CL('${node.id}')`
-            });
-            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
-        });
-        PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'ORGANIZ_CL', 'ids': paramsSop }, 'POST', false);
-        preSave.push({
-            method: 'MERGE',
-            requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
-            data: {
-                DELETED: 0
-            }
-        });
-        change = change.concat(preSave);
-        return this.apiSrv.batch(change, '');
-    }
+    // public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
+    //     const preSave = [];
+    //     let paramsSop = '';
+    //     let change: Array<any> = [{
+    //         method: 'MERGE',
+    //         requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
+    //         data: {
+    //             DELETED: 1
+    //         }
+    //     }];
+    //     slicedNodes.forEach((node, i) => {
+    //         preSave.push({
+    //             method: 'DELETE',
+    //             requestUri: `ORGANIZ_CL('${node.id}')`
+    //         });
+    //         i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+    //     });
+    //     PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'ORGANIZ_CL', 'ids': paramsSop }, 'POST', false);
+    //     preSave.push({
+    //         method: 'MERGE',
+    //         requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
+    //         data: {
+    //             DELETED: 0
+    //         }
+    //     });
+    //     change = change.concat(preSave);
+    //     return this.apiSrv.batch(change, '');
+    // }
     public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, paramsMode) {
         const config = {
             classif: 'gop_rc',

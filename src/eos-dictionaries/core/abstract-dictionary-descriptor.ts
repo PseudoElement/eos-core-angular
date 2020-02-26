@@ -448,9 +448,34 @@ export abstract class AbstractDictionaryDescriptor {
                     return [];
                 }
             });
-    }
-    combine(slicedNodes: EosDictionaryNode[], marked: EosDictionaryNode[]): Promise<any> {
-        return Promise.resolve();
+        }
+    combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
+        const preSave = [];
+        let paramsSop = '';
+        let change: Array<any> = [{
+            method: 'MERGE',
+            requestUri: `${this.apiInstance}('${markedNodes[0].id}')`,
+            data: {
+                DELETED: 1
+            }
+        }];
+        slicedNodes.forEach((node, i) => {
+            preSave.push({
+                method: 'DELETE',
+                requestUri: `${this.apiInstance}('${node.id}')`
+            });
+            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+        });
+        PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': this.apiInstance, 'ids': paramsSop }, 'POST', false);
+        preSave.push({
+            method: 'MERGE',
+            requestUri: `${this.apiInstance}('${markedNodes[0].id}')`,
+            data: {
+                DELETED: 0
+            }
+        });
+        change = change.concat(preSave);
+        return this.apiSrv.batch(change, '');
     }
     getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, mode?) {
         return null;

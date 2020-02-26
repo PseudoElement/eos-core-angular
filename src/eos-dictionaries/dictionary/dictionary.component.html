@@ -31,7 +31,7 @@
         <div class="node-actions" id="node-actions">
             <div *ngIf="treeNode"
                 class="selected-node xl-font"
-                [ngClass]="{'has-custom': hasCustomTable}">
+                [ngClass]="{'has-custom': hasCustomTable, 'adapt': hasCustomTable && stylesFlex === 'xl', 'adapt-middle': hasCustomTable && stylesFlex === 'xs' }">
                 <div class="go-top-wrapper">
                     <button *ngIf="hasParent"
                         class="btn btn-primary-light"

@@ -5,6 +5,11 @@ import { COMMON_FIELD_NAME } from './_common';
 export const STATUS_EXEC_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'status-exec',
     apiInstance: 'STATUS_EXEC_CL',
+    actions: [
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
+        'cut', 'combine',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import'],
     title: 'Состояния исполнения (поручение)',
     visible: true,
     iconName: 'eos-icon-viewed-blue',

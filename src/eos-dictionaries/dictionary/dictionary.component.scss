@@ -131,6 +131,36 @@
                 grid-column: 1;
             }
         }
+        .adapt {
+            display: flex;
+            flex-wrap: wrap;
+            .selected-node-title {
+                width: 50%;
+            }
+            .tabs-wrapper {
+                width: 47%;
+            }
+            .item-count {
+                height: 45px;
+                text-align: right;
+                margin: 0 auto;
+            }
+        }
+        .adapt-middle {
+            display: flex;
+            flex-wrap: wrap;
+            .selected-node-title {
+                width: 50%;
+            }
+            .tabs-wrapper {
+                width: 100%;
+            }
+            .item-count {
+                width: 100%;
+                height: 45px;
+                text-align: right;
+            }
+        }
         .first-line {
             background: $modal-block-background-main-theme;
             height: $item-height + 2px;

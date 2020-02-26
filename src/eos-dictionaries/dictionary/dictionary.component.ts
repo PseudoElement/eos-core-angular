@@ -9,7 +9,8 @@ import {
     CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE,
     CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE,
     CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT,
-    CONFIRM_OPERATION_NOMENKL_CLOSED } from 'app/consts/confirms.const';
+    CONFIRM_OPERATION_NOMENKL_CLOSED
+} from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
@@ -91,7 +92,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     treeNode: EosDictionaryNode;
     title: string;
 
-
+    stylesFlex = 'none';
     SLICE_LEN = 110;
     customTreeData: CustomTreeNode[];
 
@@ -230,7 +231,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((state: boolean[]) => this.currentState = state);
+            .subscribe((state: boolean[]) => {
+                if (this.selectedEl) {
+                    setTimeout(() => {
+                        this.setStyles();
+                    }, 250);
+                }
+                this.currentState = state;
+            });
 
         _dictSrv.dictionary$
             .pipe(
@@ -359,6 +367,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     ngOnInit(): void {
+        this.setStyles();
     }
 
     ngOnDestroy() {
@@ -668,7 +677,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     @HostListener('window:resize')
     resize(): void {
+        this.setStyles();
         this._sandwichSrv.resize();
+    }
+    setStyles() {
+        if (this.selectedEl.nativeElement.offsetWidth < 655 && this.selectedEl.nativeElement.offsetWidth > 510) {
+            this.stylesFlex = 'xl';
+        } else if (this.selectedEl.nativeElement.offsetWidth <= 510) {
+            this.stylesFlex = 'xs';
+        }   else {
+            this.stylesFlex = 'none';
+        }
     }
 
     isDictModeEnabled(mode: number): boolean {

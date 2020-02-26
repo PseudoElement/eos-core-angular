@@ -3,7 +3,6 @@ import { RecordDescriptor } from './record-descriptor';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
-import { PipRX } from 'eos-rest';
 // interface search {
 //     CITIZEN_SURNAME?: string;
 //     CITIZEN_CITY?: string;
@@ -66,27 +65,27 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public cutNode(node?: EosDictionaryNode): void {
         console.log(this);
     }
-    public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
-        const preSave = [];
-        let paramsSop = '';
-        let change: Array<any> = [{
-            method: 'MERGE',
-            requestUri: `CITIZEN(${markedNodes[0].id})`,
-            data: {
-                DELETED: 0
-            }
-        }];
-        slicedNodes.forEach((node, i) => {
-            preSave.push({
-                method: 'DELETE',
-                requestUri: `CITIZEN(${node.id})`
-            });
-            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
-        });
-        PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'CITIZEN', 'ids': paramsSop }, 'POST', false);
-        change = change.concat(preSave);
-        return this.apiSrv.batch(change, '');
-    }
+    // public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> { // перенос в abstra
+    //     const preSave = [];
+    //     let paramsSop = '';
+    //     let change: Array<any> = [{
+    //         method: 'MERGE',
+    //         requestUri: `CITIZEN(${markedNodes[0].id})`,
+    //         data: {
+    //             DELETED: 0
+    //         }
+    //     }];
+    //     slicedNodes.forEach((node, i) => {
+    //         preSave.push({
+    //             method: 'DELETE',
+    //             requestUri: `CITIZEN(${node.id})`
+    //         });
+    //         i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+    //     });
+    //     PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'CITIZEN', 'ids': paramsSop }, 'POST', false);
+    //     change = change.concat(preSave);
+    //     return this.apiSrv.batch(change, '');
+    // }
     public search(criteries: any[]): Promise<any[]> {
         const crit = criteries[0];
         if (crit.ISN_REGION) {
