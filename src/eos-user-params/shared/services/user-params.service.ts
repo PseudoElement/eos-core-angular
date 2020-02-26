@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT, PipRX, IEnt, ORGANIZ_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IParamUserCl, IUserSetChanges, IGetUserCfg } from '../intrfaces/user-parm.intterfaces';
+import { IParamUserCl, IUserSetChanges, IGetUserCfg, IRoleCB } from '../intrfaces/user-parm.intterfaces';
 import { Subject, Observable } from 'rxjs';
 import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ErrorHelperServices } from './helper-error.services';
-import { BASE_PARAM_REG_EXP } from '../consts/base-param.consts';
+import { KIND_ROLES_CB } from '../consts/user-param.consts';
 
 @Injectable()
 export class UserParamsService {
@@ -23,6 +23,7 @@ export class UserParamsService {
     public SubEmail: Subject<any> = new Subject();
     public SubmitCards: Subject<any> = new Subject();
     public submitSave;
+    public asistMansStr: string;
     private _saveFromAsk$: Subject<void> = new Subject<void>();
     private _updateUser$: Subject<void> = new Subject<void>();
     private _hasChanges$: Subject<IUserSetChanges> = new Subject<IUserSetChanges>();
@@ -30,8 +31,6 @@ export class UserParamsService {
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
     private _sysParams;
-    private _passCondWords: Array<any>;
-    private _passConditionals: Array<any>;
 
 
     get sysParams() {
@@ -297,63 +296,6 @@ export class UserParamsService {
         });
     }
 
-    getPasswordСonditions(): Promise<any> {
-        return Promise.all([
-            this._pipSrv.getData({'SYS_PARMS(-99)/PASS_STOP_LIST_List': ALL_ROWS}),
-            this._pipSrv.getData({
-                USER_PARMS: PipRX.criteries({'PARM_NAME': 'CHANGE_PASS|PASS_MINLEN|PASS_CASE|PASS_ALF|PASS_NUM|PASS_SPEC|PASS_LIST|PASS_LIST_SUBSTR'})
-            })
-        ]).then((data: any[]) => {
-            this._passCondWords = data[0];
-            this._passConditionals = data[1];
-        });
-    }
-
-    checkPasswordСonditions(pass: string): string {
-        const passNums = pass.replace(BASE_PARAM_REG_EXP[0].passNums, '').length;
-        const passAlph = (pass.match(BASE_PARAM_REG_EXP[1].passAlph) || []);
-        const otherSymb = (pass.match(BASE_PARAM_REG_EXP[2].otherSymb) || []).length;
-        if (this._passConditionals[0].PARM_VALUE === 'YES') { // проверка на запрет смены
-            return 'запрещена смена пароля';
-        }
-        if (this._passConditionals[1].PARM_VALUE > passAlph.length) { // проверка на буквы
-            return `пароль должен содержать не менее ${+this._passConditionals[1].PARM_VALUE} букв`;
-        }
-        if (this._passConditionals[2].PARM_VALUE === 'YES') { // проверка на регситр
-            const isLowerCase = passAlph.filter(symb => symb === symb.toLowerCase());
-            const isUpperCase = passAlph.filter(symb => symb === symb.toUpperCase());
-            if (isLowerCase.length > 0 && isUpperCase.length === 0) {
-                return 'отсутствуют буквы верхнего регистра';
-            }
-            if (isLowerCase.length === 0 && isUpperCase.length > 0) {
-                return 'отсутствуют буквы нижнего регистра';
-            }
-        }
-        if (this._passConditionals[3].PARM_VALUE === 'YES') { // значение из словаря
-            const colWords = this._passCondWords.map(word => word.CLASSIF_NAME);
-            if (this._passConditionals[4].PARM_VALUE === 'YES') { // подстрока или точечное значение
-                const substrWord = colWords.filter(word => pass.indexOf(word) !== -1);
-                if (substrWord.length > 0) {
-                    return 'пароль совпадает с исключением';
-                }
-            } else {
-                if (colWords.indexOf(pass) !== -1) {
-                    return 'пароль совпадает с исключением частично';
-                }
-            }
-        }
-        if (+this._passConditionals[5].PARM_VALUE > pass.length) { // проверка на длинну
-            return 'слишком короткий пароль';
-        }
-        if (+this._passConditionals[6].PARM_VALUE > passNums) { // проверка на цифры
-            return `пароль должен содержать не менее ${+this._passConditionals[6].PARM_VALUE} цифр`;
-        }
-        if (+this._passConditionals[7].PARM_VALUE > otherSymb) { // проверка на другие символы
-            return `пароль должен содержать не менее ${+this._passConditionals[8].PARM_VALUE} других символов`;
-        }
-        return '';
-    }
-
     CheckLimitTech(techList): boolean {
         let limitUser = false;
         techList.forEach((item) => {
@@ -364,10 +306,193 @@ export class UserParamsService {
         return limitUser;
     }
 
+    getPhotoUser(due: string): Promise<any> {
+        const query = {
+            DEPARTMENT: {
+                criteries: {
+                    DUE: `${due}`
+                }
+            }
+        };
+        return this._pipRx.read(query);
+    }
+
+    getCabinetOwnUser(isnCabinet): Promise<any> {
+        return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: {
+            criteries: {
+                ISN_CABINET: isnCabinet,
+            }
+        }});
+    }
+
+    getUserCbRoles(): Promise<any> {
+        this.asistMansStr = '';
+        const reqs = [
+            this._pipRx.read({CBR_USER_ROLE: {
+                criteries: {DUE_PERSON: this.curentUser.DUE_DEP}
+            }}),
+            this._pipRx.read({CBR_USER_ROLE: {
+                    criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
+                },
+                orderby: 'WEIGHT',
+            })
+        ];
+        return Promise.all(reqs).then((data: any[]) => {
+            const asistMansData = data[0].filter(el => el.ISN_USER !== this.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
+            if (asistMansData.length > 0) {
+                return this.getUserCl(asistMansData).then((users: USER_CL[]) => {
+                    const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
+                    sortUsers.forEach(user => {
+                        if (this.asistMansStr.indexOf(user.SURNAME_PATRON) === -1) {
+                            this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`;
+                        }
+                    });
+                    if (data[1].length) {
+                        return this.ParseRoles(data[1]);
+                    }
+                    return Promise.resolve([]);
+                });
+            } else {
+                if (data[1].length) {
+                    return this.ParseRoles(data[1]);
+                }
+                return Promise.resolve([]);
+            }
+        });
+    }
+
+    ParseRoles(roles: any[]): Promise<any> {
+        return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: roles.map(due => due.DUE_PERSON)}).then((dueName: any) => {
+            const dueNames = new Map<string, string>();
+            dueName.forEach((dep) => dueNames.set(dep.DUE, dep.CLASSIF_NAME));
+            return Promise.resolve(this.parseData(roles, dueNames));
+        });
+    }
+
+    parseData(data: any[], dueNames: Map<string, string>): any[]  {
+        const currentCbFields = [];
+        data.forEach(el => {
+            if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
+                currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: dueNames.get(el.DUE_PERSON),
+                due: el.DUE_PERSON, isnRole: el.ISN_USER_ROLE});
+            } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
+                currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr, isnRole: el.ISN_USER_ROLE});
+            } else {
+                currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], isnRole: el.ISN_USER_ROLE});
+            }
+        });
+        return currentCbFields;
+    }
+
+    clearRolesCb(startRolesCb: IRoleCB[]): any[] {
+        const queryRoles = [];
+        startRolesCb.forEach(role => {
+            queryRoles.push({
+                method: 'DELETE',
+                requestUri: `CBR_USER_ROLE(${role.isnRole})`,
+            });
+        });
+        return queryRoles;
+    }
+
+    getQueryFromRoles(currentCbFields: IRoleCB[], startRolesCb: IRoleCB[]): any[] {
+        const queryRoles = [];
+        currentCbFields.forEach((field, indx) => {
+            if (!field.isnRole) {
+                const newElem = {
+                    method: 'POST',
+                    requestUri: `CBR_USER_ROLE(-99)`,
+                    data: {
+                        WEIGHT: indx + 1,
+                        DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
+                        KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
+                        ISN_USER: this.curentUser.ISN_LCLASSIF,
+                    }
+                };
+                if (queryRoles.filter(elem => JSON.stringify(newElem) === JSON.stringify(elem)).length === 0) {
+                    queryRoles.push(newElem);
+                }
+           }
+        });
+        startRolesCb.forEach((old, index) => {
+            const kindRole = KIND_ROLES_CB.indexOf(old.role);
+            const weigthNow = currentCbFields[index] && currentCbFields[index].isnRole === old.isnRole ? false : true;
+            if (kindRole === 3 || kindRole === 4 || weigthNow) {
+                const repeatRole = currentCbFields.filter(cur => cur.isnRole === old.isnRole)[0];
+                if (repeatRole) {
+                    queryRoles.push({
+                        method: 'MERGE',
+                        requestUri: `CBR_USER_ROLE(${repeatRole.isnRole})`,
+                        data: {
+                            WEIGHT: currentCbFields.indexOf(repeatRole) + 1,
+                            DUE_PERSON: repeatRole.due,
+                            KIND_ROLE: kindRole + 1,
+                            ISN_USER: this.curentUser.ISN_LCLASSIF,
+                        }
+                    });
+                } else {
+                    const checkArr = queryRoles.map(q => q.requestUri);
+                    if (old.isnRole && checkArr && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                        queryRoles.push({
+                            method: 'DELETE',
+                            requestUri: `CBR_USER_ROLE(${old.isnRole})`,
+                        });
+                    }
+                }
+            } else {
+                if (currentCbFields.filter(cur => cur.isnRole === old.isnRole).length === 0) {
+                    const checkArr = queryRoles.map(q => q.requestUri);
+                    if (old.isnRole && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
+                        queryRoles.push({
+                            method: 'DELETE',
+                            requestUri: `CBR_USER_ROLE(${old.isnRole})`,
+                        });
+                    }
+                }
+            }
+        });
+        return queryRoles;
+    }
+
+    getUserCl(isn: number|number[]) {
+        let queryUser;
+        if (typeof isn === 'number') {
+            queryUser = {
+                USER_CL: {
+                    criteries: {
+                        ISN_LCLASSIF: isn
+                    }
+                }
+            };
+        } else {
+            queryUser = {
+                USER_CL: isn,
+            };
+        }
+        return this._pipRx.read<USER_CL>(queryUser);
+    }
+
+    getUserDepartment(isn_cl: number): Promise<any> {
+        const queryCabinet = {
+            DEPARTMENT: {
+                criteries: {
+                    ISN_NODE: String(isn_cl)
+                }
+            }
+        };
+        return this._pipRx.read(queryCabinet);
+    }
+
+    dropLogin(id): Promise<any> {
+        const url = `DropLogin?isn_user=${id}`;
+        return this._pipRx.read({ [url]: ALL_ROWS });
+    }
+
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
         this._userContext['USER_PARMS_List'].forEach(item => {
             this._userContext['USER_PARMS_HASH'][item['PARM_NAME']] = item.PARM_VALUE;
         });
     }
+
 }

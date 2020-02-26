@@ -180,15 +180,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
 
-    getPhotoUser(due: string) {
-        const query = {
-            DEPARTMENT: {
-                criteries: {
-                    DUE: `${due}`
-                }
-            }
-        };
-        return this.apiSrvRx.read(query).then(data => {
+    getPhotoUser(due: string): Promise<any> {
+        return this._userParamSrv.getPhotoUser(due).then((data: DEPARTMENT[]) => {
             this.isPhoto = data[0]['ISN_PHOTO'];
             if (this.isPhoto) {
                 this._rtUserSel.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
@@ -319,7 +312,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
                 .then(data => {
                     this.user_copy_isn = +data;
-                    return this._getUserCl(this.user_copy_isn);
+                    return this._userParamSrv.getUserCl(this.user_copy_isn);
                 })
                 .then(data => {
                     this.isShell = false;
@@ -416,7 +409,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                    return this.dropLogin(id).then(() => {
+                    return this._userParamSrv.dropLogin(id).then(() => {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
                             return this.sendData(query, accessStr);
@@ -476,6 +469,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.editModeF();
             this._pushState();
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
+            if (this.curentUser.DUE_DEP) {
+                return this.getPhotoUser(this.curentUser.DUE_DEP);
+            }
         });
     }
 
@@ -586,20 +582,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
-    getUserDepartment(isn_cl): Promise<any> {
-        const queryCabinet = {
-            DEPARTMENT: {
-                criteries: {
-                    ISN_NODE: String(isn_cl)
-                }
-            }
-        };
-        return this.apiSrvRx.read(queryCabinet)
-            .then(result => {
-                return result;
-            });
-    }
-
     showDepartment() {
         this.isShell = true;
         let dueDep = '';
@@ -615,7 +597,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
                 if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
                     this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
-                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                     });
                     return data[0];
@@ -624,7 +606,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (data) {
                         this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
                     }
-                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                     });
                     return val;
@@ -805,21 +787,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         );
     }
 
-    private _getUserCl(isn) {
-        const queryUser = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: isn
-                }
-            }
-        };
-        return this.apiSrvRx.read<USER_CL>(queryUser);
-    }
-
-    private dropLogin(id): Promise<any> {
-        const url = `DropLogin?isn_user=${id}`;
-        return this.apiSrvRx.read({ [url]: ALL_ROWS });
-    }
     private AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }

@@ -14,12 +14,12 @@
                     <div class="item-cb" *ngFor="let item of fixedFields" (click)="select(item, 3)" [ngClass]="{'highlighted': item === selectedFixedItem}">
                         <i class="fa fa-lock unimportant-text lock-r"
                             aria-hidden="true"></i>
-                        <span class="text-cb">{{item}}</span>
+                        <span class="text-cb">{{item?.role}}</span>
                     </div>
                 </div>
                 <div id="basic" class="basic-cb" [dragula]='"bag-one"'[dragulaModel]="basicFields">
                     <div class="item-cb" *ngFor="let item of basicFields" (click)="select(item, 1)" [ngClass]="{'highlighted': item === selectedBasicRole}">
-                        <span class="text-cb">{{item}}</span>
+                        <span class="text-cb">{{item?.role}}</span>
                     </div>
                 </div>
             </div>
@@ -76,3 +76,4 @@
         <eos-spinner [size]="'lg'"></eos-spinner>
     </div>
 </div>
+<div *ngIf="isShell" class="shell"></div>
