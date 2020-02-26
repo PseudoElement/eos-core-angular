@@ -514,7 +514,7 @@ export abstract class AbstractDictionaryDescriptor {
             return Promise.resolve(true);
         });
     }
-    updateDefaultValues(nodes: EosDictionaryNode[]): Promise<any> {
+    updateDefaultValues(nodes: EosDictionaryNode[], closed?: string): Promise<any> {
         return Promise.resolve(null);
     }
 

@@ -2,18 +2,18 @@ import {
     IDictionaryDescriptor, ISearchSettings, ITreeDictionaryDescriptor,
 } from 'eos-dictionaries/interfaces';
 
-import {PipRX} from 'eos-rest/services/pipRX.service';
-import {FieldDescriptor} from './field-descriptor';
-import {ModeFieldSet} from './record-mode';
-import {ALL_ROWS} from '../../eos-rest/core/consts';
-import {DEPARTMENT} from '../../eos-rest';
-import {CustomTreeNode} from '../tree2/custom-tree.component';
-import {DictionaryDescriptor} from './dictionary-descriptor';
-import {RecordDescriptor} from './record-descriptor';
-import {EosDictionaryNode} from './eos-dictionary-node';
-import {DictionaryComponent} from '../dictionary/dictionary.component';
-import {DANGER_EDIT_ON_ROOT} from '../consts/messages.consts';
-import {IMessage} from '../../eos-common/core/message.interface';
+import { PipRX } from 'eos-rest/services/pipRX.service';
+import { FieldDescriptor } from './field-descriptor';
+import { ModeFieldSet } from './record-mode';
+import { ALL_ROWS } from '../../eos-rest/core/consts';
+import { DEPARTMENT } from '../../eos-rest';
+import { CustomTreeNode } from '../tree2/custom-tree.component';
+import { DictionaryDescriptor } from './dictionary-descriptor';
+import { RecordDescriptor } from './record-descriptor';
+import { EosDictionaryNode } from './eos-dictionary-node';
+import { DictionaryComponent } from '../dictionary/dictionary.component';
+import { DANGER_EDIT_ON_ROOT } from '../consts/messages.consts';
+import { IMessage } from '../../eos-common/core/message.interface';
 
 const NP_NOM_ROOT_DUE = '0.';
 
@@ -81,7 +81,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
 
     getCustomTreeData(): Promise<CustomTreeNode[]> {
 
-        return this.apiSrv.read<DEPARTMENT>({'DEPARTMENT': PipRX.criteries({'IS_NODE': '0'}),  orderby: 'WEIGHT' })
+        return this.apiSrv.read<DEPARTMENT>({ 'DEPARTMENT': PipRX.criteries({ 'IS_NODE': '0' }), orderby: 'WEIGHT' })
             .then((data) => {
                 this._makeTreeData(data);
                 return this._treeData;
@@ -141,14 +141,14 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
         if (!query) {
             if (this._filterDUE && (this._filterDUE !== NP_NOM_ROOT_DUE)) {
-                query = {criteries: {DUE: this._filterDUE}};
+                query = { criteries: { DUE: this._filterDUE } };
             } else {
                 query = ALL_ROWS;
                 return Promise.resolve([]);
             }
         }
 
-        const req = {[this.apiInstance]: query};
+        const req = { [this.apiInstance]: query };
 
         if (limit) {
             req.top = limit;
@@ -192,15 +192,65 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         return null;
     }
 
-    getRelatedFields2(tables: {table: string, order?: string } [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    getRelatedFields2(tables: { table: string, order?: string }[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const ignoreMeta = loadAll || ignoreMetadata;
-        return super.getRelatedFields2 (tables, nodes, loadAll, ignoreMeta).then( (r) => {
+        return super.getRelatedFields2(tables, nodes, loadAll, ignoreMeta).then((r) => {
             // if (loadAll) {
             // console.log("TCL: loadAll", loadAll)
 
             // }
             return r;
         });
+    }
+
+    public canChangeClassifRequest(id): Promise<any> {
+        const qargs = { type: 'NOMENKL_CL', oper: 'DELETE', id: String(id) };
+        const query = { args: qargs };
+        const req = { CanChangeClassif: query };
+        return this.apiSrv.read(req);
+    }
+
+    updateDefaultValues(selectedNode: EosDictionaryNode[], param?: string): Promise<any> {
+        if (param === 'check') {
+            const queries = [];
+            const nodesafterChecked = { closed: [], deleted: [], oldClosed: [] };
+            selectedNode.forEach((node: EosDictionaryNode) => {
+                const query = this.canChangeClassifRequest(node.id).then(val => {
+                    if (val === 'DELO_EXISTS') {
+                        if (node.data.rec.CLOSED) {
+                            node.isMarked = false;
+                            nodesafterChecked.oldClosed.push(node);
+                        } else {
+                            nodesafterChecked.closed.push(node);
+                        }
+                    } else {
+                        nodesafterChecked.deleted.push(node);
+                    }
+                    return nodesafterChecked;
+                });
+                queries.push(query);
+            });
+            return Promise.all(queries).then(res => {
+                return nodesafterChecked;
+            }).catch(e => {
+                return null;
+            });
+        }
+        if (param === 'closed') {
+            const queries = selectedNode.map((node: EosDictionaryNode) => {
+                return {
+                    method: 'MERGE',
+                    requestUri: `NOMENKL_CL(${node.id})`,
+                    data: {
+                        CLOSED: 1
+                    }
+                };
+            });
+            return this.apiSrv.batch(queries, '');
+        }
+
+        return Promise.resolve(null);
+
     }
     protected _initRecord(data: IDictionaryDescriptor) {
         this.record = new NomenklRecordDescriptor(this, <ITreeDictionaryDescriptor>data);
@@ -245,7 +295,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isExpanded: false,
                 updating: false,
                 children: [],
-                data: {DEPARTMENT_INDEX : dd.DEPARTMENT_INDEX },
+                data: { DEPARTMENT_INDEX: dd.DEPARTMENT_INDEX },
                 path: this._getPath(dd.DUE),
             };
             if (r.isActive) {

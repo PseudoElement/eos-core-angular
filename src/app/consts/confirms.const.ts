@@ -151,6 +151,16 @@ export const CONFIRM_OPERATION_HARDDELETE: IConfirmWindow2 = {
         {title: 'Удалить',  result: 2, },
     ],
 };
+export const CONFIRM_OPERATION_NOMENKL_CLOSED: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Невозможно удалить дела:',
+    bodyAfterList: 'Вы хотите закрыть их?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Закрыть',  result: 2, },
+    ],
+};
 
 export const CONFIRM_OPERATION_RESTORE: IConfirmWindow2 = {
     title: 'Внимание',

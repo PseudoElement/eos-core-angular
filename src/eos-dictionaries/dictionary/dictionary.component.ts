@@ -5,7 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT } from 'app/consts/confirms.const';
+import {
+    CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE,
+    CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE,
+    CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT,
+    CONFIRM_OPERATION_NOMENKL_CLOSED } from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
@@ -45,6 +49,7 @@ import {
     SUCCESS_SAVE,
     WARN_SAVE_FAILED,
     INFO_NOTHING_CHANGES,
+    WARN_ELEMENT_CLOSED,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
@@ -454,6 +459,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
 
             case E_RECORD_ACTIONS.removeHard:
+                if (this.dictionaryId === 'nomenkl') {
+                    this._physicallyDeleteNomenkl();
+                    return;
+                }
                 this._physicallyDelete();
                 break;
 
@@ -892,7 +901,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
      * Physical delete marked elements on page
      */
     private _physicallyDelete(): void {
-
         const selectedNodes = this._dictSrv.getMarkedNodes();
 
         if (selectedNodes.length === 0) {
@@ -933,6 +941,50 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
                 return Promise.resolve(null);
             });
+    }
+
+    private _physicallyDeleteNomenkl() {
+        const selectedNodes = this._dictSrv.getMarkedNodes();
+
+        if (selectedNodes.length === 0) {
+            return;
+        }
+
+        for (let i = 0; i < selectedNodes.length; i++) {
+            const node = selectedNodes[i];
+
+            if (node.isProtected) {
+                node.isMarked = false;
+                const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
+                warn.msg = warn.msg.replace('{{elem}}', node.title);
+                this._msgSrv.addNewMessage(warn);
+                return;
+            }
+        }
+        const confirmClosed: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_NOMENKL_CLOSED);
+        this._dictSrv.checkRelatedNomenkl(selectedNodes, 'checkClosed').then(result => {
+            if (result.closed.length) {
+                this._confirmMarkedItems(result.closed, confirmClosed).then(button => {
+                    result.closed.forEach(l => l.isMarked = false);
+                    if (button && button.result === 2) {
+                        this._dictSrv.checkRelatedNomenkl(result.closed, 'closed').then(data => {
+                            this._physicallyDelete();
+                        }).catch(e => console.log(e));
+                    } else {
+                        this._physicallyDelete();
+                    }
+                });
+            } else {
+                if (result.oldClosed.length) {
+                    const warn = Object.assign({}, WARN_ELEMENT_CLOSED);
+                    warn.msg = warn.msg.replace('{{elem}}', result.oldClosed.map((n: EosDictionaryNode) => n.data.rec.CLASSIF_NAME).join(', '));
+                    this._msgSrv.addNewMessage(warn);
+                }
+                this._physicallyDelete();
+            }
+        }).catch(e => {
+            console.log(e);
+        });
     }
 
     /**

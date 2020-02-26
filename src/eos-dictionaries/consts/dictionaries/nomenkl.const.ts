@@ -10,9 +10,9 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
     actions: [
-        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
-        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization', 'removeHard',
+        'edit', 'view',  'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
         'OpenSelected',
         'CloseSelected',
     ],
