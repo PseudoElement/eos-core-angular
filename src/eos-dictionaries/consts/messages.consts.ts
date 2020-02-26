@@ -136,7 +136,7 @@ export const WARN_ELEMENT_PROTECTED: IMessage = {
 export const WARN_ELEMENT_CLOSED: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
-    msg: 'элементы "{{elem}}" нельзя удалить! Дела закрыты!'
+    msg: 'элементы "{{elem}}" нельзя удалить!  Дела  непустые и уже закрыты.!'
 };
 
 export const WARN_ELEMENT_DELETED: IMessage = {
