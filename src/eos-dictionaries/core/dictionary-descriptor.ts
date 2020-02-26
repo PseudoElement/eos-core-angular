@@ -12,6 +12,9 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
         const results: IRecordOperationResult[] = [];
 
         let _newRec = this.preCreate(isProtected, isDeleted);
+        if (this.metadata.pk) {
+            _newRec[this.metadata.pk] =  _newRec.ISN_LCLASSIF;
+        }
         _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
 
         let pSev: Promise<boolean> = Promise.resolve(true);

@@ -23,7 +23,6 @@ import {
     DANGER_NAVIGATE_TO_DELETED_ERROR,
     DANGER_EDIT_DELETED_ERROR,
     SUCCESS_SAVE,
-    WARN_SAVE_FAILED
 } from '../consts/messages.consts';
 import { NAVIGATE_TO_ELEMENT_WARN } from '../../app/consts/messages.consts';
 import { LS_EDIT_CARD } from '../consts/common';
@@ -38,6 +37,7 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { E_LIST_ENUM_TYPE } from 'eos-dictionaries/features/features.interface';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -133,7 +133,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((nodes) => {
-                this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
+                this.nodes = nodes; // E_LIST_ENUM_TYPE.allInFolder
+
+                if (Features.cfg.nodeList.enumerationType === E_LIST_ENUM_TYPE.marked) {
+                    this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
+                }
+
             });
 
         this._dictSrv.currentTab = tabNum;
@@ -503,6 +508,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this._initNodeData(node);
             this.cancel();
         } else {
+            this.isChanged = false;
             if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length <= 1)) {
                 this.close();
             }
@@ -523,7 +529,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             });
             this._clearEditingCardLink();
         } else {
-            this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
+            // this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
         }
         return node;
     }

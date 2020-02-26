@@ -1,7 +1,7 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 /*
@@ -94,7 +94,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [
-        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'],
     allVisibleFields: ['CODE', 'NOTE', 'COD_OKATO'],
 };

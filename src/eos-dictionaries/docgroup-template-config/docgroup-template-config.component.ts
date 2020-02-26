@@ -7,6 +7,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { DGTplElement, DGTplAdditionalControl } from 'eos-dictionaries/helpers/numcreation-template.interface';
 import { ListSelectorFormComponent, SelectorListItem } from 'eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
 import { PipRX } from 'eos-rest';
+import { DG_TPL_SEPARATOR } from 'eos-dictionaries/features/docgroups/docgroup-template-base.consts';
 
 const FTemplates = Features.cfg.docgroups.templates;
 
@@ -114,7 +115,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         // }));
 
         const req = { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
-
         this._apiSrv.read(req).then((data) => {
 
             if (data && data.length) {
@@ -171,15 +171,15 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
     get visibleAddControls(): DGTplAddControl[] {
         if (this.selection.right) {
-            return this.selection.right.additionalControls;
+            return this.selection.right.additionalControls || [];
         } else if (this.templateItems.length === 1) {
-            return this.templateItems[0].additionalControls;
+            return this.templateItems[0].additionalControls || [];
         }
         return [];
     }
 
     get additionalControls() {
-        return [].concat(... this.templateItems.map(ti => ti.additionalControls));
+        return [].concat(... this.templateItems.filter(ti => ti.additionalControls).map(ti => ti.additionalControls));
     }
 
     hasAdditionalControls(): boolean {
@@ -333,7 +333,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         if (idx > 0 || this.isEnabled(item)) {
             if (idx === 1) {
                 this.selection.right = item;
-                this.separator = this.isSeparator(item) ? item.key : '';
+                this.separator = this.isSeparator(item) ? item.editKey || item.key : '';
             } else {
                 this.selection.left = item;
             }
@@ -381,10 +381,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         return item.key.replace(/([*{}])/g, '');
     }
 
-    update(event: any) {
+    keyUpSeparator(event: any) {
         if (this.selection.right) {
             event.target.value = event.target.value.replace(/([*{}])/g, '');
-            this.selection.right.key = event.target.value;
+            this.selection.right.editKey = event.target.value;
             this.generateTemplate();
         }
     }
@@ -461,10 +461,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
                         this._checkControlsValuesR(item);
 
                     } else {
-                        this.templateItems.push(Object.assign({editKey: key}, {
-                            key: key,
-                            title: 'Разделитель'
-                        }));
+                        this.templateItems.push(Object.assign({editKey: key}, <DGTplElementEdit>DG_TPL_SEPARATOR));
                     }
                 }
             });

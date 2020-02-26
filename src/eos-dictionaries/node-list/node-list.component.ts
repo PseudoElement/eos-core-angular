@@ -192,9 +192,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
      */
     configColumns() {
         this.modalWindow = this._modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
-        this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields);
+        this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields.filter (c => !(c.preferences && c.preferences.inline)));
         this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this._dictSrv.customTitles);
-        this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields);
+        this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields.filter (c => !(c.preferences && c.preferences.inline)));
         this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([],
             this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
 
@@ -338,13 +338,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     getWeigthForItem(item: EosDictionaryNode, index: number): number {
         let w = item.data.rec['WEIGHT'];
-        if (!w) {
+        if (!w && w !== 0) {
             w = Number (item.id);
         }
-        if (!w) {
+        if (!w && w !== 0) {
             w = item.data.rec['ISN_LCLASSIF'];
         }
-        if (!w) {
+        if (!w && w !== 0) {
             w = index;
         }
         return w;
@@ -369,8 +369,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             w1 += signedOne;
         }
 
-        if (w1 === 0) { w1 += signedOne; }
-        if (w2 === 0) { w2 -= signedOne; }
+        if (w1 === 0) { w1 -= signedOne; }
+        if (w2 === 0) { w2 += signedOne; }
 
         item1.data.rec['WEIGHT'] = w2;
         item2.data.rec['WEIGHT'] = w1;

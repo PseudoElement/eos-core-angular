@@ -21,8 +21,17 @@ export interface IOESDictsFeatures {
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;
     SEV: IEOSSevConfig;
+    nodeList: IEOSNodeListPreferences;
     canEditLogicDeleted: boolean;
 
+}
+
+export enum E_LIST_ENUM_TYPE {
+    marked, // Только выделенные
+    allInFolder, // все в пределах родительской ноды
+}
+export interface  IEOSNodeListPreferences {
+    enumerationType: E_LIST_ENUM_TYPE; // как перелистывать ноды (предыдущая\следущая)
 }
 
 export interface IEOSSevConfig {

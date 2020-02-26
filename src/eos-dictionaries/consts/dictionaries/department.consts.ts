@@ -2,7 +2,7 @@ import {E_DICT_TYPE, E_VISIBLE_TIPE, IDepartmentDictionaryDescriptor, IFieldPref
 import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
-import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS } from './_common';
+import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS, ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
@@ -71,6 +71,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         title: 'Parent ID',
         length: 248,
     },
+        COMMON_FIELD_ICONS_SEV,
         COMMON_FIELD_ICONS,
         Object.assign({}, COMMON_FIELD_NOTE, {length: 255}),
         Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
@@ -344,7 +345,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         ),
     treeFields: ['nametitle'],
     searchFields: [/* 'RUBRIC_CODE', */'nametitle'/*, 'NOTE'*/],
-    listFields: [ICONS_CONTAINER, /*'CODE',*/ 'nametitle', /*'DUTY',*/    ],
+    listFields: [ICONS_CONTAINER_SEV, ICONS_CONTAINER, /*'CODE',*/ 'nametitle', /*'DUTY',*/    ],
     fullSearchFields: {
         person: ['CODE', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'DUTY', 'SURNAME', 'NOTE', 'printInfo'],
         department: ['CODE', 'nametitleDep', 'indexDep', 'NOTE', 'fullTitle'],

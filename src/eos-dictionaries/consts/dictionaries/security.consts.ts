@@ -2,7 +2,7 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { NOT_EMPTY_STRING } from 'eos-dictionaries/consts/input-validation';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV } from './_common';
+import { ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
 
 export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'security',
@@ -61,7 +61,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     treeFields: ['GRIF_NAME'],
     allVisibleFields: ['EDS_FLAG', 'ENCRYPT_FLAG', 'SEC_INDEX', 'NOTE'],
     listFields: [
-        ...Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        ...Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'GRIF_NAME'],
     editFields: ['SEC_INDEX', 'GRIF_NAME', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE', 'CONFIDENTIONAL',
         ...Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
