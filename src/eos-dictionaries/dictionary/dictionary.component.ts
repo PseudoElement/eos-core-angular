@@ -367,7 +367,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     ngOnInit(): void {
-        this.setStyles();
+        setTimeout(() => {
+            this.setStyles();
+        }, 250);
     }
 
     ngOnDestroy() {
@@ -685,7 +687,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this.stylesFlex = 'xl';
         } else if (this.selectedEl.nativeElement.offsetWidth <= 510) {
             this.stylesFlex = 'xs';
-        }   else {
+        } else {
             this.stylesFlex = 'none';
         }
     }
