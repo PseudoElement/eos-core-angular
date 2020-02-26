@@ -58,7 +58,7 @@
                [ngStyle]="{'margin-left.px': 10}"
                [id]="'separator'"
                [type]="'text'"
-               (keyup)="update($event)"
+               (keyup)="keyUpSeparator($event)"
                value="{{separator}}">
 
         <div *ngIf="hasAdditionalControls()">

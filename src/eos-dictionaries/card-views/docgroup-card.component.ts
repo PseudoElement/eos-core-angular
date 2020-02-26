@@ -73,7 +73,11 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     }
 
     dataShablonDetail (): [] {
-        return !this.data['SHABLON_DETAIL_List'] ? [] : this.data['SHABLON_DETAIL_List']/*.filter( rec => rec['CONSTR_TYPE'] === 'L')*/.map(rec =>
+        if (!this.data['SHABLON_DETAIL_List']) {
+            this.data['SHABLON_DETAIL_List'] = [];
+        }
+
+        return this.data['SHABLON_DETAIL_List']/*.filter( rec => rec['CONSTR_TYPE'] === 'L')*/.map(rec =>
             <SelectorListItem>Object.assign({}, {key: rec['ISN_LCLASSIF'], CONSTR_TYPE: rec['CONSTR_TYPE'], element: rec['ELEMENT'].trim(), title: '', obj: null }
         ));
     }

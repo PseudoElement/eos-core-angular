@@ -1,4 +1,4 @@
-import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates, IEOSRKDefaults, EOSDICTS_VARIANT, IEOSSevConfig, IEOSTPLVariant } from '../features.interface';
+import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates, IEOSRKDefaults, EOSDICTS_VARIANT, IEOSSevConfig, IEOSTPLVariant, E_LIST_ENUM_TYPE } from '../features.interface';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { DOC_TEMPLATE_ELEMENTS_CB, PRJ_TEMPLATE_ELEMENTS_CB } from './docgroup-template-cb.consts';
 
@@ -6,6 +6,9 @@ export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
     version: 'ЦБ',
     variant : EOSDICTS_VARIANT.CB,
     canEditLogicDeleted: true,
+    nodeList: {
+        enumerationType: E_LIST_ENUM_TYPE.allInFolder,
+    },
     departments: {
         numcreation: false,
         reestr_send: false,

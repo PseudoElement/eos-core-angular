@@ -291,25 +291,26 @@ formatSurname(fam: string, name: string, patron: string): string {
 
 
     public confirmSave(): Promise<boolean> {
+        const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
         let isNeedCorrectStart = false;
         let isNeedCorrectEnd = false;
-        if (this.dictSrv.currentNode.parent.data.rec['START_DATE']) {
+        if (parent.data.rec['START_DATE']) {
             if (!this.data.rec['START_DATE']) {
                 isNeedCorrectStart = true;
             } else {
                 const sd1 = new Date(this.data.rec['START_DATE']);
-                const sd2 = new Date(this.dictSrv.currentNode.parent.data.rec['START_DATE']);
+                const sd2 = new Date(parent.data.rec['START_DATE']);
                 if (sd1 < sd2) {
                     isNeedCorrectStart = true;
                 }
             }
         }
-        if (this.dictSrv.currentNode.parent.data.rec['END_DATE']) {
+        if (parent.data.rec['END_DATE']) {
             if (!this.data.rec['END_DATE']) {
                 isNeedCorrectEnd = true;
             } else {
                 const sd1 = new Date(this.data.rec['END_DATE']);
-                const sd2 = new Date(this.dictSrv.currentNode.parent.data.rec['END_DATE']);
+                const sd2 = new Date(parent.data.rec['END_DATE']);
                 if (sd1 > sd2) {
                     isNeedCorrectEnd = true;
                 }
@@ -320,13 +321,13 @@ formatSurname(fam: string, name: string, patron: string): string {
             return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX).then((button) => {
                 if (button.result === BUTTON_RESULT_YES) {
                     if (isNeedCorrectStart) {
-                        this.setValue('rec.START_DATE', new Date(this.dictSrv.currentNode.parent.data.rec['START_DATE']));
-                        this.data.rec['START_DATE'] = this.dictSrv.currentNode.parent.data.rec['START_DATE'];
+                        this.setValue('rec.START_DATE', new Date(parent.data.rec['START_DATE']));
+                        this.data.rec['START_DATE'] = parent.data.rec['START_DATE'];
 
                     }
                     if (isNeedCorrectEnd) {
-                        this.setValue('rec.END_DATE', new Date(this.dictSrv.currentNode.parent.data.rec['END_DATE']));
-                        this.data.rec['START_DATE'] = this.dictSrv.currentNode.parent.data.rec['END_DATE'];
+                        this.setValue('rec.END_DATE', new Date(parent.data.rec['END_DATE']));
+                        this.data.rec['END_DATE'] = parent.data.rec['END_DATE'];
                     }
                     return true;
                 }
