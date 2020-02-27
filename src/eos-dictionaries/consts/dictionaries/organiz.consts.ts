@@ -1,7 +1,7 @@
 import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV, } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_NAME } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';
@@ -101,7 +101,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         type: 'new',
         length: 1,
     },
-    COMMON_FIELD_ICONS_SEV,
+    // COMMON_FIELD_ICONS_SEV,
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование организации',
         groupLabel: 'Наименование группы',
@@ -229,11 +229,11 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: '',
 
         // }
-        {
-            key: 'sev',
-            title: 'Индекс СЭВ',
-            type: 'dictionary',
-        }
+        // {
+        //     key: 'sev',
+        //     title: 'Индекс СЭВ',
+        //     type: 'dictionary',
+        // }
     ]),
     treeFields: ['CLASSIF_NAME'],
     // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
@@ -241,7 +241,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     //     'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
     editFields: ['CLASSIF_NAME', 'NOTE',
         ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [ 'TERM_EXEC', 'TERM_EXEC_TYPE', 'ISN_ADDR_CATEGORY'] : [],
-        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+        // ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
     fullSearchFields: [],
@@ -252,7 +252,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [
-        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
+        // ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'
     ],
     allVisibleFields: ['NOTE', 'NEW_RECORD'],
