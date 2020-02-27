@@ -1,12 +1,12 @@
 import { IFieldDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
-import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
+import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 
 export const COMMON_FIELD_CODE: IFieldDescriptor = {
     key: 'CODE',
     title: 'Код',
     type: 'string',
     length: 64,
-    pattern: NOT_EMPTY_STRING,
+    pattern: VALID_REQ_STRING,
     isUnique: true,
     uniqueInDict: true,
 };
@@ -17,7 +17,7 @@ export const COMMON_FIELD_NAME: IFieldDescriptor = {
     type: 'string',
     length: 250,
     required: true,
-    pattern: NOT_EMPTY_STRING,
+    pattern: VALID_REQ_STRING,
     // isUnique: true,
     // uniqueInDict: true,
 };
@@ -27,7 +27,7 @@ export const COMMON_FIELD_FULLNAME: IFieldDescriptor = {
     title: 'Полное наименование',
     type: 'text',
     length: 250,
-    pattern: NOT_EMPTY_STRING,
+    pattern: VALID_REQ_STRING,
 };
 
 export const COMMON_FIELD_NOTE = {

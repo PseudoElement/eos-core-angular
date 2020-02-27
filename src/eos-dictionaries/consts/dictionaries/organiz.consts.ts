@@ -1,5 +1,5 @@
 import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-dictionaries/interfaces';
-import { NOT_EMPTY_STRING } from '../input-validation';
+import { VALID_REQ_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_NAME } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
@@ -52,7 +52,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         key: 'MAXDUE',
         title: 'MAX значение кода Дьюи',
         type: 'string',
-        pattern: NOT_EMPTY_STRING,
+        pattern: VALID_REQ_STRING,
         length: 248,
     },
     ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [
@@ -112,32 +112,32 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         title: 'Поиск наименование организации',
         type: 'string',
         length: 255,
-        pattern: NOT_EMPTY_STRING,
+        pattern: VALID_REQ_STRING,
     }*/
         // ,
         // Object.assign({}, COMMON_FIELD_FULLNAME, {
         //     title: 'Полное наименование',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }), {
         //     key: 'ZIPCODE',
         //     title: 'Почтовый индекс',
         //     type: 'string',
         //     length: 12,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'CITY',
         //     title: 'Город',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ADDRESS',
         //     title: 'Почтовый адрес',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'MAIL_FOR_ALL',
         //     title: 'Признак использования e-mail для всех представителей',
@@ -153,13 +153,13 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'ОКПО',
         //     type: 'string',
         //     length: 16,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'INN',
         //     title: 'ИНН',
         //     type: 'string',
         //     length: 64,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ISN_REGION',
         //     title: 'Регион',
@@ -170,25 +170,25 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'ОКОНХ',
         //     type: 'string',
         //     length: 16,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'LAW_ADRESS',
         //     title: 'Юридический адрес',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ISN_ORGANIZ_TYPE',
         //     title: 'Форма Собственности',
         //     type: 'number',
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         //     length: 10,
         // }, {
         //     key: 'SERTIFICAT',
         //     title: 'Регистрационное свидетельство',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ISN_ADDR_CATEGORY',
         //     title: 'Категория адресата',
@@ -201,14 +201,14 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'поле для формирования выписок для ЦБ',
         //     type: 'number',
         //     length: 4,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         //
         // }, {
         //     key: 'OGRN',
         //     title: 'ОГРН',
         //     type: 'string',
         //     length: 64,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'contact',
         //     type: 'array',

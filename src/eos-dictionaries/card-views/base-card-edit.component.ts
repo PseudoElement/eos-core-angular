@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { Subscription } from 'rxjs';
-import { NOT_EMPTY_STRING } from '../consts/input-validation';
+import { VALID_REQ_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { Features } from 'eos-dictionaries/features/features-current.const';
@@ -31,7 +31,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     @Input() isNewRecord: boolean;
     @Input() dutysList: string[];
     @Input() fullNamesList: string[];
-    readonly notEmptyString = NOT_EMPTY_STRING;
+    readonly notEmptyString = VALID_REQ_STRING;
 
     nodeId: string;
     currTab = 0;

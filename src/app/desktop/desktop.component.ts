@@ -6,7 +6,7 @@ import {EosDeskService, DEFAULT_DESKTOP} from '../services/eos-desk.service';
 import {IDeskItem} from '../core/desk-item.interface';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_LINK_DELETE} from '../consts/confirms.const';
-import {NOT_EMPTY_STRING} from 'eos-common/consts/common.consts';
+import {VALID_REQ_STRING} from 'eos-common/consts/common.consts';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {RECENT_URL} from 'app/consts/common.consts';
 import { skip } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
     referencesList: IDeskItem[];
     deskId: string;
-    notEmptyString = NOT_EMPTY_STRING;
+    notEmptyString = VALID_REQ_STRING;
     dragResolve = false;
 
     private _editingItem: IDeskItem;
