@@ -66,6 +66,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     urlPhoto: string = '';
     errorSave: boolean;
     queryRoles: any[] = [];
+    startIsPhoto: boolean | number = false;
+    startUrlPhoto: string = '';
     public isShell: boolean = false;
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
@@ -169,7 +171,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         if (this.curentUser.DUE_DEP) {
-            this.getPhotoUser(this.curentUser.DUE_DEP);
+            this.getPhotoUser(this.curentUser.DUE_DEP, true);
         }
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS_CB, !this.editMode);
         this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
@@ -194,19 +196,26 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
 
-    getPhotoUser(due: string): Promise<any> {
+    getPhotoUser(due: string, init?: boolean): Promise<any> {
         return this._userParamSrv.getPhotoUser(due).then((data: DEPARTMENT[]) => {
             this.isPhoto = data[0]['ISN_PHOTO'];
-            if (!this.curentUser.isTechUser) {
-                return this.getCabinetOwnUser(data[0]['ISN_CABINET']);
-            } else {
-                this.singleOwnerCab = true;
-            }
             if (this.isPhoto) {
                 this._rtUserSel.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
                     const url = `url(data:image/${res[0].EXTENSION};base64,${res[0].CONTENTS})`;
                     this.urlPhoto = url;
+                    if (init) {
+                        this.startUrlPhoto = this.urlPhoto;
+                        this.startIsPhoto = this.isPhoto;
+                    }
                 });
+            } else {
+                this.startUrlPhoto = null;
+                this.startIsPhoto = null;
+            }
+            if (!this.curentUser.isTechUser) {
+                return this.getCabinetOwnUser(data[0]['ISN_CABINET'], data[0]['DUE']);
+            } else {
+                this.singleOwnerCab = true;
             }
         });
     }
@@ -265,12 +274,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    getCabinetOwnUser(isnCabinet): Promise<any> {
+    getCabinetOwnUser(isnCabinet: number, due: string): Promise<any> {
         if (isnCabinet) {
             return this._userParamSrv.getCabinetOwnUser(isnCabinet).then((depD: DEPARTMENT[]) => {
                 if (depD.length === 1) {
                     this.singleOwnerCab = false;
-                    return this._userParamSrv.getUserCbRoles().then((data: IRoleCB[]) => {
+                    return this._userParamSrv.getUserCbRoles(due).then((data: IRoleCB[]) => {
                         this.startRolesCb = data;
                         this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
                         this.patchCbRoles();
@@ -549,7 +558,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.currentCbFields = [];
             }
             if (this.curentUser.DUE_DEP) {
-                return this.getPhotoUser(this.curentUser.DUE_DEP);
+                return this.getPhotoUser(this.curentUser.DUE_DEP, true);
             }
         });
     }
@@ -567,6 +576,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.upform(this.accessInputs, this.formAccess);
             this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
             this.dueDepSurname = this.form.controls['SURNAME_PATRON'].value;
+            if (this.curentUser.isTechUser) {
+                this.singleOwnerCab = true;
+            }
             this.isLoading = false;
             this.editModeF();
             this._pushState();
@@ -589,6 +601,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
+        this.isPhoto = this.startIsPhoto;
+        this.startUrlPhoto = this.startUrlPhoto;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
@@ -726,6 +740,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
+                return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
                 this.isShell = false;

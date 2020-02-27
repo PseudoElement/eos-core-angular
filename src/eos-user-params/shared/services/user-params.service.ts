@@ -325,11 +325,11 @@ export class UserParamsService {
         }});
     }
 
-    getUserCbRoles(): Promise<any> {
+    getUserCbRoles(due: string): Promise<any> {
         this.asistMansStr = '';
         const reqs = [
             this._pipRx.read({CBR_USER_ROLE: {
-                criteries: {DUE_PERSON: this.curentUser.DUE_DEP}
+                criteries: {DUE_PERSON: due}
             }}),
             this._pipRx.read({CBR_USER_ROLE: {
                     criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
@@ -362,14 +362,19 @@ export class UserParamsService {
     }
 
     ParseRoles(roles: any[]): Promise<any> {
-        return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: roles.map(due => due.DUE_PERSON)}).then((dueName: any) => {
-            const dueNames = new Map<string, string>();
-            dueName.forEach((dep) => dueNames.set(dep.DUE, dep.CLASSIF_NAME));
-            return Promise.resolve(this.parseData(roles, dueNames));
-        });
+        const arrRoles = roles.filter(role => role.DUE_PERSON !== null).map(due => due.DUE_PERSON);
+        if (arrRoles.length) {
+            return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: arrRoles}).then((dueName: any) => {
+                const dueNames = new Map<string, string>();
+                dueName.forEach((dep) => dueNames.set(dep.DUE, dep.CLASSIF_NAME));
+                return Promise.resolve(this.parseData(roles, dueNames));
+            });
+        } else {
+            return Promise.resolve(this.parseData(roles));
+        }
     }
 
-    parseData(data: any[], dueNames: Map<string, string>): any[]  {
+    parseData(data: any[], dueNames?: Map<string, string>): any[]  {
         const currentCbFields = [];
         data.forEach(el => {
             if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {

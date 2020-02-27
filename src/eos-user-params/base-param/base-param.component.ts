@@ -61,6 +61,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     user_copy_isn: number;
     isPhoto: boolean | number = false;
     urlPhoto: string = '';
+    startIsPhoto: boolean | number = false;
+    startUrlPhoto: string = '';
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public maxLoginLength: string;
@@ -188,6 +190,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     const url = `url(data:image/${res[0].EXTENSION};base64,${res[0].CONTENTS})`;
                     this.urlPhoto = url;
                 });
+            } else {
+                this.startUrlPhoto = null;
+                this.startIsPhoto = null;
             }
         });
     }
@@ -498,6 +503,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
+        this.isPhoto = this.startIsPhoto;
+        this.startUrlPhoto = this.startUrlPhoto;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
@@ -619,6 +626,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
+                return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
                 this.isShell = false;

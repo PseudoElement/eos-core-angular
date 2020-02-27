@@ -3,8 +3,8 @@
         <div class="base-param-main">
             <!-- Логин , фото, ФИО -->
             <div class="top-base-align">
-                <div class="avatar-base" *ngIf="curentUser.DUE_DEP else tech">
-                    <a class="av-link-b" [routerLink]="['/spravochniki','departments', curentUser.DUE_DEP, 'view' ]">
+                <div class="avatar-base" *ngIf="isPhoto && !formControls.get('teсhUser').value; else tech">
+                    <a class="av-link-b" [routerLink]="['/spravochniki','departments', inputs['DUE_DEP_NAME']?.data, 'view' ]">
                         <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
                         <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-icon eos-icon-Man-Blue small"></span>
                     </a>
@@ -45,6 +45,7 @@
                     [input]="controls['SELECT_ROLE']"
                     [form]="formControls"
                     [container]="body"
+                    [ngStyle]="{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
                     [readonly]="curentUser.isTechUser || !editMode"
                     [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
                 <button
