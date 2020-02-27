@@ -594,7 +594,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
         if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb) && !this.singleOwnerCab) {
-            this.startRolesCb = JSON.parse(JSON.stringify(this.currentCbFields));
+            this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
             this.patchCbRoles();
             this.queryRoles = [];
         } else {
