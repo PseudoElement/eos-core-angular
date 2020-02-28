@@ -7,6 +7,9 @@ import { RK_TYPE_OPTIONS } from '../consts/dictionaries/docgroup.consts';
 import { CB_FUNCTIONS } from 'eos-rest/services/appContext.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { EosUtils } from 'eos-common/core/utils';
+import { SelectorListItem } from 'eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
+import { SHABLON_DETAIL } from 'eos-rest';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -69,19 +72,78 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
     }
 
+    dataShablonDetail (): [] {
+        if (!this.data['SHABLON_DETAIL_List']) {
+            this.data['SHABLON_DETAIL_List'] = [];
+        }
+
+        return this.data['SHABLON_DETAIL_List']/*.filter( rec => rec['CONSTR_TYPE'] === 'L')*/.map(rec =>
+            <SelectorListItem>Object.assign({}, {key: rec['ISN_LCLASSIF'], CONSTR_TYPE: rec['CONSTR_TYPE'], element: rec['ELEMENT'].trim(), title: '', obj: null }
+        ));
+    }
+
     editTemplate(forProject = false) {
         this.templateModal = this.modalSrv.show(DocgroupTemplateConfigComponent, { class: 'docgroup-template-modal modal-lg' });
         const path = forProject ? 'rec.PRJ_SHABLON' : 'rec.SHABLON';
-        const content = {
-            forProject: forProject,
-            dgTemplate: this.getValue(path),
-            rcType: this.rcType * 1,
-            allowEmpty: (forProject ? false : this.isNode),
-        };
+        const modalObj = (<DocgroupTemplateConfigComponent>this.templateModal.content);
+        modalObj.forProject = forProject;
+        const additionalData = Object.assign ({},
+                { SHABLON_DETAIL_List: this.dataShablonDetail(), },
+                forProject ? { COPY_NUMBER_FLAG_PRJ: this.getValue('rec.COPY_NUMBER_FLAG_PRJ') || 0} : {COPY_NUMBER_FLAG: this.getValue('rec.COPY_NUMBER_FLAG') || 0}
+            );
+        modalObj.additionalData = additionalData;
+        modalObj.dgTemplate = this.getValue(path);
+        modalObj.rcType = this.rcType * 1;
+        modalObj.allowEmpty = (forProject ? false : this.isNode);
+        modalObj.init();
+        modalObj.onSave.subscribe(([template, outdata]) => {
+            if (outdata && !EosUtils.isObjEmpty(outdata)) {
+                for (const key in outdata) {
+                    if (outdata.hasOwnProperty(key)) {
+                        if (key === 'SHABLON_DETAIL_List') {
+                            if (!this.data[key]) {
+                                this.data[key] = [];
+                            }
+                            // добавленные
+                            outdata[key].forEach( d => {
+                                const ex = this.data[key].find ( saved =>
+                                    saved['ELEMENT'].trim() === d.element &&
+                                    saved['CONSTR_TYPE'] === d.CONSTR_TYPE &&
+                                    saved['ISN_LCLASSIF'] === d.key
+                                    );
+                                if (!ex) {
+                                    this.data[key].push(<SHABLON_DETAIL>{
+                                        CONSTR_TYPE: d.CONSTR_TYPE,
+                                        DUE: this.data.rec['DUE'],
+                                        ELEMENT: d.element + ' ', // так в базе зачем-то
+                                        ISN_LCLASSIF: d.key,
+                                    });
+                                } else {
+                                    // проверить на метку deleted
+                                }
+                            });
+                            // удаленные
+                            this.data[key].forEach (saved => {
+                                const ex = outdata[key].find ( d =>
+                                    saved['ELEMENT'].trim() === d.element &&
+                                    saved['CONSTR_TYPE'] === d.CONSTR_TYPE &&
+                                    saved['ISN_LCLASSIF'] === d.key
+                                    );
+                                if (!ex) {
 
-        this.templateModal.content.init(content);
+                                }
+                            });
 
-        this.templateModal.content.onSave.subscribe((template) => this.setValue(path, template));
+                        } else {
+                            const value = outdata[key];
+                            this.setValue('rec.' + key, value);
+                        }
+                    }
+                }
+            }
+
+            this.setValue(path, template);
+        });
     }
 
     private _isChanged(path, changes): boolean {

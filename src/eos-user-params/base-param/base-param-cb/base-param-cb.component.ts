@@ -26,7 +26,6 @@ import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/conf
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT } from 'eos-dictionaries/consts/confirm.consts';
-import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -61,13 +60,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     dueDepSurname: string = '';
     singleOwnerCab: boolean = true;
     currentCbFields: IRoleCB[] = [];
-    asistMansStr: string = '';
     startRolesCb: IRoleCB[] = [];
     user_copy_isn: number;
     isPhoto: boolean | number = false;
     urlPhoto: string = '';
     errorSave: boolean;
     queryRoles: any[] = [];
+    startIsPhoto: boolean | number = false;
+    startUrlPhoto: string = '';
     public isShell: boolean = false;
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
@@ -171,7 +171,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         if (this.curentUser.DUE_DEP) {
-            this.getPhotoUser(this.curentUser.DUE_DEP);
+            this.getPhotoUser(this.curentUser.DUE_DEP, true);
         }
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS_CB, !this.editMode);
         this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
@@ -196,24 +196,26 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
 
-    getPhotoUser(due: string) {
-        const query = {
-            DEPARTMENT: {
-                criteries: {
-                    DUE: `${due}`
-                }
-            }
-        };
-        return this.apiSrvRx.read(query).then(data => {
+    getPhotoUser(due: string, init?: boolean): Promise<any> {
+        return this._userParamSrv.getPhotoUser(due).then((data: DEPARTMENT[]) => {
             this.isPhoto = data[0]['ISN_PHOTO'];
-            if (!this.curentUser.isTechUser) {
-                this.getCabinetOwnUser(data[0]['ISN_CABINET']);
-            }
             if (this.isPhoto) {
                 this._rtUserSel.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
                     const url = `url(data:image/${res[0].EXTENSION};base64,${res[0].CONTENTS})`;
                     this.urlPhoto = url;
+                    if (init) {
+                        this.startUrlPhoto = this.urlPhoto;
+                        this.startIsPhoto = this.isPhoto;
+                    }
                 });
+            } else {
+                this.startUrlPhoto = null;
+                this.startIsPhoto = null;
+            }
+            if (!this.curentUser.isTechUser) {
+                return this.getCabinetOwnUser(data[0]['ISN_CABINET'], data[0]['DUE']);
+            } else {
+                this.singleOwnerCab = true;
             }
         });
     }
@@ -272,76 +274,23 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    getCabinetOwnUser(isnCabinet): void {
+    getCabinetOwnUser(isnCabinet: number, due: string): Promise<any> {
         if (isnCabinet) {
-            this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: {
-                criteries: {
-                    ISN_CABINET: isnCabinet,
-                }
-            }}).then((depD: any) => {
+            return this._userParamSrv.getCabinetOwnUser(isnCabinet).then((depD: DEPARTMENT[]) => {
                 if (depD.length === 1) {
                     this.singleOwnerCab = false;
-                    this.getUserCbRoles();
+                    return this._userParamSrv.getUserCbRoles(due).then((data: IRoleCB[]) => {
+                        this.startRolesCb = data;
+                        this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
+                        this.patchCbRoles();
+                    });
+                } else {
+                    this.singleOwnerCab = true;
                 }
             });
+        } else {
+            this.singleOwnerCab = true;
         }
-    }
-
-    getUserCbRoles() {
-        const reqs = [
-            this.apiSrvRx.read({CBR_USER_ROLE: {
-                criteries: {DUE_PERSON: this.curentUser.DUE_DEP}
-            }}),
-            this.apiSrvRx.read({CBR_USER_ROLE: {
-                    criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
-                },
-                orderby: 'WEIGHT',
-            })
-        ];
-        return Promise.all(reqs).then((data: any[]) => {
-            const asistMansData = data[0].filter(el => el.ISN_USER !== this._userParamSrv.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
-            if (asistMansData.length > 0) {
-                this._getUserCl(asistMansData).then((users: USER_CL[]) => {
-                    const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
-                    sortUsers.forEach(user => {
-                        if (this.asistMansStr.indexOf(user.SURNAME_PATRON) === -1) {
-                            this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`;
-                        }
-                    });
-                    if (data[1].length) {
-                        this.ParseRoles(data[1]);
-                    }
-                });
-            } else {
-                if (data[1].length) {
-                    this.ParseRoles(data[1]);
-                }
-            }
-        });
-    }
-
-    ParseRoles(roles: any[]): Promise<any> {
-        return this.apiSrvRx.read<DEPARTMENT>({ DEPARTMENT: roles.map(due => due.DUE_PERSON)}).then((dueName: any) => {
-            const dueNames = new Map<string, string>();
-            dueName.forEach((dep) => dueNames.set(dep.DUE, dep.CLASSIF_NAME));
-            this.parseData(roles, dueNames);
-        });
-    }
-
-    parseData(data: any[], dueNames: Map<string, string>) {
-        this.currentCbFields = [];
-        data.forEach(el => {
-            if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
-                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: dueNames.get(el.DUE_PERSON),
-                due: el.DUE_PERSON, isnRole: el.ISN_USER_ROLE});
-            } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
-                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr, isnRole: el.ISN_USER_ROLE});
-            } else {
-                this.currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], isnRole: el.ISN_USER_ROLE});
-            }
-        });
-        this.startRolesCb = JSON.parse(JSON.stringify(this.currentCbFields));
-        this.patchCbRoles();
     }
 
     getTitle(): void {
@@ -394,8 +343,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 requestUri: `USER_CL(${id})`,
                 data: newD
             });
+            if (!this.singleOwnerCab && ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || (newD.hasOwnProperty('DUE_DEP') && newD.DUE_DEP === ''))) {
+                this.queryRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
+            }
         }
     }
+
     setNewDataFormControl(query, id) {
         if (this._newDataformControls.size) {
             if (this._newDataformControls.has('SELECT_ROLE') && !this.user_copy_isn) {
@@ -429,7 +382,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
                 .then(data => {
                     this.user_copy_isn = +data;
-                    return this._getUserCl(this.user_copy_isn);
+                    return this._userParamSrv.getUserCl(this.user_copy_isn);
                 })
                 .then(data => {
                     this.isShell = false;
@@ -455,7 +408,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const accessStr = '';
         this.setQueryNewData(accessStr, newD, query);
         this.setNewDataFormControl(query, id);
-        if (this._newData.get('IS_SECUR_ADM') === false) { // IS_SECUR_ADM приватный критерий
+        if (this._newData.get('IS_SECUR_ADM') === false) {
             this.apiSrvRx.read<USER_CL>({
                 USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1',  'ORACLE_ID': 'isnotnull', 'DELETED': '0'}),
                 orderby: 'ISN_LCLASSIF',
@@ -548,7 +501,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                return this.dropLogin(id).then(() => {
+                return this._userParamSrv.dropLogin(id).then(() => {
                     this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                     return this.apiSrvRx.batch(queryPas, '').then(() => {
                         return this.sendData(query, accessStr);
@@ -577,10 +530,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }).then(() => {
                     this.user_copy_isn = null;
                     this.formControls.get('USER_COPY').patchValue('');
-                    return this.AfterSubmit(accessStr);
+                    return this.AfterSubmit(accessStr, query);
                 });
             } else {
-                return this.AfterSubmit(accessStr);
+                return this.AfterSubmit(accessStr, query);
             }
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
@@ -588,21 +541,26 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
     }
-    AfterSubmit(accessStr: string): Promise<any> {
+    AfterSubmit(accessStr: string, query): Promise<any> {
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
         }
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
-        if (this.queryRoles.length) {
-            return this.GetUserData().then(() =>  {
-                this.queryRoles = [];
-                this.getUserCbRoles();
-            });
-        } else {
-            return this.GetUserData();
-        }
+        this.startRolesCb = [];
+        this.queryRoles = [];
+        return this.GetUserData().then(() => {
+            if (this.currentCbFields.length) {
+                this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+                this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+                this.cancelValues(this.controls, this.formControls);
+                this.currentCbFields = [];
+            }
+            if (this.curentUser.DUE_DEP) {
+                return this.getPhotoUser(this.curentUser.DUE_DEP, true);
+            }
+        });
     }
 
     GetUserData(): Promise<any> {
@@ -618,6 +576,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.upform(this.accessInputs, this.formAccess);
             this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
             this.dueDepSurname = this.form.controls['SURNAME_PATRON'].value;
+            if (this.curentUser.isTechUser) {
+                this.singleOwnerCab = true;
+            }
             this.isLoading = false;
             this.editModeF();
             this._pushState();
@@ -640,12 +601,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
+        this.isPhoto = this.startIsPhoto;
+        this.startUrlPhoto = this.startUrlPhoto;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
         if (JSON.stringify(this.currentCbFields) !== JSON.stringify(this.startRolesCb) && !this.singleOwnerCab) {
-            this.currentCbFields = [...this.startRolesCb];
+            this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
             this.patchCbRoles();
             this.queryRoles = [];
         } else {
@@ -696,6 +659,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (!val1 && !val2) {
             this.formControls.controls['SELECT_ROLE'].patchValue(null);
             this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+        } else {
+            let str = '';
+            if (this.currentCbFields.length > 1) {
+                str = this.currentCbFields[0].role + ' ...';
+            } else  if (this.currentCbFields.length === 1) {
+                str = this.currentCbFields[0].role;
+            }
+            if (str) {
+                this.formControls.controls['SELECT_ROLE'].patchValue(str);
+            }
         }
     }
     checkMeinControlAccess($event, data) {
@@ -730,20 +703,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
-    getUserDepartment(isn_cl): Promise<any> {
-        const queryCabinet = {
-            DEPARTMENT: {
-                criteries: {
-                    ISN_NODE: String(isn_cl)
-                }
-            }
-        };
-        return this.apiSrvRx.read(queryCabinet)
-            .then(result => {
-                return result;
-            });
-    }
-
     showDepartment() {
         this.isShell = true;
         let dueDep = '';
@@ -759,7 +718,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
                 if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
                     this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
-                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                     });
                     return data[0];
@@ -768,7 +727,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     if (data) {
                         this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
                     }
-                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                     });
                     return val;
@@ -781,6 +740,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
+                return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
                 this.isShell = false;
@@ -840,81 +800,20 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
             this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
             this.cancelValues(this.controls, this.formControls);
-            // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         }
         if (JSON.stringify(this.startRolesCb) !== JSON.stringify(this.currentCbFields)) {
-            this.getQueryFromRoles();
-            this._pushState();
+            this.queryRoles = this._userParamSrv.getQueryFromRoles(this.currentCbFields, this.startRolesCb);
+        } else {
+            this.queryRoles = [];
         }
-    }
-
-    getQueryFromRoles() {
-        this.queryRoles = [];
-        this.currentCbFields.forEach((field, indx) => {
-            if (!field.isnRole) {
-                const newElem = {
-                    method: 'POST',
-                    requestUri: `CBR_USER_ROLE(-99)`,
-                    data: {
-                        WEIGHT: indx + 1,
-                        DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
-                        KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
-                        ISN_USER: this.curentUser.ISN_LCLASSIF,
-                    }
-                };
-                if (this.queryRoles.filter(elem => JSON.stringify(newElem) === JSON.stringify(elem)).length === 0) {
-                    this.queryRoles.push(newElem);
-                }
-           }
-        });
-        this.startRolesCb.forEach((old, index) => {
-            const kindRole = KIND_ROLES_CB.indexOf(old.role);
-            const weigthNow = this.currentCbFields[index] && this.currentCbFields[index].isnRole === old.isnRole ? false : true;
-            if (kindRole === 3 || kindRole === 4 || weigthNow) {
-                const repeatRole = this.currentCbFields.filter(cur => cur.isnRole === old.isnRole)[0];
-                if (repeatRole) {
-                    this.queryRoles.push({
-                        method: 'MERGE',
-                        requestUri: `CBR_USER_ROLE(${repeatRole.isnRole})`,
-                        data: {
-                            WEIGHT: this.currentCbFields.indexOf(repeatRole) + 1,
-                            DUE_PERSON: repeatRole.due,
-                            KIND_ROLE: kindRole + 1,
-                            ISN_USER: this.curentUser.ISN_LCLASSIF,
-                        }
-                    });
-                } else {
-                    const checkArr = this.queryRoles.map(q => q.requestUri);
-                    if (old.isnRole && checkArr && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
-                        this.queryRoles.push({
-                            method: 'DELETE',
-                            requestUri: `CBR_USER_ROLE(${old.isnRole})`,
-                        });
-                    }
-                }
-            } else {
-                if (this.currentCbFields.filter(cur => cur.isnRole === old.isnRole).length === 0) {
-                    const checkArr = this.queryRoles.map(q => q.requestUri);
-                    if (old.isnRole && checkArr.indexOf(`CBR_USER_ROLE(${old.isnRole})`) === -1) {
-                        this.queryRoles.push({
-                            method: 'DELETE',
-                            requestUri: `CBR_USER_ROLE(${old.isnRole})`,
-                        });
-                    }
-                }
-            }
-        });
+        this._pushState();
     }
 
     patchCbRoles() {
         let str = '';
         if (this.currentCbFields.length === 1) {
             str = this.currentCbFields[0].role;
-        } else if (this.currentCbFields.length === 0) {
-            this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
-            this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
-            this.cancelValues(this.controls, this.formControls);
-        } else {
+        } else if (this.currentCbFields.length !== 0) {
             str = this.currentCbFields[0].role + ' ...';
         }
         this.controlField[1].options = [{
@@ -927,7 +826,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.cancelValues(this.controls, this.formControls);
-        // this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
     }
 
     private patchVal() {
@@ -1057,28 +955,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         );
     }
 
-    private _getUserCl(isn: number|number[]) {
-        let queryUser;
-        if (typeof isn === 'number') {
-            queryUser = {
-                USER_CL: {
-                    criteries: {
-                        ISN_LCLASSIF: isn
-                    }
-                }
-            };
-        } else {
-            queryUser = {
-                USER_CL: isn,
-            };
-        }
-        return this.apiSrvRx.read<USER_CL>(queryUser);
-    }
-
-    private dropLogin(id): Promise<any> {
-        const url = `DropLogin?isn_user=${id}`;
-        return this.apiSrvRx.read({ [url]: ALL_ROWS });
-    }
     private AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }

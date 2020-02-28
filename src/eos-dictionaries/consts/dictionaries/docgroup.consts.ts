@@ -164,6 +164,14 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         type: 'boolean',
         forNode: true,
     }, {
+        key: 'COPY_NUMBER_FLAG',
+        title: 'COPY_NUMBER_FLAG',
+        type: 'boolean',
+    }, {
+        key: 'COPY_NUMBER_FLAG_PRJ',
+        title: 'COPY_NUMBER_FLAG_PRJ',
+        type: 'boolean',
+    }, {
         key: 'PROTECT_DEL_PRJ_STATUS',
         title: 'Запретить удаление РКПД при статусе', // и выше
         type: 'select',
@@ -176,7 +184,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
         'ACCESS_MODE',
-        ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? ['REG_DATE_PROTECTED', 'PROTECT_DEL_PRJ_STATUS'] : [],
+        ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? ['REG_DATE_PROTECTED', 'PROTECT_DEL_PRJ_STATUS', 'COPY_NUMBER_FLAG', 'COPY_NUMBER_FLAG_PRJ', ] : [],
         ],
     searchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME'],
     fullSearchFields: ['CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],

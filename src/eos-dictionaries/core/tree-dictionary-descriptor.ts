@@ -50,6 +50,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
             }
             return this._postChanges(_newRec, data.rec, updates)
             .then((resp) => {
+                changeData.length = 0;
                 // const results: IRecordOperationResult[] = [];
                 if (resp && resp[0]) {
                     data.rec = Object.assign(_newRec, data.rec);

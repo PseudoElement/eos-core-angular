@@ -3,6 +3,7 @@ import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME } from './_common';
 import { SEARCH_TYPES } from '../search-types';
 import {environment} from '../../../environments/environment';
+import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 
 export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'cabinet',
@@ -28,6 +29,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     Object.assign({}, COMMON_FIELD_NAME, {
         key: 'CABINET_NAME',
         title: 'Краткое наименование кабинета',
+        pattern: VALID_REQ_STRING,
         length: 64,
         isUnique: true,
     }),

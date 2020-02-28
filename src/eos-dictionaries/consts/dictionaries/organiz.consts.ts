@@ -1,7 +1,7 @@
 import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-dictionaries/interfaces';
-import { NOT_EMPTY_STRING } from '../input-validation';
+import { VALID_REQ_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER, } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_NAME } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';
@@ -52,7 +52,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         key: 'MAXDUE',
         title: 'MAX значение кода Дьюи',
         type: 'string',
-        pattern: NOT_EMPTY_STRING,
+        pattern: VALID_REQ_STRING,
         length: 248,
     },
     ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [
@@ -101,7 +101,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         type: 'new',
         length: 1,
     },
-    COMMON_FIELD_ICONS_SEV,
+    // COMMON_FIELD_ICONS_SEV,
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование организации',
         groupLabel: 'Наименование группы',
@@ -112,32 +112,32 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         title: 'Поиск наименование организации',
         type: 'string',
         length: 255,
-        pattern: NOT_EMPTY_STRING,
+        pattern: VALID_REQ_STRING,
     }*/
         // ,
         // Object.assign({}, COMMON_FIELD_FULLNAME, {
         //     title: 'Полное наименование',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }), {
         //     key: 'ZIPCODE',
         //     title: 'Почтовый индекс',
         //     type: 'string',
         //     length: 12,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'CITY',
         //     title: 'Город',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ADDRESS',
         //     title: 'Почтовый адрес',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'MAIL_FOR_ALL',
         //     title: 'Признак использования e-mail для всех представителей',
@@ -153,13 +153,13 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'ОКПО',
         //     type: 'string',
         //     length: 16,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'INN',
         //     title: 'ИНН',
         //     type: 'string',
         //     length: 64,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ISN_REGION',
         //     title: 'Регион',
@@ -170,25 +170,25 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'ОКОНХ',
         //     type: 'string',
         //     length: 16,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'LAW_ADRESS',
         //     title: 'Юридический адрес',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ISN_ORGANIZ_TYPE',
         //     title: 'Форма Собственности',
         //     type: 'number',
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         //     length: 10,
         // }, {
         //     key: 'SERTIFICAT',
         //     title: 'Регистрационное свидетельство',
         //     type: 'string',
         //     length: 255,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'ISN_ADDR_CATEGORY',
         //     title: 'Категория адресата',
@@ -201,14 +201,14 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'поле для формирования выписок для ЦБ',
         //     type: 'number',
         //     length: 4,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         //
         // }, {
         //     key: 'OGRN',
         //     title: 'ОГРН',
         //     type: 'string',
         //     length: 64,
-        //     pattern: NOT_EMPTY_STRING,
+        //     pattern: VALID_REQ_STRING,
         // }, {
         //     key: 'contact',
         //     type: 'array',
@@ -229,11 +229,11 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: '',
 
         // }
-        {
-            key: 'sev',
-            title: 'Индекс СЭВ',
-            type: 'dictionary',
-        }
+        // {
+        //     key: 'sev',
+        //     title: 'Индекс СЭВ',
+        //     type: 'dictionary',
+        // }
     ]),
     treeFields: ['CLASSIF_NAME'],
     // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
@@ -241,7 +241,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     //     'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
     editFields: ['CLASSIF_NAME', 'NOTE',
         ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [ 'TERM_EXEC', 'TERM_EXEC_TYPE', 'ISN_ADDR_CATEGORY'] : [],
-        ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
+        // ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
     fullSearchFields: [],
@@ -252,7 +252,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [
-        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        // ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'
     ],
     allVisibleFields: ['NOTE', 'NEW_RECORD'],

@@ -18,7 +18,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { ICONS_CONTAINER } from 'eos-dictionaries/consts/dictionaries/_common';
+import { ICONS_CONTAINER_SEV } from 'eos-dictionaries/consts/dictionaries/_common';
 
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -439,7 +439,7 @@ export class EosDictionary {
             .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder } : null);
         const tablesUniq = Array.from(new Set(tablelist));
 
-        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER) !== -1) {
+        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER_SEV) !== -1) {
             tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: { OBJECT_NAME: this.descriptor.apiInstance } } });
         }
 
@@ -465,7 +465,7 @@ export class EosDictionary {
                                 field.options.push(el);
                             });
                         }
-                    } else if (Features.cfg.SEV.isIndexesEnable && field.key === ICONS_CONTAINER && nodes.length) {
+                    } else if (Features.cfg.SEV.isIndexesEnable && field.key === ICONS_CONTAINER_SEV && nodes.length) {
                         if (nodes && nodes.length && related && related['SEV_ASSOCIATION']) {
                             // this.descriptor.getRelatedSev(node.data.rec)
                             nodes.forEach(node => {
@@ -473,6 +473,8 @@ export class EosDictionary {
                                 const sev = related['SEV_ASSOCIATION'].find(s => s['OBJECT_ID'] === id);
                                 if (sev) {
                                     node.data.sev = sev;
+                                } else if (node.data.sev) {
+                                    delete node.data.sev;
                                 }
                             });
 
@@ -573,8 +575,8 @@ export class EosDictionary {
             let res = 0;
             switch (typeof _a) {
                 case 'number':
-                    res = _a < 0 ?
-                        ((_a < _b && 1) || (_a > _b && -1) || 0) :
+                    res = // _a < 0 ?
+                        // ((_a < _b && 1) || (_a > _b && -1) || 0) :
                         ((_a < _b && -1) || (_a > _b && 1) || 0);
                     break;
                 case 'string':
@@ -702,6 +704,12 @@ export class EosDictionary {
     private getNodeRelatedData(node: EosDictionaryNode, refresh: boolean = false): Promise<EosDictionaryNode> {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
+                case 'resolution-category':
+                return this.descriptor.getRelatedSev(node.data.rec).then((sev) => {
+                    node.data = Object.assign(node.data, { sev: sev });
+                    node.relatedLoaded = true;
+                    return node;
+                });
                 case 'departments':
                     // const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
                     const orgDUE = node.data.rec.DUE_LINK_ORGANIZ;

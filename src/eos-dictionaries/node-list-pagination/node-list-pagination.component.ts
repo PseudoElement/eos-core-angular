@@ -40,6 +40,8 @@ export class NodeListPaginationComponent {
     public setPageLength(length: number): void {
         this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
         this.config.length = length;
+        this.config.current = 1;
+        this.config.start = 1;
         this._dictSrv.changePagination(this.config);
     }
 

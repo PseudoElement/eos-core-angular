@@ -12,6 +12,9 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
         const results: IRecordOperationResult[] = [];
 
         let _newRec = this.preCreate(isProtected, isDeleted);
+        if (this.metadata.pk) {
+            _newRec[this.metadata.pk] =  _newRec.ISN_LCLASSIF;
+        }
         _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
 
         let pSev: Promise<boolean> = Promise.resolve(true);
@@ -21,8 +24,13 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
 
         return pSev.then(() => {
-            return this._postChanges(_newRec, data.rec, appendToChanges)
+            let updates = this.apiSrv.changeList(changeData);
+            if (appendToChanges) {
+                updates = updates.concat(appendToChanges);
+            }
+            return this._postChanges(_newRec, data.rec, updates)
             .then((resp: any[]) => {
+                changeData.length = 0;
                 if (resp && resp[0]) {
                     return resp[0].ID;
                 } else {

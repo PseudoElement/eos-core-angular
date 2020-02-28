@@ -5,7 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT } from 'app/consts/confirms.const';
+import {
+    CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE,
+    CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE,
+    CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT,
+    CONFIRM_OPERATION_NOMENKL_CLOSED
+} from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
@@ -45,6 +50,7 @@ import {
     SUCCESS_SAVE,
     WARN_SAVE_FAILED,
     INFO_NOTHING_CHANGES,
+    WARN_ELEMENT_CLOSED,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
@@ -86,7 +92,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     treeNode: EosDictionaryNode;
     title: string;
 
-
+    stylesFlex = 'none';
     SLICE_LEN = 110;
     customTreeData: CustomTreeNode[];
 
@@ -203,8 +209,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
                                 this._dictSrv.setCustomNodeId(this._nodeId);
                                 if (this.dictionaryId === 'templates') {
-                                    this.dictionary.descriptor['top'] = this._nodeId;
-                                    this._dictSrv.selectTemplateNode().then(() => { });
+                                    this._dictSrv.selectTemplateNode(this.treeNodes, this._nodeId).then(() => { });
                                 } else {
                                     this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
                                     });
@@ -226,7 +231,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((state: boolean[]) => this.currentState = state);
+            .subscribe((state: boolean[]) => {
+                if (this.selectedEl) {
+                    setTimeout(() => {
+                        this.setStyles();
+                    }, 250);
+                }
+                this.currentState = state;
+            });
 
         _dictSrv.dictionary$
             .pipe(
@@ -355,6 +367,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     ngOnInit(): void {
+        setTimeout(() => {
+            this.setStyles();
+        }, 250);
     }
 
     ngOnDestroy() {
@@ -368,7 +383,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     onSetActiveNode($event) {
         // reset pagination custom tree
-       this._dictSrv.resetPagination();
+        this._dictSrv.resetPagination();
     }
 
     clearFindSettings() {
@@ -455,6 +470,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
 
             case E_RECORD_ACTIONS.removeHard:
+                if (this.dictionaryId === 'nomenkl') {
+                    this._physicallyDeleteNomenkl();
+                    return;
+                }
                 this._physicallyDelete();
                 break;
 
@@ -660,7 +679,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     @HostListener('window:resize')
     resize(): void {
+        this.setStyles();
         this._sandwichSrv.resize();
+    }
+    setStyles() {
+        if (this.selectedEl.nativeElement.offsetWidth < 655 && this.selectedEl.nativeElement.offsetWidth > 510) {
+            this.stylesFlex = 'xl';
+        } else if (this.selectedEl.nativeElement.offsetWidth <= 510) {
+            this.stylesFlex = 'xs';
+        } else {
+            this.stylesFlex = 'none';
+        }
     }
 
     isDictModeEnabled(mode: number): boolean {
@@ -893,7 +922,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
      * Physical delete marked elements on page
      */
     private _physicallyDelete(): void {
-
         const selectedNodes = this._dictSrv.getMarkedNodes();
 
         if (selectedNodes.length === 0) {
@@ -936,13 +964,57 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
     }
 
+    private _physicallyDeleteNomenkl() {
+        const selectedNodes = this._dictSrv.getMarkedNodes();
+
+        if (selectedNodes.length === 0) {
+            return;
+        }
+
+        for (let i = 0; i < selectedNodes.length; i++) {
+            const node = selectedNodes[i];
+
+            if (node.isProtected) {
+                node.isMarked = false;
+                const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
+                warn.msg = warn.msg.replace('{{elem}}', node.title);
+                this._msgSrv.addNewMessage(warn);
+                return;
+            }
+        }
+        const confirmClosed: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_NOMENKL_CLOSED);
+        this._dictSrv.checkRelatedNomenkl(selectedNodes, 'checkClosed').then(result => {
+            if (result.closed.length) {
+                this._confirmMarkedItems(result.closed, confirmClosed).then(button => {
+                    result.closed.forEach(l => l.isMarked = false);
+                    if (button && button.result === 2) {
+                        this._dictSrv.checkRelatedNomenkl(result.closed, 'closed').then(data => {
+                            this._physicallyDelete();
+                        }).catch(e => console.log(e));
+                    } else {
+                        this._physicallyDelete();
+                    }
+                });
+            } else {
+                if (result.oldClosed.length) {
+                    const warn = Object.assign({}, WARN_ELEMENT_CLOSED);
+                    warn.msg = warn.msg.replace('{{elem}}', result.oldClosed.map((n: EosDictionaryNode) => n.data.rec.CLASSIF_NAME).join(', '));
+                    this._msgSrv.addNewMessage(warn);
+                }
+                this._physicallyDelete();
+            }
+        }).catch(e => {
+            console.log(e);
+        });
+    }
+
     /**
      * Logic delete marked elements on page
      */
     private _deleteItems(): void {
 
         // let delCount = 0, allCount = 0;
-        const selectedNodes = this._dictSrv.getMarkedNodes().filter(n => !n.isDeleted);
+        let selectedNodes = this._dictSrv.getMarkedNodes().filter(n => !n.isDeleted);
 
         if (selectedNodes.length === 0) {
             // this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
@@ -961,10 +1033,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
-        this._dictSrv.checkPreDelete(selectedNodes).then((continueDelete) => {
+        this._dictSrv.checkPreDelete(selectedNodes).then(({ continueDelete, selectdNodeWitwoutDate }) => {
             if (!continueDelete) {
                 return;
             } else {
+                if (selectdNodeWitwoutDate) {
+                    selectedNodes = selectdNodeWitwoutDate;
+                }
                 const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
 
                 return this._confirmMarkedItems(selectedNodes, confirmDelete).then((button: IConfirmButton) => {

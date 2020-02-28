@@ -1,8 +1,8 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { NOT_EMPTY_STRING } from 'eos-dictionaries/consts/input-validation';
+import { VALID_REQ_STRING } from 'eos-dictionaries/consts/input-validation';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { ICONS_CONTAINER, COMMON_FIELD_ICONS_SEV } from './_common';
+import { ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
 
 export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'security',
@@ -14,54 +14,56 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     iconName: 'eos-icon-lock-blue',
     actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
     fields: LINEAR_TEMPLATE.fields.concat([
-        Object.assign(COMMON_FIELD_ICONS_SEV, { preferences: { minColumnWidth: 73 } }),
-        {
-            key: 'SECURLEVEL',
-            type: 'number',
-            title: 'Гриф доступа',
-            length: 10,
-            pattern: NOT_EMPTY_STRING,
-        }, {
-            key: 'GRIF_NAME',
-            type: 'string',
-            title: 'Наименование грифа',
-            length: 64,
-            pattern: NOT_EMPTY_STRING,
-            required: true,
-            isUnique: true,
-            uniqueInDict: true,
-        }, {
-            key: 'EDS_FLAG',
-            type: 'boolean',
-            title: 'ЭП',
-            length: 20,
-        }, {
-            key: 'ENCRYPT_FLAG',
-            type: 'boolean',
-            title: 'Шифрование',
-            length: 20,
-        }, {
-            key: 'SEC_INDEX',
-            type: 'string',
-            title: 'Индекс грифа',
-            length: 24,
-            pattern: NOT_EMPTY_STRING,
-        }, {
-            key: 'CONFIDENTIONAL',
-            type: 'boolean',
-            title: 'ДСП файлы',
-            length: 20,
-        }, {
-            key: 'sev',
-            title: 'Индекс СЭВ',
-            type: 'dictionary',
-            isUnique: true,
-        },
+        COMMON_FIELD_ICONS_SEV,
+    {
+        key: 'SECURLEVEL',
+        type: 'number',
+        title: 'Гриф доступа',
+        length: 10,
+        pattern: VALID_REQ_STRING,
+    }, {
+        key: 'GRIF_NAME',
+        type: 'string',
+        title: 'Наименование грифа',
+        length: 64,
+        pattern: VALID_REQ_STRING,
+        required: true,
+        isUnique: true,
+        uniqueInDict: true,
+    }, {
+        key: 'EDS_FLAG',
+        type: 'boolean',
+        title: 'ЭП',
+        length: 20,
+    }, {
+        key: 'ENCRYPT_FLAG',
+        type: 'boolean',
+        title: 'Шифрование',
+        length: 20,
+    }, {
+        key: 'SEC_INDEX',
+        type: 'string',
+        title: 'Индекс грифа',
+        length: 24,
+        pattern: VALID_REQ_STRING,
+    }, {
+        key: 'CONFIDENTIONAL',
+        type: 'boolean',
+        title: 'Конфиденциальность',
+        length: 20,
+        pattern: VALID_REQ_STRING,
+    }, {
+        key: 'sev',
+        title: 'Индекс СЭВ',
+        type: 'dictionary',
+        isUnique: true,
+    }
+
     ]),
     treeFields: ['GRIF_NAME'],
     allVisibleFields: ['EDS_FLAG', 'ENCRYPT_FLAG', 'SEC_INDEX', 'NOTE'],
     listFields: [
-        ...Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER] : [],
+        ...Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'GRIF_NAME'],
     editFields: ['SEC_INDEX', 'GRIF_NAME', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE', 'CONFIDENTIONAL',
         ...Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],

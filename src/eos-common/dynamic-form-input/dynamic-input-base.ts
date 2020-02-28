@@ -89,6 +89,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
             this.ngOnDestroy();
             this.subscriptions.push(control.statusChanges.subscribe(() => {
+                 this.inputTooltip.visible = false;
                 if (this.inputTooltip.force) {
                     this.updateMessage();
                     this.inputTooltip.visible = true;

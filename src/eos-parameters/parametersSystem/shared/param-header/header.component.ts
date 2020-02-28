@@ -39,9 +39,6 @@ export class ParamHeaderComponent implements OnInit {
         if (this.flag) {
             this.editMode = false;
         }
-        if (this.stayEdit) {
-            this.editMode = true;
-        }
         this.submitForm.emit();
     }
     cancel() {

@@ -34,6 +34,14 @@
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
+        <ng-container *ngSwitchCase="types.icon_sev"> <!-- ICONS_CONTAINER -->
+            <div class="table-field-ico" *ngFor="let icon of iconsArray;">
+                <span class="folder small eos-icon"
+                    [ngClass]="icon.class"
+                    [tooltip]="icon.tooltip"
+                    placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
+            </div>
+        </ng-container>
         <ng-container *ngSwitchCase="types.icon"> <!-- ICONS_CONTAINER -->
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
                 <span class="folder small eos-icon"

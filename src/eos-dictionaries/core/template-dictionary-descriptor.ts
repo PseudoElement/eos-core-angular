@@ -29,7 +29,7 @@ export class TemplateDescriptor extends RecordDescriptor {
 export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: TemplateDescriptor;
     dataNewFile?: REF_FILE;
-    top?;
+    top = '0.';
     hashTree: Map<string, string> = new Map()
         .set('0.', '%_%|isnull')
         .set('0.1', 'Информация о системе')

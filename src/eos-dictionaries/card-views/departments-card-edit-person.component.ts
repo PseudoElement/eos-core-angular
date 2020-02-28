@@ -11,7 +11,9 @@ import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp
 import { EosUtils } from 'eos-common/core/utils';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
+import { AbstractControl, Validators } from '@angular/forms';
+// import { InputControlService } from 'eos-common/services/input-control.service';
+import { BUTTON_RESULT_OK, CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
 
 
 interface IToDeclineFields {
@@ -38,6 +40,8 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         private injector: Injector,
         private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
+        //    private _intupControlSrv: InputControlService
+
     ) {
         super(injector);
     }
@@ -45,8 +49,20 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     get hasStamp(): boolean {
         return this.getValue('rec.ISN_STAMP');
     }
+    get parentStart_Date() {
+        const parent = this.dictSrv.currentNode.parent;
+        if (parent && parent.data.rec.START_DATE) {
+            return new Date(parent.data.rec.START_DATE);
+        }
+    }
+    get parentEnd_Date() {
+        const parent = this.dictSrv.currentNode.parent;
+        if (parent && parent.data.rec.END_DATE) {
+            return new Date(parent.data.rec.END_DATE);
+        }
+    }
 
-    ngOnInit () {
+    ngOnInit() {
         // super.ngOnInit();
         // if (this.isCBBase && this.isNewRecord) {
         //     this.inputs['rec.START_DATE'].required = true;
@@ -56,11 +72,11 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         // }
         // this.data
 
-        if (!this.isNewRecord) {
+        if (!this.isNewRecord && this.editMode) {
             const changes = [];
             const inObj: any = {};
             let fio;
-            if (this.data.rec['SURNAME'] && !this.data.printInfo['NAME'] && !this.data.printInfo['SURNAME'] && !this.data.printInfo['PATRON'] ) {
+            if (this.data.rec['SURNAME'] && !this.data.printInfo['NAME'] && !this.data.printInfo['SURNAME'] && !this.data.printInfo['PATRON']) {
 
                 fio = this.data.rec['SURNAME'].replace(/\./g, ' ');
                 changes.push('Фамилия, имя, отчество');
@@ -76,7 +92,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 inObj.gender = true;
             }
 
-            if (this.data.rec['DUTY'] && !this.data.printInfo['DUTY_RP'] && !this.data.printInfo['DUTY_DP'] && !this.data.printInfo['DUTY_VP'] ) {
+            if (this.data.rec['DUTY'] && !this.data.printInfo['DUTY_RP'] && !this.data.printInfo['DUTY_DP'] && !this.data.printInfo['DUTY_VP']) {
                 inObj.dep = true;
                 changes.push('Дополнительные сведения (склонение должности)');
             }
@@ -86,17 +102,18 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
                     changes.push('Пол');
                 }
-                const warn: IConfirmWindow2 = {
-                    title: 'Ведение справочников',
-                    body: 'Новые поля карточки ДЛ:',
-                    bodyList: changes,
-                    bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
-                    buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
-                };
-                setTimeout(() => {
-                    this._confirmSrv.confirm2(warn);
-                }, 10);
-
+                if (changes.length) {
+                    const warn: IConfirmWindow2 = {
+                        title: 'Ведение справочников',
+                        body: 'Новые поля карточки ДЛ:',
+                        bodyList: changes,
+                        bodyAfterList: 'Были заполнены автоматически. Проверьте и сохраните эти данные в БД',
+                        buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+                    };
+                    setTimeout(() => {
+                        this._confirmSrv.confirm2(warn);
+                    }, 10);
+                }
             }
 
 
@@ -105,6 +122,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         this.prevValues = this.makePrevValues(this.data);
         this.tabsToArray(this.fieldGroups);
         if (this.form) {
+            this.updateValidators();
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
                 this.updateForm(formChanges);
@@ -123,292 +141,408 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         } else {
             this.photo = null;
         }
+    }
+    updateValidators() {
+        const extensibleValidators = this.form.controls['rec.START_DATE'].validator;
+        this.form.controls['rec.START_DATE'].setValidators(
+            Validators.compose([extensibleValidators, this.validatorsStartToEnd('rec.END_DATE')]));
+        const extensibleValidators1 = this.form.controls['rec.END_DATE'].validator;
+        this.form.controls['rec.END_DATE'].setValidators(Validators.compose([extensibleValidators1, this.validatorsStartToEnd('rec.START_DATE')]));
+        this.form.updateValueAndValidity();
+    }
+    // dateEmptyValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [key: string]: any } => {
+    //         const value = control.value;
+    //         if (!value) {
+    //             if (this.parentStart_Date) {
+    //                 const errMessage = 'Дата должна быть больше ' + EosUtils.dateToStringValue(new Date(this.parentStart_Date));
+    //                 control.setErrors({ 'dateCompare': errMessage });
+    //                 return { 'dateCompare': errMessage };
+    //             }
+    //         }
+    //         return null;
+    //     };
+    // }
 
-
+    // dateCompareValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [errKey: string]: any } => {
+    //         let valid = true;
+    //         let errMessage: string = null;
+    //         const value = control.value;
+    //         if (value && value instanceof Date) {
+    //             if (this.parentStart_Date && this.parentStart_Date instanceof Date) {
+    //                 if (value.getTime() < this.parentStart_Date.getTime()) {
+    //                     valid = false;
+    //                     errMessage = 'Дата должна быть больше ' + EosUtils.dateToStringValue(this.parentStart_Date);
+    //                 }
+    //             }
+    //             if (this.parentEnd_Date && this.parentEnd_Date instanceof Date) {
+    //                 if (value.getTime() > this.parentEnd_Date.getTime()) {
+    //                     valid = false;
+    //                     errMessage = 'Дата должна быть меньше ' + EosUtils.dateToStringValue(this.parentEnd_Date);
+    //                 }
+    //             }
+    //         }
+    //         return (valid ? null : { dateCompare: errMessage });
+    //     };
+    // }
+    validatorsStartToEnd(field: string) {
+        return (control: AbstractControl): { [errKey: string]: any } => {
+            let valid = true;
+            const  errMessage = `Неверно заданны даты начала/окончания действия`;
+            const value = control.value;
+            const comparedField = this.getValue(field);
+            if (value && value instanceof Date) {
+                switch (field) {
+                    case 'rec.START_DATE':
+                    if (comparedField && comparedField instanceof Date) {
+                        if (value.getTime() < comparedField.getTime()) {
+                            valid = false;
+                        }
+                    }
+                    break;
+                    case 'rec.END_DATE':
+                        if (comparedField && comparedField instanceof Date) {
+                            if (value.getTime() > comparedField.getTime()) {
+                                valid = false;
+                            }
+                        }
+                        break;
+                }
+            }
+            return (valid ? null : { dateCompare: errMessage });
+        };
     }
 
+stampClick() {
+    this.tooltipsHide();
+    const isn = this.data.rec['ISN_STAMP'];
+    const _modalSrv = this.injector.get(BsModalService);
+    const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
+    (<StampBlobFormComponent>modalWindow.content).init(isn);
 
-    stampClick() {
-        this.tooltipsHide();
-        const isn = this.data.rec['ISN_STAMP'];
-        const _modalSrv = this.injector.get(BsModalService);
-        const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
-        (<StampBlobFormComponent>modalWindow.content).init(isn);
+    if (modalWindow) {
+        const hideWaitSubscr = _modalSrv.onHide.subscribe(() => {
+            this.tooltipsRestore();
+            hideWaitSubscr.unsubscribe();
+        });
 
-        if (modalWindow) {
-            const hideWaitSubscr = _modalSrv.onHide.subscribe( () => {
-                this.tooltipsRestore();
-                hideWaitSubscr.unsubscribe();
-            });
+        const subscription = (<StampBlobFormComponent>modalWindow.content).onClose.subscribe((savedisn) => {
+            subscription.unsubscribe();
+            this.setValue('rec.ISN_STAMP', savedisn);
+        });
+    }
+}
 
-            const subscription = (<StampBlobFormComponent>modalWindow.content).onClose.subscribe((savedisn) => {
-                subscription.unsubscribe();
-                this.setValue('rec.ISN_STAMP', savedisn);
-            });
+makePrevValues(data: any) {
+    const res = [];
+    for (const key1 in data) {
+        if (data.hasOwnProperty(key1)) {
+            const element1 = data[key1];
+
+            for (const key2 in element1) {
+                if (element1.hasOwnProperty(key2)) {
+                    const element2 = element1[key2];
+                    res[key1 + '.' + key2] = element2;
+                }
+            }
+
+
         }
     }
+    return res;
+}
+onBeforeModalPhoto($event) {
+    this.tooltipsHide();
+}
+onAfterModalPhoto($event) {
+    this.tooltipsRestore();
+}
+newImage(img: IImage) {
+    this.photo = img.url;
+    this.dictSrv.uploadImg(img)
+        .then((photoId: number) => {
+            if (photoId) {
+                this.setValue('rec.ISN_PHOTO', photoId['ID']);
+            } else {
+                this.photo = null;
+                this._msgSrv.addNewMessage(UPLOAD_IMG_FALLED);
+            }
+        });
+}
 
-    makePrevValues (data: any) {
-        const res = [];
-        for (const key1 in data) {
-            if (data.hasOwnProperty(key1)) {
-                const element1 = data[key1];
+removePhoto() {
+    this.setValue('rec.ISN_PHOTO', null);
+    this.photo = null;
+}
 
-                for (const key2 in element1) {
-                    if (element1.hasOwnProperty(key2)) {
-                        const element2 = element1[key2];
-                        res[key1 + '.' + key2] = element2;
-                    }
+formatSurname(fam: string, name: string, patron: string): string {
+    let res = '';
+    fam = fam ? fam.trim() : '';
+    if (fam) { fam = fam.replace(/./g, (c, i) => i === 0 ? c.toUpperCase() : c); }
+    name = name ? name.trim() : '';
+    patron = patron ? patron.trim() : '';
+
+    res = (fam ? fam : '') + (fam && (name || patron) ? ' ' : '') +
+        (name ? name[0].toUpperCase() + '.' : '') +
+        (patron ? patron[0].toUpperCase() + '.' : '');
+    return res;
+}
+
+
+    public confirmSave(): Promise<boolean> {
+        const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
+        let isNeedCorrectStart = false;
+        let isNeedCorrectEnd = false;
+        if (parent.data.rec['START_DATE']) {
+            if (!this.data.rec['START_DATE']) {
+                isNeedCorrectStart = true;
+            } else {
+                const sd1 = new Date(this.data.rec['START_DATE']);
+                const sd2 = new Date(parent.data.rec['START_DATE']);
+                if (sd1 < sd2) {
+                    isNeedCorrectStart = true;
                 }
-
-
             }
         }
-        return res;
-    }
-    onBeforeModalPhoto($event) {
-        this.tooltipsHide();
-    }
-    onAfterModalPhoto($event) {
-        this.tooltipsRestore();
-    }
-    newImage(img: IImage) {
-        this.photo = img.url;
-        this.dictSrv.uploadImg(img)
-            .then((photoId: number) => {
-                if (photoId) {
-                    this.setValue('rec.ISN_PHOTO', photoId['ID']);
-                } else {
-                    this.photo = null;
-                    this._msgSrv.addNewMessage(UPLOAD_IMG_FALLED);
+        if (parent.data.rec['END_DATE']) {
+            if (!this.data.rec['END_DATE']) {
+                isNeedCorrectEnd = true;
+            } else {
+                const sd1 = new Date(this.data.rec['END_DATE']);
+                const sd2 = new Date(parent.data.rec['END_DATE']);
+                if (sd1 > sd2) {
+                    isNeedCorrectEnd = true;
                 }
+            }
+        }
+
+        if (isNeedCorrectEnd || isNeedCorrectStart) {
+            return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX).then((button) => {
+                if (button.result === BUTTON_RESULT_YES) {
+                    if (isNeedCorrectStart) {
+                        this.setValue('rec.START_DATE', new Date(parent.data.rec['START_DATE']));
+                        this.data.rec['START_DATE'] = parent.data.rec['START_DATE'];
+
+                    }
+                    if (isNeedCorrectEnd) {
+                        this.setValue('rec.END_DATE', new Date(parent.data.rec['END_DATE']));
+                        this.data.rec['END_DATE'] = parent.data.rec['END_DATE'];
+                    }
+                    return true;
+                }
+                return false;
             });
-    }
-
-    removePhoto() {
-        this.setValue('rec.ISN_PHOTO', null);
-        this.photo = null;
-    }
-
-    formatSurname(fam: string, name: string, patron: string): string {
-        let res = '';
-        fam = fam ? fam.trim() : '';
-        if (fam) { fam = fam.replace(/./g, (c, i) => i === 0 ? c.toUpperCase() : c); }
-        name = name ? name.trim() : '';
-        patron = patron ? patron.trim() : '';
-
-        res = (fam ? fam : '') + (fam && (name || patron) ? ' ' : '') +
-            (name ? name[0].toUpperCase() + '.' : '') +
-            (patron ? patron[0].toUpperCase() + '.' : '');
-        return res;
+        }
+        return Promise.resolve(true);
     }
 
     public fillDeclineFields(opt: IToDeclineFields, fio: string = null): void {
-        const gender = this.getValue('printInfo.GENDER');
-        const field: FieldsDecline = {
-            DUTY: this.getValue('rec.DUTY') || '',
-            NAME: this.getValue('printInfo.NAME') || '',
-            PATRON: this.getValue('printInfo.PATRON') || '',
-            SURNAME: this.getValue('printInfo.SURNAME') || '',
-        };
+    const gender = this.getValue('printInfo.GENDER');
+    const field: FieldsDecline = {
+        DUTY: this.getValue('rec.DUTY') || '',
+        NAME: this.getValue('printInfo.NAME') || '',
+        PATRON: this.getValue('printInfo.PATRON') || '',
+        SURNAME: this.getValue('printInfo.SURNAME') || '',
+    };
 
 
-        if (opt.dep || opt.adv) {
-            if (gender !== null) {
-                field['GENDER'] = gender;
+    if (opt.dep || opt.adv) {
+    if (gender !== null) {
+        field['GENDER'] = gender;
+    }
+
+    this.dictSrv.inclineFields(field)
+        .then(([res]: any) => {
+            const name = res['NAME'];
+            if (name && name.length === 1) {
+                res['NAME_DP'] = name;
+                res['NAME_PP'] = name;
+                res['NAME_RP'] = name;
+                res['NAME_TP'] = name;
+                res['NAME_VP'] = name;
             }
 
-            this.dictSrv.inclineFields(field)
-            .then(([res]: any) => {
-                const name = res['NAME'];
-                if (name && name.length === 1) {
-                    res['NAME_DP'] = name;
-                    res['NAME_PP'] = name;
-                    res['NAME_RP'] = name;
-                    res['NAME_TP'] = name;
-                    res['NAME_VP'] = name;
-                }
-
-                if (res) {
-                    Object.keys(res).forEach((key) => {
-                        if (key !== 'PRINT_DEPARTMENT') {
-                            if ((opt.dep && (key === 'DUTY_RP' || key === 'DUTY_DP' || key === 'DUTY_VP' || key === 'DEPARTMENT_RP')) ||
-                                (opt.adv && (key === 'PRINT_DEPARTMENT' || key === 'PRINT_DUTY' ))
-
-                            ) {
-                                this.setValue('printInfo.' + key, res[key]);
-                                this.setDirty('printInfo.' + key);
-                            }
-                        }
-                    });
-                }
-            });
-
-            if (opt.adv) {
-                if (this.dictSrv.currentNode) {
-                    this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
-                } else {
-                    this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
-                }
-            }
-        }
-
-        if (opt.fio || opt.gender || opt.nomenative) {
-            if (gender !== null) {
-                field['GENDER'] = gender;
-            }
-
-            const data: any = Object.assign(field);
-                // const rn = new RussianName('Петрова Зоя Сергеевна');
-            if (data['SURNAME'] + data['NAME'] + data['PATRON'] === '') {
-                const sn = this.getValue('rec.SURNAME');
-                data['SURNAME'] = (sn || '').replace(/\./g, ' ');
-            }
-            let rn = null;
-            if (fio === null) {
-                rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
-                    data['GENDER'] === 1 ? RussianNameProcessor.sexM :
-                    data['GENDER'] === 2 ? RussianNameProcessor.sexF :
-                    null
-                );
-            } else {
-                rn = new RussianName(fio, '', '',
-                    data['GENDER'] === 1 ? RussianNameProcessor.sexM :
-                    data['GENDER'] === 2 ? RussianNameProcessor.sexF :
-                    null
-                );
-            }
-
-            if (opt.gender) {
-                data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 2 :
-                                rn.sex === RussianNameProcessor.sexM ? 1 : null;
-            }
-
-            if (opt.fio) {
-                data.NAME_DP = rn.firstName(rn.gcaseDat);
-                data.NAME_PP = rn.firstName(rn.gcasePred);
-                data.NAME_RP = rn.firstName(rn.gcaseRod);
-                data.NAME_TP = rn.firstName(rn.gcaseTvor);
-                data.NAME_VP = rn.firstName(rn.gcaseVin);
-                data.PATRON_DP = rn.middleName(rn.gcaseDat);
-                data.PATRON_PP = rn.middleName(rn.gcasePred);
-                data.PATRON_RP = rn.middleName(rn.gcaseRod);
-                data.PATRON_TP = rn.middleName(rn.gcaseTvor);
-                data.PATRON_VP = rn.middleName(rn.gcaseVin);
-                data.SURNAME_DP = rn.lastName(rn.gcaseDat);
-                data.SURNAME_PP = rn.lastName(rn.gcasePred);
-                data.SURNAME_RP = rn.lastName(rn.gcaseRod);
-                data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
-                data.SURNAME_VP = rn.lastName(rn.gcaseVin);
-
-                data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
-                data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
-                data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
-
-                delete data.DUTY;
-
-                delete data.SURNAME;
-                delete data.NAME;
-                delete data.PATRON;
-            }
-
-            if (opt.nomenative) {
-                data.NAME = rn.firstName(rn.gcaseNom);
-                data.SURNAME = rn.lastName(rn.gcaseNom);
-                data.PATRON = rn.middleName(rn.gcaseNom);
-            }
-
-            if (data) {
-                Object.keys(data).forEach((key) => {
+            if (res) {
+                Object.keys(res).forEach((key) => {
                     if (key !== 'PRINT_DEPARTMENT') {
-                        this.setValue('printInfo.' + key, data[key]);
-                        this.setDirty('printInfo.' + key);
+                        if ((opt.dep && (key === 'DUTY_RP' || key === 'DUTY_DP' || key === 'DUTY_VP' || key === 'DEPARTMENT_RP')) ||
+                            (opt.adv && (key === 'PRINT_DEPARTMENT' || key === 'PRINT_DUTY'))
+
+                        ) {
+                            this.setValue('printInfo.' + key, res[key]);
+                            this.setDirty('printInfo.' + key);
+                        }
                     }
                 });
             }
+        });
 
+    if (opt.adv) {
+        if (this.dictSrv.currentNode) {
+            this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
+        } else {
+            this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
         }
+    }
+}
+
+if (opt.fio || opt.gender || opt.nomenative) {
+    if (gender !== null) {
+        field['GENDER'] = gender;
+    }
+
+    const data: any = Object.assign(field);
+    // const rn = new RussianName('Петрова Зоя Сергеевна');
+    if (data['SURNAME'] + data['NAME'] + data['PATRON'] === '') {
+        const sn = this.getValue('rec.SURNAME');
+        data['SURNAME'] = (sn || '').replace(/\./g, ' ');
+    }
+    let rn = null;
+    if (fio === null) {
+        rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
+            data['GENDER'] === 1 ? RussianNameProcessor.sexM :
+                data['GENDER'] === 2 ? RussianNameProcessor.sexF :
+                    null
+        );
+    } else {
+        rn = new RussianName(fio, '', '',
+            data['GENDER'] === 1 ? RussianNameProcessor.sexM :
+                data['GENDER'] === 2 ? RussianNameProcessor.sexF :
+                    null
+        );
+    }
+
+    if (opt.gender) {
+        data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 2 :
+            rn.sex === RussianNameProcessor.sexM ? 1 : null;
+    }
+
+    if (opt.fio) {
+        data.NAME_DP = rn.firstName(rn.gcaseDat);
+        data.NAME_PP = rn.firstName(rn.gcasePred);
+        data.NAME_RP = rn.firstName(rn.gcaseRod);
+        data.NAME_TP = rn.firstName(rn.gcaseTvor);
+        data.NAME_VP = rn.firstName(rn.gcaseVin);
+        data.PATRON_DP = rn.middleName(rn.gcaseDat);
+        data.PATRON_PP = rn.middleName(rn.gcasePred);
+        data.PATRON_RP = rn.middleName(rn.gcaseRod);
+        data.PATRON_TP = rn.middleName(rn.gcaseTvor);
+        data.PATRON_VP = rn.middleName(rn.gcaseVin);
+        data.SURNAME_DP = rn.lastName(rn.gcaseDat);
+        data.SURNAME_PP = rn.lastName(rn.gcasePred);
+        data.SURNAME_RP = rn.lastName(rn.gcaseRod);
+        data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
+        data.SURNAME_VP = rn.lastName(rn.gcaseVin);
+
+        data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
+        data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
+        data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
+
+        delete data.DUTY;
+
+        delete data.SURNAME;
+        delete data.NAME;
+        delete data.PATRON;
+    }
+
+    if (opt.nomenative) {
+        data.NAME = rn.firstName(rn.gcaseNom);
+        data.SURNAME = rn.lastName(rn.gcaseNom);
+        data.PATRON = rn.middleName(rn.gcaseNom);
+    }
+
+    if (data) {
+        Object.keys(data).forEach((key) => {
+            if (key !== 'PRINT_DEPARTMENT') {
+                this.setValue('printInfo.' + key, data[key]);
+                this.setDirty('printInfo.' + key);
+            }
+        });
+    }
+
+}
 
     }
     private _genFamilyIO(rn: RussianName, gcase): string {
-        let res = rn.lastName(gcase);
+    let res = rn.lastName(gcase);
 
-        const s1 = rn.firstName(gcase);
-        const s2 = rn.middleName(gcase);
-        if (s1 || s2) {
-            res += ' ';
-        }
-        if (s1) {
-            res += s1[0] + '.';
-        }
-        if (s2) {
-            res += s2[0] + '.';
-        }
-        return res;
+    const s1 = rn.firstName(gcase);
+    const s2 = rn.middleName(gcase);
+    if (s1 || s2) {
+        res += ' ';
     }
+    if (s1) {
+        res += s1[0] + '.';
+    }
+    if (s2) {
+        res += s2[0] + '.';
+    }
+    return res;
+}
 
     private _genIOFamily(rn: RussianName, gcase): string {
-        let res = '';
-        let s = rn.firstName(gcase);
-        if (s) {
-            res += s[0] + '.';
-        }
-        s = rn.middleName(gcase);
-        if (s) {
-            res += s[0] + '.';
-        }
-        if (res.length > 1) {
-            res += ' ';
-        }
-
-        res += rn.lastName(gcase);
-
-        return res;
+    let res = '';
+    let s = rn.firstName(gcase);
+    if (s) {
+        res += s[0] + '.';
     }
+    s = rn.middleName(gcase);
+    if (s) {
+        res += s[0] + '.';
+    }
+    if (res.length > 1) {
+        res += ' ';
+    }
+
+    res += rn.lastName(gcase);
+
+    return res;
+}
 
     private updateForm(formChanges: any) {
-        if (/*(this.data.rec.POST_H * 1 === 1) &&*/ !(this.data.cabinet && Object.keys(this.data.cabinet).length !== 0)) {
-            if (formChanges['rec.POST_H'] * 1 === 1) {
-                if (!this.bossWarning) {
-                    this.bossWarning = true;
-                    this._msgSrv.addNewMessage(INFO_PERSONE_DONT_HAVE_CABINET);
-                }
-            } else {
-                this.bossWarning = false;
+    if (/*(this.data.rec.POST_H * 1 === 1) &&*/ !(this.data.cabinet && Object.keys(this.data.cabinet).length !== 0)) {
+        if (formChanges['rec.POST_H'] * 1 === 1) {
+            if (!this.bossWarning) {
+                this.bossWarning = true;
+                this._msgSrv.addNewMessage(INFO_PERSONE_DONT_HAVE_CABINET);
             }
+        } else {
+            this.bossWarning = false;
         }
-        let setSurname = null;
-        if (this.prevValues['printInfo.NAME'] !== formChanges['printInfo.NAME'] ||
-            this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
-            this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
-        ) {
-            this.prevValues['printInfo.NAME'] = formChanges['printInfo.NAME'];
-            this.prevValues['printInfo.SURNAME'] = formChanges['printInfo.SURNAME'];
-            this.prevValues['printInfo.PATRON'] = formChanges['printInfo.PATRON'];
-            setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
-                                        formChanges['printInfo.NAME'],
-                                        formChanges['printInfo.PATRON']);
-            this.fillDeclineFields({fio: true});
-
-        }
-
-        if (this.prevValues['printInfo.GENDER'] !== formChanges['printInfo.GENDER']) {
-            this.prevValues['printInfo.GENDER'] = formChanges['printInfo.GENDER'];
-            this.fillDeclineFields({fio: true});
-        }
-
-
-        if (setSurname) {
-            this.setValue('rec.SURNAME', setSurname);
-        } else if (this.prevValues['rec.SURNAME'] !== formChanges['rec.SURNAME']) {
-            this.prevValues['rec.SURNAME'] = formChanges['rec.SURNAME'];
-            let fio: string = this.prevValues['rec.SURNAME'];
-            if (fio) { fio = fio.replace(/\./g, ' '); }
-
-            this.fillDeclineFields({fio: true}, fio);
-        }
-
-        this.prevValues = formChanges;
+    }
+    let setSurname = null;
+    if (this.prevValues['printInfo.NAME'] !== formChanges['printInfo.NAME'] ||
+        this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
+        this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
+    ) {
+        this.prevValues['printInfo.NAME'] = formChanges['printInfo.NAME'];
+        this.prevValues['printInfo.SURNAME'] = formChanges['printInfo.SURNAME'];
+        this.prevValues['printInfo.PATRON'] = formChanges['printInfo.PATRON'];
+        setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
+            formChanges['printInfo.NAME'],
+            formChanges['printInfo.PATRON']);
+        this.fillDeclineFields({ fio: true });
 
     }
+
+    if (this.prevValues['printInfo.GENDER'] !== formChanges['printInfo.GENDER']) {
+        this.prevValues['printInfo.GENDER'] = formChanges['printInfo.GENDER'];
+        this.fillDeclineFields({ fio: true });
+    }
+
+
+    if (setSurname) {
+        this.setValue('rec.SURNAME', setSurname);
+    } else if (this.prevValues['rec.SURNAME'] !== formChanges['rec.SURNAME']) {
+        this.prevValues['rec.SURNAME'] = formChanges['rec.SURNAME'];
+        let fio: string = this.prevValues['rec.SURNAME'];
+        if (fio) { fio = fio.replace(/\./g, ' '); }
+
+        this.fillDeclineFields({ fio: true }, fio);
+    }
+
+    this.prevValues = formChanges;
+
+}
 }

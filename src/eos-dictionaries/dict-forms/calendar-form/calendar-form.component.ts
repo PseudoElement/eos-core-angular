@@ -13,6 +13,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictFormBase } from '../dict-form-base.interface';
 import { EosUtils } from 'eos-common/core/utils';
 import { CalendarHelper, CALENDAR_CL_BY_DEP } from 'eos-dictionaries/helpers/calendars.helper';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 enum dayType {
     holiday = 1,
@@ -84,6 +85,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     constructor(
         // private localeService: BsLocaleService,
         private inputCtrlSrv: InputControlService,
+        private _erorSrv: ErrorHelperServices,
         injector: Injector,
     ) {
         this._apiSrv = injector.get(PipRX);
@@ -170,6 +172,9 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     onSave() {
         this._save().then( () => {
             this.onSaveChanges.emit();
+        }).catch(e => {
+            this._formHasChanges = false;
+            this._erorSrv.errorHandler(e);
         });
     }
 
@@ -213,7 +218,9 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
                         return true;
                     })
                     .catch((err) => {
-                        this._msgSrv.addNewMessage({ msg: err.message, type: 'danger', title: 'Ошибка записи' });
+                        this._formHasChanges = false;
+                        this._erorSrv.errorHandler(err);
+                     //   this._msgSrv.addNewMessage({ msg: err.message, type: 'danger', title: 'Ошибка записи' });
                         return false;
                     });
             } else {
@@ -333,7 +340,10 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     }
 
     private _readDBSaved(): Promise<any> {
-        return CalendarHelper.readDB(this._apiSrv, this.due);
+        return CalendarHelper.readDB(this._apiSrv, this.due).catch(e => {
+            this._formHasChanges = false;
+            this._erorSrv.errorHandler(e);
+        });
     }
 
 }

@@ -3,10 +3,10 @@ import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
 import { Injectable, } from '@angular/core';
 // import {Router} from '@angular/router';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import {EosDictionary, CUSTOM_SORT_FIELD} from '../core/eos-dictionary';
-import {EosDictionaryNode} from '../core/eos-dictionary-node';
+import { EosDictionary, CUSTOM_SORT_FIELD } from '../core/eos-dictionary';
+import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import {
     E_DICT_TYPE,
     IDictionaryDescriptor,
@@ -19,21 +19,21 @@ import {
     SearchFormSettings,
     ISearchSettings,
 } from 'eos-dictionaries/interfaces';
-import {EosUtils} from 'eos-common/core/utils';
-import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface';
-import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
-import {IImage} from 'eos-dictionaries/interfaces/image.interface';
-import {LS_PAGE_LENGTH, PAGES} from '../node-list-pagination/node-list-pagination.consts';
-import {WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND} from '../consts/messages.consts';
-import {EosMessageService} from 'eos-common/services/eos-message.service';
-import {EosStorageService} from 'app/services/eos-storage.service';
-import {EosDepartmentsService} from './eos-department-service';
-import {RestError} from 'eos-rest/core/rest-error';
-import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
-import {IAppCfg} from 'eos-common/interfaces';
-import {CabinetDictionaryDescriptor} from '../core/cabinet-dictionary-descriptor';
+import { EosUtils } from 'eos-common/core/utils';
+import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
+import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
+import { IImage } from 'eos-dictionaries/interfaces/image.interface';
+import { LS_PAGE_LENGTH, PAGES } from '../node-list-pagination/node-list-pagination.consts';
+import { WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND } from '../consts/messages.consts';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { EosDepartmentsService } from './eos-department-service';
+import { RestError } from 'eos-rest/core/rest-error';
+import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
+import { IAppCfg } from 'eos-common/interfaces';
+import { CabinetDictionaryDescriptor } from '../core/cabinet-dictionary-descriptor';
 import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
-import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
@@ -163,6 +163,9 @@ export class EosDictService {
     get treeNodeTitle(): any {
         return this._treeNode.title;
     }
+    get treeNode(): any {
+        return this._treeNode;
+    }
 
     get order() {
         return this.currentDictionary.orderBy;
@@ -180,7 +183,7 @@ export class EosDictService {
             const stored: [] = this._customFields[dictionary.id];
             if (stored && stored.length) {
                 const allList = dictionary.descriptor.record.getCustomListView({});
-                const fies = stored.map( s => allList.find( a => a.key === s)).filter( s => !!s);
+                const fies = stored.map(s => allList.find(a => a.key === s)).filter(s => !!s);
                 return fies;
             } else {
                 return [];
@@ -306,7 +309,7 @@ export class EosDictService {
             if (changeList.hasOwnProperty(id)) {
                 const value = changeList[id];
                 const key = dict.descriptor.PKForEntity(id);
-                changes.push ({
+                changes.push({
                     method: 'MERGE',
                     data: { [weightField]: String(value) },
                     requestUri: key,
@@ -328,7 +331,7 @@ export class EosDictService {
         return Promise.resolve(null);
     }
 
-    getDueForNode (node: EosDictionaryNode): string {
+    getDueForNode(node: EosDictionaryNode): string {
         if (!node || !node.dictionary.isTreeType()) {
             return null;
         }
@@ -375,7 +378,7 @@ export class EosDictService {
         this.currentNode = null;
     }
 
-    unbindOrganization () {
+    unbindOrganization() {
         this.currentDictionary.unbindOrganization();
     }
 
@@ -390,7 +393,7 @@ export class EosDictService {
     createRepresentative(): Promise<IRecordOperationResult[]> {
         const dictionary = this.currentDictionary;
         if (dictionary && this._treeNode) {
-            this.updateViewParameters({updatingList: true});
+            this.updateViewParameters({ updatingList: true });
 
             return dictionary.getFullNodeInfo(this._treeNode.id)
                 .then((_fullData) => {
@@ -424,7 +427,7 @@ export class EosDictService {
                     }
                 })
                 .then((res) => {
-                    this.updateViewParameters({updatingList: false});
+                    this.updateViewParameters({ updatingList: false });
                     return res;
                 })
                 .catch((err) => this._errHandler(err));
@@ -462,13 +465,13 @@ export class EosDictService {
         if (recursive) {
             return this.currentDictionary.getMarkedNodes(recursive);
         } else {
-            return this._visibleListNodes.filter( n => n.isMarked);
+            return this._visibleListNodes.filter(n => n.isMarked);
         }
     }
 
     setMarkAllVisible(emit: boolean = true): void {
         this._currentMarkInfo.nodes = this._visibleListNodes;
-        this._currentMarkInfo.nodes.forEach( n => n.isMarked = true);
+        this._currentMarkInfo.nodes.forEach(n => n.isMarked = true);
         if (emit) {
             this.updateMarked(false);
         }
@@ -476,7 +479,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach( n => {n.isMarked = false; n.isSliced = false; } );
+            this._currentList.forEach(n => { n.isMarked = false; n.isSliced = false; });
         }
         this._currentMarkInfo.nodes = [];
 
@@ -502,7 +505,7 @@ export class EosDictService {
                 });
             } else {
                 const selectedCount = this._currentMarkInfo.nodes.length;
-                this.openNode(selectedCount ? this._currentMarkInfo.nodes[0].id : '').then(() => {});
+                this.openNode(selectedCount ? this._currentMarkInfo.nodes[0].id : '').then(() => { });
             }
             this.updateMarked();
         }
@@ -526,7 +529,7 @@ export class EosDictService {
     // May be need used always instead this._viewParameters$.next();
     // Because this.viewParametrs is and may be changed from other classes need way for share state
     updateViewParameters(updates?: any) {
-        if ( updates && updates.hasOwnProperty('userOrdered') ) {
+        if (updates && updates.hasOwnProperty('userOrdered')) {
             this.userOrdered = updates.userOrdered;
             const dictionary = this.currentDictionary;
             if (dictionary) {
@@ -622,7 +625,7 @@ export class EosDictService {
         if (this._dictionaries[0] && this._dictionaries[0].id === dictionaryId) {
             return Promise.resolve(this._dictionaries[0]);
         } else {
-            this.updateViewParameters({showDeleted: false});
+            this.updateViewParameters({ showDeleted: false });
             if (this._dictionaries[0]) {
                 this.closeDictionary();
             }
@@ -632,11 +635,11 @@ export class EosDictService {
 
     expandNode(nodeId: string): Promise<EosDictionaryNode> {
         if (this._treeNode.id === nodeId) {
-            this.updateViewParameters({updatingList: true});
+            this.updateViewParameters({ updatingList: true });
         }
         return this._dictionaries[0].expandNode(nodeId)
             .then((val) => {
-                this.updateViewParameters({updatingList: false});
+                this.updateViewParameters({ updatingList: false });
                 return val;
             })
             .catch((err) => this._errHandler(err));
@@ -652,13 +655,13 @@ export class EosDictService {
         let p = Promise.resolve(this._treeNode);
         if (nodeId) {
             if (!this._treeNode || this._treeNode.id !== nodeId) {
-                this.updateViewParameters({updatingList: true});
+                this.updateViewParameters({ updatingList: true });
                 p = this.getTreeNode(nodeId);
             }
         } else {
             const dictionary = this._dictionaries[0];
             if (dictionary && dictionary.root) {
-                this.updateViewParameters({updatingList: true});
+                this.updateViewParameters({ updatingList: true });
                 p = this.loadChildren(dictionary, dictionary.root);
             } else {
                 p = Promise.resolve(null);
@@ -678,10 +681,10 @@ export class EosDictService {
             }).then((n) => {
                 if (this.dictMode !== 0) {
                     this._reloadList().then(() => {
-                        this.updateViewParameters({updatingList: false});
+                        this.updateViewParameters({ updatingList: false });
                     });
                 } else {
-                    this.updateViewParameters({updatingList: false});
+                    this.updateViewParameters({ updatingList: false });
                 }
                 return n;
             })
@@ -693,7 +696,7 @@ export class EosDictService {
         let p;
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
-            this.updateViewParameters({updatingList: true});
+            this.updateViewParameters({ updatingList: true });
             p = Promise.resolve(dictionary.root);
         } else {
             p = Promise.resolve(null);
@@ -719,18 +722,22 @@ export class EosDictService {
             }).then((n) => {
                 // this._setCurrentList(dictionary, n, true);
                 this._reloadList().then(() => {
-                    this.updateViewParameters({updatingList: false});
+                    this.updateViewParameters({ updatingList: false });
                 });
                 return n;
             })
             .catch(err => this._errHandler(err));
     }
 
-    selectTemplateNode() {
+    selectTemplateNode(treeNodes, id) {
+        if (this.currentDictionary.descriptor['top'] !== id) {
+            this._srchCriteries = null;
+        }
+        this.currentDictionary.descriptor['top'] = id;
         const dictionary = this._dictionaries[0];
         this._selectTreeNode(dictionary.root);
         this._reloadList().then(() => {
-            this.updateViewParameters({updatingList: false});
+            this.updateViewParameters({ updatingList: false });
         });
         return Promise.resolve();
     }
@@ -743,7 +750,7 @@ export class EosDictService {
                 return Promise.resolve(null);
             }
             if (!this._listNode || this._listNode.id !== nodeId) {
-                this.updateViewParameters({updatingInfo: false});
+                this.updateViewParameters({ updatingInfo: false });
                 return dictionary.getFullNodeInfo(nodeId).then((node) => {
                     if (node) {
                         this._openNode(node);
@@ -812,10 +819,10 @@ export class EosDictService {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data, appendChanges);
                 })
                 .then((results) => {
-                    this.updateViewParameters({updatingList: true});
+                    this.updateViewParameters({ updatingList: true });
                     return this._reloadList(true)
                         .then(() => {
-                            this.updateViewParameters({updatingList: false});
+                            this.updateViewParameters({ updatingList: false });
                             if (dictionary.descriptor.type !== E_DICT_TYPE.linear &&
                                 dictionary.descriptor.type !== E_DICT_TYPE.custom) {
                                 this._treeNode$.next(this._treeNode);
@@ -869,7 +876,7 @@ export class EosDictService {
         this._srchCriteries = null;
         return this._reloadList()
             .then((val) => {
-                this.updateViewParameters({updatingList: false});
+                this.updateViewParameters({ updatingList: false });
                 return val;
             })
             .catch(err => this._errHandler(err));
@@ -884,11 +891,11 @@ export class EosDictService {
      */
     setFlagForMarked(fieldName: string, recursive = false, value = true): Promise<boolean> {
         if (this.currentDictionary) {
-            this.updateViewParameters({updatingList: true});
+            this.updateViewParameters({ updatingList: true });
             return this.currentDictionary.setFlagForMarked(fieldName, recursive, value)
                 .then(() => this._reloadList())
                 .then(() => {
-                    this.updateViewParameters({updatingList: false});
+                    this.updateViewParameters({ updatingList: false });
                     this.setMarkAllNone();
                     this.openNode('');
                     return true;
@@ -904,7 +911,7 @@ export class EosDictService {
      */
     deleteMarked(): Promise<IRecordOperationResult[]> {
         if (this.currentDictionary) {
-            this.updateViewParameters({updatingList: true});
+            this.updateViewParameters({ updatingList: true });
             return this.currentDictionary.deleteMarked()
                 .then((results) => {
                     // let success = true;
@@ -924,7 +931,7 @@ export class EosDictService {
                     });
                     return this._reloadList()
                         .then(() => {
-                            this.updateViewParameters({updatingList: false});
+                            this.updateViewParameters({ updatingList: false });
                             return results;
                         });
                 })
@@ -953,7 +960,7 @@ export class EosDictService {
         return this._srchParams ? this._srchParams.mode === SEARCH_MODES.totalDictionary : false;
     }
 
-    quickSearch (settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
+    quickSearch(settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
         const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
@@ -1129,7 +1136,7 @@ export class EosDictService {
                         // cabinet costyl
                         records = Array.from(this.currentDictionary.nodes.values());
                         const due = this._treeNode.id;
-                        records = records.filter(r => r.data.rec['DUE'] === due );
+                        records = records.filter(r => r.data.rec['DUE'] === due);
                     }
                 } else if (this.currentNode) {
                     records = this.currentNode.neighbors;
@@ -1146,7 +1153,7 @@ export class EosDictService {
                 return recVal === val;
             }) === -1;
         }
-        return valid ? null : {'isUnique': !valid};
+        return valid ? null : { 'isUnique': !valid };
     }
 
     uploadImg(img: IImage): Promise<number> {
@@ -1179,7 +1186,7 @@ export class EosDictService {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
     public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
-        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        const markedNodes: EosDictionaryNode[] = this.getMarkedNodes();
         markedNodes.forEach((node: EosDictionaryNode) => {
             node.isSliced = !node.isSliced;
         });
@@ -1200,25 +1207,25 @@ export class EosDictService {
     }
 
 
-    rereadNode(nodeId: any): Promise<any>  {
+    rereadNode(nodeId: any): Promise<any> {
         return this._apiSrv
-        .read({
-            DOCGROUP_CL: PipRX.criteries({'DUE': nodeId}),
-            foredit: true,
-        })
-        .then(([]) => {
+            .read({
+                DOCGROUP_CL: PipRX.criteries({ 'DUE': nodeId }),
+                foredit: true,
+            })
+            .then(([]) => {
 
 
 
-        // return this.descriptor.getRecord(nodeId)
-            // .then((records) => {
+                // return this.descriptor.getRecord(nodeId)
+                // .then((records) => {
                 // this.updateNodes(records, true);
                 // return this._nodes.get(nodeId);
-            // });
-        });
+                // });
+            });
     }
 
-    public checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+    public checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {
         return this.currentDictionary.descriptor.checkPreDelete(selectedNodes);
     }
 
@@ -1237,6 +1244,20 @@ export class EosDictService {
         this._initPaginationConfig();
     }
 
+    public checkRelatedNomenkl(nodes: EosDictionaryNode[], param: string): Promise<any> {
+        if (param === 'checkClosed') {
+            return this.currentDictionary.descriptor.updateDefaultValues(nodes, 'check');
+        } else {
+            return this.currentDictionary.descriptor.updateDefaultValues(nodes, 'closed').then((result) => {
+                return this._reloadList()
+                    .then(() => {
+                        this.updateViewParameters({ updatingList: false });
+                        return result;
+                    });
+            });
+        }
+
+    }
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -1278,7 +1299,7 @@ export class EosDictService {
      * Initial pagination configuration
      */
     private _initPaginationConfig(update = false) {
-        this.paginationConfig = Object.assign(this.paginationConfig || {start: 1, current: 1}, {
+        this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
             length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES[0].value,
             itemsQty: this._getListLength()
         });
@@ -1297,7 +1318,7 @@ export class EosDictService {
         if (dictionary) {
             return dictionary.getChildren(node)
                 .then(() => node)
-                .then (() => {
+                .then(() => {
                     return node;
                 })
                 .catch((err) => this._errHandler(err));
@@ -1316,7 +1337,7 @@ export class EosDictService {
                 return Promise.reject(e);
             }
             if (this._dictionaries[0]) {
-                this.updateViewParameters({updatingList: true});
+                this.updateViewParameters({ updatingList: true });
                 _p = this._dictionaries[0].init()
                     .then(() => {
                         this._initViewParameters();
@@ -1344,7 +1365,7 @@ export class EosDictService {
                     });
                 this._mDictionaryPromise.set(dictionaryId, _p);
             } else {
-                _p = Promise.reject({message: 'Unknown dictionary "' + dictionaryId + '"'});
+                _p = Promise.reject({ message: 'Unknown dictionary "' + dictionaryId + '"' });
             }
         }
         return _p;
@@ -1371,7 +1392,7 @@ export class EosDictService {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
                 if (1 * data.rec.POST_H === 1) {
-                    let parent: EosDictionaryNode = null ;
+                    let parent: EosDictionaryNode = null;
                     if (this._treeNode && ((!data.rec.PARENT_DUE) || (this._treeNode.id === data.rec.PARENT_DUE))) {
                         parent = this._treeNode;
                     }
@@ -1399,7 +1420,7 @@ export class EosDictService {
             }
 
             if (dictionary.id === 'region') {
-                const params = {deleted: true, mode: SEARCH_MODES.totalDictionary};
+                const params = { deleted: true, mode: SEARCH_MODES.totalDictionary };
                 const _srchCriteries = dictionary.getSearchCriteries(data.rec['CLASSIF_NAME'], params, this._treeNode);
 
                 return dictionary.descriptor.search(_srchCriteries)
@@ -1429,12 +1450,12 @@ export class EosDictService {
                         data['REESTR_NEW'].push({
                             'ISN_REESTR': recs[i]['ISN_REESTR'],
                             'ISN_DELIVERY': data.rec['ISN_DELIVERY'],
-                            __metadata: {__type: 'REESTR_NEW'},
+                            __metadata: { __type: 'REESTR_NEW' },
                             _State: _ES.Modified,
                             _orig: {
                                 'ISN_REESTR': recs[i]['ISN_REESTR'],
                                 'ISN_DELIVERY': recs[i]['ISN_DELIVERY'],
-                                __metadata: {__type: 'REESTR_NEW'}
+                                __metadata: { __type: 'REESTR_NEW' }
                             }
                         });
                     }
@@ -1501,7 +1522,7 @@ export class EosDictService {
 
             const page = this.paginationConfig;
             const pageList = this._visibleListNodes.slice((page.start - 1) * page.length, page.current * page.length);
-            const lastTimeMarked = pageList.find( n => n === this._listNode);
+            const lastTimeMarked = pageList.find(n => n === this._listNode);
             if (!lastTimeMarked || !lastTimeMarked.isMarked) {
                 const firstMarkedIndex = pageList.findIndex((node) => node.isMarked);
                 if (firstMarkedIndex < 0) {
@@ -1638,9 +1659,9 @@ export class EosDictService {
             //         returnUrl: this._router.url
             //     }
             // });
-            let url = document.location.href.split('#')[0];
-            url = url.slice(0, url.lastIndexOf('Classif')) + 'login.aspx';
-            document.location.assign(url);
+            /* let url = document.location.href.split('#')[0];
+            url = url.slice(0, url.lastIndexOf('Classif')) + 'login.aspx'; */
+            document.location.assign('../login.aspx');
 
             return undefined;
         } else {

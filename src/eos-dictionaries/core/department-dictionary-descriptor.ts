@@ -18,7 +18,7 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 import { InjectorInstance } from 'app/app.static';
 import { AppContext, CB_FUNCTIONS } from 'eos-rest/services/appContext.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { CONFIRM_OPERATION_FILL_ENDDATE } from 'app/consts/confirms.const';
+import { WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_NOT_DATE, CONFIRM_OPERATION_NOT_DATE_ALL } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { EosUtils } from 'eos-common/core/utils';
 
@@ -154,23 +154,53 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
     }
 
-    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
+    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {
         const injector = InjectorInstance;
         const appctx = injector.get(AppContext);
         const isCBBase = appctx.getParams(CB_FUNCTIONS) === 'YES';
+        const notDateNodes = [];
+        const uncheckNodeIsMarked = [];
+        const withDateNodes = [];
+        const newSelectedNodes = [];
+        const confirmSrv = InjectorInstance.get(ConfirmWindowService);
+        let cantDeleteWarning: IConfirmWindow2;
         if (isCBBase) {
             for (let i = 0; i < selectedNodes.length; i++) {
                 const node = selectedNodes[i];
                 if (!node.data.rec['END_DATE'] && node.data.rec['IS_NODE'] === 0) {
-                    const cantDeleteWarning: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_FILL_ENDDATE);
-                    const confirmSrv = InjectorInstance.get(ConfirmWindowService);
-                    return confirmSrv.confirm2(cantDeleteWarning).then(() => {
-                        return Promise.resolve(false);
-                    });
+                    uncheckNodeIsMarked.push(node);
+                    notDateNodes.push(node.title);
+                } else {
+                    newSelectedNodes.push(node);
+                    withDateNodes.push(node.title);
                 }
             }
+            if (notDateNodes.length) {
+                let list;
+                if (notDateNodes.length > WARNING_LIST_MAXCOUNT) {
+                    list = notDateNodes.slice(0, 9);
+                    list.push(`... всего записей ${notDateNodes.length}`);
+                } else {
+                    list = notDateNodes;
+                }
+                if (withDateNodes.length) {
+                    cantDeleteWarning = CONFIRM_OPERATION_NOT_DATE;
+                    cantDeleteWarning.bodyList = list;
+                } else {
+                    cantDeleteWarning = CONFIRM_OPERATION_NOT_DATE_ALL;
+                    cantDeleteWarning.bodyList = list;
+                }
+                return confirmSrv.confirm2(cantDeleteWarning).then((res) => {
+                    if (res && res.result === 2) {
+                        uncheckNodeIsMarked.forEach(l => l.isMarked = false);
+                        return Promise.resolve({ continueDelete: true, selectdNodeWitwoutDate: newSelectedNodes });
+                    } else {
+                        return Promise.resolve({ continueDelete: false });
+                    }
+                });
+            }
         }
-        return Promise.resolve(true);
+        return Promise.resolve({ continueDelete: true });
     }
 
     getRoot(): Promise<any[]> {

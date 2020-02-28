@@ -133,6 +133,11 @@ export const WARN_ELEMENT_PROTECTED: IMessage = {
     title: 'Предупреждение:',
     msg: 'элемент "{{elem}}" является защищенным! Удаление невозможно.'
 };
+export const WARN_ELEMENT_CLOSED: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение:',
+    msg: 'элементы "{{elem}}" нельзя удалить!  Дела  непустые и уже закрыты.!'
+};
 
 export const WARN_ELEMENT_DELETED: IMessage = {
     type: 'warning',
@@ -173,7 +178,7 @@ export const DANGER_EDIT_YEAR_INVALID: IMessage = {
 export const DANGER_NUMCREATION_NP_CHANGE: IMessage = {
     type: 'danger',
     title: 'Предупреждение: ',
-    msg: 'Указанное значение или значения больше ранее уже использовались в нумерации НП. Изменение значения счетчика невозможно.'
+    msg: 'Значения больше указанного ранее уже использовались в нумерации НП. Изменение значения счетчика невозможно.'
 };
 
 export const DANGER_ORGANIZ_NO_SEV: IMessage = {

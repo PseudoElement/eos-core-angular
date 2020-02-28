@@ -136,7 +136,13 @@ export abstract class AbstractDictionaryDescriptor {
 
 
     deleteRecords(records: IEnt[]): Promise<IRecordOperationResult[]> {
-        const pDelete = records.map((record) => this.deleteRecord(record));
+        let result = Promise.resolve(null);
+        const pDelete = records.map((record) => {
+            result = result.then((ans) => {
+                return this.deleteRecord(record);
+            });
+            return result;
+        });
         return Promise.all(pDelete);
     }
 
@@ -189,7 +195,11 @@ export abstract class AbstractDictionaryDescriptor {
         const _criteries = {};
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
-                _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
+                if (fld.foreignKey !== 'CODE') {
+                      _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
+                }   else {
+                    _criteries[fld.foreignKey] =  data[fld.foreignKey].trim();
+                }
             }
         });
         return _criteries;
@@ -294,8 +304,8 @@ export abstract class AbstractDictionaryDescriptor {
             .then((results) => [].concat(...results));
     }
 
-    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<boolean> {
-        return Promise.resolve(true);
+    checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {
+        return Promise.resolve({continueDelete: true});
     }
 
     /**
@@ -438,9 +448,34 @@ export abstract class AbstractDictionaryDescriptor {
                     return [];
                 }
             });
-    }
-    combine(slicedNodes: EosDictionaryNode[], marked: EosDictionaryNode[]): Promise<any> {
-        return Promise.resolve();
+        }
+    combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
+        const preSave = [];
+        let paramsSop = '';
+        let change: Array<any> = [{
+            method: 'MERGE',
+            requestUri: `${this.apiInstance}('${markedNodes[0].id}')`,
+            data: {
+                DELETED: 1
+            }
+        }];
+        slicedNodes.forEach((node, i) => {
+            preSave.push({
+                method: 'DELETE',
+                requestUri: `${this.apiInstance}('${node.id}')`
+            });
+            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+        });
+        PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': this.apiInstance, 'ids': paramsSop }, 'POST', false);
+        preSave.push({
+            method: 'MERGE',
+            requestUri: `${this.apiInstance}('${markedNodes[0].id}')`,
+            data: {
+                DELETED: 0
+            }
+        });
+        change = change.concat(preSave);
+        return this.apiSrv.batch(change, '');
     }
     getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, mode?) {
         return null;
@@ -504,7 +539,7 @@ export abstract class AbstractDictionaryDescriptor {
             return Promise.resolve(true);
         });
     }
-    updateDefaultValues(nodes: EosDictionaryNode[]): Promise<any> {
+    updateDefaultValues(nodes: EosDictionaryNode[], closed?: string): Promise<any> {
         return Promise.resolve(null);
     }
 
@@ -528,7 +563,7 @@ export abstract class AbstractDictionaryDescriptor {
                         result.success = false;
                         result.error = new RestError({
                             isLogicException: true,
-                            message: 'Индекс СЭВ создан ранее!'
+                            message: 'Для данного справочника уже существует индекс СЭВ с таким значением.'
                         });
                     }
                 } else {

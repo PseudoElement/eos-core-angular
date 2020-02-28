@@ -6,6 +6,6 @@ export const SEV_LENGTH = 64;
 export const DEPARTMENT_TITLE_LENGTH = 255;
 export const SURNAME_LENGTH = 64;
 
-export { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
+export { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 /* tslint:disable */
 export const EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

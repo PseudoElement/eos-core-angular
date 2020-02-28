@@ -30,7 +30,7 @@
         </form>
         <hr>
         <form [formGroup]="formAttach" *ngIf="formAttach">
-            <div class="formAttach" *ngIf="hiddenFieldAttach">
+            <div class="formAttach" *ngIf="!hiddenFieldAttach">
                 <div class="l-font">Файлы РК</div>
                 <div class="contain">
                     <span class="mar-right">{{inputAttach['rec.DOC_RC_MAX_SIZE'].label}}</span>
@@ -46,7 +46,7 @@
                 </div>
                 <hr>
             </div>
-            <div class="formAttach" *ngIf="hiddenFieldAttach">
+            <div class="formAttach" *ngIf="!hiddenFieldAttach">
                 <div class="l-font">Файлы поручений</div>
                 <div class="contain">
                     <span class="mar-right">{{inputAttach['rec.RESOLUTION_MAX_SIZE'].label}}</span>
@@ -61,7 +61,7 @@
                     </div>
                     <hr>
                 </div>
-                <div class="formAttach" *ngIf="hiddenFieldAttach">
+                <div class="formAttach" *ngIf="!hiddenFieldAttach">
                     <div class="l-font">Файлы отчетов исполнителей</div>
                     <div class="contain">
                         <span class="mar-right">{{inputAttach['rec.REPLY_MAX_SIZE'].label}}</span>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            <div class="formAttach" *ngIf="!hiddenFieldAttach">
+            <div class="formAttach" *ngIf="hiddenFieldAttach">
                 <div class="l-font">Файлы РКПД</div>
                 <div class="contain">
                     <span class="mar-right">{{inputAttach['rec.PRJ_RC_MAX_SIZE'].label}}</span>
@@ -93,7 +93,7 @@
                 </div>
                 <hr>
             </div>
-            <div class="formAttach" *ngIf="!hiddenFieldAttach">
+            <div class="formAttach" *ngIf="hiddenFieldAttach">
                 <div class="l-font">Файлы визы или подписи</div>
                 <div class="contain">
                     <span class="mar-right">{{inputAttach['rec.PRJ_VISA_SIGN_MAX_SIZE'].label}}</span>

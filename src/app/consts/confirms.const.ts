@@ -32,11 +32,21 @@ export const CONFIRM_NUMCREATION_CHANGE: IConfirmWindow = {
 
 export const CONFIRM_NUMCREATION_CANT: IConfirmWindow2 = {
     title: 'Изменение значения счетчика невозможно',
-    body: 'Указанное значение или значения больше ранее уже использовались в нумерации.',
+    body: 'Значения больше указанного ранее уже использовались в нумерации.',
     buttons: [
             {title: 'Ok', result: 1, isDefault: true, },
     ],
     manualCR: true,
+};
+
+export const CONFIRM_DEPARTMENTS_DATES_FIX: IConfirmWindow2 = {
+    title: 'Ведение справочников',
+    body: 'Период существования элемента выходит за границы существования родительской вершины. Скорректировать даты?',
+    buttons: [
+            {title: 'Да', result: BUTTON_RESULT_YES, isDefault: true, },
+            {title: 'Нет', result: BUTTON_RESULT_NO, },
+    ],
+    // manualCR: true,
 };
 
 export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
@@ -141,6 +151,16 @@ export const CONFIRM_OPERATION_HARDDELETE: IConfirmWindow2 = {
         {title: 'Удалить',  result: 2, },
     ],
 };
+export const CONFIRM_OPERATION_NOMENKL_CLOSED: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Невозможно удалить дела:',
+    bodyAfterList: 'Вы хотите закрыть их?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Закрыть',  result: 2, },
+    ],
+};
 
 export const CONFIRM_OPERATION_RESTORE: IConfirmWindow2 = {
     title: 'Внимание',
@@ -209,4 +229,23 @@ export const CONFIRM_SEV_DEFAULT: IConfirmWindow = {
     body: 'Применить значения по умолчанию для коллизий группы ',
     okTitle: 'ПРИМЕНИТЬ',
     cancelTitle: 'ОТМЕНИТЬ'
+};
+
+export const CONFIRM_OPERATION_NOT_DATE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Логическое удаление некоторых подразделений невозможно (не заполнена Дата окончания действия):',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Продолжить',  result: 2, },
+    ],
+};
+export const CONFIRM_OPERATION_NOT_DATE_ALL: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Логическое удаление всех отмеченных подразделений невозможно (не заполнена Дата окончания действия):',
+    buttons: [
+        {title: 'OK', result: 1, isDefault: true, },
+    ],
 };

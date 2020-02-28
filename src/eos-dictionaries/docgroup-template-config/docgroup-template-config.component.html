@@ -14,11 +14,11 @@
             <div class="dnd-bag"
                 id="availble"
                 [dragula]="'template-bag'"
-                [dragulaModel]="availableItems">
+                [(dragulaModel)]="availableItems">
                 <div class="item"
                     *ngFor="let item of availableItems"
                     (click)="select(item, 0)"
-                    [ngClass]="{'highlighted': (item === selected[0]), separator: isSeparator(item), disabled: !isEnabled(item) }">
+                    [ngClass]="{'highlighted': (item === selection.left), separator: isSeparator(item), disabled: !isEnabled(item) }">
                     <span class="text">{{item?.key}} {{item?.title}}</span>
                 </div>
             </div>
@@ -34,31 +34,70 @@
             <div class="dnd-bag"
                 [dragula]="'template-bag'"
                 id="selected"
-                [dragulaModel]="templateItems">
+                [(dragulaModel)]="templateItems">
                 <div class="item"
                     *ngFor="let item of templateItems"
                     (click)="select(item, 1)"
-                    [ngClass]="{'highlighted': item === selected[1], invalid: !isValid(item) }">
-                    <span class="text">{{item?.key}} {{item?.title}}</span>
+                    [ngClass]="{'highlighted': item === selection.right, invalid: !isValid(item) }">
+                    <span class="text">{{item?.editKey}} {{item?.title}}</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="dg-template-wrapper">
         <span>Шаблон</span>
-        <input class="dg-template m-font"
+        <input class="dg-template m-font form-control m-font link-input"
                [id]="'dgTemplate'"
                [type]="'text'"
                [disabled]="true"
                placeholder="{{dgTemplate}}">
         <button class="btn btn-primary"
             (click)="clearTemplate()">Очистить</button>
-        <input *ngIf="separator"
+        <input *ngIf="isEditSeparator()"
                class="m-font"
                [ngStyle]="{'margin-left.px': 10}"
                [id]="'separator'"
                [type]="'text'"
-               (keyup)="update($event)"
+               (keyup)="keyUpSeparator($event)"
                value="{{separator}}">
+
+        <div *ngIf="hasAdditionalControls()">
+            <label *ngFor="let item of visibleAddControlsR"
+                class="{{item.class}}"
+                style="padding-left: 30px;">
+                <input
+                    [id]="item.key"
+                    type="{{item.type}}"
+                    (change)="cbChange(item, $event)"
+                    [checked]="valueForControl(item)"
+                    value="{{additionalData[item.key]}}"><span></span>{{item.title}}
+            </label>
+        </div>
+
+
+
+    </div>
+    <div
+        *ngIf="hasAdditionalControls()">
+        <div *ngFor="let item of visibleAddControlsL"
+
+            class="{{item.class}}"
+            [ngClass]="{'dg-template-wrapper': true}"
+            >
+            <span>{{item.title}}</span>
+            <input
+                class="dg-template m-font form-control m-font link-input"
+                [id]="item.key"
+                type="text"
+                disabled
+                (keyup)="update($event)"
+                (change)="cbChange($event)"
+                [checked]="valueForControl(item)"
+                [tooltip]="getListText(item)"
+                value="{{getListText(item)}}">
+                <div class="inbutton" (click)="itemCButtonClick(item, $event)"><span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span></div>
+
+                <!-- <button class="btn btn-primary" (click)="itemCButtonClick(item, $event)">тык</button> -->
+        </div>
     </div>
 </div>

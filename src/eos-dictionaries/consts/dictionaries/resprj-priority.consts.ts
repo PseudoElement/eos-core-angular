@@ -6,6 +6,11 @@ export const RESPRJ_PRIORITY_DICT: IDictionaryDescriptor = Object.assign({}, LIN
     id: 'reprj-priority',
     apiInstance: 'RESPRJ_PRIORITY_CL',
     title: 'Приоритеты проектов резолюций',
+    actions: [
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
+        'cut', 'combine',
+        'edit', 'view', 'remove', 'removeHard', 'export', 'import'],
     visible: true,
     iconName: 'eos-icon-rating-blue',
     fields: [...LINEAR_TEMPLATE.fields,
