@@ -96,6 +96,16 @@
             <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
+        <span>Добавлять в журнал передачи документа:</span>
+        <div class="add-to-juornal-radio">
+            <span class="add-j-title">для:</span>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_4DOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="add-to-juornal">
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_CONTROLLER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_REPLY']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
         <div style="display: inline-block">
             <eos-dynamic-input [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']" [form]="form" [readonly]="false"></eos-dynamic-input>

@@ -76,7 +76,6 @@ import { AutenteficationComponent } from './auntefication/auntefication.componen
 import { UserParamExtendExchComponent } from './user-params-set/user-param-ext-exch/user-param-ext-exch.component';
 import { RemasterSebComponent } from './user-params-set/user-param-ext-exch/remaster-seb/remaster-seb.component';
 import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/remaster-email/remaster-email.component';
-import { UserParamJournalTrDocComponent } from './user-params-set/user-param-other/user-param-journal-transf-doc/user-param-journal-tr-doc.component';
 
 @NgModule({
     declarations: [
@@ -123,7 +122,6 @@ import { UserParamJournalTrDocComponent } from './user-params-set/user-param-oth
         ListCardRightComponent,
         UserParamTransferComponent,
         UserParamAddressesComponent,
-        UserParamJournalTrDocComponent,
         UserParamReestrCBComponent,
         UserParamReestrComponent,
         UserParamShablonyComponent,
