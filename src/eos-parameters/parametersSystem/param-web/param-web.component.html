@@ -1,7 +1,7 @@
 <div class="input-param-wrapper input-param-web-wrapper" *ngIf="form">
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit(); cancelEdit()"
+        (submitForm)="btnDisabled ? cancel() : submit()"
         [editBtn]="true"
         (editForm)="edit()"
         (cancelForm)="cancel()"
