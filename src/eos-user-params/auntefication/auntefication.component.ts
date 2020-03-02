@@ -45,6 +45,8 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public updateData: boolean = false;
     public paramsChengePass: boolean = false;
     public passDate: number = 0;
+    public queryAll: any = {};
+    public newLogin: boolean = false;
     inputFields: IInputParamControl[];
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     constructor(
@@ -57,16 +59,28 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
 
     }
     ngOnInit() {
+        /* this.apiSrvRx.read({REGION_CL: {
+            criteries: {
+                CODE: 1,
+                CLASSIF_NAME: '1',
+                COD_OKATO: '01',
+            }
+        }}) */
         this.isLoading = true;
         this.inputFields = AUNTEFICATION_CONTROL_INPUT;
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, !this.editMode);
+        this.init();
         this.formUpdate(!this.editMode);
+    }
+
+    init() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
         }).then((data) => {
             if (data) {
+                this.curentUser = this._userParamSrv.curentUser;
                 const req = {
                     USER_PARMS: {
                         criteries: {
@@ -82,21 +96,30 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                         if (elem.PARM_NAME === 'CHANGE_PASS') {
                             this.paramsChengePass = elem.PARM_VALUE === 'YES' ? true : false;
                         }
-                        if (elem.PARM_NAME === 'PASS_DATE' && this.paramsChengePass) {
+                        if (elem.PARM_NAME === 'PASS_DATE') {
                             this.passDate = Number(elem.PARM_VALUE);
                         }
+                        const d = new Date();
+                    let check_date;
+                    if (this.paramsChengePass) {
+                        if (this.passDate !== 0) {
+                            check_date = new Date(d.setDate(d.getDate() + this.passDate));
+                        } else {
+                            check_date = '';
+                        }
+                    } else {
+                        check_date =  new Date(d.setDate(d.getDate() - 1));
+                    }
+                    const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
+                        this.curentUser.IS_PASSWORD === 0 ? check_date : '';
+                    this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
                     });
                 })
                 .catch(er => {
                     console.log('ER', er);
                 });
-                this.curentUser = this._userParamSrv.curentUser;
-                const d = new Date();
-                const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
-                    this.curentUser.IS_PASSWORD === 0 ? new Date(d.setDate(d.getDate() - 1)) : '';
                 this.originAutent = '' + this.curentUser.USERTYPE;
                 this.form.controls['SELECT_AUTENT'].setValue( '' + this.curentUser.USERTYPE, { emitEvent: false });
-                this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
                 this.getTitle();
                 this.subscribeForms();
                 this.isLoading = false;
@@ -114,9 +137,25 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.checkChangeForm(data);
             this.checkUpdate();
         });
+        this.form.get('pass').valueChanges
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        ).subscribe(() => {
+            this.dateDisable();
+        });
+        this.form.get('passRepeated').valueChanges
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        ).subscribe(() => {
+            this.dateDisable();
+        });
     }
     getEditDate(): boolean {
-        const provElem = !this.curentUser.PASSWORD_DATE;
+        const provElem = !this.form.controls['PASSWORD_DATE'].value;
+        // если мы начали менять пароль при необходимости задизейбли
+        if (this.newLogin) {
+            return true;
+        }
         if (this.paramsChengePass || (this.curentUser && this.curentUser.IS_PASSWORD === 2) || provElem) {
             return false;
         }
@@ -143,6 +182,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     onChangeAuntef($event) {
         this.form.get('SELECT_AUTENT').patchValue(this.autentif.nativeElement.value);
+        if (this.form.get('SELECT_AUTENT').value === '0' || this.form.get('SELECT_AUTENT').value === '3') {
+            // пока не понял при каких случаях оно нужно
+            /* if (!this.paramsChengePass) {
+                this.updateDataSysParam();
+            } */
+        }
     }
     getTitle(): void {
         if (this.curentUser.isTechUser) {
@@ -168,7 +213,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     formUpdate(flag: boolean) {
         if (flag) {
             Object.keys(this.form.controls).forEach(key => {
-                this.form.get(key).disable({emitEvent: false});
+                if (this.form.get(key)) {
+                    this.form.get(key).disable({emitEvent: false});
+                }
             });
         } else {
             Object.keys(this.form.controls).forEach(key => {
@@ -210,126 +257,198 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             });
             return ;
         }
+        if (this.provUpdateDate() && !this.form.get('pass').value ) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение:',
+                msg: 'Дату смены пароля, установленного пользователем, можно только уменьшить',
+                dismissOnTimeout: 6000,
+            });
+            return ;
+        }
         this.isLoading = true;
         const promAll = [];
         let flag = false;
-        let flagDate = false;
         // в случае если меняется или создаётся пароль, то тогда нужно изменять другие параметры только после смены пароля
-        if (value === 0 || value === 3) {
-            if (this.form.get('pass').value) {
-                if (this.curentUser.IS_PASSWORD === 0) {
-                    promAll.push(this.createLogin(this.form.get('pass').value, this._userParamSrv.userContextId));
-                    flag = true;
-                } else {
-                    promAll.push(this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId));
-                    flag = true;
-                }
+        if ((value === 0 || value === 3) && this.form.get('pass').value) {
+            promAll.push(this.createOrChengePass());
+            this.newLogin = false;
+            flag = true;
+            if (this.paramsChengePass && this.checkUpdateDate()) {
+                flag = false;
+                this.getQueryDate(true);
             }
         }
-        const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
-        if (!flag && n_d && String(this.form.controls['PASSWORD_DATE'].value) !== String(new Date(this.curentUser.PASSWORD_DATE))) {
-            flagDate = true;
-            let month: string = String(n_d.getMonth() + 1);
-            month = month.length === 1 ? '0' + month : month;
-            promAll.push(this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${month}-${n_d.getDate()}T00:00:00`}));
-        }
-        if (!flag && this.updateData && this.curentUser.USERTYPE !== value) {
-            const query = value === 1 ? {'USERTYPE': value, 'PASSWORD_DATE': null} : {'USERTYPE': value};
+        Promise.all(promAll)
+        .then((arr) => {
+            if (flag) {
+                this.curentUser.IS_PASSWORD = 1;
+                this.updateDataSysParam();
+            }
+            // если был изменён пароль то мы не изменяем дату
+            const flag_d = flag ? false : this.checkUpdateDate();
+            const flag_t = this.checkUpdateUserType(value);
+            if (flag_d || flag_t) {
+                this.getQueryDate(flag_d);
+                this.getQueryUserType(value, flag_t);
+            }
+            if (Object.keys(this.queryAll).length > 0) {
+                this.updateUser(this._userParamSrv.userContextId, this.queryAll)
+                .then(() => {
+                    this.queryAll = {};
+                })
+                .catch(er => {
+                    console.log('er', er);
+                });
+            }
+            this.isLoading = false;
+            this.originAutent = this.form.get('SELECT_AUTENT').value;
+            this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
+            this.curentUser.USERTYPE = value;
+            this.formUpdate(true);
+            this.cancelValues(this.inputs, this.form);
+            this.editMode = false;
+            this._msgSrv.addNewMessage({
+                type: 'success',
+                title: 'Сохранение:',
+                msg: 'Изменения успешно сохранены',
+                dismissOnTimeout: 6000,
+            });
+            this._pushState(false);
+        })
+        .catch((arr) => {
+            this._errorSrv.errorHandler(arr);
+            /* this.cancelValues(this.inputs, this.form); */
+            this.isLoading = false;
+        });
+    }
+
+    getQueryUserType(value, flag) {
+        // возвращает запрос на изменение или же отсутсвие изменений
+        if (flag) {
             if (value === 1) {
                 this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
                 this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
+                this.queryAll['USERTYPE'] = value;
+                this.queryAll['PASSWORD_DATE'] = null;
+            } else {
+                this.queryAll['USERTYPE'] = value;
             }
-            promAll.push(this.updateUser(this._userParamSrv.userContextId, query));
-        }
-        if (promAll.length > 0) {
-            Promise.all(promAll)
-            .then((arr) => {
-                if (flag && this.updateData && this.curentUser.USERTYPE !== value) {
-                    const query = value === 1 ? {'USERTYPE': value, 'PASSWORD_DATE': null} : {'USERTYPE': value};
-                    if ( value === 1) {
-                        this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
-                        this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-                    }
-                    this.updateUser(this._userParamSrv.userContextId, query)
-                    .catch(Er => { console.log('Er', Er); });
-                }
-                const d = new Date();
-                if (value !== 1) {
-                    if (this.paramsChengePass && n_d && String(this.form.controls['PASSWORD_DATE'].value) !== String(new Date(this.curentUser.PASSWORD_DATE))) {
-                        flagDate = true;
-                        let month: string = String(n_d.getMonth() + 1);
-                        month = month.length === 1 ? '0' + month : month;
-                        this.updateUser(this._userParamSrv.userContextId, {'PASSWORD_DATE': `${n_d.getFullYear()}-${month}-${n_d.getDate()}T00:00:00`})
-                        .then(elem => {
-                            this.form.controls['PASSWORD_DATE'].setValue(new Date(`${n_d.getDate()}.${month}.${n_d.getFullYear()}`), { emitEvent: false });
-                            this.isLoading = false;
-                            this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-                        });
-                    } else {
-                        this.isLoading = false;
-                        if (flag) {
-                            this.curentUser.IS_PASSWORD = 1;
-                            if (this.paramsChengePass) {
-                                if (this.passDate !== 0 ) {
-                                    this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
-                                } else {
-                                    this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
-                                }
-                            } else {
-                                this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() - 1)), { emitEvent: false });
-                            }
-                            this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-                        }
-                    }
-                } else {
-                    this.isLoading = false;
-                }
-                this.originAutent = this.form.get('SELECT_AUTENT').value;
-                if (flagDate) {
-                    this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-                }
-                this.curentUser.USERTYPE = value;
-                this.formUpdate(true);
-                this.cancelValues(this.inputs, this.form);
-                this.editMode = false;
-                this._msgSrv.addNewMessage({
-                    type: 'success',
-                    title: 'Сохранение:',
-                    msg: 'Изменения успешно сохранены',
-                    dismissOnTimeout: 6000,
-                });
-                this._pushState(false);
-            })
-            .catch((arr) => {
-                this._errorSrv.errorHandler(arr);
-                /* this.cancelValues(this.inputs, this.form); */
-                this.isLoading = false;
-            });
-        } else {
-            this.cancelValues(this.inputs, this.form);
-            this.formUpdate(true);
-            this.editMode = false;
-            this.isLoading = false;
-            this._pushState(false);
         }
     }
 
+    provUpdateDate() {
+        // проверка можно ли изменить дату
+        if (this.curentUser.IS_PASSWORD === 2 && this.passDate !== 0) {
+            if (new Date(this.form.controls['PASSWORD_DATE'].value) > new Date(this.curentUser.PASSWORD_DATE) || !this.form.controls['PASSWORD_DATE'].value) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    getQueryDate(flag): any {
+        // возвращает запрос на изменение или же отсутсвие изменений
+        const data = this.getNewDate();
+        if (flag && data !== '') {
+            this.queryAll['PASSWORD_DATE'] = data;
+        }
+        return null;
+    }
+    checkUpdateDate() {
+        // проверка была ли изменена дата
+        const cur_date = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) : '';
+        return (String(this.form.controls['PASSWORD_DATE'].value) !== String(cur_date));
+    }
+    checkUpdateUserType(value) {
+        // проверка был ли изменён тип пользователя
+        return this.curentUser.USERTYPE !== value;
+    }
+    getNewDate() {
+        // параметр который говорит о возможности изменения пароля пользователем this.paramsChengePass
+        if (!this.paramsChengePass || this.checkUpdateDate()) {
+            const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
+            if (!n_d) {
+                return null;
+            }
+            let month: string = String(n_d.getMonth() + 1);
+            month = month.length === 1 ? '0' + month : month;
+            return `${n_d.getFullYear()}-${month}-${n_d.getDate()}T00:00:00`;
+        } else {
+            const d = new Date();
+            if (this.passDate !== 0 ) {
+                this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
+            } else {
+                this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
+            }
+        }
+        return '';
+    }
+    updateDataSysParam(flag?: boolean) {
+        const d = new Date();
+        if (this.paramsChengePass) {
+            if (this.passDate !== 0 ) {
+                this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
+            } else {
+                this.form.controls['PASSWORD_DATE'].setValue(' ', { emitEvent: false });
+            }
+        } else {
+            this.newLogin = true;
+            this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() - 1)), { emitEvent: false });
+        }
+        if (!flag) {
+            this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
+        }
+    }
+    createOrChengePass(): Promise<any> {
+        if (this.form.get('pass').value) {
+            if (this.curentUser.IS_PASSWORD === 0) {
+                return this.createLogin(this.form.get('pass').value, this._userParamSrv.userContextId);
+            } else {
+                return this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId);
+            }
+        }
+        return Promise.resolve();
+    }
+    cancelDate() {
+        if (this.form.controls['PASSWORD_DATE'].value !== new Date(this.curentUser.PASSWORD_DATE)) {
+            let check_date;
+            const d = new Date();
+            if (this.paramsChengePass) {
+                if (this.passDate !== 0) {
+                    check_date = new Date(d.setDate(d.getDate() + this.passDate));
+                } else {
+                    check_date = '';
+                }
+            } else {
+                check_date =  new Date(d.setDate(d.getDate() - 1));
+            }
+            const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
+                this.curentUser.IS_PASSWORD === 0 ? check_date : '';
+            this.form.controls['PASSWORD_DATE'].patchValue(date_new, { emitEvent: false });
+        }
+        this.newLogin = false;
+    }
     cancelValues(inputs, form: FormGroup) {
         form.controls['pass'].patchValue(inputs['pass'].value, { emitEvent: false });
         form.controls['passRepeated'].patchValue(inputs['passRepeated'].value, { emitEvent: false });
         form.controls['ID_USER'].patchValue(inputs['ID_USER'].value, { emitEvent: false });
-        if (this.form.controls['PASSWORD_DATE'].value !== new Date(this.curentUser.PASSWORD_DATE)) {
-            const d = new Date();
-            const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
-                this.curentUser.IS_PASSWORD === 0 ? new Date(d.setDate(d.getDate() - 1)) : '';
-            form.controls['PASSWORD_DATE'].patchValue(date_new, { emitEvent: false });
-        }
+        this.cancelDate();
     }
 
     checkChangeForm(data): void {
         this.checkchangPass(data['pass'], data['passRepeated']);
     }
-
+    dateDisable() {
+        if (this.form.get('pass').value || this.form.get('passRepeated').value) {
+            // меняем дату не обновляя в curentUser
+            this.updateDataSysParam(true);
+        } else {
+            this.cancelDate();
+        }
+    }
     getPassDate(): boolean {
         const value = '' + this.form.get('SELECT_AUTENT').value;
         if (value === '0' || value === '3') {
