@@ -213,9 +213,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.startIsPhoto = null;
             }
             if (!this.curentUser.isTechUser) {
-                return this.getCabinetOwnUser(data[0]['ISN_CABINET'], data[0]['DUE']);
+                return this.getCabinetOwnUser(data[0]['ISN_CABINET'], data[0]['DUE'], init);
             } else {
                 this.singleOwnerCab = true;
+                this.patchCbRoles();
             }
         });
     }
@@ -274,22 +275,26 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    getCabinetOwnUser(isnCabinet: number, due: string): Promise<any> {
+    getCabinetOwnUser(isnCabinet: number, due: string, changeDue: boolean): Promise<any> {
         if (isnCabinet) {
             return this._userParamSrv.getCabinetOwnUser(isnCabinet).then((depD: DEPARTMENT[]) => {
                 if (depD.length === 1) {
                     this.singleOwnerCab = false;
                     return this._userParamSrv.getUserCbRoles(due).then((data: IRoleCB[]) => {
-                        this.startRolesCb = data;
-                        this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
+                        if (changeDue) {
+                            this.startRolesCb = data;
+                            this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
+                        }
                         this.patchCbRoles();
                     });
                 } else {
                     this.singleOwnerCab = true;
+                    this.patchCbRoles();
                 }
             });
         } else {
             this.singleOwnerCab = true;
+            this.patchCbRoles();
         }
     }
 
@@ -343,7 +348,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 requestUri: `USER_CL(${id})`,
                 data: newD
             });
-            if (!this.singleOwnerCab && ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || (newD.hasOwnProperty('DUE_DEP') && newD.DUE_DEP === ''))) {
+            if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || newD.hasOwnProperty('DUE_DEP')) {
                 this.queryRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
             }
         }
@@ -740,6 +745,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
+                this.currentCbFields = [];
                 return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
@@ -824,6 +830,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         }
+        this.controlField[0].value = false;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.cancelValues(this.controls, this.formControls);
     }
