@@ -1,17 +1,16 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
-import { OTHER_USER_SHABLONY } from '../../shared-user-param/consts/other.consts';
-import { UserParamsService } from '../../../shared/services/user-params.service';
-import { FormHelperService } from '../../../shared/services/form-helper.services';
+import { OTHER_USER_SHABLONY } from '../shared-user-param/consts/other.consts';
+import { UserParamsService } from '../../shared/services/user-params.service';
+import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { RemasterService } from '../../shared-user-param/services/remaster-service';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { PipRX } from 'eos-rest';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+
 @Component({
     selector: 'eos-user-param-shablony',
     templateUrl: 'user-param-shablony.component.html',
@@ -19,81 +18,73 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 })
 
 export class UserParamShablonyComponent implements OnDestroy, OnInit {
-    @Input() defaultValues;
+    @Input() defaultTitle: string;
     @Input() defaultUser: any;
-    @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public initShablony: Array<any>;
     public form: FormGroup;
     public inputs: any;
-    private _ngUnsebscribe: Subject<any> = new Subject();
+    public btnDisable;
+    public currentUser;
     private allData: any;
     private prepareData: any;
     private prepareInputs: any;
     private mapChanges = new Map();
     private defoltInputs: any;
     private flagEdit: boolean = false;
+    private defaultValues;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Справочники по умолчанию' : this.currentUser.CLASSIF_NAME + '- Справочники';
+            }
+            return this.defaultTitle ? 'Справочники по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Справочники`;
+        }
+        return '';
+    }
     constructor(
         private _userSrv: UserParamsService,
         private formHelp: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
-        private remaster: RemasterService,
         private _appContext: AppContext,
-        // private _msg: EosMessageService,
-        // private _errorSrv: ErrorHelperServices,
+        private _pipRx: PipRX,
+        private _msg: EosMessageService,
+        private _errorSrv: ErrorHelperServices
     ) {
-        this.remaster.submitEmit
-        .pipe(
-            takeUntil(this._ngUnsebscribe)
-        )
-        .subscribe(() => {
-            this.submit();
-        });
-        this.remaster.cancelEmit
-        .pipe(
-            takeUntil(this._ngUnsebscribe)
-        )
-        .subscribe(() => {
-            this.cancel();
-        });
-        this.remaster.defaultEmit
-        .pipe(
-            takeUntil(this._ngUnsebscribe)
-        )
-        .subscribe(() => {
-            this.default();
-        });
-        this.remaster.editEmit
-        .pipe(
-            takeUntil(this._ngUnsebscribe)
-        )
-        .subscribe(() => {
-            this.flagEdit = true;
-            this.editMode();
-        });
-        this.remaster.emitDefaultFalues
-        .pipe(
-            takeUntil(this._ngUnsebscribe)
-        )
-        .subscribe((value) => {
-            this.defaultValues = value;
-            this.initShablony = this.getInitShablony(this.defaultValues);
-        });
+        this.flagEdit = false;
+        this.btnDisable = true;
     }
-    ngOnDestroy() {
-        this._ngUnsebscribe.next();
-        this._ngUnsebscribe.complete();
-    }
+
     ngOnInit() {
-        if (this.defaultUser) {
+        if (this.defaultTitle) {
+            this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.inint();
             this.initShablony = this.getInitShablony(this.defaultUser);
         } else {
-            this.allData = this._userSrv.hashUserContext;
-            this.inint();
+            this._userSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+                .then((d) => {
+                    this.allData = this._userSrv.hashUserContext;
+                    this.currentUser = this._userSrv.curentUser;
+                    this.inint();
+                    this.initShablony = this.getInitShablony(this.allData);
+                    this.currentUser = this._userSrv.curentUser;
+                    this._pipRx.read(this.formHelp.getObjQueryInputsField()).then(data => {
+                        this.defaultValues = this.formHelp.createhash(data);
+                    }).catch(error => {
+                        this._errorSrv.errorHandler(error);
+                    });
+                })
+                .catch(err => {
+                });
         }
     }
+
+    ngOnDestroy() {}
+
     getInitShablony(result) {
         const arrayDateMain = [];
         let prepareObj = {};
@@ -106,6 +97,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         });
         return arrayDateMain;
     }
+
     checkElem() {
         let flag = true;
         OTHER_USER_SHABLONY.fields.forEach(element => {
@@ -115,6 +107,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         });
         return flag;
     }
+
     inint() {
         if (this._appContext.cbBase && this.checkElem()) {
             OTHER_USER_SHABLONY.fields.splice(25, 0,
@@ -138,6 +131,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         this.editMode();
         this.formSubscriber();
     }
+
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);
@@ -157,14 +151,13 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             }
         });
         if (countError > 0 || this.mapChanges.size) {
-            this.pushChange.emit([{
-                btn: true,
-                data: this.mapChanges
-            }, this.form.value]);
+            this.btnDisable = false;
         } else {
-            this.pushChange.emit(false);
+            this.btnDisable = true;
         }
+        this._pushState();
     }
+
     prepFormForSave() {
         Object.keys(this.inputs).forEach((key) => {
             const value = this.form.controls[key].value;
@@ -178,6 +171,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             this.form.controls[key].patchValue(val, { emitEvent: flag });
         });
     }
+
     editMode() {
         if (this.flagEdit) {
             this.form.enable({ emitEvent: false });
@@ -185,12 +179,50 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
-    submit() {
-        this.mapChanges.clear();
-        this.prepFormForSave();
-        this.flagEdit = false;
+
+    edit($event) {
+        this.flagEdit = $event;
         this.editMode();
     }
+
+    submit() {
+        if (this.mapChanges.size) {
+            return this._pipRx.batch(this.createUrl(), '').then(() => {
+                this.prepFormForSave();
+                this.mapChanges.clear();
+                this.btnDisable = true;
+                this.flagEdit = false;
+                this._pushState();
+                this.editMode();
+                if (this.defaultTitle) {
+                    this.DefaultSubmitEmit.emit(this.form.value);
+                }
+                this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
+            }).catch((error) => {
+                this._errorSrv.errorHandler(error);
+                this.cancel();
+                this._msg.addNewMessage(this.createMessage('warning', '', 'Изменения не сохранены'));
+            });
+        } else {
+            this.cancel();
+        }
+    }
+
+    createUrl(): any[] {
+        const req = [];
+        if (this.defaultUser) {
+            if (this.mapChanges.size) {
+                req.concat(this.formHelp.CreateDefaultRequest(req, this.mapChanges));
+            }
+        } else {
+            const userId = this._userSrv.userContextId;
+            if (this.mapChanges.size) {
+                req.concat(this.formHelp.pushIntoArrayRequest(req, this.mapChanges, userId));
+            }
+        }
+        return req;
+    }
+
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
@@ -199,10 +231,28 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
         this.prepFormCancel(this.defoltInputs, true);
     }
+
     cancel($event?) {
         this.flagEdit = false;
         this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
+        this.btnDisable = true;
+        this.flagEdit = false;
+        this._pushState();
         this.editMode();
     }
+
+    createMessage(type, title, msg) {
+        return {
+            type: type,
+            title: title,
+            msg: msg,
+            dismissOnTimeout: 6000,
+        };
+    }
+
+    private _pushState() {
+        this._userSrv.setChangeState({ isChange: !this.btnDisable });
+    }
+
 }

@@ -26,11 +26,6 @@
             <eos-user-param-reestr *ngIf='!cbBase' (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
         </div>
         <!--------------------------2--------------------------------------------->
-        <!--------------------------3--------------------------------------------->
-        <div [hidden]="currTab !==3" class="clearfix last ">
-            <eos-user-param-shablony (pushChange)="emitChangesShablony($event)" [defaultValues]=" defaultValues " [defaultUser]="defaultUser"></eos-user-param-shablony>
-        </div>
-        <!--------------------------3--------------------------------------------->
     </div>
 </div>
 <!-- <div class="sp " *ngIf="!isLoading ">

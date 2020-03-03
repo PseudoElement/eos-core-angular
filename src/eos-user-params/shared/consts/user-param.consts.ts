@@ -22,6 +22,10 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'dictionary'
     },
     {
+        title: 'Внешний обмен',
+        url: 'ext-exch'
+    },
+    {
         title: 'Электронная подпись',
         url: 'el-signature'
     },
@@ -38,13 +42,17 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'visualization'
     },
     {
-        title: 'Внешние приложения',
+        title: 'Десктопное приложение',
         url: 'external-application'
     },
     {
-        title: 'Прочие',
+        title: 'Передача',
         url: 'other'
     },
+    {
+        title: 'Шаблоны',
+        url: 'patterns'
+    }
 ];
 export const SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO: IParamAccordionList[] = [
     {

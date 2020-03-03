@@ -31,6 +31,8 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     public sortedData;
     public editFlag: boolean = false;
     public titleHeader: string;
+    public currTab: number = 0;
+    readonly fieldGroupsForDeskApl: string[] = ['Десктопное приложение'];
     private newData = new Map();
     private prepDate;
     private allData;
@@ -53,7 +55,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
                 expand: 'USER_PARMS_List'
             })
             .then(() => {
-                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
+                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Десктопное приложение';
                 this.init();
             })
             .catch(err => {
@@ -135,6 +137,11 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         }
         return readyObjectData;
     }
+
+    setTab(i: number) {
+        this.currTab = i;
+    }
+
     suscribeChanges() {
         let count_error = 0;
         this.form.valueChanges

@@ -283,9 +283,6 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         if (this.saveReestrDep !== undefined) {
             paramsDep = this.saveReestrDep.replace(/,/g, '||');
         }
-        this.prepFormCancel(this.inputs, true);
-        this.mapChanges.clear();
-        this.editMode();
         this.secureData = this.saveReestrSecur !== undefined ? this.saveReestrSecur : this.updateSecur(this._userSrv.hashUserContext['REESTR_CB_SECUR']);
         reqs.push(this.getDocGroupName(paramsDoc, true));
         reqs.push(this.getDepName(paramsDep, true));

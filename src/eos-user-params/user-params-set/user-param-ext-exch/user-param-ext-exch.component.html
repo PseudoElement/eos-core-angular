@@ -1,0 +1,21 @@
+<div class="input-user-wrapper input-user-registration-rk-forwarding-wrapper">
+    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="!btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <div class="tabs-wrapper usual-border border-bottom">
+        <ul class="tabs">
+            <li class="tab-item" *ngFor="let tab of fieldGroupsForExhcExt; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
+                <span class="tab-title">{{tab}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="user-param-registration-content-wrapper scrollWrapper" *ngIf="isLoading">
+        <div [hidden]="currTab !== 0" class="clearfix">
+            <eos-remaster-email (pushChenge)='getChanges($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-email>
+        </div>
+        <div [hidden]="currTab !== 1" class="clearfix">
+            <eos-remaster-seb (pushChange)='emitChangesSab($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-seb>
+        </div>
+    </div>
+    <div class="sp" *ngIf="!isLoading">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+</div>

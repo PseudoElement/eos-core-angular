@@ -30,13 +30,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
-                return this.defaultTitle ? 'Прочее по умолчанию' : this.currentUser.CLASSIF_NAME + '- Прочее';
+                return this.defaultTitle ? 'Передача по умолчанию' : this.currentUser.CLASSIF_NAME + '- Передача';
             }
-            return this.defaultTitle ? 'Прочее по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Прочее`;
+            return this.defaultTitle ? 'Передача по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Передача`;
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
+    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
@@ -44,12 +44,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     private flagAddresses: boolean = false;
     private newValuesReestr: Map<string, any> = new Map();
     private flagReestr: boolean = false;
-    private newValuesShablony: Map<string, any> = new Map();
-    private flagShablony: boolean = false;
     private TransferInputs: any;
     private AddressesInputs: any;
     private ReestInputsr: any;
-    private ShablonyInputs: any;
     constructor(
         private _userSrv: UserParamsService,
         private _pipRx: PipRX,
@@ -84,7 +81,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     }
 
     get btnDisabled() {
-        if (this.flagAddresses || this.flagReestr || this.flagShablony || this.flagTransfer) {
+        if (this.flagAddresses || this.flagReestr || this.flagTransfer) {
             return false;
         } else {
             return true;
@@ -133,20 +130,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         this._pushState();
     }
-    emitChangesShablony($event) {
-        if (this.defaultUser) {
-            this.ShablonyInputs = $event[1];
-        }
-        if ($event) {
-            this.flagShablony = $event[0].btn;
-            this.newValuesShablony = $event[0].data;
-        } else {
-            this.flagShablony = false;
-            this.newValuesShablony.clear();
-        }
-        //   this.DefaultSubmitEmit.emit()
-        this._pushState();
-    }
+
     emitIncrementError($event) {
         this.flagIncrementError = $event;
     }
@@ -187,16 +171,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         if (this.ReestInputsr !== undefined) {
             obj = Object.assign(this.ReestInputsr, obj);
         }
-        if (this.ShablonyInputs !== undefined) {
-            obj = Object.assign(this.ShablonyInputs, obj);
-        }
         this.DefaultSubmitEmit.emit(obj);
     }
 
     resetFlagsBtn() {
         this.emitChangesAddresses(false);
         this.emitChangesReestr(false);
-        this.emitChangesShablony(false);
         this.emitChangesTransfer(false);
         // this.emitIncrementError(false);
     }
@@ -212,9 +192,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             if (this.newValuesReestr.size) {
                 this._formHelper.CreateDefaultRequest(req, this.newValuesReestr);
             }
-            if (this.newValuesShablony.size) {
-                this._formHelper.CreateDefaultRequest(req, this.newValuesShablony, true);
-            }
         } else {
             const userId = this._userSrv.userContextId;
             if (this.newValuesTransfer.size) {
@@ -225,9 +202,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             }
             if (this.newValuesReestr.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesReestr, userId));
-            }
-            if (this.newValuesShablony.size) {
-                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesShablony, userId, true));
             }
         }
         return req;

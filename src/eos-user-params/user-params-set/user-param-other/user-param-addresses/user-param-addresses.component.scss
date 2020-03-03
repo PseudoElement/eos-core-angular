@@ -1,15 +1,19 @@
-.other-send {
-    display: inline;
-    eos-dynamic-input-radio {
-      > div {
-          display: flex;
-          margin-left: 10px;
-          .elem-input-radio {
-              margin-right: 0;
+.param-adress-doc {
+    height: 600px;
+    .other-send {
+        display: inline;
+        eos-dynamic-input-radio {
+          > div {
+              display: flex;
+              margin-left: 10px;
+              .elem-input-radio {
+                  margin-right: 0;
+              }
+              .radio  {
+                  width: 175px;
+              }
           }
-          .radio  {
-              width: 175px;
-          }
-      }
+        }
     }
 }
+
