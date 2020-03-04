@@ -364,7 +364,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.prjDefaultValues:
                     if (this._dictSrv && this._dictSrv.listNode) {
-                        _enabled = this._dictSrv.listNode.isPrjDocGroup && opts.listHasSelected;
+                        _enabled = this._dictSrv.listNode.isPrjDocGroup && opts.listHasSelected && opts.listHasOnlyOne;
                     } else {
                         _enabled = false;
                     }
