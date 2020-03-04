@@ -32,17 +32,18 @@ export const AUTH_METHOD: Array<OptionDiscription> = [
 
 export const TYPE_OF_RULE: Array<OptionDiscription> = [{
     value: 1,
-    title: 'Отправка документа'
-}, {
-    value: 2,
-    title: 'Прием документа'
-}, {
-    value: 3,
-    title: 'Отправка доклада'
-}, {
-    value: 4,
-    title: 'Прием доклада'
-}];
+    title: 'Отправка документа' }
+// }, {
+//     value: 2,
+//     title: 'Прием документа'
+// }, {
+//     value: 3,
+//     title: 'Отправка доклада'
+// }, {
+//     value: 4,
+//     title: 'Прием доклада'
+// }
+];
 
 export const LINK_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},

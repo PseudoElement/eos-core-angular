@@ -25,3 +25,28 @@
         height: 100%;
     }
 }
+.sev-wr {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+.action {
+    cursor: pointer;
+}
+.sev-grif {
+    display: flex;
+    flex-wrap: wrap;
+    //justify-content: space-between;
+    align-items: center;
+}
+.mar-right {
+    display: block;
+    width: 100%;
+    margin-right: 5px;
+}
+.card-content-wrapper {
+    fieldset {
+        list-style-type: none;
+    }
+}
+

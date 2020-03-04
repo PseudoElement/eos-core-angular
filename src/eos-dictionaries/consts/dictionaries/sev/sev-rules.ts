@@ -1,6 +1,6 @@
 import {IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE } from '../_linear-template';
-import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from '../_common';
+import { COMMON_FIELD_NOTE} from '../_common';
 import {DOCGROUP_DICT} from '../docgroup.consts';
 import {
     ADDRESS_REPLACE,
@@ -26,9 +26,15 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
     title: 'Правила СЭВ',
     keyField: 'ISN_LCLASSIF',
     fields: [...LINEAR_TEMPLATE.fields,
-        Object.assign({}, COMMON_FIELD_NAME, {
-            title: 'Наименование'
-        }),
+        {
+            key: 'CLASSIF_NAME',
+            title: 'Наименование',
+            type: 'string',
+            length: 64,
+            required: true,
+            isUnique: true,
+            pattern:  /^(?! *$)[\wА-Яа-я.+ '-][^!@$&^=~]*$/
+        },
         Object.assign({}, COMMON_FIELD_NOTE, {
             title: 'Примечание'
         }), {
@@ -57,19 +63,24 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'DUE_DOCGROUP',
             type: 'select',
             title: 'Группа документов',
+            required: true,
             dictionaryId: DOCGROUP_DICT.apiInstance,
+            dictionaryLink: {
+                pk: 'DUE',
+                label: 'CLASSIF_NAME',
+        },
             options: [],
         }, {
             key: 'DUE_DEP',
             type: 'select',
-            options: [],
-            title: 'Отправитель/Получатель',
+            options: [{value: null, title: 'Все организации'}],
+            title: 'Отправитель',
         }, {
             key: 'departmentSend', // TODO справочник организаций
             type: 'select',
             dictionaryId: ORGANIZ_DICT.apiInstance,
             options: [{
-                value: 0,
+                value: '',
                 title: 'Для всех организаций'
             }],
             title: 'Отправитель',
@@ -114,6 +125,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'region',
             type: 'boolean',
             title: 'Регион субъекта документа',
+            default: true,
         }, {
             key: 'visa',
             type: 'boolean',
@@ -148,16 +160,25 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'fileExtensions',
             title: 'С расширением',
             type: 'string',
+            default: '.pdf, .doc, docx, .txt, .xls, .xlsx, .tif, .tiff, .jpg, .bmp, .gif',
         }, {
             key: 'fileAccessList', // TODO должен быть массив
-            title: 'Гриф доступа',
+            title: 'Грифы доступа:',
             type: 'select',
             dictionaryId: SECURITY_DICT.apiInstance,
             options: [],
-        }, {
+            default: '1',
+        },
+        {
+            key: 'fileAccessListRk',
+            title: 'Грифы доступа:',
+            type: 'string',
+        },
+        {
             key: 'fileMaxLength',
             title: 'Max размер',
             type: 'number',
+            pattern: /^\s?\d{0,9}$/
         }, {
             key: 'item',
             title: 'Пункты',
@@ -176,7 +197,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         }, {
             key: 'resolutionKind',
             type: 'buttons',
-            default: 1,
+            default: 2,
             options: RESOLUTION_KIND,
         }, {
             key: 'taskCategory',
@@ -202,10 +223,12 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'taskFileExtensions',
             title: 'С расширением',
             type: 'string',
+            default: '.pdf, .doc, docx, .txt, .xls, .xlsx, .tif, .tiff, .jpg, .bmp, .gif',
         }, {
             key: 'taskFileMaxLength',
             title: 'Max размер',
             type: 'number',
+            pattern: /^\s?\d{0,9}$/
         }, {
             key: 'reception',
             title: 'Уведомление о приеме',
@@ -244,8 +267,10 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         }, {
             key: 'stopDayCount',
             title: 'Доклады направлять в течении (сутки)',
-            type: 'number',
+            type: 'numberIncrement',
             default: 30,
+            required: true,
+            pattern: /^[1-9]$|^[0-9]{2,3}$/
         }, {
             key: 'handRegistration',
             title: 'Направлять на ручную регистрацию',
@@ -409,6 +434,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'executorsProject',
             type: 'boolean',
             title: 'Исполнители',
+            default: true,
         }, {
             key: 'kindExecutorProject',
             type: 'buttons',
@@ -418,6 +444,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'dateExecutionProject',
             type: 'boolean',
             title: 'Срок исполнения',
+            default: true,
         }, {
             key: 'kindDateExecutionProject',
             type: 'buttons',
@@ -427,23 +454,27 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'FileRKPD',
             type: 'boolean',
             title: 'Файлы РКПД',
+            default: true,
         }, {
             key: 'VisaKind',
             type: 'buttons',
             options: Visa_KIND,
-            default: 0,
+            default: 1,
         }, {
             key: 'VisaInfo',
             type: 'boolean',
             title: 'Информация о визе',
+            default: true,
         }, {
             key: 'VisaFile',
             type: 'boolean',
             title: 'Файл визы',
+            default: true,
         }, {
             key: 'signatures',
             type: 'boolean',
             title: 'Подписи',
+            default: true,
         }, {
             key: 'signaturesKind',
             type: 'buttons',
@@ -453,31 +484,45 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'signaturesInfo',
             type: 'boolean',
             title: 'Информация о подписи',
+            default: true,
         }, {
             key: 'signaturesFile',
             type: 'boolean',
             title: 'Файл подписи',
+            default: true,
         }, {
             key: 'registrationProject',
             title: 'Доклад о регистрации (отказ в регистрации)',
             type: 'boolean',
+            default: true,
         }, {
             key: 'forwardingVisa',
             title: 'Доклад о направлении документа на визирование',
             type: 'boolean',
+            default: true,
         }, {
             key: 'forwardingSign',
             title: 'Доклад о направлении документа на подписание',
             type: 'boolean',
+            default: true,
         }, {
             key: 'reportVisa',
             title: 'Доклад о визировании',
             type: 'boolean',
+            default: true,
         }, {
             key: 'reportSign',
             title: 'Доклад о подписании',
             type: 'boolean',
-        }, {
+            default: true,
+        },
+        {
+            key: 'progectRegistration',
+            title: 'Доклад о регистрации документа',
+            type: 'boolean',
+            default: false,
+        },
+        {
             key: 'executor',
             title: 'Исполнитель',
             type: 'select',
@@ -560,7 +605,8 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             title: 'Корректировать визирующих/подписывающих в РКПД',
             type: 'boolean',
             default: true,
-        }],
+        }
+    ],
     editFields: ['CLASSIF_NAME', 'RULE_KIND', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
         'linkKind', 'linkTypeList', 'access', 'rubric', 'address', 'region', 'visa', 'addressee', 'addresseeKind', 'additionalField',
         'userGrantedOnly', 'file', 'fileExtensions', 'fileAccessList', 'fileMaxLength', 'item', 'itemKind', 'resolution',
@@ -573,10 +619,10 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         'controlConsideration', 'planConsideration', 'Summary', 'FactDate', 'Status', 'Resume',
         'executorConsideration', 'kindExecutorConsideration', 'executors', 'executorFile', 'editSet', 'calcDate', 'regNumber',
         'LinkPD', 'executorsProject', 'kindExecutorProject', 'dateExecutionProject', 'kindDateExecutionProject', 'FileRKPD',
-        'VisaKind', 'VisaInfo', 'VisaFile', 'signatures', 'signaturesKind', 'signaturesInfo', 'signaturesFile', 'registrationProject',
+         'VisaKind', 'VisaInfo', 'VisaFile', 'signatures', 'signaturesKind', 'signaturesInfo', 'signaturesFile', 'registrationProject',
         'forwardingVisa', 'forwardingSign', 'reportVisa', 'reportSign', 'executor', 'executive', 'visaDate', 'visaDays',
         'signatureDate', 'signatureDays', 'visaForward', 'signatureForward', 'VisaKindTake', 'signatureKindTake', 'forwardingVisaKind',
-        'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign'],
+        'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign', 'progectRegistration', 'fileAccessListRk'],
     listFields: ['CLASSIF_NAME', 'NOTE'],
     allVisibleFields: [],
     quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'RULE_KIND', 'DUE_DOCGROUP', 'DUE_DEP'],

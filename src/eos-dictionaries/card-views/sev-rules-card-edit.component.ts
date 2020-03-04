@@ -2,7 +2,8 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_LINK_CL, OPEN_CLASSIF_SECURITY_CL } from 'eos-user-select/shered/consts/create-user.consts';
-import { LINK_CL, SECURITY_CL } from 'eos-rest';
+import { LINK_CL, SECURITY_CL, DEPARTMENT, ORGANIZ_CL } from 'eos-rest';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-sev-rules-card-edit',
@@ -12,10 +13,13 @@ import { LINK_CL, SECURITY_CL } from 'eos-rest';
 export class SevRulesCardEditComponent extends BaseCardEditComponent implements OnInit {
     public linkTypeListNames = [];
     public fileAccessNames = [];
+    public securityLink = [];
+    private _errorHelper: ErrorHelperServices;
     constructor(injector: Injector,
         private _waitClassif: WaitClassifService
     ) {
         super(injector);
+        this._errorHelper = injector.get(ErrorHelperServices);
     }
     get typeDoc(): number {
         return this.getValue('rec.type');
@@ -78,7 +82,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         return this.getValue('rec.dateExecutionProject');
     }
     get Visa(): boolean {
-        return this.getValue('rec.Visa');
+        return this.getValue('rec.visa');
     }
     get VisaInfo(): boolean {
         return this.getValue('rec.VisaInfo');
@@ -116,23 +120,56 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     get fileAcces() {
         return this.getControl('rec.fileAccessList');
     }
+    get fileAccesRK() {
+        return this.getControl('rec.fileAccessListRk');
+    }
+    get RuleKind() {
+        return this.getControl('rec.RULE_KIND');
+    }
     ngOnInit() {
         super.ngOnInit();
-        console.log(this.form);
-        this.loadLinksNames();
-        this.loadGrifsNames();
+        this.afterGetFrom();
         this.form.controls['rec.type'].valueChanges.subscribe(value => {
             this.updateRule_Kind(+value);
+            this.loadGrifsNames(value);
         });
-        this.form.controls['rec.kind'].valueChanges.subscribe(value => {
-            this.updateOnlyKind(+value);
+
+    }
+    afterGetFrom() {
+        this.loadLinksNames();
+        this.loadGrifsNames(this.typeDoc);
+        this.checkKind();
+        this.dictSrv['_apiSrv'].read({ DEPARTMENT: { criteries: { 'DUE_LINK_ORGANIZ': 'isnotnull' } } }).then((d: DEPARTMENT[]) => {
+            let idsOrganiz: string[] = [];
+            const options = new Map();
+            if (d && d.length) {
+                idsOrganiz = d.map(i => {
+                    options.set(i.DUE_LINK_ORGANIZ, { value: i.DUE, title: '' });
+                    return i.DUE_LINK_ORGANIZ;
+                });
+            }
+            this.dictSrv['_apiSrv'].read({ ORGANIZ_CL: idsOrganiz }).then((o: ORGANIZ_CL[]) => {
+                const due_depInput = this.inputs['rec.DUE_DEP'];
+                o.forEach((e: ORGANIZ_CL) => {
+                    const val = options.get(e.DUE);
+                    val.title = e.CLASSIF_NAME;
+                    due_depInput.options.push(val);
+                });
+            });
         });
+    }
+    checkKind() {
+        if (String(this.RuleKind.value) !== '1' && String(this.RuleKind.value) !== '5' && this.editMode) {
+            const error = { code: 2000, message: 'Данный вид правила не поддерживается. Доступный вид правила: "Отправка документов"' };
+            this.RuleKind.patchValue('1');
+            this._errorHelper.errorHandler(error);
+        }
     }
     openLinkCl() {
         this.openClassifLikc();
     }
-    openSecurityCl() {
-        this.openClassiSecurity();
+    openSecurityCl(value) {
+        this.openClassiSecurity(value);
     }
     public deleteFieldsNames(name) {
         switch (name) {
@@ -150,23 +187,23 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     private updateRule_Kind(value: number): void {
         const formRuleKind = this.form.controls['rec.RULE_KIND'];
         const formKind = this.form.controls['rec.kind'];
-        formKind.patchValue(1);
+        formKind.patchValue(1, { emitEvent: false });
         if (value === 1) {
             formRuleKind.patchValue(1);
         } else {
             formRuleKind.patchValue(5);
         }
     }
-    private updateOnlyKind(value: number): void {
-        const type = this.form.controls['rec.type'].value;
-        const kind = this.form.controls['rec.RULE_KIND'];
-        if (type === 1) {
-            kind.patchValue(value);
-        } else {
-            kind.patchValue(value + 4);
-            console.log((value + 4));
-        }
-    }
+    // private updateOnlyKind(value: number): void {
+    //     const type = this.form.controls['rec.type'].value;
+    //     const kind = this.form.controls['rec.RULE_KIND'];
+    //     console.log(type);
+    //     if (type === 1) {
+    //         kind.patchValue(value);
+    //     } else {
+    //         kind.patchValue(value + 4);
+    //     }
+    // }
     private openClassifLikc() {
         if (this.linkTypeListControl.value && this.linkTypeListControl.value !== 'null') {
             OPEN_CLASSIF_LINK_CL.selected = this.linkTypeListControl.value;
@@ -175,18 +212,17 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             this.linkTypeListControl.patchValue(data);
             this.loadLinksNames();
         }).catch(e => {
-
+            this._errorHelper.errorHandler(e);
         });
     }
-    private openClassiSecurity() {
-        if (this.fileAcces.value && this.fileAcces.value !== 'null') {
-            OPEN_CLASSIF_SECURITY_CL.selected = this.fileAcces.value;
+    private openClassiSecurity(value) {
+        const control = this.form.controls[value];
+        if (control.value && control.value !== 'null') {
+            OPEN_CLASSIF_SECURITY_CL.selected = control.value;
         }
         this._waitClassif.openClassif(OPEN_CLASSIF_SECURITY_CL).then(data => {
-            this.fileAcces.patchValue(data);
-            this.loadGrifsNames();
-        }).catch(e => {
-
+            control.patchValue(data);
+            this.loadGrifsNames(this.typeDoc);
         });
     }
     private loadLinksNames() {
@@ -197,19 +233,26 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                     this.linkTypeListNames.push(n.CLASSIF_NAME);
                 });
             }).catch(e => {
-                console.log(e);
+                this._errorHelper.errorHandler(e);
             });
         }
     }
-    private loadGrifsNames() {
-        if (this.fileAcces.value && this.fileAcces.value !== 'null') {
-            this.dictSrv.currentDictionary.descriptor.loadNames('SECURITY_CL', this.fileAcces.value).then((names: SECURITY_CL[]) => {
-                this.fileAccessNames = [];
+    private loadGrifsNames(value) {
+        this.fileAccessNames = [];
+        let control;
+        if (String(value) === '1') {
+            control = this.fileAcces;
+        }
+        if (String(value) === '2') {
+            control = this.fileAccesRK;
+        }
+        if (control.value && control.value !== 'null') {
+            this.dictSrv.currentDictionary.descriptor.loadNames('SECURITY_CL', control.value).then((names: SECURITY_CL[]) => {
                 names.forEach((n: SECURITY_CL) => {
                     this.fileAccessNames.push(n.GRIF_NAME);
                 });
             }).catch(e => {
-                console.log(e);
+                this._errorHelper.errorHandler(e);
             });
         }
     }

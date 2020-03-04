@@ -57,7 +57,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
             }
             let optValue = this.input.options.find((option) => option.value === ctrl.value);
             if (!optValue && typeof ctrl.value === 'string') {
-                optValue = this.input.options.find((option) => option.value.toString() === ctrl.value);
+                optValue = this.input.options.find((option) => String(option.value) === ctrl.value);
             }
             if (optValue) {
                 value = optValue.title;

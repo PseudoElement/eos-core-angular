@@ -243,7 +243,7 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         formatDbBinary: descr[_key].formatDbBinary,
                                         forNode: descr[_key].forNode,
-                                        value: !!data[_dict][descr[_key].foreignKey],
+                                        value: data[_dict][descr[_key].foreignKey] !== undefined ? !!data[_dict][descr[_key].foreignKey] : descr[_key].default,
                                         disabled: !editMode,
                                     });
                                     break;
@@ -282,8 +282,7 @@ export class EosDataConvertService {
                                         required: descr[_key].required,
                                         hideLabel: !(descr[_key].title),
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey]
-                                            || descr[_key].default,
+                                        value: data[_dict][descr[_key].foreignKey] !== undefined ? data[_dict][descr[_key].foreignKey] : descr[_key].default,
                                         disabled: !editMode,
                                     });
                                     break;
