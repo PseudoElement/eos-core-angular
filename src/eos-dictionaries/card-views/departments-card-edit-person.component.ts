@@ -501,48 +501,51 @@ if (opt.fio || opt.gender || opt.nomenative) {
 }
 
     private updateForm(formChanges: any) {
-    if (/*(this.data.rec.POST_H * 1 === 1) &&*/ !(this.data.cabinet && Object.keys(this.data.cabinet).length !== 0)) {
-        if (formChanges['rec.POST_H'] * 1 === 1) {
-            if (!this.bossWarning) {
-                this.bossWarning = true;
-                this._msgSrv.addNewMessage(INFO_PERSONE_DONT_HAVE_CABINET);
+        if (/*(this.data.rec.POST_H * 1 === 1) &&*/ !(this.data.cabinet && Object.keys(this.data.cabinet).length !== 0)) {
+            if (formChanges['rec.POST_H'] * 1 === 1) {
+                if (!this.bossWarning) {
+                    this.bossWarning = true;
+                    this._msgSrv.addNewMessage(INFO_PERSONE_DONT_HAVE_CABINET);
+                }
+            } else {
+                this.bossWarning = false;
             }
-        } else {
-            this.bossWarning = false;
+            let setSurname = null;
+            if (this.prevValues['rec.DUTY'] !== formChanges['rec.DUTY']) {
+                this.prevValues['rec.DUTY'] = formChanges['rec.DUTY'];
+                this.fillDeclineFields({ dep: true });
+            }
+            if (this.prevValues['printInfo.NAME'] !== formChanges['printInfo.NAME'] ||
+                this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
+                this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
+            ) {
+                this.prevValues['printInfo.NAME'] = formChanges['printInfo.NAME'];
+                this.prevValues['printInfo.SURNAME'] = formChanges['printInfo.SURNAME'];
+                this.prevValues['printInfo.PATRON'] = formChanges['printInfo.PATRON'];
+                setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
+                    formChanges['printInfo.NAME'],
+                    formChanges['printInfo.PATRON']);
+                this.fillDeclineFields({ fio: true });
+
+        }
+
+        if (this.prevValues['printInfo.GENDER'] !== formChanges['printInfo.GENDER']) {
+            this.prevValues['printInfo.GENDER'] = formChanges['printInfo.GENDER'];
+            this.fillDeclineFields({ fio: true });
+        }
+
+
+        if (setSurname) {
+            this.setValue('rec.SURNAME', setSurname);
+        } else if (this.prevValues['rec.SURNAME'] !== formChanges['rec.SURNAME']) {
+            this.prevValues['rec.SURNAME'] = formChanges['rec.SURNAME'];
+            let fio: string = this.prevValues['rec.SURNAME'];
+            if (fio) { fio = fio.replace(/\./g, ' '); }
+
+            this.fillDeclineFields({ fio: true }, fio);
+        }
+
+        this.prevValues = formChanges;
         }
     }
-    let setSurname = null;
-    if (this.prevValues['printInfo.NAME'] !== formChanges['printInfo.NAME'] ||
-        this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
-        this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
-    ) {
-        this.prevValues['printInfo.NAME'] = formChanges['printInfo.NAME'];
-        this.prevValues['printInfo.SURNAME'] = formChanges['printInfo.SURNAME'];
-        this.prevValues['printInfo.PATRON'] = formChanges['printInfo.PATRON'];
-        setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
-            formChanges['printInfo.NAME'],
-            formChanges['printInfo.PATRON']);
-        this.fillDeclineFields({ fio: true });
-
-    }
-
-    if (this.prevValues['printInfo.GENDER'] !== formChanges['printInfo.GENDER']) {
-        this.prevValues['printInfo.GENDER'] = formChanges['printInfo.GENDER'];
-        this.fillDeclineFields({ fio: true });
-    }
-
-
-    if (setSurname) {
-        this.setValue('rec.SURNAME', setSurname);
-    } else if (this.prevValues['rec.SURNAME'] !== formChanges['rec.SURNAME']) {
-        this.prevValues['rec.SURNAME'] = formChanges['rec.SURNAME'];
-        let fio: string = this.prevValues['rec.SURNAME'];
-        if (fio) { fio = fio.replace(/\./g, ' '); }
-
-        this.fillDeclineFields({ fio: true }, fio);
-    }
-
-    this.prevValues = formChanges;
-
-}
 }
