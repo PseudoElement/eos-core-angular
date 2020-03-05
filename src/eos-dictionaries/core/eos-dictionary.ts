@@ -705,6 +705,8 @@ export class EosDictionary {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
                 case 'resolution-category':
+                case 'status-reply':
+                case 'region':
                 return this.descriptor.getRelatedSev(node.data.rec).then((sev) => {
                     node.data = Object.assign(node.data, { sev: sev });
                     node.relatedLoaded = true;
