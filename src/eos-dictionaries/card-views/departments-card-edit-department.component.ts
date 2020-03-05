@@ -10,6 +10,8 @@ import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp
 import { BsModalService } from 'ngx-bootstrap';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
+import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -24,7 +26,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     private _orgName = '';
     private previousValues: SimpleChanges;
 
-    constructor(private injector: Injector, private _zone: NgZone, private msgSrv: EosMessageService) {
+    constructor(private injector: Injector, private _zone: NgZone, private msgSrv: EosMessageService, private _confirmSrv: ConfirmWindowService) {
         super(injector);
         this.previousValues = {};
     }
@@ -86,6 +88,53 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
             }
             return error ? {valueError: error} : null;
         };
+    }
+
+    public confirmSave(): Promise<boolean> {
+        const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
+        let isNeedCorrectStart = false;
+        let isNeedCorrectEnd = false;
+        if (parent.data.rec['START_DATE']) {
+            if (!this.data.rec['START_DATE']) {
+                isNeedCorrectStart = true;
+            } else {
+                const sd1 = new Date(this.data.rec['START_DATE']);
+                const sd2 = new Date(parent.data.rec['START_DATE']);
+                if (sd1 < sd2) {
+                    isNeedCorrectStart = true;
+                }
+            }
+        }
+        if (parent.data.rec['END_DATE']) {
+            if (!this.data.rec['END_DATE']) {
+                isNeedCorrectEnd = true;
+            } else {
+                const sd1 = new Date(this.data.rec['END_DATE']);
+                const sd2 = new Date(parent.data.rec['END_DATE']);
+                if (sd1 > sd2) {
+                    isNeedCorrectEnd = true;
+                }
+            }
+        }
+
+        if (isNeedCorrectEnd || isNeedCorrectStart) {
+            return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX).then((button) => {
+                if (button.result === BUTTON_RESULT_YES) {
+                    if (isNeedCorrectStart) {
+                        this.setValue('rec.START_DATE', new Date(parent.data.rec['START_DATE']));
+                        this.data.rec['START_DATE'] = parent.data.rec['START_DATE'];
+
+                    }
+                    if (isNeedCorrectEnd) {
+                        this.setValue('rec.END_DATE', new Date(parent.data.rec['END_DATE']));
+                        this.data.rec['END_DATE'] = parent.data.rec['END_DATE'];
+                    }
+                    return true;
+                }
+                return false;
+            });
+        }
+        return Promise.resolve(true);
     }
 
     stampClick() {
