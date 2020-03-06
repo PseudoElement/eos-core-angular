@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
-import { VALID_REQ_STRING } from 'eos-dictionaries/consts/input-validation';
+import { NOT_EMPTY_STRING } from 'eos-dictionaries/consts/input-validation';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
 
@@ -20,13 +20,13 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
         type: 'number',
         title: 'Гриф доступа',
         length: 10,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
     }, {
         key: 'GRIF_NAME',
         type: 'string',
         title: 'Наименование грифа',
         length: 64,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
         required: true,
         isUnique: true,
         uniqueInDict: true,
@@ -45,13 +45,13 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
         type: 'string',
         title: 'Индекс грифа',
         length: 24,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
     }, {
         key: 'CONFIDENTIONAL',
         type: 'boolean',
         title: 'Конфиденциальность',
         length: 20,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
     }, {
         key: 'sev',
         title: 'Индекс СЭВ',

@@ -8,7 +8,7 @@ import { DateInput } from 'eos-common/core/inputs/date-input';
 import { StringInput } from 'eos-common/core/inputs/string-input';
 import { IInputParamControl, IInputParamControlForIndexRight } from '../intrfaces/user-parm.intterfaces';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
+import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { EosUtils } from 'eos-common/core/utils';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
@@ -161,7 +161,7 @@ export class InputParamControlService {
             if (input.pattern) {
                 validators.push(Validators.pattern(input.pattern));
             } else if (input.controlType === E_FIELD_TYPE.text || input.controlType === E_FIELD_TYPE.string) {
-                validators.push(Validators.pattern(VALID_REQ_STRING));
+                validators.push(Validators.pattern(NOT_EMPTY_STRING));
             }
             // if (input.isUnique) {
             //     validators.push(this.unicValueValidator(input.key, input.uniqueInDict));

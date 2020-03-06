@@ -13,7 +13,7 @@ import {DropdownInput} from '../core/inputs/select-input';
 import {ButtonsInput} from '../core/inputs/buttons-input';
 import {E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
 import {EosUtils} from '../core/utils';
-import {VALID_REQ_STRING} from '../consts/common.consts';
+import {NOT_EMPTY_STRING} from '../consts/common.consts';
 import { NumberIncrementInput } from 'eos-common/core/inputs/number-increment-input';
 
 @Injectable()
@@ -194,7 +194,7 @@ export class InputControlService {
             } else if (input.controlType === E_FIELD_TYPE.text) {
                 validators.push(Validators.pattern(NOT_EMPTY_MULTYSTRING));
             } else if (input.controlType === E_FIELD_TYPE.string) {
-                validators.push(Validators.pattern(VALID_REQ_STRING));
+                validators.push(Validators.pattern(NOT_EMPTY_STRING));
             }
             if (input.isUnique) {
                 validators.push(this.unicValueValidator(input.key, input.uniqueInDict));

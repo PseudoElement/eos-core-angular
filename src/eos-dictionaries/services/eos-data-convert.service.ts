@@ -7,7 +7,7 @@ import { CheckboxInput } from 'eos-common/core/inputs/checkbox-input';
 import { DateInput } from 'eos-common/core/inputs/date-input';
 import { E_FIELD_TYPE } from '../interfaces';
 import { GENDERS } from '../consts/dictionaries/department.consts';
-import { EMAIL, VALID_REQ_STRING } from '../consts/input-validation';
+import { EMAIL, NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
@@ -243,7 +243,7 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         formatDbBinary: descr[_key].formatDbBinary,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey] !== undefined ? !!data[_dict][descr[_key].foreignKey] : descr[_key].default,
+                                        value: !!data[_dict][descr[_key].foreignKey],
                                         disabled: !editMode,
                                     });
                                     break;
@@ -282,7 +282,8 @@ export class EosDataConvertService {
                                         required: descr[_key].required,
                                         hideLabel: !(descr[_key].title),
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey] !== undefined ? data[_dict][descr[_key].foreignKey] : descr[_key].default,
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
                                         disabled: !editMode,
                                     });
                                     break;
@@ -309,7 +310,7 @@ export class EosDataConvertService {
                             label: 'Индекс СЭВ',
                             dict: 'sev',
                             value: data['sev'] ? data['sev']['GLOBAL_ID'] : null,
-                            pattern: VALID_REQ_STRING,
+                            pattern: NOT_EMPTY_STRING,
                             disabled: !editMode,
                             length: 255,
                         });
@@ -353,7 +354,7 @@ export class EosDataConvertService {
                                 value: data.contact[i].MAIL_FORMAT,
                                 // options: fieldsDescription['printInfo']['GENDER'].options,
                                 options: MAIL_FORMATS,
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 disabled: !editMode,
                             });
                             inputs['contact[' + i + '].NOTE'] = new StringInput({
@@ -382,7 +383,7 @@ export class EosDataConvertService {
                                 value: data['printInfo']['GENDER'],
                                 // options: fieldsDescription['printInfo']['GENDER'].options,
                                 options: GENDERS,
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.SURNAME'] = new StringInput({
@@ -390,7 +391,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 disabled: !editMode,
                             });
@@ -399,7 +400,7 @@ export class EosDataConvertService {
                                 label: 'Имя',
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 disabled: !editMode,
                             });
@@ -408,7 +409,7 @@ export class EosDataConvertService {
                                 label: 'Отчество',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 disabled: !editMode,
                             });
@@ -417,7 +418,7 @@ export class EosDataConvertService {
                                 label: 'Родительный падеж (кого, чего)',
                                 dict: 'printInfo',
                                 value: data['printInfo']['DUTY_RP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
@@ -426,7 +427,7 @@ export class EosDataConvertService {
                                 label: 'Дательный падеж (кому, чему?)',
                                 dict: 'printInfo',
                                 value: data['printInfo']['DUTY_DP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
@@ -435,7 +436,7 @@ export class EosDataConvertService {
                                 label: 'Винительный падеж (кого, что?)',
                                 dict: 'printInfo',
                                 value: data['printInfo']['DUTY_VP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
@@ -444,7 +445,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия И.О. в дательном падеже',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_SURNAME_DP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 disabled: !editMode,
                             });
@@ -453,7 +454,7 @@ export class EosDataConvertService {
                                 label: 'И.О. Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_SURNAME'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 disabled: !editMode,
                             });
@@ -462,7 +463,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_RP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 hideLabel: true,
                                 length: 64,
                                 disabled: !editMode,
@@ -472,7 +473,7 @@ export class EosDataConvertService {
                                 label: 'Имя',
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_RP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -482,7 +483,7 @@ export class EosDataConvertService {
                                 label: 'Отчество',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_RP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -492,7 +493,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_DP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -502,7 +503,7 @@ export class EosDataConvertService {
                                 label: 'Имя',
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_DP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -512,7 +513,7 @@ export class EosDataConvertService {
                                 label: 'Отчество',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_DP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -522,7 +523,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_VP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -532,7 +533,7 @@ export class EosDataConvertService {
                                 label: 'Имя',
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_VP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -542,7 +543,7 @@ export class EosDataConvertService {
                                 label: 'Отчество',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_VP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -552,7 +553,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_TP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -562,7 +563,7 @@ export class EosDataConvertService {
                                 label: 'Имя',
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_TP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -572,7 +573,7 @@ export class EosDataConvertService {
                                 label: 'Отчество',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_TP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -582,7 +583,7 @@ export class EosDataConvertService {
                                 label: 'Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_PP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -592,7 +593,7 @@ export class EosDataConvertService {
                                 label: 'Имя',
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_PP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -602,7 +603,7 @@ export class EosDataConvertService {
                                 label: 'Отчество',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_PP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
@@ -612,7 +613,7 @@ export class EosDataConvertService {
                                 label: 'Должность',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_DUTY'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
@@ -621,7 +622,7 @@ export class EosDataConvertService {
                                 label: 'Подразделение',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_DEPARTMENT'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
@@ -632,14 +633,14 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['NOT_USE_IN_DUTY'],
                                 disabled: !editMode,
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                             });
                             inputs['printInfo.PRINT_DEPARTMENT'] = new TextInput({
                                 key: 'printInfo.PRINT_DEPARTMENT',
                                 label: 'Полное наименование подразделения',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_DEPARTMENT'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
@@ -648,7 +649,7 @@ export class EosDataConvertService {
                                 label: 'Наименование подразделения в родительном падеже (чего?)',
                                 dict: 'printInfo',
                                 value: data['printInfo']['DEPARTMENT_RP'],
-                                pattern: VALID_REQ_STRING,
+                                pattern: NOT_EMPTY_STRING,
                                 length: 255,
                                 disabled: !editMode,
                             });
