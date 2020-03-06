@@ -23,6 +23,7 @@ export class AppContext {
      */
     public UserViews: SRCH_VIEW[];
     public User99Parms: any;
+    public sysLicenseInfo;
 
     /**
      * рабочие столы
@@ -62,7 +63,9 @@ export class AppContext {
                 ParamsDic: '-99'
             }
         });
-
+        const oLicenseInfo = this.pip.read<any>({
+            'LicenseInfo': ALL_ROWS
+        });
         const oCurrentUser = p.read<USER_CL>({
             CurrentUser: ALL_ROWS,
             expand: 'USERDEP_List,USERSECUR_List,USER_VIEW_List,USER_TECH_List',
@@ -80,8 +83,8 @@ export class AppContext {
                 return res;
             });
 
-        return Promise.all([oSysParams, oCurrentUser])
-            .then(([sysParms, userWithViews]) => {
+        return Promise.all([oSysParams, oCurrentUser, oLicenseInfo])
+            .then(([sysParms, userWithViews, sysLicenseInfo]) => {
                 this.SysParms = sysParms[0];
                 if (this.SysParms._more_json.ParamsDic['CB_FUNCTIONS'] === 'YES') {
                     this.cbBase = true;
@@ -89,6 +92,12 @@ export class AppContext {
                 this.CurrentUser = userWithViews.user;
                 this.UserViews = userWithViews.views.map((userView) => this.pip.entityHelper.prepareForEdit(userView));
                 this._ready.resolve('ready');
+                // получаем список лицензий
+                let ans = sysLicenseInfo;
+                if (typeof(ans) === 'string') {
+                    ans = JSON.parse(ans);
+                }
+                this.sysLicenseInfo = ans;
                 return [this.CurrentUser, this.SysParms, this.UserViews];
             });
     }
@@ -131,7 +140,19 @@ export class AppContext {
             }
         });
     }
-
+    /* Обновление систем лицензий нужно будет в дальнейшем */
+    public updateLicenseInfo() {
+        this.pip.read<USER_CL>({
+            'LicenseInfo': ALL_ROWS
+        })
+        .then(sysLicenseInfo => {
+            let ans = sysLicenseInfo;
+            if (typeof(ans) === 'string') {
+                ans = JSON.parse(ans);
+            }
+            this.sysLicenseInfo = ans;
+        });
+    }
 
 
 }

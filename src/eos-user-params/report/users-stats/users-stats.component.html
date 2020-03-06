@@ -34,7 +34,7 @@
             </div>
             <div class="mar-items">
                 <span class="item-count-content">
-                    Система не зарегистрирована
+                    {{systemRegistr}}
                 </span>
             </div>
             <div class="mar-items">
@@ -71,10 +71,37 @@
             <div class="stats-list">
                 <div class="user-item">
                     <div class="table-stats-title" *ngFor="let subItem of subSysArray">
-                        <span class="cust-str1">{{subItem.subSystem}}</span>
-                        <span class="cust-str2 text-center">{{subItem.subValue}}</span>
-                        <span class="cust-str3 text-center">-</span>
-                        <span class="cust-str4">-</span>
+                        <span class="cust-str1">{{subItem.label}}</span>
+                        <span class="cust-str2 text-center">{{subItem.ActualUsers}}</span>
+                        <span class="cust-str3 text-center">{{subItem.Users || '-'}}</span>
+                        <span class="cust-str4">{{subItem.Expired || '-'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mar-items4">
+                <span class="item-count-content">
+                    Серверные компоненты
+                </span>
+            </div>
+            <div class="table-header">
+                <div class="table-stats-title">    
+                        <span class="user-title-name user-first-colomn text-center">
+                            Подсистема   
+                        </span>
+                        <span class="user-third-colomn text-center">
+                            Наличие
+                        </span> 
+                        <span class="user-four-colomn text-center">
+                            Срок Действия
+                        </span>
+                </div>
+            </div>
+            <div class="stats-list">
+                <div class="user-item">
+                    <div class="table-stats-title" *ngFor="let subItem of subServerArray">
+                        <span class="cust-str1">{{subItem.label}}</span>
+                        <span class="cust-str3 text-center">{{subItem.Trial}}</span>
+                        <span class="cust-str4">{{subItem.Expired}}</span>
                     </div>
                 </div>
             </div>

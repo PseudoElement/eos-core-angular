@@ -1,10 +1,12 @@
 .users-stats-wrapper {
     border-style: solid;
+    background-color: #fafafa;;
     .table-stats-title {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         width: 100%;
+        border-bottom: 1px solid #e6e6e6;
     }
     .stats-list {
         background: #fafafa;
@@ -121,16 +123,22 @@
         height: 32px;
         width: 10%;
         padding-top: 5px;
+        border-left: 1px solid #e6e6e6;
     }
     .cust-str3 {
         height: 32px;
         width: 10%;
         padding-top: 5px;  
+        border-left: 1px solid #e6e6e6;
     }
     .cust-str4 {
         height: 32px;
         width: 20%;    
         padding-top: 5px; 
+        padding-left: 50px; 
+        border-left: 1px solid #e6e6e6;
+    }
+    .user-four-colomn {
         padding-left: 50px; 
     }
 }

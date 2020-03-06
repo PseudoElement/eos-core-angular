@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { PipRX, USER_CL, USER_PARMS } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+/* import { ALL_ROWS } from 'eos-rest/core/consts'; */
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
   selector: 'eos-report-stats',
@@ -10,23 +12,29 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 })
 export class EosReportUsersStatsComponent implements OnInit {
   subsystem: any;
-  items: USER_CL[] = [];
+  serverSystem: any;
+  items: [] = [];
+  users: USER_CL[] = [];
   blockByTech: number = 0;
   blockAuthUsers: number = 0;
   usersNumber: number = 0;
   paramValue: number;
   logUsers: string;
   subSysArray = [];
+  subServerArray = [];
   protUsers;
   deletedUsers;
+  systemRegistr;
 
-  delo: number = 0; delowebLGO: number = 0; delowebKL: number = 0;
-  Shif: number = 0; SCAN: number = 0; Pscan: number = 0; Scan_code: number = 0;
-  Search_code: number = 0; Notifer: number = 0; Informer: number = 0;
-  EOS: number = 0; MobNet: number = 0; APM: number = 0;
 
-  constructor(private _selectedUser: RtUserSelectService, private pip: PipRX, private _errorSrv: ErrorHelperServices, ) {
+  constructor(
+    private _selectedUser: RtUserSelectService,
+    private pip: PipRX,
+    private _errorSrv: ErrorHelperServices,
+    private _appContext: AppContext,
+    ) {
     this.subsystem = this._selectedUser.ArraySystemHelper;
+    this.serverSystem = this._selectedUser.ArrayServerHelper;
   }
 
   ngOnInit() {
@@ -38,11 +46,13 @@ export class EosReportUsersStatsComponent implements OnInit {
       USER_CL: PipRX.criteries({ 'DELETED': '0', 'ISN_LCLASSIF': '1:null' }),
       loadmode: 'Table'
     }).then((r: any) => {
-      this.items = r;
+      this.users = r;
     })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
+    this.items = this._appContext.sysLicenseInfo;
+    this.systemRegistr = this.items.length === 0 ? 'Система не зарегистрирована' : 'Система зарегистрирована';
     const b = this.pip.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
     }).then((r: any) => {
@@ -69,7 +79,7 @@ export class EosReportUsersStatsComponent implements OnInit {
       });
     Promise.all([a, b, c]).then(() => {
       this.getSubSystems(this.items);
-      this.usersNumber = this.usersNumber + this.items.length;
+      this.usersNumber = this.usersNumber + this.users.length;
       this.getProtectedUsers(this.deletedUsers, this.usersNumber);
     }
     )
@@ -93,65 +103,104 @@ export class EosReportUsersStatsComponent implements OnInit {
   }
 
 
-  getSubSystems(items) {
-    for (const i of items) {
-      if (i.AV_SYSTEMS[0] === '1') {
-        this.delo++;
+  getSubSystems(items: any[]) {
+    items.forEach(elem => {
+      if (elem.Id === 1) {
+        this.subsystem.delo.Users = elem.Users;
+        this.subsystem.delo.ActualUsers = elem.ActualUsers;
+        this.subsystem.delo.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[1] === '1') {
-        this.delowebLGO++;
+      if (elem.Id === 2) {
+        this.subsystem.delowebLGO.Users = elem.Users;
+        this.subsystem.delowebLGO.ActualUsers = elem.ActualUsers;
+        this.subsystem.delowebLGO.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[2] === '1') {
-        this.SCAN++;
+      if (elem.Id === 3) {
+        this.subsystem.SCAN.Users = elem.Users;
+        this.subsystem.SCAN.ActualUsers = elem.ActualUsers;
+        this.subsystem.SCAN.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[3] === '1') {
-        this.Pscan++;
+      if (elem.Id === 4) {
+        this.subsystem.Pscan.Users = elem.Users;
+        this.subsystem.Pscan.ActualUsers = elem.ActualUsers;
+        this.subsystem.Pscan.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[5] === '1') {
-        this.Shif++;
+      if (elem.Id === 6) {
+        this.subsystem.Shif.Users = elem.Users;
+        this.subsystem.Shif.ActualUsers = elem.ActualUsers;
+        this.subsystem.Shif.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[15] === '1') {
-        this.Scan_code++;
+      if (elem.Id === 16) {
+        this.subsystem.Scan_code.Users = elem.Users;
+        this.subsystem.Scan_code.ActualUsers = elem.ActualUsers;
+        this.subsystem.Scan_code.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[16] === '1') {
-        this.Notifer++;
+      if (elem.Id === 17) {
+        this.subsystem.Notifer.Users = elem.Users;
+        this.subsystem.Notifer.ActualUsers = elem.ActualUsers;
+        this.subsystem.Notifer.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[17] === '1') {
-        this.Search_code++;
+      if (elem.Id === 18) {
+        this.subsystem.Search_code.Users = elem.Users;
+        this.subsystem.Search_code.ActualUsers = elem.ActualUsers;
+        this.subsystem.Search_code.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[21] === '1') {
-        this.EOS++;
+      if (elem.Id === 22) {
+        this.subsystem.EOS.Users = elem.Users;
+        this.subsystem.EOS.ActualUsers = elem.ActualUsers;
+        this.subsystem.EOS.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[23] === '1') {
-        this.MobNet++;
+      if (elem.Id === 24) {
+        this.subsystem.MobNet.Users = elem.Users;
+        this.subsystem.MobNet.ActualUsers = elem.ActualUsers;
+        this.subsystem.MobNet.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[25] === '1') {
-        this.APM++;
+      if (elem.Id === 26) {
+        this.subsystem.APM.Users = elem.Users;
+        this.subsystem.APM.ActualUsers = elem.ActualUsers;
+        this.subsystem.APM.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[26] === '1') {
-        this.Informer++;
+      if (elem.Id === 27) {
+        this.subsystem.Informer.Users = elem.Users;
+        this.subsystem.Informer.ActualUsers = elem.ActualUsers;
+        this.subsystem.Informer.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-      if (i.AV_SYSTEMS[27] === '1') {
-        this.delowebKL++;
+      if (elem.Id === 28) {
+        this.subsystem.delowebKL.Users = elem.Users;
+        this.subsystem.delowebKL.ActualUsers = elem.ActualUsers;
+        this.subsystem.delowebKL.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
-    }
+      // server
+      if (elem.Id === 32) {
+        this.serverSystem.server_web.Trial = '+'; // elem.Trial;
+        this.serverSystem.server_web.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+      }
+      if (elem.Id === 33) {
+        this.serverSystem.server_EP.Trial = '+'; // elem.Trial;
+        this.serverSystem.server_EP.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+      }
+      if (elem.Id === 31) {
+        this.serverSystem.systemProces.Trial = '+'; // elem.Trial;
+        this.serverSystem.systemProces.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+      }
+      /* if (elem.Id === 31) {
+        this.serverSystem.SEW.Users = elem.Users;
+        this.serverSystem.SEW.ActualUsers = elem.ActualUsers;
+        this.serverSystem.SEW.Expired = elem.Expired;
+      } */
+      if (elem.Id === 21) {
+        this.serverSystem.mail.Trial = '+'; // elem.Trial;
+        this.serverSystem.mail.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+      }
+    });
 
-    this.delowebLGO = this.items.length - this.delo - this.delowebKL;
-    this.subSysArray = [
-      { subSystem: this.subsystem.delo.label, subValue: this.delo },
-      { subSystem: this.subsystem.delowebLGO.label, subValue: this.delowebLGO },
-      { subSystem: this.subsystem.delowebKL.label, subValue: this.delowebKL },
-      { subSystem: this.subsystem.Shif.label, subValue: this.Shif },
-      { subSystem: this.subsystem.SCAN.label, subValue: this.SCAN },
-      { subSystem: this.subsystem.Pscan.label, subValue: this.Pscan },
-      { subSystem: this.subsystem.Scan_code.label, subValue: this.Scan_code },
-      { subSystem: this.subsystem.Search_code.label, subValue: this.Search_code },
-      { subSystem: this.subsystem.Notifer.label, subValue: this.Notifer },
-      { subSystem: this.subsystem.Informer.label, subValue: this.Informer },
-      { subSystem: this.subsystem.EOS.label, subValue: this.EOS },
-      { subSystem: this.subsystem.MobNet.label, subValue: this.MobNet },
-      { subSystem: this.subsystem.APM.label, subValue: this.APM }
-    ];
+    // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
+    Object.keys(this.subsystem).forEach(key => {
+      this.subSysArray.push(this.subsystem[key]);
+    });
+    Object.keys(this.serverSystem).forEach(key => {
+      this.subServerArray.push(this.serverSystem[key]);
+    });
   }
 
 }

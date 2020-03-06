@@ -17,60 +17,176 @@ export class RtUserSelectService {
     ArraySystemHelper = {
         delo: {
             label: 'Дело',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         delo_deloweb: {
             label: 'Дело+Дело-WEB',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         delowebLGO: {
             label: 'Дело-WEB(ЛГО)',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         delowebKL: {
             label: 'Дело-WEB(КЛ)',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         APM: {
             label: 'АРМ руководителя',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         EOS: {
             label: 'EOS Desktop Service',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         SCAN: {
             label: 'Сканирование',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         Pscan: {
             label: 'Поточное сканирование',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         Shif: {
             label: 'ЭП и шифрование',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         Scan_code: {
             label: 'Печать штрих-кода',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         Notifer: {
             label: 'Оповещения и уведомления',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         Search_code: {
             label: 'Поиск по штрих-коду',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         MobNet: {
             label: 'Мобильный кабинет',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         },
         Informer: {
             label: 'Информер',
-            checked: false
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         }
+    };
+    ArrayServerHelper = {
+        server_web: {
+            label: 'Сервер Дело-WEB',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
+        server_EP: {
+            label: 'Сервер удалённо проверки ЭП',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
+        systemProces: {
+            label: 'Подсистема управления процессами',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
+        SEW: {
+            label: 'СЭВ',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
+        mail: {
+            label: 'Партионная почта',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
+        /* MEDO: {
+            label: 'Модуль сопряжения с МЭДО',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
+        },
+        AC_OG: {
+            label: 'Модуль взаимодействия с АС ОГ',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
+        },
+        webWork: {
+            label: 'Модуль интеграции с интернет приёмной',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
+        },
+        work_OG: {
+            label: 'Опубликования хода работ с ОГ',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
+        },
+        MEDO_2_7: {
+            label: 'Модуль сопряжения работ с МЭДО 2.7',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
+        },
+        PPO_SSTY: {
+            label: 'Модуль взаимодействия с РРО ССТУ',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
+        }, */
     };
     scrollPosition: number = 0;
     private _ChangeSelectUser: UserSelectNode;
