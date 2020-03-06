@@ -1,5 +1,5 @@
 import {E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
-import {VALID_REQ_STRING} from '../input-validation';
+import {NOT_EMPTY_STRING} from '../input-validation';
 import {COMMON_FIELDS} from './_common';
 import { SEARCH_TYPES } from '../search-types';
 import { REGION_DICT } from './region.consts';
@@ -70,7 +70,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         title: 'Город',
         type: 'string',
         length: 255,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
         required: true,
         preferences: <IFieldPreferences>{
             minColumnWidth: 200,
@@ -80,7 +80,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         title: 'Фамилия И.О.',
         type: 'string',
         length: 64,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
         required: true,
     }, {
         key: 'DUE_REGION',

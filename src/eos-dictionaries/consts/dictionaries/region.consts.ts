@@ -1,4 +1,5 @@
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
+import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
@@ -74,7 +75,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
         title: 'MAX значение кода Дьюи',
         type: 'string',
         length: 248,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
     }, {
         key: 'sev',
         title: 'Индекс СЭВ',

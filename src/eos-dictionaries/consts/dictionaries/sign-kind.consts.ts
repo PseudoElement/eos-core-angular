@@ -1,5 +1,5 @@
 import {IDictionaryDescriptor, E_DICT_TYPE} from 'eos-dictionaries/interfaces';
-import {VALID_REQ_STRING} from '../input-validation';
+import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
@@ -29,7 +29,7 @@ export const SIGN_KIND_DICT: IDictionaryDescriptor = {
             title: 'Текст подписи',
             type: 'text',
             length: 255,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
         }
     ]),
     treeFields: ['CLASSIF_NAME'],

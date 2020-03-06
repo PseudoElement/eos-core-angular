@@ -1,6 +1,6 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from '../_linear-template';
-import { VALID_REQ_STRING } from '../../input-validation';
+import { NOT_EMPTY_STRING } from '../../input-validation';
 import { COMMON_FIELD_NAME } from '../_common';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
@@ -22,7 +22,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         title: 'Организация',
         type: 'string',
         required: true,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING,
     }, Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Организация'
     }), {
@@ -36,7 +36,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         key: 'ADDRESS',
         type: 'string',
         title: 'Адрес',
-        pattern: VALID_REQ_STRING
+        pattern: NOT_EMPTY_STRING
     }, {
         key: 'CRYPT',
         type: 'boolean',

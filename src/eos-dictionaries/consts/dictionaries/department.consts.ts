@@ -1,5 +1,5 @@
 import {E_DICT_TYPE, E_VISIBLE_TIPE, IDepartmentDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
-import {VALID_REQ_STRING} from '../input-validation';
+import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS, ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
@@ -117,7 +117,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Фамилия И.О.',
             type: 'string',
             length: 64,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             required: true,
             forNode: true,
         }, {
@@ -125,7 +125,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Краткое наименование должности',
             type: 'text',
             length: 255,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             required: true,
             forNode: true,
         },
@@ -179,7 +179,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Индекс',
             type: 'string',
             length: 24,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: false,
         }, {
             key: 'POST_H',
@@ -199,7 +199,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'string',
             required: true,
             length: 64,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: false,
         }, {
             key: 'START_DATE',
@@ -220,35 +220,35 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: '№ местного телефона',
             type: 'string',
             length: 24,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: true,
         }, {
             key: 'PHONE',
             title: '№ телефона',
             type: 'string',
             length: 24,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: true,
         }, {
             key: 'FAX',
             title: 'Факс',
             type: 'string',
             length: 24,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: true,
         }, {
             key: 'E_MAIL',
             title: 'E-mail',
             type: 'string',
             length: 64,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: true,
         }, {
             key: 'NUM_CAB',
             title: '№ кабинета',
             type: 'string',
             length: 24,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             forNode: true,
         }, {
             key: 'DUE_LINK_ORGANIZ',
@@ -296,19 +296,19 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Заместитель',
             type: 'string',
             length: 248,
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
         }, {
             key: 'titleRoom',
             title: 'Краткое наименование кабинета',
             type: 'string',
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             length: 64,
             foreignKey: 'CLASSIF_NAME',
         }, {
             key: 'fullCabinet',
             title: 'Полное наименование кабинета',
             type: 'string',
-            pattern: VALID_REQ_STRING,
+            pattern: NOT_EMPTY_STRING,
             foreignKey: 'FULLNAME',
         },
         ... !Features.cfg.departments.gas_ps ? [] : [

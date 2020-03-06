@@ -2,7 +2,7 @@ import {Component, Output, EventEmitter} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {DOCGROUP_CL, PipRX} from '../../eos-rest';
 import {EosDictService} from '../services/eos-dict.service';
-import {YEAR_PATTERN, NUMERIC_PATTERN, VALID_REQ_STRING} from 'eos-common/consts/common.consts';
+import {YEAR_PATTERN, NUMERIC_PATTERN, NOT_EMPTY_STRING} from 'eos-common/consts/common.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DANGER_NUMCREATION_NP_CHANGE } from 'eos-dictionaries/consts/messages.consts';
 import { CONFIRM_NUMCREATION_CANT, CONFIRM_NUMCREATION_CHANGE } from 'app/consts/confirms.const';
@@ -141,7 +141,7 @@ export class CounterNpEditComponent {
 
     valuePattern = NUMERIC_PATTERN;
     yearPattern = YEAR_PATTERN;
-    docGroupPattern = VALID_REQ_STRING;
+    docGroupPattern = NOT_EMPTY_STRING;
 
     protected apiSrv: PipRX;
     private _node = {};
