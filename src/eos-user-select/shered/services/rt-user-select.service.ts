@@ -16,6 +16,7 @@ export class RtUserSelectService {
     usersInfo: BtnActionFields;
     ArraySystemHelper = {
         delo: {
+            id: 1,
             label: 'Дело',
             checked: false,
             Users: 0,
@@ -23,6 +24,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         delo_deloweb: {
+            id: 0,
             label: 'Дело+Дело-WEB',
             checked: false,
             Users: 0,
@@ -30,6 +32,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         delowebLGO: {
+            id: 2,
             label: 'Дело-WEB(ЛГО)',
             checked: false,
             Users: 0,
@@ -37,6 +40,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         delowebKL: {
+            id: 28,
             label: 'Дело-WEB(КЛ)',
             checked: false,
             Users: 0,
@@ -44,6 +48,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         APM: {
+            id: 26,
             label: 'АРМ руководителя',
             checked: false,
             Users: 0,
@@ -51,6 +56,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         EOS: {
+            id: 22,
             label: 'EOS Desktop Service',
             checked: false,
             Users: 0,
@@ -58,6 +64,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         SCAN: {
+            id: 3,
             label: 'Сканирование',
             checked: false,
             Users: 0,
@@ -65,6 +72,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         Pscan: {
+            id: 4,
             label: 'Поточное сканирование',
             checked: false,
             Users: 0,
@@ -72,6 +80,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         Shif: {
+            id: 6,
             label: 'ЭП и шифрование',
             checked: false,
             Users: 0,
@@ -79,6 +88,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         Scan_code: {
+            id: 16,
             label: 'Печать штрих-кода',
             checked: false,
             Users: 0,
@@ -86,6 +96,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         Notifer: {
+            id: 17,
             label: 'Оповещения и уведомления',
             checked: false,
             Users: 0,
@@ -93,6 +104,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         Search_code: {
+            id: 18,
             label: 'Поиск по штрих-коду',
             checked: false,
             Users: 0,
@@ -100,6 +112,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         MobNet: {
+            id: 24,
             label: 'Мобильный кабинет',
             checked: false,
             Users: 0,
@@ -107,6 +120,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         Informer: {
+            id: 27,
             label: 'Информер',
             checked: false,
             Users: 0,

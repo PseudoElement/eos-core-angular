@@ -1,6 +1,9 @@
 .users-stats-wrapper {
     border-style: solid;
-    background-color: #fafafa;;
+    background-color: #fafafa;
+    .error-rows{
+        color: red;
+    }
     .table-stats-title {
         display: flex;
         align-items: center;

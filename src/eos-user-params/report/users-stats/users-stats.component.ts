@@ -33,7 +33,7 @@ export class EosReportUsersStatsComponent implements OnInit {
     private _errorSrv: ErrorHelperServices,
     private _appContext: AppContext,
     ) {
-    this.subsystem = this._selectedUser.ArraySystemHelper;
+    this.subsystem = this.deletDeloDeloWeb(this._selectedUser.ArraySystemHelper);
     this.serverSystem = this._selectedUser.ArrayServerHelper;
   }
 
@@ -88,7 +88,10 @@ export class EosReportUsersStatsComponent implements OnInit {
       })
       ;
   }
-
+  deletDeloDeloWeb(any) {
+    delete any['delo_deloweb'];
+    return any;
+  }
 
   getProtectedUsers(data: any, usNum: number) {
     for (const i of data) {
@@ -104,70 +107,81 @@ export class EosReportUsersStatsComponent implements OnInit {
 
 
   getSubSystems(items: any[]) {
+    const masFull = this.users[0]['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
+    this.users.forEach((user, index) => {
+      if (index !== 0) {
+        const nUser = user['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
+        masFull.forEach((element, numb) => {
+          if (typeof(nUser[numb]) === 'number') {
+            masFull[numb] += nUser[numb];
+          }
+        });
+      }
+    });
     items.forEach(elem => {
       if (elem.Id === 1) {
         this.subsystem.delo.Users = elem.Users;
-        this.subsystem.delo.ActualUsers = elem.ActualUsers;
+        this.subsystem.delo.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.delo.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 2) {
         this.subsystem.delowebLGO.Users = elem.Users;
-        this.subsystem.delowebLGO.ActualUsers = elem.ActualUsers;
+        this.subsystem.delowebLGO.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.delowebLGO.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 3) {
         this.subsystem.SCAN.Users = elem.Users;
-        this.subsystem.SCAN.ActualUsers = elem.ActualUsers;
+        this.subsystem.SCAN.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.SCAN.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 4) {
         this.subsystem.Pscan.Users = elem.Users;
-        this.subsystem.Pscan.ActualUsers = elem.ActualUsers;
+        this.subsystem.Pscan.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.Pscan.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 6) {
         this.subsystem.Shif.Users = elem.Users;
-        this.subsystem.Shif.ActualUsers = elem.ActualUsers;
+        this.subsystem.Shif.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.Shif.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 16) {
         this.subsystem.Scan_code.Users = elem.Users;
-        this.subsystem.Scan_code.ActualUsers = elem.ActualUsers;
+        this.subsystem.Scan_code.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.Scan_code.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 17) {
         this.subsystem.Notifer.Users = elem.Users;
-        this.subsystem.Notifer.ActualUsers = elem.ActualUsers;
+        this.subsystem.Notifer.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.Notifer.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 18) {
         this.subsystem.Search_code.Users = elem.Users;
-        this.subsystem.Search_code.ActualUsers = elem.ActualUsers;
+        this.subsystem.Search_code.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.Search_code.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 22) {
         this.subsystem.EOS.Users = elem.Users;
-        this.subsystem.EOS.ActualUsers = elem.ActualUsers;
+        this.subsystem.EOS.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.EOS.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 24) {
         this.subsystem.MobNet.Users = elem.Users;
-        this.subsystem.MobNet.ActualUsers = elem.ActualUsers;
+        this.subsystem.MobNet.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.MobNet.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 26) {
         this.subsystem.APM.Users = elem.Users;
-        this.subsystem.APM.ActualUsers = elem.ActualUsers;
+        this.subsystem.APM.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.APM.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 27) {
         this.subsystem.Informer.Users = elem.Users;
-        this.subsystem.Informer.ActualUsers = elem.ActualUsers;
+        this.subsystem.Informer.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.Informer.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       if (elem.Id === 28) {
         this.subsystem.delowebKL.Users = elem.Users;
-        this.subsystem.delowebKL.ActualUsers = elem.ActualUsers;
+        this.subsystem.delowebKL.ActualUsers = masFull[elem.Id - 1]; // elem.ActualUsers;
         this.subsystem.delowebKL.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
       }
       // server
@@ -196,6 +210,9 @@ export class EosReportUsersStatsComponent implements OnInit {
 
     // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
     Object.keys(this.subsystem).forEach(key => {
+      if (masFull[this.subsystem[key].id - 1] !== 0) {
+        this.subsystem[key].ActualUsers = masFull[this.subsystem[key].id - 1];
+      }
       this.subSysArray.push(this.subsystem[key]);
     });
     Object.keys(this.serverSystem).forEach(key => {
