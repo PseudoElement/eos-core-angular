@@ -7,6 +7,44 @@ const LIST_ORDERBY = 'WEIGHT';
 
 const FeaturesRK = Features.cfg.rkdefaults;
 
+export const STRICT_OPTIONS =  [
+    {
+        value: '4', title: 'Строгий – Фигуранты и список ДЛ'
+    },
+    {
+        value: '5', title: 'Строгий – Список ДЛ'
+    },
+];
+export const NOT_STRICT_OPTIONS = [{
+    value: '3', title: 'Список ДЛ'
+}, {
+    value: '2', title: 'Фигуранты и список ДЛ'
+},
+{
+    value: '1', title: 'Картотечный'
+},
+{
+    value: '4', title: 'Строгий – Фигуранты и список ДЛ'
+},
+{
+    value: '5', title: 'Строгий – Список ДЛ'
+}];
+
+export const NOT_STRICT_OPTIONS_PRG = [{
+    value: '3', title: 'Список ДЛ'
+}, {
+    value: '2', title: 'Фигуранты и список ДЛ'
+},
+{
+    value: '1', title: 'Простой'
+},
+{
+    value: '4', title: 'Строгий – Фигуранты и список ДЛ'
+},
+{
+    value: '5', title: 'Строгий – Список ДЛ'
+}];
+
 export class TDFSelect {
     dictId: string;
     dictKey: string;
@@ -595,21 +633,40 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 40,
         // classif_id:  111
         // справочник.
-    }, {
+    },
+    {
+        // Доступ
         key: 'SECURLEVEL_FILE',
+        page: 'D',
+        type: E_FIELD_TYPE.select,
+        // kind_doc '1,2,3',
+        // title: 'Гриф доступа РК',
+        title: 'Гриф:',
+        dict: {
+            dictId: 'SECURITY_CL',
+            dictKey: 'SECURLEVEL',
+            dictKeyTitle: 'GRIF_NAME',
+            orderby: LIST_ORDERBY,
+        },
+        order: 40,
+        // classif_id:  111
+        // справочник.
+    }, {
+        key: 'ACCESS_MODE_FILE',
         page: 'F',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Гриф доступа файла РК',
         longTitle: 'Доступ (Файлы)',
         title: 'Доступ',
-        dict: {
-            dictId: 'SECURITY_CL',
-            dictKey: 'SECURLEVEL',
-            dictKeyTitle: 'GRIF_NAME',
-            version: 1,
-            orderby: LIST_ORDERBY,
-        },
+        options: [],
+        // dict: {
+        //     dictId: 'SECURITY_CL',
+        //     dictKey: 'SECURLEVEL',
+        //     dictKeyTitle: 'GRIF_NAME',
+        //     version: 1,
+        //     orderby: LIST_ORDERBY,
+        // },
         order: 3300,
 
         // classif_id:  111

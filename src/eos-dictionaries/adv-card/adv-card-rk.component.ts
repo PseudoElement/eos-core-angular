@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone, Injector } from '@angular/core';
-import {BsModalRef} from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME, IUpdateDictEvent } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField } from './rk-default-values/rk-default-const';
+import { TDefaultField, STRICT_OPTIONS, NOT_STRICT_OPTIONS } from './rk-default-values/rk-default-const';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs';
 import { RKBasePage } from './rk-default-values/rk-base-page';
@@ -13,7 +13,7 @@ import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/v
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { RK_SELECTED_VALUE_INCORRECT } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
@@ -24,11 +24,11 @@ class Ttab {
     title: string;
 }
 
-const tabs: Ttab [] = [
-    {tag: 0, title: 'По умолчанию'},
-    {tag: 1, title: 'Обязательные'},
-    {tag: 2, title: 'При записи'},
-    {tag: 3, title: 'Файлы'},
+const tabs: Ttab[] = [
+    { tag: 0, title: 'По умолчанию' },
+    { tag: 1, title: 'Обязательные' },
+    { tag: 2, title: 'При записи' },
+    { tag: 3, title: 'Файлы' },
 ];
 
 // declare function openPopup(url: string, callback?: Function): boolean;
@@ -44,7 +44,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     isUpdating = true;
     nodes: any[];
-    tabs: Ttab [];
+    tabs: Ttab[];
     dataController: AdvCardRKDataCtrl;
     activeTab: Ttab;
     form: FormGroup;
@@ -98,11 +98,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.subscriptions = [];
     }
 
-    updateLinks2 (event: IUpdateDictEvent) {
+    updateLinks2(event: IUpdateDictEvent) {
         const el = event.el;
         if (el.key === 'JOURNAL_ISN_NOMENC' ||
             el.key === 'JOURNAL_ISN_NOMENC_W'
-            ) {
+        ) {
             const rec = event.data[0];
             if (rec['DUE'] === '0.') {
                 event.options[0].title = '...';
@@ -116,9 +116,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     save(): void {
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
-                this.dataController.save(this.isn_node, this.inputs, this.newData).then (() => {
+                this.dataController.save(this.isn_node, this.inputs, this.newData).then(() => {
                     this.bsModalRef.hide();
-                }).catch (() => {
+                }).catch(() => {
 
                 });
             }
@@ -129,29 +129,30 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         // this.dataController.zone.run(() => {
         //     this.rereadUserLists();
         // });
-        this._waitClassifSrv.openClassif({classif:
-            (Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? 'TECH_LISTS' : 'COMMON_LIST')
+        this._waitClassifSrv.openClassif({
+            classif:
+                (Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? 'TECH_LISTS' : 'COMMON_LIST')
         })
-        .then(() => {
-            // console.log('result: ', result);
-            this.dataController.zone.run(() => {
-                // console.log('zone');
-                this.rereadUserLists();
+            .then(() => {
+                // console.log('result: ', result);
+                this.dataController.zone.run(() => {
+                    // console.log('zone');
+                    this.rereadUserLists();
+                });
+            })
+            .catch(() => {
+                // console.log('window closed');
+                this.dataController.zone.run(() => {
+                    this.rereadUserLists();
+                });
             });
-        })
-        .catch(() => {
-            // console.log('window closed');
-            this.dataController.zone.run(() => {
-                this.rereadUserLists();
-            });
-        });
     }
 
 
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
         this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), 'USER_LISTS', null, () => {
-        }).then ( () => {
+        }).then(() => {
 
             for (const key in this.inputs) {
                 if (this.inputs.hasOwnProperty(key)) {
@@ -162,7 +163,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                         if (control) {
                             const val = control.value;
                             if (val) {
-                                const opt = field.options.find ( o => Number(o.value) === Number(val));
+                                const opt = field.options.find(o => Number(o.value) === Number(val));
                                 if (!opt) {
                                     // control.setValue(null);
                                 }
@@ -184,7 +185,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             // console.log(event);
             this._updateInputs(this.inputs);
             this._updateOptions(this.inputs);
-        }).then (() => {
+        }).then(() => {
             this.form.updateValueAndValidity();
 
             // проверить списки на предмет наличия логически удаленных записей.
@@ -192,8 +193,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
             // Выводить ошибки в заданном порядке.
             const sortable = fields_.sort((a, b) => a.order > b.order ? 1 : a.order < b.order ? -1 :
-                (a.order === undefined ?  1 :
-                (b.order === undefined ? -1 : 0) ));
+                (a.order === undefined ? 1 :
+                    (b.order === undefined ? -1 : 0)));
 
             const listLD = [];
             const listHasDeleted = [];
@@ -211,7 +212,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 }
 
                 if (val) {
-                    const opt = el.options.find ( o => Number(o.value) === Number(val));
+                    const opt = el.options.find(o => Number(o.value) === Number(val));
                     if (opt && opt.isEmpty) {
                         listIsEmpty.push(el);
                         // confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
@@ -221,7 +222,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                         // confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_CONTAIN_DELETED);
                     }
                     if (opt && opt.disabled) {
-                        listLD.push (el);
+                        listLD.push(el);
                         // confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
                     }
                     if (!opt) {
@@ -259,7 +260,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
                 }
 
-                confirmationsChain = confirmationsChain.then( (res) => {
+                confirmationsChain = confirmationsChain.then((res) => {
                     if (res) {
                         return res;
                     } else {
@@ -275,7 +276,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     _elListToText(list: any[]): string {
-        return EosDataConvertService.listToCommaList(list.map( (el) => (el.longTitle || el.title)));
+        return EosDataConvertService.listToCommaList(list.map((el) => (el.longTitle || el.title)));
     }
 
     cancel(): void {
@@ -290,7 +291,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         return 'Реквизиты РК "' + this._node[NODE_LABEL_NAME] + '"';
     }
 
-    public clickTab (item: Ttab) {
+    public clickTab(item: Ttab) {
         this.activeTab = item;
         BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
     }
@@ -309,7 +310,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.dataController = new AdvCardRKDataCtrl(this.injector/*, this._zone, this._apiSrv, this._msgSrv, this._dictSrv*/);
         this.descriptions = this.dataController.getDescriptionsRK();
 
-        this.dataController.readDGValues(this.isn_node).then (values => {
+        this.dataController.readDGValues(this.isn_node).then(values => {
             this.storedValuesDG = values[0];
             if (this.storedValuesDG['E_DOCUMENT'] === 1) {
                 this.isEDoc = true;
@@ -330,15 +331,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this.isChanged = true;
             this._checkCorrectValuesLogic(this.values /*, this.descriptions*/);
             this.editValues = this._makePrevValues(this.values);
-
-            this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), null, this.values, this.updateLinks2).then (() => {
+            this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), null, this.values, this.updateLinks2).then(() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
-                this._updateOptions(this.inputs);
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
+                this._updateOptions(this.inputs);
                 this._updateValidators(this.form.controls);
-
                 this.subscriptions.push(this.form.statusChanges
                     .subscribe((status) => {
                         if (this._currentFormStatus !== status) {
@@ -387,17 +386,17 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         ValidatorsControl.appendValidator(controls['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST'],
             (control: AbstractControl): { [key: string]: any } => {
-            const c = this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
-            if (c) {
-                const v = c.value;
-                if (v) {
-                    if ((!control.value || control.value === '') && (v === '-1')) {
-                        return { valueError: 'Итоговый список не должен быть пустым. Заполните его или измените значение "Доступ"'};
+                const c = this.form.controls['DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE'];
+                if (c) {
+                    const v = c.value;
+                    if (v) {
+                        if ((!control.value || control.value === '') && (v === '3' || v === '5')) {
+                            return { valueError: 'Итоговый список не должен быть пустым. Заполните его или измените значение "Доступ"' };
+                        }
                     }
                 }
-            }
-            return null;
-        });
+                return null;
+            });
 
         const controlSrok1 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC'];
         const controlSrok2 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'];
@@ -445,7 +444,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '2';
             values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT_IF'] = '1';
             values[FICT_CONTROLS_LIST_NAME]['ISN_CARD_REG_W_2'] = v3;
-        } else if (!v1 && !v2 && ! v3) { // Отсутствуют данные
+        } else if (!v1 && !v2 && !v3) { // Отсутствуют данные
             values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '0';
             values[DEFAULTS_LIST_NAME]['ISN_CARD_REG_CURR_W'] = '1';
         }
@@ -492,7 +491,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
 
     private _makeDefaults(descr: TDefaultField[]): any {
-        const res = { };
+        const res = {};
         for (let i = 0; i < descr.length; i++) {
             const el = descr[i];
             if (el.default !== undefined) {
@@ -503,18 +502,26 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     private _updateOptions(values: any[]) {
-        const v = values['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
-        v.options.push (
-            {
-                value: '-1', title: 'Список ДЛ'
-            }, {
-                value: '-2', title: 'Фигуранты РК'
+        const grif = this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
+        this.updateAccessInput(grif.value);
+    }
+    private updateAccessInput(value) {
+        const optionsWithDsp: Array<any> = this.inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'].options;
+        const findDsp = optionsWithDsp.filter(o => +o.value === +value);
+        const v = this.inputs['DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE'].options;
+        if (findDsp.length) {
+            if (findDsp[0].confidentional) {
+                v.length = 0;
+                v.push(...STRICT_OPTIONS);
+            } else {
+                v.length = 0;
+                v.push(...NOT_STRICT_OPTIONS);
             }
-        );
+        }
 
     }
 
-    private _appendDBFilesValues (values: any[], data: any): void {
+    private _appendDBFilesValues(values: any[], data: any): void {
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
             values[el['CATEGORY'] + '.' + 'EXTENSIONS'] = el['EXTENSIONS'];
@@ -523,7 +530,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
     }
 
-    private _appendDBDefValues (values: any[], data: any): void {
+    private _appendDBDefValues(values: any[], data: any): void {
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
             values[el['DEFAULT_ID']] = el['VALUE'];
@@ -586,11 +593,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         return res;
     }
 
-    private _getPrevValue (path: string): any {
+    private _getPrevValue(path: string): any {
         return this.editValues[path];
     }
 
-    private _setPrevValue (path: string, value: any) {
+    private _setPrevValue(path: string, value: any) {
         this.editValues[path] = value;
     }
 

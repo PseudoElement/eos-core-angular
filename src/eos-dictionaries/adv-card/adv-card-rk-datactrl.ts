@@ -260,10 +260,11 @@ export class AdvCardRKDataCtrl {
                     const value = element[el.dict.dictKey];
                     const title = element[el.dict.dictKeyTitle];
                     const deleted = element['DELETED'];
+                    const DSP = element['CONFIDENTIONAL'];
                     if (deleted) {
-                        opts_ptr.push ({value: value, title: title, disabled: true});
+                        opts_ptr.push (Object.assign({}, {value: value, title: title, disabled: true}, DSP ? {confidentional: 1} : null));
                     } else {
-                        opts_ptr.push ({value: value, title: title });
+                        opts_ptr.push (Object.assign({}, {value: value, title: title}, DSP ? {confidentional: 1} : null));
                     }
 
                 }
