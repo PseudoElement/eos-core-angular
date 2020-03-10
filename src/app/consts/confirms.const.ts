@@ -249,3 +249,13 @@ export const CONFIRM_OPERATION_NOT_DATE_ALL: IConfirmWindow2 = {
         {title: 'OK', result: 1, isDefault: true, },
     ],
 };
+export const CONFIRM_CHANGE_CONFIDENTIONAL_FLAG: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: `В системе существуют РК и файлы с данным грифом доступа. После внесения изменений в их реквизитах возможны не корректные значения.
+     Вы хотите изменить значение флага «ДСП файлы»?`,
+    buttons: [
+        {title: 'Нет', result: 1, isDefault: true, },
+        {title: 'Да',  result: 2, },
+    ],
+};
