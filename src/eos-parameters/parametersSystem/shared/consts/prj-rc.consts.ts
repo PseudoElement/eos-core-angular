@@ -86,6 +86,11 @@ export const PRJ_RC_PARAM: IBaseParameters = {
             options: [
                 {value: '', title: ''},
             ]
-        }
+        },
+        {
+            key: 'PRJ_RC_SECURLEVEL_CONSIDER',
+            type: 'boolean',
+            title: 'Учитывать гриф при доступе к РКПД'
+        },
     ]
 };
