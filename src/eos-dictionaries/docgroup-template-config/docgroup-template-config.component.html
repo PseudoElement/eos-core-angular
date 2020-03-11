@@ -58,6 +58,7 @@
                [ngStyle]="{'margin-left.px': 10}"
                [id]="'separator'"
                [type]="'text'"
+               maxlength="10"
                (keyup)="keyUpSeparator($event)"
                value="{{separator}}">
 
@@ -85,7 +86,7 @@
             [ngClass]="{'dg-template-wrapper': true}"
             >
             <span>{{item.title}}</span>
-            <input
+            <input style="padding-right: 23px;"
                 class="dg-template m-font form-control m-font link-input"
                 [id]="item.key"
                 type="text"

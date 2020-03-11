@@ -13,6 +13,11 @@
                 padding-left: 20px;
                 padding-right: 20px;
                 cursor: grab;
+                &.gu-transit {
+                    display: block;
+                    width: 100%;
+                    background-color: #e3f2fd;
+                }
             }
         }
 

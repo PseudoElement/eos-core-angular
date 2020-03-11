@@ -1,7 +1,7 @@
 import { DGTplElement, DGTplElementPosition } from 'eos-dictionaries/helpers/numcreation-template.interface';
 
 
-const BASE_ENABLE_EXP = /^((?!(\{(@2|@|2#|3#)\})).)*$/; // если не содержит {@2}, {@}, {2#}, {3#}
+const BASE_ENABLE_EXP = /^((?!(\{(@2|@|2#|3#|1#)\})).)*$/; // если не содержит {@2}, {@}, {2#}, {3#}
 const ONLY_IF_EMPTY = /^$/; // только в пустой шаблон
 
 export const DG_TPL_GRP_IDX: DGTplElement = { key: '{1}', title: 'Индекс группы документов', enabledMask: BASE_ENABLE_EXP };
@@ -67,6 +67,27 @@ export const DG_TPL_LINKED_DOC_NUMBER_WRL: DGTplElement = Object.assign({}, DG_T
     ],
 });
 export const DG_TPL_RK_NUMBER: DGTplElement = { key: '{C}', title: 'Порядковый номер в пределах связанной РК', enabledMask: BASE_ENABLE_EXP };
+export const DG_TPL_RK_NUMBER_WRL: DGTplElement = Object.assign({}, DG_TPL_RK_NUMBER, {
+
+    infoR: true,
+    infoL: true,
+    additionalControls: [{
+        key: '',
+        title: 'Признак обязательности',
+        // isToggleR: true,
+        type: 'checkbox',
+        class: 'checkbox checkbox-inline',
+        storeInInfo: 'R',
+    },
+    {
+        key: '',
+        title: 'Связки',
+        type: 'link-list',
+        class: '',
+        storeInInfo: 'L',
+    }
+    ],
+});
 export const DG_TPL_D: DGTplElement = { key: '{D}', title: 'Исх. № корреспондента', enabledMask: BASE_ENABLE_EXP };
 export const DG_TPL_NUM_NP: DGTplElement = { key: '{N}', title: 'Номер НП', possibleRKType: /^[3]$/, enabledMask: BASE_ENABLE_EXP };
 export const DG_TPL_SEPARATOR: DGTplElement = { key: '-', title: 'Разделитель', isNotUnique: true, enabledMask: BASE_ENABLE_EXP };
@@ -79,6 +100,7 @@ export const DG_TPL_MANUAL_NUMBER_DOCCB: DGTplElement = Object.assign({}, DG_TPL
         type: 'checkbox',
         class: 'checkbox checkbox-inline',
         valueIfUnused: 0,
+        storeInInfo: 'R',
 }], });
 export const DG_TPL_MANUAL_NUMBER_PRJCB = Object.assign({}, DG_TPL_MANUAL_NUMBER, {
     additionalControls: [{
@@ -87,6 +109,7 @@ export const DG_TPL_MANUAL_NUMBER_PRJCB = Object.assign({}, DG_TPL_MANUAL_NUMBER
         type: 'checkbox',
         class: 'checkbox checkbox-inline',
         valueIfUnused: 0,
+        storeInInfo: 'R',
     }],
 });
 
@@ -98,7 +121,7 @@ export const DG_TPL_COMB2: DGTplElement = {
     enabledMask: BASE_ENABLE_EXP,
     onlyPos: DGTplElementPosition.last,
 };
-export const DG_TPL_COMB3: DGTplElement = { key: '{2#}', title: 'Спец. элемент повторного документа', enabledMask: BASE_ENABLE_EXP };
+export const DG_TPL_COMB3: DGTplElement = { key: '{2#}', title: 'Спец. элемент повторного документа', enabledMask: ONLY_IF_EMPTY };
 export const DG_TPL_COMB4: DGTplElement = { key: '{3#}', title: 'Специальный элемент ответов', enabledMask: ONLY_IF_EMPTY };
 export const DG_TPL_NUM_ORG: DGTplElement = { key: '{E}', title: 'Порядковый номер организации - регистратора', enabledMask: BASE_ENABLE_EXP };
 export const DG_TPL_INDEX: DGTplElement = { key: '{F}', title: 'Индекс организации - регистратора', enabledMask: BASE_ENABLE_EXP };

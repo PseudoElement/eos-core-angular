@@ -340,7 +340,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         }
     }
     valueForControl (item) {
-        return this.additionalData[item.key] || (item.editValue.length ? item.editValue : false );
+        return this.additionalData[item.key] || ((item.editValue && item.editValue.length) ? item.editValue : false );
     }
 
     cbChange(control: DGTplAddControl, event: any) {
@@ -351,7 +351,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
         const item =  control.item;
 
-        if (item && item.infoL && control && control.storeInInfo === 'R') {
+        if (item && item.infoL && control && (control.storeInInfo === 'R' && control.title !== 'Копировать №')) {
             // this._setShablonInfo(item, control.storeInInfo, event.target.checked);
             control.editValue = event.target.checked ? [{ CONSTR_TYPE: 'R', element: this._getLetter(item) }] : [];
             item.editKey = this._setL(item.editKey, event.target.checked);
@@ -471,8 +471,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         const letter = this._getLetter(item);
         const list = this.additionalData['SHABLON_DETAIL_List'].filter (d => d.CONSTR_TYPE === 'R' && d.element === letter);
         item.additionalControls.forEach( control => {
-            if (control.storeInInfo === 'R') {
-
+            if (control.storeInInfo === 'R' && control.title !== 'Копировать №') {
                 control.editValue = list;
                 item.editKey = this._setR(item.editKey, !!list);
             }
@@ -482,7 +481,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     private updateAvailableItems() {
         const items = (this.forProject ? FTemplates.prj.list : FTemplates.doc.list).slice(0);
         this.availableItems = items;
-
         // пересоздадим по ключу, ибо драгула теряет поля при драгдропе.
         // this.templateItems = this.templateItems
         // .map( t => {
