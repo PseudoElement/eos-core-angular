@@ -625,6 +625,6 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign', 'progectRegistration', 'fileAccessListRk'],
     listFields: ['CLASSIF_NAME', 'NOTE'],
     allVisibleFields: [],
-    quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'RULE_KIND', 'DUE_DOCGROUP', 'DUE_DEP'],
+    quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'DUE_DOCGROUP'],
     searchFields: [],
 });

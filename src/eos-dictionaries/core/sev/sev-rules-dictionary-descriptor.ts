@@ -44,7 +44,7 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                     processors.push(
                         new Promise<any>((resolve) => {
                             if (value['RULE_KIND'] === 1) {
-                                return this._rulesSrv.parseSendDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
+                                return this._rulesSrv.parseSendDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
                                     .then(result => {
                                         if (result) {
                                             for (const prop in result) {
@@ -70,7 +70,7 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                             //         });
                             // }
                             if (value['RULE_KIND'] === 5) {
-                                return this._rulesSrv.parsesendProjectRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
+                                return this._rulesSrv.parsesendProjectRule(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
                                     .then(result => {
                                         if (result) {
                                             for (const prop in result) {

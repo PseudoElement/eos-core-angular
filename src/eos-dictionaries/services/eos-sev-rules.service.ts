@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import * as xml2js from 'xml2js';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IMessage } from 'eos-common/interfaces';
+import { SEV_RULE } from 'eos-rest';
 
 @Injectable()
 export class EosSevRulesService {
     private _scriptConfig: string;
     private _data: any;
+    constructor(private _msgSrv: EosMessageService) {
+
+    }
 
     scriptConfigToXml(): string {
         const kind = (this._data['type'] - 1) * 4 + +this._data['kind'];
@@ -37,19 +43,23 @@ export class EosSevRulesService {
         return result;
     }
 
-    parseSendDocumentRule(scriptConfig, kindRule): Promise<any> {
+    parseSendDocumentRule(scriptConfig, kindRule, data: SEV_RULE): Promise<any> {
         const parseString = xml2js.parseString;
         this._scriptConfig = scriptConfig;
         if (this._scriptConfig) {
             return new Promise<any>((resolve, reject) => {
                 parseString(this._scriptConfig, (err, result) => {
                     if (err) {
-                        return reject(err);
+                        const mess = err.message ? err.message : 'ошибка в файле Вид правила';
+                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: mess };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
                     }
                     const sendDocumentRule = result['SendDocumentRule'];
                     if (!sendDocumentRule) {
-                        const e = { message: 'отсутствует SendDocumentRule' };
-                        return reject(e);
+                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
                     }
                     const document = sendDocumentRule['ScriptConfig'][0]['Document'][0];
                     this._data = {};
@@ -128,19 +138,23 @@ export class EosSevRulesService {
         });
     }
 
-    parsesendProjectRule(scriptConfig, kindRule) {
+    parsesendProjectRule(scriptConfig, kindRule, data: SEV_RULE) {
         const parseString = xml2js.parseString;
         this._scriptConfig = scriptConfig;
         if (this._scriptConfig) {
             return new Promise<any>((resolve, reject) => {
                 parseString(this._scriptConfig, (err, result) => {
                     if (err) {
-                        return reject(err);
+                        const mess = err.message ? err.message : 'ошибка в файле Вид правила';
+                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: mess };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
                     }
                     const sendProjectRule = result['SendProjectRule'];
                     if (!sendProjectRule) {
-                        const e = { message: 'отсутствует SendProjectRule' };
-                        return reject(e);
+                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
                     }
                     this._data = {};
                     this._data['type'] = kindRule >= 5 ? 2 : 1;
