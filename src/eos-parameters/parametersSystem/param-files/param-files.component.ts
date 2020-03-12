@@ -158,7 +158,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     }
     chenge($event) {
         const inputValue: string = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
-        if ($event.code !== 'Delete' && $event.code !== 'Backspace' && inputValue && inputValue.length === 1) {
+        if ($event.keyCode !== 39 && $event.keyCode !== 37 && $event.keyCode !== 8 && $event.keyCode !== 46 && inputValue && inputValue.length === 1) {
             $event.preventDefault();
             $event.stopPropagation();
         }
