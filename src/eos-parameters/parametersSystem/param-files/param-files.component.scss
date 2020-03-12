@@ -32,6 +32,29 @@
             }
         }
     }
+    
+    .description-all-grup{
+        position: relative;
+        .description-input-group {
+            width: 580px;
+        }
+        .description-button {
+            position: absolute;
+            top: 37px;
+            right: 50px;
+        }
+    }
+    .description-input-group-rep {
+        input{
+            width: 50px;
+            margin-left: 20px;
+        }
+        label {
+            float: left;
+        }
+        
+    }
+    
     .modal-dialog {
         margin-top: 250px;
     }
