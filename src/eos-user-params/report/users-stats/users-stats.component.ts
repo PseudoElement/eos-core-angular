@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { PipRX, USER_CL, USER_PARMS } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 /* import { ALL_ROWS } from 'eos-rest/core/consts'; */
-import { AppContext } from 'eos-rest/services/appContext.service';
+/* import { AppContext } from 'eos-rest/services/appContext.service'; */
 
 @Component({
   selector: 'eos-report-stats',
@@ -31,7 +32,7 @@ export class EosReportUsersStatsComponent implements OnInit {
     private _selectedUser: RtUserSelectService,
     private pip: PipRX,
     private _errorSrv: ErrorHelperServices,
-    private _appContext: AppContext,
+    /* private _appContext: AppContext, */
     ) {
     this.subsystem = this.deletDeloDeloWeb(this._selectedUser.ArraySystemHelper);
     this.serverSystem = this._selectedUser.ArrayServerHelper;
@@ -51,7 +52,7 @@ export class EosReportUsersStatsComponent implements OnInit {
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
-    this.items = this._appContext.sysLicenseInfo;
+    /* this.items = this._appContext.sysLicenseInfo; */
     this.systemRegistr = this.items.length === 0 ? 'Система не зарегистрирована' : 'Система зарегистрирована';
     const b = this.pip.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
@@ -77,7 +78,20 @@ export class EosReportUsersStatsComponent implements OnInit {
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
-    Promise.all([a, b, c]).then(() => {
+    const d =  this.pip.read<any>({
+      'LicenseInfo': ALL_ROWS
+    })
+    .then((licenz: any) => {
+      let ans = licenz;
+      if (typeof(ans) === 'string') {
+          ans = JSON.parse(ans);
+      }
+      this.items = ans;
+    })
+    .catch(er => {
+      this._errorSrv.errorHandler(er);
+    });
+    Promise.all([a, b, c, d]).then(() => {
       this.getSubSystems(this.items);
       this.usersNumber = this.usersNumber + this.users.length;
       this.getProtectedUsers(this.deletedUsers, this.usersNumber);
