@@ -52,7 +52,18 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'FILE_WITH_EDS_PROTECTED',
             type: 'boolean',
             title: 'Запретить редактирование файлов РК с ЭП'
-        }
+        },
+        {
+            key: 'FILE_DESCRIPTION_VALID_CHARS',
+            type: 'text',
+            title: 'Допустимые символы',
+            length: 255,
+        },
+        {
+            key: 'FILE_DESCRIPTION_REPLACE',
+            type: 'string',
+            title: 'Символ для замены',
+        },
     ],
     fieldsChild: [
         {
