@@ -17,6 +17,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 export class ParamFielsComponent extends BaseParamComponent {
     @ViewChild('infoAttachFilesModal') infoAttachFilesModal: ModalDirective;
     @Input() btnError;
+    validChengeValueStr = '0123456789abcdefghijklmnopqrstuvwxyzабвгдеёжзийклмнопрстуфхцчшщъыьэюя';
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
     dataAttachDb;
@@ -29,6 +30,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     newDataAttach;
     editMode: boolean;
     validValue;
+    newMesTrue = true;
     checkBlur: boolean = false;
     readonly arrSetValidation = ['DOC_RC_EXTENSIONS', 'PRJ_VISA_SIGN_EXTENSIONS', 'REPLY_EXTENSIONS', 'RESOLUTION_EXTENSIONS', 'PRJ_RC_EXTENSIONS'];
     formAttachfields = [
@@ -78,7 +80,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     unique(str) {
         const result = [];
         for (let index = 0; index < str.length; index++) {
-            if (!result.includes(str[index])) {
+            if (result.indexOf(str[index]) === -1) {
                 result.push(str[index]);
             }
         }
@@ -88,14 +90,16 @@ export class ParamFielsComponent extends BaseParamComponent {
         const validRepeat: string = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
         const valid: string = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (valid && validRepeat && valid.indexOf(validRepeat) === -1) {
-            return true;
+            if (this.validChengeValueStr.indexOf(validRepeat.toLowerCase()) === -1) {
+                return true;
+            }
         }
         return false;
     }
     checkValid() {
         this.validValue = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (this.validValue) {
-            this.validValue = this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ]/g, '');
+            this.validValue = this.validValue.replace(/\s/g, ''); // this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, '');
             this.validValue = this.unique(this.validValue);
             if (this.validValue.length !== this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value.length) {
                 return true;
@@ -115,17 +119,17 @@ export class ParamFielsComponent extends BaseParamComponent {
                 alert('В параметре "Допустимые символы" описания файлов есть повторяющиеся символы или буквы/цифры. Лишние будут удалены.');
                 this.deletValid();
             }
-            this.checkBlur = true;
         }
+        this.checkBlur = false;
     }
     replaceBlur() {
         if (!this.checkBlur) {
-            if (this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].valid && this.checkReplace()) {
+            if (this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value && this.checkReplace()) {
                 alert('В параметре "Символ для замены" описания файлов введен не допустимый символ. Он будет удален');
                 this.deletReplace();
             }
-            this.checkBlur = true;
         }
+        this.checkBlur = false;
     }
     preSubmit() {
         if (this.checkValid()) {
@@ -138,7 +142,6 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.deletReplace();
             this.newData.rec['FILE_DESCRIPTION_REPLACE'] = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
         }
-        console.log('newData', this.newData);
         this.submit();
         this.cancelEdit();
     }
@@ -186,7 +189,32 @@ export class ParamFielsComponent extends BaseParamComponent {
                 });
         }
     }
+    mesInfoNew() {
+        if (this.newMesTrue) {
+            this.msgSrv.addNewMessage({
+                type: 'info',
+                title: 'Ввод данных',
+                msg: 'Цифры и буквы вводить не нужно - они добавляются автоматически.'
+            });
+            this.newMesTrue = false;
+            setTimeout(() => {
+                this.newMesTrue = true;
+            }, 3000);
+        }
+    }
+    chengeValid($event) {
+        if (this.validChengeValueStr.indexOf($event.key.toLowerCase()) !== -1) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            this.mesInfoNew();
+        }
+    }
     afterInit() {
+        let newValueControl = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
+        if (newValueControl && newValueControl.indexOf(this.validChengeValueStr) !== -1) {
+            newValueControl = newValueControl.replace(this.validChengeValueStr, '');
+            this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(newValueControl, {emitEvent: false});
+        }
         this.subscriptions.push(
             this.formAttachChoice.controls.attachFile.valueChanges
                 .subscribe(value => {
@@ -202,6 +230,9 @@ export class ParamFielsComponent extends BaseParamComponent {
                 .subscribe(value => {
                     if (!value) {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
+                    } else {
+                        value = value.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, '');
+                    this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(value, {emitEvent: false});
                     }
                 })
         );
@@ -243,8 +274,10 @@ export class ParamFielsComponent extends BaseParamComponent {
             });
     }
     submit() {
-        console.log('submit');
         if (this.newData || this.newDataAttach) {
+            if (this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr)) {
+                this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.validChengeValueStr + this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'];
+            }
             let dataRes = [];
             this.formChanged.emit(false);
             this.isChangeForm = false;
