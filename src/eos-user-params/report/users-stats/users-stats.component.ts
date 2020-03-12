@@ -89,7 +89,8 @@ export class EosReportUsersStatsComponent implements OnInit {
       this.items = ans;
     })
     .catch(er => {
-      this._errorSrv.errorHandler(er);
+      this.items = [];
+      /* this._errorSrv.errorHandler(er); */
     });
     Promise.all([a, b, c, d]).then(() => {
       this.getSubSystems(this.items);
@@ -99,8 +100,7 @@ export class EosReportUsersStatsComponent implements OnInit {
     )
       .catch((error) => {
         this._errorSrv.errorHandler(error);
-      })
-      ;
+      });
   }
   deletDeloDeloWeb(any) {
     delete any['delo_deloweb'];
@@ -140,88 +140,88 @@ export class EosReportUsersStatsComponent implements OnInit {
       if (elem.Id === 1) {
         this.subsystem.delo.Users = elem.Users;
         this.subsystem.delo.ActualUsers = elem.ActualUsers;
-        this.subsystem.delo.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.delo.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 2) {
         this.subsystem.delowebLGO.Users = elem.Users;
         this.subsystem.delowebLGO.ActualUsers = elem.ActualUsers;
-        this.subsystem.delowebLGO.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.delowebLGO.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 3) {
         this.subsystem.SCAN.Users = elem.Users;
         this.subsystem.SCAN.ActualUsers = elem.ActualUsers;
-        this.subsystem.SCAN.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.SCAN.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 4) {
         this.subsystem.Pscan.Users = elem.Users;
         this.subsystem.Pscan.ActualUsers = elem.ActualUsers;
-        this.subsystem.Pscan.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.Pscan.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 6) {
         this.subsystem.Shif.Users = elem.Users;
         this.subsystem.Shif.ActualUsers = elem.ActualUsers;
-        this.subsystem.Shif.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.Shif.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 16) {
         this.subsystem.Scan_code.Users = elem.Users;
         this.subsystem.Scan_code.ActualUsers = elem.ActualUsers;
-        this.subsystem.Scan_code.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.Scan_code.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 17) {
         this.subsystem.Notifer.Users = elem.Users;
         this.subsystem.Notifer.ActualUsers = elem.ActualUsers;
-        this.subsystem.Notifer.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.Notifer.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 18) {
         this.subsystem.Search_code.Users = elem.Users;
         this.subsystem.Search_code.ActualUsers = elem.ActualUsers;
-        this.subsystem.Search_code.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.Search_code.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 22) {
         this.subsystem.EOS.Users = elem.Users;
         this.subsystem.EOS.ActualUsers = elem.ActualUsers;
-        this.subsystem.EOS.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.EOS.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 24) {
         this.subsystem.MobNet.Users = elem.Users;
         this.subsystem.MobNet.ActualUsers = elem.ActualUsers;
-        this.subsystem.MobNet.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.MobNet.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 26) {
         this.subsystem.APM.Users = elem.Users;
         this.subsystem.APM.ActualUsers = elem.ActualUsers;
-        this.subsystem.APM.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.APM.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 27) {
         this.subsystem.Informer.Users = elem.Users;
         this.subsystem.Informer.ActualUsers = elem.ActualUsers;
-        this.subsystem.Informer.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.Informer.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 28) {
         this.subsystem.delowebKL.Users = elem.Users;
         this.subsystem.delowebKL.ActualUsers = elem.ActualUsers;
-        this.subsystem.delowebKL.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.subsystem.delowebKL.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       // server
       if (elem.Id === 32) {
         this.serverSystem.server_web.Trial = '+'; // elem.Trial;
-        this.serverSystem.server_web.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.serverSystem.server_web.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 33) {
         this.serverSystem.server_EP.Trial = '+'; // elem.Trial;
-        this.serverSystem.server_EP.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.serverSystem.server_EP.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 31) {
         this.serverSystem.systemProces.Trial = '+'; // elem.Trial;
-        this.serverSystem.systemProces.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.serverSystem.systemProces.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 23) {
         this.serverSystem.systemProces.Trial = '+'; // elem.Trial;
-        this.serverSystem.SEW.Expired = elem.Expired;
+        this.serverSystem.SEW.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 21) {
         this.serverSystem.mail.Trial = '+'; // elem.Trial;
-        this.serverSystem.mail.Expired = elem.Expired.slice(0, elem.Expired.indexOf('T'));
+        this.serverSystem.mail.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
     });
 
