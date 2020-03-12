@@ -39,6 +39,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     get rcType(): number {
         return this.getValue('rec.RC_TYPE');
     }
+    get accessMode() {
+        return this.getValue('rec.ACCESS_MODE');
+    }
 
     private modalSrv: BsModalService;
     private templateModal: BsModalRef;
@@ -217,6 +220,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
         if (Object.keys(updates).length) {
             this.form.patchValue(updates);
+        }
+        if (!formChanges['rec.ACCESS_MODE'] && formChanges.hasOwnProperty('rec.ACCESS_MODE')) {
+            this.setValue('rec.ACCESS_MODE_FIXED', false);
         }
 
         Object.assign(this._prev, formChanges);

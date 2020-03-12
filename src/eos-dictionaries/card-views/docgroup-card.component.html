@@ -88,7 +88,7 @@
                 [ngStyle]="{ 'width.px': 180 }"
                 [input]="inputs['rec.ACCESS_MODE_FIXED']"
                 [form]="form"
-                [readonly]="!editMode"
+                [readonly]="!editMode || !accessMode"
             ></eos-dynamic-input>
         </div>
     </div>
