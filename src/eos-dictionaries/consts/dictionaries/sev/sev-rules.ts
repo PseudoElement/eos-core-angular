@@ -33,7 +33,8 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             length: 64,
             required: true,
             isUnique: true,
-            pattern:  /^(?! *$)[\wА-Яа-я.+ '-][^!@$&^=~]*$/
+            pattern:  /^(?! *$)[\wА-Яа-я.+ '-][^!@$&^=~]*$/,
+            preferences: {minColumnWidth: 549}
         },
         Object.assign({}, COMMON_FIELD_NOTE, {
             title: 'Примечание'

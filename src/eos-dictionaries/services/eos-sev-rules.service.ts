@@ -51,61 +51,68 @@ export class EosSevRulesService {
                 parseString(this._scriptConfig, (err, result) => {
                     if (err) {
                         const mess = err.message ? err.message : 'ошибка в файле Вид правила';
-                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: mess };
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: mess };
                         this._msgSrv.addNewMessage(e);
                         return resolve({});
                     }
                     const sendDocumentRule = result['SendDocumentRule'];
                     if (!sendDocumentRule) {
-                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
                         this._msgSrv.addNewMessage(e);
                         return resolve({});
                     }
-                    const document = sendDocumentRule['ScriptConfig'][0]['Document'][0];
-                    this._data = {};
-                    this._data['type'] = kindRule >= 5 ? 2 : 1;
-                    this._data['kind'] = kindRule >= 5 ? kindRule - 4 : kindRule;
-                    this._data['link'] = !(document['Link'][0].$['Include'] === 'None');
-                    this._data['linkKind'] = document['Link'][0].$['Include'] === 'All' ? 0 : 1;
-                    this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList'];
-                    this._data['access'] = document['Access'][0].$['Include'] === 'true';
-                    this._data['rubric'] = document['Rubric'][0].$['Include'] === 'true';
-                    this._data['address'] = sendDocumentRule['ScriptConfig'][0]['Contact'][0]['Address'][0].$['Include'] === 'true';
-                    this._data['region'] = sendDocumentRule['ScriptConfig'][0]['Contact'][0]['Address'][0]['Region'][0]
-                        .$['Include'] === 'true';
-                    this._data['visa'] = document['Visa'][0].$['Include'] === 'true';
-                    this._data['addressee'] = !(document['Addressee'][0].$['Include'] === 'None');
-                    this._data['addresseeKind'] = document['Addressee'][0].$['Include'] === 'All' ? 0 : 1;
-                    this._data['additionalField'] = document['AdditionalField'][0].$['Include'] === 'true';
-                    this._data['userGrantedOnly'] = document.$['UserGrantedOnly'] === 'true';
-                    this._data['file'] = document['File'][0].$['Include'] === 'true';
-                    const ext1 = document['File'][0].$['Extensions'];
-                    this._data['fileExtensions'] = ext1 && ext1 !== 'null' ? ext1 : '';
-                    this._data['fileAccessList'] = document['File'][0].$['AccessList'];
-                    this._data['fileMaxLength'] = document['File'][0].$['MaxLength'] === 'null' ? '' : document['File'][0].$['MaxLength'];
-                    this._data['item'] = !(document['Item'][0].$['Include'] === 'None');
-                    this._data['itemKind'] = document['Item'][0].$['Include'] === 'All' ? 0 : 1;
-                    this._data['resolution'] = !(document['Resolution'][0].$['Include'] === 'None');
-                    const resolution = document['Resolution'][0].$['Include'];
-                    this._data['resolutionKind'] = !this._data['resolution'] ? 2 : resolution === 'All' ? 0 : resolution === 'ExtractionWithParent' ? 1 : 2;
-                    const task = sendDocumentRule['ScriptConfig'][0]['Task'][0];
-                    this._data['taskCategory'] = task['Category'][0].$['Include'] === 'true';
-                    this._data['taskController'] = task['Controller'][0].$['Include'] === 'true';
-                    this._data['taskNote'] = task['Note'][0].$['Include'] === 'true';
-                    this._data['taskFile'] = task['File'][0].$['Include'] === 'true';
-                    const ext = task['FileOptions'][0].$['Extensions'];
-                    this._data['taskFileExtensions'] = ext && ext !== 'null' ? ext : '';
-                    const maxLength = task['FileOptions'][0].$['MaxLength'];
-                    this._data['taskFileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
-                    const subscriptions = sendDocumentRule['Subscriptions'][0];
-                    this._data['reception'] = subscriptions['Reception'][0].$['Include'] === 'true';
-                    this._data['registration'] = subscriptions['Registration'][0].$['Include'] === 'true';
-                    this._data['forwarding'] = subscriptions['Forwarding'][0].$['Include'] === 'true';
-                    this._data['consideration'] = subscriptions['Consideration'][0].$['Include'] === 'true';
-                    this._data['report'] = subscriptions['Report'][0].$['Include'] === 'true';
-                    this._data['redirection'] = subscriptions['Redirection'][0].$['Include'] === 'true';
-                    this._data['answer'] = subscriptions['Answer'][0].$['Include'] === 'true';
-                    this._data['stopDayCount'] = subscriptions.$['StopDayCount'];
+                    try {
+                        const document = sendDocumentRule['ScriptConfig'][0]['Document'][0];
+                        this._data = {};
+                        this._data['type'] = kindRule >= 5 ? 2 : 1;
+                        this._data['kind'] = kindRule >= 5 ? kindRule - 4 : kindRule;
+                        this._data['link'] = !(document['Link'][0].$['Include'] === 'None');
+                        this._data['linkKind'] = document['Link'][0].$['Include'] === 'All' ? 0 : 1;
+                        this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList'];
+                        this._data['access'] = document['Access'][0].$['Include'] === 'true';
+                        this._data['rubric'] = document['Rubric'][0].$['Include'] === 'true';
+                        this._data['address'] = sendDocumentRule['ScriptConfig'][0]['Contact'][0]['Address'][0].$['Include'] === 'true';
+                        this._data['region'] = sendDocumentRule['ScriptConfig'][0]['Contact'][0]['Address'][0]['Region'][0]
+                            .$['Include'] === 'true';
+                        this._data['visa'] = document['Visa'][0].$['Include'] === 'true';
+                        this._data['addressee'] = !(document['Addressee'][0].$['Include'] === 'None');
+                        this._data['addresseeKind'] = document['Addressee'][0].$['Include'] === 'All' ? 0 : 1;
+                        this._data['additionalField'] = document['AdditionalField'][0].$['Include'] === 'true';
+                        this._data['userGrantedOnly'] = document.$['UserGrantedOnly'] === 'true';
+                        this._data['file'] = document['File'][0].$['Include'] === 'true';
+                        const ext1 = document['File'][0].$['Extensions'];
+                        this._data['fileExtensions'] = ext1 && ext1 !== 'null' ? ext1 : '';
+                        this._data['fileAccessList'] = document['File'][0].$['AccessList'];
+                        this._data['fileMaxLength'] = document['File'][0].$['MaxLength'] === 'null' ? '' : document['File'][0].$['MaxLength'];
+                        this._data['item'] = !(document['Item'][0].$['Include'] === 'None');
+                        this._data['itemKind'] = document['Item'][0].$['Include'] === 'All' ? 0 : 1;
+                        this._data['resolution'] = !(document['Resolution'][0].$['Include'] === 'None');
+                        const resolution = document['Resolution'][0].$['Include'];
+                        this._data['resolutionKind'] = !this._data['resolution'] ? 2 : resolution === 'All' ? 0 : resolution === 'ExtractionWithParent' ? 1 : 2;
+                        const task = sendDocumentRule['ScriptConfig'][0]['Task'][0];
+                        this._data['taskCategory'] = task['Category'][0].$['Include'] === 'true';
+                        this._data['taskController'] = task['Controller'][0].$['Include'] === 'true';
+                        this._data['taskNote'] = task['Note'][0].$['Include'] === 'true';
+                        this._data['taskFile'] = task['File'][0].$['Include'] === 'true';
+                        const ext = task['FileOptions'][0].$['Extensions'];
+                        this._data['taskFileExtensions'] = ext && ext !== 'null' ? ext : '';
+                        const maxLength = task['FileOptions'][0].$['MaxLength'];
+                        this._data['taskFileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
+                        const subscriptions = sendDocumentRule['Subscriptions'][0];
+                        this._data['reception'] = subscriptions['Reception'][0].$['Include'] === 'true';
+                        this._data['registration'] = subscriptions['Registration'][0].$['Include'] === 'true';
+                        this._data['forwarding'] = subscriptions['Forwarding'][0].$['Include'] === 'true';
+                        this._data['consideration'] = subscriptions['Consideration'][0].$['Include'] === 'true';
+                        this._data['report'] = subscriptions['Report'][0].$['Include'] === 'true';
+                        this._data['redirection'] = subscriptions['Redirection'][0].$['Include'] === 'true';
+                        this._data['answer'] = subscriptions['Answer'][0].$['Include'] === 'true';
+                        this._data['stopDayCount'] = subscriptions.$['StopDayCount'];
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
                     resolve(this._data);
                 });
             });
@@ -146,68 +153,75 @@ export class EosSevRulesService {
                 parseString(this._scriptConfig, (err, result) => {
                     if (err) {
                         const mess = err.message ? err.message : 'ошибка в файле Вид правила';
-                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: mess };
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: mess };
                         this._msgSrv.addNewMessage(e);
                         return resolve({});
                     }
                     const sendProjectRule = result['SendProjectRule'];
                     if (!sendProjectRule) {
-                        const e: IMessage = {title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
                         this._msgSrv.addNewMessage(e);
                         return resolve({});
                     }
-                    this._data = {};
-                    this._data['type'] = kindRule >= 5 ? 2 : 1;
-                    this._data['kind'] = kindRule >= 5 ? kindRule - 4 : kindRule;
-                    const document = sendProjectRule['ScriptConfig'];
-                    this._data['LinkPD'] = !!(document[0]['Project'][0]['Link'][0].$.Include !== 'None');
-                    this._data['linkKind'] = !this._data['LinkPD'] ? 0 : document[0]['Project'][0]['Link'][0].$.Include === 'All' ? 0 : 1;
-                    this._data['linkTypeList'] = document[0]['Project'][0]['Link'][0].$.LinkTypeList;
+                    try {
+                        this._data = {};
+                        this._data['type'] = kindRule >= 5 ? 2 : 1;
+                        this._data['kind'] = kindRule >= 5 ? kindRule - 4 : kindRule;
+                        const document = sendProjectRule['ScriptConfig'];
+                        this._data['LinkPD'] = !!(document[0]['Project'][0]['Link'][0].$.Include !== 'None');
+                        this._data['linkKind'] = !this._data['LinkPD'] ? 0 : document[0]['Project'][0]['Link'][0].$.Include === 'All' ? 0 : 1;
+                        this._data['linkTypeList'] = document[0]['Project'][0]['Link'][0].$.LinkTypeList;
 
-                    this._data['access'] = document[0]['Project'][0]['Access'][0].$.Include === 'true';
-                    this._data['rubric'] = document[0]['Project'][0]['Rubric'][0].$.Include === 'true';
+                        this._data['access'] = document[0]['Project'][0]['Access'][0].$.Include === 'true';
+                        this._data['rubric'] = document[0]['Project'][0]['Rubric'][0].$.Include === 'true';
 
-                    this._data['address'] = document[0]['Contact'][0]['Address'][0].$.Include === 'true';
-                    this._data['region'] = document[0]['Contact'][0]['Address'][0]['Region'][0].$.Include === 'true';
-
-
-                    this._data['addressee'] = document[0]['Project'][0]['Addressee'][0].$.Include === 'true';
-                    this._data['additionalField'] = document[0]['Project'][0]['AdditionalField'][0].$.Include === 'true';
+                        this._data['address'] = document[0]['Contact'][0]['Address'][0].$.Include === 'true';
+                        this._data['region'] = document[0]['Contact'][0]['Address'][0]['Region'][0].$.Include === 'true';
 
 
-                    this._data['executorsProject'] = !!(document[0]['Project'][0]['Executor'][0].$.Include !== 'None');
-                    this._data['kindExecutorProject'] = !this._data['executorsProject'] ? 0 : document[0]['Project'][0]['Executor'][0].$.Include === 'All' ? 0 : 1;
+                        this._data['addressee'] = document[0]['Project'][0]['Addressee'][0].$.Include === 'true';
+                        this._data['additionalField'] = document[0]['Project'][0]['AdditionalField'][0].$.Include === 'true';
 
 
-                    this._data['dateExecutionProject'] = !!(document[0]['Project'][0]['Term'][0].$.Include !== 'None');
-                    this._data['kindDateExecutionProject'] = document[0]['Project'][0]['Term'][0].$.Include === 'Plan' ? 0 : 1;
+                        this._data['executorsProject'] = !!(document[0]['Project'][0]['Executor'][0].$.Include !== 'None');
+                        this._data['kindExecutorProject'] = !this._data['executorsProject'] ? 0 : document[0]['Project'][0]['Executor'][0].$.Include === 'All' ? 0 : 1;
 
-                    const ext = document[0]['Project'][0]['FileOptions'][0].$.Extensions;
-                    this._data['taskFileExtensions'] = ext && ext !== 'null' ? ext : '';
-                    const maxLength = document[0]['Project'][0]['FileOptions'][0].$.MaxLength;
-                    this._data['taskFileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
 
-                    this._data['FileRKPD'] = !!(document[0]['Project'][0]['File'][0].$.Include !== 'None');
-                    this._data['fileAccessListRk'] = document[0]['Project'][0]['FileOptions'][0].$.AccessList;
-                    this._data['visa'] = !!(document[0]['Project'][0]['Visa'][0].$.Include !== 'None');
-                    const visaKind = { 'Addressee': 2, 'Primary': 1, 'All': 0, 'None': 0 };
-                    this._data['VisaKind'] = visaKind[document[0]['Project'][0]['Visa'][0].$.Include];
-                    this._data['VisaInfo'] = !!(document[0]['Project'][0]['Visa'][0].Content[0].$.Include === 'true');
-                    this._data['VisaFile'] = !!(document[0]['Project'][0]['Visa'][0].Content[0].File[0].$.Include === 'true');
+                        this._data['dateExecutionProject'] = !!(document[0]['Project'][0]['Term'][0].$.Include !== 'None');
+                        this._data['kindDateExecutionProject'] = document[0]['Project'][0]['Term'][0].$.Include === 'Plan' ? 0 : 1;
 
-                    this._data['signatures'] = !!(document[0]['Project'][0]['Sign'][0].$.Include !== 'None');
-                    this._data['signaturesKind'] = !this._data['signatures'] ? 0 : document[0]['Project'][0]['Sign'][0].$.Include === 'All' ? 0 : 1;
-                    this._data['signaturesInfo'] = !!(document[0]['Project'][0]['Sign'][0].Content[0].$.Include === 'true');
-                    this._data['signaturesFile'] = !!(document[0]['Project'][0]['Sign'][0].Content[0].File[0].$.Include === 'true');
-                    const document2 = sendProjectRule['Subscriptions'];
-                    this._data['reception'] = !!(document2[0]['Reception'][0].$.Include === 'true');
-                    this._data['registrationProject'] = !!(document2[0]['Registration'][0].$.Include === 'true');
-                    this._data['forwardingVisa'] = !!(document2[0]['VisaDirection'][0].$.Include === 'true');
-                    this._data['forwardingSign'] = !!(document2[0]['SignDirection'][0].$.Include === 'true');
-                    this._data['reportVisa'] = !!(document2[0]['VisaInformation'][0].$.Include === 'true');
-                    this._data['reportSign'] = !!(document2[0]['SignInformation'][0].$.Include === 'true');
-                    this._data['progectRegistration'] = !!(document2[0]['ProjectRegistrationSubscription'][0].$.Include === 'true');
-                    this._data['stopDayCount'] = isNaN(document2[0].$.StopDayCount) ? 1 : document2[0].$.StopDayCount;
+                        const ext = document[0]['Project'][0]['FileOptions'][0].$.Extensions;
+                        this._data['taskFileExtensions'] = ext && ext !== 'null' ? ext : '';
+                        const maxLength = document[0]['Project'][0]['FileOptions'][0].$.MaxLength;
+                        this._data['taskFileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
+
+                        this._data['FileRKPD'] = !!(document[0]['Project'][0]['File'][0].$.Include !== 'None');
+                        this._data['fileAccessListRk'] = document[0]['Project'][0]['FileOptions'][0].$.AccessList;
+                        this._data['visa'] = !!(document[0]['Project'][0]['Visa'][0].$.Include !== 'None');
+                        const visaKind = { 'Addressee': 2, 'Primary': 1, 'All': 0, 'None': 0 };
+                        this._data['VisaKind'] = visaKind[document[0]['Project'][0]['Visa'][0].$.Include];
+                        this._data['VisaInfo'] = !!(document[0]['Project'][0]['Visa'][0].Content[0].$.Include === 'true');
+                        this._data['VisaFile'] = !!(document[0]['Project'][0]['Visa'][0].Content[0].File[0].$.Include === 'true');
+
+                        this._data['signatures'] = !!(document[0]['Project'][0]['Sign'][0].$.Include !== 'None');
+                        this._data['signaturesKind'] = !this._data['signatures'] ? 0 : document[0]['Project'][0]['Sign'][0].$.Include === 'All' ? 0 : 1;
+                        this._data['signaturesInfo'] = !!(document[0]['Project'][0]['Sign'][0].Content[0].$.Include === 'true');
+                        this._data['signaturesFile'] = !!(document[0]['Project'][0]['Sign'][0].Content[0].File[0].$.Include === 'true');
+                        const document2 = sendProjectRule['Subscriptions'];
+                        this._data['reception'] = !!(document2[0]['Reception'][0].$.Include === 'true');
+                        this._data['registrationProject'] = !!(document2[0]['Registration'][0].$.Include === 'true');
+                        this._data['forwardingVisa'] = !!(document2[0]['VisaDirection'][0].$.Include === 'true');
+                        this._data['forwardingSign'] = !!(document2[0]['SignDirection'][0].$.Include === 'true');
+                        this._data['reportVisa'] = !!(document2[0]['VisaInformation'][0].$.Include === 'true');
+                        this._data['reportSign'] = !!(document2[0]['SignInformation'][0].$.Include === 'true');
+                        this._data['progectRegistration'] = !!(document2[0]['ProjectRegistrationSubscription'][0].$.Include === 'true');
+                        this._data['stopDayCount'] = isNaN(document2[0].$.StopDayCount) ? 1 : document2[0].$.StopDayCount;
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
                     resolve(this._data);
                 });
             });
