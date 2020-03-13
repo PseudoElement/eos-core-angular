@@ -2,9 +2,9 @@
         <eos-user-params-header [editMode]="editMode" [title]='title' [disableBtn]="!getValidDate || newInfo" [errorSave]="getErrorSave" (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'></eos-user-params-header>
         <div class="base-param-main">
             <!-- Логин , фото, ФИО -->
-            <div class="top-base-align"> 
-                <div class="avatar-base" *ngIf="(isPhoto && !formControls.controls['teсhUser'].value) || !formControls.controls['teсhUser'].value; else tech">
-                    <a class="av-link-b" [routerLink]="['/spravochniki','departments', curentUser.DUE_DEP, 'view' ]">
+            <div class="top-base-align">
+                <div class="avatar-base" *ngIf="(isPhoto && !formControls.controls['teсhUser'].value) || (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP); else tech">
+                    <a class="av-link-b" [routerLink]="['/spravochniki','departments', !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP, 'view' ]">
                         <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
                         <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-icon eos-icon-Man-Blue small"></span>
                     </a>

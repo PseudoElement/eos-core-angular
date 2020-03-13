@@ -744,6 +744,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.dueDepSurname = dep['SURNAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
                 this.currentCbFields = [];
                 return this.getPhotoUser(dep['DUE']);
