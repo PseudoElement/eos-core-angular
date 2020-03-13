@@ -228,6 +228,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkBtnOpenSumProtocol(): void {
         if (this.limitCards.length) {
             SumProtocol.disabled = true;
+            SumProtocol.isActive = false;
         } else {
             SumProtocol.disabled = false;
         }
@@ -235,6 +236,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkBtnDefaultSettings(): void {
         if (this.limitCards.length) {
             DefaultSettings.disabled = true;
+            DefaultSettings.isActive = false;
         } else {
             DefaultSettings.disabled = false;
         }
