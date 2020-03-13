@@ -348,8 +348,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 requestUri: `USER_CL(${id})`,
                 data: newD
             });
-            if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || newD.hasOwnProperty('DUE_DEP')) {
-                this.queryRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
+            if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || (newD.hasOwnProperty('DUE_DEP') && newD.DUE_DEP !== undefined)) {
+                const clearRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
+                this.queryRoles = this.queryRoles.concat(clearRoles);
             }
         }
     }
