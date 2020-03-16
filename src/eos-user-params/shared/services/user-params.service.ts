@@ -400,7 +400,7 @@ export class UserParamsService {
         return queryRoles;
     }
 
-    getQueryFromRoles(currentCbFields: IRoleCB[], startRolesCb: IRoleCB[]): any[] {
+    getQueryFromRoles(currentCbFields: IRoleCB[], startRolesCb: IRoleCB[], due: string): any[] {
         const queryRoles = [];
         currentCbFields.forEach((field, indx) => {
             if (!field.isnRole) {
@@ -409,7 +409,7 @@ export class UserParamsService {
                     requestUri: `CBR_USER_ROLE(-99)`,
                     data: {
                         WEIGHT: indx + 1,
-                        DUE_PERSON: field.hasOwnProperty('due') ? field.due : this.curentUser.DUE_DEP,
+                        DUE_PERSON: field.hasOwnProperty('due') ? field.due : due,
                         KIND_ROLE: KIND_ROLES_CB.indexOf(field.role) + 1,
                         ISN_USER: this.curentUser.ISN_LCLASSIF,
                     }

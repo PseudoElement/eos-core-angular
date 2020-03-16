@@ -72,7 +72,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public maxLoginLength: string;
-    private _sysParams;
     private _descSrv;
     private _newData: Map<string, any> = new Map();
     private _newDataformControls: Map<string, any> = new Map();
@@ -86,9 +85,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return true;
     }
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
-    get sysParams() {
-        return this._sysParams;
-    }
+
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0 || this.queryRoles.length > 0;
     }
@@ -810,7 +807,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.cancelValues(this.controls, this.formControls);
         }
         if (JSON.stringify(this.startRolesCb) !== JSON.stringify(this.currentCbFields)) {
-            this.queryRoles = this._userParamSrv.getQueryFromRoles(this.currentCbFields, this.startRolesCb);
+            this.queryRoles = this._userParamSrv.getQueryFromRoles(this.currentCbFields, this.startRolesCb, this.curentUser.DUE_DEP);
         } else {
             this.queryRoles = [];
         }
