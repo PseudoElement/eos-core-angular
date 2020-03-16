@@ -139,6 +139,9 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
             return (this.flagSort ? 1 : -1) * a.CLASSIF_NAME.localeCompare(b.CLASSIF_NAME);
         });
     }
+    public confirmSave(): Promise<boolean> {
+        return Promise.resolve(true);
+    }
     private initFiles() {
         window['_metadata'].merge({
             TEMP_RC: {
