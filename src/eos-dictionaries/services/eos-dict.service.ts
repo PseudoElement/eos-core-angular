@@ -1298,14 +1298,14 @@ export class EosDictService {
     /**
      * Initial pagination configuration
      */
-    private _initPaginationConfig(update = false) {
+    private _initPaginationConfig(update = false, param?: string) {
         this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
             length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES[0].value,
             itemsQty: this._getListLength()
         });
 
         if (update) {
-            this._updateVisibleNodes();
+            this._updateVisibleNodes(param);
             // this._fixCurrentPage();
         } else {
             this.paginationConfig.current = 1;
@@ -1492,7 +1492,7 @@ export class EosDictService {
                 this._currentList = this._currentList.filter((item) => item.id !== dictionary.root.id);
             }
         }
-        this._initPaginationConfig(update);
+        this._initPaginationConfig(update, 'notUpdate');
         this._emitListDictionary();
         this._reorderList(dictionary);
     }
@@ -1509,7 +1509,7 @@ export class EosDictService {
         this._updateVisibleNodes();
     }
 
-    private _updateVisibleNodes() {
+    private _updateVisibleNodes(reorder?) {
         this._visibleListNodes = this._currentList;
         if (this._visibleListNodes) {
             if (!this.viewParameters.showDeleted) {
@@ -1532,8 +1532,11 @@ export class EosDictService {
                 }
             }
             this._visibleListNodes = pageList;
-            this._visibleList$.next(pageList);
-            this.updateMarked(true);
+            if (!reorder) {
+                this._visibleList$.next(pageList);
+                this.updateMarked(true);
+            }
+
         }
     }
 
