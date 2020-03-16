@@ -348,8 +348,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 requestUri: `USER_CL(${id})`,
                 data: newD
             });
-            if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || newD.hasOwnProperty('DUE_DEP')) {
-                this.queryRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
+            if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || (newD.hasOwnProperty('DUE_DEP') && newD.DUE_DEP !== undefined)) {
+                const clearRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
+                this.queryRoles = this.queryRoles.concat(clearRoles);
             }
         }
     }
@@ -744,6 +745,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.dueDepSurname = dep['SURNAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
                 this.currentCbFields = [];
                 return this.getPhotoUser(dep['DUE']);

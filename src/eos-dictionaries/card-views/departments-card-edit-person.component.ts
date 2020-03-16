@@ -99,7 +99,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
             if (!EosUtils.isObjEmpty(inObj)) {
                 this.fillDeclineFields(inObj, fio);
-                if (inObj.gender && this.getValue('printInfo.GENDER') !== null) {
+                if (inObj.gender && this.getValue('printInfo.GENDER') !== null && changes.length) {
                     changes.push('Пол');
                 }
                 if (changes.length) {
