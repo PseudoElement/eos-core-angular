@@ -121,9 +121,8 @@ export class EosReportUsersStatsComponent implements OnInit {
 
 
   getSubSystems(items: any[]) {
-    const masFull = this.users[0]['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
+    const masFull = '0000000000000000000000000000'.split('').map(elem => Number(elem));
     this.users.forEach((user, index) => {
-      if (index !== 0) {
         const nUser = user['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
         masFull.forEach((element, numb) => {
           if (numb === 1) {
@@ -134,7 +133,6 @@ export class EosReportUsersStatsComponent implements OnInit {
             }
           }
         });
-      }
     });
     items.forEach(elem => {
       if (elem.Id === 1) {
