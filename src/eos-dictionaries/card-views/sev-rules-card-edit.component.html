@@ -112,8 +112,8 @@
                         <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
                             <input readonly type="text" [value]="fileAccessNames.join(';')">
                         </span>
-                        <span *ngIf="editMode" class="action eos-icon eos-icon-download " (click)="openSecurityCl('rec.fileAccessList')"></span>
-                        <span *ngIf="editMode" class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.fileAccessList')"></span>
+                        <span *ngIf="editMode" class="action eos-icon eos-icon-download " container="body" placement="bottom" containerClass="tooltip-info" tooltip="Выбрать" (click)="openSecurityCl('rec.fileAccessList')"></span>
+                        <span *ngIf="editMode" class="action eos-icon eos-icon-bin-forever-blue " container="body" placement="bottom" containerClass="tooltip-info" tooltip="Удалить" (click)="deleteFieldsNames('rec.fileAccessList')"></span>
                     </div>
                     <!-- <eos-dynamic-input [input]="inputs['rec.fileAccessList']"
                                        [form]="form"
