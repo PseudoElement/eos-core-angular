@@ -200,6 +200,17 @@ export const DefaultSettings: BtnActionFields = {
     isActive: false,
 };
 
+export const SettingsManagement: BtnActionFields = {
+    name: 'SettingsManagement',
+    title: 'Управление настройками',
+    disabledClass: 'eos-icon eos-icon-department-grey small',
+    enableClass: 'eos-icon eos-icon-department-blue small',
+    tooltip: 'Управление настройками',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-department-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -233,6 +244,7 @@ export const Allbuttons: BtnAction = {
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
         CommonTechLists,
+        SettingsManagement,
         GeneralLists,
         UsersStats,
         Protocol,

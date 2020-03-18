@@ -1,0 +1,85 @@
+.param-settings-management {
+    margin-top: 100px;
+    width: 800px;
+    .log {
+        display: inline-block;
+    }
+    header {
+        color: black;
+        background-color: #fff;
+        border-bottom: 1px solid #e6e6e6;
+        min-height: 48px;
+        height: 48px;
+        text-align: left;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        font-size: 18px;
+    }
+    main {
+        background: $white;
+        padding: 20px;
+        eos-dynamic-input {
+            font-size: 14px;
+            display: inline-block;
+        }
+        .base-department-input {
+            input {
+                background: $light-grey-1;
+                width: 457px;
+                cursor: default;
+            }
+            .icon-add-department {
+                cursor: pointer;
+                display: inline-block;
+                margin-left: -34px;
+                margin-bottom: -7px;
+            }
+        }
+        .container-settings {
+            display: flex;
+            padding-top: 20px;
+            .container-param-check {
+                .group-close {
+                    width: 400px;
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+                .group-middle {
+                    display: flex;
+                    width: 600px;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    padding-top: 20px;
+                    eos-dynamic-input {
+                        width: 50%;
+                    }
+                }
+                .pad-par-copy {
+                    padding-right: 20px;
+                }
+            }
+            .btn-copy {
+                padding: 8px 10px;
+                height: 35px;
+                margin-right: 81px;
+            }
+        }
+    }
+    .shell {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .3);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+    }
+}
+.spiner-div{
+    padding-top: 120px;
+    height: 293px;
+    text-align: center;
+}
