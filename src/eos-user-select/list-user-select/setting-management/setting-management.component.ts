@@ -10,6 +10,7 @@ import { PipRX, USER_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-setting-management',
@@ -31,7 +32,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _pipeSrv: PipRX,
-        private _msgSrv: EosMessageService) { }
+        private _msgSrv: EosMessageService,
+        private _errorSrv: ErrorHelperServices
+    ) { }
 
     get disabledCopy(): boolean {
         return this.isnCopyFrom && this._data.size > 1;
@@ -56,12 +59,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         }).then(() => {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
             this.resetForm();
-        }).catch((e) => {
-            this._msgSrv.addNewMessage({
-                type: 'warning',
-                title: 'Предупреждение',
-                msg: e,
-            });
+        }).catch(() => {
             this.resetForm();
         });
     }
@@ -87,7 +85,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 this.isShell = false;
                 this.form.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e);
+                this._errorSrv.errorHandler(e);
                 this.isShell = false;
             });
     }
