@@ -22,6 +22,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         }
     },
     {
+        controlType: E_FIELD_TYPE.boolean, // 24
+        key: '2',
+        label: 'Централизованная отправка документов',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+        }
+    },
+    {
         controlType: E_FIELD_TYPE.boolean, // 3
         key: '3',
         label: 'Просмотр всех поручений',
@@ -175,6 +184,24 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         }
     },
     {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '31',
+        label: 'Исполнение проектов',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '32',
+        label: 'Чтение проектов',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+        }
+    },
+    {
         controlType: E_FIELD_TYPE.boolean, // 19
         key: '9',
         label: 'Редактирование рег. данных РК',
@@ -221,7 +248,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             flagcheck: true,
         }
     },
-    {
+    /* {
         controlType: E_FIELD_TYPE.boolean, // 24
         key: '2',
         label: 'Отправка документов по реестрам',
@@ -229,7 +256,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
-    },
+    }, */
     /* {
         controlType: E_FIELD_TYPE.boolean, // 25
         key: '30',

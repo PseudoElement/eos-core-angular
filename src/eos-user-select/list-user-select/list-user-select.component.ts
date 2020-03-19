@@ -31,6 +31,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { SearchServices } from 'eos-user-select/shered/services/search.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { SettingManagementComponent } from './setting-management/setting-management.component';
 interface TypeBread {
     action: number;
 }
@@ -43,6 +44,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     currentState: boolean[];
     createUserModal: BsModalRef;
+    settingsManagementModal: BsModalRef;
     listUsers: UserSelectNode[];
     selectedUser: UserSelectNode;
     isLoading: boolean;
@@ -551,6 +553,21 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         setTimeout(() => {
             this._router.navigate(['user_param/default-settings']);
         }, 0);
+    }
+
+    SettingsManagement() {
+        this.settingsManagementModal = this._modalSrv.show(SettingManagementComponent, {
+            class: 'param-settings-management',
+            ignoreBackdropClick: true,
+            animated: false,
+            show: false,
+        });
+        this.settingsManagementModal.content.checkedUsers = this.getCheckedUsers().map(user => user.data.ISN_LCLASSIF);
+        this.settingsManagementModal.content.closedModal.subscribe(() => {
+            setTimeout(() => {
+                this.settingsManagementModal.hide();
+            });
+        });
     }
 
     setCheckedAllFlag() {

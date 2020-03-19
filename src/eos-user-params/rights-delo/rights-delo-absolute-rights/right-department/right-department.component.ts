@@ -61,8 +61,9 @@ export class RightDepertmentComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
+        console.log('this.funcNum', this.funcNum);
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
-            if (this.funcNum === 3 && this._appContext.cbBase) {
+            if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                 this.addNewDepAll();
             } else {
                 this.addDep();
@@ -75,7 +76,7 @@ export class RightDepertmentComponent implements OnInit {
             const str: string[] = this.userDepFuncNumber.map(i => i.DUE);
             this.apiSrv.getDepartment(str)
                 .then((data: DEPARTMENT[]) => {
-                    if (this.funcNum === 3 && this._appContext.cbBase) {
+                    if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                         data.sort((a, b) => this.desc(a, b));
                     }
                     data.forEach((dep: DEPARTMENT) => {
@@ -91,7 +92,7 @@ export class RightDepertmentComponent implements OnInit {
                         };
                         let flag;
                         this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
-                        if (this.funcNum === 3 && this._appContext.cbBase) {
+                        if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                             cfg.allowed = !!userDep.ALLOWED;
                             cfg.viewAllowed = true;
                             if (cfg.label === ' ') {
@@ -152,7 +153,7 @@ export class RightDepertmentComponent implements OnInit {
         }
     }
     selectNoAllDep() {
-        if (this.funcNum === 3 && this._appContext.cbBase && this.selectedDep && this.selectedDep.DUE === '0.') {
+        if (this.funcNum === 3 /* && this._appContext.cbBase */ && this.selectedDep && this.selectedDep.DUE === '0.') {
             return false;
         }
         return true;
@@ -183,7 +184,7 @@ export class RightDepertmentComponent implements OnInit {
                     },
                 };
                 this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
-                if (this.funcNum === 3 && this._appContext.cbBase) {
+                if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                     cfg.label = 'Все подразделения';
                     newUserDep.ALLOWED = this._appContext.limitCardsUser.length > 0 ? 0 : 1;
                     cfg.allowed = this._appContext.limitCardsUser.length > 0 ? false : true;
@@ -223,10 +224,11 @@ export class RightDepertmentComponent implements OnInit {
         }
     }
     addDep(): Promise<any> {
+        console.log('funcNum', this.funcNum);
         this.isShell = true;
-        const DEPART = (this.funcNum === 3 && this._appContext.cbBase) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
+        const DEPART = (this.funcNum === 3 /* && this._appContext.cbBase */) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
 
-        return this._waitClassifSrv.openClassif(DEPART)
+        return this._waitClassifSrv.openClassif(DEPART, true)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
@@ -253,7 +255,7 @@ export class RightDepertmentComponent implements OnInit {
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: (this.funcNum === 3 && this._appContext.cbBase) ? null : this._getMaxWeight(),
+                        WEIGHT: (this.funcNum === 3 /* && this._appContext.cbBase */) ? null : this._getMaxWeight(),
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -268,7 +270,7 @@ export class RightDepertmentComponent implements OnInit {
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     let flag;
-                    if (this.funcNum === 3 && this._appContext.cbBase) {
+                    if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                         newUserDep.ALLOWED = this.findParent(newUserDep.DUE) ? 0 : 1;
                         cfg.allowed = this.findParent(newUserDep.DUE) ? false : true;
                         cfg.viewAllowed = true;
@@ -349,7 +351,7 @@ export class RightDepertmentComponent implements OnInit {
             due: this.selectedDep.DUE,
             data: this.selectedDep.data.userDep
         });
-        if (this.funcNum === 3 && this._appContext.cbBase && this.selectedDep.data.userDep['CompositePrimaryKey']) {
+        if (this.funcNum === 3 /* && this._appContext.cbBase */ && this.selectedDep.data.userDep['CompositePrimaryKey']) {
             let flag = true;
             this.selectedNode.change.forEach(elem => {
                 if (elem.method === 'DELETE' && this.selectedDep.DUE === elem.due) {
@@ -369,7 +371,7 @@ export class RightDepertmentComponent implements OnInit {
         this.Changed.emit('del');
     }
     emitDeleteRcpd() {
-        if (this.selectedNode.key === '5' && this.selectedNode.value === 0 && this.listRigth[8].control.value) {
+        if (this.selectedNode.key === '31' && this.selectedNode.value === 0 && this.listRigth[9].control.value) {
             this.emitDeletedRc.emit();
         }
     }
@@ -377,7 +379,7 @@ export class RightDepertmentComponent implements OnInit {
         this.selectedNode.value = event.target.checked ? 2 : 1;
     }
     checkedNode($event: NodeDocsTree) {
-        if (this.funcNum === 3 && this._appContext.cbBase) {
+        if (this.funcNum === 3 /* && this._appContext.cbBase */) {
             /* $event.flagCheckNode.deepValue = Number($event.isAllowed); */
             const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });
             a['ALLOWED'] = Number($event.isAllowed);

@@ -14,6 +14,7 @@ import {
     Protocol,
     UsersInfo,
     DefaultSettings,
+    SettingsManagement
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
@@ -44,7 +45,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'OpenSumProtocol',
         'UsersInfo',
         'DefaultSettings',
-        'DeliteUser'];
+        'DeliteUser',
+        'SettingsManagement'];
     get techUser() {
         return this._appContext.CurrentUser.USER_TECH_List;
     }
@@ -153,6 +155,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             case 'DefaultSettings':
                 this.checkBtnDefaultSettings();
                 break;
+            case 'SettingsManagement':
+                this.checkBtnSettingsManagement();
+                break;
             default:
                 console.log('not Action');
                 break;
@@ -202,6 +207,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWittAllUsers(UsersInfo);
         this._rtSrv.usersInfo = UsersInfo;
     }
+    checkBtnSettingsManagement() {
+        this.checkWittAllUsers(SettingsManagement);
+     }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted) {
             OpenStreamScanSystem.disabled = true;

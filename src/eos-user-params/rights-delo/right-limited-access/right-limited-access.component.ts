@@ -14,7 +14,7 @@ import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
-import { AppContext } from 'eos-rest/services/appContext.service';
+/* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -85,13 +85,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
         private _snap: ActivatedRoute,
-        private _appContext: AppContext,
+        /* private _appContext: AppContext, */
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
-        this.tabsForAccessLimited = _appContext.cbBase ? ['Группы документов', 'Грифы РК/РКПД', 'Грифы файлов'] : ['Группы документов', 'Грифы'];
+        this.tabsForAccessLimited = /* _appContext.cbBase ?  */['Группы документов', 'Грифы РК/РКПД', 'Грифы файлов'] /* : ['Группы документов', 'Грифы'] */;
         this._snap.queryParams
         .pipe(
             takeUntil(this._ngUnsubscribe)
@@ -103,13 +103,14 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         });
     }
     ngOnInit() {
-        this.checkCB = this._appContext.cbBase;
-        const query = this.checkCB ? 'USERCARD_List,USERSECUR_List,USER_FILESECUR_List' : 'USERCARD_List,USERSECUR_List';
+        /* this.checkCB = this._appContext.cbBase; */
+        const query = /* this.checkCB ?  */'USERCARD_List,USERSECUR_List,USER_FILESECUR_List'/*  : 'USERCARD_List,USERSECUR_List' */;
         this._userServices.getUserIsn({
             expand: query
         })
         .then(() => {
             this.currentUser = this._userServices.curentUser;
+            console.log('this.currentUser', this.currentUser);
             this.checkUserCard = this.currentUser['USERCARD_List'];
             this.isLoading = false;
             this._limitservise.getGrifsName()
