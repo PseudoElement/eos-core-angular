@@ -21,7 +21,7 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+/* import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces'; */
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
@@ -61,8 +61,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
-    private DELETE_RCPD = 'У пользователя назначено право \'Создание РКПД\' .Без права \'Исполнение поручений\' оно не работает. Снять это право?';
-    private CREATE_RCPD = 'У пользователя нет права \'Исполнения поручений\', добавить его?';
+    private DELETE_RCPD = 'У пользователя назначено право \'Создание РКПД\' .Без права \'Исполнение проектов\' оно не работает. Снять это право?';
+    private CREATE_RCPD = 'У пользователя нет права \'Исполнение проектов\', добавить его?';
     private GRUP_DEL_RK = 'Назначить права пользователю на выполнение операции «Удаление РК» в доступных ему картотеках?';
     private GRUP_NOT_DEL_RK = 'У пользователя назначены права на выполнение операции «Удаление РК» в доступных ему картотеках. Снять?';
 
@@ -93,7 +93,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() { }
 
-    absoluteRightReturnCB() {
+    /* absoluteRightReturnCB() {
         const arrayFirst = ABSOLUTE_RIGHTS.filter(elem => {
             if (elem.key === '2' || elem.key === '30') {
                 return false;
@@ -102,9 +102,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         const array = [];
         arrayFirst.forEach((elem, index) => {
-            /* if (elem.key === '9') {
+            if (elem.key === '9') {
                 elem.label = 'Редактирование рег. данных РК';
-            } */
+            }
             array.push(elem);
             if (index === 1) {
                 array.push({
@@ -139,9 +139,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
         });
         return array;
-    }
+    } */
     init() {
-        const ABS = this._appContext.cbBase ? this.absoluteRightReturnCB() : ABSOLUTE_RIGHTS;
+        const ABS = /* this._appContext.cbBase ? this.absoluteRightReturnCB() :  */ABSOLUTE_RIGHTS;
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -170,11 +170,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this._appContext.limitCardsUser.length > 0) {
             let arr;
-            if (this._appContext.cbBase) {
+            /* if (this._appContext.cbBase) { */
                 arr = ['0', '1', '3', '18', '23', '29'];
-            } else {
+            /* } else {
                 arr = ['0', '1', '2', '3', '18', '23', '29'];
-            }
+            } */
             this.listRight.forEach(elem => {
                 if (arr.indexOf(elem.key) !== -1) {
                     elem.control.disable({emitEvent: false});
@@ -510,7 +510,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     checkRcpd($event, item: NodeAbsoluteRight) {
         if ($event.target.tagName === 'SPAN' && this.editMode) {
             const flag = item.control.value;
-            if (item.key === '5') {
+            if (item.key === '31') {
                 this.checkRcpdDelete(flag);
             }
             if (item.key === '28') {
@@ -559,7 +559,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             return new Promise((res, rej) => {
                 if (flag) {
-                    if (this.returnElemListRight('5').control.value) {
+                    if (this.returnElemListRight('31').control.value) {
                         res(false);
                     } else {
                         const f = confirm(this.CREATE_RCPD);
@@ -572,10 +572,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
             }).then(answer => {
                 if (answer) {
-                    this.returnElemListRight('5').control.patchValue(true);
-                    this.returnElemListRight('5').control.markAsTouched();
-                    this.returnElemListRight('5').value = 1;
-                    this.selectNode(this.returnElemListRight('5'));
+                    this.returnElemListRight('31').control.patchValue(true);
+                    this.returnElemListRight('31').control.markAsTouched();
+                    this.returnElemListRight('31').value = 1;
+                    this.selectNode(this.returnElemListRight('31'));
                 }
             });
         }, 500);
@@ -597,14 +597,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
     }
     changedAll($event) {
-        if (this._appContext.cbBase) {
+        /* if (this._appContext.cbBase) { */
             const pos_in = this.curentUser.TECH_RIGHTS.indexOf('1');
             if (pos_in === -1 || pos_in >= 37) {
                 this.returnElemListRight('0').control.patchValue(false);
                 this.returnElemListRight('0').value = 0;
                 this._deleteAllClassif(this.returnElemListRight('0'));
             }
-        } else {
+        /* } else {
             const mas_rigth = this.curentUser.TECH_RIGHTS.split('');
             mas_rigth[21] = '0';
             const pos_in = mas_rigth.join('').indexOf('1');
@@ -613,7 +613,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.returnElemListRight('0').value = 0;
                 this._deleteAllClassif(this.returnElemListRight('0'));
             }
-        }
+        } */
     }
     checkChange(event?) {
         if (event && event === 'del') {
