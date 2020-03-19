@@ -17,7 +17,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 export class ParamFielsComponent extends BaseParamComponent {
     @ViewChild('infoAttachFilesModal') infoAttachFilesModal: ModalDirective;
     @Input() btnError;
-    validChengeValueStr = '0123456789abcdefghijklmnopqrstuvwxyzабвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+    validChengeValueStr = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзиклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ';
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
     dataAttachDb;
@@ -99,7 +99,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     checkValid() {
         this.validValue = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (this.validValue) {
-            this.validValue = this.validValue.replace(/\s/g, ''); // this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, '');
+            this.validValue = this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, ''); //
             this.validValue = this.unique(this.validValue);
             if (this.validValue.length !== this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value.length) {
                 return true;
@@ -189,7 +189,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                 });
         }
     }
-    mesInfoNew() {
+    /* mesInfoNew() {
         if (this.newMesTrue) {
             this.msgSrv.addNewMessage({
                 type: 'info',
@@ -208,7 +208,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             $event.stopPropagation();
             this.mesInfoNew();
         }
-    }
+    } */
     afterInit() {
         let newValueControl = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (newValueControl && newValueControl.indexOf(this.validChengeValueStr) !== -1) {
@@ -230,10 +230,10 @@ export class ParamFielsComponent extends BaseParamComponent {
                 .subscribe(value => {
                     if (!value) {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
-                    } else {
+                    }/*  else {
                         value = value.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, '');
-                    this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(value, {emitEvent: false});
-                    }
+                        this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(value, {emitEvent: false});
+                    } */
                 })
         );
         this.paramApiSrv.getData(Object.assign({}, this.queryFileConstraint))
@@ -276,7 +276,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     submit() {
         if (this.newData || this.newDataAttach) {
             if (this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr)) {
-                this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.validChengeValueStr + this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'];
+                this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] + this.validChengeValueStr;
             }
             let dataRes = [];
             this.formChanged.emit(false);
