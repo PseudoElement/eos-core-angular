@@ -13,7 +13,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { PipRX } from 'eos-rest';
-import { AppContext } from 'eos-rest/services/appContext.service';
+/* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-absolute-rights-classif',
     templateUrl: 'absolute-rights-classif.component.html'
@@ -39,7 +39,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         public _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
         private pipRx: PipRX,
-        private _appContext: AppContext,
+        /* private _appContext: AppContext, */
     ) {
         this.userTechList = this._userParmSrv.userTechList;
     }
@@ -276,7 +276,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string = this._appContext.cbBase ? '1'.repeat(40) : '1'.repeat(21) + '0' + '1'.repeat(18);
+            const techRights: string = /* this._appContext.cbBase ?  */'1'.repeat(40) /* : '1'.repeat(21) + '0' + '1'.repeat(18) */;
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -296,7 +296,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             this.curentUser['TECH_RIGHTS'] = arr.join('');
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
-        if (!this._appContext.cbBase) {
+        /* if (!this._appContext.cbBase) {
             let delIndex;
             TECH_USER_CLASSIF.forEach((elem, index) => {
                 if (elem.key === 22) {
@@ -306,12 +306,12 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             if (delIndex) {
                 TECH_USER_CLASSIF.splice(delIndex, 1);
             }
-        }
+        } */
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
             if (item.key === 1 && techListLim.length !== 0) {
                 item.label = 'Пользователи (доступ ограничен)';
             }
-            if (item.key === 35 && this._appContext.cbBase) {
+            if (item.key === 35 /* && this._appContext.cbBase */) {
                 item.label = 'Концентратор';
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));

@@ -52,6 +52,7 @@ export class RightOrganizDepertComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
+        console.log('this.funcNum', this.funcNum);
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
             // this.addDep();
             this.isLoading = false;
@@ -118,7 +119,7 @@ export class RightOrganizDepertComponent implements OnInit {
     }
     addDep(): Promise<any> {
         this.isShell = true;
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL)
+        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL, true)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
@@ -194,7 +195,8 @@ export class RightOrganizDepertComponent implements OnInit {
                 }
             });
     }
-    // только для исполнения поручений, спрашиваем на создание права ркпд
+    // только для исполнения поручений, спрашиваем на создание права ркпд P.S. из-за изменений этот код больше не отрабатывает если понадобиться то
+    // this.selectedNode.key === '5'
     confirmPkpd() {
         if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !this.listRigth[8].control.value) {
             return new Promise((res, rej) => {
@@ -231,15 +233,15 @@ export class RightOrganizDepertComponent implements OnInit {
             due: this.selectedDep.DUE,
             data: this.selectedDep.data.userDep
         });
-        this.emitDeleteRcpd();
+        // this.emitDeleteRcpd();
         this.selectedDep = null;
         this.Changed.emit('del');
     }
-    emitDeleteRcpd() {
-        if (this.selectedNode.key === '5' && this.selectedNode.value === 0 && this.listRigth[8].control.value) {
+    /* emitDeleteRcpd() {
+        if (this.selectedNode.key === '31' && this.selectedNode.value === 0 && this.listRigth[9].control.value) {
             this.emitDeletedRc.emit();
         }
-    }
+    } */
     markedSendPrj(event) {
         this.selectedNode.value = event.target.checked ? 2 : 1;
     }
