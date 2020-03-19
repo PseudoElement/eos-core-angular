@@ -21,6 +21,7 @@ import { TreeUserSelectService } from './shered/services/tree-user-select.servic
 import { RtUserSelectService } from './shered/services/rt-user-select.service';
 import {SearchServices} from '../eos-user-select/shered/services/search.service';
 import { EosReportUsersInfoComponent } from 'eos-user-params/report/users-info/users-info.component';
+import { SettingManagementComponent } from './list-user-select/setting-management/setting-management.component';
 @NgModule({
     declarations: [
         UserSelectComponent,
@@ -31,10 +32,12 @@ import { EosReportUsersInfoComponent } from 'eos-user-params/report/users-info/u
         UserSystemComponent,
         BtnActionComponent,
         UserSearchComponent,
-        EosReportUsersInfoComponent
+        EosReportUsersInfoComponent,
+        SettingManagementComponent
     ],
     entryComponents: [
-        CreateUserComponent
+        CreateUserComponent,
+        SettingManagementComponent
     ],
     imports: [
         BrowserModule,
