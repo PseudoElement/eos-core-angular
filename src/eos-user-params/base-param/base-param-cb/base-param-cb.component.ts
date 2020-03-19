@@ -26,6 +26,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT } from 'eos-dictionaries/consts/confirm.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -121,21 +122,46 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this._userParamSrv.curentUser.USER_PARMS_List.forEach(elem => {
                     if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
                         this.criptoView = true;
+                        this.apiSrvRx.read<any>({
+                            LicenseInfo: ALL_ROWS
+                        })
+                            .then(ans => {
+                                if (typeof (ans) === 'string') {
+                                    this.LicenzeInfo = JSON.parse(ans);
+                                } else {
+                                    this.LicenzeInfo = data;
+                                }
+                                if (this.LicenzeInfo.length > 0) {
+                                    this.createActualLicenze();
+                                }
+                                this.afterInit();
+                            })
+                            .catch(err => {
+                                this.afterInit();
+                                this.LicenzeInfo = [];
+                            });
                     }
                 });
-                this.selfLink = this._router.url.split('?')[0];
-                this.init();
-                this.getTitle();
-                if (!this.curentUser['IS_PASSWORD']) {
-                    this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
-                }
-                this.editModeF();
-                this._subscribe();
+                // if (localStorage.getItem('lastNodeDue') == null) {
+                //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
+                // }
             }
         });
-        // if (localStorage.getItem('lastNodeDue') == null) {
-        //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
-        // }
+    }
+    afterInit() {
+        this._userParamSrv.curentUser.USER_PARMS_List.forEach(elem => {
+            if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
+                this.criptoView = true;
+            }
+        });
+        this.selfLink = this._router.url.split('?')[0];
+        this.init();
+        this.getTitle();
+        if (!this.curentUser['IS_PASSWORD']) {
+            this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+        }
+        this.editModeF();
+        this._subscribe();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -194,7 +220,59 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.subscribeForms();
         return Promise.resolve();
     }
-
+    createActualLicenze() {
+        const masEl = [];
+        this.LicenzeInfo.forEach(elem => {
+            if (elem.Users > elem.ActualUsers) {
+                masEl.push('' + (elem.Id - 1));
+            }
+        });
+        if (masEl.indexOf('0') !== -1 && masEl.indexOf('1') !== -1) {
+            this.actualLicenz.push('0-1');
+        }
+        if (masEl.indexOf('1') !== -1 || masEl.indexOf('27') !== -1) {
+            this.actualLicenz.push('delo_web');
+            if (masEl.indexOf('1') !== -1 && masEl.indexOf('27') !== -1) {
+                this.actualLicenz.push('1-27');
+            }
+        }
+        masEl.forEach(elem => {
+            this.actualLicenz.push(elem);
+        });
+    }
+    setRadioBt($event?) {
+        /* попав сюда я знаю что radio содержит только одну лицензию */
+        const radioVal = this.actualLicenz.indexOf('1') === -1 ? '27' : '1';
+        /* если мы только поставили галочку то */
+        if (this.formAccess.controls['delo_web'].value) {
+            this._toggleFormControl(this.formAccess.controls['1-27'], false);
+            if (!this.accessInputs['1-27'].value || !this.formAccess.controls['1-27'].value) {
+                this._toggleFormControl(this.formAccess.controls['1-27'], true);
+                this.formAccess.controls['1-27'].setValue(radioVal, { emitEvent: false });
+            } else {
+                /* если мы уже стоим то нужно проверить на нужной ли лицензии если на нужной просто блок */
+                if (this.formAccess.controls['1-27'].value === radioVal) {
+                    this._toggleFormControl(this.formAccess.controls['1-27'], true);
+                }
+            }
+        }
+    }
+    editLicenze() {
+        if (this.LicenzeInfo.length === 0) {
+            return;
+        }
+        Object.keys(this.accessInputs).forEach((input, index) => {
+            if (this.LicenzeInfo.length > 0 && this.actualLicenz && !this.formAccess.controls[input].value && this.actualLicenz.indexOf(input) === -1) {
+                if (input === '1-27') {
+                    if (this.actualLicenz.indexOf('1-27') === -1) {
+                        this.setRadioBt();
+                    }
+                } else {
+                    this.formAccess.controls[input].disable({ emitEvent: false });
+                }
+            }
+        });
+    }
     getPhotoUser(due: string, init?: boolean): Promise<any> {
         return this._userParamSrv.getPhotoUser(due).then((data: DEPARTMENT[]) => {
             this.isPhoto = data[0]['ISN_PHOTO'];
@@ -263,6 +341,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this._newDataformAccess.set(input, this.formAccess.controls[input].value);
             } else {
                 this._newDataformAccess.delete(input);
+            }
+            if (this.LicenzeInfo.length > 0 && this.actualLicenz && this.actualLicenz.indexOf(input) === -1) {
+                if (input === '1-27') {
+                    if (this.actualLicenz.indexOf('1-27') === -1) {
+                        this.setRadioBt();
+                    }
+                } else if (!this.formAccess.controls[input].value) {
+                    this.formAccess.controls[input].disable({ emitEvent: false });
+                }
             }
         });
         this._pushState();
@@ -721,6 +808,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
         this.tf();
+        this.editLicenze();
     }
     tf() {
         // const val1 = this.formAccess.controls['0-1'].value;
@@ -732,15 +820,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         //     this.formControls.controls['SELECT_ROLE'].patchValue(null);
         //     this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
         // } else {
-            let str = '';
-            if (this.currentCbFields.length > 1) {
-                str = this.currentCbFields[0].role + ' ...';
-            } else if (this.currentCbFields.length === 1) {
-                str = this.currentCbFields[0].role;
-            }
-            if (str) {
-                this.formControls.controls['SELECT_ROLE'].patchValue(str);
-            }
+        let str = '';
+        if (this.currentCbFields.length > 1) {
+            str = this.currentCbFields[0].role + ' ...';
+        } else if (this.currentCbFields.length === 1) {
+            str = this.currentCbFields[0].role;
+        }
+        if (str) {
+            this.formControls.controls['SELECT_ROLE'].patchValue(str);
+        }
         // }
     }
     checkMeinControlAccess($event, data) {
@@ -755,8 +843,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         } else {
             this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
-            this._toggleFormControl(this.formAccess.controls['1-27'], !$event.target.checked);
+            if (this.LicenzeInfo.length > 0 && $event.target.checked) {
+                if (this.actualLicenz.indexOf('1-27') !== -1) {
+                    this._toggleFormControl(this.formAccess.controls['1-27'], false);
+                } else {
+                    this.setRadioBt();
+                }
+            } else {
+                this._toggleFormControl(this.formAccess.controls['1-27'], !$event.target.checked);
+            }
         }
+        this.editLicenze();
     }
     editModeF() {
         if (this.editMode) {
