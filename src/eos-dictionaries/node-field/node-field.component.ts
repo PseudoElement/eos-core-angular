@@ -4,7 +4,6 @@ import { HintConfiguration } from '../long-title-hint/hint-configuration.interfa
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { AppContext } from 'eos-rest/services/appContext.service';
 import { RESOLVE_DESCRIPTIONS } from 'eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 
 interface ISpecialIcon {
@@ -31,7 +30,7 @@ export class NodeFieldComponent implements OnInit {
     iconsArray: ISpecialIcon[] = [];
     private _hasFolderIcon: boolean;
 
-    constructor(private _appCntext: AppContext) {
+    constructor() {
     }
 
     viewNode(evt: Event) {
@@ -54,7 +53,7 @@ export class NodeFieldComponent implements OnInit {
                     tooltip: 'Номерообразование',
                 });
             }
-            if (this.node.data.rec['CONFIDENTIONAL'] && this._appCntext.cbBase) {
+            if (this.node.data.rec['CONFIDENTIONAL']) {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
                     tooltip: 'ДСП файлы',
