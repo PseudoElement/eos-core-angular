@@ -221,6 +221,8 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         const control = this.form.controls[value];
         if (control.value && control.value !== 'null') {
             OPEN_CLASSIF_SECURITY_CL.selected = control.value;
+        } else {
+            OPEN_CLASSIF_SECURITY_CL.selected = '';
         }
         this._waitClassif.openClassif(OPEN_CLASSIF_SECURITY_CL).then(data => {
             control.patchValue(data);
