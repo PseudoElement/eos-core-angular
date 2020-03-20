@@ -121,9 +121,8 @@ export class EosReportUsersStatsComponent implements OnInit {
 
 
   getSubSystems(items: any[]) {
-    const masFull = this.users[0]['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
+    const masFull = '0000000000000000000000000000'.split('').map(elem => Number(elem));
     this.users.forEach((user, index) => {
-      if (index !== 0) {
         const nUser = user['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
         masFull.forEach((element, numb) => {
           if (numb === 1) {
@@ -134,7 +133,6 @@ export class EosReportUsersStatsComponent implements OnInit {
             }
           }
         });
-      }
     });
     items.forEach(elem => {
       if (elem.Id === 1) {
@@ -216,12 +214,36 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.serverSystem.systemProces.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 23) {
-        this.serverSystem.systemProces.Trial = '+'; // elem.Trial;
+        this.serverSystem.SEW.Trial = '+'; // elem.Trial;
         this.serverSystem.SEW.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
       if (elem.Id === 21) {
         this.serverSystem.mail.Trial = '+'; // elem.Trial;
         this.serverSystem.mail.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 25) {
+        this.serverSystem.MEDO.Trial = '+'; // elem.Trial;
+        this.serverSystem.MEDO.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 30) {
+        this.serverSystem.AC_OG.Trial = '+'; // elem.Trial;
+        this.serverSystem.AC_OG.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 29) {
+        this.serverSystem.webWork.Trial = '+'; // elem.Trial;
+        this.serverSystem.webWork.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 34) {
+        this.serverSystem.work_OG.Trial = '+'; // elem.Trial;
+        this.serverSystem.work_OG.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 35) {
+        this.serverSystem.MEDO_2_7.Trial = '+'; // elem.Trial;
+        this.serverSystem.MEDO_2_7.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 36) {
+        this.serverSystem.PPO_SSTY.Trial = '+'; // elem.Trial;
+        this.serverSystem.PPO_SSTY.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
     });
 

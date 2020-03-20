@@ -159,48 +159,42 @@ export class RtUserSelectService {
             Trial: '-',
             Expired: '-',
         },
-        /* MEDO: {
+        MEDO: {
             label: 'Модуль сопряжения с МЭДО',
             checked: false,
-            Users: 0,
-            ActualUsers: 0,
+            Trial: '-',
             Expired: '-',
         },
         AC_OG: {
             label: 'Модуль взаимодействия с АС ОГ',
             checked: false,
-            Users: 0,
-            ActualUsers: 0,
+            Trial: '-',
             Expired: '-',
         },
         webWork: {
             label: 'Модуль интеграции с интернет приёмной',
             checked: false,
-            Users: 0,
-            ActualUsers: 0,
+            Trial: '-',
             Expired: '-',
         },
         work_OG: {
             label: 'Опубликования хода работ с ОГ',
             checked: false,
-            Users: 0,
-            ActualUsers: 0,
+            Trial: '-',
             Expired: '-',
         },
         MEDO_2_7: {
             label: 'Модуль сопряжения работ с МЭДО 2.7',
             checked: false,
-            Users: 0,
-            ActualUsers: 0,
+            Trial: '-',
             Expired: '-',
         },
         PPO_SSTY: {
             label: 'Модуль взаимодействия с РРО ССТУ',
             checked: false,
-            Users: 0,
-            ActualUsers: 0,
+            Trial: '-',
             Expired: '-',
-        }, */
+        },
     };
     scrollPosition: number = 0;
     private _ChangeSelectUser: UserSelectNode;
