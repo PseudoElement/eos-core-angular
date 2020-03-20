@@ -81,6 +81,7 @@ export class CardRightSrv {
     provPrevSubmit() {
         // проверяю есть ли право, и если ни у одного парава нет ALLOWED = 1 то выдавать ошибку и не давать сохранять
         let flag = true;
+        const viewResol = [];
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             let countFN = 0;
             let countFNA = 0;
@@ -95,6 +96,7 @@ export class CardRightSrv {
             if (countFN > 0 && countFNA === 0) {
                 flag = false;
             }
+            this.checkViewResol(card, viewResol);
         });
         if (!flag) {
             this._msgSrv.addNewMessage({
@@ -104,8 +106,32 @@ export class CardRightSrv {
             });
             return false;
         }
+        if (viewResol.length) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: `Невозможно снять право 'Просмотр поручений.'\n Пользователь имеет доступ в папки 1-3 кабинетов данных картотек: ${this.getNamesDue(viewResol)}`
+            });
+            return false;
+        }
         return true;
     }
+
+    checkViewResol(card: USERCARD, viewResol: string[]): void {
+        const fold_av = card.USER_CABINET_List[0].FOLDERS_AVAILABLE.charAt(0);
+        if ((fold_av === '1' || fold_av === '2' || fold_av === '3') && card.FUNCLIST.charAt(16) === '0') {
+            viewResol.push(card.DUE);
+        }
+    }
+
+    getNamesDue(viewResol: any[]): string {
+        let str = '';
+        viewResol.forEach(due => {
+            str += this.departments.get(due).CARD_NAME + ', ';
+        });
+        return str.slice(0, -2);
+    }
+
     saveChenge$() {
         const chl = [];
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {

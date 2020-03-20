@@ -212,17 +212,25 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             this.linkTypeListControl.patchValue(data);
             this.loadLinksNames();
         }).catch(e => {
-            this._errorHelper.errorHandler(e);
+            if (e) {
+                this._errorHelper.errorHandler(e);
+            }
         });
     }
     private openClassiSecurity(value) {
         const control = this.form.controls[value];
         if (control.value && control.value !== 'null') {
             OPEN_CLASSIF_SECURITY_CL.selected = control.value;
+        } else {
+            OPEN_CLASSIF_SECURITY_CL.selected = '';
         }
         this._waitClassif.openClassif(OPEN_CLASSIF_SECURITY_CL).then(data => {
             control.patchValue(data);
             this.loadGrifsNames(this.typeDoc);
+        }).catch(e => {
+            if (e) {
+                this._errorHelper.errorHandler(e);
+            }
         });
     }
     private loadLinksNames() {
@@ -233,7 +241,9 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                     this.linkTypeListNames.push(n.CLASSIF_NAME);
                 });
             }).catch(e => {
-                this._errorHelper.errorHandler(e);
+                if (e) {
+                    this._errorHelper.errorHandler(e);
+                }
             });
         }
     }
@@ -252,7 +262,9 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                     this.fileAccessNames.push(n.GRIF_NAME);
                 });
             }).catch(e => {
-                this._errorHelper.errorHandler(e);
+                if (e) {
+                    this._errorHelper.errorHandler(e);
+                }
             });
         }
     }
