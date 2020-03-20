@@ -52,7 +52,6 @@ export class RightOrganizDepertComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
-        console.log('this.funcNum', this.funcNum);
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
             // this.addDep();
             this.isLoading = false;
@@ -119,7 +118,7 @@ export class RightOrganizDepertComponent implements OnInit {
     }
     addDep(): Promise<any> {
         this.isShell = true;
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL, true)
+        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();

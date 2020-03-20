@@ -61,7 +61,6 @@ export class RightDepertmentComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
-        console.log('this.funcNum', this.funcNum);
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
             if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                 this.addNewDepAll();
@@ -224,11 +223,10 @@ export class RightDepertmentComponent implements OnInit {
         }
     }
     addDep(): Promise<any> {
-        console.log('funcNum', this.funcNum);
         this.isShell = true;
         const DEPART = (this.funcNum === 3 /* && this._appContext.cbBase */) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
 
-        return this._waitClassifSrv.openClassif(DEPART, true)
+        return this._waitClassifSrv.openClassif(DEPART)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
