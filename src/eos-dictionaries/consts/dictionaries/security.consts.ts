@@ -49,7 +49,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     }, {
         key: 'CONFIDENTIONAL',
         type: 'boolean',
-        title: 'Конфиденциальность',
+        title: 'Дсп файл',
         length: 20,
         pattern: NOT_EMPTY_STRING,
     }, {
