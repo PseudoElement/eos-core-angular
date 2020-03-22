@@ -62,7 +62,7 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
         // return this.getData();
     }
     confirmSave(nodeData: EosDictionaryNode, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        if (this.id === 'security') {
+        if (this.id === 'security' && !isNewRecord) {
             if (nodeData['rec'].CONFIDENTIONAL !== nodeData['rec']._orig.CONFIDENTIONAL) {
                 const query1 = this.apiSrv.read({ PRJ_RC: { criteries: { SECURLEVEL: nodeData['rec'].SECURLEVEL } } });
                 const query2 = this.apiSrv.read({ REF_FILE: { criteries: { SECURLEVEL: nodeData['rec'].SECURLEVEL } } });
