@@ -53,13 +53,6 @@ export class NodeFieldComponent implements OnInit {
                     tooltip: 'Номерообразование',
                 });
             }
-            if (this.node.data.rec['CONFIDENTIONAL']) {
-                this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
-                    tooltip: 'ДСП файлы',
-                });
-            }
-
             if (this.node.data.rec['POST_H'] === 1) {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-user-ceo-grey' : 'eos-icon-user-ceo-blue',
@@ -73,6 +66,12 @@ export class NodeFieldComponent implements OnInit {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-shared-folder-grey' : 'eos-icon-shared-folder-blue',
                     tooltip: 'Индекс СЭВ',
+                });
+            }
+            if (this.node.data.rec['CONFIDENTIONAL']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
+                    tooltip: 'ДСП файлы',
                 });
             }
         }
