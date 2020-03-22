@@ -3,6 +3,7 @@
     max-height: calc(100vh - 176px);
     margin-left: calc(50vw - 420px);
     overflow: auto;
+    overflow-x: hidden;
 
     .input-param-wrapper {
         border: 1px solid $border-color-main-theme;
@@ -67,8 +68,8 @@
 }
 
 .organ-new-now{
-    position: absolute; 
-    top: 3px; 
+    position: absolute;
+    top: 3px;
     left: 720px;
     .organ-new-now-en {
         cursor: pointer;
