@@ -14,6 +14,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -37,6 +38,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     subscriptions: Subscription[] = [];
     prepareData;
     _currentFormStatus;
+    _errorSrv: ErrorHelperServices;
     private _fieldsType = {};
     constructor(
         injector: Injector,
@@ -50,6 +52,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.inputCtrlSrv = injector.get(InputControlService);
         this.msgSrv = injector.get(EosMessageService);
         this._waitClassifSrv = injector.get(WaitClassifService);
+        this._errorSrv = injector.get(ErrorHelperServices);
+
     }
     ngOnDestroy() {
         this.unsubscribe();
