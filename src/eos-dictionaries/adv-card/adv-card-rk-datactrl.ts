@@ -262,9 +262,9 @@ export class AdvCardRKDataCtrl {
                     const deleted = element['DELETED'];
                     const DSP = element['CONFIDENTIONAL'];
                     if (deleted) {
-                        opts_ptr.push (Object.assign({}, {value: value, title: title, disabled: true}, DSP ? {confidentional: 1} : null));
+                        opts_ptr.push (Object.assign({}, {value: value, title: title, disabled: true}, DSP ? {confidentional: 1, style: {color: 'red'}} : {style: {color: 'black'}}));
                     } else {
-                        opts_ptr.push (Object.assign({}, {value: value, title: title}, DSP ? {confidentional: 1} : null));
+                        opts_ptr.push (Object.assign({}, {value: value, title: title}, DSP ? {confidentional: 1, style: {color: 'red'}} : {style: {color: 'black'}}));
                     }
 
                 }

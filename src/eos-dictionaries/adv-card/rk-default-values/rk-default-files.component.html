@@ -33,6 +33,7 @@
             <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE']"
                                             [form]="form"
                                             [viewOpts]="selOpts"
+                                            [style.color]= "securColor('DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE')"
                                             [readonly]="!editMode" ></eos-dynamic-input>
         </div>
     </div>
@@ -40,7 +41,7 @@
         <div class="col-1">
         <eos-dynamic-input *ngIf="isSecurLavelAccessEnabled" [input]="inputs['DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE']"
                                         [form]="form"
-                                        [viewOpts]="selOpts"
+
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
         <div class="col-2">

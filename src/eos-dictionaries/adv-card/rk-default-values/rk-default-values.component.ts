@@ -77,6 +77,17 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
         //         return variations[0];
         // }
     }
+    public securColor(name: string) {
+        if (this.form) {
+            const val = this.form.controls[name].value;
+            const val1 = this.InputsSucerlevelOpt(name).filter(f => +f.value === +val);
+            return val1[0] ? val1[0].style.color : 'black';
+        }
+        return 'black';
+    }
+     InputsSucerlevelOpt(name) {
+        return this.inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'].options;
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         // this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;

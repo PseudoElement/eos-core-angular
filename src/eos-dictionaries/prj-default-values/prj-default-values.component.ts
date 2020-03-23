@@ -405,6 +405,7 @@ class PrjDefaultFactory {
                             value: record[dict.isnFieldName],
                             disabled: record['DELETED'],
                             confidentional: record['CONFIDENTIONAL'],
+                            style: { color: record['CONFIDENTIONAL'] ? 'red' : 'black' },
                             isEmpty: false,
                             hasDeleted: false,
                         });
@@ -451,7 +452,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     @Input() form: FormGroup;
 
     selOpts: IDynamicInputOptions = {
-        defaultValue: { value: '', title: '...' }
+        defaultValue: { value: '', title: '...'}
     };
 
     nodeDescription: string;
@@ -498,7 +499,6 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
         ValidatorsControl.appendValidator(controls['PRJ_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST'],
             (control: AbstractControl): { [key: string]: any } => {
-                console.log('re');
                 const c = controls['PRJ_DEFAULT_VALUE_List.ACCESS_MODE_FILE'];
                 if (c) {
                     const v = c.value;
@@ -525,6 +525,17 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
     get isFilesTab() {
         return this.currTab === 2;
+    }
+    public securColor(name: string) {
+        if (this.form) {
+            const val = this.form.controls[name].value;
+            const val1 = this.InputsSucerlevelOpt(name).filter(f => +f.value === +val);
+            return val1[0] ? val1[0].style.color : 'black';
+        }
+        return 'black';
+    }
+     InputsSucerlevelOpt(name) {
+        return this.inputs['PRJ_DEFAULT_VALUE_List.SECURLEVEL'].options;
     }
 
     init(content: {}) {
@@ -747,12 +758,14 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             if (findDsp[0].confidentional) {
                 v.length = 0;
                 v.push(...STRICT_OPTIONS);
-                if (controlAccess.value === '3' || controlAccess.value === '2' || controlAccess.value === '1') {
-                    controlAccess.patchValue(null);
-                }
+                    controlAccess.patchValue('4');
+                // if (controlAccess.value === '3' || controlAccess.value === '2' || controlAccess.value === '1') {
+
+                // }
             } else {
                 v.length = 0;
                 v.push(...NOT_STRICT_OPTIONS_PRG);
+                    controlAccess.patchValue('1');
             }
         }
 
