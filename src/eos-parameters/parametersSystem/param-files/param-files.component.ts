@@ -248,6 +248,9 @@ export class ParamFielsComponent extends BaseParamComponent {
                 .subscribe(value => {
                     if (!value) {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
+                        this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].disable({emitEvent: false});
+                    } else {
+                        this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].enable({emitEvent: false});
                     }
                 })
         );
@@ -294,7 +297,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                 this.cancelEdit();
             })
             .catch(err => {
-                throw err;
+                this._errorSrv.errorHandler(err);
             });
     }
     submit() {
@@ -333,7 +336,9 @@ export class ParamFielsComponent extends BaseParamComponent {
                     }
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
-                .catch(data => console.log(data));
+                .catch(data => {
+                    this._errorSrv.errorHandler(data);
+                });
         }
     }
     getInputAttach() {
