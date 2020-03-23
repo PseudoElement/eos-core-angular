@@ -50,6 +50,8 @@ export class ParamFielsComponent extends BaseParamComponent {
         super(injector, FILES_PARAM);
         this.init()
             .then(() => {
+                 // b-119380
+                this.updateFormInput();
                 this.formAttachChoice = new FormGroup({
                     attachFile: new FormControl('rc')
                 });
@@ -86,6 +88,21 @@ export class ParamFielsComponent extends BaseParamComponent {
         }
         return result.join('');
     }
+    // b-119380
+    updateFormInput() {
+        let newValueControl = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
+        if (newValueControl && newValueControl.indexOf(this.validChengeValueStr) !== -1) {
+            newValueControl = newValueControl.replace(this.validChengeValueStr, '');
+            this.prepareData.rec['FILE_DESCRIPTION_VALID_CHARS'] = newValueControl;
+            this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(newValueControl, );
+            this.inputs['rec.FILE_DESCRIPTION_VALID_CHARS'].value = newValueControl;
+        }
+        if (!this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value) {
+            this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('', { emitEvent: false });
+            this.prepareData.rec['FILE_DESCRIPTION_REPLACE'] = '';
+            this.inputs['rec.FILE_DESCRIPTION_REPLACE'].value = '';
+        }
+    }
     checkReplace()  {
         const validRepeat: string = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
         const valid: string = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
@@ -99,7 +116,8 @@ export class ParamFielsComponent extends BaseParamComponent {
     checkValid() {
         this.validValue = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (this.validValue) {
-            this.validValue = this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, ''); //
+            // b-119382
+            this.validValue = this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ\n]/g, '');
             this.validValue = this.unique(this.validValue);
             if (this.validValue.length !== this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value.length) {
                 return true;
@@ -111,7 +129,8 @@ export class ParamFielsComponent extends BaseParamComponent {
         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
     }
     deletValid() {
-        this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(this.validValue, {emitEvent: false});
+        // b-119479
+        this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(this.validValue);
     }
     validBlur() {
         if (!this.checkBlur) {
@@ -119,6 +138,8 @@ export class ParamFielsComponent extends BaseParamComponent {
                 alert('В параметре "Допустимые символы" описания файлов есть повторяющиеся символы или буквы/цифры. Лишние будут удалены.');
                 this.deletValid();
             }
+            // b-119403
+            this.replaceBlur();
         }
         this.checkBlur = false;
     }
@@ -180,6 +201,8 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.ngOnDestroy();
             this.init()
                 .then(() => {
+                    // b-119380
+                    this.updateFormInput();
                     this.afterInit();
                 })
                 .catch(err => {
@@ -210,11 +233,6 @@ export class ParamFielsComponent extends BaseParamComponent {
         }
     } */
     afterInit() {
-        let newValueControl = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
-        if (newValueControl && newValueControl.indexOf(this.validChengeValueStr) !== -1) {
-            newValueControl = newValueControl.replace(this.validChengeValueStr, '');
-            this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(newValueControl, {emitEvent: false});
-        }
         this.subscriptions.push(
             this.formAttachChoice.controls.attachFile.valueChanges
                 .subscribe(value => {
@@ -230,10 +248,16 @@ export class ParamFielsComponent extends BaseParamComponent {
                 .subscribe(value => {
                     if (!value) {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
-                    }/*  else {
-                        value = value.replace(/[0-9a-zA-Zа-яА-ЯёЁ\s]/g, '');
-                        this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(value, {emitEvent: false});
-                    } */
+                    }
+                })
+        );
+        // b-119393
+        this.subscriptions.push(
+            this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].valueChanges
+                .subscribe(value => {
+                    if (value && value.length > 1) {
+                        this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue(value[value.length - 1], {emitEvent: false});
+                    }
                 })
         );
         this.paramApiSrv.getData(Object.assign({}, this.queryFileConstraint))
