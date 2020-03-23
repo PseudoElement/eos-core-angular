@@ -311,9 +311,9 @@ export class RightDepertmentComponent implements OnInit {
     }
     // только для исполнения поручений, спрашиваем на создание права ркпд
     confirmPkpd() {
-        if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !this.listRigth[8].control.value) {
+        if (this.selectedNode.key === '31' && this.selectedNode.isCreate && !this.listRigth[9].control.value) {
             return new Promise((res, rej) => {
-                if (confirm('У пользователя нет права \'создание РКПД\', создать его?')) {
+                if (confirm('У пользователя нет права \'Создание РКПД\'. Добавить его?')) {
                     res(true);
                 } else {
                     res(false);
