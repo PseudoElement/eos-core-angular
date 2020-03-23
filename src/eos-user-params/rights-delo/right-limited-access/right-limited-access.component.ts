@@ -47,23 +47,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public myElemFiles: any[] = [];
     public flagFileGrifs: boolean = true;
     grifInput: any[] = [];
-    get checkGriffs() {
-        let flag = false;
-        if (this.grifsForm) {
-            Object.keys(this.grifsForm.controls).forEach(element => {
-                if (this.grifsForm.get(element).value) {
-                    flag = true;
-                }
-            });
-        } else {
-            if (this.checkGrifs.length) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return flag;
-    }
+
     get title() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -73,8 +57,9 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         }
         return '';
     }
+
     private checkUserCard;
-    private checkGrifs;
+    // private checkGrifs;
     private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -110,7 +95,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         })
         .then(() => {
             this.currentUser = this._userServices.curentUser;
-            console.log('this.currentUser', this.currentUser);
             this.checkUserCard = this.currentUser['USERCARD_List'];
             this.isLoading = false;
             this._limitservise.getGrifsName()
@@ -121,7 +105,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 }
                 this.grifInput[1] = result;
                 this.grifInput[0] = this.currentUser['USERSECUR_List'];
-                this.checkGrifs = this.currentUser['USERSECUR_List'];
+                // this.checkGrifs = this.currentUser['USERSECUR_List'];
             });
             this._limitservise.getAccessCode()
                 .then((result) => {
@@ -142,6 +126,57 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
 
         });
     }
+
+    checkGriffs(): boolean {
+        const flagRk = this.checkedFlagForm(this.grifsForm),
+            flagFile = this.checkedFlagForm(this.grifsFileForm),
+            flagGroups = this.checkedGroupForm();
+        if (flagGroups) {
+            this.editFlag = true;
+            this.warning('warning', 'Предупреждение', 'Не назначен доступ к Группам документов');
+            return true;
+        }
+        if (!(flagRk || flagFile) && (this.grifsForm || this.grifsFileForm)) {
+            this.editFlag = true;
+            this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа. Назначьте Грифы РК/РКПД, Грифы файлов');
+            return true;
+        }
+        // if (!this.grifsForm && !this.grifsFiles) {
+        //     if (this.checkGrifs.length) {
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // }
+        return false;
+    }
+
+    checkedFlagForm(form: FormGroup): boolean {
+        let flag = false;
+        if (form) {
+            Object.keys(form.controls).forEach(element => {
+                if (form.get(element).value) {
+                    flag = true;
+                }
+            });
+        }
+        return flag;
+    }
+
+    checkedGroupForm(): boolean {
+        let flag = false, count = 0;
+        const groupForm = this.myForm.value.groupForm;
+        groupForm.forEach(item => {
+            if (!item.checkbox) {
+                count++;
+            }
+        });
+        if (groupForm.length && groupForm.length === count) {
+            flag = true;
+        }
+        return flag;
+    }
+
     clearForm(): void {
         sessionStorage.removeItem(String(this._userServices.userContextId));
         this.umailsInfo.splice(0, this.umailsInfo.length);
@@ -163,9 +198,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         });
     }
     saveAllForm($event?): Promise<any> {
-        if (!this.checkGriffs) {
-            this.editFlag = true;
-            this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа');
+        if (this.checkGriffs()) {
             return;
         }
         this.isLoading = false;
@@ -185,7 +218,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 this._limitservise.getDataGrifs()
                 .then(res => {
                     this.grifInput[0] = res[0]['USERSECUR_List'];
-                    this.checkGrifs = res[0]['USERSECUR_List'];
+                    // this.checkGrifs = res[0]['USERSECUR_List'];
                     if (res[0]['USER_FILESECUR_List']) {
                         this.grifsFiles[0] = res[0]['USER_FILESECUR_List'];
                     }
@@ -211,11 +244,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                                         elem.push(element);
                                     }
                                 });
-                                this.checkGrifs = elem;
+                                // this.checkGrifs = elem;
                             }
                             this.grifsFileForm = null;
                             this.grifsForm = null;
                             this.myElem = [];
+                            this.myElemFiles = [];
                             this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                             this.editModeForm();
                             this._pushState();
@@ -239,11 +273,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     backForm($event?): void {
         this.editFlag = $event;
         this.myElem = [];
+        this.myElemFiles = [];
         this._limitservise.getDataGrifs()
         .then(result => {
             this.flagFileGrifs = true;
             this.grifInput[0] = result[0]['USERSECUR_List'];
-            this.checkGrifs = result[0]['USERSECUR_List'];
+            // this.checkGrifs = result[0]['USERSECUR_List'];
             if (result[0]['USER_FILESECUR_List']) {
                 this.grifsFiles[0] = result[0]['USER_FILESECUR_List'];
             }
