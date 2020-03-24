@@ -60,7 +60,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
         }, {
             key: 'CONFIDENTIONAL',
             type: 'boolean',
-            title: 'Дсп файл',
+            title: 'ДСП файл',
             length: 20,
             pattern: NOT_EMPTY_STRING,
         }, {
@@ -80,7 +80,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
         ...Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     shortQuickViewFields: ['GRIF_NAME'],
-    quickViewFields: ['SEC_INDEX', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE',
+    quickViewFields: ['SEC_INDEX', 'EDS_FLAG', 'ENCRYPT_FLAG', 'NOTE', 'CONFIDENTIONAL',
         ...Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
 });
