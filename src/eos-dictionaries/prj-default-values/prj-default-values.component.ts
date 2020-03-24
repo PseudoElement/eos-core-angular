@@ -510,6 +510,13 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                 }
                 return null;
             });
+            ValidatorsControl.appendValidator(controls['PRJ_DEFAULT_VALUE_List.ACCESS_MODE_FILE'],
+            (control: AbstractControl): { [key: string]: any } => {
+                if (!control.value || control.value === '') {
+                            return { valueError: 'Поле доступ не должно быть пустым.' };
+                        }
+                return null;
+            });
     }
 
     ngOnDestroy() {

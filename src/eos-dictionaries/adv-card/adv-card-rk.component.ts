@@ -397,7 +397,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 }
                 return null;
             });
-
+            ValidatorsControl.appendValidator(controls['DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE'],
+            (control: AbstractControl): { [key: string]: any } => {
+                if (!control.value || control.value === '') {
+                            return { valueError: 'Поле доступ не должно быть пустым.' };
+                        }
+                return null;
+            });
         const controlSrok1 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC'];
         const controlSrok2 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'];
         const err = 'Реквизит "Срок исполнения" может быть заполнен только в одном месте';
