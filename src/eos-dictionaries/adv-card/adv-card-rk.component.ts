@@ -11,12 +11,13 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_VALUE_INCORRECT } from 'app/consts/confirms.const';
+import { RK_SELECTED_VALUE_INCORRECT, RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -75,6 +76,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         private _inputCtrlSrv: InputControlService,
         private _confirmSrv: ConfirmWindowService,
         private _waitClassifSrv: WaitClassifService,
+        private _appContext: AppContext,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -112,8 +114,36 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             event.options[0].rec = rec;
         }
     }
-
+    checkUpdateSecurlable(): boolean {
+        let securelevel;
+        let securelevelFile;
+        if (!(+this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL'].value) || !(+this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'].value)) {
+            return false;
+        }
+        this.inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL'].options.forEach(elem => {
+            if (+elem.value === +this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL'].value) {
+                securelevel = elem.confidentional;
+            }
+        });
+        this.inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'].options.forEach(elem => {
+            if (+elem.value === +this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'].value) {
+                securelevelFile = elem.confidentional;
+            }
+        });
+        // если securelevelFile имеет confidentional === 1 и если securelevelFile не имеет confidentional === 1 тогда вернуть true
+        if (securelevelFile === 1 && !securelevel) {
+            return true;
+        }
+        return false;
+    }
     save(): void {
+        // перед подготовкой к сохранению проверить можно ли сохранять
+        if (this._appContext.cbBase && this.checkUpdateSecurlable()) {
+            RK_ERROR_SAVE_SECUR.body = 'Гриф РК и гриф файлов по умолчанию не соответствуют друг другу.';
+            this._confirmSrv.confirm2(RK_ERROR_SAVE_SECUR);
+            return ;
+        }
+
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
                 this.dataController.save(this.isn_node, this.inputs, this.newData).then(() => {

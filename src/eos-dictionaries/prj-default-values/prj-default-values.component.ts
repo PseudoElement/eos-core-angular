@@ -16,7 +16,7 @@ import { VALIDATOR_TYPE, ValidatorsControl } from '../validators/validators-cont
 import { Subscription } from 'rxjs';
 import { IDynamicInputOptions } from '../../eos-common/dynamic-form-input/dynamic-input.component';
 import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
-import { RK_SELECTED_VALUE_INCORRECT } from '../../app/consts/confirms.const';
+import { RK_SELECTED_VALUE_INCORRECT, RK_ERROR_SAVE_SECUR } from '../../app/consts/confirms.const';
 import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { WaitClassifService } from '../../app/services/waitClassif.service';
@@ -26,6 +26,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { PRJ_DEFAULTS_LIST_NAME } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { STRICT_OPTIONS, NOT_STRICT_OPTIONS_PRG } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 // const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -484,7 +485,9 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         private _apiSrv: PipRX,
         private _zone: NgZone,
         private _waitClassifSrv: WaitClassifService,
-        private _confirmSrv: ConfirmWindowService) {
+        private _confirmSrv: ConfirmWindowService,
+        private _appContext: AppContext,
+        ) {
         this.dayTypeTitle = 'дней';
     }
 
@@ -622,8 +625,35 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     cancel(): void {
         this.bsModalRef.hide();
     }
-
+    checkUpdateSecurlable(): boolean {
+        let securelevel;
+        let securelevelFile;
+        // проверяю что в обоих полях есть данные
+        if (!(+this.form.controls['PRJ_DEFAULT_VALUE_List.SECURLEVEL'].value) || !(+this.form.controls['PRJ_DEFAULT_VALUE_List.SECURLEVEL_FILE'].value)) {
+            return false;
+        }
+        this.inputs['PRJ_DEFAULT_VALUE_List.SECURLEVEL'].options.forEach(elem => {
+            if (+elem.value === +this.form.controls['PRJ_DEFAULT_VALUE_List.SECURLEVEL'].value) {
+                securelevel = elem.confidentional;
+            }
+        });
+        this.inputs['PRJ_DEFAULT_VALUE_List.SECURLEVEL_FILE'].options.forEach(elem => {
+            if (+elem.value === +this.form.controls['PRJ_DEFAULT_VALUE_List.SECURLEVEL_FILE'].value) {
+                securelevelFile = elem.confidentional;
+            }
+        });
+        // если securelevel имеет confidentional === 1 и если securelevelFile не имеет confidentional === 1 тогда вернуть true
+        if (securelevelFile === 1 && !securelevel) {
+            return true;
+        }
+        return false;
+    }
     save(): void {
+        if (this._appContext.cbBase && this.checkUpdateSecurlable()) {
+            RK_ERROR_SAVE_SECUR.body = 'Гриф РКПД и гриф файлов по умолчанию не соответствуют друг другу.';
+            this._confirmSrv.confirm2(RK_ERROR_SAVE_SECUR);
+            return ;
+        }
         this._preSaveCheck()
             .then((res) => {
                 if (res) { return; }
