@@ -44,6 +44,7 @@ export enum E_RECORD_ACTIONS {
     uncheckNewEntry,
     dopRequisites,
     defaultCollision,
+    protViewSecurity,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

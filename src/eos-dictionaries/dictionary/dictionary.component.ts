@@ -95,6 +95,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     stylesFlex = 'none';
     SLICE_LEN = 110;
     customTreeData: CustomTreeNode[];
+    protocolWindow: Window;
 
     get sliced_title(): string {
         if (this.isTitleSliced) {
@@ -376,6 +377,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (this.modalWindow) {
             this.modalWindow.hide();
         }
+        if (this.protocolWindow) {
+            this.protocolWindow.close();
+        }
         this._sandwichSrv.treeScrollTop = this._treeScrollTop;
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -564,6 +568,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
             case E_RECORD_ACTIONS.defaultCollision:
                 this._defaultSettingsCollision();
+                break;
+            case E_RECORD_ACTIONS.protViewSecurity:
+                this._openProtocolSecyrity();
                 break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
@@ -1343,6 +1350,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 });
             }
         });
+    }
+    private _openProtocolSecyrity() {
+        const node = this.nodeList;
+        if (this.protocolWindow && !this.protocolWindow.closed) {
+            this.protocolWindow.close();
+            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
+        } else {
+            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
+        }
     }
 
 }

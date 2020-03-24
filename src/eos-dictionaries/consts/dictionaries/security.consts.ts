@@ -12,7 +12,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     title: 'Грифы доступа',
     visible: true,
     iconName: 'eos-icon-lock-blue',
-    actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
+    actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization', 'protViewSecurity']),
     fields: LINEAR_TEMPLATE.fields.concat([
         /* COMMON_FIELD_ICONS_SEV */,
         {

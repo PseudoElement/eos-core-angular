@@ -504,6 +504,19 @@ const RECORD_ACTIONS_DEFAULT_COLLISION: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+const RECORD_ACTIONS_PROTVIEW_SECURITY: IAction = {
+    type: E_RECORD_ACTIONS.protViewSecurity,
+    group: E_ACTION_GROUPS.item,
+    title: 'Протокол изменеий',
+    hint: 'Протокол изменеий',
+    iconClass: 'eos-icon eos-icon-new-doc-blue small',
+    disabledIconClass: 'eos-icon eos-icon-new-doc-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-new-doc-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -534,6 +547,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_COMBINE,
     RECORD_UNCHECK_NEW_ENTRY,
     RECORD_ACTIONS_DEFAULT_COLLISION,
+    RECORD_ACTIONS_PROTVIEW_SECURITY,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];
@@ -563,6 +577,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_PASTE_NODES,
     RECORD_ACTIONS_DOWNLOAD_FILE,
     RECORD_ACTIONS_DEFAULT_COLLISION,
+    RECORD_ACTIONS_PROTVIEW_SECURITY,
 ];
 
 export const COMMON_ADD_MENU = [{

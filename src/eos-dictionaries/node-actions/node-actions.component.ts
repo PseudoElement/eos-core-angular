@@ -399,6 +399,19 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
                     _enabled = _enabled && this.checkNewCitizen.length > 0;
                     break;
+                case E_RECORD_ACTIONS.protViewSecurity:
+                    _enabled = (!_isLDSubTree || Features.cfg.canEditLogicDeleted) && !this._viewParams.updatingList && opts.listHasOnlyOne;
+                    _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
+                    if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
+                        if (this._dictSrv && this._dictSrv.listNode) {
+                            _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
+                        }
+                    }
+
+                    if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
+                        _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
+                    }
+                    break;
             }
         }
 
