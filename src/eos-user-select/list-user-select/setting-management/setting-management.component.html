@@ -7,40 +7,56 @@
 	</button>
 </header>
 <main *ngIf="!isLoading; else spiner">
-  	<div [formGroup]="form" class="inline-block base-department-input">
-      	<label [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
+  	<div [formGroup]="formCopy" class="inline-block base-department-input">
+      	<label [attr.for]="inputsManage['USER_COPY'].key">{{inputsManage['USER_COPY'].label}}</label>
       	<div style="width: 460px">
-          	<input class="form-control m-font inline-block" readonly [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text" [placeholder]="inputs['USER_COPY'].label" autocomplete="off">
+          	<input class="form-control m-font inline-block" readonly [formControlName]="inputsManage['USER_COPY'].key" [id]="inputsManage['USER_COPY'].key" type="text" [placeholder]="inputsManage['USER_COPY'].label" autocomplete="off">
           	<span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span>
       	</div>
   	</div>
-	  <div class="container-settings">
-		<div class="container-param-check">
-			<div class="group-close">
-				<eos-dynamic-input class="pad-par-copy" [input]="inputs['1']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input class="pad-par-copy" [input]="inputs['2']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input class="pad-par-copy" [input]="inputs['3']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input class="pad-par-copy" [input]="inputs['4']" [form]="form"></eos-dynamic-input>
+	  	<div class="container-settings">
+			<div class="container-param-check">
+				<div class="group-close">
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['1']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['2']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['3']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['4']" [form]="formCopy"></eos-dynamic-input>
+				</div>
+				<div class="group-middle">
+					<eos-dynamic-input [input]="inputsManage['5']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input [input]="inputsManage['6']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input [input]="inputsManage['7']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input [input]="inputsManage['8']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input [input]="inputsManage['9']" [form]="formCopy"></eos-dynamic-input>
+				</div>
 			</div>
-			<div class="group-middle">
-				<eos-dynamic-input [input]="inputs['5']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input [input]="inputs['6']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input [input]="inputs['7']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input [input]="inputs['8']" [form]="form"></eos-dynamic-input>
-				<eos-dynamic-input [input]="inputs['9']" [form]="form"></eos-dynamic-input>
+			<div>
+				<button
+					class="btn btn-copy"
+					(click)="copySettings()"
+					[disabled]="!disabledCopy"
+					[ngClass]="{'btn-primary': disabledCopy, 'btn-light': !disabledCopy}"
+				>Скопировать</button>
 			</div>
-			
 		</div>
-		<div>
-		<button
-			class="btn btn-copy"
-			(click)="copySettings()"
-			[disabled]="!disabledCopy"
-			[ngClass]="{'btn-primary': disabledCopy, 'btn-light': !disabledCopy}"
-		>Скопировать</button>
+		<hr>
+		<div class="container-settings">
+			<div class="container-param-check btn-rights-cut">
+				<div class="group-close">
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsCut['1']" [form]="formCut"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsCut['2']" [form]="formCut"></eos-dynamic-input>
+				</div>
+			</div>
+			<div>
+				<button
+					class="btn btn-copy"
+					(click)="cutRights()"
+					[disabled]="!disabledCutRights"
+					[ngClass]="{'btn-primary': disabledCutRights, 'btn-light': !disabledCutRights}"
+				>Снять права</button>
+			</div>
 		</div>
-  	</div>
-</main>
+	</main>
 
 <div *ngIf="isShell" class="shell"></div>
 

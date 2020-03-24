@@ -62,12 +62,6 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
             }
         ],
     },
-    {
-        controlType: E_FIELD_TYPE.string,
-        key: 'USER_COPY',
-        label: 'Скопировать настройки от:',
-        value: '',
-    },
 ];
 
 export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
