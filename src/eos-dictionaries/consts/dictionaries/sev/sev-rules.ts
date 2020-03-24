@@ -1,7 +1,7 @@
 import {IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE } from '../_linear-template';
 import { COMMON_FIELD_NOTE} from '../_common';
-import {DOCGROUP_DICT} from '../docgroup.consts';
+// import {DOCGROUP_DICT} from '../docgroup.consts';
 import {
     ADDRESS_REPLACE,
     ADDRESSEE_KIND,
@@ -62,16 +62,22 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             default: 1,
         }, {
             key: 'DUE_DOCGROUP',
-            type: 'select',
+            type: 'string',
             title: 'Группа документов',
             required: true,
-            dictionaryId: DOCGROUP_DICT.apiInstance,
-            dictionaryLink: {
-                pk: 'DUE',
-                label: 'CLASSIF_NAME',
+        // dictionaryId: DOCGROUP_DICT.apiInstance,
+        //     dictionaryLink: {
+        //         pk: 'DUE',
+        //         label: 'CLASSIF_NAME',
+        // },
+        //     options: [],
         },
-            options: [],
-        }, {
+        {
+            key: 'DUE_DOCGROUP_NAME',
+            type: 'string',
+            title: 'Группа документов',
+        },
+        {
             key: 'DUE_DEP',
             type: 'select',
             options: [{value: null, title: 'Все организации'}],
@@ -608,7 +614,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             default: true,
         }
     ],
-    editFields: ['CLASSIF_NAME', 'RULE_KIND', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
+    editFields: ['CLASSIF_NAME', 'RULE_KIND', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DOCGROUP_NAME', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
         'linkKind', 'linkTypeList', 'access', 'rubric', 'address', 'region', 'visa', 'addressee', 'addresseeKind', 'additionalField',
         'userGrantedOnly', 'file', 'fileExtensions', 'fileAccessList', 'fileMaxLength', 'item', 'itemKind', 'resolution',
         'resolutionKind', 'taskCategory', 'taskController', 'taskNote', 'taskFile', 'taskFileExtensions', 'taskFileMaxLength', 'reception',

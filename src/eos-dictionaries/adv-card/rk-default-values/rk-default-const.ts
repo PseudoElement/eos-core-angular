@@ -15,35 +15,40 @@ export const STRICT_OPTIONS =  [
         value: '5', title: 'Строгий – Список ДЛ'
     },
 ];
-export const NOT_STRICT_OPTIONS = [{
-    value: '3', title: 'Список ДЛ'
-}, {
-    value: '2', title: 'Фигуранты и список ДЛ'
-},
-{
-    value: '1', title: 'Картотечный'
-},
-{
-    value: '4', title: 'Строгий – Фигуранты и список ДЛ'
-},
-{
-    value: '5', title: 'Строгий – Список ДЛ'
-}];
+export const NOT_STRICT_OPTIONS = [
+    {
+        value: '1', title: 'Картотечный'
+    },
+    {
+        value: '3', title: 'Список ДЛ'
+    },
+    {
+        value: '2', title: 'Фигуранты и список ДЛ'
+    },
+    {
+        value: '4', title: 'Строгий – Фигуранты и список ДЛ'
+    },
+    {
+        value: '5', title: 'Строгий – Список ДЛ'
+    }
+];
 
-export const NOT_STRICT_OPTIONS_PRG = [{
-    value: '3', title: 'Список ДЛ'
-}, {
-    value: '2', title: 'Фигуранты и список ДЛ'
-},
-{
-    value: '1', title: 'Простой'
-},
-{
-    value: '4', title: 'Строгий – Фигуранты и список ДЛ'
-},
-{
-    value: '5', title: 'Строгий – Список ДЛ'
-}];
+export const NOT_STRICT_OPTIONS_PRG = [
+    {
+        value: '1', title: 'Простой'
+    },
+    {
+        value: '3', title: 'Список ДЛ'
+    }, {
+        value: '2', title: 'Фигуранты и список ДЛ'
+    },
+    {
+        value: '4', title: 'Строгий – Фигуранты и список ДЛ'
+    },
+    {
+        value: '5', title: 'Строгий – Список ДЛ'
+    }
+];
 
 export class TDFSelect {
     dictId: string;

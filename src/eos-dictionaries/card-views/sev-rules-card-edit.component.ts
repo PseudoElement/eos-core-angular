@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_LINK_CL, OPEN_CLASSIF_SECURITY_CL } from 'eos-user-select/shered/consts/create-user.consts';
-import { LINK_CL, SECURITY_CL, DEPARTMENT, ORGANIZ_CL } from 'eos-rest';
+import { LINK_CL, SECURITY_CL, DEPARTMENT, ORGANIZ_CL, DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
@@ -132,12 +132,14 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         this.form.controls['rec.type'].valueChanges.subscribe(value => {
             this.updateRule_Kind(+value);
             this.loadGrifsNames(value);
+            this.updateInputDue_doc();
         });
 
     }
     afterGetFrom() {
         this.loadLinksNames();
         this.loadGrifsNames(this.typeDoc);
+        this.updateInputDue_doc();
         this.checkKind();
         this.dictSrv['_apiSrv'].read({ DEPARTMENT: { criteries: { 'DUE_LINK_ORGANIZ': 'isnotnull' } } }).then((d: DEPARTMENT[]) => {
             let idsOrganiz: string[] = [];
@@ -170,6 +172,9 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     }
     openSecurityCl(value) {
         this.openClassiSecurity(value);
+    }
+    openDocGroupCl() {
+        this.openClassifDocGroup();
     }
     public deleteFieldsNames(name) {
         switch (name) {
@@ -247,6 +252,25 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             });
         }
     }
+    private openClassifDocGroup() {
+        this._waitClassif.chooseDocGroup().then(val => {
+            if (val) {
+                this.form.controls['rec.DUE_DOCGROUP'].patchValue(val);
+                this.updateInputDue_doc();
+            }
+        });
+    }
+    private updateInputDue_doc() {
+        const due = this.form.controls['rec.DUE_DOCGROUP'].value;
+        if (due) {
+            this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[]) => {
+                this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(data.length ? data[0].CLASSIF_NAME : '');
+            }).catch(e => {
+                this._errorHelper.errorHandler(e);
+            });
+        }
+    }
+
     private loadGrifsNames(value) {
         this.fileAccessNames = [];
         let control;
