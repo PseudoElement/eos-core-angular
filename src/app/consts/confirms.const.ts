@@ -100,7 +100,15 @@ export const RK_SELECTED_VALUE_LOGIC_DELETED: IConfirmWindow2 = {
         {title: 'Нет', result: 2, },
     ],
 };
-
+export const RK_ERROR_SAVE_SECUR: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: '',
+    bodyAfterList: '',
+    buttons: [
+        {title: 'Ок', result: 1, isDefault: true, },
+    ],
+};
 export const RK_SELECTED_VALUE_INCORRECT: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
