@@ -107,7 +107,8 @@ export class ParamFielsComponent extends BaseParamComponent {
         const validRepeat: string = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
         const valid: string = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (valid && validRepeat && valid.indexOf(validRepeat) === -1) {
-            if (this.validChengeValueStr.indexOf(validRepeat.toLowerCase()) === -1) {
+            const provElem: string = this.validChengeValueStr + 'й';
+            if (provElem.indexOf(validRepeat.toLowerCase()) === -1) {
                 return true;
             }
         }
@@ -117,7 +118,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         this.validValue = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
         if (this.validValue) {
             // b-119382
-            this.validValue = this.validValue.replace(/[0-9a-zA-Zа-яА-ЯёЁ\n]/g, '');
+            this.validValue = this.validValue.replace(/[0-9a-zA-Zа-яА-Я\n]/g, '');
             this.validValue = this.unique(this.validValue);
             if (this.validValue.length !== this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value.length) {
                 return true;
