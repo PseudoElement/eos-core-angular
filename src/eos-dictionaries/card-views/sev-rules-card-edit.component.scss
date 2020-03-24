@@ -49,4 +49,21 @@
         list-style-type: none;
     }
 }
-
+.doc-wr {
+    display: flex;
+    align-items: center;
+    .ng-invalid {
+        border-color: red;
+    }
+    .action {
+        position: relative;
+        top: -5px;
+    }
+    #due {
+        background-color: #fafafa;
+    }
+    .form-control:focus {
+        border-color: transparent;
+        box-shadow: none;
+    }
+}

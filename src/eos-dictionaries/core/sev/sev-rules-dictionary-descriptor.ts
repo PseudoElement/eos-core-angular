@@ -98,6 +98,8 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
             case 'SECURITY_CL':
                 query = { SECURITY_CL: [names.split('|')] };
                 break;
+            case 'DOCGROUP_CL':
+                query = {DOCGROUP_CL: [names]};
         }
         return this.apiSrv.read(query);
     }
