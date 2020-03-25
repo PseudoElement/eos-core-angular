@@ -130,6 +130,7 @@
             <div class="description-button">
                 <button
                     class="btn btn-primary"
+                    [ngClass]="{'disabled-class-descr': !editMode}"
                     (click)="buttonDefault()"
                     (mousedown)="cancelDown($event)"
                     (mouseup)="cancelUp($event)"

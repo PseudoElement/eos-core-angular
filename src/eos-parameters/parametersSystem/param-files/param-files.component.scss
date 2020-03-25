@@ -45,6 +45,11 @@
             right: 50px;
         }
     }
+    .disabled-class-descr{
+        border-color: rgba(33, 150, 243, 0.65) !important;
+        opacity: 1;
+        color: rgba(33, 150, 243, 0.65) !important;
+    }
     .description-input-group-rep {
         input{
             width: 50px;
