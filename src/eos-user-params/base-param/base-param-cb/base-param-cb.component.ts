@@ -13,9 +13,8 @@ import { BASE_PARAM_INPUTS_CB, BASE_PARAM_ACCESS_INPUT, BASE_PARAM_CONTROL_INPUT
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl, IRoleCB } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from '../shared/base-param-curent.descriptor';
-import { OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_USER_CL } from 'eos-user-select/shered/consts/create-user.consts';
+import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
-import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
@@ -61,7 +60,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     singleOwnerCab: boolean = true;
     currentCbFields: IRoleCB[] = [];
     startRolesCb: IRoleCB[] = [];
-    user_copy_isn: number;
     isPhoto: boolean | number = false;
     urlPhoto: string = '';
     errorSave: boolean;
@@ -354,7 +352,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
 
     setNewDataFormControl(query, id) {
         if (this._newDataformControls.size) {
-            if (this._newDataformControls.has('SELECT_ROLE') && !this.user_copy_isn) {
+            if (this._newDataformControls.has('SELECT_ROLE')) {
                 query.push({
                     method: 'MERGE',
                     requestUri: `USER_CL(${id})/USER_PARMS_List('${id} CATEGORY')`,
@@ -374,27 +372,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         }
         return false;
-    }
-
-    selectUser() {
-        if (this.editMode) {
-            OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
-            OPEN_CLASSIF_USER_CL['selectMulty'] = false;
-            OPEN_CLASSIF_USER_CL['skipDeleted'] = null;
-            this.isShell = true;
-            this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
-                .then(data => {
-                    this.user_copy_isn = +data;
-                    return this._userParamSrv.getUserCl(this.user_copy_isn);
-                })
-                .then(data => {
-                    this.isShell = false;
-                    this.formControls.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
-                })
-                .catch(() => {
-                    this.isShell = false;
-                });
-        }
     }
 
     submit(meta?: string): Promise<any> {
@@ -524,20 +501,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
         .then(() => {
-            if (this.user_copy_isn) {
-                let url = `FillUserCl?isn_user=${this.curentUser.ISN_LCLASSIF}`;
-                url += `&role='${this.formControls.controls['SELECT_ROLE'].value ? encodeURI(this.formControls.controls['SELECT_ROLE'].value) : ''}'`;
-                url += `&isn_user_copy_from=${this.user_copy_isn}`;
-                return this.apiSrvRx.read({
-                    [url]: ALL_ROWS,
-                }).then(() => {
-                    this.user_copy_isn = null;
-                    this.formControls.get('USER_COPY').patchValue('');
-                    return this.AfterSubmit(accessStr, query);
-                });
-            } else {
-                return this.AfterSubmit(accessStr, query);
-            }
+            return this.AfterSubmit(accessStr, query);
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();

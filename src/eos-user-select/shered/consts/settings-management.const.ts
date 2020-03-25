@@ -62,3 +62,18 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
         value: '',
     },
 ];
+
+export const CUT_RIGHTS_INPUTS = [
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '1',
+        label: 'Права "Дело" (абсолютные и картотечные)',
+        value: false,
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '2',
+        label: 'Права системного технолога',
+        value: false,
+    },
+];

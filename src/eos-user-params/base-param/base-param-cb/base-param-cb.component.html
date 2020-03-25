@@ -35,7 +35,7 @@
                 <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
                     <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
                     <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required, 'department-role-flex': true}" style="width: 534px">
-                        <input class="form-control m-font inline-block" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [ngClass]="{'readonly': readonly}" [placeholder]="inputs['DUE_DEP_NAME'].label" autocomplete="off">
+                        <input class="form-control m-font inline-block" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label" autocomplete="off">
                         <span class="icon eos-icon small icon-add-department span-avatar-icon" [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <eos-dynamic-input class="base-text-input-cb base-input-role"
                     [input]="controls['SELECT_ROLE']"
                     [form]="formControls"
-                    [container]="body"
+                    container="body"
                     [ngStyle]="{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
                     [readonly]="curentUser.isTechUser || !editMode"
                     [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
@@ -90,13 +90,6 @@
             </div>
           </div>
           <hr style="margin-top: 5px;">
-          <div [formGroup]="formControls" class="dynamic-input-wrapper inline-block base-department-input">
-            <label [attr.for]="controls['USER_COPY'].key">{{controls['USER_COPY'].label}}</label>
-            <div class="create-user-wr">
-                <input class="form-control m-font inline-block" (keyup)="delSelectUser($event)" readonly [formControlName]="controls['USER_COPY'].key" [id]="controls['USER_COPY'].key" type="text" [placeholder]="controls['USER_COPY'].label" autocomplete="off">
-                <span class="icon eos-icon small icon-add-department" [ngClass]="{'eos-icon-avatar-blue': editMode, 'eos-icon-avatar-grey': !editMode}" (click)="selectUser()"></span>
-            </div>
-          </div>
           <div class="access-syst-wr settings-copy-top">
             <div class="access-syst-part">
                 <eos-dynamic-input [input]="settingsCopyInputs['copy_0']" [form]="formSettingsCopy" class="base-checkbox-input" [readonly]="formSettingsCopy.get('copy_0').disabled"></eos-dynamic-input>
