@@ -132,6 +132,9 @@ export class ParamFielsComponent extends BaseParamComponent {
     deletValid() {
         // b-119479
         this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(this.validValue);
+        if (this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value.length < 255) {
+            this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setErrors(null);
+        }
     }
     validBlur() {
         if (!this.checkBlur) {
@@ -187,7 +190,9 @@ export class ParamFielsComponent extends BaseParamComponent {
     }
 
     cancelDown() {
-        this.checkBlur = true;
+        if (!this.btnError) {
+            this.checkBlur = true;
+        }
     }
     cancelUp() {
         this.checkBlur = false;
