@@ -143,6 +143,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._confirmSrv.confirm2(RK_ERROR_SAVE_SECUR);
             return ;
         }
+        if (!this._node['ACCESS_MODE'] && !this.checkDspGrif(+this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL'].value)) {
+            RK_ERROR_SAVE_SECUR.body = `Запись информации невозможна, поскольку значение реквизита РК <Доступ>,
+             не соответствует значению флага <РК перс. доступа>.
+             Либо взведите флаг, либо cмените значение реквизита <Доступ>.
+             `;
+            this._confirmSrv.confirm2(RK_ERROR_SAVE_SECUR);
+            return ;
+        }
 
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
@@ -382,6 +390,19 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             });
         });
 
+    }
+    private checkDspGrif(value: number): boolean {
+        const options = this.inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL'].options;
+        if (options.length) {
+            const findVal = options.filter(o =>  +o.value === +value);
+            if (findVal[0]) {
+                if (findVal[0].hasOwnProperty('confidentional')) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return true;
     }
 
     private _updateInputs(inputs: any): any {
