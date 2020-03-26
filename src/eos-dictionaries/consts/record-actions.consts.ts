@@ -429,6 +429,18 @@ export const RECORD_ACTIONS_DOWNLOAD_FILE: IAction = {
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.readwrite,
 };
+const RECORD_CHECK_UNIQUE_INDEX: IAction = {
+    type: E_RECORD_ACTIONS.uniqueIndexDel,
+    group: E_ACTION_GROUPS.group,
+    title: 'Проверка уникальности индексов',
+    hint: 'Проверка уникальности индексов',
+    iconClass: 'eos-icon eos-icon-custom-list-blue small',
+    disabledIconClass: 'eos-icon eos-icon-custom-list-grey small',
+    activeIconClass: 'eos-icon eos-icon-custom-list-white small',
+    hoverIconClass: 'eos-icon eos-icon-custom-list-white small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
+};
 export const RECORD_ACTIONS_IMPORT_EDS: IAction = {
     type: E_RECORD_ACTIONS.importEDS,
     group: E_ACTION_GROUPS.common,
@@ -560,6 +572,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_DELETE,
     RECORD_ACTION_RESTORE,
     RECORD_ACTION_USER_SORT,
+    RECORD_CHECK_UNIQUE_INDEX,
     RECORD_ACTION_TO_UP,
     RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,

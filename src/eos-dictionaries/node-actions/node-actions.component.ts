@@ -412,6 +412,9 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
                     break;
+                case E_RECORD_ACTIONS.uniqueIndexDel:
+                    _isWriteAction = false;
+                    break;
             }
         }
 
