@@ -8,7 +8,7 @@ import { Injector } from '@angular/core';
 import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES, CONFIRM_DG_SHABLONRK, CONFIRM_DG_FIXE_V2 } from 'app/consts/confirms.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
-import { PipRX } from 'eos-rest';
+import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 import { TDefaultField } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
 import { NumcreationTemplateHelper } from 'eos-dictionaries/helpers/numcreation-template.helper';
@@ -155,8 +155,46 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         confirmParams.body = confirmParams.body.replace('{{index}}', index);
         return confirmSrv.confirm(confirmParams)
             .then((doSave) => {
+                if (doSave) {
+                    return this.getRepitedIndex(index).then((data: DOCGROUP_CL[]) => {
+                        if (data.length) {
+                            const query = [];
+                            this.createQuery(data, query);
+                            return this.apiSrv.batch(query, '').then(() => {
+                                return true;
+                            }).catch(e => {
+                                console.log(e);
+                                return false;
+                            });
+                        }
+                        return true;
+                    }).catch(e => {
+                        console.log(e);
+                        return false;
+                    });
+                }
                 return doSave;
             });
+    }
+    private getRepitedIndex(index): Promise<DOCGROUP_CL[]> {
+        return  this.apiSrv.read({
+            DOCGROUP_CL:
+               {  criteries: {
+                       DOCGROUP_INDEX: index
+                   }
+               }
+        });
+    }
+    private createQuery(data: DOCGROUP_CL[], query): void {
+        data.forEach((d: DOCGROUP_CL) => {
+            query.push({
+                method: 'MERGE',
+                requestUri: `DOCGROUP_CL('${d.DUE}')`,
+                data: {
+                    DOCGROUP_INDEX: '',
+                }
+            });
+        });
     }
 
 }
