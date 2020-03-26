@@ -8,7 +8,6 @@ import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.i
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 
 import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 @Component({
     selector: 'eos-grifs-files',
     styleUrls: ['grifs-files.component.scss'],
@@ -53,10 +52,10 @@ export class GrifsFilesComponent implements OnInit, OnDestroy {
             const res = this.grifFilesInput;
             const result = this.grifFilesInput;
             result[1].forEach(elem => {
-                this.fieldsGrifs.push(this._createElemGrif(elem));
+                this.fieldsGrifs.push(this._limitservise.createElemGrif(elem));
             });
             this.checkGrifs = res[0];
-            this.fields = this.writeValue(this.fieldsGrifs);
+            this.fields = this._limitservise.writeValue(this.fieldsGrifs, this.checkGrifs);
             this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
             if (this.grifsFilesForm && !deistvi) {
@@ -95,30 +94,10 @@ export class GrifsFilesComponent implements OnInit, OnDestroy {
             this.form.disable({emitEvent: false});
         }
     }
-    writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
-        const fields = [];
-        constanta.forEach((node: IInputParamControl) => {
-            let flag = false;
-            this.checkGrifs.forEach(element => {
-                if ('' + element.SECURLEVEL === node['key']) {
-                    flag = true;
-                }
-            });
-            const n = Object.assign({ value: flag }, node);
-            fields.push(n);
-        });
-        return fields;
-    }
+
     ngOnDestroy() {
         this.Unsub.next();
         this.Unsub.complete();
     }
-    private _createElemGrif(elem: any): any {
-        const data = {
-            controlType: E_FIELD_TYPE.boolean,
-            key: '' + elem['ISN_LCLASSIF'],
-            label: elem['CLASSIF_NAME'],
-        };
-        return data;
-    }
+
 }
