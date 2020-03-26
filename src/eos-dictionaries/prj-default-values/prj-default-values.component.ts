@@ -515,7 +515,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             });
             ValidatorsControl.appendValidator(controls['PRJ_DEFAULT_VALUE_List.ACCESS_MODE_FILE'],
             (control: AbstractControl): { [key: string]: any } => {
-                if (!control.value || control.value === '') {
+                const c = controls['PRJ_DEFAULT_VALUE_List.SECURLEVEL_FILE'].value;
+                if ((!control.value || control.value === '') && (c && c !== '')) {
                             return { valueError: 'Поле доступ не должно быть пустым.' };
                         }
                 return null;
