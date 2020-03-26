@@ -454,7 +454,7 @@ export abstract class AbstractDictionaryDescriptor {
         let paramsSop = '';
         let change: Array<any> = [{
             method: 'MERGE',
-            requestUri: `${this.apiInstance}('${markedNodes[0].id}')`,
+            requestUri: `${this.apiInstance}(${isNaN(markedNodes[0].id) ? '"' + String(markedNodes[0].id) + '"' : markedNodes[0].id})`,
             data: {
                 DELETED: 1
             }
@@ -462,14 +462,15 @@ export abstract class AbstractDictionaryDescriptor {
         slicedNodes.forEach((node, i) => {
             preSave.push({
                 method: 'DELETE',
-                requestUri: `${this.apiInstance}('${node.id}')`
+                requestUri: `${this.apiInstance}(${isNaN(node.id) ? '"' + String(node.id) + '"' : node.id})`
             });
             i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+            console.log(isNaN(node.id));
         });
         PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': this.apiInstance, 'ids': paramsSop }, 'POST', false);
         preSave.push({
             method: 'MERGE',
-            requestUri: `${this.apiInstance}('${markedNodes[0].id}')`,
+            requestUri: `${this.apiInstance}(${isNaN(markedNodes[0].id) ? '"' + String(markedNodes[0].id) + '"' : markedNodes[0].id})`,
             data: {
                 DELETED: 0
             }
