@@ -6,6 +6,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Injectable()
 export class LimitedAccesseService {
@@ -77,6 +78,30 @@ export class LimitedAccesseService {
             queryParams += element.DUE + '||';
         });
         return queryParams;
+    }
+
+    writeValue(constanta: any[], checkGrifs): any[] {
+        const fields = [];
+        constanta.forEach((node: any) => {
+            let flag = false;
+            checkGrifs.forEach(element => {
+                if ('' + element.SECURLEVEL === node['key']) {
+                    flag = true;
+                }
+            });
+            const n = Object.assign({ value: flag }, node);
+            fields.push(n);
+        });
+        return fields;
+    }
+
+    createElemGrif(elem: any): any {
+        const data = {
+            controlType: E_FIELD_TYPE.boolean,
+            key: '' + elem['ISN_LCLASSIF'],
+            label: elem['CLASSIF_NAME'],
+        };
+        return data;
     }
 
     parseClassifResponse(params: string): Array<string> {
