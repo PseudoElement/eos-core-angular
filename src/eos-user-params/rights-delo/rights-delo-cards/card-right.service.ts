@@ -88,7 +88,7 @@ export class CardRightSrv {
             card.USER_CARD_DOCGROUP_List.forEach(elem => {
                 if (elem.FUNC_NUM === 1 && elem._State !== _ES.Deleted) {
                     countFN++;
-                    if (elem.ALLOWED === 1 ) {
+                    if (elem.ALLOWED === 1) {
                         countFNA++;
                     }
                 }
@@ -118,9 +118,11 @@ export class CardRightSrv {
     }
 
     checkViewResol(card: USERCARD, viewResol: string[]): void {
-        const fold_av = card.USER_CABINET_List[0].FOLDERS_AVAILABLE.charAt(0);
-        if ((fold_av === '1' || fold_av === '2' || fold_av === '3') && card.FUNCLIST.charAt(16) === '0') {
-            viewResol.push(card.DUE);
+        if (card.USER_CABINET_List.length) {
+            const fold_av = card.USER_CABINET_List[0].FOLDERS_AVAILABLE.charAt(0);
+            if ((fold_av === '1' || fold_av === '2' || fold_av === '3') && card.FUNCLIST.charAt(16) === '0') {
+                viewResol.push(card.DUE);
+            }
         }
     }
 
