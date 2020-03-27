@@ -46,6 +46,8 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public grifsFileForm: FormGroup;
     public myElemFiles: any[] = [];
     public flagFileGrifs: boolean = true;
+    public initGrifs: any[];
+    public initGrifsFiles: any[];
     grifInput: any[] = [];
 
     get title() {
@@ -105,6 +107,8 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 }
                 this.grifInput[1] = result;
                 this.grifInput[0] = this.currentUser['USERSECUR_List'];
+                this.initGrifs = this.initValueGrifs(this.grifInput);
+                this.initGrifsFiles = this.initValueGrifs(this.grifsFiles);
                 // this.checkGrifs = this.currentUser['USERSECUR_List'];
             });
             this._limitservise.getAccessCode()
@@ -128,17 +132,36 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
 
     checkGriffs(): boolean {
-        const flagRk = this.checkedFlagForm(this.grifsForm),
-            flagFile = this.checkedFlagForm(this.grifsFileForm),
-            flagGroups = this.checkedGroupForm();
+        let flagRk, flagFile;
+        const flagGroups = this.checkedGroupForm();
+        if (this.grifsForm) {
+            flagRk = this.checkedFlagForm(this.grifsForm);
+        } else {
+            flagRk = this.checkedFlagForm(this.initGrifs, true);
+        }
+        if (this.grifsFileForm) {
+            flagFile = this.checkedFlagForm(this.grifsFileForm);
+        } else {
+            flagFile = this.checkedFlagForm(this.initGrifsFiles, true);
+        }
         if (flagGroups) {
             this.editFlag = true;
             this.warning('warning', 'Предупреждение', 'Не назначен доступ к Группам документов');
             return true;
         }
-        if (!(flagRk || flagFile) && (this.grifsForm || this.grifsFileForm)) {
+        if (!flagRk && !flagFile) {
             this.editFlag = true;
             this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа. Назначьте Грифы РК/РКПД, Грифы файлов');
+            return true;
+        }
+        if (!flagRk) {
+            this.editFlag = true;
+            this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа. Назначьте Грифы РК/РКПД');
+            return true;
+        }
+        if (!flagFile) {
+            this.editFlag = true;
+            this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа. Назначьте Грифы файлов');
             return true;
         }
         // if (!this.grifsForm && !this.grifsFiles) {
@@ -151,11 +174,17 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    checkedFlagForm(form: FormGroup): boolean {
+    checkedFlagForm(data: any, init?: boolean): boolean {
         let flag = false;
-        if (form) {
-            Object.keys(form.controls).forEach(element => {
-                if (form.get(element).value) {
+        if (init) {
+            const checkVal = data.filter(item => item.value);
+            console.log(checkVal);
+            if (checkVal.length) {
+                flag = true;
+            }
+        } else {
+            Object.keys(data.controls).forEach(element => {
+                if (data.get(element).value) {
                     flag = true;
                 }
             });
@@ -175,6 +204,17 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             flag = true;
         }
         return flag;
+    }
+
+    initValueGrifs(inputs: any[]): any[] {
+        const result = inputs;
+        const arr = [];
+        const checkGrifs = result[0];
+        result[1].forEach(elem => {
+            arr.push(this._limitservise.createElemGrif(elem));
+        });
+        const fields = this._limitservise.writeValue(arr, checkGrifs);
+        return fields;
     }
 
     clearForm(): void {
@@ -494,6 +534,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     private _pushState() {
         this._userServices.setChangeState({ isChange: !this.getBtn });
     }
+
     private warning(type: any, title: string, msg: string, dismissOnTimeout?: any) {
         const m: IMessage = {
             type: type,

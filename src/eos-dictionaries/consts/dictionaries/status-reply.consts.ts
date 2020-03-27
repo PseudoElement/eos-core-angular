@@ -6,6 +6,11 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'status-reply',
     apiInstance: 'STATUS_REPLY_CL',
+    actions: [
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
+        'cut', 'combine',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import'],
     title: 'Состояния исполнения (исполнитель)',
     visible: true,
     iconName: 'eos-icon-administrant-status-blue',
