@@ -9,18 +9,19 @@
 <main *ngIf="!isLoading; else spiner">
   	<div [formGroup]="formCopy" class="inline-block base-department-input">
       	<label [attr.for]="inputsManage['USER_COPY'].key">{{inputsManage['USER_COPY'].label}}</label>
-      	<div style="width: 460px">
+      	<div class="copy-user-wr" style="width: 460px">
           	<input class="form-control m-font inline-block" readonly [formControlName]="inputsManage['USER_COPY'].key" [id]="inputsManage['USER_COPY'].key" type="text" [placeholder]="inputsManage['USER_COPY'].label" autocomplete="off">
-          	<span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span>
+			  <span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()" [ngStyle]="{'margin-right': !formCopy.value['USER_COPY'] ? '0px' : '28px'}"></span>
+			  <a [ngClass]="{'hide': !formCopy.value['USER_COPY']}" (click)="cleanUser()"><span class="eos-icon eos-icon-close-blue small"></span></a>
       	</div>
   	</div>
 	  	<div class="container-settings">
 			<div class="container-param-check">
 				<div class="group-close">
 					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['1']" [form]="formCopy"></eos-dynamic-input>
-					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['2']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['2']" [form]="formCopy" [disabled]="!formCopy.controls['1'].value"></eos-dynamic-input>
 					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['3']" [form]="formCopy"></eos-dynamic-input>
-					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['4']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['4']" [form]="formCopy" [disabled]="!formCopy.controls['3'].value"></eos-dynamic-input>
 				</div>
 				<div class="group-middle">
 					<eos-dynamic-input [input]="inputsManage['5']" [form]="formCopy"></eos-dynamic-input>

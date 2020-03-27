@@ -9,7 +9,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT, BASE_PARAM_SETTINGS_COPY } from 'eos-user-params/shared/consts/base-param.consts';
+import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from './shared/base-param-curent.descriptor';
@@ -38,20 +38,17 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
-    copyField: IInputParamControl[];
     title: string;
     /* инпуты */
     inputs;
     controls;
     accessInputs;
-    settingsCopyInputs;
     /* инпуты */
 
     /* формы */
     form: FormGroup;
     formControls: FormGroup;
     formAccess: FormGroup;
-    formSettingsCopy: FormGroup;
     /* формы */
     isLoading: Boolean = true;
     selfLink = null;
@@ -157,17 +154,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
         this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
-        this.copyField = this._descSrv.fillValueAccessField(BASE_PARAM_SETTINGS_COPY, !this.editMode);
 
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
-        this.settingsCopyInputs = this._inputCtrlSrv.generateInputs(this.copyField);
 
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-        this.formSettingsCopy = this._inputCtrlSrv.toFormGroup(this.settingsCopyInputs, false);
         this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
         this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
@@ -469,7 +463,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
-        this.cancelValues(this.settingsCopyInputs, this.formSettingsCopy);
         this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
         this.clearMap();
         this._pushState();
@@ -538,12 +531,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.form.enable({ onlySelf: true, emitEvent: false });
             this.formControls.enable({ onlySelf: true, emitEvent: false });
             this.formAccess.enable({ onlySelf: true, emitEvent: false });
-            this.formSettingsCopy.enable({ onlySelf: true, emitEvent: false });
         } else {
             this.form.disable({ onlySelf: true, emitEvent: false });
             this.formControls.disable({ onlySelf: true, emitEvent: false });
             this.formAccess.disable({ onlySelf: true, emitEvent: false });
-            this.formSettingsCopy.disable({ onlySelf: true, emitEvent: false });
         }
     }
     close() {
