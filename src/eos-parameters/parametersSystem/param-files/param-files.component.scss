@@ -38,6 +38,9 @@
         position: relative;
         .description-input-group {
             width: 580px;
+            textarea{
+                height: 80px !important;
+            }
         }
         .description-button {
             position: absolute;
