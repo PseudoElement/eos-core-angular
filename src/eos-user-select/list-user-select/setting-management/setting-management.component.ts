@@ -9,6 +9,8 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-setting-management',
@@ -30,7 +32,8 @@ export class SettingManagementComponent implements OnInit {
         private _waitClassifSrv: WaitClassifService,
         private _pipeSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _errorSrv: ErrorHelperServices
+        private _errorSrv: ErrorHelperServices,
+        private _confirmSrv: ConfirmWindowService,
     ) { }
 
     get disabledCopy(): boolean {
@@ -52,12 +55,19 @@ export class SettingManagementComponent implements OnInit {
     copySettings(): Promise<any> {
         const url = this._createUrlForSop(this.formCopy, true);
         this.isLoading = true;
-        return this._pipeSrv.read({
-            [url]: ALL_ROWS
-        }).then(() => {
-            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this.isLoading = false;
-            this._isnCopyFrom = null;
+        return this._confirmSrv.confirm(CONFIRM_COPY_USER).then(res => {
+            if (res) {
+                return this._pipeSrv.read({
+                    [url]: ALL_ROWS
+                }).then(() => {
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    this._pathForm(true);
+                    this.isLoading = false;
+                    this._isnCopyFrom = null;
+                });
+            } else {
+                this.isLoading = false;
+            }
         }).catch((e) => {
             this._errorSrv.errorHandler(e);
             this.isLoading = false;
@@ -68,11 +78,19 @@ export class SettingManagementComponent implements OnInit {
     cutRights(): Promise<any> {
         const url = this._createUrlForSop(this.formCut);
         this.isLoading = true;
-        return this._pipeSrv.read({
-            [url]: ALL_ROWS
-        }).then(() => {
-            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this.isLoading = false;
+        return this._confirmSrv.confirm(CONFIRM_CUT_USER).then(res => {
+            if (res) {
+                return this._pipeSrv.read({
+                    [url]: ALL_ROWS
+                }).then(() => {
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    this.formCut.reset();
+                    this.isLoading = false;
+                });
+            } else {
+                this.isLoading = false;
+                return;
+            }
         }).catch((e) => {
             this._errorSrv.errorHandler(e);
             this.isLoading = false;
@@ -139,9 +157,6 @@ export class SettingManagementComponent implements OnInit {
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY') {
                 str += form.controls[key].value ? '1' : '0';
-                form.controls[key].patchValue(false);
-            } else {
-                form.controls[key].patchValue('');
             }
         });
         return str;
