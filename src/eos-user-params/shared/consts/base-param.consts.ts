@@ -192,34 +192,6 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
     },
 ];
 
-export const BASE_PARAM_SETTINGS_COPY: IInputParamControl[] = [
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'copy_0',
-        label: 'Права "Дело"',
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'copy_1',
-        label: 'Списки справочников',
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'copy_2',
-        label: 'Стандартные тексты',
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'copy_3',
-        label: 'Параметры',
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'copy_4',
-        label: 'Права поточного сканирования',
-    },
-];
-
 export const BASE_PARAM_REG_EXP: IPassRegExp[] = [
     {passNums: /\D+/g},
     {passAlph:  /[\A-Z\a-z\А-Я\a-я]/g},
