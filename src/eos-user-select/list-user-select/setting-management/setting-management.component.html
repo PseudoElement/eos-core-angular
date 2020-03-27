@@ -19,9 +19,9 @@
 			<div class="container-param-check">
 				<div class="group-close">
 					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['1']" [form]="formCopy"></eos-dynamic-input>
-					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['2']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['2']" [form]="formCopy" [disabled]="!formCopy.controls['1'].value"></eos-dynamic-input>
 					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['3']" [form]="formCopy"></eos-dynamic-input>
-					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['4']" [form]="formCopy"></eos-dynamic-input>
+					<eos-dynamic-input class="pad-par-copy" [input]="inputsManage['4']" [form]="formCopy" [disabled]="!formCopy.controls['3'].value"></eos-dynamic-input>
 				</div>
 				<div class="group-middle">
 					<eos-dynamic-input [input]="inputsManage['5']" [form]="formCopy"></eos-dynamic-input>

@@ -1,9 +1,7 @@
-import { Component, OnInit, EventEmitter, Output, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { SETTINGS_MANAGEMENT_INPUTS, CUT_RIGHTS_INPUTS } from 'eos-user-select/shered/consts/settings-management.const';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { OPEN_CLASSIF_USER_CL } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, USER_CL } from 'eos-rest';
@@ -16,19 +14,16 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
     selector: 'eos-setting-management',
     templateUrl: 'setting-management.component.html',
 })
-export class SettingManagementComponent implements OnInit, OnDestroy {
+export class SettingManagementComponent implements OnInit {
     @Output() closedModal = new EventEmitter();
     @Input() checkedUsers: number[];
     inputsManage: any;
     inputsCut: any;
     isLoading: boolean = false;
     isShell: boolean = false;
-    isnCopyFrom: number;
     formCopy: FormGroup;
     formCut: FormGroup;
-    private _dataCopy: Map<string, any> = new Map();
-    private _dataCut: Map<string, any> = new Map();
-    private _ngUnsubscribe: Subject<any> = new Subject();
+    private _isnCopyFrom: number;
 
     constructor(
         private _inputCtrlSrv: InputParamControlService,
@@ -39,11 +34,11 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     ) { }
 
     get disabledCopy(): boolean {
-        return this.isnCopyFrom && this.checkForm(this.formCopy);
+        return this._isnCopyFrom && this._checkForm(this.formCopy);
     }
 
     get disabledCutRights(): boolean {
-        return this.checkForm(this.formCut);
+        return this._checkForm(this.formCut);
     }
 
     ngOnInit() {
@@ -51,67 +46,54 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         this.formCopy = this._inputCtrlSrv.toFormGroup(this.inputsManage, false);
         this.inputsCut = this._inputCtrlSrv.generateInputs(CUT_RIGHTS_INPUTS);
         this.formCut = this._inputCtrlSrv.toFormGroup(this.inputsCut, false);
-        this._subscribe();
-    }
-
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
+        this._pathForm(true);
     }
 
     copySettings(): Promise<any> {
-        const url = this._createUrlForSop(this.formCopy, 'UserRightsCopy?');
+        const url = this._createUrlForSop(this.formCopy, true);
         this.isLoading = true;
         return this._pipeSrv.read({
             [url]: ALL_ROWS
         }).then(() => {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this.resetForm(true);
+            this.isLoading = false;
+            this._isnCopyFrom = null;
         }).catch((e) => {
             this._errorSrv.errorHandler(e);
-            this.resetForm(true);
+            this.isLoading = false;
+            this._isnCopyFrom = null;
         });
     }
 
     cutRights(): Promise<any> {
-        const url = this._createUrlForSop(this.formCut, 'UserRightsReset?');
+        const url = this._createUrlForSop(this.formCut);
         this.isLoading = true;
         return this._pipeSrv.read({
             [url]: ALL_ROWS
         }).then(() => {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this.resetForm(false);
+            this.isLoading = false;
         }).catch((e) => {
             this._errorSrv.errorHandler(e);
-            this.resetForm(false);
+            this.isLoading = false;
         });
     }
 
-    close() {
+    close(): void {
         this.closedModal.emit();
     }
 
-    resetForm(copyForm: boolean ) {
-        if (copyForm) {
-            this._dataCopy.clear();
-        } else {
-            this._dataCut.clear();
-            this.formCopy.controls['USER_COPY'].patchValue('', { emitEvent: false });
-        }
-        this.isLoading = false;
-        this.isnCopyFrom = null;
-    }
-
-    selectUser() {
+    selectUser(): Promise<any> {
         this.isShell = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
             .then(data => {
-                this.isnCopyFrom = +data;
+                this._isnCopyFrom = +data;
                 return this._getUserCl(data);
             })
             .then(data => {
                 this.isShell = false;
                 this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                this._pathForm();
             })
             .catch((e) => {
                 if (e) {
@@ -121,12 +103,13 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
             });
     }
 
-    cleanUser() {
+    cleanUser(): void {
         this.formCopy.controls['USER_COPY'].patchValue('');
-        this.isnCopyFrom = null;
+        this._pathForm(true);
+        this._isnCopyFrom = null;
     }
 
-    checkForm(form: FormGroup): boolean {
+    private _checkForm(form: FormGroup): boolean {
         let flag = false;
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY' && form.controls[key].value) {
@@ -136,10 +119,17 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         return flag;
     }
 
-    private _createUrlForSop(form: FormGroup, soap: string) {
-        let url = soap;
+    private _createUrlForSop(form: FormGroup, copy?: boolean): string {
+        let url;
+        if (copy) {
+            url = 'UserRightsCopy?';
+        } else {
+            url = 'UserRightsReset?';
+        }
         url += `users=${this.checkedUsers.join('|')}`;
-        url += `&user=${this.isnCopyFrom}`;
+        if (copy) {
+            url += `&user=${this._isnCopyFrom}`;
+        }
         url += `&rights=${this._getRightsData(form)}`;
         return url;
     }
@@ -149,44 +139,40 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY') {
                 str += form.controls[key].value ? '1' : '0';
-                form.controls[key].patchValue(false, { emitEvent: false });
+                form.controls[key].patchValue(false);
             } else {
-                form.controls[key].patchValue('', { emitEvent: false });
+                form.controls[key].patchValue('');
             }
         });
         return str;
     }
 
-    private _subscribe() {
-        this.formCopy.valueChanges
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                Object.keys(this.inputsManage).forEach(input => {
-                    if (this.inputsManage[input].value !== this.formCopy.controls[input].value) {
-                        this._dataCopy.set(input, this.formCopy.controls[input].value);
-                    } else {
-                        this._dataCopy.delete(input);
-                    }
-                });
-            });
-        this.formCut.valueChanges
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                Object.keys(this.inputsCut).forEach(input => {
-                    if (this.inputsCut[input].value !== this.formCut.controls[input].value) {
-                        this._dataCut.set(input, this.formCut.controls[input].value);
-                    } else {
-                        this._dataCut.delete(input);
-                    }
-                });
-            });
+    private _pathForm(init?: boolean): void {
+        Object.keys(this.formCopy.controls).forEach(key => {
+            if (key === '2' || key === '4') {
+                this.formCopy.controls[key].patchValue(false);
+                if (init) {
+                    this.formCopy.controls[key].disable();
+                } else {
+                    this.formCopy.controls[key].enable();
+                }
+            } else if (key === 'USER_COPY') {
+                if (init) {
+                    this.formCopy.controls[key].patchValue('');
+                }
+            } else {
+                if (init) {
+                    this.formCopy.controls[key].patchValue(false);
+                    this.formCopy.controls[key].disable();
+                } else {
+                    this.formCopy.controls[key].patchValue(true);
+                    this.formCopy.controls[key].enable();
+                }
+            }
+        });
     }
 
-    private _getUserCl(isn) {
+    private _getUserCl(isn): Promise<USER_CL[]> {
         const queryUser = {
             USER_CL: {
                 criteries: {
