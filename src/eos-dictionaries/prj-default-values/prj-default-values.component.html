@@ -155,17 +155,18 @@
             </div>
             <div class="items-group">
                 <div class="col-1">
-                <eos-dynamic-input *ngIf="isSecurLavelAccessEnabled"  [input]="inputs['PRJ_DEFAULT_VALUE_List.ACCESS_MODE_FILE']"
+                <eos-dynamic-input  [input]="inputs['PRJ_DEFAULT_VALUE_List.ACCESS_MODE_FILE']"
                                                 [form]="form"
-
+                                                [readonly] = "!isSecurLavelAccessEnabled"
                                                 ></eos-dynamic-input>
                 </div>
                 <div class="col-2">
-                <eos-dynamic-input  *ngIf="isFileAccessEnabled"
+                <eos-dynamic-input
                 [input]="inputs['PRJ_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
                                                 [form]="form"
                                                 [hideLabel]="true"
                                                 [viewOpts]="selOpts"
+                                                [readonly] = "!isFileAccessEnabled"
                                                ></eos-dynamic-input>
                 </div>
         </div>

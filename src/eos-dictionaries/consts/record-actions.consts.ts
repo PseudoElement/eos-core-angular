@@ -507,8 +507,8 @@ const RECORD_ACTIONS_DEFAULT_COLLISION: IAction = {
 const RECORD_ACTIONS_PROTVIEW_SECURITY: IAction = {
     type: E_RECORD_ACTIONS.protViewSecurity,
     group: E_ACTION_GROUPS.item,
-    title: 'Протокол изменеий',
-    hint: 'Протокол изменеий',
+    title: 'Протокол изменений',
+    hint: 'Протокол изменений',
     iconClass: 'eos-icon eos-icon-new-doc-blue small',
     disabledIconClass: 'eos-icon eos-icon-new-doc-grey small',
     activeIconClass: '',
