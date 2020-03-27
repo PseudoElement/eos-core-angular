@@ -183,6 +183,11 @@ export class ParamFielsComponent extends BaseParamComponent {
     }
     chenge($event) {
         const inputValue: string = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
+        if ($event.keyCode === 32) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            this.mesInfoNew();
+        }
         if ($event.keyCode !== 39 && $event.keyCode !== 37 && $event.keyCode !== 8 && $event.keyCode !== 46 && inputValue && inputValue.length === 1) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -218,12 +223,12 @@ export class ParamFielsComponent extends BaseParamComponent {
                 });
         }
     }
-    /* mesInfoNew() {
+     mesInfoNew() {
         if (this.newMesTrue) {
             this.msgSrv.addNewMessage({
                 type: 'info',
                 title: 'Ввод данных',
-                msg: 'Цифры и буквы вводить не нужно - они добавляются автоматически.'
+                msg: 'Данный символ вводить нельзя.'
             });
             this.newMesTrue = false;
             setTimeout(() => {
@@ -231,7 +236,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             }, 3000);
         }
     }
-    chengeValid($event) {
+    /* chengeValid($event) {
         if (this.validChengeValueStr.indexOf($event.key.toLowerCase()) !== -1) {
             $event.preventDefault();
             $event.stopPropagation();
