@@ -185,7 +185,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
         this.pip.batch([chl], '')
         .then(ans => {
             this.notUniqueElem = this.notUniqueElem.filter(elem => elem['ISN_LCLASSIF'] !== this.selectedItem['ISN_LCLASSIF']);
-            this.selectedItem['ISN_LCLASSIF'] = {};
+            this.selectedItem = {};
         })
         .catch(er => {
             this._errorSrv.errorHandler(er);
