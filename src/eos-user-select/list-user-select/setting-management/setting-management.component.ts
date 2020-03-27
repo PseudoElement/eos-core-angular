@@ -121,6 +121,10 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
             });
     }
 
+    cleanUser() {
+        this.formCopy.controls['USER_COPY'].patchValue('');
+    }
+
     private _createUrlForSop(form: FormGroup, soap: string) {
         let url = soap;
         url += `users=${this.checkedUsers.join('|')}`;
