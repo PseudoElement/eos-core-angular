@@ -39,11 +39,11 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     ) { }
 
     get disabledCopy(): boolean {
-        return this.isnCopyFrom && this._dataCopy.size > 1;
+        return this.isnCopyFrom && this.checkForm(this.formCopy);
     }
 
     get disabledCutRights(): boolean {
-        return this.isnCopyFrom && this._dataCut.size > 0;
+        return this.checkForm(this.formCut);
     }
 
     ngOnInit() {
@@ -123,6 +123,17 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
 
     cleanUser() {
         this.formCopy.controls['USER_COPY'].patchValue('');
+        this.isnCopyFrom = null;
+    }
+
+    checkForm(form: FormGroup): boolean {
+        let flag = false;
+        Object.keys(form.controls).forEach(key => {
+            if (key !== 'USER_COPY' && form.controls[key].value) {
+                flag = true;
+            }
+        });
+        return flag;
     }
 
     private _createUrlForSop(form: FormGroup, soap: string) {
