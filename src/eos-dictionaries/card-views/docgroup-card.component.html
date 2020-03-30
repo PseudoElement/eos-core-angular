@@ -57,7 +57,7 @@
             [input]="inputs['rec.RC_TYPE']"
             [form]="form"
             [dropup]="true"
-            [readonly]="!editMode"
+            [readonly]="!editMode || isUsed"
         ></eos-dynamic-input>
 
         <div class="dg-require">

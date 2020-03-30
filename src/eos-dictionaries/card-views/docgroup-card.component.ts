@@ -9,7 +9,8 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { EosUtils } from 'eos-common/core/utils';
 import { SelectorListItem } from 'eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
-import { SHABLON_DETAIL } from 'eos-rest';
+import { SHABLON_DETAIL, PipRX } from 'eos-rest';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -20,6 +21,7 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
 })
 export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     isSignatura: boolean;
+    isUsed = true;
     private _prev = {};
 
 
@@ -48,12 +50,19 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     constructor(
         injector: Injector,
+        private _errorSrv: ErrorHelperServices,
+        private _apiSrv: PipRX,
     ) {
         super(injector);
         this.modalSrv = injector.get(BsModalService);
+        this._errorSrv = injector.get(ErrorHelperServices);
+        this._apiSrv = injector.get(PipRX);
         this.appctx.get99UserParms('ANCUD').then((value) => {
             this.isSignatura = value && value.PARM_VALUE === 'SIGNATURA';
+        }).catch(e => {
+            this._errorSrv.errorHandler(e);
         });
+
 
     }
 
@@ -70,7 +79,21 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         super.ngOnInit();
         this.updateForm({});
         this._setRequired('rec.SHABLON', !this.isNode);
-
+        this._apiSrv.read({
+            DOC_RC: {
+                criteries: {
+                    DUE_DOCGROUP: this.data.rec['DUE'],
+                }
+            }
+        }).then(_d => {
+            if (_d.length) {
+                this.isUsed = true;
+            } else {
+                this.isUsed = false;
+            }
+        }).catch(e => {
+            this._errorSrv.errorHandler(e);
+        });
         this.isCBBase = this.appctx.getParams(CB_FUNCTIONS) === 'YES';
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
     }
