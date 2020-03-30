@@ -125,7 +125,6 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
             const checkUnique = answer.filter(elem => {
                 return +elem['YEAR_NUMBER'] <= stateYear && (!elem['END_YEAR'] || +elem['END_YEAR'] >= stateYear);
             });
-            console.log('elem', checkUnique);
             const uniqueNumIndex = [];
             const notUniqueNumIndex = [];
             checkUnique.forEach(elem => {
