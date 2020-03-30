@@ -47,6 +47,17 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
             required: true,
             minValue: 1900,
             maxValue: 2100,
+        },
+        {
+            controlType: '',
+            key: 'NOM_NUMBER',
+            value: '',
+            label: 'Состояние на',
+            hideLabel: true,
+            length: 24,
+            readonly: false,
+            required: true,
+            minValue: 1900,
         }
     ];
     constructor(
@@ -82,6 +93,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     edit() {
         if (this.selectedItem['ISN_LCLASSIF']) {
             const config = { ignoreBackdropClick: true };
+            this.searchForm.controls['NOM_NUMBER'].setValue(this.selectedItem['NOM_NUMBER']);
             this.modalRefRedact = this._modalSrv.show(this.redactWindow, config);
         }
     }
@@ -155,20 +167,34 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     }
     updateNomenc() {
         if (this.selectedItem['ISN_LCLASSIF']) {
-            const chl = {
-                method: 'MERGE',
-                requestUri: 'NOMENKL_CL(' + this.selectedItem['ISN_LCLASSIF'] + ')',
-                data: {
-                    NOM_NUMBER: this.selectedItem['NOM_NUMBER']
-                }
-            };
-            this.pip.batch([chl], '')
-            .then(ans => {
-                this.modalRefRedact.hide();
-            })
-            .catch(er => {
-                this._errorSrv.errorHandler(er);
-            });
+            if (String(this.searchForm.controls['NOM_NUMBER'].value).trim().length > 0) {
+                const chl = {
+                    method: 'MERGE',
+                    requestUri: 'NOMENKL_CL(' + this.selectedItem['ISN_LCLASSIF'] + ')',
+                    data: {
+                        NOM_NUMBER: this.searchForm.controls['NOM_NUMBER'].value.trim()
+                    }
+                };
+                this.pip.batch([chl], '')
+                .then(ans => {
+                    this.selectedItemLinc['NOM_NUMBER'] = this.searchForm.controls['NOM_NUMBER'].value.trim();
+                    this.selectedItem['NOM_NUMBER'] = this.searchForm.controls['NOM_NUMBER'].value.trim();
+                    this.modalRefRedact.hide();
+                })
+                .catch(er => {
+                    this._errorSrv.errorHandler(er);
+                });
+            } else {
+                this._confirmSrv.confirm2({
+                    title: 'Результат проверки',
+                    bodyList: [],
+                    body: 'Не задан индекс номенклатуры',
+                    bodyAfterList: '',
+                    buttons: [
+                        {title: 'Ок', result: 1, isDefault: true, },
+                    ],
+                });
+            }
         }
     }
     public canChangeClassifRequest(id): Promise<any> {
@@ -216,6 +242,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
                     });
                 } else {
                     const confirmClosed: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_NOMENKL_CLOSED);
+                    confirmClosed.bodyList = [];
                     confirmClosed.bodyList.push(this.selectedItem['CLASSIF_NAME']);
                     this._confirmSrv.confirm2(confirmClosed)
                     .then(elem => {
@@ -229,6 +256,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
                 }
             } else {
                 const confirmRemove: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
+                confirmRemove.bodyList = [];
                 confirmRemove.bodyList.push(this.selectedItem['CLASSIF_NAME']);
                 this._confirmSrv.confirm2(confirmRemove)
                     .then(elem => {

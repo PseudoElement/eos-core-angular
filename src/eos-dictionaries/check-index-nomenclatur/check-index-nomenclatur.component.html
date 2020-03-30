@@ -85,7 +85,7 @@
         placement="bottom"
         containerClass="tooltip-info">
         <span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
-    <div class="not-unique-elem-content">
+    <div class="not-unique-elem-content" [ngClass] = "{'not-unique-elem-content-height': this.notUniqueElem.length === 0}">
         <div *ngFor="let item of notUniqueElem">
             <div class="model-items" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)">
                 <span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-restricted-blue"></span>
@@ -112,34 +112,62 @@
     </div>
     <div class="content-class">
         <div class="input-elem-label name-nadzor">
-            <label style="font-size: 12px; line-height: 20px;">ЗАГОЛОВОК ДЕЛА</label>
-            <textarea type="text" class="input disabled area" placeholder="..." disabled [(ngModel)]="selectedItem['CLASSIF_NAME']">
-            </textarea>
+            <div>
+                <label style="font-size: 12px; line-height: 20px;">ЗАГОЛОВОК ДЕЛА</label>
+            </div>
+            <div>
+                <textarea type="text" class="input disabled area" placeholder="..." disabled [(ngModel)]="selectedItem['CLASSIF_NAME']">
+                </textarea>
+            </div>
         </div>
-        <div>
+        <div style="display: flex;">
             <div class="input-elem-label col-1">
-                <label style="font-size: 12px; line-height: 20px;">ИНДЕКС</label>
-                <input type="text" class="input" placeholder="..." [(ngModel)]="selectedItem['NOM_NUMBER']">
+                <div>
+                    <label style="font-size: 12px; line-height: 20px;">ИНДЕКС</label>
+                </div>
+                <div>
+                    <eos-dynamic-input
+                    [input]="inputs[1]"
+                    [readonly]=inputs[1].readonly
+                    [form]="searchForm"></eos-dynamic-input>
+                    <!-- <input 
+                    type="text" 
+                    class="input" 
+                    placeholder="..." 
+                    [(ngModel)]="selectedItem['NOM_NUMBER']" 
+                    [tooltip]="!selectedItem['NOM_NUMBER'] ? 'Обязательное поле.' : null"
+                    [placement]="'bottom'"
+                    [containerClass]="'tooltip-error'"
+                    > -->
+                </div>
             </div>
             <div class="input-elem-label col-2">
-                <label style="font-size: 12px; line-height: 20px;">СРОК ХРАНЕНИЯ</label>
-                <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['SHELF_LIFE']">
+                <div>
+                    <label style="font-size: 12px; line-height: 20px;">СРОК ХРАНЕНИЯ</label>
+                </div>
+                <div>
+                    <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['SHELF_LIFE']">
+                </div>
             </div>
         </div>
-        <div>
+        <div style="display: flex;">
             <div class="input-elem-label col-1">
                 <label style="font-size: 12px; line-height: 20px;">ВВОД В ДЕЙСТВИЕ</label>
                 <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['YEAR_NUMBER']">
             </div>
             <div class="input-elem-label col-2">
-                <label style="font-size: 12px; line-height: 20px;">ЗАВЕРШЕНИЕ</label>
-                <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['YEAR_NUMBER']">
+                <div>
+                    <label style="font-size: 12px; line-height: 20px;">ЗАВЕРШЕНИЕ</label>
+                </div>
+                <div>
+                    <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['YEAR_NUMBER']">
+                </div>
             </div>
         </div>
         
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" (click)="updateNomenc()">Записать</button>
+        <button class="btn btn-primary" [disabled] = "searchForm.controls['NOM_NUMBER'].status === 'INVALID'" (click)="updateNomenc()">Записать</button>
         <button (click)="closeRedact()" class="btn btn-primary-full" >
             Отменить
         </button>

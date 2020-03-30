@@ -35,9 +35,19 @@
     max-height: 450px;
     overflow-y: auto;
     overflow-x: hidden;
+    height: auto;
 }
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .not-unique-elem-content-height{
+        height: 0;
+    }
+ }
+// код только для IE
+
+
 .input-elem-label{
-    display: inline-grid;
+    // display: inline-grid;
     padding-top: 20px;
     .input {
         min-height: 20px;
@@ -46,6 +56,7 @@
         padding: 6px 8px;
         border: 1px solid #e6e6e6;
         color: #000000;
+        width: 100%;
         &.disabled{
             background-color: #eeeeee;
             cursor: not-allowed;
