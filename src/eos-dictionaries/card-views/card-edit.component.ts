@@ -74,7 +74,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                 newData.rec['PRJ_AUTO_REG'] = 2;
             }
         } else if (this.dictionaryId === 'departments') {
-            if (newData.printInfo['SURNAME'] === null) {
+            if (newData.printInfo['SURNAME'] === null && newData.rec['SURNAME']) {
                 newData.printInfo['SURNAME'] = newData.rec['SURNAME'].split(' ')[0];
             }
         }
