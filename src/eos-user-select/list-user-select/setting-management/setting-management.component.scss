@@ -37,6 +37,14 @@
                 margin-left: -34px;
                 margin-bottom: -7px;
             }
+            .copy-user-wr {
+                position: relative;
+                span {
+                    position: absolute;
+                    right: 10px;
+                    top: 5px;
+                }
+            }
         }
         .container-settings {
             display: flex;

@@ -3,15 +3,16 @@ import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
-import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
 import { BsModalService } from 'ngx-bootstrap';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
-import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
+import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES, CONFIRM_DEPARTMENTS_DATES_FIX1 } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { PipRX } from 'eos-rest';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -26,7 +27,12 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     private _orgName = '';
     private previousValues: SimpleChanges;
 
-    constructor(private injector: Injector, private _zone: NgZone, private msgSrv: EosMessageService, private _confirmSrv: ConfirmWindowService) {
+    constructor(private injector: Injector,
+        private _zone: NgZone,
+        private msgSrv: EosMessageService,
+        private _confirmSrv: ConfirmWindowService,
+        private _apiSrv: PipRX,
+    ) {
         super(injector);
         this.previousValues = {};
     }
@@ -53,14 +59,14 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         }
     }
 
-    ngOnInit () {
+    ngOnInit() {
         // super.ngOnInit();
         const v = this.featuresDep.numcreation ? [this.validatorNumcreationFlag()] : [];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }
         this.form.controls['rec.DEPARTMENT_INDEX'].setValidators(v);
-        const  _eaps = this.injector.get(EosAccessPermissionsService);
+        const _eaps = this.injector.get(EosAccessPermissionsService);
         if (this.isNewRecord) {
             this.directGrant = APS_DICT_GRANT.denied;
         } else {
@@ -86,11 +92,26 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                     error = 'Отсутствует индекс при активном "Номерообразовании НП"';
                 }
             }
-            return error ? {valueError: error} : null;
+            return error ? { valueError: error } : null;
         };
     }
 
     public confirmSave(): Promise<boolean> {
+
+        // const query = {
+        //     DEPARTMENT: {
+        //         criteries: {
+        //             DUE: this.data.rec['DUE'] + '_%',
+        //             START_DATE: `^${startDate} : ${endDate}`,
+        //             END_DATE: `^${startDate} : ${endDate}`,
+        //         }
+        //     }
+        // };
+        // this._apiSrv.read(query).then(data => {
+        //     console.log(data);
+        // }).catch(e => {
+        //     console.log(e);
+        // });
         const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
         let isNeedCorrectStart = false;
         let isNeedCorrectEnd = false;
@@ -123,7 +144,6 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                     if (isNeedCorrectStart) {
                         this.setValue('rec.START_DATE', new Date(parent.data.rec['START_DATE']));
                         this.data.rec['START_DATE'] = parent.data.rec['START_DATE'];
-
                     }
                     if (isNeedCorrectEnd) {
                         this.setValue('rec.END_DATE', new Date(parent.data.rec['END_DATE']));
@@ -133,8 +153,32 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                 }
                 return false;
             });
+        } else {
+            const changes = [];
+            const startDate = this.data.rec['START_DATE'] ? new Date(this.data.rec['START_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
+            const endDate = this.data.rec['END_DATE'] ? new Date(this.data.rec['END_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
+            PipRX.invokeSop(changes, 'DepartmentDateTests',
+                {
+                    'due': this.data.rec['DUE'], 'date1': startDate, 'date2': endDate
+                }, 'POST', false);
+            return this._apiSrv.batch(changes, '').then((answer) => {
+                if (answer.length && answer[0].value === 'incompatible') {
+                    return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX1).then(button => {
+                        if (button.result === BUTTON_RESULT_YES) {
+                            return true;
+                        }
+
+                        return false;
+                    });
+                } else {
+                    return true;
+                }
+            }).catch(e => {
+                console.log(e);
+                return true;
+            });
         }
-        return Promise.resolve(true);
+        //   return Promise.resolve(true);
     }
 
     stampClick() {
@@ -144,7 +188,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
         (<StampBlobFormComponent>modalWindow.content).init(isn);
         if (modalWindow) {
-            const hideWaitSubscr = _modalSrv.onHide.subscribe( () => {
+            const hideWaitSubscr = _modalSrv.onHide.subscribe(() => {
                 this.tooltipsRestore();
                 hideWaitSubscr.unsubscribe();
             });
@@ -155,7 +199,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         }
     }
 
-    clickNumcreation () {
+    clickNumcreation() {
         const dib: DynamicInputBase = this.inputs['rec.indexDep'].dib;
         dib.forceTooltip();
         const c = this.form.controls['rec.DEPARTMENT_INDEX'];

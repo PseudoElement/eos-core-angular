@@ -39,18 +39,17 @@
     </div>
     <div class="items-group" style="padding-bottom: 200px;">
         <div class="col-1">
-        <eos-dynamic-input *ngIf="isSecurLavelAccessEnabled" [input]="inputs['DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE']"
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE']"
                                         [form]="form"
-
-                                        [readonly]="!editMode" ></eos-dynamic-input>
+                                        [readonly]="!editMode || !isSecurLavelAccessEnabled" ></eos-dynamic-input>
         </div>
         <div class="col-2">
-        <eos-dynamic-input *ngIf="isFileAccessEnabled"
+        <eos-dynamic-input
         [input]="inputs['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
                                         [form]="form"
                                         [hideLabel]="true"
                                         [viewOpts]="selOpts"
-                                        [readonly]="!editMode" ></eos-dynamic-input>
+                                        [readonly]="!editMode || !isFileAccessEnabled" ></eos-dynamic-input>
         </div>
     </div>
 </div>

@@ -58,3 +58,17 @@ export const CONFIRM_REDIRECT_AUNT: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_COPY_USER: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'Скопировать права выделенным пользователям?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};
+
+export const CONFIRM_CUT_USER: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'Снять права выделенным пользователям?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

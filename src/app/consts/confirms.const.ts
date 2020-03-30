@@ -48,6 +48,15 @@ export const CONFIRM_DEPARTMENTS_DATES_FIX: IConfirmWindow2 = {
     ],
     // manualCR: true,
 };
+export const CONFIRM_DEPARTMENTS_DATES_FIX1: IConfirmWindow2 = {
+    title: 'Ведение справочников',
+    body: 'Период существования подчиненных элементов выходит за границы существования родительской вершины. Скорректировать даты подчиненных элементов?',
+    buttons: [
+            {title: 'Да', result: BUTTON_RESULT_YES, isDefault: true, },
+            {title: 'Нет', result: BUTTON_RESULT_NO, },
+    ],
+    // manualCR: true,
+};
 
 export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
     title: 'Подтверждение изменения',

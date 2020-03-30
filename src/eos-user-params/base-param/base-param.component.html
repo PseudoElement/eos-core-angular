@@ -81,19 +81,6 @@
         </div>
       </div>
       <hr style="margin-top: 5px;">
-      <div class="access-syst-wr settings-copy-top">
-        <div class="access-syst-part">
-            <eos-dynamic-input [input]="settingsCopyInputs['copy_0']" [form]="formSettingsCopy" class="base-checkbox-input" [readonly]="formSettingsCopy.get('copy_0').disabled"></eos-dynamic-input>
-            <eos-dynamic-input [input]="settingsCopyInputs['copy_3']" [form]="formSettingsCopy" class="base-checkbox-input" [readonly]="formSettingsCopy.get('copy_3').disabled"></eos-dynamic-input>
-        </div>
-        <div class="access-syst-part">
-            <eos-dynamic-input [input]="settingsCopyInputs['copy_1']" [form]="formSettingsCopy" class="base-checkbox-input" [readonly]="formSettingsCopy.get('copy_1').disabled"></eos-dynamic-input>
-            <eos-dynamic-input style="white-space: pre;" [input]="settingsCopyInputs['copy_4']" [form]="formSettingsCopy" class="base-checkbox-input" [readonly]="formSettingsCopy.get('copy_4').disabled"></eos-dynamic-input>
-        </div>
-        <div class="access-syst-part">
-            <eos-dynamic-input [input]="settingsCopyInputs['copy_2']" [form]="formSettingsCopy" class="base-checkbox-input" [readonly]="formSettingsCopy.get('copy_2').disabled"></eos-dynamic-input>
-        </div>
-      </div>
     <!-- Примечания -->
     <div>
         <eos-dynamic-input class="note-textarea" onkeypress="return event.keyCode != 13;" [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
