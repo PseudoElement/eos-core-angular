@@ -98,6 +98,7 @@ import { StampBlobFormComponent } from './shablon-blob-form/stamp-blob-form.comp
 import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-record/image-blob-record.component';
 import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-info/sev-collisions-node-info.component';
 import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list-selector-form.component';
+import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-index-nomenclatur.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -148,6 +149,7 @@ import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list
         SecurityNodeInfoComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
+        CheckIndexNomenclaturComponent,
         BroadcastChannelCardEditComponent,
         SevRulesCardEditComponent,
         SevParticipantCardEditComponent,
@@ -177,6 +179,7 @@ import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list
         RulesSelectComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
+        CheckIndexNomenclaturComponent,
         DocgroupTemplateConfigComponent,
         ListSelectorFormComponent,
         PrjDefaultValuesComponent,
