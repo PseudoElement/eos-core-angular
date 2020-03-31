@@ -78,22 +78,27 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     ngOnInit(): void {
         super.ngOnInit();
         this.updateForm({});
-        this._setRequired('rec.SHABLON', !this.isNode);
-        this._apiSrv.read({
-            DOC_RC: {
-                criteries: {
-                    DUE_DOCGROUP: this.data.rec['DUE'],
+        if (!this.isNewRecord && this.data.rec['DUE']) {
+            this._apiSrv.read({
+                DOC_RC: {
+                    criteries: {
+                        DUE_DOCGROUP: this.data.rec['DUE'],
+                    }
                 }
-            }
-        }).then(_d => {
-            if (_d.length) {
-                this.isUsed = true;
-            } else {
-                this.isUsed = false;
-            }
-        }).catch(e => {
-            this._errorSrv.errorHandler(e);
-        });
+            }).then(_d => {
+                if (_d.length) {
+                    this.isUsed = true;
+                } else {
+                    this.isUsed = false;
+                }
+            }).catch(e => {
+                this._errorSrv.errorHandler(e);
+            });
+        }   else {
+            this.isUsed  = false;
+        }
+        this._setRequired('rec.SHABLON', !this.isNode);
+
         this.isCBBase = this.appctx.getParams(CB_FUNCTIONS) === 'YES';
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
     }
