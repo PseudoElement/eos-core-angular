@@ -272,6 +272,10 @@ export class ParamFielsComponent extends BaseParamComponent {
                     if (value && value.length > 1) {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue(value[value.length - 1], {emitEvent: false});
                     }
+                    if (this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value === ' ') {
+                        this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('', {emitEvent: false});
+                        this.mesInfoNew();
+                    }
                 })
         );
         this.paramApiSrv.getData(Object.assign({}, this.queryFileConstraint))
