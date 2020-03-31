@@ -65,6 +65,7 @@ import { CopyPropertiesComponent } from 'eos-dictionaries/copy-properties/copy-p
 import { CreateNodeBroadcastChannelComponent } from 'eos-dictionaries/create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { ORGANIZ_CL } from 'eos-rest';
 import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
+import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -572,6 +573,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.protViewSecurity:
                 this._openProtocolSecyrity();
                 break;
+            case E_RECORD_ACTIONS.uniqueIndexDel:
+                this.uniqueIndex();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -711,7 +715,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this.nodeList.updateViewFields([], []);
         }
     }
-
+    uniqueIndex() {
+        const config = { ignoreBackdropClick: true };
+        this.modalWindow = this._modalSrv.show(CheckIndexNomenclaturComponent, config);
+        this.modalWindow.content.onHide.subscribe(() => {
+            this._dictSrv.reload();
+            this.modalWindow.hide();
+        });
+    }
     nlHeightType() {
         let res = 1;
         if (this.hasFilter()) {

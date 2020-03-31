@@ -1,0 +1,175 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Задайте параметры проверки уникальности индексов</h4>
+    <button 
+        type="button"
+        tooltip="Закрыть"
+        placement="bottom"
+        containerClass="tooltip-info" 
+        class="close pull-right" 
+        aria-label="Close"
+        style="opacity: 1;" 
+        (click)="cancelCreate()">
+        <span class="eos-icon eos-icon-close-blue small" ></span>
+    </button>
+</div>
+<div class="create-new-node modal-body" style="background-color: #ffffff;">
+    <div style="display: flex;">
+        <div style="padding-top: 7px;">
+            <span>Проверить за:</span>
+        </div>
+        <div style="width: 100px;">
+            <eos-dynamic-input
+            [input]="inputs[0]"
+            [readonly]=inputs[0].readonly
+            [form]="searchForm"></eos-dynamic-input>
+        </div>
+        <div style="padding-top: 7px;">
+            <span>год</span>
+        </div>
+    </div>
+    <hr>
+    
+    <div>
+        <span>Для:</span>
+        <div class="radio-inline quick" style="width: 100%;">
+            <label><input type="radio" name="forWhom" [value]="0" [(ngModel)]="forWhom"><span></span>Данного подразделения</label>
+        </div>
+        <div class="radio-inline quick" style="margin-left: 0;">
+            <label><input type="radio" name="forWhom" [value]="1" [(ngModel)]="forWhom"><span></span>Всех подразделений</label>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <span>Среди:</span>
+        <div class="radio-inline quick" style="width: 100%;">
+            <label><input type="radio" name="where" [value]="0" [(ngModel)]="where"><span></span>Всех дел</label>
+        </div>
+        <div class="radio-inline quick" style="margin-left: 0;">
+            <label><input type="radio" name="where" [value]="1" [(ngModel)]="where"><span></span>Только открытых</label>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" (click)="checkIndex()" [disabled]="searchForm.controls['stateYear'].status === 'INVALID'">Продолжить</button>
+    <button (click)="cancelCreate()" class="btn btn-primary-full" >
+        Отменить
+    </button>
+</div>
+
+<ng-template #settingsWindow>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Найдены дела с одинаковыми значениями индекса</h4>
+        <button class="btn btn-primary-light close-modal"
+        aria-hidden="true"
+        [disabled]="false"
+        (click)="close()"
+        tooltip="Закрыть"
+        placement="bottom"
+        containerClass="tooltip-info">
+        <span class="eos-icon eos-icon-close-blue small"></span>
+    </button>
+    </div>
+    <button class="btn btn-primary-light"
+        aria-hidden="true"
+        [disabled]="getSelectElem()"
+        (click)="edit()"
+        tooltip="Редактировать"
+        placement="bottom"
+        containerClass="tooltip-info">
+        <span class="eos-icon eos-icon-edit-blue small"></span></button>
+    <button class="btn btn-primary-light"
+        aria-hidden="true"
+        [disabled]="getSelectElem()"
+        (click)="delet()"
+        tooltip="Удалить"
+        placement="bottom"
+        containerClass="tooltip-info">
+        <span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+    <div class="not-unique-elem-content" [ngClass] = "{'not-unique-elem-content-height': this.notUniqueElem.length === 0}">
+        <div *ngFor="let item of notUniqueElem">
+            <div class="model-items" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)">
+                <span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-restricted-blue"></span>
+                <div class="model-items-label">
+                    <label>{{item['CLASSIF_NAME']}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #redactWindow>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Изменение индекса дела</h4>
+        <button class="btn btn-primary-light close-modal"
+            aria-hidden="true"
+            [disabled]="false"
+            (click)="closeRedact()"
+            tooltip="Закрыть"
+            placement="bottom"
+            containerClass="tooltip-info">
+            <span class="eos-icon eos-icon-close-blue small"></span>
+        </button>
+    </div>
+    <div class="content-class">
+        <div class="input-elem-label name-nadzor">
+            <div>
+                <label style="font-size: 12px; line-height: 20px;">ЗАГОЛОВОК ДЕЛА</label>
+            </div>
+            <div>
+                <textarea type="text" class="input disabled area" placeholder="..." disabled [(ngModel)]="selectedItem['CLASSIF_NAME']">
+                </textarea>
+            </div>
+        </div>
+        <div style="display: flex;">
+            <div class="input-elem-label col-1">
+                <div>
+                    <label style="font-size: 12px; line-height: 20px;">ИНДЕКС</label>
+                </div>
+                <div>
+                    <eos-dynamic-input
+                    [input]="inputs[1]"
+                    [readonly]=inputs[1].readonly
+                    [form]="searchForm"></eos-dynamic-input>
+                    <!-- <input 
+                    type="text" 
+                    class="input" 
+                    placeholder="..." 
+                    [(ngModel)]="selectedItem['NOM_NUMBER']" 
+                    [tooltip]="!selectedItem['NOM_NUMBER'] ? 'Обязательное поле.' : null"
+                    [placement]="'bottom'"
+                    [containerClass]="'tooltip-error'"
+                    > -->
+                </div>
+            </div>
+            <div class="input-elem-label col-2">
+                <div>
+                    <label style="font-size: 12px; line-height: 20px;">СРОК ХРАНЕНИЯ</label>
+                </div>
+                <div>
+                    <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['SHELF_LIFE']">
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;">
+            <div class="input-elem-label col-1">
+                <label style="font-size: 12px; line-height: 20px;">ВВОД В ДЕЙСТВИЕ</label>
+                <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['YEAR_NUMBER']">
+            </div>
+            <div class="input-elem-label col-2">
+                <div>
+                    <label style="font-size: 12px; line-height: 20px;">ЗАВЕРШЕНИЕ</label>
+                </div>
+                <div>
+                    <input type="text" class="input disabled" placeholder="..." disabled [(ngModel)]="selectedItem['YEAR_NUMBER']">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" [disabled] = "searchForm.controls['NOM_NUMBER'].status === 'INVALID'" (click)="updateNomenc()">Записать</button>
+        <button (click)="closeRedact()" class="btn btn-primary-full" >
+            Отменить
+        </button>
+    </div>
+</ng-template>
