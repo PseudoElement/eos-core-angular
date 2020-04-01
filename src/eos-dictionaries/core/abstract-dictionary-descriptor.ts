@@ -449,15 +449,15 @@ export abstract class AbstractDictionaryDescriptor {
                 }
             });
     }
-    paste(slicedNodes: EosDictionaryNode[], dueTo: string, flag?: boolean): Promise<any> {
+    paste(slicedNodes: EosDictionaryNode[], dueTo: string, whenCopy?: string): Promise<any> {
         const change = [];
         let paramsSop = '';
 
         slicedNodes.forEach((node, i) => {
             i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
         });
-        const whenCopy = this.apiInstance === 'DEPARTMENT' ? 'restore' : 'no_copy';
-        PipRX.invokeSop(change, 'MoveClassif', { 'dueTo': dueTo, 'type': this.apiInstance, 'dues': paramsSop, 'weight': 1, 'whenCopy': whenCopy}, 'POST', false);
+        const whenCopyCheck = this.apiInstance === 'DEPARTMENT' && whenCopy ? whenCopy : 'no_copy';
+        PipRX.invokeSop(change, 'MoveClassif', { 'dueTo': dueTo, 'type': this.apiInstance, 'dues': paramsSop, 'weight': 1, 'whenCopy': whenCopyCheck}, 'POST', false);
         return this.apiSrv.batch(change, '');
     }
 

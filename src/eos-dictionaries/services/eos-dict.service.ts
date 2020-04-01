@@ -1187,8 +1187,8 @@ export class EosDictService {
     }
     // по идее нужно сюда передать нужные данные
     // flag пока думаю использовать как показатель вырезать = true  копировать = false
-    public paste(slicedNodes: EosDictionaryNode[], dueTo: string, flag): Promise<any>  {
-        return this.currentDictionary.descriptor.paste(slicedNodes, dueTo, true)
+    public paste(slicedNodes: EosDictionaryNode[], dueTo: string, whenCopy?): Promise<any>  {
+        return this.currentDictionary.descriptor.paste(slicedNodes, dueTo, whenCopy)
         .then(() => {
             this._storageSrv.removeItem('markedNodes');
             this.reload();

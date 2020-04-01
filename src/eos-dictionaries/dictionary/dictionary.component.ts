@@ -66,6 +66,7 @@ import { CreateNodeBroadcastChannelComponent } from 'eos-dictionaries/create-nod
 import { ORGANIZ_CL } from 'eos-rest';
 import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
+import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -947,9 +948,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     /**
      * Physical delete marked elements on page
      */
-    private _physicallyDelete(): void {
-        const selectedNodes = this._dictSrv.getMarkedNodes();
-
+    private _physicallyDelete(slicedNode?): void {
+        let selectedNodes;
+        if (slicedNode) {
+            selectedNodes = slicedNode;
+        } else {
+            selectedNodes = this._dictSrv.getMarkedNodes();
+        }
         if (selectedNodes.length === 0) {
             // this._msgSrv.addNewMessage(DANGER_HAVE_NO_ELEMENTS);
             return;
@@ -1293,25 +1298,75 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
     }
+    private _checkDeletNode(slicedNode: EosDictionaryNode[]) {
+        let countAll = 0;
+        let countDel = 0;
+        slicedNode.forEach(el => {
+            countAll++;
+            if (el.isDeleted) {
+                countDel++;
+            }
+            el.children.forEach(child => {
+                countAll++;
+                if (child.isDeleted) {
+                    countDel++;
+                }
+            });
+        });
+        if (countDel > 0) {
+            if (countAll === countDel) {
+                return -1;
+            }
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     // MoveClassif?dueTo=0.2VK.&type=RUBRIC_CL&dues=0.2EYD3.2EZEN.%2C0.2EYD3.2EZEP.%2C0.2EYD3.2EZER.&weight=1 HTTP/1.1
     // dueTo=0.2VK. => где мы находимся
     // type=RUBRIC_CL => таблица где происходит копирование
     // dues= записи которые переносим через запятую
     // weight = пока не знаю чему он должен быть равен
     //
+    private pasteNode(slicedNode: any[], dueTo, whenCopy?) {
+        this._dictSrv.paste(slicedNode, dueTo, whenCopy)
+        .then(elem => {
+            if (this.dictionaryId === 'departments') {
+                this._dictSrv.getMarkedNodes().forEach(node => {
+                    node.isMarked = false;
+                });
+                slicedNode.forEach(node => {
+                    node.isMarked = true;
+                });
+                this._physicallyDelete(slicedNode);
+            }
+        })
+        .catch(er => {
+            console.log('er', er);
+        });
+    }
     private _copy(): void {
         // то что вырезано и записано
         const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
         // хранится то куда будем вставлять данные
         const dueTo = this._router.url.split('/').pop();
         // скорее всего нужно ещё и откуда передать
-        this._dictSrv.paste(slicedNode, dueTo, true)
-        .then(elem => {
-            console.log('elem', elem);
-        })
-        .catch(er => {
-            console.log('er', er);
-        });
+        const deletNode = this._checkDeletNode(slicedNode);
+        if (deletNode !== 0) {
+            this.modalWindow = this._modalSrv.show(DictionaryPasteComponent);
+            if (deletNode === -1) {
+                this.modalWindow.content.disabledFirst = true;
+                this.modalWindow.content.whenCopyNode = 1;
+            }
+            this.modalWindow.content.closeWindowCheck.subscribe((ans) => {
+                if (!ans['cancel']) {
+                    this.pasteNode(slicedNode, dueTo, ans['whenCopy']);
+                }
+                this.modalWindow.hide();
+            });
+        } else {
+            this.pasteNode(slicedNode, dueTo);
+        }
     }
 
     // status-reply Состояния исполнения (исполнитель)
