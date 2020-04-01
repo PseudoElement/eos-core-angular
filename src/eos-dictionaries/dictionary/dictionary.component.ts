@@ -1352,7 +1352,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const dueTo = this._router.url.split('/').pop();
         // скорее всего нужно ещё и откуда передать
         const deletNode = this._checkDeletNode(slicedNode);
-        if (deletNode !== 0) {
+        if (deletNode !== 0 && this.dictionaryId === 'departments') {
             this.modalWindow = this._modalSrv.show(DictionaryPasteComponent);
             if (deletNode === -1) {
                 this.modalWindow.content.disabledFirst = true;
