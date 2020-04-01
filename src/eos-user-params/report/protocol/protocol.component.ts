@@ -50,6 +50,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     { who: false },
     { isn: false }
   ];
+  isLoading: boolean = false;
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -81,6 +82,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this._userpar.getUserIsn({
       expand: 'NTFY_USER_EMAIL_List'
     }).then(() => {
@@ -98,11 +100,13 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       this.link = this._userpar.userContextId;
     })
       .catch((error) => {
+        this.isLoading = false;
         this._errorSrv.errorHandler(error);
       });
   }
 
   PaginateData(length, orderStr, skip?) {
+    this.isLoading = true;
     this._pipeSrv.read({
       USER_AUDIT:
         PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
@@ -127,10 +131,12 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
           }
           this.ParseInitData(this.usersAudit);
         } else {
+          this.isLoading = false;
         }
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
+        this.isLoading = false;
       });
   }
 
@@ -149,6 +155,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
           }
         }
         this.ShowData();
+        this.isLoading = false;
       });
   }
 

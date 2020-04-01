@@ -55,6 +55,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     { who: false },
     { isn: false }
   ];
+  isLoading: boolean = false;
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -99,6 +100,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   GetSortData() {
+    this.isLoading = true;
     this._pipeSrv.read({
       USER_AUDIT:
         PipRX.criteries({
@@ -126,16 +128,19 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           type: 'warning'
         });
         this.frontData = [];
+        this.isLoading = false;
       } else {
         this.ParseDate(this.usersAudit);
       }
     })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
+        this.isLoading = false;
       });
   }
 
   PaginateData(length, orderStr, skip?) {
+    this.isLoading = true;
     this._pipeSrv.read({
       USER_AUDIT: ALL_ROWS,
       orderby: orderStr,
@@ -161,10 +166,12 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           this.ParseInitData(this.usersAudit);
         } else {
           this.flagChecked = null;
+          this.isLoading = false;
         }
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
+        this.isLoading = false;
       });
   }
 
@@ -184,6 +191,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         }
         this.ShowData();
         this.checkNotAllUsers();
+        this.isLoading = false;
       });
   }
 
@@ -481,6 +489,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     } else {
       dateSearch = undefined;
     }
+    this.isLoading = true;
     this.dateCrit = dateSearch;
     this.eventUser = eventUser;
     this.isnUser = isnUser;
@@ -509,6 +518,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           });
           this.frontData = [];
           this._user_pagination.totalPages = 0;
+          this.isLoading = true;
         } else {
           const parsePosts = data.TotalRecords;
           if (parsePosts !== undefined) {
@@ -525,6 +535,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         this.initPage = true;
       })
       .catch((error) => {
+        this.isLoading = false;
         this._errorSrv.errorHandler(error);
       });
   }
@@ -545,6 +556,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         }
         this.ShowData();
         this.checkNotAllUsers();
+        this.isLoading = false;
       });
   }
 
@@ -563,6 +575,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   DeleteEventUser() {
     this.queryForDelete = [];
     let usersCheck;
+    this.isLoading = true;
     if (this.frontData !== undefined) {
       usersCheck = this.frontData.filter(user => user.checked === true);
       for (const user of usersCheck) {
@@ -585,6 +598,10 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
                 this.frontData = [];
               }
               this._user_pagination.changePagination(this.config);
+              this.isLoading = false;
+            }).catch(e => {
+              this.isLoading = false;
+              this._errorSrv.errorHandler(e);
             });
         } else {
           this.createRequestForDelete(user.isnEvent);
