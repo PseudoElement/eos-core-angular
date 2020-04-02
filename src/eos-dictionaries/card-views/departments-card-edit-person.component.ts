@@ -131,7 +131,37 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
 
     }
-
+    inputPersonElem($event, flag?) {
+        if (+$event === 13 || flag) {
+            if (!this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.NAME'].value) {
+                const surnameFIO = this.form.controls['rec.SURNAME'].value;
+                const fio = this.form.controls['rec.SURNAME'].value.replace(/\s/g, '');
+                let patron, name, surname;
+                if (fio.length > 2 && fio.lastIndexOf('.') === fio.length - 1) {
+                    patron = fio.substr(fio.length - 2, 1);
+                    this.form.controls['printInfo.PATRON'].setValue(patron);
+                }
+                if (fio.length > 6 && patron && fio[fio.length - 3] === '.' && this.checkSpaceStr(surnameFIO, fio, patron)) {
+                    name = fio.substr(fio.length - 4, 1);
+                    this.form.controls['printInfo.NAME'].setValue(name);
+                }
+                if (patron && !name) {
+                    surname = fio.substring(0, fio.length - 2);
+                } else if (patron && name) {
+                    surname = fio.substring(0, fio.length - 4);
+                } else {
+                    surname = fio;
+                }
+                this.form.controls['printInfo.SURNAME'].setValue(surname);
+            }
+        }
+    }
+    checkSpaceStr(str: string, strTrim: string, patron: string): boolean {
+        if (patron === strTrim.substr(strTrim.length - 4, 1)) {
+            str = str.substring(0, str.length - 2);
+        }
+        return str[(str.lastIndexOf(strTrim.substr(strTrim.length - 4, 1)) - 1)] === ' ';
+    }
     ngOnChanges() {
         if (this.isNewRecord) {
             this.currTab = 0;
