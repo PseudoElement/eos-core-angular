@@ -47,6 +47,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public passDate: number = 0;
     public queryAll: any = {};
     public newLogin: boolean = false;
+    public maxLoginLength: string;
     inputFields: IInputParamControl[];
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     constructor(
@@ -71,9 +72,21 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, !this.editMode);
         this.init();
-        this.formUpdate(!this.editMode);
+        this.subscribeForms();
     }
-
+    get validClassif() {
+        const val = this.form.controls['CLASSIF_NAME'].errors;
+        if (val !== null) {
+            if (val.required) {
+                return 'Поле логин не может быть пустым';
+            } else if (val.isUnique) {
+                return 'Поле логин должно быть уникальным';
+            } else {
+                return 'Некорректное значение логина';
+            }
+        }
+        return null;
+    }
     init() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
@@ -119,10 +132,22 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     console.log('ER', er);
                 });
                 this.originAutent = '' + this.curentUser.USERTYPE;
-                this.form.controls['SELECT_AUTENT'].setValue( '' + this.curentUser.USERTYPE, { emitEvent: false });
+                if ('' + this.curentUser.USERTYPE === '0' || '' + this.curentUser.USERTYPE === '3') {
+                    this.form.controls['SELECT_AUTENT'].setValue( '0', { emitEvent: false });
+                } else {
+                    this.form.controls['SELECT_AUTENT'].setValue( '1', { emitEvent: false });
+                }
+                this.form.controls['pass'].setValue('', { emitEvent: false });
+                this.form.controls['passRepeated'].setValue('', { emitEvent: false });
+                // this.form.controls['SELECT_AUTENT'].setValue('' + this.curentUser.USERTYPE, { emitEvent: false });
+                this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME'], { emitEvent: false });
+                const autent = this.form.get('SELECT_AUTENT').value;
+                this.maxLoginLength = autent === 1 || autent === 3 ? '64' : '12';
                 this.getTitle();
-                this.subscribeForms();
+                this.editMode = false;
+                this.formUpdate(!this.editMode);
                 this.isLoading = false;
+                this._pushState(false);
             }
         });
     }
@@ -136,6 +161,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         ).subscribe(data => {
             this.checkChangeForm(data);
             this.checkUpdate();
+            this.getLoginChenge(!this.editMode);
         });
         this.form.get('pass').valueChanges
         .pipe(
@@ -148,6 +174,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
         ).subscribe(() => {
             this.dateDisable();
+        });
+        this.form.get('CLASSIF_NAME').valueChanges
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        ).subscribe(() => {
+            this.getErrorSave();
         });
     }
     getEditDate(): boolean {
@@ -170,7 +202,17 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.updateData = false;
         }
     }
-
+    disableLogin() {
+        if (this.form.get('SELECT_AUTENT').value === '1') {
+            return false;
+        } else {
+            if (this.curentUser.IS_PASSWORD === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
     returnEdit() {
         return !this.editMode;
     }
@@ -182,11 +224,23 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     onChangeAuntef($event) {
         this.form.get('SELECT_AUTENT').patchValue(this.autentif.nativeElement.value);
+        const autent = this.form.get('SELECT_AUTENT').value;
+        this.maxLoginLength = autent === 1 || autent === 3 ? '64' : '12';
         if (this.form.get('SELECT_AUTENT').value === '0' || this.form.get('SELECT_AUTENT').value === '3') {
             // пока не понял при каких случаях оно нужно
             /* if (!this.paramsChengePass) {
                 this.updateDataSysParam();
             } */
+        }
+        if (this.originAutent === '1' && autent === '1') {
+            this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
+        } else if (this.originAutent === '1' && autent !== '1') {
+            this.form.controls['CLASSIF_NAME'].setValue('');
+        }
+        if (this.originAutent !== '1' && autent === '0') {
+            this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
+        } else if (this.originAutent !== '1' && autent !== '0') {
+            this.form.controls['CLASSIF_NAME'].setValue('');
         }
     }
     getTitle(): void {
@@ -222,6 +276,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 this.form.get(key).enable({emitEvent: false});
             });
         }
+        this.getLoginChenge(flag);
     }
     edit($event) {
         this.autentif.nativeElement.disabled = false;
@@ -240,12 +295,115 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.isLoading = false;
         this.cancelValues(this.inputs, this.form);
         this.autentif.nativeElement.disabled = true;
-        this.form.get('SELECT_AUTENT').patchValue(this.originAutent);
+        if (this.originAutent === '0' || this.originAutent === '3') {
+            this.form.controls['SELECT_AUTENT'].setValue( '0', { emitEvent: false });
+        } else {
+            this.form.controls['SELECT_AUTENT'].setValue( '1', { emitEvent: false });
+        }
+        this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
+        // this.form.get('SELECT_AUTENT').patchValue(this.originAutent);
         this.autentif.nativeElement.value = this.originAutent;
         /* this._pushState(); */
         this.formUpdate(true);
         this._pushState(false);
     }
+    getLoginChenge(flag) {
+        if (this.curentUser.IS_PASSWORD === 0 || flag) {
+            this.form.controls['CLASSIF_NAME'].disable({emitEvent: false});
+            return true;
+        } else {
+            this.form.controls['CLASSIF_NAME'].enable({emitEvent: false});
+        }
+        return false;
+    }
+    chengeForElemUser(): Promise<any> {
+        if (+this.curentUser.USERTYPE === 1) {
+            return Promise.resolve(null);
+        } else {
+            return this.changePassword('1234', this._userParamSrv.userContextId);
+        }
+    }
+    preSubmit($event) {
+        // const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
+        // const url = `ChangePassword?isn_user=${this._userParamSrv.userContextId}&pass='${encodeURI('1234')}'`;
+        this.apiSrvRx.read({ USER_CL: {
+            criteries: {
+                CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value // isnull(выборка по null), isnotnull(не null)
+            },
+        }
+        })
+        .then(ans => {
+            const full = ans.filter(elem =>
+                elem['CLASSIF_NAME'].toUpperCase() === this.form.controls['CLASSIF_NAME'].value.toUpperCase() &&
+                elem['ISN_LCLASSIF'] !== this.curentUser['ISN_LCLASSIF']
+                );
+            if (full.length > 0) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Сохранение:',
+                    msg: 'Пользователь с идентификатором \"' + this.form.controls['CLASSIF_NAME'].value + '\" уже существует.',
+                    dismissOnTimeout: 6000,
+                });
+                return ;
+            }
+            if (this.form.controls['SELECT_AUTENT'].value === '1') {
+                this.chengeForElemUser()
+                .then(() => {
+                    this.apiSrvRx.batch([{
+                        method: 'MERGE',
+                        requestUri: `USER_CL(${this._userParamSrv.userContextId})`,
+                        data: {
+                            IS_PASSWORD: '1',
+                            PASSWORD_DATE: null,
+                            CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value,
+                            ORACLE_ID: this.form.controls['CLASSIF_NAME'].value,
+                            USERTYPE: '1',
+                        }
+                    }], '')
+                    .then(() => {
+                        this.curentUser.CLASSIF_NAME = this.form.controls['CLASSIF_NAME'].value;
+                        this.curentUser.IS_PASSWORD = 1;
+                        this.getTitle();
+                        this.postSubmit(1);
+                    });
+                });
+            } else {
+                if (this.form.controls['CLASSIF_NAME'].value === this.curentUser.CLASSIF_NAME && this.originAutent !== '1') {
+                    this.submit($event);
+                } else {
+                    this.apiSrvRx.batch([{
+                        method: 'MERGE',
+                        requestUri: `USER_CL(${this._userParamSrv.userContextId})`,
+                        data: {
+                            USERTYPE: 0,
+                            IS_PASSWORD: 0,
+                            CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value,
+                        }
+                    }], '')
+                    .then(() => {
+                        this.curentUser.IS_PASSWORD = 0;
+                        this.submit($event);
+                    });
+                }
+            }
+        })
+        .catch(er => {
+            this._errorSrv.errorHandler(er);
+        });
+    }
+
+    getErrorSave() {
+        if (this.form.controls['CLASSIF_NAME'].value !== this.curentUser.CLASSIF_NAME &&
+            this.form.controls['SELECT_AUTENT'].value !== '1'
+        ) {
+            if (!this.form.get('pass').value) {
+                this.form.get('pass').setErrors({ repeat: true }, {emitEvent: false});
+            } else {
+                this.form.get('pass').setErrors(null, {emitEvent: false});
+            }
+        }
+    }
+
     submit($event) {
         const value = +this.form.get('SELECT_AUTENT').value;
         if (this.errorPass && (value === 0 || value === 3)) {
@@ -276,6 +434,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             flag = true;
             if (this.paramsChengePass && this.checkUpdateDate()) {
                 flag = false;
+                this.curentUser.IS_PASSWORD = 1;
                 this.getQueryDate(true);
             }
         }
@@ -295,26 +454,15 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             if (Object.keys(this.queryAll).length > 0) {
                 this.updateUser(this._userParamSrv.userContextId, this.queryAll)
                 .then(() => {
-                    this.queryAll = {};
+                    this.init();
                 })
                 .catch(er => {
                     console.log('er', er);
                 });
+            } else {
+                this.init();
             }
-            this.isLoading = false;
-            this.originAutent = this.form.get('SELECT_AUTENT').value;
-            this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-            this.curentUser.USERTYPE = value;
-            this.formUpdate(true);
-            this.cancelValues(this.inputs, this.form);
-            this.editMode = false;
-            this._msgSrv.addNewMessage({
-                type: 'success',
-                title: 'Сохранение:',
-                msg: 'Изменения успешно сохранены',
-                dismissOnTimeout: 6000,
-            });
-            this._pushState(false);
+            // this.postSubmit(value);
         })
         .catch((arr) => {
             this._errorSrv.errorHandler(arr);
@@ -322,17 +470,32 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.isLoading = false;
         });
     }
-
+    postSubmit(value) {
+        this.isLoading = false;
+        this.originAutent = this.form.get('SELECT_AUTENT').value;
+        this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
+        this.curentUser.USERTYPE = value;
+        this.formUpdate(true);
+        this.cancelValues(this.inputs, this.form);
+        this.editMode = false;
+        this._msgSrv.addNewMessage({
+            type: 'success',
+            title: 'Сохранение:',
+            msg: 'Изменения успешно сохранены',
+            dismissOnTimeout: 6000,
+        });
+        this._pushState(false);
+    }
     getQueryUserType(value, flag) {
         // возвращает запрос на изменение или же отсутсвие изменений
         if (flag) {
             if (value === 1) {
                 this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
                 this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-                this.queryAll['USERTYPE'] = value;
+                // this.queryAll['USERTYPE'] = value;
                 this.queryAll['PASSWORD_DATE'] = null;
             } else {
-                this.queryAll['USERTYPE'] = value;
+                // this.queryAll['USERTYPE'] = value;
             }
         }
     }

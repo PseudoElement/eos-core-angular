@@ -1,6 +1,12 @@
 <div *ngIf="!isLoading" class="autentification-window">
-    <eos-user-params-header [editMode]="editMode" [title]='titleHeader' [disableBtn]="false" [defaultBtn]='false' [errorSave] = "this.form.status === 'INVALID'"
-        (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'
+    <eos-user-params-header 
+        [editMode]="editMode" 
+        [title]='titleHeader' [disableBtn]="false" 
+        [defaultBtn]='false' 
+        [errorSave] = "this.form.status === 'INVALID' || this.form.controls['CLASSIF_NAME'].value === ''"
+        (submitEmit)='preSubmit($event)' 
+        (cancelEmit)='cancel($event)' 
+        (editEmit)='edit($event)'
         ></eos-user-params-header><!-- (defaultEmit)='default($event)' -->
     <div class="autentification-control">
         <div class="select-auntef" >
@@ -17,12 +23,12 @@
                     <option value="1" [disabled]="optionDisable(1)" [selected]="optionSelected(1)">
                         ОС-аутентификация
                     </option>
-                    <option value="2" [disabled]="optionDisable(2)" [selected]="optionSelected(2)">
+                    <!-- <option value="2" [disabled]="optionDisable(2)" [selected]="optionSelected(2)">
                         Системная аутентификация
-                    </option>
-                    <option value="3" [disabled]="optionDisable(3)" [selected]="optionSelected(3)">
+                    </option> -->
+                    <!-- <option value="3" [disabled]="optionDisable(3)" [selected]="optionSelected(3)">
                         Веб-аутентификация
-                    </option>
+                    </option> -->
             </select>
         </div>
         <!-- <eos-dynamic-input class="base-text-input pos" [form]="form" [input]="inputs['SELECT_AUTENT']" container="body"></eos-dynamic-input> -->
@@ -31,6 +37,23 @@
         <!-- <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['pass']" container="body"></eos-dynamic-input>
         <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['passRepeated']" container="body"></eos-dynamic-input> -->
     </div> 
+    <div style="width: 200px; margin-bottom: 20px;" 
+        class="base-text-input base-login-input autentification-control-type" 
+        [formGroup]="form" 
+        [tooltip]="errorPass && editMode ? 'Для смены логина задайте пароль' : validClassif" 
+        container="body" 
+        placement="bottom" 
+        containerClass="tooltip-error">
+        <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel" 
+        [attr.for]="inputs['CLASSIF_NAME'].key">
+            {{inputs['CLASSIF_NAME'].label}}
+        </label >
+        <input
+            class="form-control m-font" 
+            maxlength="maxLoginLength" 
+            [formControlName]="inputs['CLASSIF_NAME'].key" 
+            autocomplete="off">
+    </div>
     <div *ngIf="getPassDate()" class="autentification-control-type">
         <div class="elem-password-date">
             <eos-dynamic-input style="width: 180px" class="inline-block" [form]="form" [input]="inputs['PASSWORD_DATE']" [readonly]="getEditDate() || !editMode"></eos-dynamic-input>
@@ -46,10 +69,10 @@
                     [formControlName]="inputs['pass'].key"
                     [id]="inputs['pass'].key" [type]="type"
                     [readonly]="inputs['pass'].readonly"
-                    [ngClass]="{'error-focus': checkPass !== '', 'readonly': readonly}"
-                    [tooltip]="checkPass !== '' ? checkPass : null"
+                    [ngClass]="{'error-focus': form.get('pass').errors, 'readonly': readonly}"
+                    [tooltip]="form.get('pass').errors ? 'Введите пароль' : null"
                     placement="bottom"
-                    [containerClass]="checkPass !== '' ? 'tooltip-error' : 'tooltip-info'"
+                    [containerClass]="form.get('pass').errors ? 'tooltip-error' : 'tooltip-info'"
                     [placeholder]="curentUser.IS_PASSWORD ? '*******' : inputs['pass'].label"
                     autocomplete="off">
                     <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>

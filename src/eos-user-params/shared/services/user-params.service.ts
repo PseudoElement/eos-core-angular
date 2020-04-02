@@ -488,9 +488,20 @@ export class UserParamsService {
         return this._pipRx.read(queryCabinet);
     }
 
-    dropLogin(id): Promise<any> {
-        const url = `DropLogin?isn_user=${id}`;
-        return this._pipRx.read({ [url]: ALL_ROWS });
+    dropLogin(id, userT, clasName?): Promise<any> {
+        if (userT && +userT === 1 && clasName) {
+            return this._pipRx.batch([{
+                method: 'MERGE',
+                requestUri: `USER_CL(${id})`,
+                data: {
+
+                    CLASSIF_NAME: clasName,
+                }
+            }], '');
+        } else {
+            const url = `DropLogin?isn_user=${id}`;
+            return this._pipRx.read({ [url]: ALL_ROWS });
+        }
     }
 
     private _createHash() {

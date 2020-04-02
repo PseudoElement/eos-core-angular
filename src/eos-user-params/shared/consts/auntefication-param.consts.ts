@@ -17,6 +17,13 @@ export const AUNTEFICATION_CONTROL_INPUT: IInputParamControl[] = [
         value: '',
     },
     {
+        controlType: E_FIELD_TYPE.string,
+        key: 'CLASSIF_NAME',
+        label: 'ЛОГИН',
+        required: true,
+        pattern: /^\S+$/,
+    },
+    {
         controlType: E_FIELD_TYPE.boolean,
         key: 'USERTYPE',
         label: 'Аутентификация с помощью ОС',
@@ -51,14 +58,14 @@ export const AUNTEFICATION_CONTROL_INPUT: IInputParamControl[] = [
                 title: 'ОС-аутентификация',
                 value: '1'
             },
-            {
+            /* {
                 title: 'Системная аутентификация',
                 value: '2'
             },
             {
                 title: 'Веб-аутентификация',
                 value: '3'
-            }
+            } */
         ],
     },
 ];
