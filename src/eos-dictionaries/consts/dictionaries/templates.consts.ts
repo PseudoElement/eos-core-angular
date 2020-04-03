@@ -48,6 +48,7 @@ export const Templates: IDictionaryDescriptor = {
             { value: 'Печать списка поручений', title: 'Печать списка поручений' },
             { value: 'Печать перечня поручений', title: 'Печать перечня поручений' },
             { value: 'Реестры внеш. отправки', title: 'Реестры внеш. отправки' },
+            { value: 'Печать номенклатуры дел', title: 'Печать номенклатуры дел' },
             { value: 'Печать РК', title: 'Печать РК' },
             { value: 'opis_arh.exe', title: 'opis_arh.exe' }
         ],

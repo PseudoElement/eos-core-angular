@@ -424,6 +424,9 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.copy:
                     _enabled = _enabled && opts.listHasItems;
                     break;
+                case E_RECORD_ACTIONS.printNomenc:
+                    _isWriteAction = false;
+                    break;
             }
         }
 

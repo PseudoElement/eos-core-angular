@@ -9,7 +9,8 @@ import {
     CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE,
     CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE,
     CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT,
-    CONFIRM_OPERATION_NOMENKL_CLOSED
+    CONFIRM_OPERATION_NOMENKL_CLOSED,
+    CONFIRM_PRINT_INCLUDE
 } from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
@@ -67,6 +68,7 @@ import { ORGANIZ_CL } from 'eos-rest';
 import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
 import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
+import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-template.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -584,6 +586,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
             case E_RECORD_ACTIONS.uniqueIndexDel:
                 this.uniqueIndex();
+                break;
+            case E_RECORD_ACTIONS.printNomenc:
+                this._printNomenc();
                 break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
@@ -1470,6 +1475,40 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
         } else {
             this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
+        }
+    }
+    /* проверка есть ли вложенные подразделения */
+    private _checkIncludeDepartment(dues: string): boolean {
+        let flag = false;
+        this.customTreeData[0]['children'].forEach(element => {
+            if (element['id'] === dues && element['children'].length > 0) {
+                flag = true;
+            }
+        });
+        return flag;
+    }
+    /* открытие окна выбора шаблона для подразделения */
+    private _openPrintTemplate(dues, checkYear, d) {
+        const config = { ignoreBackdropClick: true };
+        this.modalWindow = this._modalSrv.show(PrintTemplateComponent, config);
+        this.modalWindow.content.onHide.subscribe((template) => {
+            if (template) {
+                this._dictSrv.printNomencTemplate(dues, '' + template['ISN_TEMPLATE'], checkYear, d);
+            }
+            this.modalWindow.hide();
+        });
+    }
+    /* выполнение открытия окна в разных условиях */
+    private _printNomenc() {
+        const url = this._router.url;
+        const dues: string = url.split('/').pop();
+        const checkYear = this._dictSrv.getFilterValue('YEAR');
+        if (this._checkIncludeDepartment(dues)) {
+            this._confirmSrv.confirm(CONFIRM_PRINT_INCLUDE).then(d => {
+                this._openPrintTemplate(dues, checkYear, d);
+            });
+        } else {
+            this._openPrintTemplate(dues, checkYear, false);
         }
     }
 

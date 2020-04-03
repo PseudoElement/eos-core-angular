@@ -48,6 +48,7 @@ export enum E_RECORD_ACTIONS {
     uniqueIndexDel,
     paste,
     copy,
+    printNomenc,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

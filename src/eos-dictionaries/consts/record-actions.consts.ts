@@ -441,6 +441,18 @@ const RECORD_CHECK_UNIQUE_INDEX: IAction = {
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.read,
 };
+const PRINT_NOMENKL: IAction = {
+    type: E_RECORD_ACTIONS.printNomenc,
+    group: E_ACTION_GROUPS.group,
+    title: 'Печать',
+    hint: 'Печать',
+    iconClass: 'eos-icon eos-icon-print-blue small',
+    disabledIconClass: 'eos-icon eos-icon-print-grey small',
+    activeIconClass: 'eos-icon eos-icon-print-white small',
+    hoverIconClass: 'eos-icon eos-icon-print-white small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
+};
 export const RECORD_ACTIONS_IMPORT_EDS: IAction = {
     type: E_RECORD_ACTIONS.importEDS,
     group: E_ACTION_GROUPS.common,
@@ -617,6 +629,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTIONS_DOWNLOAD_FILE,
     RECORD_ACTIONS_DEFAULT_COLLISION,
     RECORD_ACTIONS_PROTVIEW_SECURITY,
+    PRINT_NOMENKL,
 ];
 
 export const COMMON_ADD_MENU = [{

@@ -100,6 +100,7 @@ import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-
 import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list-selector-form.component';
 import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-index-nomenclatur.component';
 import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.component';
+import { PrintTemplateComponent } from './print-template/print-template.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -170,6 +171,8 @@ import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.co
         ImageBlobRecordComponent,
         SevCollisionsNodeInfoComponent,
         DictionaryPasteComponent,
+        PrintTemplateComponent,
+
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -191,6 +194,7 @@ import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.co
         EdsImportComponent,
         StampBlobFormComponent,
         DictionaryPasteComponent,
+        PrintTemplateComponent,
     ],
     imports: [
         BrowserModule,

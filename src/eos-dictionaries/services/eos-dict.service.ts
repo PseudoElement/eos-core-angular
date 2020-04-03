@@ -35,7 +35,7 @@ import { CabinetDictionaryDescriptor } from '../core/cabinet-dictionary-descript
 import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
-import { _ES } from '../../eos-rest/core/consts';
+import { _ES, ALL_ROWS } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
 import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-participant';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
@@ -444,7 +444,27 @@ export class EosDictService {
             return null;
         }
     }
-
+    printNomencTemplate(dues, template, printYear, printWithSecondary) {
+        const url = `CreateNomenklatura?dues=${dues}&templateISN=${template}&printYear=${printYear}&printWithSecondary=${printWithSecondary}`;
+        this._apiSrv.read({
+            [url]: ALL_ROWS
+        })
+        .then(ans => {
+            this._apiSrv.read({
+                REF_FILE: {
+                    criteries: {
+                        ISN_REF_DOC: ans
+                    }
+                }
+            })
+            .then(fileDownload => {
+                window.open(`../getfile.aspx/${fileDownload[0]['ISN_REF_FILE']}`);
+            });
+        })
+        .catch(er => {
+            this._errHandler(er);
+        });
+    }
     getCabinetOwners(departmentDue: string): Promise<any[]> {
         return this.getDictionaryById('cabinet')
             .then((dictionary) => {

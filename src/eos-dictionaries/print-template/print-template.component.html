@@ -1,0 +1,32 @@
+
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Выберите шаблон для печати</h4>
+    <button class="btn btn-primary-light close-modal"
+    aria-hidden="true"
+    [disabled]="false"
+    (click)="close()"
+    tooltip="Закрыть"
+    placement="bottom"
+    containerClass="tooltip-info">
+    <span class="eos-icon eos-icon-close-blue small"></span>
+</button>
+</div>
+<div class="print-elem-content"> 
+    <div *ngIf="!isLoading">
+        <div *ngFor="let item of allTemplates">
+            <div class="model-items" [ngClass]="{'selected-item': item['ISN_TEMPLATE'] === selectedItem['ISN_TEMPLATE']}" (click)="clickForItem(item)">
+                <div class="model-items-label">
+                    <label>{{item['DESCRIPTION']}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="spinner-prot" *ngIf="isLoading">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+</div>
+<div class="modal-footer">
+    <button (click)="close()" class="btn btn-primary-full" >
+        Закрыть
+    </button>
+</div>
