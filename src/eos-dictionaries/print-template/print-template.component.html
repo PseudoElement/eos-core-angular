@@ -13,10 +13,15 @@
 </div>
 <div class="print-elem-content"> 
     <div *ngIf="!isLoading">
-        <div *ngFor="let item of allTemplates">
-            <div class="model-items" [ngClass]="{'selected-item': item['ISN_TEMPLATE'] === selectedItem['ISN_TEMPLATE']}" (click)="clickForItem(item)">
-                <div class="model-items-label">
-                    <label>{{item['DESCRIPTION']}}</label>
+        <div *ngIf="allTemplates.length === 0" style="text-align: center;">
+            <label>Нет шаблонов для печати номенклатуры по годам!</label>
+        </div>
+        <div *ngIf="allTemplates.length > 0">
+            <div *ngFor="let item of allTemplates">
+                <div class="model-items" [ngClass]="{'selected-item': item['ISN_TEMPLATE'] === selectedItem['ISN_TEMPLATE']}" (click)="clickForItem(item)">
+                    <div class="model-items-label">
+                        <label>{{item['DESCRIPTION']}}</label>
+                    </div>
                 </div>
             </div>
         </div>
