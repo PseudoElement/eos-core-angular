@@ -71,7 +71,12 @@
         float: left;
         width: 50%;
     }
-
+    .max-height-select{
+        ul{
+            max-height: 145px !important;
+        }
+        
+    }
     .span-one-by-one {
         display: inline-flex;
         flex-direction: row;
