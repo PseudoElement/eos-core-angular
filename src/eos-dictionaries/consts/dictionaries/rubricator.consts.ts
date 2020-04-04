@@ -2,6 +2,7 @@ import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-d
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV, } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 /*
 */
 export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
@@ -35,6 +36,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
         length: 248,
         isUnique: true,
         uniqueInDict: true,
+        pattern: VALID_REQ_STRING,
     }),
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Краткое наименование',
