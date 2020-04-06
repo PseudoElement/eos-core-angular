@@ -634,6 +634,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     closeSerts() {
         this.modalRef.hide();
     }
+    delSelectUser($event?) { // удаление от кого копировать
+        if ($event && $event.keyCode === 46) {
+            this.formControls.get('USER_COPY').patchValue('');
+        } else if (!$event) {
+            this.formControls.get('USER_COPY').patchValue('');
+        }
+    }
     private patchVal() {
         ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
