@@ -58,8 +58,14 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         const frame = document.getElementsByTagName('iframe')[0];
         const frameDoc = frame.contentWindow.document;
         const fileDiv = frameDoc.getElementById('UpFile');
-        frame.contentWindow['fire'].apply(null, [false, [], false, false, false, true, '',
+
+        try {
+            frame.contentWindow['fire'].apply(null, [false, [], false, false, false, true, '',
             -10000, 701, 1, 1]);
+        } catch (e) {
+            document.location.assign('../login.aspx');
+        }
+
         fileDiv.addEventListener('input', ($event) => {
             this.upload = true;
             this._ref.detectChanges();
