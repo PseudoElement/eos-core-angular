@@ -31,6 +31,14 @@
             height: 23px;
         }
     }
+    .spinner-wrapper {
+        position: relative;
+        eos-spinner {
+            position: absolute;
+            top: 40%;
+            left: 47%;
+        }
+    }
     .email-wr {
         width: 100%;
         /* max-height: calc(100vh - 330px); */

@@ -75,7 +75,7 @@ export class EmailAddressService {
        });
     }
 
-    preEditEmail(form: FormArray) {
+    preEditEmail(form: FormArray, emailsInfo?) {
         const data = [];
         const chengedFields = form.value.filter(element => {
             return element.change === true && element.newField !== true;
@@ -91,6 +91,27 @@ export class EmailAddressService {
                 }
             });
         });
+        if (emailsInfo) {
+            form.controls.forEach((elem, index) => {
+                if (emailsInfo[index].EMAIL !== elem.value.email) {
+                    data.push({
+                        method: 'DELETE',
+                        requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List(\'${ this._userServices.curentUser['ISN_LCLASSIF']} ${emailsInfo[index].EMAIL}\')`
+                    });
+                    data.push({
+                        method: 'POST',
+                        requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List`,
+                        data: {
+                            ISN_USER: this._userServices.curentUser['ISN_LCLASSIF'],
+                            EMAIL: elem.value.email,
+                            IS_ACTIVE: elem.value.checkbox ? '1' : '0',
+                            WEIGHT: elem.value.weigth,
+                            EXCLUDE_OPERATION: this.parseCodeFroMerge(elem.value.params)
+                        }
+                    });
+                }
+            });
+        }
         return this.editEmail(data);
 
     }

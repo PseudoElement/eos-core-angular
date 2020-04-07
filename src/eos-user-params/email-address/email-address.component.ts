@@ -38,6 +38,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public delitedSetStore = new Set();
     public seveForm: Set<any>;
     public editFalg: boolean;
+    public updateEmail: boolean;
     public editedEmail: string;
     public saveParams: any;
     public newEmail: string;
@@ -48,6 +49,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public storeParams = new Set();
     public inputsInfo: any;
     public showRigth: boolean = false;
+    public isLoading: boolean = false;
     selfLink;
     link;
     flagEdit: boolean = false;
@@ -161,7 +163,10 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
     saveAllForm(event): Promise<any> {
-        return Promise.all([this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
+        this.isLoading = true;
+        return Promise.all([this._emailService.preAddEmail(this.ArrayForm),
+            this._emailService.preDeliteEmail(this.delitedSetStore),
+            this._emailService.preEditEmail(this.ArrayForm, this.umailsInfo)])
             .then(result => {
                 return this._userServices.getUserIsn({
                     expand: 'NTFY_USER_EMAIL_List'
@@ -184,8 +189,10 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                         this.flagEdit = false;
                         this.redactEmail.emit(this.flagEdit);
                         this.editMode();
+                        this.isLoading = false;
                     });
             }).catch(error => {
+                this.isLoading = false;
                 this._errorSrv.errorHandler(error);
                 this.backForm(false);
             });
@@ -209,6 +216,13 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         }
         this.modalRef = this.modalService.show(template);
 
+    }
+    openModalRedact(template: TemplateRef<any>) {
+        if (this.currentIndex !== null && this.currentIndex !== undefined) {
+            this.updateEmail = true;
+            this.newEmail = this.umailsInfo[this.currentIndex].EMAIL;
+            this.modalRef = this.modalService.show(template);
+        }
     }
     chooseCurrentField(index?: number): void {
         if (index !== undefined ) {
@@ -322,8 +336,42 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         if (flag) {
             this.editEmail();
         } else {
-            this.checkMail_PreSave(email);
+            if (!this.updateEmail) {
+                this.checkMail_PreSave(email);
+            } else {
+                this.updateEmail = false;
+                this.upEmaileditEmail(email);
+            }
         }
+    }
+    upEmaileditEmail(email: string) {
+        if (email !== this.umailsInfo[this.currentIndex].EMAIL) {
+            this._emailService.getAllEmails(email)
+            .then(result => {
+                if (!result && !this.checkEmailCurrentfields(email)) {
+                    this.statusBtnSub = true;
+                    const newElem = this.ArrayForm.controls[this.currentIndex].value;
+                    newElem['email'] = email;
+                    this.updateForm(newElem);
+                    this.modalRef.hide();
+                } else {
+                    const m: IMessage = {
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Такая почта уже существует',
+                    };
+                    this._msgSrv.addNewMessage(m);
+                }
+            }).catch(error => {
+                error.message = 'Ошибка сервера';
+                this.cathError(error);
+            });
+        } else {
+            this.modalRef.hide();
+        }
+    }
+    updateForm(upElem) {
+        this.ArrayForm.controls[this.currentIndex].setValue(upElem);
     }
     editEmail() {
         this.setEditEmail();
@@ -418,15 +466,24 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 if (checkedField['email'] !== checkedData['EMAIL'] || Number(checkedField['checkbox']) !== Number(checkedData['IS_ACTIVE'])
                     || checkedField['params'] !== checkedData['EXCLUDE_OPERATION'] || checkedField['newField'] === true) {
                     this.statusBtnSub = false;
-                    this.myForm.get('groupForm')
-                        .get(String(index))
-                        .patchValue({ change: true }, { emitEvent: false });
+                    if (checkedField['email'] !== checkedData['EMAIL']) {
+                        this.myForm.get('groupForm')
+                            .get(String(index))
+                            .patchValue({ changeEmail: true }, { emitEvent: false });
+                    } else {
+                        this.myForm.get('groupForm')
+                            .get(String(index))
+                            .patchValue({ change: true }, { emitEvent: false });
+                    }
                     count_error++;
                 } else {
                     this.statusBtnSub = true;
                     this.myForm.get('groupForm')
                         .get(String(index))
                         .patchValue({ change: false }, { emitEvent: false });
+                    this.myForm.get('groupForm')
+                        .get(String(index))
+                        .patchValue({ changeEmail: false }, { emitEvent: false });
                 }
             }
         });

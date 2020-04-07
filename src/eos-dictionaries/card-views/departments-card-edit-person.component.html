@@ -71,7 +71,10 @@
                     [form]="form"
                     [readonly]="!editMode"></eos-dynamic-input>
             </div>
-            <eos-dynamic-input [input]="inputs['rec.SURNAME']"
+            <eos-dynamic-input 
+                [input]="inputs['rec.SURNAME']"
+                (keyup)="inputPersonElem($event.keyCode)"
+                (onControlBlur)="inputPersonElem($event.keyCode, true)"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input class="text-shorter"

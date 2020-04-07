@@ -382,11 +382,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                    return this._userParamSrv.dropLogin(id).then(() => {
+                    return this._userParamSrv.dropLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
-                        return this.apiSrvRx.batch(queryPas, '').then(() => {
+                        if (+this.curentUser.USERTYPE !== 1) {
+                            return this.apiSrvRx.batch(queryPas, '').then(() => {
+                                return this.sendData(query, accessStr);
+                            });
+                        } else {
                             return this.sendData(query, accessStr);
-                        });
+                        }
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
                         this.cancel();

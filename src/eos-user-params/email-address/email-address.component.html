@@ -7,6 +7,11 @@
             tooltip="Добавить E-MAIL" placement="top" containerClass="tooltip-info">
             <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
         </button>
+        <button [disabled]="getaccess || !flagEdit" type="button" class=" email-create btn btn-primary" (click)="itemTooltip.hide(); openModalRedact(template)"
+            tooltip="Редактировать E-MAIL" placement="top" containerClass="tooltip-info">
+            <span class="eos-icon small" [ngClass]="getaccess || !flagEdit ? 'eos-icon-edit-grey' : 'eos-icon-edit-blue'"></span>
+        </button>
+
         <!-- <div class="btn-group">
             <div tooltip="Ограничение рассылки" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info">
                 <button [disabled]="getaccess || !flagEdit" type="button" class=" email-edit btn btn-primary "
@@ -44,7 +49,7 @@
             </div>
         </div>
     </div>
-    <div class="email-wr">
+    <div class="email-wr" *ngIf="!isLoading">
         <div class="email-header">
             <span class="first">Е-mail пользователя: {{username}}</span>
             <span class="seconds">Вкл. в рассылку</span>
@@ -77,6 +82,9 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="spinner-wrapper email-wr" *ngIf="isLoading">
+        <eos-spinner [size]="'lg'"></eos-spinner>
     </div>
 </div>
 

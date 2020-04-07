@@ -72,8 +72,8 @@
                         </span>
                     </div>
                 </div>
-                <div class="selected-wrapper">
-                    <div class="user-item sum-list-prot" #someVar>
+                <div class="selected-wrapper" >
+                    <div class="user-item sum-list-prot" #someVar *ngIf="!isLoading">
                         <div *ngFor="let user of frontData; let i = index ">
                             <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
                                 <div class="check-sum">
@@ -105,6 +105,9 @@
                         </div>
                     </div>
                     <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
+                </div>
+                <div class="spinner-prot" *ngIf="isLoading">
+                    <eos-spinner size="lg"></eos-spinner>
                 </div>
             </div>
         </div>
