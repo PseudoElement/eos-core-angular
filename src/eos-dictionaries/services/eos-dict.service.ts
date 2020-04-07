@@ -849,7 +849,7 @@ export class EosDictService {
                 .catch((err) => {
                     if (err === 'cancel') {
                         return Promise.reject('cancel');
-                    } else if (err && err.error instanceof RestError) {
+                    } else if (err && (err.error instanceof RestError || err instanceof RestError)) {
                         return Promise.reject(err);
                     }
                     this._errHandler(err);

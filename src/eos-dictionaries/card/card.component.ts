@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
 import { EosStorageService } from '../../app/services/eos-storage.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
@@ -116,6 +117,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private _router: Router,
         private departmentsSrv: EosDepartmentsService,
         private _eaps: EosAccessPermissionsService,
+        private _errSrv: ErrorHelperServices,
     ) {
         let tabNum = 0;
 
@@ -250,12 +252,21 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this._save(_data)
                         .then((node: EosDictionaryNode) => this._afterSaving(node))
                         .catch ((err) => {
-                            // console.log("TCL: CardComponent -> err", err)
-                            this._windowInvalidSave ([err.message]);
-                            this.disableSave = false;
+                            if (err.code && err.code === 434) {
+                                this.cardEditRef.isChanged = false;
+                                this.isChanged = false;
+                                this._errSrv.errorHandler(err);
+                            } else {
+                                this._windowInvalidSave ([err.message]);
+                                this.disableSave = false;
+                            }
                         });
                 }
-             });
+             }).catch(e => {
+                this.isChanged = false;
+                this.cardEditRef.isChanged = false;
+                this._errSrv.errorHandler(e);
+            });
     }
 
     disManager(mod: boolean, tooltip: any): boolean {
