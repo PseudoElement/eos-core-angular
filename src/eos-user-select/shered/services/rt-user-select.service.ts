@@ -136,7 +136,7 @@ export class RtUserSelectService {
             Expired: '-',
         },
         server_EP: {
-            label: 'Сервер удалённо проверки ЭП',
+            label: 'Сервер удалённой проверки ЭП',
             checked: false,
             Trial: '-',
             Expired: '-',
