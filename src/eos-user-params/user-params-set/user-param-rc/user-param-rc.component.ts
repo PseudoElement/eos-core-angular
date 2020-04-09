@@ -61,6 +61,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
+            this.cutentTab = 0;
             this.init();
             this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
                 this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
@@ -212,6 +213,8 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     disableDelet() {
         if (this.cutentTab && this.dopRec) {
             return ((this.cutentTab + 1) > this.dopRec.length);
+        } else if (!this.cutentTab && this.cutentTab !== 0) {
+            return true;
         } else {
             return false;
         }

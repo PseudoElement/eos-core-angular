@@ -34,8 +34,10 @@ export class EosReportUsersStatsComponent implements OnInit {
     private _errorSrv: ErrorHelperServices,
     /* private _appContext: AppContext, */
     ) {
-    this.subsystem = this.deletDeloDeloWeb(this._selectedUser.ArraySystemHelper);
-    this.serverSystem = this._selectedUser.ArrayServerHelper;
+    const ArraySystem = Object.assign({}, this._selectedUser.ArraySystemHelper);
+    const serverSystem = Object.assign({}, this._selectedUser.ArrayServerHelper);
+    this.subsystem = this.deletDeloDeloWeb(ArraySystem);
+    this.serverSystem = serverSystem;
   }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { Component, Injector, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
@@ -9,8 +9,10 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { EosUtils } from 'eos-common/core/utils';
 import { SelectorListItem } from 'eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
-import { SHABLON_DETAIL, PipRX } from 'eos-rest';
+import { SHABLON_DETAIL, PipRX, DOCGROUP_CL, DOC_DEFAULT_VALUE, SECURITY_CL } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -47,6 +49,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     private modalSrv: BsModalService;
     private templateModal: BsModalRef;
+    private _confirmSrv: ConfirmWindowService;
 
     constructor(
         injector: Injector,
@@ -57,6 +60,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         this.modalSrv = injector.get(BsModalService);
         this._errorSrv = injector.get(ErrorHelperServices);
         this._apiSrv = injector.get(PipRX);
+        this._confirmSrv = injector.get(ConfirmWindowService);
         this.appctx.get99UserParms('ANCUD').then((value) => {
             this.isSignatura = value && value.PARM_VALUE === 'SIGNATURA';
         }).catch(e => {
@@ -64,6 +68,56 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         });
 
 
+    }
+    confirmSave(): Promise<boolean> {
+        let due;
+        if (this.isNewRecord) {
+            due = window.location.hash.split('/').reverse()[0];
+        } else {
+            due = window.location.hash.split('/').reverse()[2];
+        }
+        const query = {
+            DOCGROUP_CL: {
+                criteries: {
+                    DUE: `${due}`
+                }
+            },
+            expand: 'DOC_DEFAULT_VALUE_List'
+        };
+        return this.getDate<DOCGROUP_CL>(query).then(d => {
+            const grif = d[0].DOC_DEFAULT_VALUE_List.filter((doc: DOC_DEFAULT_VALUE) => {
+                return doc.DEFAULT_ID === 'SECURLEVEL';
+            });
+            if (grif.length) {
+                return this.getDate<SECURITY_CL>({
+                    SECURITY_CL: {
+                        criteries: {
+                            SECURLEVEL: grif[0].VALUE
+                        }
+                    }
+                }).then(s => {
+                    if (s.length) {
+                        const sequrity = s[0].CONFIDENTIONAL;
+                        if (!this.data.rec['ACCESS_MODE'] && sequrity) {
+                            RK_ERROR_SAVE_SECUR.body = `Запись информации невозможна, поскольку значение реквизита РК <Доступ>,
+                                    не соответствует значению флага <РК перс. доступа>.
+                                    Либо взведите флаг, либо cмените значение реквизита <Доступ>.
+                                    `;
+                            return this._confirmSrv.confirm2(RK_ERROR_SAVE_SECUR).then(() => false);
+                        }
+                        return Promise.resolve(true);
+                    } else {
+                        return Promise.resolve(true);
+                    }
+                });
+            } else {
+                return Promise.resolve(true);
+            }
+        });
+    }
+
+    getDate<T>(query): Promise<T[]> {
+        return this._apiSrv.read<T>(query);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -78,22 +132,27 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     ngOnInit(): void {
         super.ngOnInit();
         this.updateForm({});
-        this._setRequired('rec.SHABLON', !this.isNode);
-        this._apiSrv.read({
-            DOC_RC: {
-                criteries: {
-                    DUE_DOCGROUP: this.data.rec['DUE'],
+        if (!this.isNewRecord && this.data.rec['DUE']) {
+            this._apiSrv.read({
+                DOC_RC: {
+                    criteries: {
+                        DUE_DOCGROUP: this.data.rec['DUE'],
+                    }
                 }
-            }
-        }).then(_d => {
-            if (_d.length) {
-                this.isUsed = true;
-            } else {
-                this.isUsed = false;
-            }
-        }).catch(e => {
-            this._errorSrv.errorHandler(e);
-        });
+            }).then(_d => {
+                if (_d.length) {
+                    this.isUsed = true;
+                } else {
+                    this.isUsed = false;
+                }
+            }).catch(e => {
+                this._errorSrv.errorHandler(e);
+            });
+        }   else {
+            this.isUsed  = false;
+        }
+        this._setRequired('rec.SHABLON', !this.isNode);
+
         this.isCBBase = this.appctx.getParams(CB_FUNCTIONS) === 'YES';
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
     }
@@ -114,9 +173,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         const modalObj = (<DocgroupTemplateConfigComponent>this.templateModal.content);
         modalObj.forProject = forProject;
         const additionalData = Object.assign ({},
-                { SHABLON_DETAIL_List: this.dataShablonDetail(), },
-                forProject ? { COPY_NUMBER_FLAG_PRJ: this.getValue('rec.COPY_NUMBER_FLAG_PRJ') || 0} : {COPY_NUMBER_FLAG: this.getValue('rec.COPY_NUMBER_FLAG') || 0}
-            );
+            { SHABLON_DETAIL_List: this.dataShablonDetail(), },
+               forProject ? { COPY_NUMBER_FLAG_PRJ: this.getValue('rec.COPY_NUMBER_FLAG_PRJ') || 0 } : { COPY_NUMBER_FLAG: this.getValue('rec.COPY_NUMBER_FLAG') || 0 }
+        );
         modalObj.additionalData = additionalData;
         modalObj.dgTemplate = this.getValue(path);
         modalObj.rcType = this.rcType * 1;

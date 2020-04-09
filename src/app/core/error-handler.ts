@@ -1,5 +1,6 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Injectable()
 export class EosErrorHandler implements ErrorHandler {
@@ -10,6 +11,12 @@ export class EosErrorHandler implements ErrorHandler {
         /* tslint:disable:no-console */
         console.error('Unhandled error', error);
         try {
+            if (error['rejection'] && error['rejection'] instanceof RestError) {
+                if (error['rejection']['code'] && +error['rejection']['code'] === 434) {
+                    document.location.assign('../login.aspx');
+                }
+            }
+
             this._msgSrv.addNewMessage({
                 type: 'danger',
                 title: 'Ошибка приложения!',
