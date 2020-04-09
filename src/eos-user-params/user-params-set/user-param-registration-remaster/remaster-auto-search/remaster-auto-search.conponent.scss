@@ -1,8 +1,32 @@
-.search-citizens-in-the-directory-by-fields-radio {
-    padding-left: 0;
-    li {
+.rem-auto-search {
+    .sort-link {
         display: flex;
-        justify-content: flex-start;
+        .sort-sp {
+            margin-top: 7px;
+            margin-right: 10px;
+        }
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    .search-citizens-in-the-directory-by-fields-radio {
+        padding-left: 0;
+        li {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+    .right-input-pos {
+        display: flex;
         align-items: center;
+        margin-bottom: 20px;
+        justify-content: flex-end;
+        margin-right: 90px;
+        span {
+            margin-right: 10px;
+        }
     }
 }
+

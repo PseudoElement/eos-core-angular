@@ -4,6 +4,35 @@
     margin: auto;
     background: $white;
     border: 1px solid $border-color-main-theme;
+    .user-set {
+        .form-group {
+            margin: 0;
+        }
+        .set-header {
+            margin-bottom: 20px;
+            span {
+                line-height: 24px;
+                font-size: 16px;
+            }
+            &.bold {
+                font-weight: bold;
+            }
+        }
+        .user-group-form {
+            margin-bottom: 20px;
+            .inputs-inline {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                span {
+                    margin-right: 10px;
+                }
+            }
+            .input-right {
+                margin-left: 40px;
+            }
+        }
+    }
 }
 
 .nav-accordion {

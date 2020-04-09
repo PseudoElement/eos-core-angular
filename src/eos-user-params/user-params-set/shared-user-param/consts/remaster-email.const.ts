@@ -1272,27 +1272,27 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'AUTOSEND',
             type: 'boolean',
-            title: 'Автоматически вызывать функцию переслать РК'
+            title: 'Вызывать функцию "Переслать документ"'
         },
         {
             key: 'AUTOLOAD_TO_EXEC_CURR_CAB',
             type: 'boolean',
-            title: 'На исполнение текущего кабинета'
+            title: 'На исполнении'
         },
         {
             key: 'AUTOLOAD_TO_DELO_CURR_CAB',
             type: 'boolean',
-            title: 'В дело текущего кабинета'
+            title: 'В дело'
         },
         {
             key: 'AUTOSTAMP',
             type: 'boolean',
-            title: 'Автоматическая печать регистрационного штампа (входящий)'
+            title: 'входящий'
         },
         {
             key: 'AUTOSTAMP1',
             type: 'boolean',
-            title: 'Автоматическая печать регистрационного штампа (исходящий)'
+            title: 'исходящий'
         },
         {
             key: 'SECURLEVEL',
@@ -1300,7 +1300,7 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'от предыдущей РК'},
+                {value: '0', title: 'от предыдущего документа'},
                 {value: '1', title: 'первый из справочника'}
             ]
         },
@@ -1310,39 +1310,29 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'от предыдущей РК'},
+                {value: '0', title: 'от предыдущего документа'},
                 {value: '1', title: 'первый из справочника'}
             ]
         },
         {
             key: 'TESTRAPID_ONSAVE',
             type: 'boolean',
-            title: 'Автоматически вызывать проверку повторности РК'
+            title: 'Проверять повторность документа по номеру и дате регистрации'
         },
         {
             key: 'TESTRAPID_USECORRESP',
             type: 'boolean',
-            title: 'Проверять корреспондента'
-        },
-        {
-            key: 'PRJ2RC_DIALOG',
-            type: 'radio',
-            title: '',
-            readonly: false,
-            options: [
-                {value: 'NO', title: 'Без диалога'},
-                {value: 'YES', title: 'С диалогом'}
-            ]
+            title: 'Проверять повторность документа по полю "Корреспондент"'
         },
         {
             key: 'FILELOCK',
             type: 'boolean',
-            title: 'Запрет на редактирование прикрепляемых файлов'
+            title: 'на редактирование прикрепляемых файлов'
         },
         {
             key: 'FILE_DONTDEL',
             type: 'boolean',
-            title: 'Запрет на удаление прикрепляемых файлов'
+            title: 'на удаление прикрепляемых файлов'
         },
     ]
 };
@@ -1355,12 +1345,12 @@ export const REGISTRATION_ADDRESSES: IBaseUsers = {
         {
             key: 'CORR_SIGN',
             type: 'boolean',
-            title: 'Заполнять поле "Подписал" (Корреспондент) из справочника'
+            title: 'Подписал (Корреспондент)'
         },
         {
             key: 'ADDR_WHOUM',
             type: 'boolean',
-            title: 'Заполнять поле "Кому" (Адресат) из справочника '
+            title: 'Кому (Адресаты)'
         },
         {
             key: 'ORGGROUP',
@@ -1400,7 +1390,23 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             key: 'LOCKFILE_SSCAN',
             type: 'boolean',
             title: 'Запретить редактирование прикрепленного файла'
-        }
+        },
+        {
+            key: 'TYPE_PRINT_BARCODE',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'документе'},
+                {value: '2', title: 'обороте документа'},
+                {value: '1', title: 'чистом листе'}
+            ]
+        },
+        {
+            key: 'EXPLANATION_STRING_FOR_PRINT_BARCODE',
+            type: 'boolean',
+            title: 'С пояснительной строкой'
+        },
     ]
 };
 export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
@@ -1429,10 +1435,10 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'select',
             title: '',
             options: [
-                {value: '1', title: 'Точное'},
-                {value: '2', title: 'Начало номера'},
-                {value: '3', title: 'Подстрока'},
-                {value: '4', title: 'Порядковый'}
+                {value: '1', title: 'На равенство'},
+                {value: '2', title: 'Поначалу №'},
+                {value: '3', title: 'На вхождение'},
+                {value: '4', title: 'Порядковый №'}
             ]
         },
         {
@@ -1471,6 +1477,24 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             ]
         },
         {
+            key: 'LINKS_SHOW_DG',
+            type: 'boolean',
+            title: 'Только рег.№ и дату регистрации'
+        },
+        {
+            key: 'LINKS_SHOW_FIRST',
+            type: 'boolean',
+            title: 'Корр./Подписал/Исполнитель/Адресат'
+        }, {
+            key: 'LINKS_SHOW_CONTENT',
+            type: 'boolean',
+            title: 'Содержание'
+        }, {
+            key: 'LINKS_SHOW_FILES',
+            type: 'boolean',
+            title: 'Файлы'
+        },
+        {
             key: 'LINKED_WIN_SHOW',
             type: 'boolean',
             title: 'Всегда показывать список найденных документов'
@@ -1487,10 +1511,38 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '3', title: 'по началу'},
-                {value: '1', title: 'по подстроке'},
+                {value: '1', title: 'на вхождение'},
                 {value: '2', title: 'на равенство'}
             ],
             keyPosition: 0,
+        },
+        {
+            key: 'LINKS_SORT',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: 'ORDERNUM', title: 'порядку связок'},
+                {value: 'DOC_DATE', title: 'дате регистрации документа (проекта)'}
+            ],
+            keyPosition: 0,
+        },
+        {
+            key: 'LINKS_SORT_ORDER1',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '0', title: 'По возрастанию'},
+                {value: '1', title: 'По убыванию'},
+            ]
+        },
+        {
+            key: 'LINKS_SORT_ORDER2',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '0', title: 'Сначала новые'},
+                {value: '1', title: 'Сначала старые'},
+            ]
         },
         {
             key: 'DEF_SEARCH_CITIZEN_CITY',
@@ -1504,7 +1556,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '3', title: 'по началу'},
-                {value: '1', title: 'по подстроке'},
+                {value: '1', title: 'на вхождение'},
                 {value: '2', title: 'на равенство'}
             ],
             keyPosition: 1,
@@ -1521,7 +1573,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '3', title: 'по началу'},
-                {value: '1', title: 'по подстроке'},
+                {value: '1', title: 'на вхождение'},
                 {value: '2', title: 'на равенство'}
             ],
             keyPosition: 2
@@ -1538,7 +1590,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '3', title: 'по началу'},
-                {value: '1', title: 'по подстроке'},
+                {value: '1', title: 'на вхождение'},
                 {value: '2', title: 'на равенство'}
             ],
             keyPosition: 3
@@ -1571,7 +1623,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '3', title: 'по началу'},
-                {value: '1', title: 'по подстроке'},
+                {value: '1', title: 'на вхождение'},
                 {value: '2', title: 'на равенство'}
             ],
             keyPosition: 10,
@@ -1603,12 +1655,27 @@ export const REGISTRATION_RC: IBaseUsers =  {
     fields: [  {
         key: 'FIRST_PRJEXEC_FROM_PREV',
         type: 'boolean',
-        title: 'Первый исполнитель от предыдущей РКПД'
+        title: 'Автоматически копировать исполнителя от предыдущего проекта документа'
     },
     {
         key: 'DONT_SHOW_PRJ_HIDDEN_FILES',
         type: 'boolean',
         title: 'Не показывать скрытые файлы'
+    },
+    {
+        key: 'CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA',
+        type: 'boolean',
+        title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы'
+    },
+    {
+        key: 'PRJ2RC_DIALOG',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: 'NO', title: 'Без диалога'},
+            {value: 'YES', title: 'С диалогом'}
+        ]
     },
     ]
 };

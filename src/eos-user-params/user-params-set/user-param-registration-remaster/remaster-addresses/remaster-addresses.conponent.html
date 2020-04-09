@@ -1,4 +1,5 @@
-<div class="user-input-group">
+<div class="user-group-form">
+    <span>Заполнять из справочника поле:</span>
     <eos-dynamic-input
         [input]="inputs['rec.CORR_SIGN']"
         [form]="form"
@@ -11,7 +12,8 @@
     ></eos-dynamic-input>
 </div>
 <div class="user-input-group readonlyInput">
-    <span>Помещать новые организации в группу: </span>
+    <span>Помещать новые организации
+        в вершину справочника "Организации":</span>
     <span class="get-new-org">
         <input readonly type="text" [(ngModel)]="orgName">
     </span>

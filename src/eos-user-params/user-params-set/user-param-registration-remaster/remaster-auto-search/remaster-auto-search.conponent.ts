@@ -81,6 +81,8 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         this._RemasterService.getLink_Type().then((data: LINK_CL[]) => {
            this.fillConstLinkType(data);
             this.pretInputs();
+            this.inputs['rec.LINKS_SORT_ORDER1'].value = `${this.userData['LINKS_SORT_ORDER']}`;
+            this.inputs['rec.LINKS_SORT_ORDER2'].value = `${this.userData['LINKS_SORT_ORDER']}`;
             this.form = this.inpSrv.toFormGroup(this.inputs);
             this.form.disable({emitEvent: false});
             this.subscribeChange();
@@ -132,13 +134,17 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         if (data[item] !== oldValue) {
             if (this.formHelp._fieldsTypeParce[key] === 'DEV_SEARCH') {
                 this.checkDevSearch(data, key);
-            }  else {
+            } else if (key === 'LINKS_SORT_ORDER1' || key === 'LINKS_SORT_ORDER2') {
+                this.checkLinkSort(data, key);
+            } else {
               this.checkChangesNext(data, key);
             }
             return false;
         } else {
             if (this.formHelp._fieldsTypeParce[key] === 'DEV_SEARCH') {
                 this.checkDevSearch(data, key);
+            } else if (key === 'LINKS_SORT_ORDER1' || key === 'LINKS_SORT_ORDER2') {
+                this.checkLinkSort(data, key);
             } else {
                 if (this.newDataMap.has(key)) {
                     this.newDataMap.delete(key);
@@ -156,6 +162,15 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
           this.newDataMap.delete('DEF_SEARCH_CITIZEN');
         }
     }
+
+    checkLinkSort(data, key) {
+        if (this.userData['LINKS_SORT_ORDER'] !== data['rec.' + key]) {
+            this.newDataMap.set('LINKS_SORT_ORDER', data['rec.' + key]);
+        } else {
+            this.newDataMap.delete('LINKS_SORT_ORDER');
+        }
+    }
+
     parseDevSearch(data, item) {
         const position = this.formHelp.mapKeyPosition.get(item);
         const newString = this.searchString.split('');

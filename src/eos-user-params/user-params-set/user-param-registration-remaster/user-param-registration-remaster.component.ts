@@ -17,7 +17,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Сканирование', 'Автопоиск', 'РКПД'];
+    readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
