@@ -1,37 +1,40 @@
 
-<div class="modal-header">
-    <h4 class="modal-title pull-left">Выберите шаблон для печати</h4>
-    <button class="btn btn-primary-light close-modal"
-    aria-hidden="true"
-    [disabled]="false"
-    (click)="close()"
-    tooltip="Закрыть"
-    placement="bottom"
-    containerClass="tooltip-info">
-    <span class="eos-icon eos-icon-close-blue small"></span>
-</button>
-</div>
-<div class="print-elem-content"> 
-    <div *ngIf="!isLoading">
-        <div *ngIf="allTemplates.length === 0" style="text-align: center;">
-            <label>Нет шаблонов для печати номенклатуры по годам!</label>
-        </div>
-        <div *ngIf="allTemplates.length > 0">
-            <div *ngFor="let item of allTemplates">
-                <div class="model-items" [ngClass]="{'selected-item': item['ISN_TEMPLATE'] === selectedItem['ISN_TEMPLATE']}" (click)="clickForItem(item)">
-                    <div class="model-items-label">
-                        <label>{{item['DESCRIPTION']}}</label>
+<div *ngIf="!messageAlert"> <!--  -->
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Выберите шаблон для печати</h4>
+        <button class="btn btn-primary-light close-modal"
+        aria-hidden="true"
+        [disabled]="false"
+        (click)="close()"
+        tooltip="Закрыть"
+        placement="bottom"
+        containerClass="tooltip-info">
+        <span class="eos-icon eos-icon-close-blue small"></span>
+    </button>
+    </div>
+    <div class="print-elem-content"> 
+        <div *ngIf="!isLoading">
+            <div *ngIf="allTemplates.length === 0" style="text-align: center;">
+                <label>В системе отсутствуют шаблоны для печати номенклатуры дел</label>
+            </div>
+            <div *ngIf="allTemplates.length > 0">
+                <div *ngFor="let item of allTemplates">
+                    <div class="model-items" [ngClass]="{'selected-item': item['ISN_TEMPLATE'] === selectedItem['ISN_TEMPLATE']}" (click)="clickForItem(item)">
+                        <div class="model-items-label">
+                            <label>{{item['DESCRIPTION'] || item['NAME_TEMPLATE']}}</label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="spinner-prot" *ngIf="isLoading" style="position: absolute;top: 45%;left: 45%;">
+            <eos-spinner size="lg"></eos-spinner>
+        </div>
     </div>
-    <div class="spinner-prot" *ngIf="isLoading">
-        <eos-spinner size="lg"></eos-spinner>
+    <div class="modal-footer">
+        <button (click)="close()" class="btn btn-primary-full" >
+            Закрыть
+        </button>
     </div>
 </div>
-<div class="modal-footer">
-    <button (click)="close()" class="btn btn-primary-full" >
-        Закрыть
-    </button>
-</div>
+

@@ -9,8 +9,7 @@ import {
     CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE,
     CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE,
     CONFIRM_COMBINE_NODES, CONFIRM_SEV_DEFAULT,
-    CONFIRM_OPERATION_NOMENKL_CLOSED,
-    CONFIRM_PRINT_INCLUDE
+    CONFIRM_OPERATION_NOMENKL_CLOSED
 } from 'app/consts/confirms.const';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
@@ -979,7 +978,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         const titleId = selectedNodes[0].nodeTitleid;
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
-
+        if (slicedNode) {
+            confirmDelete.body = 'Вы действительно хотите навсегда удалить копируемые записи:';
+        }
         this._confirmMarkedItems(selectedNodes, confirmDelete)
             .then((button: IConfirmButton) => {
                 if (button && button.result === 2) {
@@ -1405,10 +1406,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _combine() {
         const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes'); // this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
         const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => {
-            if (node.isNode) {
-                node.isMarked = false;
+            if (this.dictionaryId === 'organization') {
+                if (node.isNode) {
+                    node.isMarked = false;
+                }
+                return node.isMarked && !node.isSliced && !node.isNode;
+            } else {
+                return node.isMarked && !node.isSliced;
             }
-            return node.isMarked && !node.isSliced && !node.isNode;
         });
         if (slicedNode.length && markedNode.length === 1) {
             this._confirmSrv.confirm(CONFIRM_COMBINE_NODES).then(resp => {
@@ -1417,7 +1422,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
             });
         } else {
-            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись' });
+            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбрана одна запись' });
         }
     }
     private _uncheckNewEntry() {
@@ -1491,9 +1496,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _openPrintTemplate(dues, checkYear, d) {
         const config = { ignoreBackdropClick: true };
         this.modalWindow = this._modalSrv.show(PrintTemplateComponent, config);
+        this.modalWindow.content.checkIncludeDir = d;
         this.modalWindow.content.onHide.subscribe((template) => {
             if (template) {
-                this._dictSrv.printNomencTemplate(dues, '' + template['ISN_TEMPLATE'], checkYear, d);
+                this._dictSrv.printNomencTemplate(dues, '' + template['item']['ISN_TEMPLATE'], checkYear, template['printIncludeDir']);
             }
             this.modalWindow.hide();
         });
@@ -1503,13 +1509,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const url = this._router.url;
         const dues: string = url.split('/').pop();
         const checkYear = this._dictSrv.getFilterValue('YEAR');
-        if (this._checkIncludeDepartment(dues)) {
-            this._confirmSrv.confirm(CONFIRM_PRINT_INCLUDE).then(d => {
-                this._openPrintTemplate(dues, checkYear, d);
-            });
-        } else {
-            this._openPrintTemplate(dues, checkYear, false);
-        }
+        this._openPrintTemplate(dues, checkYear, this._checkIncludeDepartment(dues));
     }
 
 }

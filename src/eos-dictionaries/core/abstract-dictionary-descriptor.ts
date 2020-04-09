@@ -472,10 +472,12 @@ export abstract class AbstractDictionaryDescriptor {
             }
         }];
         slicedNodes.forEach((node, i) => {
-            preSave.push({
-                method: 'DELETE',
-                requestUri: `${this.apiInstance}(${isNaN(node.id) ? '\'' + String(node.id) + '\'' : node.id})`
-            });
+            if (this.apiInstance !== 'RUBRIC_CL' && this.apiInstance !== 'REGION_CL') {
+                preSave.push({
+                    method: 'DELETE',
+                    requestUri: `${this.apiInstance}(${isNaN(node.id) ? '\'' + String(node.id) + '\'' : node.id})`
+                });
+            }
             i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
         });
         PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': this.apiInstance, 'ids': paramsSop }, 'POST', false);
