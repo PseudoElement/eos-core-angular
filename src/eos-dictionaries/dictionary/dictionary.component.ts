@@ -66,6 +66,8 @@ import { CreateNodeBroadcastChannelComponent } from 'eos-dictionaries/create-nod
 import { ORGANIZ_CL } from 'eos-rest';
 import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
+import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
+import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-template.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -372,6 +374,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         setTimeout(() => {
             this.setStyles();
         }, 250);
+        // удаляем данные которые относятся к копированию/вырезанию данных
+        this._storageSrv.removeItem('markedNodes');
     }
 
     ngOnDestroy() {
@@ -561,6 +565,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.combine:
                 this._combine();
                 break;
+            case E_RECORD_ACTIONS.paste:
+                this._copy();
+                break;
+            case E_RECORD_ACTIONS.copy:
+                this._cutNode();
+                break;
             case E_RECORD_ACTIONS.uncheckNewEntry:
                 this._uncheckNewEntry();
                 break;
@@ -575,6 +585,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
             case E_RECORD_ACTIONS.uniqueIndexDel:
                 this.uniqueIndex();
+                break;
+            case E_RECORD_ACTIONS.printNomenc:
+                this._printNomenc();
                 break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
@@ -939,9 +952,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     /**
      * Physical delete marked elements on page
      */
-    private _physicallyDelete(): void {
-        const selectedNodes = this._dictSrv.getMarkedNodes();
-
+    private _physicallyDelete(slicedNode?): void {
+        let selectedNodes;
+        if (slicedNode) {
+            selectedNodes = slicedNode;
+        } else {
+            selectedNodes = this._dictSrv.getMarkedNodes();
+        }
         if (selectedNodes.length === 0) {
             // this._msgSrv.addNewMessage(DANGER_HAVE_NO_ELEMENTS);
             return;
@@ -961,7 +978,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         const titleId = selectedNodes[0].nodeTitleid;
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
-
+        if (slicedNode) {
+            confirmDelete.body = 'Вы действительно хотите навсегда удалить копируемые записи:';
+        }
         this._confirmMarkedItems(selectedNodes, confirmDelete)
             .then((button: IConfirmButton) => {
                 if (button && button.result === 2) {
@@ -1285,24 +1304,116 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
     }
-    private _cutNode(): void {
-        // Для объединения можно выбирать только карточки организаций.
-        const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
-            return !node.isNode;
+    private _checkDeletNode(slicedNode: EosDictionaryNode[]) {
+        let countAll = 0;
+        let countDel = 0;
+        slicedNode.forEach(el => {
+            countAll++;
+            if (el.isDeleted) {
+                countDel++;
+            }
+            el.children.forEach(child => {
+                countAll++;
+                if (child.isDeleted) {
+                    countDel++;
+                }
+            });
         });
-        if (!checkNode) {
-            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения можно выбирать только карточки организаций.' });
-            return;
+        if (countDel > 0) {
+            if (countAll === countDel) {
+                return -1;
+            }
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    // MoveClassif?dueTo=0.2VK.&type=RUBRIC_CL&dues=0.2EYD3.2EZEN.%2C0.2EYD3.2EZEP.%2C0.2EYD3.2EZER.&weight=1 HTTP/1.1
+    // dueTo=0.2VK. => где мы находимся
+    // type=RUBRIC_CL => таблица где происходит копирование
+    // dues= записи которые переносим через запятую
+    // weight = пока не знаю чему он должен быть равен
+    //
+    private pasteNode(slicedNode: any[], dueTo, whenCopy?) {
+        this._dictSrv.paste(slicedNode, dueTo, whenCopy)
+        .then(elem => {
+            if (this.dictionaryId === 'departments') {
+                this._dictSrv.getMarkedNodes().forEach(node => {
+                    node.isMarked = false;
+                });
+                slicedNode.forEach(node => {
+                    node.isMarked = true;
+                });
+                this._physicallyDelete(slicedNode);
+            }
+        })
+        .catch(er => {
+            console.log('er', er);
+        });
+    }
+    private _copy(): void {
+        // то что вырезано и записано
+        const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
+        // хранится то куда будем вставлять данные
+        const dueTo = this._router.url.split('/').pop();
+        // скорее всего нужно ещё и откуда передать
+        const deletNode = this._checkDeletNode(slicedNode);
+        if (deletNode !== 0 && this.dictionaryId === 'departments') {
+            this.modalWindow = this._modalSrv.show(DictionaryPasteComponent);
+            if (deletNode === -1) {
+                this.modalWindow.content.disabledFirst = true;
+                this.modalWindow.content.whenCopyNode = 1;
+            }
+            this.modalWindow.content.closeWindowCheck.subscribe((ans) => {
+                if (!ans['cancel']) {
+                    this.pasteNode(slicedNode, dueTo, ans['whenCopy']);
+                }
+                this.modalWindow.hide();
+            });
+        } else {
+            this.pasteNode(slicedNode, dueTo);
+        }
+    }
+
+    // status-reply Состояния исполнения (исполнитель)
+    // status-exec Состояния исполнения (поручение)
+    // reprj-priority Приоритеты проектов резолюций
+    // citizens Граждане
+    private _cutNode(): void {
+        // Для объединения можно выбирать только карточки организаций. Или если по другому листья но не папки
+        switch (this.dictionaryId) {
+            /* case 'region':
+                message = 'Для объединения можно выбирать только регионы.';
+                break; */
+            case 'organization':
+                const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
+                    return !node.isNode;
+                });
+                if (!checkNode) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Для объединения можно выбирать только карточки организаций.' });
+                    return;
+                }
+                break;
+            /* case 'rubricator':
+                message = 'Для объединения можно выбирать только карточки рубрикаторов.';
+                break; */
         }
         this._dictSrv.cutNode();
     }
     private _combine() {
-        const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
+        const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes'); // this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
         const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => {
-            if (node.isNode) {
-                node.isMarked = false;
+            if (this.dictionaryId === 'organization') {
+                if (node.isNode) {
+                    node.isMarked = false;
+                }
+                return node.isMarked && !node.isSliced && !node.isNode;
+            } else {
+                return node.isMarked && !node.isSliced;
             }
-            return node.isMarked && !node.isSliced && !node.isNode;
         });
         if (slicedNode.length && markedNode.length === 1) {
             this._confirmSrv.confirm(CONFIRM_COMBINE_NODES).then(resp => {
@@ -1311,7 +1422,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
             });
         } else {
-            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись' });
+            this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбрана одна запись' });
         }
     }
     private _uncheckNewEntry() {
@@ -1370,6 +1481,35 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         } else {
             this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
         }
+    }
+    /* проверка есть ли вложенные подразделения */
+    private _checkIncludeDepartment(dues: string): boolean {
+        let flag = false;
+        this.customTreeData[0]['children'].forEach(element => {
+            if (element['id'] === dues && element['children'].length > 0) {
+                flag = true;
+            }
+        });
+        return flag;
+    }
+    /* открытие окна выбора шаблона для подразделения */
+    private _openPrintTemplate(dues, checkYear, d) {
+        const config = { ignoreBackdropClick: true };
+        this.modalWindow = this._modalSrv.show(PrintTemplateComponent, config);
+        this.modalWindow.content.checkIncludeDir = d;
+        this.modalWindow.content.onHide.subscribe((template) => {
+            if (template) {
+                this._dictSrv.printNomencTemplate(dues, '' + template['item']['ISN_TEMPLATE'], checkYear, template['printIncludeDir']);
+            }
+            this.modalWindow.hide();
+        });
+    }
+    /* выполнение открытия окна в разных условиях */
+    private _printNomenc() {
+        const url = this._router.url;
+        const dues: string = url.split('/').pop();
+        const checkYear = this._dictSrv.getFilterValue('YEAR');
+        this._openPrintTemplate(dues, checkYear, this._checkIncludeDepartment(dues));
     }
 
 }

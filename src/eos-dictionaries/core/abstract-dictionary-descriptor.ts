@@ -448,7 +448,19 @@ export abstract class AbstractDictionaryDescriptor {
                     return [];
                 }
             });
-        }
+    }
+    paste(slicedNodes: EosDictionaryNode[], dueTo: string, whenCopy?: string): Promise<any> {
+        const change = [];
+        let paramsSop = '';
+
+        slicedNodes.forEach((node, i) => {
+            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+        });
+        const whenCopyCheck = this.apiInstance === 'DEPARTMENT' && whenCopy ? whenCopy : 'no_copy';
+        PipRX.invokeSop(change, 'MoveClassif', { 'dueTo': dueTo, 'type': this.apiInstance, 'dues': paramsSop, 'weight': 1, 'whenCopy': whenCopyCheck}, 'POST', false);
+        return this.apiSrv.batch(change, '');
+    }
+
     combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
         const preSave = [];
         let paramsSop = '';
@@ -460,10 +472,12 @@ export abstract class AbstractDictionaryDescriptor {
             }
         }];
         slicedNodes.forEach((node, i) => {
-            preSave.push({
-                method: 'DELETE',
-                requestUri: `${this.apiInstance}(${isNaN(node.id) ? '\'' + String(node.id) + '\'' : node.id})`
-            });
+            if (this.apiInstance !== 'RUBRIC_CL' && this.apiInstance !== 'REGION_CL') {
+                preSave.push({
+                    method: 'DELETE',
+                    requestUri: `${this.apiInstance}(${isNaN(node.id) ? '\'' + String(node.id) + '\'' : node.id})`
+                });
+            }
             i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
         });
         PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': this.apiInstance, 'ids': paramsSop }, 'POST', false);

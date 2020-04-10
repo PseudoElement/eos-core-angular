@@ -26,6 +26,7 @@ import {takeUntil} from 'rxjs/operators';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Component({
     selector: 'eos-node-actions',
@@ -71,6 +72,7 @@ export class NodeActionsComponent implements OnDestroy {
     constructor(
         _dictSrv: EosDictService,
         private _eaps: EosAccessPermissionsService,
+        private _storageSrv: EosStorageService,
     ) {
         this._markedNodes = [];
         this._initButtons();
@@ -233,7 +235,7 @@ export class NodeActionsComponent implements OnDestroy {
         if (opts === null) {
             return;
         }
-
+        const marketN: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
         let _enabled = false;
         let _active = false;
         let _show = false;
@@ -391,8 +393,9 @@ export class NodeActionsComponent implements OnDestroy {
                  //   _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
                     break;
                 case E_RECORD_ACTIONS.combine:
-                    _enabled = _enabled && opts.listHasItems;
-                    _enabled = _enabled && this._dictSrv.listNode && this.slicedInfo.length > 0;
+                    /* _enabled = _enabled && opts.listHasItems;
+                    _enabled = _enabled && this._dictSrv.listNode && this.slicedInfo.length > 0; */
+                    _enabled = _enabled && (marketN && marketN.length > 0);
                     break;
                 case E_RECORD_ACTIONS.uncheckNewEntry:
                     _enabled = _enabled && opts.listHasItems;
@@ -413,6 +416,15 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     break;
                 case E_RECORD_ACTIONS.uniqueIndexDel:
+                    _isWriteAction = false;
+                    break;
+                case E_RECORD_ACTIONS.paste:
+                    _enabled = _enabled && (marketN && marketN.length > 0);
+                    break;
+                case E_RECORD_ACTIONS.copy:
+                    _enabled = _enabled && opts.listHasItems;
+                    break;
+                case E_RECORD_ACTIONS.printNomenc:
                     _isWriteAction = false;
                     break;
             }

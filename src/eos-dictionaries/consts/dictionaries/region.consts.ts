@@ -14,7 +14,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
     iconName: 'eos-icon-pin-geo-blue',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine', 'paste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization',
         'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore', 'export', 'import'],
     keyField: 'DUE',

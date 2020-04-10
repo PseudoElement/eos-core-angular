@@ -99,6 +99,8 @@ import { ImageBlobRecordComponent } from './shablon-blob-form/shablon-blob-recor
 import { SevCollisionsNodeInfoComponent } from './node-info/sev-collisions-node-info/sev-collisions-node-info.component';
 import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list-selector-form.component';
 import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-index-nomenclatur.component';
+import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.component';
+import { PrintTemplateComponent } from './print-template/print-template.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -168,6 +170,8 @@ import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-
         StampBlobFormComponent,
         ImageBlobRecordComponent,
         SevCollisionsNodeInfoComponent,
+        DictionaryPasteComponent,
+        PrintTemplateComponent,
 
     ],
     entryComponents: [
@@ -189,6 +193,8 @@ import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-
         CopyNodeComponent,
         EdsImportComponent,
         StampBlobFormComponent,
+        DictionaryPasteComponent,
+        PrintTemplateComponent,
     ],
     imports: [
         BrowserModule,
