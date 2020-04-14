@@ -727,34 +727,23 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     }
                     if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
                         if (users.blockedUser) {
-                            users.blockedUser = false;
                             this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
                         } else {
                             if (!users.blockedUser && !users.blockedSystem) {
-                                users.blockedUser = true;
                                 this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
                             }
                             if (users.blockedSystem) {
                                 this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                                users.blockedUser = false;
-                                users.blockedSystem = false;
                             }
                         }
                     }
                     users.isChecked = false;
                     return users;
                 });
-                if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.listUsers[0]);
-                } else {
-                    this.selectedUser = undefined;
-                    this.updateFlafListen();
-                }
-                this.isLoading = false;
+                this.initView(this.currentDue);
             }).catch(error => {
-                error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
                 this.isLoading = false;
-                this.cathError(error.message);
+                this._errorSrv.errorHandler(error);
             });
         });
     }
@@ -868,8 +857,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 });
             }).catch(error => {
                 this.isLoading = false;
-                error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                this.cathError(error);
+                this._errorSrv.errorHandler(error);
             });
         }
     }
