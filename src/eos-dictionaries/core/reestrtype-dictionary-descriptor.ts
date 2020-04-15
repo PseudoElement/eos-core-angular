@@ -48,9 +48,16 @@ export class ReestrtypeDictionaryDescriptor extends DictionaryDescriptor {
                         const e2 = d[i2];
                         const c1 = e1['ISN_ADDR_CATEGORY'];
                         const c2 = e2['ISN_ADDR_CATEGORY'];
-                        const oneCateg = e1['ISN_ADDR_CATEGORY'] === e2['ISN_ADDR_CATEGORY'] || (c1 === 0 || c2 === 0);
-
-                        if (e1['ISN_DELIVERY'] === e2['ISN_DELIVERY'] && oneCateg) {
+                        const fixedCategory = (c1 <= 0 && c2 <= 0);
+                        if (e1['ISN_DELIVERY'] === e2['ISN_DELIVERY'] && (c2 === c2) && (c1 > 0 && c2 > 0)) {
+                            e1['IS_UNIQUE'] = 0;
+                            e2['IS_UNIQUE'] = 0;
+                        }
+                        if (e1['ISN_DELIVERY'] === e2['ISN_DELIVERY'] && fixedCategory && (+c1 !== -2 && +c2 !== -2)) {
+                            e1['IS_UNIQUE'] = 0;
+                            e2['IS_UNIQUE'] = 0;
+                        }
+                        if (e1['ISN_DELIVERY'] === e2['ISN_DELIVERY'] && fixedCategory && (+c1 !== -1 && +c2 !== -1)) {
                             e1['IS_UNIQUE'] = 0;
                             e2['IS_UNIQUE'] = 0;
                         }
