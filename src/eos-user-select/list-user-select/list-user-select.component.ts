@@ -16,7 +16,6 @@ import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.servi
 import { Allbuttons } from '../shered/consts/btn-action.consts';
 import { BtnAction } from '../shered/interfaces/btn-action.interfase';
 import { TreeUserSelectService } from '../shered/services/tree-user-select.service';
-import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
@@ -908,19 +907,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.initView(urlUpdate);
     }
 
-    private cathError(e) {
-        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-            return undefined;
-        } else {
-            const errMessage = e.message ? e.message : e;
-            this._msgSrv.addNewMessage({
-                type: 'danger',
-                title: 'Ошибка обработки. Ответ сервера:',
-                msg: errMessage
-            });
-            return null;
-        }
-    }
     private _createUrlForSop(isn_user) {
         const url = `EraseUser?isn_user=${isn_user}`;
         return url;
