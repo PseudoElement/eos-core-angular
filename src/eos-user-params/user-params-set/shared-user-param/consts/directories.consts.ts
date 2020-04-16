@@ -11,8 +11,8 @@ export const DIRECTORIES_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '1', title: 'Вертикальные'},
-                {value: '0', title: 'Горизонтальные'}
+                {value: '1', title: 'вертикальные'},
+                {value: '0', title: 'горизонтальные'}
             ]
         },
         {
@@ -21,8 +21,18 @@ export const DIRECTORIES_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'Алфавитная'},
-                {value: '1', title: 'В порядке ввода значений'},
+                {value: '0', title: 'по алфавиту'},
+                {value: '1', title: 'в порядке ввода значений'},
+            ]
+        },
+        {
+            key: 'CLASSIF_WEB_SUGGESTION',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'Click мышью'},
+                {value: '1', title: 'Ctrl+ Click мышью'},
             ]
         },
         {

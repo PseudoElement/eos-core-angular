@@ -97,7 +97,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             title: '',
          //   readonly: true,
             options: [
-                {value: '0', title: '"свои"'},
+                {value: '0', title: 'где адресат - исполнитель'},
                 {value: '1', title: 'все'}
             ],
             keyPosition: 10.11,
@@ -116,7 +116,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             title: '',
            // readonly: true,
             options: [
-                {value: '0', title: '"свои"'},
+                {value: '0', title: 'адресату - информация о себе'},
                 {value: '1', title: 'все'}
             ],
             keyPosition: '169.170',
@@ -139,14 +139,14 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
         {
             key: 'RCSEND_SUMMARY',
             type: 'boolean',
-            title: 'Краткое содержание',
+            title: 'Содержание',
             keyPosition: 14,
             parent: null,
         },
         {
             key: 'RCSEND_SIGN_OF_COLLECTIVITY',
             type: 'boolean',
-            title: 'Признак коллективности (письма гражданина)',
+            title: 'Признак коллективности (обращения гражданина)',
             keyPosition: 15,
             parent: null,
         },
@@ -154,7 +154,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
         {
             key: 'RCSEND_REGISTRATION_NUMBER',
             type: 'boolean',
-            title: 'Регистрационный номер',
+            title: 'Регистрационный №',
             keyPosition: 16,
             parent: null,
 
@@ -162,7 +162,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
         {
             key: 'RCSEND_REGISTRATION_NUMBER_SUBSET',
             type: 'boolean',
-            title: 'Регистрационный номер',
+            title: 'Регистрационный №',
             keyPosition: 17,
             parent: 'RCSEND_REGISTRATION_NUMBER',
         },
@@ -206,7 +206,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
         {
             key: 'RCSEND_NOTE_TO_THE_ADDRESSEE_OF_THE_MESSAGE',
             type: 'boolean',
-            title: 'Примечание к адресату-получателю сообщения',
+            title: 'Примечание к адресату сообщения',
             keyPosition: 164,
             parent: null,
         },
@@ -1215,14 +1215,14 @@ export const REGISTRATION_MAILRESIVE: IBaseUsers = {
         {
             key: 'MAILRECEIVE_ACCOMPANYING_DOCUMENTS',
             type: 'boolean',
-            title: 'Сопроводительные документы',
+            title: 'Заполнять информацию о сопроводительных документах',
             keyPosition: 15,
             parent: null,
         },
         {
             key: 'MAILRECEIVE_AUTOMATICALLY_ADD_ORGANIZATIONS_AND_REPRESENTATIVES',
             type: 'boolean',
-            title: 'Автоматически добавлять организации и представителей',
+            title: 'Автоматически добавлять организации и представителей в справочник «Организации»',
             keyPosition: 9,
             parent: null,
         },

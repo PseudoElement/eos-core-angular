@@ -12,6 +12,7 @@ import {RemasterService} from '../../shared-user-param/services/remaster-service
 import {IOpenClassifParams} from '../../../../eos-common/interfaces/interfaces';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 @Component({
     selector: 'eos-remaster-addresses',
     styleUrls: ['remaster-addresses.conponent.scss'],
@@ -44,6 +45,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         private _RemasterService: RemasterService,
         private _waitClassifSrv: WaitClassifService,
         private msgSrv: EosMessageService,
+        private _errorSrv: ErrorHelperServices
     ) {
         this._RemasterService.cancelEmit
         .pipe(
@@ -106,12 +108,13 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 this.orgSaveName = '';
             }
         }).catch(error => {
-            this.msgSrv.addNewMessage({
-                type: 'danger',
-                title: 'Предупреждение',
-                msg: 'Ошибка сервера',
-                dismissOnTimeout: 5000,
-            });
+            this._errorSrv.errorHandler(error);
+            // this.msgSrv.addNewMessage({
+            //     type: 'danger',
+            //     title: 'Предупреждение',
+            //     msg: 'Ошибка сервера',
+            //     dismissOnTimeout: 5000,
+            // });
         });
     }
 

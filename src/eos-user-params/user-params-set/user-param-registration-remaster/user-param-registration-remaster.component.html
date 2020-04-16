@@ -1,5 +1,5 @@
 <div class="input-user-wrapper input-user-registration-rk-forwarding-wrapper">
-    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="!btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [errorSave]="isSave" [disableBtn]="!btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs container-tabs">
             <li class="tab-item item-tab-vh" *ngFor="let tab of fieldGroupsForRegistration; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">

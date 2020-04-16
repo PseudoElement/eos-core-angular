@@ -19,8 +19,8 @@ export const SEARCH_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'Текущая картотека'},
-                {value: '1', title: 'Не задана'}
+                {value: '0', title: 'текущая'},
+                {value: '1', title: 'не задана'}
             ]
         }
     ],

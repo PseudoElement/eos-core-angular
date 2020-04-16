@@ -1,27 +1,20 @@
 <div class="input-user-wrapper  input-user-other-rk-forwarding-wrapper" *ngIf="inputs">
     <div class="pad-other-set">
-        <div>
-            <span class="l-font">Пересылка</span>
-            <hr>
-            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-        <hr>
-        <div>
-            <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
-            <hr>
+        <div class="user-group-form">
+            <span>Удалять документ из текущего кабинета после пересылки</span><br>
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.DELFROMCAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <hr>
-        <div>
-            <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
-            <hr>
+        <div class="user-group-form">
+            <span>Добавлять адресатов пересылки документа в журнал передачи документа</span><br>
             <eos-dynamic-input [input]="inputs['rec.MARKDOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <hr>
-        <div>
-            <span class="l-font">Передавать</span>
-            <hr>
+        <div class="user-group-form">
+            <span>Передавать</span><br>
             <eos-dynamic-input [input]="inputs['rec.MARKDOCKND']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="user-group-form">
+            <span>Пересылать</span><br>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
     </div>
 </div>

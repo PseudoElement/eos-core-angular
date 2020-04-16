@@ -12,8 +12,8 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: 'NO', title: 'Без диалога'},
-                {value: 'YES', title: 'С диалогом'}
+                {value: 'NO', title: 'без диалога'},
+                {value: 'YES', title: 'с диалогом'}
             ]
         },
         {
@@ -22,8 +22,8 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '1', title: 'Нет'},
-                {value: '0', title: 'Да'}
+                {value: '0', title: 'да'},
+                {value: '1', title: 'нет'}
             ]
         },
         {
@@ -32,9 +32,9 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '1', title: 'Не добавлять'},
-                {value: '0', title: 'Для всех документов'},
-                {value: '2', title: 'Только для документов с "бумажным" оригиналом'}
+                {value: '1', title: 'не добавлять'},
+                {value: '0', title: 'для всех документов'},
+                {value: '2', title: 'только для документов с оригиналом на бумажном носителе'}
             ]
         },
         {
@@ -43,10 +43,10 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'Оригинал(ы)'},
-                {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'Вручную'}
+                {value: '0', title: 'оригинал(ы)'},
+                {value: '1', title: 'копию(и)'},
+                {value: '2', title: 'первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'вручную'}
             ]
         },
     ],
@@ -65,26 +65,49 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             ]
         },
         {
+            key: 'RS_OUTER_DEFAULT_SENDING_TYPE',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'централизовано'},
+                {value: '1', title: 'в департаменте'}
+            ]
+        },
+        {
+            key: 'RS_INNER_DEFAULT_ORIG',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '4', title: 'Эл. экземпляр(ы)'},
+                {value: '0', title: 'оригинал(ы)'},
+                {value: '1', title: 'копию(и)'},
+                {value: '2', title: 'первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'не отмечать'}
+            ]
+        },
+        {
             key: 'MARKDOCKND1',
             type: 'radio',
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'Оригинал(ы)'},
-                {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'Вручную'}
+                {value: '0', title: 'оригинал(ы)'},
+                {value: '1', title: 'копию(и)'},
+                {value: '2', title: 'первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'вручную'}
             ]
         },
         {
             key: 'GPD_FLAG',
             type: 'boolean',
-            title: 'Использовать это правило в Журнале передачи документов'
+            title: 'Использовать правило секции «Внутренние адресаты» об указании бумажного экземпляра в записях журнала передачи'
         },
         {
             key: 'VOL_FLAG',
             type: 'boolean',
-            title: 'Заполнять информацию о томах'
+            title: 'Показывать информацию о томах в записях о списании в дело'
         },
         {
             key: 'ADDR_EXPEDITION',
@@ -97,10 +120,15 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             title: '',
             type: 'radio',
             options: [
-                {value: '1', title: 'Централизовано'},
-                {value: '2', title: 'В департаменте'},
+                {value: '1', title: 'централизовано'},
+                {value: '2', title: 'в департаменте'},
             ],
             readonly: false,
+        },
+        {
+            key: 'RS_INNER_FILL_SEND_DATE',
+            type: 'boolean',
+            title: 'Добавлять с отметкой об отправке'
         },
     ]
 };
@@ -536,10 +564,23 @@ export const OTHER_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'Оригинал(ы)'},
-                {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'Вручную'}
+                {value: '0', title: 'оригинал(ы)'},
+                {value: '1', title: 'копию(и)'},
+                {value: '2', title: 'первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'вручную'}
+            ]
+        },
+        {
+            key: 'RS_INNER_DEFAULT_ORIG',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '4', title: 'Эл. экземпляр(ы)'},
+                {value: '0', title: 'оригинал(ы)'},
+                {value: '1', title: 'копию(и)'},
+                {value: '2', title: 'первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'не отмечать'}
             ]
         },
         {
@@ -550,7 +591,12 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'VOL_FLAG',
             type: 'boolean',
-            title: 'Заполнять информацию о томах'
+            title: 'Показывать информацию о томах в записях о списании в дело'
+        },
+        {
+            key: 'RS_INNER_FILL_SEND_DATE',
+            type: 'boolean',
+            title: 'Добавлять с отметкой об отправке'
         },
         {
             key: 'CUR_CABINET',

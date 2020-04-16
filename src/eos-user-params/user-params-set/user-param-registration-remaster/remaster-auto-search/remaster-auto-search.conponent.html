@@ -48,13 +48,13 @@
                     [input]="inputs['rec.LINKS_SORT_ORDER1']"
                     [form]="form"
                     [readonly]="false"
-                    [disabled]="form.controls['rec.LINKS_SORT'].value === 'ORDERNUM'"
+                    [disabled]="form.controls['rec.LINKS_SORT'].value !== 'ORDERNUM'"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputs['rec.LINKS_SORT_ORDER2']"
                     [form]="form"
                     [readonly]="false"
-                    [disabled]="form.controls['rec.LINKS_SORT'].value !== 'ORDERNUM'"
+                    [disabled]="form.controls['rec.LINKS_SORT'].value === 'ORDERNUM'"
                 ></eos-dynamic-input> 
                 <!-- <select name="" id=""></select>
                 <select name="" id=""></select> -->
@@ -66,10 +66,10 @@
     </div>
     <div class="user-group-form">
         <div class="inputs-inline">
-            <span>Искать по:</span>
+            <span class="input-title">Искать по:</span>
             <eos-dynamic-input [ngStyle]="{'width': '50%', 'margin-right': '10px'}" [input]="inputs['rec.LINKED_SEARCHPARAM']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [ngStyle]="{'width': '180px'}" [input]="inputs['rec.LINKED_SEARCHVALUE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
+        </div><br>
         <div class="right-input-pos">
             <span>Год регистрации:</span>
             <eos-dynamic-input  [ngStyle]="{'width': '180px'}" [input]="inputs['rec.LINKED_SEARCHYEAR']" [form]="form" [readonly]="false"></eos-dynamic-input>

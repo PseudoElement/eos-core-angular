@@ -36,7 +36,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов'];
+    readonly fieldGroups: string[] = ['Пересылка документа', 'Адресаты документа', 'Реестр передачи документов'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
