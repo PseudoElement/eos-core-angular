@@ -510,7 +510,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     return Promise.reject(err.error);
                 }
 
-                this._errHandler(err);
+                // this._errHandler(err); // данная ошибка обрабатывается на уровень выше убираю чтобы не было 2 сообщений
             });
     }
 
@@ -571,7 +571,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         this.lastEditedCard = this._storageSrv.getItem(LS_EDIT_CARD);
     }
 
-    private _errHandler(err) {
+    /* private _errHandler(err) {
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
             type: 'danger',
@@ -579,7 +579,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             msg: errMessage
         });
         return null;
-    }
+    } */
     private _windowInvalidSave(errors: string[] = []): Promise<boolean> {
         if (this.isChanged) {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);

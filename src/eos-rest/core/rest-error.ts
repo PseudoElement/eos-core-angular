@@ -38,7 +38,6 @@ export class RestError {
         if (e.data) {
             const error = e.data['odata.error'] || e.data['error'];
             message = error.message ? error.message.value : message;
-
             if (error.innererror && error.innererror.type === 'Eos.Delo.Exceptions.LogicException') {
                 let data = error['logicException.data'];
                 if (data) {
@@ -56,9 +55,12 @@ export class RestError {
         }
         try {
             let odataerr = e.error && e.error['odata.error'] && e.error['odata.error'].innererror && e.error['odata.error'].innererror.message;
+            const str = JSON.parse(e.error);
             if (!odataerr) {
-                const str = JSON.parse(e.error);
                 odataerr = str && str['odata.error'] && str['odata.error'].innererror && str['odata.error'].innererror.message;
+            }
+            if (!odataerr) {
+                odataerr = str && str['odata.error'] && str['odata.error'].innererror && str['odata.error'].innererror.Message;
             }
 
             this.message = odataerr;
