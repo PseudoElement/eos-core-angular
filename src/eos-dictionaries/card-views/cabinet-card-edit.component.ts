@@ -243,6 +243,12 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         });
     }
 
+    emitHeadCheckbox(mark: boolean): void {
+        if (mark && !this.allMarkedOwners) {
+            this.allMarkedOwners = !this.allMarkedOwners;
+        }
+    }
+
     private getOwnerPath(index: number) {
         return 'owners[' + index + '].ISN_CABINET';
     }

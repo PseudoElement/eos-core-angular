@@ -91,6 +91,7 @@
                             <label class="checkbox checkbox-inline"
                                    *ngIf="editMode"><input type="checkbox"
                                                            name="owner"
+                                                           [checked]="emitHeadCheckbox(owner.marked)"
                                                            [(ngModel)]="owner.marked"><span></span></label>
                         </td>
                         <td>{{owner.data['SURNAME']}}</td>
