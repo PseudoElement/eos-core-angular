@@ -4,7 +4,7 @@ import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS, ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { VALID_REQ_STRING, VALID_REQ_MULTIPLE_STRING, NOT_EMPTY_STRING2 } from 'eos-common/consts/common.consts';
+import { VALID_REQ_STRING, NOT_EMPTY_STRING2 } from 'eos-common/consts/common.consts';
 
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
     {value: 0, title: 'Не указана'},
@@ -126,7 +126,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Краткое наименование должности',
             type: 'text',
             length: 255,
-            pattern: VALID_REQ_MULTIPLE_STRING,
+            pattern: NOT_EMPTY_STRING2,
             required: true,
             forNode: true,
         },
