@@ -1011,7 +1011,17 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
-            this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
+
+            const phone = data.person['PHONE_LOCAL'];
+            if (phone) {
+                const dataDiffPhone = JSON.parse(JSON.stringify(data));
+                delete dataDiffPhone.person['PHONE_LOCAL'];
+                dataDiffPhone.person['PHONE'] = phone;
+                this._srchCriteries.push(dictionary.getFullsearchCriteries(dataDiffPhone, params, this._treeNode));
+            } else {
+                this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
+            }
+
             return this._search(params.deleted);
         } else {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
