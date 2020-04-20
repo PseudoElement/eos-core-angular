@@ -12,7 +12,7 @@ import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/se
 import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
 import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES, CONFIRM_DEPARTMENTS_DATES_FIX1 } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { PipRX, DEPARTMENT } from 'eos-rest';
+import { PipRX } from 'eos-rest';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -139,32 +139,56 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                 return false;
             });
         } else {
+            // const startDate = this.data.rec['START_DATE'] ? new Date(this.data.rec['START_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
+            // const endDate = this.data.rec['END_DATE'] ? new Date(this.data.rec['END_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
+            // const criteries1 = {
+            //     DEPARTMENT: {
+            //         criteries: {
+            //             DUE: this.data.rec['DUE'] + '_%',
+            //             START_DATE: `^${startDate} : ${endDate}`,
+            //         }
+            //     }
+            // };
+            // const criteries2 = {
+            //     DEPARTMENT: {
+            //         criteries: {
+            //             DUE: this.data.rec['DUE'] + '_%',
+            //             END_DATE: `^${startDate} : ${endDate}`,
+            //         }
+            //     }
+            // };
+            // const query1 = this._apiSrv.read<DEPARTMENT>(criteries1);
+            // const query2 = this._apiSrv.read<DEPARTMENT>(criteries2);
+            // return Promise.all([query1, query2]).then((result: Array<DEPARTMENT[]>) => {
+            //     if (result[0].length || result[1].length) {
+            //         return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX1).then(button => {
+            //             if (button.result === BUTTON_RESULT_YES) {
+            //                 return true;
+            //             }
+            //             return false;
+            //         });
+            //     } else {
+            //         return true;
+            //     }
+            // }).catch(e => {
+            //     console.log(e);
+            //     return Promise.resolve(true);
+            // });
+
+            const changes = [];
             const startDate = this.data.rec['START_DATE'] ? new Date(this.data.rec['START_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
             const endDate = this.data.rec['END_DATE'] ? new Date(this.data.rec['END_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
-            const criteries1 = {
-                DEPARTMENT: {
-                    criteries: {
-                        DUE: this.data.rec['DUE'] + '_%',
-                        START_DATE: `^${startDate} : ${endDate}`,
-                    }
-                }
-            };
-            const criteries2 = {
-                DEPARTMENT: {
-                    criteries: {
-                        DUE: this.data.rec['DUE'] + '_%',
-                        END_DATE: `^${startDate} : ${endDate}`,
-                    }
-                }
-            };
-            const query1 = this._apiSrv.read<DEPARTMENT>(criteries1);
-            const query2 = this._apiSrv.read<DEPARTMENT>(criteries2);
-            return Promise.all([query1, query2]).then((result: Array<DEPARTMENT[]>) => {
-                if (result[0].length || result[1].length) {
+            PipRX.invokeSop(changes, 'DepartmentDateTests',
+                {
+                    'due': this.data.rec['DUE'], 'date1': startDate, 'date2': endDate
+                }, 'POST', false);
+            return this._apiSrv.batch(changes, '').then((answer) => {
+                if (answer.length && answer[0].value === 'incompatible') {
                     return this._confirmSrv.confirm2(CONFIRM_DEPARTMENTS_DATES_FIX1).then(button => {
                         if (button.result === BUTTON_RESULT_YES) {
                             return true;
                         }
+
                         return false;
                     });
                 } else {
@@ -172,7 +196,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                 }
             }).catch(e => {
                 console.log(e);
-                return Promise.resolve(true);
+                return true;
             });
         }
     }
