@@ -825,7 +825,7 @@ export class EosDictService {
                 } else if (err && err.error instanceof RestError) {
                     return Promise.reject(err);
                 }
-                this._errHandler(err);
+             //   this._errHandler(err);
                 return Promise.reject(err);
             });
     }
