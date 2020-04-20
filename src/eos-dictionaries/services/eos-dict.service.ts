@@ -44,6 +44,7 @@ import { PipRX } from 'eos-rest';
 import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
@@ -255,6 +256,7 @@ export class EosDictService {
         private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _apiSrv: PipRX,
+        private _errorHelper: ErrorHelperServices,
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -1224,6 +1226,9 @@ export class EosDictService {
             this.reload();
         })
         .catch(er => {
+            if (er) {
+                this._errorHelper.errorHandler(er);
+            }
             this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
         });
     }
@@ -1247,7 +1252,10 @@ export class EosDictService {
             this._storageSrv.removeItem('markedNodes');
             this.reload();
         }).catch(e => {
-            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
+                if (e) {
+                    this._errorHelper.errorHandler(e);
+                }
+            // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
         });
     }
     public uncheckNewEntry() {
