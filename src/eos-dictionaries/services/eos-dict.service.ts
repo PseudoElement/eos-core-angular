@@ -35,7 +35,7 @@ import { CabinetDictionaryDescriptor } from '../core/cabinet-dictionary-descript
 import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
-import { _ES } from '../../eos-rest/core/consts';
+import { _ES, ALL_ROWS } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
 import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-participant';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
@@ -444,7 +444,27 @@ export class EosDictService {
             return null;
         }
     }
-
+    printNomencTemplate(dues, template, printYear, printWithSecondary) {
+        const url = `CreateNomenklatura?dues=${dues}&templateISN=${template}&printYear=${printYear}&printWithSecondary=${printWithSecondary}`;
+        this._apiSrv.read({
+            [url]: ALL_ROWS
+        })
+        .then(ans => {
+            this._apiSrv.read({
+                REF_FILE: {
+                    criteries: {
+                        ISN_REF_DOC: ans
+                    }
+                }
+            })
+            .then(fileDownload => {
+                window.open(`../getfile.aspx/${fileDownload[0]['ISN_REF_FILE']}`);
+            });
+        })
+        .catch(er => {
+            this._errHandler(er);
+        });
+    }
     getCabinetOwners(departmentDue: string): Promise<any[]> {
         return this.getDictionaryById('cabinet')
             .then((dictionary) => {
@@ -479,7 +499,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach(n => { n.isMarked = false; n.isSliced = false; });
+            this._currentList.forEach( n => {n.isMarked = false; /* n.isSliced = false; */ } );
         }
         this._currentMarkInfo.nodes = [];
 
@@ -849,7 +869,7 @@ export class EosDictService {
                 .catch((err) => {
                     if (err === 'cancel') {
                         return Promise.reject('cancel');
-                    } else if (err && err.error instanceof RestError) {
+                    } else if (err && (err.error instanceof RestError || err instanceof RestError)) {
                         return Promise.reject(err);
                     }
                     this._errHandler(err);
@@ -991,7 +1011,17 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
-            this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
+
+            const phone = data.person['PHONE_LOCAL'];
+            if (phone) {
+                const dataDiffPhone = JSON.parse(JSON.stringify(data));
+                delete dataDiffPhone.person['PHONE_LOCAL'];
+                dataDiffPhone.person['PHONE'] = phone;
+                this._srchCriteries.push(dictionary.getFullsearchCriteries(dataDiffPhone, params, this._treeNode));
+            } else {
+                this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
+            }
+
             return this._search(params.deleted);
         } else {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
@@ -1185,15 +1215,36 @@ export class EosDictService {
     isPaginationVisible(): boolean {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
-    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
-        const markedNodes: EosDictionaryNode[] = this.getMarkedNodes();
-        markedNodes.forEach((node: EosDictionaryNode) => {
-            node.isSliced = !node.isSliced;
+    // по идее нужно сюда передать нужные данные
+    // flag пока думаю использовать как показатель вырезать = true  копировать = false
+    public paste(slicedNodes: EosDictionaryNode[], dueTo: string, whenCopy?): Promise<any>  {
+        return this.currentDictionary.descriptor.paste(slicedNodes, dueTo, whenCopy)
+        .then(() => {
+            this._storageSrv.removeItem('markedNodes');
+            this.reload();
+        })
+        .catch(er => {
+            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
         });
+    }
+    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
+        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        const storageNode = [];
+        // убираем выделение
+        this._currentList.forEach((node: EosDictionaryNode) => {
+            node.isSliced = false;
+        });
+        // добавляем выделение для вырезаных/копированных
+        markedNodes.forEach((node: EosDictionaryNode) => {
+            node.isSliced = true; // !node.isSliced;
+            storageNode.push(node);
+        });
+        this._storageSrv.setItem('markedNodes', storageNode);
     }
     public combine(slicedNodes, markedNodes): Promise<any> {
         return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
             this._msgSrv.addNewMessage({ type: 'success', title: 'Сообщение', msg: 'Объединение завершенно' });
+            this._storageSrv.removeItem('markedNodes');
             this.reload();
         }).catch(e => {
             this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
@@ -1317,8 +1368,12 @@ export class EosDictService {
     private loadChildren(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode> {
         if (dictionary) {
             return dictionary.getChildren(node)
-                .then(() => node)
-                .then(() => {
+                .then((el) => {
+                    // теперь будем обновлять данные а не просто делать запрос
+                    node.children = el;
+                    return node;
+                })
+                .then (() => {
                     return node;
                 })
                 .catch((err) => this._errHandler(err));
@@ -1483,6 +1538,15 @@ export class EosDictService {
     }
 
     private _setCurrentList(dictionary: EosDictionary, nodes: EosDictionaryNode[], update = false) {
+        const markedNodes: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
+        nodes.forEach((node: EosDictionaryNode) => {
+            // filter вместо find из-за IE
+            if (markedNodes && markedNodes.filter(mark => mark.id === node.id).length > 0) {
+                node.isSliced = true;
+            } else {
+                node.isSliced = false;
+            }
+        });
         this._currentList = nodes || [];
         if (dictionary) {
             // remove duplicates

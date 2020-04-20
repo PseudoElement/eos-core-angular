@@ -90,6 +90,14 @@ export class CreateNodeComponent {
                     this._sendDataOnCreate(data, hide);
                     this._dictSrv.currentTab = 0;
                 }
+            }).catch(e => {
+                this.cardEditRef.isChanged = false;
+                if (e.code && e.code === 434) {
+                    this.cardEditRef.isChanged = false;
+                    document.location.assign('../login.aspx');
+                }   else {
+                       this._errHandler(e);
+                }
             });
     }
 
@@ -110,6 +118,11 @@ export class CreateNodeComponent {
         this._dictSrv.addNode(data)
             .then((node: EosDictionaryNode) => this._afterAdding(node, hide))
             .catch((err) => {
+                if (err.code && err.code === 434) {
+                    this.cardEditRef.isChanged = false;
+                    document.location.assign('../login.aspx');
+                }
+
                 if (err && err.error instanceof RestError) {
                     this._windowInvalidSave ([err.error.message]);
                 } else if (err === 'cancel') {

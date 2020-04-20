@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { SETTINGS_MANAGEMENT_INPUTS, CUT_RIGHTS_INPUTS } from 'eos-user-select/shered/consts/settings-management.const';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -11,12 +11,13 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/confirm.consts';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'eos-setting-management',
     templateUrl: 'setting-management.component.html',
 })
-export class SettingManagementComponent implements OnInit {
+export class SettingManagementComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
     @Input() checkedUsers: number[];
     inputsManage: any;
@@ -26,6 +27,7 @@ export class SettingManagementComponent implements OnInit {
     formCopy: FormGroup;
     formCut: FormGroup;
     private _isnCopyFrom: number;
+    private _subscription: Subscription;
 
     constructor(
         private _inputCtrlSrv: InputParamControlService,
@@ -50,6 +52,7 @@ export class SettingManagementComponent implements OnInit {
         this.inputsCut = this._inputCtrlSrv.generateInputs(CUT_RIGHTS_INPUTS);
         this.formCut = this._inputCtrlSrv.toFormGroup(this.inputsCut, false);
         this._pathForm(true);
+        this._subscribeForm();
     }
 
     copySettings(): Promise<any> {
@@ -127,6 +130,10 @@ export class SettingManagementComponent implements OnInit {
         this._isnCopyFrom = null;
     }
 
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
+    }
+
     private _checkForm(form: FormGroup): boolean {
         let flag = false;
         Object.keys(form.controls).forEach(key => {
@@ -165,7 +172,7 @@ export class SettingManagementComponent implements OnInit {
     private _pathForm(init?: boolean): void {
         Object.keys(this.formCopy.controls).forEach(key => {
             if (key === '2' || key === '4') {
-                this.formCopy.controls[key].patchValue(false);
+                this.formCopy.controls[key].patchValue(false, {emitEvent: false});
                 if (init) {
                     this.formCopy.controls[key].disable();
                 } else {
@@ -173,14 +180,14 @@ export class SettingManagementComponent implements OnInit {
                 }
             } else if (key === 'USER_COPY') {
                 if (init) {
-                    this.formCopy.controls[key].patchValue('');
+                    this.formCopy.controls[key].patchValue('', {emitEvent: false});
                 }
             } else {
                 if (init) {
-                    this.formCopy.controls[key].patchValue(false);
+                    this.formCopy.controls[key].patchValue(false, {emitEvent: false});
                     this.formCopy.controls[key].disable();
                 } else {
-                    this.formCopy.controls[key].patchValue(true);
+                    this.formCopy.controls[key].patchValue(true, {emitEvent: false});
                     this.formCopy.controls[key].enable();
                 }
             }
@@ -196,5 +203,16 @@ export class SettingManagementComponent implements OnInit {
             }
         };
         return this._pipeSrv.read<USER_CL>(queryUser);
+    }
+
+    private _subscribeForm() {
+        this._subscription = this.formCopy.valueChanges.subscribe(data => {
+            if (!this.formCopy.controls['1'].value) {
+                this.formCopy.controls['2'].patchValue(false, {emitEvent: false});
+            }
+            if (!this.formCopy.controls['3'].value) {
+                this.formCopy.controls['4'].patchValue(false, {emitEvent: false});
+            }
+        });
     }
 }

@@ -42,7 +42,8 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         .set('0.8', 'Реестры внеш. отправки')
         .set('0.9', 'Печать РК')
         .set('1', '%opis_arh.exe%')
-        .set('2', 'Печать перечня поручений');
+        .set('2', 'Печать перечня поручений')
+        .set('3', 'Печать номенклатуры дел');
 
 
     staticDataForTree: TreeTempl[] = [
@@ -89,6 +90,10 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         {
             id: '2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
             isExpanded: false, level: 1, title: 'Печать перечня поручений', path: 'spravochniki/templates/2'
+        },
+        {
+            id: '3', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+            isExpanded: false, level: 1, title: 'Печать номенклатуры дел', path: 'spravochniki/templates/3'
         },
     ];
 

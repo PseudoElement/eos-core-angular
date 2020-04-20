@@ -3,6 +3,7 @@ import { LINEAR_TEMPLATE } from './_linear-template';
 import { NOT_EMPTY_STRING } from 'eos-dictionaries/consts/input-validation';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { ICONS_CONTAINER_SEV, /* COMMON_FIELD_ICONS_SEV */ } from './_common';
+import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 
 export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'security',
@@ -37,7 +38,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
             type: 'string',
             title: 'Наименование грифа',
             length: 64,
-            pattern: NOT_EMPTY_STRING,
+            pattern: VALID_REQ_STRING,
             required: true,
             isUnique: true,
             uniqueInDict: true,

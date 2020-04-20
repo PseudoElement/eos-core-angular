@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Добавление записи</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="cancelUpdate()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="create-new-node modal-body">
+    <div class="radio-inline quick" style="width: 100%;">
+        <label><input type="radio" [disabled]="disabledFirst" name="whenCopy" [value]="0" [(ngModel)]="whenCopyNode"><span></span>Без логически удалённых элементов</label>
+    </div>
+    <div class="radio-inline quick" style="width: 100%; margin-left: 0;">
+        <label><input type="radio" name="whenCopy" [value]="1" [(ngModel)]="whenCopyNode"><span></span>1:1</label>
+    </div>
+    <div class="radio-inline quick" style="width: 100%; margin-left: 0;">
+        <label><input type="radio" name="whenCopy" [value]="2" [(ngModel)]="whenCopyNode"><span></span>Восстанавливая логически удалённые элементы</label>
+    </div>
+    
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" (click)="createUpdate()">Вставить</button>
+    <button class="btn btn-primary-full" (click)="cancelUpdate()">Отменить</button>
+</div>

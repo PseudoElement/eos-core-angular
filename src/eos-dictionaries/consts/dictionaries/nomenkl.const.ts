@@ -1,7 +1,7 @@
 import {E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
-import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
+import {YEAR_PATTERN, VALID_REQ_MULTIPLE_STRING} from 'eos-common/consts/common.consts';
 import { SECURITY_DICT } from './security.consts';
 
 export const DID_NOMENKL_CL = 'nomenkl';
@@ -10,7 +10,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
     actions: [
-        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'uniqueIndexDel', 'userOrder',
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'uniqueIndexDel', 'userOrder', 'printNomenc',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization', 'removeHard',
         'edit', 'view',  'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
         'OpenSelected',
@@ -131,6 +131,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
             title: 'Заголовок',
             length: 2000,
             type: 'text',
+            pattern: VALID_REQ_MULTIPLE_STRING,
             preferences: <IFieldPreferences>{
                 minColumnWidth: 250,
             }

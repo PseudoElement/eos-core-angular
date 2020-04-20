@@ -46,6 +46,9 @@ export enum E_RECORD_ACTIONS {
     defaultCollision,
     protViewSecurity,
     uniqueIndexDel,
+    paste,
+    copy,
+    printNomenc,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

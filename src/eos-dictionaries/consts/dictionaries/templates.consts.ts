@@ -1,5 +1,7 @@
 import { E_DICT_TYPE, IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
+import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
+
 export const Templates: IDictionaryDescriptor = {
     id: 'templates',
     apiInstance: 'DOC_TEMPLATES',
@@ -13,6 +15,7 @@ export const Templates: IDictionaryDescriptor = {
         key: 'NAME_TEMPLATE',
         title: 'Имя файла',
         type: 'string',
+        pattern: VALID_REQ_STRING,
         length: 64,
         required: true,
         isUnique: true,
@@ -45,6 +48,7 @@ export const Templates: IDictionaryDescriptor = {
             { value: 'Печать списка поручений', title: 'Печать списка поручений' },
             { value: 'Печать перечня поручений', title: 'Печать перечня поручений' },
             { value: 'Реестры внеш. отправки', title: 'Реестры внеш. отправки' },
+            { value: 'Печать номенклатуры дел', title: 'Печать номенклатуры дел' },
             { value: 'Печать РК', title: 'Печать РК' },
             { value: 'opis_arh.exe', title: 'opis_arh.exe' }
         ],

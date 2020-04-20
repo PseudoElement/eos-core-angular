@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
 import { EosStorageService } from '../../app/services/eos-storage.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
@@ -116,6 +117,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private _router: Router,
         private departmentsSrv: EosDepartmentsService,
         private _eaps: EosAccessPermissionsService,
+        private _errSrv: ErrorHelperServices,
     ) {
         let tabNum = 0;
 
@@ -250,12 +252,21 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this._save(_data)
                         .then((node: EosDictionaryNode) => this._afterSaving(node))
                         .catch ((err) => {
-                            // console.log("TCL: CardComponent -> err", err)
-                            this._windowInvalidSave ([err.message]);
-                            this.disableSave = false;
+                            if (err.code && err.code === 434) {
+                                this.cardEditRef.isChanged = false;
+                                this.isChanged = false;
+                                this._errSrv.errorHandler(err);
+                            } else {
+                                this._windowInvalidSave ([err.message]);
+                                this.disableSave = false;
+                            }
                         });
                 }
-             });
+             }).catch(e => {
+                this.isChanged = false;
+                this.cardEditRef.isChanged = false;
+                this._errSrv.errorHandler(e);
+            });
     }
 
     disManager(mod: boolean, tooltip: any): boolean {
@@ -499,7 +510,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     return Promise.reject(err.error);
                 }
 
-                this._errHandler(err);
+                // this._errHandler(err); // данная ошибка обрабатывается на уровень выше убираю чтобы не было 2 сообщений
             });
     }
 
@@ -560,7 +571,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         this.lastEditedCard = this._storageSrv.getItem(LS_EDIT_CARD);
     }
 
-    private _errHandler(err) {
+    /* private _errHandler(err) {
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
             type: 'danger',
@@ -568,7 +579,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             msg: errMessage
         });
         return null;
-    }
+    } */
     private _windowInvalidSave(errors: string[] = []): Promise<boolean> {
         if (this.isChanged) {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);

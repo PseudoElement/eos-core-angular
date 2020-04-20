@@ -16,7 +16,6 @@ import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.servi
 import { Allbuttons } from '../shered/consts/btn-action.consts';
 import { BtnAction } from '../shered/interfaces/btn-action.interfase';
 import { TreeUserSelectService } from '../shered/services/tree-user-select.service';
-import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
@@ -727,34 +726,23 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     }
                     if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
                         if (users.blockedUser) {
-                            users.blockedUser = false;
                             this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
                         } else {
                             if (!users.blockedUser && !users.blockedSystem) {
-                                users.blockedUser = true;
                                 this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
                             }
                             if (users.blockedSystem) {
                                 this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                                users.blockedUser = false;
-                                users.blockedSystem = false;
                             }
                         }
                     }
                     users.isChecked = false;
                     return users;
                 });
-                if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.listUsers[0]);
-                } else {
-                    this.selectedUser = undefined;
-                    this.updateFlafListen();
-                }
-                this.isLoading = false;
+                this.initView(this.currentDue);
             }).catch(error => {
-                error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
                 this.isLoading = false;
-                this.cathError(error.message);
+                this._errorSrv.errorHandler(error);
             });
         });
     }
@@ -868,8 +856,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 });
             }).catch(error => {
                 this.isLoading = false;
-                error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                this.cathError(error);
+                this._errorSrv.errorHandler(error);
             });
         }
     }
@@ -920,19 +907,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.initView(urlUpdate);
     }
 
-    private cathError(e) {
-        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-            return undefined;
-        } else {
-            const errMessage = e.message ? e.message : e;
-            this._msgSrv.addNewMessage({
-                type: 'danger',
-                title: 'Ошибка обработки. Ответ сервера:',
-                msg: errMessage
-            });
-            return null;
-        }
-    }
     private _createUrlForSop(isn_user) {
         const url = `EraseUser?isn_user=${isn_user}`;
         return url;

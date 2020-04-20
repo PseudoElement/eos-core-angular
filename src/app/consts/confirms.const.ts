@@ -234,6 +234,12 @@ export const CONFIRM_COMBINE_NODES: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+export const CONFIRM_PRINT_INCLUDE: IConfirmWindow = {
+    title: 'Печать',
+    body: 'Печатать с учётом подчинённых? ',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};
 export const CONFIRM_DG_SHABLONRK: IConfirmWindow2 = {
     title: 'Ведение справочников:',
     body: 'Шаблон Рег.№ не соответствует указанному Виду РК.',

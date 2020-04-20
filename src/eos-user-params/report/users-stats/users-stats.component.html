@@ -47,64 +47,74 @@
                         </span>             
                 </div>    
             </div>
-            <div class="mar-items4">
-                <span class="item-count-content">
-                    Данные о пользователях по подсистемам
-                </span>
-            </div>
-            <div class="table-header">
-                <div class="table-stats-title">    
-                        <span class="user-title-name user-first-colomn text-center">
-                            Подсистема   
+            <div>
+                <div style="height: 540px;">
+                    <div class="mar-items4">
+                        <span class="item-count-content">
+                            Данные о пользователях по подсистемам
                         </span>
-                        <span class="user-two-colomn text-center">
-                            Всего
-                        </span>
-                        <span class="user-third-colomn text-center">
-                            Макс.
-                        </span> 
-                        <span class="user-four-colomn text-center">
-                            Срок Действия
-                        </span>
+                    </div>
+                    <div class="table-header">
+                        <div class="table-stats-title">    
+                                <span class="user-title-name user-first-colomn text-center">
+                                    Подсистема   
+                                </span>
+                                <span class="user-two-colomn text-center">
+                                    Всего
+                                </span>
+                                <span class="user-third-colomn text-center">
+                                    Макс.
+                                </span> 
+                                <span class="user-four-colomn text-center">
+                                    Срок Действия
+                                </span>
+                        </div>
+                    </div>
+                    <div class="stats-list">
+                        <div class="user-item">
+                            <div class="table-stats-title" *ngFor="let subItem of subSysArray">
+                                <span class="cust-str1" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.label}}</span>
+                                <span class="cust-str2 text-center" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.ActualUsers}}</span>
+                                <span class="cust-str3 text-center" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.Users || '-'}}</span>
+                                <span class="cust-str4" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.Expired || '-'}}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="stats-list">
-                <div class="user-item">
-                    <div class="table-stats-title" *ngFor="let subItem of subSysArray">
-                        <span class="cust-str1" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.label}}</span>
-                        <span class="cust-str2 text-center" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.ActualUsers}}</span>
-                        <span class="cust-str3 text-center" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.Users || '-'}}</span>
-                        <span class="cust-str4" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.Expired || '-'}}</span>
+                
+    
+                <div>
+                    <div class="mar-items4">
+                        <span class="item-count-content">
+                            Серверные компоненты
+                        </span>
+                    </div>
+                    <div class="table-header">
+                        <div class="table-stats-title">    
+                                <span class="user-title-name user-first-colomn text-center">
+                                    Подсистема   
+                                </span>
+                                <span class="user-third-colomn text-center">
+                                    Наличие
+                                </span> 
+                                <span class="user-four-colomn text-center">
+                                    Срок Действия
+                                </span>
+                        </div>
+                    </div>
+                    <div class="stats-list">
+                        <div class="user-item">
+                            <div class="table-stats-title" *ngFor="let subItem of subServerArray">
+                                <span class="cust-str1">{{subItem.label}}</span>
+                                <span class="cust-str3 text-center">{{subItem.Trial}}</span>
+                                <span class="cust-str4">{{subItem.Expired}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mar-items4">
-                <span class="item-count-content">
-                    Серверные компоненты
-                </span>
-            </div>
-            <div class="table-header">
-                <div class="table-stats-title">    
-                        <span class="user-title-name user-first-colomn text-center">
-                            Подсистема   
-                        </span>
-                        <span class="user-third-colomn text-center">
-                            Наличие
-                        </span> 
-                        <span class="user-four-colomn text-center">
-                            Срок Действия
-                        </span>
-                </div>
-            </div>
-            <div class="stats-list">
-                <div class="user-item">
-                    <div class="table-stats-title" *ngFor="let subItem of subServerArray">
-                        <span class="cust-str1">{{subItem.label}}</span>
-                        <span class="cust-str3 text-center">{{subItem.Trial}}</span>
-                        <span class="cust-str4">{{subItem.Expired}}</span>
-                    </div>
-                </div>
-            </div>
+            
+            
         </div>
     </div>     
 </div>

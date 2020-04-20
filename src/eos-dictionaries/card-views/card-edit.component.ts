@@ -14,6 +14,7 @@ import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { DOCGROUP_DICT } from 'eos-dictionaries/consts/dictionaries/docgroup.consts';
 import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 import { SEV_COLLISION_OPTIONS } from 'eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-card-edit',
@@ -47,6 +48,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         private _channelSrv: EosBroadcastChannelService,
         private _rulesSrv: EosSevRulesService,
         private _apiSrv: PipRX,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.subscriptions = [];
     }
@@ -157,6 +159,8 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                             }
                             this.form.controls['rec.CLASSIF_NAME'].setValidators(v);
                         }
+                    }).catch(e => {
+                        this._errorSrv.errorHandler(e);
                     });
             }
         }
