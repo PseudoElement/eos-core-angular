@@ -32,7 +32,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     public editFlag: boolean = false;
     public titleHeader: string;
     public currTab: number = 0;
-    readonly fieldGroupsForDeskApl: string[] = ['Десктопное приложение'];
+    readonly fieldGroupsForDeskApl: string[] = ['Десктопное приложение', 'Поиск'];
     private newData = new Map();
     private prepDate;
     private allData;

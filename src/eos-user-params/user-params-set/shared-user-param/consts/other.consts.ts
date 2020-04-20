@@ -143,7 +143,7 @@ export const OTHER_USER_REESTR: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'по записям текущей картотеки'},
+            {value: '0', title: 'по всему журналу передачи документа'},
             {value: '1', title: 'по записям текущего кабинета'}
         ]
     },
@@ -168,9 +168,9 @@ export const OTHER_USER_REESTR: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'Оригиналам'},
-            {value: '1', title: 'Копиям'},
-            {value: '2', title: 'Всем'}
+            {value: '0', title: 'оригиналам'},
+            {value: '1', title: 'копиям'},
+            {value: '2', title: 'всем'}
         ]
     },
     {
@@ -209,8 +209,8 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'По всему журналу'},
-            {value: '1', title: 'По записям текущего кабинета'}
+            {value: '0', title: 'по всему журналу передачи документа'},
+            {value: '1', title: 'по записям текущего кабинета'}
         ]
     },
     {
@@ -221,7 +221,7 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
     {
         key: 'SELECT_ITEMS',
         type: 'boolean',
-        title: 'Дать возможность выбора записей'
+        title: 'Давать возможность выбора записей для реестра'
     },
     {
         key: 'REESTR_ONE_TO_ONE',
@@ -234,9 +234,9 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'Оригиналам'},
-            {value: '1', title: 'Копиям'},
-            {value: '2', title: 'Всем'}
+            {value: '0', title: 'оригиналам'},
+            {value: '1', title: 'копиям'},
+            {value: '2', title: 'всем'}
         ]
     },
     {
@@ -245,8 +245,8 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'Краткое содержание'},
-            {value: '1', title: 'Корреспондент/адресат'},
+            {value: '0', title: 'Содержание'},
+            {value: '1', title: 'Корреспондент/Адресаты'},
         ]
     },
     {
@@ -604,7 +604,7 @@ export const OTHER_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'по записям текущей картотеки'},
+                {value: '0', title: 'по всему журналу передачи документа'},
                 {value: '1', title: 'по записям текущего кабинета'}
             ]
         },
@@ -629,9 +629,9 @@ export const OTHER_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'Оригиналам'},
-                {value: '1', title: 'Копиям'},
-                {value: '2', title: 'Всем'}
+                {value: '0', title: 'оригиналам'},
+                {value: '1', title: 'копиям'},
+                {value: '2', title: 'всем'}
             ]
         },
         {

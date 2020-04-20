@@ -1,6 +1,6 @@
 <div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
     <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
-    <div class="input-user-search-wrapper">
+    <div class="wr-scroll-dict">
         <div class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title" [ngStyle]="{'padding-top': '15px'}">Вызов справочника:</span>

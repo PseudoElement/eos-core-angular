@@ -20,7 +20,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
         {
             key: 'RCSEND_HIDE_OPERATION_SEND_EMAIL',
             type: 'boolean',
-            title: 'Скрыть операцию \'Отправить E-mail\'',
+            title: 'Скрыть операцию \"Отправить E-mail\"',
             keyPosition: 0,
             parent: null,
         },
@@ -1632,20 +1632,73 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
 };
 
 export const REGISTRATION_SEB: IBaseUsers =  {
-    id: 'registration',
-    title: 'Регистрация',
+    id: 'ext-app',
+    title: 'Внешний обмен',
     apiInstance: 'USER_PARMS',
     fields: [{
         key: 'SEV_HIDE_SENDING',
         type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ"'
+        title: 'Скрыть операцию "Отправить сообщение СЭВ в десктопном приложении"'
     },
     {
         key: 'SEV_ALLOW_DELIVERY',
         type: 'boolean',
         title: 'Учитывать вид отправки'
     },
+    {
+        key: 'ARM_SEV_DLG',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: 'YES', title: 'с диалогом'},
+            {value: 'NO', title: 'без диалога'}
+        ]
+    },
     ]
+};
+
+export const REMASTER_MADO: IBaseUsers =  {
+    id: 'ext-app',
+    title: 'Внешний обмен',
+    apiInstance: 'USER_PARMS',
+    fields: [{
+        key: 'MEDO_DELETE_MESSAGE_AFTER_REGISTRATION',
+        type: 'boolean',
+        title: 'Удалять сообщения после регистрации'
+    },
+    {
+        key: 'MEDO_DELETE_MESSAGE_AFTER_REFUSAL_REGISTRATION',
+        type: 'boolean',
+        title: 'Удалять сообщения после отказа от регистрации'
+    },
+    {
+        key: 'MEDO_ATTACH_DOC_PASSPORT_TO_RC',
+        type: 'boolean',
+        title: 'Прикреплять к РК паспорт документа'
+    },
+    {
+        key: 'MEDO_RECEIVE_RUBRIC_CHECK',
+        type: 'boolean',
+        title: 'Принимать рубрики РК и определять их по:',
+    },
+    {
+        key: 'MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: '1', title: 'коду'},
+            {value: '2', title: 'наименованию'},
+            {value: '3', title: 'коду и наименованию'}
+        ],
+        parent: 'MEDO_RECEIVE_RUBRIC_CHECK'
+    },
+    {
+        key: 'MEDO_ADD_CITIZEN_TO_ORGANIZ',
+        type: 'boolean',
+        title: 'Автоматически добавлять организации представителей в справочник "Организации"'
+    }]
 };
 
 export const REGISTRATION_RC: IBaseUsers =  {

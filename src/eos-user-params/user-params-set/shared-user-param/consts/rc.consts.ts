@@ -45,13 +45,13 @@ export const RC_USER: IBaseUsers = {
         {
             key: 'RES_LIST_ALL',
             type: 'boolean',
-            title: 'Развернутую инф. единым списком',
+            title: 'Развернутую информацию единым списком',
             readonly: false,
         },
         {
             key: 'SHOW_RAC_DATE',
             type: 'boolean',
-            title: 'Показывать дату поступления в картотеку',
+            title: 'Показывать дату поступления документа в картотеку',
             readonly: false,
         },
         {
@@ -92,12 +92,12 @@ export const RC_USER: IBaseUsers = {
         {
             key: 'RES_LIST_ALL',
             type: 'boolean',
-            title: 'Развернутую инф. единым списком',
+            title: 'Развернутую информацию единым списком',
         },
         {
             key: 'SHOW_RAC_DATE',
             type: 'boolean',
-            title: 'Показывать дату поступления в картотеку',
+            title: 'Показывать дату поступления документа в картотеку',
         },
         {
             key: 'DONT_SHOW_DOC_HIDDEN_FILES',
