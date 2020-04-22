@@ -1,5 +1,5 @@
 import { IFieldDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
-import { NOT_EMPTY_STRING, VALID_REQ_STRING } from 'eos-common/consts/common.consts';
+import { NOT_EMPTY_STRING, /* VALID_REQ_STRING, */ NOT_EMPTY_STRING2 } from 'eos-common/consts/common.consts';
 
 export const COMMON_FIELD_CODE: IFieldDescriptor = {
     key: 'CODE',
@@ -17,7 +17,7 @@ export const COMMON_FIELD_NAME: IFieldDescriptor = {
     type: 'string',
     length: 250,
     required: true,
-    pattern: VALID_REQ_STRING,
+    pattern: NOT_EMPTY_STRING2,
     // isUnique: true,
     // uniqueInDict: true,
 };
