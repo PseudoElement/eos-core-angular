@@ -24,7 +24,7 @@ import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm
 import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
-import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT } from 'eos-dictionaries/consts/confirm.consts';
+import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -63,6 +63,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     queryRoles: any[] = [];
     startIsPhoto: boolean | number = false;
     startUrlPhoto: string = '';
+    surnameDepartment: string = '';
+    updateDL: boolean = false;
+    public LicenzeInfo;
+    public actualLicenz = [];
     public isShell: boolean = false;
     public criptoView: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
@@ -188,6 +192,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     getPhotoUser(due: string, init?: boolean): Promise<any> {
         return this._userParamSrv.getPhotoUser(due).then((data: DEPARTMENT[]) => {
             this.isPhoto = data[0]['ISN_PHOTO'];
+            this.surnameDepartment = data[0]['SURNAME'];
             if (this.isPhoto) {
                 this._rtUserSel.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
                     const url = `url(data:image/${res[0].EXTENSION};base64,${res[0].CONTENTS})`;
@@ -380,48 +385,72 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const newD = {};
         const query = [];
         const accessStr = '';
-        this.setQueryNewData(accessStr, newD, query);
-        this.setNewDataFormControl(query, id);
-        if (this._newData.get('IS_SECUR_ADM') === false) {
-            this.apiSrvRx.read<USER_CL>({
-                USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1',  'ORACLE_ID': 'isnotnull', 'DELETED': '0'}),
-                orderby: 'ISN_LCLASSIF',
-                top: 2,
-                loadmode: 'Table'
-              }).then((admns: USER_CL[]) => {
-                if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
-                    this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
-                    return;
-                } else {
-                    if (!this.curentUser['IS_PASSWORD']) {
-                        return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                            if (res) {
-                                return this.ConfirmAvSystems(accessStr, id, query).then(() => {
-                                    this._router.navigate(['/user-params-set/auntefication']);
-                                });
-                            } else {
-                                return this.ConfirmAvSystems(accessStr, id, query);
-                            }
-                        });
+        this.checkDLSurname(query)
+        .then(() => {
+            this.setQueryNewData(accessStr, newD, query);
+            this.setNewDataFormControl(query, id);
+            if (this._newData.get('IS_SECUR_ADM') === false) {
+                this.apiSrvRx.read<USER_CL>({
+                    USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1',  'ORACLE_ID': 'isnotnull', 'DELETED': '0'}),
+                    orderby: 'ISN_LCLASSIF',
+                    top: 2,
+                    loadmode: 'Table'
+                  }).then((admns: USER_CL[]) => {
+                    if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                        this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
+                        return;
                     } else {
-                        return this.ConfirmAvSystems(accessStr, id, query);
-                    }
-                }
-            });
-        } else {
-            if (!this.curentUser['IS_PASSWORD']) {
-                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                    if (res) {
-                        return this.ConfirmAvSystems(accessStr, id, query).then(() => {
-                            this._router.navigate(['/user-params-set/auntefication']);
-                        });
-                    } else {
-                        return this.ConfirmAvSystems(accessStr, id, query);
+                        if (!this.curentUser['IS_PASSWORD']) {
+                            return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                                if (res) {
+                                    return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                        this._router.navigate(['/user-params-set/auntefication']);
+                                    });
+                                } else {
+                                    return this.ConfirmAvSystems(accessStr, id, query);
+                                }
+                            });
+                        } else {
+                            return this.ConfirmAvSystems(accessStr, id, query);
+                        }
                     }
                 });
             } else {
-                return this.ConfirmAvSystems(accessStr, id, query);
+                if (!this.curentUser['IS_PASSWORD']) {
+                    return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                        if (res) {
+                            return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                this._router.navigate(['/user-params-set/auntefication']);
+                            });
+                        } else {
+                            return this.ConfirmAvSystems(accessStr, id, query);
+                        }
+                    });
+                } else {
+                    return this.ConfirmAvSystems(accessStr, id, query);
+                }
             }
+        });
+    }
+
+    checkDLSurname(mas: any[]): Promise<any> {
+        if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
+            return this._confirmSrv.confirm(CONFIRM_SURNAME_REDACT).then(confirmation => {
+                if (confirmation) {
+                    mas.push({
+                        method: 'MERGE',
+                        requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
+                        data: {
+                            SURNAME: this.form.get('SURNAME_PATRON').value
+                        }
+                    });
+                    this.updateDL = true;
+                    this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                }
+                return null;
+            });
+        } else {
+            return Promise.resolve(null);
         }
     }
 
@@ -534,12 +563,18 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             shortSys: true
         }).then(() => {
             this.editMode = false;
+            if (this.updateDL) {
+                this.updateDL = false;
+                this.dueDepName = String(this.form.controls['DUE_DEP_NAME'].value).replace(this.curentUser._orig['SURNAME_PATRON'], this.form.controls['SURNAME_PATRON'].value);
+                this.form.controls['DUE_DEP_NAME'].setValue(this.dueDepName, { emitEvent: false });
+            } else {
+                this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+            }
             this.curentUser = this._userParamSrv.curentUser;
             this.getTitle();
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
-            this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
             this.dueDepSurname = this.form.controls['SURNAME_PATRON'].value;
             if (this.curentUser.isTechUser) {
                 this.singleOwnerCab = true;
@@ -697,10 +732,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
+                if (this.dueDepSurname !== dep['SURNAME']) {
+                    this._confirmSrv.confirm(CONFIRM_SURNAME_REDACT).then(confirmation => {
+                        if (confirmation) {
+                            this.dueDepSurname = dep['SURNAME'];
+                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        }
+                    });
+                }
                 this.dueDepName = dep['CLASSIF_NAME'];
-                this.dueDepSurname = dep['SURNAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
-                this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                 this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
                 this.currentCbFields = [];

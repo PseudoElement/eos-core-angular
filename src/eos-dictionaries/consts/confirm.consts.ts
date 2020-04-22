@@ -72,3 +72,10 @@ export const CONFIRM_CUT_USER: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_SURNAME_REDACT: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};
