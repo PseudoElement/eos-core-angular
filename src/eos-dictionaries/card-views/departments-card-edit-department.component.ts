@@ -176,8 +176,8 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
             // });
 
             const changes = [];
-            const startDate = this.data.rec['START_DATE'] ? new Date(this.data.rec['START_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
-            const endDate = this.data.rec['END_DATE'] ? new Date(this.data.rec['END_DATE']).toLocaleDateString().replace(/\./g, '/') : null;
+            const startDate = this.data.rec['START_DATE'] ? new Date(this.data.rec['START_DATE']).toLocaleDateString().replace(/[^0-9\.]/g, '').replace(/\./g, '/') : null;
+            const endDate = this.data.rec['END_DATE'] ? new Date(this.data.rec['END_DATE']).toLocaleDateString().replace(/[^0-9\.]/g, '').replace(/\./g, '/') : null;
             PipRX.invokeSop(changes, 'DepartmentDateTests',
                 {
                     'due': this.data.rec['DUE'], 'date1': startDate, 'date2': endDate
@@ -195,7 +195,9 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                     return true;
                 }
             }).catch(e => {
-                console.log(e);
+                this.msgSrv.addNewMessage({  type: 'warning',
+                title: 'Предупреждение:',
+                msg: e.message});
                 return true;
             });
         }
