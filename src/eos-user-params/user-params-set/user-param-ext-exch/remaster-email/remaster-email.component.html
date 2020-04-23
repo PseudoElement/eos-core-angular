@@ -18,7 +18,10 @@
                     <ng-template #treeNodeTmpl let-node="node" let-mar="m">
                         <div>
                             <div [ngClass] = "node.key === 'RECEIP_EMAIL' ? 'receipe-email' : ''" class="input_wrapper" [ngStyle]="{'margin-left.px': mar}">
-                                <span *ngIf="node.key === 'RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO'">Для "многопунктовых" документов отправлять</span>
+                                <div  class="user-group-form" *ngIf="node.key === 'RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO'">
+                                    <span class="set-header bold">Включать в паспорт:</span><br><br>
+                                    <span>Для «многопунктовых» документов</span>
+                                </div>
                                 <span *ngIf="node.children.length"
                                     class="eos-icon icon list-triangle"
                                     (click)="triggerNode(node)"

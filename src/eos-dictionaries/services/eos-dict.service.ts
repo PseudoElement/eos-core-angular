@@ -44,6 +44,7 @@ import { PipRX } from 'eos-rest';
 import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
@@ -255,6 +256,7 @@ export class EosDictService {
         private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _apiSrv: PipRX,
+        private _errorHelper: ErrorHelperServices,
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -475,7 +477,8 @@ export class EosDictService {
     }
 
     getFilterValue(filterName: string): any {
-        return this.filters.hasOwnProperty(filterName) ? this.filters[filterName] : null;
+        // изменил null на undefined чтобы можно было понять когда параметр стал пустым а когда он не существовал
+        return this.filters.hasOwnProperty(filterName) ? this.filters[filterName] : undefined;
     }
 
     getMarkedNodes(recursive = false): EosDictionaryNode[] {
@@ -799,7 +802,15 @@ export class EosDictService {
                 let resNode: EosDictionaryNode = null;
                 return this._preSave(dictionary, data, false)
                     .then((appendChanges) => {
-                        return dictionary.updateNodeData(node, data, appendChanges);
+                        return this._updateUserDepartment(node.data.rec, node.dictionaryId)
+                        .then(chenge => {
+                            if (!appendChanges && chenge) {
+                                appendChanges = chenge;
+                            } else if (chenge) {
+                                appendChanges.push(chenge);
+                            }
+                            return dictionary.updateNodeData(node, data, appendChanges);
+                        });
                     })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
@@ -1224,7 +1235,10 @@ export class EosDictService {
             this.reload();
         })
         .catch(er => {
-            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
+            if (er) {
+                this._errorHelper.errorHandler(er);
+            }
+            // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
         });
     }
     public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
@@ -1247,7 +1261,10 @@ export class EosDictService {
             this._storageSrv.removeItem('markedNodes');
             this.reload();
         }).catch(e => {
-            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
+                if (e) {
+                    this._errorHelper.errorHandler(e);
+                }
+            // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
         });
     }
     public uncheckNewEntry() {
@@ -1518,6 +1535,38 @@ export class EosDictService {
             }
         }
         return Promise.resolve(null);
+    }
+
+    private _updateUserDepartment(data, dictionaryId): Promise<any> {
+        if (dictionaryId === 'departments' &&
+        data._orig['IS_NODE'] === 1 &&
+        data._orig['SURNAME'] !== data['SURNAME']) {
+            return this._apiSrv.read({
+                USER_CL: {
+                    criteries: {
+                        DUE_DEP: data._orig['DUE']
+                    },
+                }
+            })
+            .then((ans: any[]) => {
+                if (ans.length > 0 && ans[0]['SURNAME_PATRON'] === data._orig['SURNAME']) {
+                    return Promise.resolve([{
+                        method: 'MERGE',
+                        requestUri: `USER_CL(${ans[0]['ISN_LCLASSIF']})`,
+                        data: {
+                            SURNAME_PATRON: data['SURNAME']
+                        }
+                    }]);
+                } else {
+                    return Promise.resolve(null);
+                }
+            })
+            .catch(er => {
+                this._errHandler(er);
+            });
+        } else {
+            return Promise.resolve(null);
+        }
     }
 
     private getTreeNode(nodeId: string): Promise<EosDictionaryNode> {

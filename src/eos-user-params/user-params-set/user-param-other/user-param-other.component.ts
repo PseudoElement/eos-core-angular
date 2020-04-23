@@ -36,7 +36,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов'];
+    readonly fieldGroups: string[] = ['Пересылка документа', 'Адресаты документа', 'Реестр передачи документов'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
@@ -104,9 +104,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         this._pushState();
     }
-    emitChangesAddresses($event) {
+    emitChangesReestr($event) {
         if (this.defaultUser) {
-            this.AddressesInputs = $event[1];
+            this.ReestInputsr = $event[1];
         }
         if ($event) {
             this.flagReestr = $event[0].btn;
@@ -117,9 +117,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         this._pushState();
     }
-    emitChangesReestr($event) {
+    emitChangesAddresses($event) {
         if (this.defaultUser) {
-            this.ReestInputsr = $event[1];
+            this.AddressesInputs = $event[1];
         }
         if ($event) {
             this.flagAddresses = $event[0].btn;

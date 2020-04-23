@@ -68,7 +68,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'HILITE_RESOLUTION_BOOLEAN',
             type: 'boolean',
-            title: 'Подсвечивать записи с поручениями РК, срок исполнения которых истекает через'
+            title: 'с поручениями, срок исполнения которых истекает через'
         },
         // {
         //     key: 'HILITE_RESOLUTION_INCREMENT',
@@ -85,7 +85,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'HILITE_PRJ_RC_BOOLEAN',
             type: 'boolean',
-            title: 'Подсвечивать записи в папке "Управление проектами", срок которых истекает через'
+            title: 'с проектами документов, срок которых истекает через '
         },
         // {
         //     key: 'HILITE_PRJ_RC_INCREMENT',
@@ -104,17 +104,32 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
             type: 'boolean',
-            title: 'Удалять РК (без поручений) из кабинета исполнителя при вводе отчета'
+            title: 'при вводе отчета'
         },
         {
             key: 'SCRATCH_RC',
             type: 'boolean',
-            title: 'Удалять РК (без поручений) из кабинета автора при вводе резолюции'
+            title: 'при вводе резолюции по документу без поручений'
+        },
+        {
+            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: 'boolean',
+            title: 'удалять документы без поручений из кабинета'
+        },
+        {
+            key: 'OZN_FILL_REPLY',
+            type: 'boolean',
+            title: 'вводить отчет об исполнении поручения с текстом:'
+        },
+        {
+            key: 'OZN_FILL_REPLY_TEXT',
+            type: 'string',
+            title: ''
         },
         {
             key: 'SCRATCH_RESOL',
             type: 'boolean',
-            title: 'Исполнять РК в кабинете автора при вводе резолюции'
+            title: 'при вводе резолюции по неконтрольному документу с проставлением даты отчета'
         },
         {
             key: 'FOLDER_ITEM_LIMIT_RESULT',
@@ -125,7 +140,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'RESOLUTION_DATE',
             type: 'radio',
-            title: 'Дата резолюции',
+            title: 'Дата поручения:',
             options: [
                 {value: 'TODAY', title: 'сегодня'},
                 {value: 'LAST', title: 'от предыдущей резолюции'},
@@ -140,42 +155,62 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'RESOLUTION_SELECT_AUTHOR',
             type: 'boolean',
-            title: 'из списка'
+            title: 'вручную'
         },
         {
             key: 'PARENT_RESOLUTION_TEXT',
             type: 'boolean',
-            title: 'Копировать текст подчиненной резолюции из родительского поручения'
+            title: 'текст'
+        },
+        {
+            key: 'INTERIM_DATE_PARENT',
+            type: 'boolean',
+            title: 'промежуточную дату'
+        },
+        {
+            key: 'STATUS_EXEC_PARENT',
+            type: 'boolean',
+            title: 'состояние исполнения'
         },
         {
             key: 'CORRECT_CTRL_DATE',
             type: 'boolean',
-            title: 'Корректировать  значение контрольности поручения при изменении План. И Факт. дат'
+            title: 'Ставить поручение на контроль при проставлении плановой даты'
+        },
+        {
+            key: 'INFORM_DIFFERENCE_CTRL_DATE',
+            type: 'boolean',
+            title: 'Сообщать о несоответствии контрольности поручения плановой и фактической дате'
+        },
+        {
+            key: 'RESOLUTION_PLAN_DATE_ASK',
+            type: 'boolean',
+            title: 'Предлагать заполнить пустую плановую дату РК при вводе контрольного поручения'
+        },
+        {
+            key: 'CASCADE_CONTROL',
+            type: 'boolean',
+            title: 'Снимать поручение с контроля, если снято вышестоящее поручение'
         },
         {
             key: 'PLAN_DATE_PARENT',
             type: 'boolean',
-            title: 'Плановая дата от РК (родительского поручения)'
+            title: 'Копировать плановую дату из вышестоящего поручения или документа'
         },
         {
             key: 'CHECK_RESOL_REPORT',
             type: 'boolean',
-            title: 'проверять отчеты'
+            title: 'проверять наличие отчетов исполнителей'
         },
         {
             key: 'SHOW_REPLY_NOTE',
             type: 'boolean',
-            title: 'примечание'
+            title: 'Примечание'
         },
         {
             key: 'SHOW_REPLY_READED',
             type: 'boolean',
-            title: 'отметку о прочтении'
-        },
-        {
-            key: 'SHOW_REPLY_READED',
-            type: 'boolean',
-            title: 'отметку о прочтении'
+            title: 'Отметку о прочтении'
         },
         {
             key: 'RESOLUTION_CONTROLLER',
@@ -187,9 +222,9 @@ export const CABINETS_USER: IBaseUsers = {
             type: 'radio',
             title: 'Контроль поручения',
             options: [
-                {value: 'YES', title: 'На контроле'},
-                {value: 'NO', title: 'Не контрольное'},
-                {value: 'PARENT', title: 'От РК (родительского поручения)'}
+                {value: 'YES', title: 'на контроле'},
+                {value: 'NO', title: 'не контрольное'},
+                {value: 'PARENT', title: 'от документа (родительского поручения)'}
             ]
         },
         {
@@ -197,34 +232,34 @@ export const CABINETS_USER: IBaseUsers = {
             type: 'radio',
             title: 'для',
             options: [
-                {value: '0', title: 'Всех документов'},
-                {value: '1', title: 'Только с "бумажным" оригиналом'},
+                {value: '0', title: 'всех документов'},
+                {value: '1', title: 'только с "бумажным" оригиналом'},
             ]
         },
         {
             key: 'ADD_JOURNAL_RESOL_AUTHOR',
             type: 'boolean',
-            title: 'Автора',
+            title: 'автора',
         },
         {
             key: 'ADD_JOURNAL_CONTROLLER',
             type: 'boolean',
-            title: 'Контролера',
+            title: 'контролера',
         },
         {
             key: 'ADD_JOURNAL_RESOL_REPLY',
             type: 'boolean',
-            title: 'Исполнителей',
+            title: 'исполнителей',
         },
         {
             key: 'ADD_ADRESS_REPORGANIZ',
             type: 'boolean',
-            title: 'Не добавлять внешних исполнителей поручений в Адресаты',
+            title: 'Добавлять внешних исполнителей поручений в Адресаты',
         },
         {
             key: 'RESOLUTION_CICLE',
             type: 'boolean',
-            title: 'Направлять резолюцию исполнителям из кабинета автора',
+            title: 'Направлять резолюцию исполнителям, если они работают в том же кабинете, что и автор',
         },
         {
             key: 'CONTROLL_AUTHOR',
@@ -234,16 +269,16 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'RESOLUTION_PRINT',
             type: 'boolean',
-            title: 'Доступна печать поручения',
+            title: 'Доступна печать поручения в десктопном приложении',
         },
         {
             key: 'SEND_ORDER_TO',
             type: 'radio',
             title: '',
             options: [
-                {value: '2', title: 'Всем фигурантам'},
-                {value: '1', title: 'Контролеру и исполнителям'},
-                {value: '0', title: 'Не рассылать'},
+                {value: '2', title: 'всем фигурантам'},
+                {value: '1', title: 'контролеру и исполнителям'},
+                {value: '0', title: 'не рассылать'},
             ]
         },
         {

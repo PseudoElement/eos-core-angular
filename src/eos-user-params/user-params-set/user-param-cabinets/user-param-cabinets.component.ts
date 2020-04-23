@@ -52,7 +52,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     ['FOLDERCOLORSTATUS_ON_SIGHT', 7], ['FOLDERCOLORSTATUS_ON_THE_SIGNATURE', 8]]);
     _ngUnsubscribe: Subject<any> = new Subject();
 
-    private btnDisable: boolean = true;
+    public btnDisable: boolean = true;
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
