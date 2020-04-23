@@ -326,9 +326,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         } return ' ';
     }
 
-    showSert(selected?: string): void {
+    showSert(selected?: any): void {
         if (selected) {
-            this.openCarmWindow(selected);
+            this.openCarmWindow(selected.id);
         } else {
             if (this.selectList) {
                 this.openCarmWindow(this.selectList.id);

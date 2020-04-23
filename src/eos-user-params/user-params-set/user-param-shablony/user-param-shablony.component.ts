@@ -36,9 +36,9 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
-                return this.defaultTitle ? 'Справочники по умолчанию' : this.currentUser.CLASSIF_NAME + '- Справочники';
+                return this.defaultTitle ? 'Шаблоны по умолчанию' : this.currentUser.CLASSIF_NAME + '- Шаблоны';
             }
-            return this.defaultTitle ? 'Справочники по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Справочники`;
+            return this.defaultTitle ? 'Шаблоны по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Шаблоны`;
         }
         return '';
     }

@@ -13,7 +13,6 @@ import { UserParamRegistrationRemasterComponent } from './user-params-set/user-p
 import { UserParamCabinetsComponent } from './user-params-set/user-param-cabinets/user-param-cabinets.component';
 import { UserParamRCComponent } from './user-params-set/user-param-rc/user-param-rc.component';
 import { UserParamDirectoriesComponent } from './user-params-set/user-param-directories/user-param-directories.component';
-import { UserParamSearchComponent } from './user-params-set/user-param-search/user-param-search.component';
 import { UserParamVisualizationComponent } from './user-params-set/user-param-visualization/user-param-visualization.component';
 import { UserParamEAComponent } from './user-params-set/user-param-external-application/user-param-external-application.component';
 import { UserParamOtherForwardingComponent } from './user-params-set/user-param-other/user-param-other.component';
@@ -76,6 +75,7 @@ import { AutenteficationComponent } from './auntefication/auntefication.componen
 import { UserParamExtendExchComponent } from './user-params-set/user-param-ext-exch/user-param-ext-exch.component';
 import { RemasterSebComponent } from './user-params-set/user-param-ext-exch/remaster-seb/remaster-seb.component';
 import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/remaster-email/remaster-email.component';
+import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/remaster-mado/remaster-mado.component';
 
 @NgModule({
     declarations: [
@@ -86,7 +86,6 @@ import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/re
         UserParamCabinetsComponent,
         UserParamRCComponent,
         UserParamDirectoriesComponent,
-        UserParamSearchComponent,
         UserParamVisualizationComponent,
         UserParamEAComponent,
         UserParamOtherForwardingComponent,
@@ -112,6 +111,7 @@ import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/re
         SignatureAddComponent,
         UserParamsProfSertComponent,
         RemasterEmailComponent,
+        RemasterMadoComponent,
         RemasterDopOperationComponent,
         RemasterAddressesComponent,
         RemasterScanComponent,

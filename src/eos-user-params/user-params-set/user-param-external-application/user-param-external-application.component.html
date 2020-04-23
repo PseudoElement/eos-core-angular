@@ -7,7 +7,7 @@
             </li>
         </ul>
     </div>
-    <div *ngIf="currTab === 0" class="clearfix scrollWrapper">
+    <div *ngIf="currTab === 0" class="clearfix scrollWrapper ext-app">
         <div class="titles-external-application ">
             <span class="l-font inscription-application-call-string">Строка вызова приложения:</span>
             <span class="l-font inscription-call-options">Параметры вызова:</span>
@@ -61,6 +61,18 @@
         <div class="user-input-group">
             <eos-dynamic-input class="inline-block application-call-string" [input]="inputs['rec.START_APP_0']" [form]="form" [readonly]="inputs['rec.START_APP_0'].readonly"></eos-dynamic-input>
             <eos-dynamic-input class="inline-block call-options" [input]="inputs['rec.START_APP_0_PARMS']" [form]="form" [readonly]="inputs['rec.START_APP_0_PARMS'].readonly"></eos-dynamic-input>
+        </div>
+    </div>
+    <div *ngIf="currTab === 1" class="input-user-directories-wrapper input-user-search-wrapper">
+        <div class="user-group-form">
+            <div class="inputs-inline">
+                <span class="input-title">Отображать в результатах поиска максимальное количество записей:</span>
+                <eos-dynamic-input [input]="inputs['rec.SRCH_LIMIT_RESULT']" [form]="form"></eos-dynamic-input>
+            </div>
+        </div>
+        <div>
+            <span>Картотека для поиска РК по умолчанию:</span>
+            <eos-dynamic-input [input]="inputs['rec.SEARCH_CONTEXT_CARD_EMPTY']" [form]="form"></eos-dynamic-input>
         </div>
     </div>
 </div>

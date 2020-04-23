@@ -7,16 +7,23 @@
         max-height: calc(100vh - 330px);
     }
     .user-param-registration-content-wrapper {
-        padding: 0 20px;
+        padding: 20px;
     }
     .tabs-wrapper {
         margin: 0;
-        margin-bottom: 20px;
+        // margin-bottom: 20px;
     }
-    .inline-block {
-        display: inline-block;
-        padding-top: 10px;
+    .container-tabs {
+        display: flex;
+        height: 65px;
     }
+    .item-tab-vh {
+        height: 65px;
+    }
+    // .inline-block {
+    //     display: inline-block;
+    //     padding-top: 10px;
+    // }
     /* .block {
         display: block;
     }*/
@@ -26,9 +33,7 @@
         margin-right: 40px;
     }
     .def_search_citizen {
-        .elem-input-radio {
-            margin-right: 14px;
-        }
+        margin-left: 146px;
     }
     .user-input-group-section {
         .span-or {

@@ -1,34 +1,28 @@
 <div *ngIf="inputs">
-    <div class="user-input-group">
-        <span class="l-font ">Получать реестр:</span>
-        <hr>
+    <div class="user-group-form">
+        <span>Получать реестр:</span>
         <eos-dynamic-input [input]="inputs[ 'rec.CUR_CABINET'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
-    <hr>
     <div class="user-input-group ">
         <eos-dynamic-input [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-    </div>
-    <hr>
+    </div><br>
     <div class="user-input-group ">
-        <span class="l-font ">Получать по:</span>
-        <hr>
+        <span>Получать по:</span>
         <eos-dynamic-input [input]="inputs[ 'rec.ORIG_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-    </div>
-    <hr>
-    <div *ngIf='errorHidden' class="user-input-group ">
-        <div class="number-increment-wrap ">
-            <span>Дата передачи документов не позднее ( дней ):</span>
-            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div><br>
+    <div *ngIf='errorHidden' class="user-group-form">
+        <div class="inputs-inline number-increment-wrap">
+            <span class="input-title">Дата передачи документов не позднее ( дней ):</span>
+            <eos-dynamic-input  [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div><br>
+        <div class="inputs-inline">
+            <span class="input-title">Количество копий:</span>
+            <eos-dynamic-input [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
-        <div class="number-increment-wrap ">
-            <span>Количество копий:</span>
-            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-        </div>
     </div>
-    <hr>
     <div class="user-content-wr ">
         <span class="title-user-content ">Ограничить группами документов:</span>
         <div class="user-input-group fl ">

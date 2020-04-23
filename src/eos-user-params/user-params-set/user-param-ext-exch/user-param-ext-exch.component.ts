@@ -18,25 +18,28 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ'];
+    readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
     public EmailChangeFlag: boolean = false;
     public SabChangeFlag: boolean = false;
+    public MadoChangeFlag: boolean = false;
     public isLoading: boolean = false;
     public editFlag: boolean = false;
     public currentUser;
     private EmailChangeValue: any;
     private SabChangeValue: any;
+    private MadoChangeValue: any;
     private newValuesMap = new Map();
     private newValuesSab: Map<string, any> = new Map();
+    private newValuesMado: Map<string, any> = new Map();
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
-                return this.defaultTitle ? 'Регистрация по умолчанию' : this.currentUser.CLASSIF_NAME + '- Регистрация';
+                return this.defaultTitle ? 'Внешний обмен по умолчанию' : this.currentUser.CLASSIF_NAME + '- Внешний обмен';
             }
-            return this.defaultTitle ? 'Регистрация по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Регистрация`;
+            return this.defaultTitle ? 'Внешний обмен по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Внешний обмен`;
         }
         return '';
     }
@@ -75,7 +78,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() {}
     get btnDisabled(): boolean {
-        if (this.EmailChangeFlag || this.SabChangeFlag) {
+        if (this.EmailChangeFlag || this.SabChangeFlag ||  this.MadoChangeFlag) {
             return true;
         }
         return false;
@@ -117,6 +120,20 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         this._pushState();
     }
 
+    emitChangesMado($event) {
+        if (this.defaultUser) {
+            this.MadoChangeValue = $event[1];
+        }
+        if ($event) {
+            this.MadoChangeFlag = $event[0].btn;
+            this.newValuesMado = $event[0].data;
+        } else {
+            this.MadoChangeFlag = false;
+            this.newValuesMado.clear();
+        }
+        this._pushState();
+    }
+
     defaultUserSubmit() {
         let obj = {};
         if (this.EmailChangeValue !== undefined) {
@@ -124,6 +141,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         }
         if (this.SabChangeValue !== undefined) {
             obj = Object.assign(this.SabChangeValue, obj);
+        }
+        if (this.MadoChangeValue !== undefined) {
+            obj = Object.assign(this.MadoChangeValue, obj);
         }
         this.DefaultSubmitEmit.emit(obj);
     }
@@ -164,6 +184,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             if (this.newValuesSab.size) {
                 req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesSab));
             }
+            if (this.newValuesMado.size) {
+                req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesMado));
+            }
         } else {
             const userId = this._userSrv.userContextId;
             if (this.newValuesMap.size) {
@@ -171,6 +194,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             }
             if (this.newValuesSab.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesSab, userId));
+            }
+            if (this.newValuesMado.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesMado, userId));
             }
         }
         return req;

@@ -1,39 +1,42 @@
 .input-user-external-application-wrapper {
     .scrollWrapper{
-        padding-left: 20px;
+        padding: 20px 30px;
     }
     .tabs-wrapper {
         margin: 0;
     }
-    .titles-external-application {
-        margin-top: 20px;
-        .inscription-application-call-string {
-            padding-left: 22%;
-            padding-top: 20px;
-        }
-        .inscription-call-options {
-            padding-left: 21%;
-            padding-top: 20px;
-        }
-    }
-
-    .user-input-group {
-        .application-call-string {
-            width: 65%;
-        }
-        .call-options {
-            width: 34%;
+    .ext-app {
+        label {
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 10px;
+            color: $label-color;
+            white-space: nowrap;
             padding-left: 20px;
+        }  
+        .titles-external-application {
+            .inscription-application-call-string {
+                padding-left: 22%;
+                padding-top: 20px;
+            }
+            .inscription-call-options {
+                padding-left: 21%;
+                padding-top: 20px;
+            }
+        }
+    
+        .user-input-group {
+            .application-call-string {
+                width: 65%;
+            }
+            .call-options {
+                width: 34%;
+                padding-left: 20px;
+            }
         }
     }
-
-    label {
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 10px;
-        color: $label-color;
-        white-space: nowrap;
-        padding-left: 20px;
+    .input-user-search-wrapper {
+        padding: 20px 30px;
     }
 }
 

@@ -17,7 +17,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Сканирование', 'Автопоиск', 'РКПД'];
+    readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
@@ -30,6 +30,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public editFlag: boolean = false;
     public accessSustem: Array<string>;
     public currentUser;
+    public isSave: boolean;
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -191,6 +192,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         this._RemasterService.editEmit.next(this.editFlag);
     }
     submit(event): Promise<any> {
+        this.isSave = true;
         if (this.defaultUser) {
             this.defaultUserSubmit();
         }
@@ -200,12 +202,14 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.hash = this._userSrv.hashUserContext;
             this.editFlag = false;
             this._RemasterService.submitEmit.next();
+            this.isSave = false;
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancel(false);
             this._RemasterService.submitEmit.next();
+            this.isSave = false;
         });
     }
     defaultSetFlagBtn() {

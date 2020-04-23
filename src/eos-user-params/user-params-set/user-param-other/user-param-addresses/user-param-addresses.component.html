@@ -1,25 +1,25 @@
 <div *ngIf="inputs">
-    <div class="user-input-group ">
-        <p class="the-main-recipients-of-the-document-titles ">Внешние адресаты</p>
-        <span class="l-font ">При добавлении указывать</span>
-        <hr>
-        <div class="view-send">
-            <div style="float: left;padding-top: 15px;">
-                <span>Вид отправки:</span>
-            </div>
-
-            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.RS_OUTER_DEFAULT_DELIVERY'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-            <span></span>
+    <div>
+        <span class="set-header bold">Внешние адресаты</span><br><br>
+    </div>
+    <div class="user-group-form">
+        <span>При добавлении указывать</span><br><br>
+        <div class="inputs-inline">
+            <span class="input-title">Вид отправки:</span>
+            <eos-dynamic-input [ngStyle]="{'width':'315px'}" [input]="inputs[ 'rec.RS_OUTER_DEFAULT_DELIVERY'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        <div class="inputs-inline" *ngIf="cBase">
+            <eos-dynamic-input class="inline-radio" [input]="inputs[ 'rec.RS_OUTER_DEFAULT_SENDING_TYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
     </div>
-    <div class="user-input-group">
+    <!-- <div class="user-input-group">
         <div *ngIf="cBase" class="send-from">
             <div class="send-fron-title">
                 <span>Отправка:</span>
             </div>
             <div>
-                <eos-dynamic-input [input]="inputs['rec.RS_OUTER_DEFAULT_SENDING_TYPE']" [form]="form"></eos-dynamic-input>
-            </div>
+                <eos-dynamic-input class="inline-radio" [input]="inputs['rec.RS_OUTER_DEFAULT_SENDING_TYPE']" [form]="form"></eos-dynamic-input>
+            </div> -->
         <!-- <span class="send-from-input ">
             <input [disabled]='!editFlag' readonly type="text " name="sendFrom " [ngModel]="sendFrom " >
         </span>
@@ -45,19 +45,19 @@
                 <span class="eos-icon eos-icon-close-blue small "></span>
             </button>
             </span> -->
-        </div>
-    </div>
-    <hr>
-    <div class="user-input-group ">
+        <!-- </div>
+    </div> -->
+    <div class="user-group-form">
         <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
-        <span class="l-font ">При добавлении указывать экземпляр документа:</span>
-        <hr>
-        <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <span>При добавлении указывать экземпляр документа:</span>
+        <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_DEFAULT_ORIG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
-    <hr>
     <div class="user-input-group ">
-        <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-    </div>
+        <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_FILL_SEND_DATE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input> 
+        <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input><br>
+        <span>При добавлении учитывать экземпляр документа (для десктопного приложения):</span><br>
+        <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div><br>
 </div>
 <!-- <div *ngIf="flagBacground " class="bacgrFixed "></div> -->

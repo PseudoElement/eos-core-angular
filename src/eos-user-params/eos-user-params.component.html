@@ -39,42 +39,41 @@
         </ng-container>
 
         <!-- components in user-params-set -->
-        <ng-container *ngSwitchCase="'registration'">
-            <eos-registration-remaster></eos-registration-remaster>
-        </ng-container>
-        <ng-container *ngSwitchCase="'cabinets'">
-            <eos-user-param-cabinets></eos-user-param-cabinets>
-        </ng-container>
-        <ng-container *ngSwitchCase="'rc'">
-            <eos-user-param-rc></eos-user-param-rc>
-        </ng-container>
-        <ng-container *ngSwitchCase="'dictionary'">
-            <eos-user-param-directories></eos-user-param-directories>
-        </ng-container>
-        <ng-container *ngSwitchCase="'ext-exch'">
-            <eos-ext-exch></eos-ext-exch>
-        </ng-container>
-        <ng-container *ngSwitchCase="'el-signature'">
-            <eos-user-param-el-signature></eos-user-param-el-signature>
-        </ng-container>
-        <ng-container *ngSwitchCase="'prof-sert'">
-            <eos-prof-sert></eos-prof-sert>
-        </ng-container>
-        <ng-container *ngSwitchCase="'search'">
-            <eos-user-param-search></eos-user-param-search>
-        </ng-container>
-        <ng-container *ngSwitchCase="'visualization'">
-            <eos-user-param-visualization></eos-user-param-visualization>
-        </ng-container>
-        <ng-container *ngSwitchCase="'external-application'">
-            <eos-user-param-external-application></eos-user-param-external-application>
-        </ng-container>
-        <ng-container *ngSwitchCase="'other'">
-            <eos-user-param-other></eos-user-param-other>
-        </ng-container>
-        <ng-container *ngSwitchCase="'patterns'">
-            <eos-user-param-shablony></eos-user-param-shablony>
-        </ng-container>
+        <div class="user-set">
+            <ng-container *ngSwitchCase="'registration'">
+                <eos-registration-remaster></eos-registration-remaster>
+            </ng-container>
+            <ng-container *ngSwitchCase="'cabinets'">
+                <eos-user-param-cabinets></eos-user-param-cabinets>
+            </ng-container>
+            <ng-container *ngSwitchCase="'rc'">
+                <eos-user-param-rc></eos-user-param-rc>
+            </ng-container>
+            <ng-container *ngSwitchCase="'dictionary'">
+                <eos-user-param-directories></eos-user-param-directories>
+            </ng-container>
+            <ng-container *ngSwitchCase="'ext-exch'">
+                <eos-ext-exch></eos-ext-exch>
+            </ng-container>
+            <ng-container *ngSwitchCase="'el-signature'">
+                <eos-user-param-el-signature></eos-user-param-el-signature>
+            </ng-container>
+            <ng-container *ngSwitchCase="'prof-sert'">
+                <eos-prof-sert></eos-prof-sert>
+            </ng-container>
+            <ng-container *ngSwitchCase="'visualization'">
+                <eos-user-param-visualization></eos-user-param-visualization>
+            </ng-container>
+            <ng-container *ngSwitchCase="'external-application'">
+                <eos-user-param-external-application></eos-user-param-external-application>
+            </ng-container>
+            <ng-container *ngSwitchCase="'other'">
+                <eos-user-param-other></eos-user-param-other>
+            </ng-container>
+            <ng-container *ngSwitchCase="'patterns'">
+                <eos-user-param-shablony></eos-user-param-shablony>
+            </ng-container>
+        </div>
     </ng-container>
 </div>
 

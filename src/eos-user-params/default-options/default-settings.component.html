@@ -12,10 +12,6 @@
             <eos-user-param-rc *ngIf="defaultUser !== undefined" [defaultUser]="defaultUser" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
               [defaultTitle]="'РК по умолчанию'"></eos-user-param-rc>
         </ng-container>
-        <ng-container *ngSwitchCase="'search'">
-            <eos-user-param-search *ngIf="defaultUser !== undefined" [defaultUser]="defaultUser" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-             [defaultTitle]="'Поиск по умолчанию'"></eos-user-param-search>
-        </ng-container>
         <ng-container *ngSwitchCase="'dictionary'">
             <eos-user-param-directories *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
               [defaultTitle]="'Справочники по умолчанию'" [defaultUser]="defaultUser"></eos-user-param-directories>
