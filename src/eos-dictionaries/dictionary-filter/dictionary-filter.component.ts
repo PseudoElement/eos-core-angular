@@ -32,7 +32,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
         }, {
             controlType: 'numberIncrement',
             key: 'filter.stateYear',
-            value: String(this._storageSrv.getItem('filter.stateYear') || new Date().getFullYear()).trim(),
+            value: new Date().getFullYear(),
             label: 'Состояние на',
             pattern: YEAR_PATTERN,
             hideLabel: true,
@@ -153,10 +153,10 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
             if (this.dictId === DID_NOMENKL_CL) {
                 const yearFilter = this.searchForm.controls['filter.stateYear'];
                 const cb1 = this.searchForm.controls['filter.CB1'];
-                const yv = this._dictSrv.getFilterValue('YEAR') || yearFilter.value;
+                const yv = this._dictSrv.getFilterValue('YEAR') === undefined ? yearFilter.value : this._dictSrv.getFilterValue('YEAR');
                 const cv = this._dictSrv.getFilterValue('CB1');
                 this.hasYear = true;
-                if (yv) {
+                if (yv || yv === '') {
                     yearFilter.setValue(yv, {emit: false});
                 }
 
@@ -167,8 +167,9 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
             }
 
             if (this.dictId === 'departments') {
-                if (this._dictSrv.getFilterValue('date')) {
-                    dateFilter.setValue(new Date(this._dictSrv.getFilterValue('date')));
+                if (this._dictSrv.getFilterValue('date') !== undefined) {
+                    const newDate = this._dictSrv.getFilterValue('date') ? new Date(this._dictSrv.getFilterValue('date')) : null;
+                    dateFilter.setValue(newDate);
                 } else {
                     this.dateFilter(dateFilter.value);
                 }

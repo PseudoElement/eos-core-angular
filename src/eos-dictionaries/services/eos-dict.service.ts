@@ -477,7 +477,8 @@ export class EosDictService {
     }
 
     getFilterValue(filterName: string): any {
-        return this.filters.hasOwnProperty(filterName) ? this.filters[filterName] : null;
+        // изменил null на undefined чтобы можно было понять когда параметр стал пустым а когда он не существовал
+        return this.filters.hasOwnProperty(filterName) ? this.filters[filterName] : undefined;
     }
 
     getMarkedNodes(recursive = false): EosDictionaryNode[] {
