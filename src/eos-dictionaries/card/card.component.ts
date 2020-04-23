@@ -508,6 +508,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     return null;
                 } else if (err && err.error instanceof RestError) {
                     return Promise.reject(err.error);
+                }   else {
+                    return Promise.reject(err);
                 }
 
                 // this._errHandler(err); // данная ошибка обрабатывается на уровень выше убираю чтобы не было 2 сообщений
