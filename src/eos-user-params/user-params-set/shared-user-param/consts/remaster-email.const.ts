@@ -1,4 +1,5 @@
 import { IBaseUsers} from '../../../shared/intrfaces/user-params.interfaces';
+const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
 export const REGISTRATION_REMASTER_USER: IBaseUsers = {
     id: 'registration',
     title: 'Регистрация',
@@ -1401,6 +1402,12 @@ export const REGISTRATION_SCAN: IBaseUsers = {
                 {value: '2', title: 'обороте документа'},
                 {value: '1', title: 'чистом листе'}
             ]
+        },
+        {
+            key: 'COUNT_PAGES_FOR_PRINT_BARCODE',
+            type: 'numberIncrement',
+            title: 'С пояснительной строкой',
+            pattern: REG_MIN_VAL
         },
         {
             key: 'EXPLANATION_STRING_FOR_PRINT_BARCODE',
