@@ -1229,7 +1229,7 @@ export class EosDictService {
             if (er) {
                 this._errorHelper.errorHandler(er);
             }
-            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
+            // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
         });
     }
     public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
