@@ -6,7 +6,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
-import { REMASTER_MADO, REGISTRATION_SEB } from 'eos-user-params/user-params-set/shared-user-param/consts/remaster-email.const';
+import { REMASTER_MADO } from 'eos-user-params/user-params-set/shared-user-param/consts/remaster-email.const';
 
 @Component({
     selector: 'eos-remaster-mado',
@@ -172,7 +172,7 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         this.form.disable({emitEvent: false});
     }
     default() {
-        this.prepareDefaultForm = this.formHelp.parse_Create(REGISTRATION_SEB.fields, this.defaultValues);
+        this.prepareDefaultForm = this.formHelp.parse_Create(REMASTER_MADO.fields, this.defaultValues);
         Object.keys(this.prepareDefaultForm).forEach((item: string) => {
             this.form.controls['rec.' + item].patchValue(this.prepareDefaultForm[item]);
         });

@@ -173,6 +173,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     defaultSetFlagBtn() {
         this.getChanges(false);
         this.emitChangesSab(false);
+        this.emitChangesMado(false);
     }
 
     createObjRequest(): any[] {
@@ -206,6 +207,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.getChanges(false);
             this.emitChangesSab(false);
+            this.emitChangesMado(false);
             this._pushState();
         }
         this.editFlag = event;
