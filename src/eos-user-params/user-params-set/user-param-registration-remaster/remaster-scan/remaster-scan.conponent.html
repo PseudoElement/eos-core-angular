@@ -1,13 +1,22 @@
 <div *ngIf="inputs">
      <div class="user-group-form">
-          <span>Печать штрих-кода на:</span>
-          <eos-dynamic-input
-               class="input-right"
-               [ngStyle]="{'width': '33%'}"
-               [input]="inputs['rec.TYPE_PRINT_BARCODE']"
-               [form]="form"
-               [readonly]="false"
-          ></eos-dynamic-input>
+          <div class="inputs-inline">
+               <span class="input-title">Печать штрих-кода на:</span>
+               <eos-dynamic-input
+                    class="input-right"
+                    [ngStyle]="{'width': '33%'}"
+                    [input]="inputs['rec.TYPE_PRINT_BARCODE']"
+                    [form]="form"
+                    [readonly]="false"
+               ></eos-dynamic-input>
+               <eos-dynamic-input
+               *ngIf="form.controls['rec.TYPE_PRINT_BARCODE'].value === '1'"
+                    class="incr-scan"
+                    [input]="inputs['rec.COUNT_PAGES_FOR_PRINT_BARCODE']"
+                    [form]="form"
+                    [readonly]="false"
+               ></eos-dynamic-input>
+          </div>
           <eos-dynamic-input
                [input]="inputs['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE']"
                [form]="form"
