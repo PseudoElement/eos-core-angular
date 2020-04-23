@@ -78,7 +78,7 @@
     <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Дата резолюции:</span>
+                <span class="input-title">Дата поручения:</span>
                 <div class="date-resolution">
                     <eos-dynamic-input [input]="inputs['rec.RESOLUTION_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
@@ -142,7 +142,7 @@
             <eos-dynamic-input [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div><br>
         <div class="user-group-form resolution">
-            <span>Проект резолюции:</span>
+            <span>Приоритет резолюции:</span>
             <div>
                 <eos-dynamic-input [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>

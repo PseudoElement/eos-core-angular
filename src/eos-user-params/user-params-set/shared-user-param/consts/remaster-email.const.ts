@@ -1345,12 +1345,12 @@ export const REGISTRATION_ADDRESSES: IBaseUsers = {
         {
             key: 'CORR_SIGN',
             type: 'boolean',
-            title: 'Подписал (Корреспондент)'
+            title: '"Подписал (Корреспондент)"'
         },
         {
             key: 'ADDR_WHOUM',
             type: 'boolean',
-            title: 'Кому (Адресаты)'
+            title: '"Кому (Адресаты)"'
         },
         {
             key: 'ORGGROUP',
@@ -1436,7 +1436,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '1', title: 'На равенство'},
-                {value: '2', title: 'Поначалу №'},
+                {value: '2', title: 'По началу №'},
                 {value: '3', title: 'На вхождение'},
                 {value: '4', title: 'Порядковый №'}
             ]
@@ -1638,7 +1638,7 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     fields: [{
         key: 'SEV_HIDE_SENDING',
         type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ в десктопном приложении"'
+        title: 'Скрыть операцию "Отправить сообщение СЭВ" в десктопном приложении'
     },
     {
         key: 'SEV_ALLOW_DELIVERY',

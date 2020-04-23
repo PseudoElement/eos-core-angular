@@ -1,4 +1,4 @@
-<div class="user-group-form">
+<div class="user-group-form mado-inputs">
     <eos-dynamic-input
         [input]="inputs['rec.MEDO_DELETE_MESSAGE_AFTER_REGISTRATION']"
         [form]="form"
@@ -11,6 +11,11 @@
     ></eos-dynamic-input>
     <eos-dynamic-input
         [input]="inputs['rec.MEDO_ATTACH_DOC_PASSPORT_TO_RC']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
@@ -27,6 +32,7 @@
         ></eos-dynamic-input>
     </div> -->
     <eos-dynamic-input
+        [ngStyle]="{'margin': 0}"
         [input]="inputs['rec.MEDO_ADD_CITIZEN_TO_ORGANIZ']"
         [form]="form"
         [readonly]="false"

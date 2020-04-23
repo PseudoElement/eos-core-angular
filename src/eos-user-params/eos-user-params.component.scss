@@ -12,7 +12,7 @@
             margin-bottom: 20px;
             span {
                 line-height: 24px;
-                font-size: 16px;
+                font-size: 17px;
             }
             &.bold {
                 font-weight: bold;
@@ -208,6 +208,37 @@
 .default-settings {
     .default-btn {
         display: none;
+    }
+    .form-group {
+        margin: 0;
+    }
+    .set-header {
+        margin-bottom: 20px;
+        span {
+            line-height: 24px;
+            font-size: 17px;
+        }
+        &.bold {
+            font-weight: bold;
+        }
+    }
+    .user-group-form {
+        margin-bottom: 20px;
+        .inputs-inline {
+            display: flex;
+            .input-title {
+                padding-top: 6px;
+                margin-right: 10px;
+            }
+        }
+        .input-right {
+            margin-left: 40px;
+        }
+        .inline-radio {
+            .elem-input-radio {
+                display: inline-flex;
+            }
+        }
     }
 }
 .right-email-stage{

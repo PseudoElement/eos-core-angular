@@ -13,7 +13,7 @@
                 <button [disabled]="this.isCarma && !editFlag" placement="auto" class="btn btn-primary-light" container="body" tooltip='Выбрать сертификат' containerClass="tooltip-info" (click)='chooseSertificate()'>
                     <span class="eos-icon eos-icon-download small"></span>
                 </button>
-                <button [disabled]='this.isCarma && !editFlag' class="btn btn-primary-light" tooltip='Показать сертификат' container="body" placement="auto" triggers="hover:click" containerClass="tooltip-info" (click)='showSert(selectedFromAllList.id)'><span class="eos-icon eos-icon-info-blue small"></span></button>
+                <button [disabled]='this.isCarma && !editFlag' class="btn btn-primary-light" tooltip='Показать сертификат' container="body" placement="auto" triggers="hover:click" containerClass="tooltip-info" (click)='showSert(selectedFromAllList)'><span class="eos-icon eos-icon-info-blue small"></span></button>
 
                 <button tooltip='Добавить сертификат' placement="auto" containerClass="tooltip-info" class="btn btn-primary-light" container="body" [disabled]='!selectedFromAllList || !editFlag' (click)='addSertificate(selectedFromAllList)'>
                     <span class="eos-icon eos-icon-plus-blue small"></span>

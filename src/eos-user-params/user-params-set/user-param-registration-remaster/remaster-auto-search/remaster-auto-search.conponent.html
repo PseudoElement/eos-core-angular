@@ -74,9 +74,10 @@
             <span>Год регистрации:</span>
             <eos-dynamic-input  [ngStyle]="{'width': '180px'}" [input]="inputs['rec.LINKED_SEARCHYEAR']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <span>Создавать связку с типом:</span>
-        <eos-dynamic-input [ngStyle]="{'width': '25%'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        <br>
+        <div class="right-input-pos">
+            <span>Создавать связку с типом:</span>
+            <eos-dynamic-input [ngStyle]="{'width': '452px'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <eos-dynamic-input [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
     <div class="set-header bold">
