@@ -1,3 +1,5 @@
+import { RestError } from 'eos-rest/core/rest-error';
+
 export interface IEnt {
     _State?: string;
     __metadata?: any;
@@ -124,4 +126,9 @@ export interface IUserParms {
     PARM_NAME: string;
     PARM_GROUP: number;
     PARM_VALUE: string;
+}
+
+export interface ICancelFormChangesEvent {
+    isChanged: boolean;
+    error: RestError;
 }

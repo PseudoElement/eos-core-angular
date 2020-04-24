@@ -13,11 +13,14 @@ import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
+import { ErrorHelperServices } from './shared/services/helper-error.services';
+
+
 @Component({
     selector: 'eos-user-params',
     templateUrl: 'eos-user-params.component.html'
 })
-
 export class UserParamsComponent implements OnDestroy, OnInit {
     @ViewChild('emailChenge') emailChenge;
     email = '';
@@ -41,7 +44,9 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         private _userParamService: UserParamsService,
         //    private _confirmSrv: ConfirmWindowService,
         private _storageSrv: EosStorageService,
-        private _appContext: AppContext
+        private _appContext: AppContext,
+        private _apiSrv: PipRX,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this._route.params
             .pipe(
@@ -105,6 +110,15 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             )
             .subscribe((state: boolean) => {
                 this.setTabsSCan(state);
+            });
+
+        this._apiSrv.cancelFormChanges$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((event: ICancelFormChangesEvent) => {
+                this._isChanged = event.isChanged;
+                this._errorSrv.errorHandler(event.error);
             });
     }
 

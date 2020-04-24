@@ -16,7 +16,9 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 // import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
+
 @Component({
     selector: 'eos-param-create-user',
     templateUrl: 'createUser.component.html'
@@ -47,7 +49,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _pipeSrv: PipRX,
-        private _appContext: AppContext
+        private _appContext: AppContext,
+        private _errorSrv: ErrorHelperServices,
     ) {
     }
     get disabledSubmit() {
@@ -88,11 +91,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this._subscribe();
             })
             .catch(e => {
-                this._router.navigate(['login'], {
-                    queryParams: {
-                        returnUrl: this._router.url
-                    }
-                });
+                this._errorSrv.errorHandler(e);
                 this.closedModal.emit();
             });
     }
@@ -135,11 +134,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         msg: '',
                     };
                     if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-                        this._router.navigate(['login'], {
-                            queryParams: {
-                                returnUrl: this._router.url
-                            }
-                        });
+                        this._errorSrv.errorHandler(e);
                         this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
