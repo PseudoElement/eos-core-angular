@@ -110,7 +110,7 @@ export class CardRightSrv {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение',
-                msg: `Невозможно снять право 'Просмотр поручений.'\n Пользователь имеет доступ в папки 1-3 кабинетов данных картотек: ${this.getNamesDue(viewResol)}`
+                msg: `Невозможно снять право 'Просмотр поручений'.\n Пользователь имеет доступ в папки 1-3 кабинетов данных картотек: ${this.getNamesDue(viewResol)}`
             });
             return false;
         }
