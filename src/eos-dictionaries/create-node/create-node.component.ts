@@ -72,6 +72,11 @@ export class CreateNodeComponent {
      */
     public create(hide = true) {
 
+        const error = this.checkErrorSEV();
+        if (error.length > 0) {
+            this._windowInvalidSave(error);
+            return ;
+        }
         if (!this.formIsValid) {
             this._windowInvalidSave();
             return;
@@ -100,7 +105,55 @@ export class CreateNodeComponent {
                 }
             });
     }
-
+    // все проверки по справочникам SEV вынес в одно место так как не знаю будет их много или только одна
+    checkErrorSEV(): string[] {
+        const errors = [];
+        const data = this.cardEditRef.newData.rec;
+        if (this.cardEditRef.dictionaryId === 'sev-rules') {
+            if (data &&
+                data['takeFileRK'] === 0 &&
+                data['FileRK'] === 1) {
+                errors.push(`Внимание! Запрещено редактировать реквизиты РК при повторном получении документа "Файлы РК", т.к. эти реквизиты не разрешены к приёму.
+                Необходимо откорректировать настройки параметров правила СЭВ.`);
+            }
+            if (data &&
+                !data['DUE_DOCGROUP_NAME']) {
+                errors.push(`Не задана группа документов`);
+            }
+            if (data &&
+                (+data['RULE_KIND'] === 2 || +data['RULE_KIND'] === 6) &&
+                !data['groupDocument']
+                ) {
+                errors.push(`Поле \'Для групп документов\' обязательно для заполнения`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['executor']
+            ) {
+                errors.push(`Поле \'Исполнитель\' обязательно для заполнения`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['visaForward'] &&
+                !data['visaDate']
+            ) {
+                errors.push(`Срок визы должен быть заполнен`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['signatureForward'] &&
+                !data['signatureDate']
+            ) {
+                errors.push(`Срок подписи должен быть заполнен`);
+            }
+            if ((data.link && data.linkKind === 1 && String(data.type) === '1' && (data.linkTypeList === 'null' || !data.linkTypeList)) ||
+            (data['LinkPD'] && data['linkKind'] === 1 && String(data['type']) === '2' && (data['linkTypeList'] === 'null' || !data['linkTypeList']))
+            ) {
+                errors.push(`Тип связки должен быть выбран`);
+            }
+        }
+        return errors;
+    }
     /**
      * Set hasChanges
      * @param hasChanges recived value

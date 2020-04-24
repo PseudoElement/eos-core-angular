@@ -30,6 +30,9 @@ export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestro
                 delete this.fieldsDescriptionFull.rec['CRYPT'];
             }
         }
+        if (this.dictSrv.currentDictionary.id  === 'sev-rules' && Object.keys(this.nodeDataFull).length > 0) {
+            this.nodeDataFull.rec['DUE_DOCGROUP_NAME'] = this.node.data.DOCGROUP_Ref[0]['CLASSIF_NAME'];
+        }
     }
     // TODO: объеденить  loadRelated и loadOptionsDictionary во что то одно внятное.
     value(key): string {

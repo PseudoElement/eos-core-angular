@@ -10,6 +10,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
+import { BsModalService } from 'ngx-bootstrap';
 
 export class TabOptions {
     id: string;
@@ -50,6 +51,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     public isCBBase: boolean;
     public isNadzor: boolean;
     public isSevIndexes: boolean = false;
+    public modalService: BsModalService;
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
     protected appctx: AppContext;
@@ -61,7 +63,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         this.prevValues = [];
         this.isSevIndexes = Features.cfg.SEV.isIndexesEnable;
         this.appctx = injector.get(AppContext);
-
+        this.modalService = injector.get(BsModalService);
         this.isCBBase = this.appctx.getParams(CB_FUNCTIONS) === 'YES';
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
 

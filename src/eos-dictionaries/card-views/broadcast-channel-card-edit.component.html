@@ -37,11 +37,12 @@
                         <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
                                            [form]="form"
                                            [readonly]="!editMode"></eos-dynamic-input>
-                        <span *ngIf="!(authMethod == 0)">
+                        <!-- <span> -->
                             <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
                                                [form]="form"
-                                               [readonly]="!editMode"></eos-dynamic-input>
-                        </span>
+                                               [disabled]="(+authMethod === 0)"
+                                               [readonly]="!editMode || (+authMethod === 0)"></eos-dynamic-input>
+                        <!-- </span> -->
                         <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
                                            [form]="form"
                                            [readonly]="!editMode"></eos-dynamic-input>
@@ -54,10 +55,11 @@
                         <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
                                            [form]="form"
                                            [readonly]="!editMode"></eos-dynamic-input>
-                        <span *ngIf="!(authMethod == 0)">
+                        <span>
                             <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
                                                [form]="form"
-                                               [readonly]="!editMode"></eos-dynamic-input>
+                                               [disabled]="(+authMethod === 0)"
+                                               [readonly]="!editMode || (+authMethod === 0)"></eos-dynamic-input>
                         </span>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_DELAY']"
                                            [form]="form"

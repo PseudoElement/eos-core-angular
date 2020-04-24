@@ -4,8 +4,8 @@ import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import { EosSevRulesService } from '../../services/eos-sev-rules.service';
 import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { BUTTON_RESULT_CANCEL } from 'app/consts/confirms.const';
+/* import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component'; */
+/* import { BUTTON_RESULT_CANCEL, CONFIRM_NOT_CONSLITE } from 'app/consts/confirms.const'; */
 
 export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
 
@@ -56,19 +56,45 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                                         return resolve(value);
                                     });
                             }
-                            // if (value['RULE_KIND'] === 2) {
-                            //     return this._rulesSrv.parseReseiveDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'])
-                            //         .then(result => {
-                            //             if (result) {
-                            //                 for (const prop in result) {
-                            //                     if (result.hasOwnProperty(prop)) {
-                            //                         value[prop] = result[prop];
-                            //                     }
-                            //                 }
-                            //             }
-                            //             return resolve(value);
-                            //         });
-                            // }
+                            if (value['RULE_KIND'] === 2) {
+                                 return this._rulesSrv.parseReseiveDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
+                                     .then(result => {
+                                         if (result) {
+                                             for (const prop in result) {
+                                                if (result.hasOwnProperty(prop)) {
+                                                     value[prop] = result[prop];
+                                                }
+                                            }
+                                        }
+                                        return resolve(value);
+                                    });
+                            }
+                            if (value['RULE_KIND'] === 3) {
+                                return this._rulesSrv.parseSendDocludDocumentRule(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
+                                    .then(result => {
+                                        if (result) {
+                                            for (const prop in result) {
+                                               if (result.hasOwnProperty(prop)) {
+                                                    value[prop] = result[prop];
+                                               }
+                                           }
+                                       }
+                                       return resolve(value);
+                                   });
+                                }
+                            if (value['RULE_KIND'] === 4) {
+                                return this._rulesSrv.parseReceptionDocludDocument(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
+                                    .then(result => {
+                                        if (result) {
+                                            for (const prop in result) {
+                                                if (result.hasOwnProperty(prop)) {
+                                                    value[prop] = result[prop];
+                                                }
+                                            }
+                                        }
+                                        return resolve(value);
+                                    });
+                            }
                             if (value['RULE_KIND'] === 5) {
                                 return this._rulesSrv.parsesendProjectRule(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
                                     .then(result => {
@@ -82,6 +108,45 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                                         return resolve(value);
                                     });
                             }
+                            if (value['RULE_KIND'] === 6) {
+                                return this._rulesSrv.parseReseiveProjectRule(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
+                                    .then(result => {
+                                        if (result) {
+                                            for (const prop in result) {
+                                               if (result.hasOwnProperty(prop)) {
+                                                    value[prop] = result[prop];
+                                               }
+                                           }
+                                       }
+                                       return resolve(value);
+                                   });
+                           }
+                           if (value['RULE_KIND'] === 7) {
+                            return this._rulesSrv.parseReseiveDoclad(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
+                                .then(result => {
+                                    if (result) {
+                                        for (const prop in result) {
+                                           if (result.hasOwnProperty(prop)) {
+                                                value[prop] = result[prop];
+                                           }
+                                       }
+                                   }
+                                   return resolve(value);
+                               });
+                            }
+                            if (value['RULE_KIND'] === 8) {
+                                return this._rulesSrv.parseTakeDoclad(value['SCRIPT_CONFIG'], value['RULE_KIND'], value)
+                                    .then(result => {
+                                        if (result) {
+                                            for (const prop in result) {
+                                               if (result.hasOwnProperty(prop)) {
+                                                    value[prop] = result[prop];
+                                               }
+                                           }
+                                       }
+                                       return resolve(value);
+                                   });
+                                }
                             return resolve(value);
                         })
                     );
@@ -100,28 +165,45 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                 break;
             case 'DOCGROUP_CL':
                 query = {DOCGROUP_CL: [names]};
+                break;
+            case 'ORGANIZ_CL':
+                query = {ORGANIZ_CL: [names]};
+                break;
+            case 'LINK_CL':
+                query = {LINK_CL: [names]};
+                break;
+            case 'DEPARTMENT':
+                query = {DEPARTMENT: [names]};
+                break;
         }
         return this.apiSrv.read(query);
     }
     confirmSave(data: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        if ((data.rec.link && data.rec.linkKind === 1 && String( data.rec.type) === '1' && (data.rec.linkTypeList === 'null' || !data.rec.linkTypeList)) ||
-        (data.rec.LinkPD && data.rec.linkKind === 1 && String(data.rec.type) === '2' && (data.rec.linkTypeList === 'null' || !data.rec.linkTypeList))
-        ) {
-            const uniqueMessage: IConfirmWindow2 = {
-                title: 'Предупреждение',
-                body: 'Тип связки должен быть выбран',
-                buttons: [{
-                    title: 'ОК',
-                    result: BUTTON_RESULT_CANCEL,
-                    isDefault: true,
-                }],
-            };
-            return confirmSrv.confirm2(uniqueMessage).then((button) => {
+        // data.rec.organizationNow rec.DUE_DEP   картотека автомата => cardFile
+        // data.rec.organizationNow === rec.DUE_DEP сообщение не выдавать
+        /* if (true) {
+            return confirmSrv.confirm2(Object.assign({}, CONFIRM_NOT_CONSLITE)).then((button) => {
+                if (button['result'] === 1) {
+                    return true;
+                }
+                return false;
+            })
+            .catch(er => {
                 return false;
             });
-        }
+        } */
         return Promise.resolve(true);
 
 
+    }
+
+    readUserLists(query): Promise<any> {
+        return this.apiSrv.read(query);
+    }
+    readDepartmentLists(query): Promise<any> {
+        return this.apiSrv.read(query);
+    }
+    readCabinetLists(query): Promise<any> {
+        return this.apiSrv.read(query);
     }
 }

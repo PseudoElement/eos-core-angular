@@ -1,5 +1,5 @@
 import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.component';
-import { Component, Injector, OnInit, OnChanges, SimpleChanges, NgZone } from '@angular/core';
+import { Component, Injector, OnInit, OnChanges, SimpleChanges/* , NgZone  */} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { PipRX, SEV_ASSOCIATION, SEV_RULE, SEV_PARTICIPANT_RULE } from '../../eos-rest';
 import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV } from 'eos-dictionaries/consts/messages.consts';
@@ -7,6 +7,9 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ALL_ROWS, _ES } from 'eos-rest/core/consts';
 import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { OPEN_CLASSIF_ORGANIZ_CL_PARTIC } from 'eos-user-select/shered/consts/create-user.consts';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-sev-participant-card-edit',
@@ -27,9 +30,11 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     constructor(
         injector: Injector,
         private _apiSrv: PipRX,
-        private _zone: NgZone,
+        /* private _zone: NgZone, */
         private _msgSrv: EosMessageService,
         private _modalSrv: BsModalService,
+        private _waitClassif: WaitClassifService,
+        private _errorHelper: ErrorHelperServices,
     ) {
         super(injector);
     }
@@ -75,13 +80,13 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     chooseOrganiz() {
         const config = this.dictSrv.getApiConfig();
         if (config) {
-            const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
-            const params = 'Classif=CONTACT&value_id=__ClassifIds&app=nadzor&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True';
-            this._zone.runOutsideAngular(() => {
-                window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
-                window['endPopup'] = (due) => {
-                    this._zone.run(() => this.bindOrganization(due));
-                };
+            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL_PARTIC, true)
+            .then((due: string) => {
+                this.bindOrganization(due);
+            }).catch(e => {
+                if (e) {
+                    this._errorHelper.errorHandler(e);
+                }
             });
         }
     }
@@ -91,7 +96,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         const due = dues[0];
         this._apiSrv.read<SEV_ASSOCIATION>({ SEV_ASSOCIATION: [SevIndexHelper.CompositePrimaryKey(due, 'ORGANIZ_CL')] })
             .then(rSevIndex => {
-                console.log(rSevIndex);
+                // console.log(rSevIndex);
                 if (rSevIndex && rSevIndex.length) {
                     this.dictSrv.bindOrganization(dues[0])
                         .then((org) => {
