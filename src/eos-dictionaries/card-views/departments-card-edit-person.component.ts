@@ -371,9 +371,9 @@ formatSurname(fam: string, name: string, patron: string): string {
     const gender = this.getValue('printInfo.GENDER');
     // нет смысла отсылать все поля если они больше чем максимальное число
     const dutyR = !this.getValue('rec.DUTY') || this.getValue('rec.DUTY').length > 260 ?  '' : this.getValue('rec.DUTY');
-    const nameR = !this.getValue('printInfo.NAME') || this.getValue('printInfo.NAME').length > 70 ? '' : this.getValue('rec.NAME');
-    const patronR = !this.getValue('printInfo.PATRON') || this.getValue('printInfo.PATRON').length > 70 ? '' : this.getValue('rec.PATRON');
-    const surnameR = !this.getValue('printInfo.SURNAME') || this.getValue('printInfo.SURNAME').length > 70 ? '' : this.getValue('rec.SURNAME');
+    const nameR = !this.getValue('printInfo.NAME') || this.getValue('printInfo.NAME').length > 70 ? '' : this.getValue('printInfo.NAME');
+    const patronR = !this.getValue('printInfo.PATRON') || this.getValue('printInfo.PATRON').length > 70 ? '' : this.getValue('printInfo.PATRON');
+    const surnameR = !this.getValue('printInfo.SURNAME') || this.getValue('printInfo.SURNAME').length > 70 ? '' : this.getValue('printInfo.SURNAME');
     const field: FieldsDecline = {
         DUTY: dutyR,
         NAME: nameR,
