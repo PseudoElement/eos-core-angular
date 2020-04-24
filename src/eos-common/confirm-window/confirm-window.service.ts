@@ -57,6 +57,27 @@ export class ConfirmWindowService {
         });
     }
 
+     // в это окно можно передать дополнительные параметры, может потом пригодиться и для других окон
+     confirm3(content: IConfirmWindow2, config): Promise<IConfirmButton> { // TODO unsubscribe, memory leak
+        const bsModalRef: BsModalRef = this._bsModalSrv.show(ConfirmWindow2Component, config);
+        const _wnd: IConfirmWindow2Content = bsModalRef.content;
+        Object.assign(_wnd, content);
+        return new Promise((res, _rej) => {
+            this.subscr1 = this._bsModalSrv.onHide.subscribe(reason => {
+                if (reason === 'backdrop-click' || reason === 'esc') {
+                    res(null);
+                    // this.unsubscribe();
+                }
+            });
+            this.subscr2 = _wnd.confirmEvent.subscribe((confirm: IConfirmButton) => {
+                if (confirm !== undefined) {
+                    res(confirm);
+                }
+                // this.unsubscribe();
+            });
+        });
+    }
+
     unsubscribe() {
         if (this.subscr1) { this.subscr1.unsubscribe(); }
         if (this.subscr2) { this.subscr2.unsubscribe(); }

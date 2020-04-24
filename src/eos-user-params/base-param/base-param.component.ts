@@ -342,8 +342,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     checkDLSurname(mas: any[]): Promise<any> {
         if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
-            return this._confirmSrv.confirm(CONFIRM_SURNAME_REDACT).then(confirmation => {
-                if (confirmation) {
+            return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
+                if (confirmation['result'] === 1) {
                     mas.push({
                         method: 'MERGE',
                         requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
@@ -353,6 +353,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     });
                     this.updateDL = true;
                     this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                } else {
+                    this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
                 }
                 return null;
             });
@@ -613,8 +615,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
                 if (this.dueDepSurname !== dep['SURNAME']) {
-                    this._confirmSrv.confirm(CONFIRM_SURNAME_REDACT).then(confirmation => {
-                        if (confirmation) {
+                    const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
+                    depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
+                    this._confirmSrv.confirm3(depConfirm, { ignoreBackdropClick: true }).then(confirmation => {
+                        if (confirmation['result'] === 1) {
                             this.dueDepSurname = dep['SURNAME'];
                             this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
                             this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
