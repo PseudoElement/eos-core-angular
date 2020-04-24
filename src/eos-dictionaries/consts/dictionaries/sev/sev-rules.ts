@@ -183,6 +183,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'fileAccessListRk',
             title: 'Грифы доступа:',
             type: 'string',
+            default: '1',
         },
         {
             key: 'fileMaxLength',
