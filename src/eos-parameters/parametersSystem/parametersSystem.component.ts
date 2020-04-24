@@ -10,6 +10,8 @@ import { takeUntil } from 'rxjs/operators';
 import { EOS_PARAMETERS_TAB } from './shared/consts/eos-parameters.const';
 import { NavParamService } from 'app/services/nav-param.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -27,6 +29,8 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
         private _navSrv: NavParamService,
         private _route: ActivatedRoute,
         private _appContext: AppContext,
+        private _apiSrv: PipRX,
+        private _errorSrv: ErrorHelperServices,
     //    private _confirmSrv: ConfirmWindowService,
     //    private _paramDescSrv: ParamDescriptorSrv
     ) {
@@ -37,6 +41,15 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             )
             .subscribe((state: boolean) => {
                 this.isWide = state;
+            });
+
+        this._apiSrv.cancelFormChanges$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((event: ICancelFormChangesEvent) => {
+                this.isChanged = event.isChanged;
+                this._errorSrv.errorHandler(event.error);
             });
     }
     ngOnInit() {

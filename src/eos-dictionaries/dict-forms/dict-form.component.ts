@@ -1,5 +1,9 @@
 import { Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosDictService } from '../services/eos-dict.service';
@@ -8,6 +12,10 @@ import { IDictFormBase } from './dict-form-base.interface';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+
+
 @Component({
     selector: 'eos-dict-form',
     templateUrl: 'dict-form.component.html',
@@ -23,12 +31,15 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
 
     private nextRoute: string;
     private _dictDescr: IDictionaryDescriptor;
+    private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private _storageSrv: EosStorageService,
         private _dictSrv: EosDictService,
         private _route: ActivatedRoute,
         private _router: Router,
+        private _apiSrv: PipRX,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this._route.params.subscribe((params) => {
             this.dictionaryId = params.dictionaryId;
@@ -37,6 +48,13 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
             this._init();
         });
 
+        this._apiSrv.cancelFormChanges$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((event: ICancelFormChangesEvent) => {
+            this._errorSrv.errorHandler(event.error);
+        });
     }
 
 

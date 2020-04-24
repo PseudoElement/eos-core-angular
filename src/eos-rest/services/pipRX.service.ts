@@ -1,5 +1,5 @@
 
-import { throwError as observableThrowError, Observable, of } from 'rxjs';
+import { throwError as observableThrowError, Observable, of, Subject } from 'rxjs';
 import { map, catchError, mergeMap, reduce } from 'rxjs/operators';
 import { Injectable, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { ApiCfg } from '../core/api-cfg';
 import { ALL_ROWS, HTTP_OPTIONS, BATCH_BOUNDARY, CHANGESET_BOUNDARY } from '../core/consts';
-import { IAsk, IKeyValuePair, IR, IRequest } from '../interfaces/interfaces';
+import { IAsk, IKeyValuePair, IR, IRequest, ICancelFormChangesEvent } from '../interfaces/interfaces';
 import { SequenceMap } from '../core/sequence-map';
 import { Metadata } from '../core/metadata';
 import { EntityHelper } from '../core/entity-helper';
@@ -31,6 +31,8 @@ export class PipRX extends PipeUtils {
     // public errorService = new ErrorService();
     public entityHelper: EntityHelper;
     public cache: Cache;
+
+    private _cancelFormChanges$: Subject<ICancelFormChangesEvent> = new Subject<ICancelFormChangesEvent>();
 
     private _cfg: ApiCfg;
     private _options = HTTP_OPTIONS;
@@ -68,6 +70,10 @@ export class PipRX extends PipeUtils {
             method: method,
             encodeurl: encodeurl,
         });
+    }
+
+    get cancelFormChanges$() {
+        return this._cancelFormChanges$.asObservable();
     }
 
     // todo: move config in common service
@@ -216,7 +222,7 @@ export class PipRX extends PipeUtils {
                                     // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
                                 }
                             }),
-                            catchError(this.httpErrorHandler)
+                            catchError(this.httpErrorHandler.bind(this))
                         );
 
                     /*
@@ -275,7 +281,7 @@ export class PipRX extends PipeUtils {
                     }
                     return answer;
                 }),
-                catchError(this.httpErrorHandler)
+                catchError(this.httpErrorHandler.bind(this))
             );
     }
 
@@ -333,11 +339,23 @@ export class PipRX extends PipeUtils {
             return allErr;
         }
     }
-    private httpErrorHandler(error) {
-        if (error instanceof RestError) {
-            return observableThrowError(error);
+    private httpErrorHandler(err) {
+        let restError: RestError;
+
+        if (err instanceof RestError) {
+            restError = err;
         } else {
-            return observableThrowError(new RestError({ http: error }));
+            restError = new RestError({ http: err });
         }
+
+        if (restError.code === (434 || 0)) {
+            const event = {
+                isChanged: false,
+                error: restError,
+            };
+            this._cancelFormChanges$.next(event);
+        }
+
+        return observableThrowError(restError);
     }
 }

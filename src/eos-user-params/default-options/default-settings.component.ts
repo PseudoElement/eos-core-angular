@@ -5,9 +5,10 @@ import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { SUB_PARAMS_LIST_NAV } from 'eos-user-params/shared/consts/user-param.consts';
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
-import { PipRX, USER_PARMS } from 'eos-rest';
+import { PipRX, USER_PARMS, ICancelFormChangesEvent } from 'eos-rest';
 import { IUserSetChanges } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-default-settings',
@@ -30,6 +31,7 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
         private formHelp: FormHelperService,
         private _pipRx: PipRX,
         private _userParamService: UserParamsService,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this._route.params.subscribe(params => (this.paramId = params['id']));
         this._navSrv.StateSandwich$
@@ -47,6 +49,15 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
             this._isChanged = isChange;
             //    this._disableSave = disableSave;
         });
+
+        this._pipRx.cancelFormChanges$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((event: ICancelFormChangesEvent) => {
+                this._isChanged = event.isChanged;
+                this._errorSrv.errorHandler(event.error);
+            });
     }
     ngOnInit() {
         const prep = this.formHelp.getObjQueryInputsField();

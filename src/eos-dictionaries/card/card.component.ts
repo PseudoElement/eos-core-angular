@@ -39,6 +39,7 @@ import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { E_LIST_ENUM_TYPE } from 'eos-dictionaries/features/features.interface';
+import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -118,6 +119,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private departmentsSrv: EosDepartmentsService,
         private _eaps: EosAccessPermissionsService,
         private _errSrv: ErrorHelperServices,
+        private _apiSrv: PipRX,
     ) {
         let tabNum = 0;
 
@@ -141,6 +143,14 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
                 }
 
+            });
+
+        this._apiSrv.cancelFormChanges$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((event: ICancelFormChangesEvent) => {
+                this.isChanged = event.isChanged;
             });
 
         this._dictSrv.currentTab = tabNum;
