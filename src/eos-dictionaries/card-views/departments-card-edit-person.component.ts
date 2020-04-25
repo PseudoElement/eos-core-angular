@@ -14,7 +14,6 @@ import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.compo
 import { AbstractControl, Validators } from '@angular/forms';
 // import { InputControlService } from 'eos-common/services/input-control.service';
 import { BUTTON_RESULT_OK, CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
-import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { CONFIRM_CHANGE_BOSS } from 'eos-dictionaries/consts/confirm.consts';
 import { EosDepartmentsService } from 'eos-dictionaries/services/eos-department-service';
 import { PipRX } from 'eos-rest';
@@ -375,7 +374,6 @@ formatSurname(fam: string, name: string, patron: string): string {
                 this.departMentService.addFullname(this.data.rec.FULLNAME);
                 if (1 * this.data.rec.POST_H === 1) {
                     // tslint:disable-next-line: no-shadowed-variable
-                    const parent: EosDictionaryNode = null;
                     // if (this._treeNode && ((!this.data.rec.PARENT_DUE) || (this._treeNode.id === this.data.rec.PARENT_DUE))) {
                     //     parent = this._treeNode;
                     // }
