@@ -756,14 +756,14 @@
                     <eos-dynamic-input [input]="inputs['rec.taskFileExtensions']"
                                        [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
-                    <!-- <div style="margin-bottom: 20px;" class="sev-grif">
+                    <div style="margin-bottom: 20px;" class="sev-grif">
                         <span class="mar-right">Грифы доступа:</span>
                         <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
                             <input readonly type="text" [value]="fileAccessNames.join(';')">
                         </span>
                         <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openSecurityCl('rec.fileAccessListRk')"></span>
                         <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.fileAccessListRk')"></span>
-                    </div> -->
+                    </div>
                    <div style="position: relative;">
                     <eos-dynamic-input class="pull-left"
                         [input]="inputs['rec.taskFileMaxLength']"

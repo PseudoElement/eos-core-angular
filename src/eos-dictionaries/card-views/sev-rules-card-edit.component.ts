@@ -557,6 +557,10 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                     this.form.controls['rec.DUE_DEP'].patchValue(null);
                     this.departmentReceiveInput = '';
                     break;
+                case 'rec.fileAccessListRk':
+                    this.fileAccessNames = [];
+                    this.form.controls['rec.fileAccessListRk'].patchValue(null);
+                    break;
             }
         }
     }

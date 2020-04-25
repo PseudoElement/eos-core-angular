@@ -1,4 +1,5 @@
 import { IConfirmWindow } from '../../eos-common/core/confirm-window.interface';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 export const MESSAGE_SAVE_ON_LEAVE = 'Возможно, внесенные изменения не сохранятся.';
 export const CONFIRM_SAVE_ON_LEAVE: IConfirmWindow = {
@@ -73,9 +74,11 @@ export const CONFIRM_CUT_USER: IConfirmWindow = {
     cancelTitle: 'Нет'
 };
 
-export const CONFIRM_SURNAME_REDACT: IConfirmWindow = {
+export const CONFIRM_SURNAME_REDACT: IConfirmWindow2 = {
     title: 'Подтвердите действие:',
-    body: 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?',
-    okTitle: 'Да',
-    cancelTitle: 'Нет'
+    body: 'ФИО пользователя отличается от ФИО должностного лица. Сохранить?',
+    buttons: [
+        {title: 'Да',  result: 1, },
+        {title: 'Нет', result: 2, isDefault: true, },
+    ],
 };
