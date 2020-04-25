@@ -14,6 +14,10 @@ import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.compo
 import { AbstractControl, Validators } from '@angular/forms';
 // import { InputControlService } from 'eos-common/services/input-control.service';
 import { BUTTON_RESULT_OK, CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
+import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
+import { CONFIRM_CHANGE_BOSS } from 'eos-dictionaries/consts/confirm.consts';
+import { EosDepartmentsService } from 'eos-dictionaries/services/eos-department-service';
+import { PipRX } from 'eos-rest';
 
 
 interface IToDeclineFields {
@@ -40,6 +44,8 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         private injector: Injector,
         private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
+        private departMentService: EosDepartmentsService,
+        private _apiSrv: PipRX,
         //    private _intupControlSrv: InputControlService
 
     ) {
@@ -363,6 +369,49 @@ formatSurname(fam: string, name: string, patron: string): string {
                 }
                 return false;
             });
+        }   else {
+            if (this.data.rec.IS_NODE) {
+                this.departMentService.addDuty(this.data.rec.DUTY);
+                this.departMentService.addFullname(this.data.rec.FULLNAME);
+                if (1 * this.data.rec.POST_H === 1) {
+                    // tslint:disable-next-line: no-shadowed-variable
+                    const parent: EosDictionaryNode = null;
+                    // if (this._treeNode && ((!this.data.rec.PARENT_DUE) || (this._treeNode.id === this.data.rec.PARENT_DUE))) {
+                    //     parent = this._treeNode;
+                    // }
+                    return this.dictSrv.currentDictionary.getBoss(this.data, parent)
+                        .then((boss) => {
+                            if (boss && boss.id !== this.data.rec.DUE) {
+                                const changeBoss = Object.assign({}, CONFIRM_CHANGE_BOSS);
+                                const CLASSIF_NAME = this.data.rec['SURNAME'] + ' - ' + this.data.rec['DUTY'];
+                                changeBoss.body = changeBoss.body.replace('{{persone}}', boss.data.rec['CLASSIF_NAME']);
+                                changeBoss.body = changeBoss.body.replace('{{newPersone}}', CLASSIF_NAME);
+                                return this._confirmSrv.confirm(changeBoss)
+                                    .then((confirm: boolean) => {
+                                        if (confirm) {
+                                            boss.data.rec['POST_H'] = 0;
+                                            return this._apiSrv.batch([{
+                                                method: 'MERGE',
+                                                requestUri: `DEPARTMENT('${boss.data.rec.DUE}')`,
+                                                data: {
+                                                    POST_H: 0
+                                                }
+                                            }], '').then(() => {
+                                                return true;
+                                            });
+                                        } else {
+                                            //    this.data.rec['POST_H'] = 0;
+                                            return false;
+                                        }
+                                    });
+                            }   else {
+                                return true;
+                            }
+                        });
+                }
+            } else {
+                Promise.resolve(true);
+            }
         }
         return Promise.resolve(true);
     }
