@@ -138,6 +138,17 @@ export const CONFIRM_SAVE_INVALID: IConfirmWindow2 = {
     manualCR: true
 };
 
+export const CONFIRM_NOT_CONSLITE: IConfirmWindow2 = {
+    title: 'Справочники СЭВ',
+    bodyList: [],
+    body: 'Подразделение образующее \"Картотеку автомата\", не входит в состав организации "Получателя".\nПродолжить сохранение?:',
+    // bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, isDefault: true, },
+        {title: 'Нет',  result: 2, },
+    ],
+};
+
 export const CONFIRM_OPERATION_LOGICDELETE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],

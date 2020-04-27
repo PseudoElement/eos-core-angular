@@ -70,3 +70,51 @@ export const OPEN_CLASSIF_SECURITY_CL: IOpenClassifParams = {
     selectMulty: true,
     selected: '',
 };
+
+export const OPEN_CLASSIF_ORGANIZ_CL: IOpenClassifParams = {
+    classif: 'CONTACT',
+    selectMulty: false,
+    selectLeafs: false,
+    selectNodes: true,
+    return_due: true,
+};
+export const OPEN_CLASSIF_ORGANIZ_CL_PARTIC: IOpenClassifParams = {
+    classif: 'CONTACT',
+    selectMulty: false,
+    selectLeafs: true,
+    selectNodes: false,
+    skipDeleted: true,
+    return_due: true,
+};
+export const OPEN_CLASSIF_DEPARTMENT_SEV: IOpenClassifParams = {
+    classif: 'DEPARTMENT',
+    return_due: true,
+    id: '0.',
+    skipDeleted: false,
+    selectMulty: false,
+    selectLeafs: true,
+    selectNodes: false,
+};
+export const OPEN_CLASSIF_DEPARTMENT_SEV_FULL: IOpenClassifParams = {
+    classif: 'DEPARTMENT',
+    return_due: true,
+    id: '0.',
+    skipDeleted: false,
+    selectMulty: false,
+};
+
+export const OPEN_CLASSIF_DOCGR_SEV: IOpenClassifParams = {
+    classif: 'DOCGROUP_CL',
+    selectMulty: false,
+    return_due: true,
+    skipDeleted: false,
+};
+
+export const OPEN_CLASSIF_DOCGR_LEAFS: IOpenClassifParams = {
+    classif: 'DOCGROUP_CL',
+    return_due: true,
+    skipDeleted: false,
+    selectLeafs: true,
+    selectNodes: false,
+    selectMulty: false,
+};

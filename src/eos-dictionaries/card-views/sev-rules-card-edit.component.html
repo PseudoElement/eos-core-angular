@@ -42,12 +42,29 @@
             containerClass="tooltip-info"
             tooltip="Выбрать" (click)="openClassifDocGroup()"></span>
     </div>
-
+    <div *ngIf="(ruleKind==2)">
+        <eos-dynamic-input [input]="inputs['rec.departmentReceive']"
+            [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    <div [hidden]="!(''+departmentReceive===''+2)">
+            <div style="margin-bottom: 20px;" class="sev-grif">
+                <span class="mar-right">Подразделение:</span>
+                <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                    <input readonly type="text" [value]="departmentReceiveInput">
+                </span>
+                <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openDepartmentCl('rec.DUE_DEP', true)"></span>
+                <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.DUE_DEP')"></span>
+            </div>
+    </div>
+    <div [hidden]="!(''+departmentReceive===''+1)">
+        <eos-dynamic-input [input]="inputs['rec.DUE_DEP']"
+            [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    
     <!--Тип документа - Документ, Вид правила – Отправка документа-->
     <span *ngIf="(typeDoc==1) && (ruleKind==1)">
-        <eos-dynamic-input [input]="inputs['rec.DUE_DEP']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
         <!--Отправлять реквизиты РК-->
         <div class="clear-both margin-b">
             <fieldset>
@@ -137,8 +154,22 @@
                         <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
                             <input readonly type="text" [value]="fileAccessNames.join(';')">
                         </span>
-                        <span *ngIf="editMode" class="action eos-icon eos-icon-download " container="body" placement="bottom" containerClass="tooltip-info" tooltip="Выбрать" (click)="openSecurityCl('rec.fileAccessList')"></span>
-                        <span *ngIf="editMode" class="action eos-icon eos-icon-bin-forever-blue " container="body" placement="bottom" containerClass="tooltip-info" tooltip="Удалить" (click)="deleteFieldsNames('rec.fileAccessList')"></span>
+                        <span *ngIf="editMode" 
+                            class="action eos-icon" 
+                            [ngClass]="{'eos-icon-download-grey': !file, 'eos-icon-download': file}" 
+                            container="body" 
+                            placement="bottom" 
+                            containerClass="tooltip-info" 
+                            tooltip="Выбрать" 
+                        (click)="openSecurityCl('rec.fileAccessList', !file)"></span>
+                        <span *ngIf="editMode" 
+                            class="action eos-icon" 
+                            [ngClass]="{'eos-icon-bin-forever-grey': !file, 'eos-icon-bin-forever-blue': file}"
+                            container="body" 
+                            placement="bottom" 
+                            containerClass="tooltip-info" 
+                            tooltip="Удалить"
+                            (click)="deleteFieldsNames('rec.fileAccessList', !file)"></span>
                     </div>
                     <!-- <eos-dynamic-input [input]="inputs['rec.fileAccessList']"
                                        [form]="form"
@@ -238,13 +269,13 @@
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
               <div style="position: relative;" class="sev-wr">
-                <span>Доклады направлять в течение</span>
+                <span>Доклады направлять в течение: &nbsp;</span>
                 <eos-dynamic-input class="pull-left"
                     [input]="inputs['rec.stopDayCount']"
                     [form]="form"
                     [readonly]="!editMode">
                 </eos-dynamic-input>
-                <span>суток</span>
+                <span>&nbsp;суток</span>
               </div>
            </fieldset>
         </div>
@@ -254,74 +285,102 @@
         <eos-dynamic-input [input]="inputs['rec.handRegistration']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.groupDocs']"
+        <div style="margin-bottom: 20px;" class="sev-grif">
+            <span class="mar-right">Для групп документов({{groupDocument.length}}):</span>
+            <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                <input readonly type="text" [value]="groupDocument[0] || ''">
+            </span>
+            <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openTemplateGroup(template, 'rec.groupDocument')"></span>
+            <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.groupDocument')"></span>
+        </div>
+        <div class="clear-both">
+            <eos-dynamic-input [input]="inputs['rec.cardFile']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.cardFile']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
+        </div>
         <eos-dynamic-input [input]="inputs['rec.cabinetFile']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.korRuleSend']"
                            [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.OrganizationFolder']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
+                           [readonly]="!editMode"></eos-dynamic-input>        
+        <div style="margin-bottom: 20px;" class="sev-grif">
+            <span class="mar-right">Организации создавать:</span>
+            <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                <input readonly type="text" [value]="organization">
+            </span>
+            <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openOrganizCl('rec.OrganizationFolderInput')"></span>
+            <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.OrganizationFolderInput')"></span>
+        </div>
         <!--Принимать реквизиты РК-->
         <div class="margin-b">
             <fieldset>
                 <legend>Принимать реквизиты РК</legend>
                 <div class="clear-both">
                     <eos-dynamic-input class="pull-left"
-                                       [input]="inputs['rec.LinkInclude']"
+                                       [input]="inputs['rec.link']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.linkInclude']"
                                        [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="pull-left margin-l"
                                        [input]="inputs['rec.linkKind']"
                                        [form]="form"
-                                       [disabled]="!isBunchRK"
+                                       [disabled]="!link"
                                        [readonly]="!editMode"></eos-dynamic-input>
+                    <div class="" *ngIf="(link && isLinkKindWithType)">
+                                        <span
+                                        class="pull-left margin-l link-type"
+                                        [ngStyle]="{'width.px': 300}"
+                                        ><input readonly type="text" [value]="linkTypeListNames.join(';')"></span>
+                                        <span *ngIf="editMode" class="action eos-icon eos-icon-download " (click)="openLinkCl()"></span>
+                                        <span *ngIf="editMode" class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
+                                    </div>
                     <eos-dynamic-input class="pull-left margin-l"
                                        [ngStyle]="{'width.px': 300}"
-                                       [input]="inputs['rec.LinkTypeList']"
+                                       [input]="inputs['rec.linkTypeList']"
                                        [form]="form"
-                                       [disabled]="!(isBunchRK&&isBunchWithType)"
+                                       [disabled]="!(isBunchRK && isBunchWithType)"
                                        [readonly]="!editMode"></eos-dynamic-input>
                 </div>
                 <eos-dynamic-input class="clear-both"
-                                   [input]="inputs['rec.Access']"
+                                   [input]="inputs['rec.access']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.Rubric']"
+                <eos-dynamic-input [input]="inputs['rec.rubric']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <div class="clear-both">
                     <eos-dynamic-input class="pull-left"
-                                       [input]="inputs['rec.Address']"
+                                       [input]="inputs['rec.address']"
                                        [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="pull-left margin-l"
                                        [input]="inputs['rec.adrReplace']"
                                        [form]="form"
-                                       [disabled]="!adrSubjDoc"
+                                       [disabled]="!address"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="clear-both"
                                        [ngStyle]="{'margin-left.px': 25}"
-                                       [input]="inputs['rec.Region']"
+                                       [input]="inputs['rec.region']"
                                        [form]="form"
-                                       [disabled]="!adrSubjDoc"
+                                       [disabled]="!address"
                                        [readonly]="!editMode"></eos-dynamic-input>
                 </div>
                 <eos-dynamic-input class="clear-both"
-                                   [input]="inputs['rec.AdditionalField']"
+                                   [input]="inputs['rec.additionalField']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
 
             </fieldset>
         </div>
         <!--Принимать поручения РК-->
+        <eos-dynamic-input class="clear-both"
+                                [input]="inputs['rec.takeFileRK']"
+                                [form]="form"
+                                [readonly]="!editMode"></eos-dynamic-input>
         <div class="margin-b">
             <fieldset>
                 <legend>Принимать поручения РК</legend>
@@ -339,7 +398,7 @@
                 <div class="clear-both"
                      [ngStyle]="{'margin-left.px': 25}">
                     <eos-dynamic-input class="pull-left"
-                                       [input]="inputs['rec.Category']"
+                                       [input]="inputs['rec.taskCategory']"
                                        [form]="form"
                                        [disabled]="!orders"
                                        [readonly]="!editMode"></eos-dynamic-input>
@@ -358,7 +417,7 @@
         <div class="margin-b">
             <fieldset>
                 <legend>Принимать (редактировать) при повторном получении документов СЭВ</legend>
-                <eos-dynamic-input [input]="inputs['rec.takeFileRK']"
+                <eos-dynamic-input [input]="inputs['rec.FileRK']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.takeOrdersRK']"
@@ -373,6 +432,14 @@
         <div class="margin-b">
             <fieldset>
                 <legend>Отправлять уведомления и доклады</legend>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.reception']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.registration']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.Reception']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
@@ -391,6 +458,10 @@
                                        [readonly]="!editMode"></eos-dynamic-input>
                 </div>
                 <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.consideration']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input class="clear-both"
                                    [input]="inputs['rec.Consideration']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
@@ -399,68 +470,115 @@
                     <eos-dynamic-input class="pull-left"
                                        [input]="inputs['rec.kindConsideration']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="clear-both"
                                        [input]="inputs['rec.textConsideration']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.categoryConsideration']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.noteConsideration']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.controlConsideration']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.planConsideration']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.Controller']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.controllerMission']"
+                                       [form]="form"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.Summary']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.FactDate']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.Status']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.Resume']"
                                        [form]="form"
-                                       [disabled]="!consideration"
+                                       [disabled]="!form.controls['rec.consideration'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <div class="clear-both">
                         <eos-dynamic-input class="pull-left"
                                            [input]="inputs['rec.executors']"
                                            [form]="form"
-                                           [disabled]="!consideration"
+                                           [disabled]="!form.controls['rec.consideration'].value"
                                            [readonly]="!editMode"></eos-dynamic-input>
                         <eos-dynamic-input class="pull-left margin-l" [input]="inputs['rec.kindExecutorConsideration']"
                                            [form]="form"
-                                           [disabled]="!(consideration && executors)"
+                                           [disabled]="!form.controls['rec.executors'].value"
                                            [readonly]="!editMode"></eos-dynamic-input>
                     </div>
                 </div>
-                <eos-dynamic-input class="clear-both"
-                                   [input]="inputs['rec.Report']"
-                                   [form]="form"
-                                   [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.executorFile']"
-                                   [form]="form"
-                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="clear-both" style="width: 100%;">
+                    <eos-dynamic-input [input]="inputs['rec.NotificationConfigReport']"
+                                       [form]="form"                              
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <div style="margin-left: 10px;">
+                        <eos-dynamic-input [input]="inputs['rec.executorFile']"
+                                       [form]="form"
+                                       [disabled]="!form.controls['rec.NotificationConfigReport'].value"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                        <div style="margin-left: 15px;width: 450px;">
+                            <eos-dynamic-input [input]="inputs['rec.fileExtensions']"
+                                [form]="form"
+                                [disabled]="!form.controls['rec.NotificationConfigReport'].value || !form.controls['rec.executorFile'].value"
+                                [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input [input]="inputs['rec.fileMaxLength']"
+                                [form]="form"
+                                [disabled]="!form.controls['rec.NotificationConfigReport'].value || !form.controls['rec.executorFile'].value"
+                                [readonly]="!editMode"></eos-dynamic-input>
+                        </div>
+                        
+                    </div>
+                    <eos-dynamic-input [input]="inputs['rec.redirection']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.answer']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.address']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <div style="margin-left: 10px;">
+                        <eos-dynamic-input [input]="inputs['rec.region']"
+                                       [form]="form"
+                                       [disabled]="!form.controls['rec.address'].value"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    </div> 
+                    <div style="display: flex;">
+                        <div style="padding-top: 7px;">
+                            <label>Доклады направлять в течении:&nbsp;</label>
+                        </div>
+                        <div style="width: 150px;">
+                            <eos-dynamic-input [input]="inputs['rec.stopDayCount']"
+                                [form]="form"
+                                [readonly]="!editMode"></eos-dynamic-input>
+                        </div>
+                        <div style="padding-top: 7px;">
+                            <label>&nbsp;Суток</label>
+                        </div>
+                    </div>                                 
+                </div>
                 <div class="files">
                     <eos-dynamic-input [input]="inputs['rec.TaskExtensions']"
                                        [form]="form"
@@ -499,6 +617,7 @@
     </span>
     <!--Тип документа - Документ, Вид правила - Прием доклада-->
     <span *ngIf="(typeDoc==1)&&(ruleKind==4)">
+        <label>Параметры обработки:</label><br><br>
         <eos-dynamic-input [input]="inputs['rec.regNumber']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
@@ -510,24 +629,36 @@
                                [form]="form"
                                [disabled]="!reportExecution"
                                [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.OrganizationFolder']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
+                <div style="margin-bottom: 20px;" class="sev-grif">
+                    <span class="mar-right">Организации создавать:</span>
+                    <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                        <input readonly type="text" [value]="organization">
+                    </span>
+                    <span *ngIf="editMode" 
+                        class="action eos-icon "  
+                        [ngClass]="{'eos-icon-download': reportExecution, 'eos-icon-download-grey': !reportExecution}"
+                        (click)="openOrganizCl('rec.OrganizationFolderInput', !reportExecution)"></span>
+                    <span *ngIf="editMode"  
+                        class="action eos-icon" 
+                        [ngClass]="{'eos-icon-bin-forever-blue': reportExecution, 'eos-icon-bin-forever-grey': !reportExecution}"
+                        (click)="deleteFieldsNames('rec.OrganizationFolderInput', !reportExecution)"></span>
+                </div>               
             <div class="clear-both">
                 <eos-dynamic-input class="pull-left"
-                                   [input]="inputs['rec.Address']"
+                                   [input]="inputs['rec.address']"
                                    [form]="form"
+                                   [disabled]="!reportExecution"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input class="pull-left margin-l"
                                    [input]="inputs['rec.adrReplace']"
                                    [form]="form"
-                                   [disabled]="!adrSubjDoc"
+                                   [disabled]="!reportExecution || !address"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input class="clear-both"
                                    [ngStyle]="{'margin-left.px': 25}"
-                                   [input]="inputs['rec.Region']"
+                                   [input]="inputs['rec.region']"
                                    [form]="form"
-                                   [disabled]="!adrSubjDoc"
+                                   [disabled]="!reportExecution || !address"
                                    [readonly]="!editMode"></eos-dynamic-input>
             </div>
       </div>
@@ -725,12 +856,12 @@
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                <div class="sev-wr">
-                   <span style="margin-right: 5px;">Доклады направлять в течение:</span>
+                   <span style="margin-right: 5px;">Доклады направлять в течение:&nbsp;</span>
                    <eos-dynamic-input class="pull-left"
                    [input]="inputs['rec.stopDayCount']"
                    [form]="form"
                    [readonly]="!editMode"></eos-dynamic-input>
-                   <span style="margin-left: 5px;">суток</span>
+                   <span style="margin-left: 5px;"> &nbsp;суток</span>
                </div>
             </fieldset>
         </div>
@@ -740,7 +871,7 @@
         <eos-dynamic-input [input]="inputs['rec.groupDocs']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.executor']"
+        <!-- <eos-dynamic-input [input]="inputs['rec.executor']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.executive']"
@@ -748,11 +879,45 @@
                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.OrganizationFolder']"
                            [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
+                           [readonly]="!editMode"></eos-dynamic-input> -->
         <!--Принимать реквизиты РКПД-->
         <div class="margin-b">
             <fieldset>
                 <legend>Принимать реквизиты РКПД</legend>
+                <div style="margin-bottom: 20px;" class="sev-grif">
+                    <span class="mar-right">Для групп документов({{groupDocument.length}}):</span>
+                    <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                        <input readonly type="text" [value]="groupDocument[0] || ''">
+                    </span>
+                    <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openTemplateGroup(template, 'rec.groupDocument')"></span>
+                    <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.groupDocument')"></span>
+                </div>
+                <div class="clear-both">   
+                    <eos-dynamic-input class="pull-left"
+                        [input]="inputs['rec.executor']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                
+                <div class="clear-both">
+                    <div style="margin-bottom: 20px;" class="sev-grif">
+                        <span class="mar-right">ДЛ за "Текущую организацию":</span>
+                        <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                            <input readonly type="text" [value]="departmentUser">
+                        </span>
+                        <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openDepartmentCl('rec.executiveInput')"></span>
+                        <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.executiveInput')"></span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;" class="sev-grif">
+                    <span class="mar-right">Организации создавать:</span>
+                    <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                        <input readonly type="text" [value]="organization">
+                    </span>
+                    <span *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openOrganizCl('rec.OrganizationFolderInput')"></span>
+                    <span *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.OrganizationFolderInput')"></span>
+                </div>
                 <div class="clear-both">
                     <eos-dynamic-input class="pull-left"
                                        [input]="inputs['rec.LinkPD']"
@@ -769,36 +934,44 @@
                                        [form]="form"
                                        [disabled]="!(isBunchRKPD&&isBunchWithType)"
                                        [readonly]="!editMode"></eos-dynamic-input>
-                </div>
+                    <div style="padding-left: 40px;" class="sev-grif" *ngIf="(isBunchRKPD && isLinkKindWithType)">
+                        <!-- <span class="mar-right">Организации создавать:</span> -->
+                        <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
+                            <input readonly type="text" [value]="linkTypeListNames.join(';')">
+                        </span>
+                        <span *ngIf="editMode" class="action eos-icon eos-icon-download " (click)="openLinkCl()"></span>
+                        <span *ngIf="editMode" class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
+                    </div>
+                </div>  
                 <eos-dynamic-input class="clear-both"
-                                   [input]="inputs['rec.Access']"
+                                   [input]="inputs['rec.access']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.Rubric']"
+                <eos-dynamic-input [input]="inputs['rec.rubric']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <div class="clear-both">
                     <eos-dynamic-input class="pull-left"
-                                       [input]="inputs['rec.Address']"
+                                       [input]="inputs['rec.address']"
                                        [form]="form"
-                                       [readonly]="!editMode"></eos-dynamic-input>
+                                       [readonly]="!editMode"></eos-dynamic-input>                                       
                     <eos-dynamic-input class="pull-left margin-l"
                                        [input]="inputs['rec.adrReplace']"
                                        [form]="form"
-                                       [disabled]="!adrSubjDoc"
+                                       [disabled]="!address"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="clear-both"
                                        [ngStyle]="{'margin-left.px': 25}"
-                                       [input]="inputs['rec.Region']"
+                                       [input]="inputs['rec.region']"
                                        [form]="form"
-                                       [disabled]="!adrSubjDoc"
+                                       [disabled]="!address"
                                        [readonly]="!editMode"></eos-dynamic-input>
                 </div>
                 <eos-dynamic-input class="clear-both"
-                                   [input]="inputs['rec.Addressee']"
+                                   [input]="inputs['rec.addressee']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.AdditionalField']"
+                <eos-dynamic-input [input]="inputs['rec.additionalField']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <div class="clear-both">
@@ -855,7 +1028,7 @@
                                        [disabled]="!(Visa && visaForward)"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="pull-left"
-                                       [ngStyle]="{'margin-top.px': 25}"
+                                       [ngStyle]="{'margin-top.px': 15}"
                                        [input]="inputs['rec.visaDays']"
                                        [form]="form"
                                        [disabled]="!(Visa && visaForward)"
@@ -895,7 +1068,7 @@
                                        [disabled]="!(signatures && signatureForward)"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="pull-left"
-                                       [ngStyle]="{'margin-top.px': 25}"
+                                       [ngStyle]="{'margin-top.px': 15}"
                                        [input]="inputs['rec.signatureDays']"
                                        [form]="form"
                                        [disabled]="!(signatures && signatureForward)"
@@ -910,7 +1083,7 @@
         <div class="margin-b">
             <fieldset>
                 <legend>Отправлять уведомления и доклады</legend>
-                <eos-dynamic-input [input]="inputs['rec.Reception']"
+                <eos-dynamic-input [input]="inputs['rec.reception']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.registrationProject']"
@@ -968,31 +1141,50 @@
                                    [disabled]="!reportSign"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input class="clear-both"
-                                   [input]="inputs['rec.Address']"
+                                   [input]="inputs['rec.progectRegistration']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
                 <eos-dynamic-input class="margin-l"
-                                   [input]="inputs['rec.Region']"
+                                   [input]="inputs['rec.fileDocument']"
                                    [form]="form"
-                                   [disabled]="!adrSubjDoc"
+                                   [disabled]="!progectRegistration"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input class="pull-left"
-                                   [input]="inputs['rec.Subscriptions']"
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.address']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input class="margin-l"
+                                   [input]="inputs['rec.region']"
+                                   [form]="form"
+                                   [disabled]="!address"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                    <div style="display: flex;">
+                        <div style="padding-top: 7px;">
+                            <label>Доклады направлять в течении:&nbsp;</label>
+                        </div>
+                        <div style="width: 150px;">
+                            <eos-dynamic-input [input]="inputs['rec.stopDayCount']"
+                                [form]="form"
+                                [readonly]="!editMode"></eos-dynamic-input>
+                        </div>
+                        <div style="padding-top: 7px;">
+                            <label>&nbsp;Суток</label>
+                        </div>
+                    </div> 
+                
             </fieldset>
         </div>
         <div class="clear-both margin-b">
             <fieldset>
                 <legend>Отправлять файлы</legend>
                 <div class="File">
-                    <eos-dynamic-input [input]="inputs['rec.TaskExtensions']"
+                    <eos-dynamic-input [input]="inputs['rec.fileExtensions']"
                                        [form]="form"
-                                       [readonly]="!editMode"></eos-dynamic-input>
+                                       [readonly]="!editMode"></eos-dynamic-input> <!-- [disabled]="!progectRegistration" -->
                     <eos-dynamic-input class="pull-left"
-                                       [input]="inputs['rec.TaskMaxLength']"
+                                       [input]="inputs['rec.fileMaxLength']"
                                        [form]="form"
-                                       [readonly]="!editMode"></eos-dynamic-input>
+                                       [readonly]="!editMode"></eos-dynamic-input> <!-- [disabled]="!progectRegistration" -->
                 </div>
             </fieldset>
         </div>
@@ -1024,3 +1216,49 @@
                            [readonly]="!editMode"></eos-dynamic-input>
     </span>
 </div>
+<ng-template #template>
+    <div class="modal-header">
+        <!-- <h4 class="modal-title pull-left">Добавление записи</h4> -->
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTemplate()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #eeeeee;">
+        <div
+            tooltip="Добавить"
+            triggers="hover"
+            containerClass="tooltip-info"
+            style="width: 40px;">
+            <button
+                [disabled] = "false"
+                class="btn btn-primary-light add-storage"
+                (click)="addGroup()">
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+        </div>
+        <div
+            tooltip="Удалить"
+            triggers="hover"
+            containerClass="tooltip-info"
+            style="width: 40px;">
+            <button
+                [disabled] = "(checkItemForDelet === null)"
+                class="btn btn-primary-light add-storage"
+                (click)="deletGroup()">
+                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+            </button>
+        </div>
+    </div>
+    <div class="create-new-node modal-body this-modal-body">
+        <div *ngFor="let item of groupDocument; let i = index" style="border-bottom: 1px solid #eeeeee ;">
+            <div (click)="clickForItem(item, i)">
+                <input class="group-document-input" [value]="item" (keyup)="onKey($event, item, i)"/> <!--  -->
+            </div>
+            
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="createUpdate()">Ок</button>
+        <button class="btn btn-primary-full" (click)="cancelTemplate()">Отменить</button>
+    </div>
+</ng-template>

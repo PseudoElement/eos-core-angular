@@ -9,7 +9,7 @@ import { DictionaryDescriptorService } from '../core/dictionary-descriptor.servi
 import { EosBroadcastChannelService } from '../services/eos-broadcast-channel.service';
 import { EosSevRulesService } from '../services/eos-sev-rules.service';
 import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts';
-import { PipRX } from 'eos-rest';
+import { PipRX, ICancelFormChangesEvent  } from 'eos-rest';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { DOCGROUP_DICT } from 'eos-dictionaries/consts/dictionaries/docgroup.consts';
 import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/sev-collisions';
@@ -82,6 +82,9 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         }
         return newData;
     }
+    resetData() {
+        Object.assign(this.data.rec, this.data.rec._orig);
+    }
 
     confirmSave(): Promise<boolean> {
         if (this.baseCardEditRef) {
@@ -106,6 +109,12 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             this.form = this._inputCtrlSrv.toFormGroup(inputs, isNode);
             this.inputs = inputs;
             this.afterGetForm(inputs);
+
+            this.subscriptions.push(this._apiSrv.cancelFormChanges$
+                .subscribe((event: ICancelFormChangesEvent) => {
+                    this.isChanged = event.isChanged;
+                    this._errorSrv.errorHandler(event.error);
+                }));
 
             this.subscriptions.push(this.form.valueChanges
                 .subscribe((newVal) => {

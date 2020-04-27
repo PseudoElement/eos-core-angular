@@ -27,13 +27,13 @@ import { LS_PAGE_LENGTH, PAGES } from '../node-list-pagination/node-list-paginat
 import { WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND } from '../consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
-import { EosDepartmentsService } from './eos-department-service';
+// import { EosDepartmentsService } from './eos-department-service';
 import { RestError } from 'eos-rest/core/rest-error';
 import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
 import { IAppCfg } from 'eos-common/interfaces';
 import { CabinetDictionaryDescriptor } from '../core/cabinet-dictionary-descriptor';
-import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
-import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+// import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
+// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES, ALL_ROWS } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
@@ -252,8 +252,8 @@ export class EosDictService {
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
-        private departmentsSrv: EosDepartmentsService,
-        private confirmSrv: ConfirmWindowService,
+    //    private departmentsSrv: EosDepartmentsService,
+    //    private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _apiSrv: PipRX,
         private _errorHelper: ErrorHelperServices,
@@ -1460,36 +1460,36 @@ export class EosDictService {
                 return Promise.resolve(data._appendChanges || null);
             }
 
-            if (dictionary.id === DEPARTMENTS_DICT.id && data.rec.IS_NODE) {
-                this.departmentsSrv.addDuty(data.rec.DUTY);
-                this.departmentsSrv.addFullname(data.rec.FULLNAME);
-                if (1 * data.rec.POST_H === 1) {
-                    let parent: EosDictionaryNode = null;
-                    if (this._treeNode && ((!data.rec.PARENT_DUE) || (this._treeNode.id === data.rec.PARENT_DUE))) {
-                        parent = this._treeNode;
-                    }
-                    return dictionary.getBoss(data, parent)
-                        .then((boss) => {
-                            if (boss && boss.id !== data.rec.DUE) {
-                                const changeBoss = Object.assign({}, CONFIRM_CHANGE_BOSS);
-                                const CLASSIF_NAME = data.rec['SURNAME'] + ' - ' + data.rec['DUTY'];
-                                changeBoss.body = changeBoss.body.replace('{{persone}}', boss.data.rec['CLASSIF_NAME']);
-                                changeBoss.body = changeBoss.body.replace('{{newPersone}}', CLASSIF_NAME);
+            // if (dictionary.id === DEPARTMENTS_DICT.id && data.rec.IS_NODE) {
+            //     this.departmentsSrv.addDuty(data.rec.DUTY);
+            //     this.departmentsSrv.addFullname(data.rec.FULLNAME);
+            //     if (1 * data.rec.POST_H === 1) {
+            //         let parent: EosDictionaryNode = null;
+            //         if (this._treeNode && ((!data.rec.PARENT_DUE) || (this._treeNode.id === data.rec.PARENT_DUE))) {
+            //             parent = this._treeNode;
+            //         }
+            //         return dictionary.getBoss(data, parent)
+            //             .then((boss) => {
+            //                 if (boss && boss.id !== data.rec.DUE) {
+            //                     const changeBoss = Object.assign({}, CONFIRM_CHANGE_BOSS);
+            //                     const CLASSIF_NAME = data.rec['SURNAME'] + ' - ' + data.rec['DUTY'];
+            //                     changeBoss.body = changeBoss.body.replace('{{persone}}', boss.data.rec['CLASSIF_NAME']);
+            //                     changeBoss.body = changeBoss.body.replace('{{newPersone}}', CLASSIF_NAME);
 
-                                return this.confirmSrv.confirm(changeBoss)
-                                    .then((confirm: boolean) => {
-                                        if (confirm) {
-                                            boss.data.rec['POST_H'] = 0;
-                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
-                                        } else {
-                                            data.rec['POST_H'] = 0;
-                                            return Promise.reject('cancel');
-                                        }
-                                    });
-                            }
-                        });
-                }
-            }
+            //                     return this.confirmSrv.confirm(changeBoss)
+            //                         .then((confirm: boolean) => {
+            //                             if (confirm) {
+            //                                 boss.data.rec['POST_H'] = 0;
+            //                                 return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
+            //                             } else {
+            //                                 data.rec['POST_H'] = 0;
+            //                                 return Promise.reject('cancel');
+            //                             }
+            //                         });
+            //                 }
+            //             });
+            //     }
+            // }
 
             if (dictionary.id === 'region') {
                 const params = { deleted: true, mode: SEARCH_MODES.totalDictionary };

@@ -20,7 +20,7 @@ export const CHANNEL_TYPE: Array<OptionDiscription> = [{
     title: 'E-mail'
 }, {
     value: 'FileSystem',
-    title: 'Файловая система'
+    title: 'FileSystem'
 }];
 
 export const AUTH_METHOD: Array<OptionDiscription> = [
@@ -32,18 +32,24 @@ export const AUTH_METHOD: Array<OptionDiscription> = [
 
 export const TYPE_OF_RULE: Array<OptionDiscription> = [{
     value: 1,
-    title: 'Отправка документа' }
-// }, {
-//     value: 2,
-//     title: 'Прием документа'
-// }, {
-//     value: 3,
-//     title: 'Отправка доклада'
-// }, {
-//     value: 4,
-//     title: 'Прием доклада'
-// }
-];
+    title: 'Отправка документа'
+}, {
+    value: 2,
+    title: 'Прием документа'
+}, {
+    value: 3,
+    title: 'Отправка доклада'
+}, {
+    value: 4,
+    title: 'Прием доклада'
+}];
+export const RESEVER_SELECT:  Array<OptionDiscription> = [{
+    value: 1,
+    title: 'Организация'
+}, {
+    value: 2,
+    title: 'Подразделение'
+}];
 
 export const LINK_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},
@@ -56,14 +62,14 @@ export const ADDRESSEE_KIND: Array<OptionDiscription> = [
 ];
 
 export const ITEMS_KIND: Array<OptionDiscription> = [
-    { value: 0, title: 'Весь документ'},
-    { value: 1, title: 'Выписку'}
+    { value: 1, title: 'Весь документ'},
+    { value: 2, title: 'Выписку'}
 ];
 
 export const RESOLUTION_KIND: Array<OptionDiscription> = [
-    { value: 0, title: 'Все'},
-    { value: 1, title: '"Свои" + родительские'},
-    { value: 2, title: 'Только "свои"'}
+    { value: 1, title: 'Все'},
+    { value: 2, title: '"Свои" + родительские'},
+    { value: 3, title: 'Только "свои"'}
 ];
 
 export const ORDERS_KIND: Array<OptionDiscription> = [
@@ -84,7 +90,7 @@ export const FORWARDING_DOCS_PROJECT_KIND: Array<OptionDiscription> = [
 export const CONSIDERATION_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},
     { value: 1, title: 'Первые'},
-    { value: 2, title: 'Последение'}
+    { value: 2, title: 'Последние'}
 ];
 
 export const Visa_KIND: Array<OptionDiscription> = [

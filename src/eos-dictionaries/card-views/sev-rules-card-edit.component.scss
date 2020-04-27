@@ -67,3 +67,17 @@
         box-shadow: none;
     }
 }
+.group-document-input {
+    width: 100%;
+    cursor: pointer;
+    border: 0px;
+    padding: 5px 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+.this-modal-body {
+    padding: 0;
+    background-color: white;
+    height: 400px;
+    max-height: 400px;
+    overflow: auto;
+}

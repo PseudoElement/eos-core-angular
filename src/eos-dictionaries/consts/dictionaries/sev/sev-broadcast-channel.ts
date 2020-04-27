@@ -70,6 +70,7 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, S
             length: 100,
             title: 'SMTP логин',
             required: true,
+            default: '',
         }, {
             key: 'SMTP_PASSWORD',
             type: 'string',
@@ -77,6 +78,7 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, S
             title: 'SMTP пароль',
             password: true,
             required: true,
+            default: '',
         }, {
             key: 'SMTP_DELAY',
             type: 'number',

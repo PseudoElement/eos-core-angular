@@ -39,6 +39,7 @@ import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { E_LIST_ENUM_TYPE } from 'eos-dictionaries/features/features.interface';
+import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -118,6 +119,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private departmentsSrv: EosDepartmentsService,
         private _eaps: EosAccessPermissionsService,
         private _errSrv: ErrorHelperServices,
+        private _apiSrv: PipRX,
     ) {
         let tabNum = 0;
 
@@ -141,6 +143,14 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
                 }
 
+            });
+
+        this._apiSrv.cancelFormChanges$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((event: ICancelFormChangesEvent) => {
+                this.isChanged = event.isChanged;
             });
 
         this._dictSrv.currentTab = tabNum;
@@ -240,6 +250,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     save(): void {
+        const error = this.checkErrorSEV();
+        if (error.length > 0) {
+            this._windowInvalidSave(error);
+            return ;
+        }
         if (this.isSaveDisabled()) {
             this._windowInvalidSave();
             return;
@@ -261,6 +276,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                                 this.disableSave = false;
                             }
                         });
+                }   else {
+                   this.cardEditRef.resetData();
                 }
              }).catch(e => {
                 this.isChanged = false;
@@ -335,7 +352,57 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             return Promise.resolve(true);
         }
     }
-
+    // все проверки по справочникам SEV вынес в одно место так как не знаю будет их много или только одна
+    private checkErrorSEV(): string[] {
+        const errors = [];
+        const data = this.cardEditRef.newData.rec;
+        if (this.cardEditRef.dictionaryId === 'sev-rules') {
+            if (data &&
+                data['takeFileRK'] === 0 &&
+                data['FileRK'] === 1) {
+                errors.push(`Внимание! Запрещено редактировать реквизиты РК при повторном получении документа "Файлы РК", т.к. эти реквизиты не разрешены к приёму.
+                Необходимо откорректировать настройки параметров правила СЭВ.`);
+            }
+            if (data &&
+                !data['DUE_DOCGROUP_NAME']) {
+                errors.push(`Не задана группа документов`);
+            }
+            if (data &&
+                (+data['RULE_KIND'] === 2 || +data['RULE_KIND'] === 6) &&
+                !data['groupDocument']
+                ) {
+                errors.push(`Поле \'Для групп документов\' обязательно для заполнения`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['executor']
+            ) {
+                errors.push(`Поле \'Исполнитель\' обязательно для заполнения`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['visaForward'] &&
+                !data['visaDate']
+            ) {
+                errors.push(`Срок визы должен быть заполнен`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['signatureForward'] &&
+                !data['signatureDate']
+            ) {
+                errors.push(`Срок подписи должен быть заполнен`);
+            }
+            if ((data.link && data.linkKind === 1 && String(data.type) === '1' && (data.linkTypeList === 'null' || !data.linkTypeList)) ||
+            (data['LinkPD'] && data['linkKind'] === 1 && String(data['type']) === '2' && (data['linkTypeList'] === 'null' || !data['linkTypeList']))
+            ) {
+                errors.push(`Тип связки должен быть выбран`);
+            }
+            return errors;
+        } else {
+            return [];
+        }
+    }
     // private _askForSaving(): Promise<boolean> {
     //     if (this.isChanged) {
     //         return this._confirmSrv.confirm2(Object.assign({}, CONFIRM_SAVE_ON_LEAVE2,
@@ -585,7 +652,6 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private _windowInvalidSave(errors: string[] = []): Promise<boolean> {
         if (this.isChanged) {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
-
             confirmParams.body = '';
             confirmParams.bodyList = [ ... errors, ... EosUtils.getValidateMessages(this.cardEditRef.inputs)];
 

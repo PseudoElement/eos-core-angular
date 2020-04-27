@@ -37,9 +37,14 @@ export class EosSevRulesService {
 
     filterConfigToXml(): string {
         let result = ``;
-        // this._data['FilterConfig']
-        // TODO foreach filter
-        result += '';
+        if (this._data['groupDocument']) {
+            result = `<FilterConfig>`;
+            const allDoc: string[] = this._data['groupDocument'].split('|');
+            allDoc.forEach(doc => {
+                result += `<DocType><Field>NAME</Field><Etalon>${doc}</Etalon></DocType>`;
+            });
+            result += '</FilterConfig>';
+        }
         return result;
     }
 
@@ -67,7 +72,7 @@ export class EosSevRulesService {
                         this._data['type'] = kindRule >= 5 ? 2 : 1;
                         this._data['kind'] = kindRule >= 5 ? kindRule - 4 : kindRule;
                         this._data['link'] = !(document['Link'][0].$['Include'] === 'None');
-                        this._data['linkKind'] = document['Link'][0].$['Include'] === 'All' ? 0 : 1;
+                        this._data['linkKind'] = document['Link'][0].$['Include'] === 'List' ? 1 : 0;
                         this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList'];
                         this._data['access'] = document['Access'][0].$['Include'] === 'true';
                         this._data['rubric'] = document['Rubric'][0].$['Include'] === 'true';
@@ -84,11 +89,11 @@ export class EosSevRulesService {
                         this._data['fileExtensions'] = ext1 && ext1 !== 'null' ? ext1 : '';
                         this._data['fileAccessList'] = document['File'][0].$['AccessList'];
                         this._data['fileMaxLength'] = document['File'][0].$['MaxLength'] === 'null' ? '' : document['File'][0].$['MaxLength'];
-                        this._data['item'] = !(document['Item'][0].$['Include'] === 'None');
-                        this._data['itemKind'] = document['Item'][0].$['Include'] === 'All' ? 0 : 1;
+                        this._data['item'] = document['Item'][0].$['Include'] !== 'None';
+                        this._data['itemKind'] = document['Item'][0].$['Include'] === 'Extraction' ? 2 : 1;
                         this._data['resolution'] = !(document['Resolution'][0].$['Include'] === 'None');
                         const resolution = document['Resolution'][0].$['Include'];
-                        this._data['resolutionKind'] = !this._data['resolution'] ? 2 : resolution === 'All' ? 0 : resolution === 'ExtractionWithParent' ? 1 : 2;
+                        this._data['resolutionKind'] = resolution === 'None' ? 3 : resolution === 'All' ? 1 : resolution === 'ExtractionWithParent' ? 2 : 3;
                         const task = sendDocumentRule['ScriptConfig'][0]['Task'][0];
                         this._data['taskCategory'] = task['Category'][0].$['Include'] === 'true';
                         this._data['taskController'] = task['Controller'][0].$['Include'] === 'true';
@@ -121,9 +126,19 @@ export class EosSevRulesService {
             resolve();
         });
     }
-    parseReseiveDocumentRule(scriptConfig, kindRule) {
+    parseReseiveDocumentRule(scriptConfig, kindRule, data: SEV_RULE) {
         const parseString = xml2js.parseString;
         this._scriptConfig = scriptConfig;
+        let filterconfig;
+        let filter = '';
+        if (data['FILTER_CONFIG']) {
+            parseString(data['FILTER_CONFIG'], (err, result) => {
+                filterconfig = result;
+                filterconfig['FilterConfig']['DocType'].forEach(elem => {
+                    filter += elem['Etalon'] + '|';
+                });
+            });
+        }
         if (this._scriptConfig) {
             return new Promise<any>((resolve, reject) => {
                 parseString(this._scriptConfig, (err, result) => {
@@ -136,6 +151,46 @@ export class EosSevRulesService {
                         return reject(e);
                     }
                     this._data = {};
+                    try {
+                        const document = receiveDocumentRule['ScriptConfig'][0]['Document'][0];
+                        const Contact = receiveDocumentRule['ScriptConfig'][0]['Contact'][0];
+                        const Task = receiveDocumentRule['ScriptConfig'][0]['Task'][0];
+                        const UpdateParams = receiveDocumentRule['ScriptConfig'][0]['UpdateParams'][0];
+                        this._data['type'] = 1;
+                        this._data['kind'] = 2;
+                        this._data['DUE_DEP'] = data['DUE_DEP'];
+                        this._data['departmentReceive'] = data['DUE_DEP'] && data['DUE_DEP'] !== '0.' ? 2 : 1;
+                        // и скорее всего нужно ещё забрать все картотеки и кабинеты
+                        // cabinetFile
+                        this._data['takeFileRK'] = document['File'][0].$['Use'] === 'true'; //  принимать файлы   // takeFileRK принимать файлы
+                        this._data['fileAccessList'] = document['File'][0].$['AccessList']; // пока не знаю зачем этот параметр так и не смог его изменить
+                        this._data['cardFile'] = receiveDocumentRule['ScriptConfig'][0]['RegistrationParams'][0]['Card'][0];
+                        this._data['cabinetFile'] = receiveDocumentRule['ScriptConfig'][0]['RegistrationParams'][0]['Cabinet'][0]; // кабинет автомата cabinetFile
+                        this._data['groupDocument'] = filter;
+                        this._data['OrganizationFolderInput'] = Contact['OrganizationFolder'][0]; // организаци
+                        this._data['handRegistration'] = receiveDocumentRule['ScriptConfig'][0]['SendToManualQueue'][0] === 'true'; // handRegistration направлять на ручную регистрацию
+                        this._data['link'] = document['Link'][0].$['Use'] !== 'None'; // link Связки РК
+                        this._data['linkKind'] = document['Link'][0].$['Use'] === 'List' ? 1 : 0; // linkKind кнопки после
+                        this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList']; // linkTypeList поле после
+                        this._data['access'] = document['Access'][0].$['Use'] === 'true'; // access грифы
+                        this._data['rubric'] = document['Rubric'][0].$['Use'] === 'true'; //  рубрики
+                        this._data['address'] = Contact['Address'][0].$['Use'] !== 'DoNotUse'; // Адрес субьекта address
+                        this._data['adrReplace'] = Contact['Address'][0].$['Use'] === 'IfEmpty' ? 2 : 1; // переключашка после адреса adrReplace
+                        this._data['region'] = Contact['Address'][0]['Region'][0].$['Use'] === 'true'; // регионы субьекта region
+                        this._data['additionalField'] = document['AdditionalField'][0].$['Use'] === 'true'; // additionalField Доп реквизит
+                        this._data['orders'] = document['Task'][0].$['Use'] !== 'None';
+                        this._data['ordersKind'] = document['Task'][0].$['Use'] === 'Own' ? 1 : 0;
+                        this._data['taskCategory'] = Task['Category'][0].$['Use'] === 'true';
+                        this._data['noteOrders'] = Task['Note'][0].$['Use'] === 'true';
+                        this._data['takeFileOrders'] = Task['File'][0].$['Use'] === 'true';
+                        this._data['FileRK'] = UpdateParams['File'][0].$['Use'] === 'true'; // файлы РК
+                        this._data['takeOrdersRK'] = UpdateParams['Task'][0].$['Use'] === 'true'; // поручения РК
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
                     resolve(this._data);
                 });
             });
@@ -144,7 +199,130 @@ export class EosSevRulesService {
             resolve();
         });
     }
+    parseSendDocludDocumentRule(scriptConfig, kindRule, data: SEV_RULE) {
+        const parseString = xml2js.parseString;
+        this._scriptConfig = scriptConfig;
+        if (this._scriptConfig) {
+            return new Promise<any>((resolve, reject) => {
+                parseString(this._scriptConfig, (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    const SendReportRule = result['SendReportRule'];
+                    if (!SendReportRule) {
+                        const e = { message: 'отсутствует SendReportRule' };
+                        return reject(e);
+                    }
+                    const Task = SendReportRule['ScriptConfig'][0]['Task'][0];
+                    const Contakt = SendReportRule['ScriptConfig'][0]['Contact'][0];
+                    const Notification = SendReportRule['NotificationConfig'][0];
+                    this._data = {};
+                    const kindConsideration = Notification['Consideration'][0].$['Include'];
+                    let kindConsiderationId = 0;
+                    if (kindConsideration === 'Last') {
+                        kindConsiderationId = 2;
+                    } else if (kindConsideration === 'First') {
+                        kindConsiderationId = 1;
+                    } else {
+                        kindConsiderationId = 0;
+                    }
+                    try {
+                        this._data['type'] = 1;
+                        this._data['kind'] = 3;
+                        this._data['kindConsideration'] = kindConsiderationId;
+                        this._data['textConsideration'] = Task['Text'][0].$['Include'] === 'true'; // Текст резолюции
+                        this._data['consideration'] = Notification['Consideration'][0].$['Include'] !== 'None'; ///////////////
+                        this._data['categoryConsideration'] = Task['Category'][0].$['Include'] === 'true'; // Категория резолюции
+                        this._data['noteConsideration'] = Task['Note'][0].$['Include'] === 'true'; // Примечание
+                        this._data['controlConsideration'] = Task['ControlState'][0].$['Include'] === 'true'; // Контрольность резолюции
+                        this._data['planConsideration'] = Task['PlanDate'][0].$['Include'] === 'true'; // План. дата
+                        this._data['controllerMission'] = Task['Controller'][0].$['Include'] === 'true'; // Контролёр поручения
+                        this._data['Summary'] = Task['Summary'][0].$['Include'] === 'true'; // Ход исполнения
+                        this._data['FactDate'] = Task['FactDate'][0].$['Include'] === 'true'; // Дата снятия с контроля
+                        this._data['Status'] = Task['Status'][0].$['Include'] === 'true'; // Состояние исполненения
+                        this._data['Resume'] = Task['Resume'][0].$['Include'] === 'true'; // Основание для снятия с контроля
+                        this._data['executors'] = !(Task['Executor'][0].$['Include'] === 'None'); // Исполнители резолюции
+                        this._data['kindExecutorConsideration'] = Task['Executor'][0].$['Include'] === 'All' ? 0 : 1; // kindExecutorConsideration
+                        this._data['NotificationConfigReport'] = Notification['Report'][0].$['Include'] === 'true'; // NotificationConfigReport Доклад об исполнении поручений
+                        this._data['executorFile'] = Task['Executor'][0]['File'][0].$['Include'] === 'true';
+                        const ext1 = Task['Executor'][0]['FileOptions'][0].$['Extensions'];
+                        this._data['fileExtensions'] = ext1 && ext1 !== 'null' ? ext1 : '';
+                        const maxLength = Task['Executor'][0]['FileOptions'][0].$['MaxLength'];
+                        this._data['fileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
+                        this._data['redirection'] = Notification['Redirection'][0].$['Include'] === 'true'; // Доклад об отправке документов
+                        this._data['answer'] = Notification['Answer'][0].$['Include'] === 'true'; // Доклад об отправке документа ответа
+                        this._data['address'] = Contakt['Address'][0].$['Include'] === 'true'; // Адрес субъекта документа
+                        this._data['region'] = Contakt['Address'][0]['Region'][0].$['Include'] === 'true'; // Регион субьекта документа
+                        this._data['stopDayCount'] = Notification.$['StopDayCount'];
+                        this._data['reception'] = Notification['Reception'][0].$['Include'] === 'true'; // уведомление о приёме
+                        this._data['registration'] = Notification['Registration'][0].$['Include'] === 'true'; // Доклад о регистрации
+                        this._data['forwardingDocs'] = Notification['Forwarding'][0].$['Include'] !== 'None'; // forwardingDocs Доклад о направлениях документа
+                        const kindForwardingDocs = Notification['Forwarding'][0].$['Include'] === 'First' ? 1 : 0;
+                        this._data['kindForwardingDocs'] = kindForwardingDocs;
 
+                        this._data['editSet'] = Notification['NotificationUpdateOptions'][0].$['Update'] === 'true';
+                        this._data['calcDate'] = Notification['NotificationUpdateOptions'][0].$['StopDayCalc'] === 'true';
+
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
+                    resolve(this._data);
+                });
+            });
+        }
+        return new Promise<any>((resolve) => {
+            resolve();
+        });
+    }
+    parseReceptionDocludDocument(scriptConfig, kindRule, data: SEV_RULE) {
+        const parseString = xml2js.parseString;
+        this._scriptConfig = scriptConfig;
+        if (this._scriptConfig) {
+            return new Promise<any>((resolve, reject) => {
+                parseString(this._scriptConfig, (err, result) => {
+                    if (err) {
+                        const mess = err.message ? err.message : 'ошибка в файле Вид правила';
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: mess };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
+                    }
+                    const ReceiveReportRule = result['ReceiveReportRule'];
+                    if (!ReceiveReportRule) {
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
+                    }
+                    this._data = {};
+                    const ScriptConfig = ReceiveReportRule['ScriptConfig'][0];
+                    try {
+                        this._data['type'] = 1;
+                        this._data['kind'] = 4;
+                        this._data['OrganizationFolderInput'] = ScriptConfig['Contact'][0]['OrganizationFolder'][0];
+                        this._data['reportExecution'] = ScriptConfig['Task'][0].$['MarkExecutor'] === 'true'; // Отчёт об исполнении в поручение
+                        this._data['address'] = ScriptConfig['Contact'][0]['Address'][0].$['Use'] !== 'DoNotUse';
+                        const adrReplace = ScriptConfig['Contact'][0]['Address'][0].$['Use'] === 'IfEmpty' ? 2 : 1;
+                        this._data['adrReplace'] = adrReplace;
+                        this._data['region'] = ScriptConfig['Contact'][0]['Address'][0]['Region'][0].$['Use'] === 'true';
+                        this._data['executorFile'] = ScriptConfig['Task'][0]['ExecutorFile'][0].$['Use'] === 'true';
+                        this._data['regNumber'] = ScriptConfig['Registration'][0].$['MarkAddresse'] === 'true';
+                        // regNumber Рег.№ в 'Адресат'
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
+                    resolve(this._data);
+                });
+            });
+        }
+        return new Promise<any>((resolve) => {
+            resolve();
+        });
+    }
     parsesendProjectRule(scriptConfig, kindRule, data: SEV_RULE) {
         const parseString = xml2js.parseString;
         this._scriptConfig = scriptConfig;
@@ -171,7 +349,6 @@ export class EosSevRulesService {
                         this._data['LinkPD'] = !!(document[0]['Project'][0]['Link'][0].$.Include !== 'None');
                         this._data['linkKind'] = !this._data['LinkPD'] ? 0 : document[0]['Project'][0]['Link'][0].$.Include === 'All' ? 0 : 1;
                         this._data['linkTypeList'] = document[0]['Project'][0]['Link'][0].$.LinkTypeList;
-
                         this._data['access'] = document[0]['Project'][0]['Access'][0].$.Include === 'true';
                         this._data['rubric'] = document[0]['Project'][0]['Rubric'][0].$.Include === 'true';
 
@@ -230,7 +407,189 @@ export class EosSevRulesService {
             resolve();
         });
     }
+    parseReseiveProjectRule(scriptConfig, kindRule, data: SEV_RULE) {
+        const parseString = xml2js.parseString;
+        this._scriptConfig = scriptConfig;
+        let filterconfig;
+        let filter = '';
+        if (data['FILTER_CONFIG']) {
+            parseString(data['FILTER_CONFIG'], (err, result) => {
+                filterconfig = result;
+                filterconfig['FilterConfig']['DocType'].forEach(elem => {
+                    filter += elem['Etalon'] + '|';
+                });
+            });
+        }
+        if (this._scriptConfig) {
+            return new Promise<any>((resolve, reject) => {
+                parseString(this._scriptConfig, (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    const ReceiveProjectRule = result['ReceiveProjectRule'];
+                    if (!ReceiveProjectRule) {
+                        const e = { message: 'отсутствует ReceiveProjectRule' };
+                        return reject(e);
+                    }
+                    const Contact = ReceiveProjectRule['ScriptConfig'][0]['Contact'][0];
+                    const Project = ReceiveProjectRule['ScriptConfig'][0]['Project'][0];
+                    const RegistrationParams = ReceiveProjectRule['ScriptConfig'][0]['RegistrationParams'][0];
+                    this._data = {};
+                    try {
+                        this._data['type'] = 2;
+                        this._data['kind'] = 2;
+                        this._data['groupDocument'] = filter;
+                        this._data['executor'] = RegistrationParams['ExecutorListID'][0]; // Исполнитель executor
+                        this._data['executiveInput'] = RegistrationParams['RepresentativePerson'][0]; // executive ДЛ за текущую организацию
+                        // организации создавать OrganizationFolderInput
+                        this._data['DUE_DEP'] = data['DUE_DEP'];
+                        this._data['departmentReceive'] = data['DUE_DEP'] && data['DUE_DEP'] !== '0.' ? 2 : 1;
+                        this._data['linkTypeList'] = Project['Link'][0].$.LinkTypeList;
+                        this._data['OrganizationFolderInput'] = Contact['OrganizationFolder'][0];
+                        this._data['LinkPD'] = Project['Link'][0].$['Use'] !== 'None'; // Связки РКПД LinkPD
+                        this._data['linkKind'] = Project['Link'][0].$['Use'] === 'List' ? 1 : 0; // linkTypeListInput Связки с типом
+                        this._data['access'] = Project['Access'][0].$['Use'] === 'true'; // access Гриф доступа
+                        this._data['rubric'] = Project['Rubric'][0].$['Use'] === 'true'; // Рубрики rubric
+                        this._data['address'] = Contact['Address'][0].$['Use'] !== 'DoNotUse'; // Адрес субьекта address
+                        this._data['adrReplace'] = Contact['Address'][0].$['Use'] === 'IfEmpty' ? 2 : 1; // переключашка после адреса adrReplace
+                        this._data['region'] = Contact['Address'][0]['Region'][0].$['Use'] === 'true'; // регионы субьекта region
+                        this._data['addressee'] = Project['Addressee'][0].$['Use'] === 'true'; // адресаты
+                        this._data['additionalField'] = Project['AdditionalField'][0].$['Use'] === 'true'; // AdditionalField доп реквиз
+                        this._data['executorsProject'] = Project['Executor'][0].$['Use'] !== 'None';
+                        this._data['kindExecutorProject'] = Project['Executor'][0].$['Use'] === 'First' ? 1 : 0; // переключашка kindExecutorProject
+                        this._data['FileRKPD'] = Project['File'][0].$['Use'] === 'true'; // FileRKPD Файлы РКПД
+                        // для визы
+                        this._data['visa'] = Project['Visa'][0].$['Use'] !== 'None'; // visa Визы
+                        this._data['VisaKindTake'] = Project['Visa'][0].$['Use'] === 'Extraction' ? 1 : 0;
+                        this._data['VisaInfo'] = Project['Visa'][0]['Content'][0].$['Use'] === 'true'; // информация о визе VisaInfo
+                        this._data['VisaFile'] = Project['Visa'][0]['Content'][0]['File'][0].$['Use'] === 'true'; // файл визы VisaFile
+                        this._data['visaForward'] = Project['Visa'][0]['SendOptions'][0].$['Send'] === 'true'; // направить на визирование visaForward
+                        this._data['visaDays'] = Project['Visa'][0]['SendOptions'][0].$['TermFlag'] === '1'; // чекбокс за визой visaDays
+                        this._data['visaDate'] = Project['Visa'][0]['SendOptions'][0].$['Term']; // срок визы visaDate
+                        // Подписи signatures
+                        this._data['signatures'] = Project['Sign'][0].$['Use'] !== 'None'; // visa Визы
+                        this._data['signatureKindTake'] = Project['Sign'][0].$['Use'] === 'Extraction' ? 1 : 0;
+                        this._data['signaturesInfo'] = Project['Sign'][0]['Content'][0].$['Use'] === 'true'; // информация о визе VisaInfo
+                        this._data['signaturesFile'] = Project['Sign'][0]['Content'][0]['File'][0].$['Use'] === 'true'; // файл визы VisaFile
+                        this._data['signatureForward'] = Project['Sign'][0]['SendOptions'][0].$['Send'] === 'true'; // направить на визирование visaForward
+                        this._data['signatureDays'] = Project['Sign'][0]['SendOptions'][0].$['TermFlag'] === '1'; // чекбокс за визой visaDays
+                        this._data['signatureDate'] = Project['Sign'][0]['SendOptions'][0].$['Term']; // срок визы visaDate
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
+                    resolve(this._data);
+                });
+            });
+        }
+        return new Promise<any>((resolve) => {
+            resolve();
+        });
+    }
+    parseReseiveDoclad(scriptConfig, kindRule, data: SEV_RULE) {
+        const parseString = xml2js.parseString;
+        this._scriptConfig = scriptConfig;
+        if (this._scriptConfig) {
+            return new Promise<any>((resolve, reject) => {
+                parseString(this._scriptConfig, (err, result) => {
+                    if (err) {
+                        const mess = err.message ? err.message : 'ошибка в файле Вид правила';
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: mess };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
+                    }
+                    const SendProjectReportRule = result['SendProjectReportRule'];
+                    if (!SendProjectReportRule) {
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
+                    }
+                    const ScriptConfig =  SendProjectReportRule['ScriptConfig'][0];
+                    const NotificationConfig = SendProjectReportRule['NotificationConfig'][0];
+                    try {
+                        this._data = {};
+                        this._data['type'] = 2;
+                        this._data['kind'] = 3;
+                        this._data['reception'] = NotificationConfig['Reception'][0].$['Include'] === 'true'; // Уведомление о приёме reception
+                        this._data['registrationProject'] = NotificationConfig['Registration'][0].$['Include'] === 'true'; // доклад о регистрации registrationProject
+                        this._data['forwardingVisa'] = NotificationConfig['VisaDirection'][0].$['Include'] !== 'None'; // forwardingVisa Доклад о направлении документа на визирование
+                        this._data['forwardingVisaKind'] = NotificationConfig['VisaDirection'][0].$['Include'] === 'Sent' ? 1 : 0; // кнопки после forwardingVisaKind
+                        this._data['forwardingSign'] = NotificationConfig['SignDirection'][0].$['Include'] !== 'None'; //  Доклад о направлении документа на подписание
+                        this._data['forwardingSignKind'] = NotificationConfig['SignDirection'][0].$['Include'] === 'Sent' ? 1 : 0; // кнопочки после reportVisa
+                        this._data['reportVisa'] = NotificationConfig['Visa'][0].$['Include'] !== 'None'; //  Доклад о направлении документа на подписание
+                        this._data['reportVisaKind'] = NotificationConfig['Visa'][0].$['Include'] === 'Sent' ? 1 : 0; // кнопочки после reportVisa
+                        this._data['VisaFile'] = NotificationConfig['Visa'][0]['File'][0].$['Include'] === 'true';
+                        this._data['reportSign'] = NotificationConfig['Sign'][0].$['Include'] !== 'None'; //  Доклад о направлении документа на подписание
+                        this._data['reportSignKind'] = NotificationConfig['Sign'][0].$['Include'] === 'Sent' ? 1 : 0; // кнопочки после reportVisa
+                        this._data['signaturesFile'] = NotificationConfig['Sign'][0]['File'][0].$['Include'] === 'true';
+                        this._data['progectRegistration'] = NotificationConfig['ProjectRegistration'][0].$['Include'] === 'true'; //
+                        this._data['fileDocument'] = NotificationConfig['ProjectRegistration'][0]['File'][0].$['Include'] === 'true'; //
 
+                        this._data['address'] = ScriptConfig['Contact'][0]['Address'][0].$['Include'] === 'true'; //
+                        this._data['region'] = ScriptConfig['Contact'][0]['Address'][0]['Region'][0].$['Include'] === 'true'; //
+                        this._data['stopDayCount'] = NotificationConfig.$['StopDayCount'];
+
+                        this._data['fileExtensions'] = NotificationConfig['FileOptions'][0].$['Extensions']; //
+                        this._data['fileMaxLength'] = NotificationConfig['FileOptions'][0].$['MaxLength'];
+                        // Доклад о визировании reportVisa
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
+                    resolve(this._data);
+                });
+            });
+        }
+        return new Promise<any>((resolve) => {
+            resolve();
+        });
+    }
+    parseTakeDoclad(scriptConfig, kindRule, data: SEV_RULE) {
+        const parseString = xml2js.parseString;
+        this._scriptConfig = scriptConfig;
+        if (this._scriptConfig) {
+            return new Promise<any>((resolve, reject) => {
+                parseString(this._scriptConfig, (err, result) => {
+                    if (err) {
+                        const mess = err.message ? err.message : 'ошибка в файле Вид правила';
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: mess };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
+                    }
+                    const ReceiveProjectReportRule = result['ReceiveProjectReportRule'];
+                    if (!ReceiveProjectReportRule) {
+                        const e: IMessage = { title: 'Предупреждение', type: 'warning', msg: `Для правила ${data.CLASSIF_NAME}, установлен не верный вид правила, пересохраните документ.` };
+                        this._msgSrv.addNewMessage(e);
+                        return resolve({});
+                    }
+                    const ScriptConfig =  ReceiveProjectReportRule['ScriptConfig'][0];
+                    try {
+                        this._data = {};
+                        this._data['type'] = 2;
+                        this._data['kind'] = 4;
+                        this._data['executorsProject'] = ScriptConfig['Executor'][0].$['Use'] !== 'None';
+                        this._data['kindExecutorProject'] = ScriptConfig['Executor'][0].$['Use'] === 'First' ? 1 : 0;
+                        this._data['infoVisaign'] = ScriptConfig['VisaSign'][0].$['Use'] === 'true';
+                        this._data['fileVisaign'] = ScriptConfig['VisaSign'][0]['File'][0].$['Use'] === 'true';
+                        this._data['correctingVisaign'] = ScriptConfig['VisaSignPersonUpdate'][0].$['Use'] === 'true';
+                    } catch (e) {
+                        console.dir(e);
+                        const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
+                        this._msgSrv.addNewMessage(error);
+                        return resolve({});
+                    }
+                    resolve(this._data);
+                });
+            });
+        }
+        return new Promise<any>((resolve) => {
+            resolve();
+        });
+    }
     get data() {
         return this._data;
     }
@@ -242,9 +601,9 @@ export class EosSevRulesService {
     private sendDocumentRule(): string {
         const linkInclude = this._data['link'] ? ((this._data['linkKind'] === 0) ? 'All' : 'List') : 'None';
         const addresseeInclude = this._data['addressee'] ? ((this._data['addresseeKind'] === 0) ? 'All' : 'EDMS') : 'None';
-        const itemInculde = this._data['item'] ? ((this._data['itemKind'] === 0) ? 'All' : 'Extraction') : 'None';
+        const itemInculde = !this._data['item'] ? 'None' : this._data['itemKind'] === 1 ? 'All' : 'Extraction';
         const resolutionKind = this._data['resolutionKind'];
-        const resolutionKindText = ((resolutionKind === 0) ? 'All' : ((resolutionKind === 1) ? 'ExtractionWithParent' : 'Extraction'));
+        const resolutionKindText = ((resolutionKind === 1) ? 'All' : ((resolutionKind === 2) ? 'ExtractionWithParent' : 'Extraction'));
         const resolutionInclude = this._data['resolution'] ? resolutionKindText : 'None';
         const linkTypeList = linkInclude === 'List' ? this.data['linkTypeList'] : ''; // TODO список link_cl.isn_lclassif через символ |
         return `<?xml version="1.0"?>
@@ -298,40 +657,38 @@ export class EosSevRulesService {
     }
 
     private receiveDocumentRule(): string {
-        const link = ''; // TODO All(Все)|List(Определенного типа)|None(Не посылать)
-        const linkTypeList = ''; // TODO список link_cl.isn_lclassif через символ |
-        const task = ''; // TODO All(Все)|Own(Только свои)
-        const correspondent = ''; // TODO Use: Sender(Из отправителя)|Author(Из автора документа)
-        const updateParamsFile = ''; // TODO All(Все)|ExtractionWithParent(Свои + родительские)|Extraction(Только свои)|
-        const updateParamsTask = true; // TODO непонятное поле
-
+        const link = !this._data['link'] ? 'None' : this._data['linkKind'] === 1 ? 'List' : 'All'; // TODO All(Все)|List(Определенного типа)|None(Не посылать)
+        const linkTypeList = this._data['linkTypeList']; // TODO список link_cl.isn_lclassif через символ |
+        const task = !this._data['orders'] ? 'None' : this._data['ordersKind'] === 1 ? 'Own' : 'All'; // TODO All(Все)|Own(Только свои)
+        const correspondent = 'Author'; // TODO Use: Sender(Из отправителя)|Author(Из автора документа)
+        const Address = !this._data['address'] ? 'DoNotUse' : this._data['adrReplace'] === 2 ? 'IfEmpty' : 'Always';
         return `<?xml version="1.0"?>
         <ReceiveDocumentRule>
             <ScriptConfig>
                 <!-- Субъект документа -->
                 <Contact>
                     <!-- Вершина в которой будут добавляться новые организации -->
-                    <OrganizationFolder>${this._data['OrganizationFolder']}</OrganizationFolder>
+                    <OrganizationFolder>${this._data['OrganizationFolderInput'] || ''}</OrganizationFolder>
                     <!--Адрес субъекта документа.
                     Заполнять адрес субъекта. Use: IfEmpty(Если поля пустые)|Always(Всегда)|DoNotUse(Не заполнять) -->
-                    <Address Use="${this._data['Address']}">
+                    <Address Use="${Address}">
                         <!--Регион субъекта документа.					Загружать. Use: true|false -->
-                        <Region Use="${this._data['Region']}"/>
+                        <Region Use="${Boolean(this._data['region'])}"/>
                     </Address>
                 </Contact>
                 <!-- Документ -->
                 <Document>
                     <!-- Гриф доступа.				Загружать. Use: true|false -->
-                    <Access Use="${this._data['Access']}"/>
+                    <Access Use="${Boolean(this._data['access'])}"/>
                     <!-- Рубрики.				Загружать. Use: true|false -->
-                    <Rubric Use="${this._data['Rubric']}"/>
+                    <Rubric Use="${Boolean(this._data['rubric'])}"/>
                     <!-- Допреквизиты.				Загружать. Use: true|false -->
-                    <AdditionalField Use="${this._data['AdditionalField']}"/>
+                    <AdditionalField Use="${Boolean(this._data['additionalField'])}"/>
                     <!-- Файлы РК.				Загружать. Use: true|false
                     Расширения файлов. Extensions: список расширений через символ ,
                     Грифы доступа. AccessList: список security_cl.securlevel через символ |
                     Максимальная величина файлов. MaxLength: число -->
-                    <File Use="${this._data['File']}" AccessList="${this._data['AccessList']}"/>
+                    <File Use="${Boolean(this._data['takeFileRK'])}" AccessList="${this._data['fileAccessList'] || ''}"/>
                     <!--Связанные РК:				Загружать. Use: None(Не загружать)|All(Все)|List
                     Типы связок. LinkTypeList: список link_cl.isn_lclassif через символ | -->
                     <Link Use="${link}" LinkTypeList="${linkTypeList}"/>
@@ -343,106 +700,124 @@ export class EosSevRulesService {
                 <!-- Поручения -->
                 <Task>
                     <!-- Категория.				Загружать. Use: true|false -->
-                    <Category Use="${this._data['Category']}"/>
+                    <Category Use="${Boolean(this._data['taskCategory'])}"/>
                     <!-- Примечания.				Загружать. Use: true|false -->
-                    <Note Use="${this._data['Note']}"/>
-                    <File Use="${this._data['File']}"/>
+                    <Note Use="${Boolean(this._data['noteOrders'])}"/>
+                    <File Use="${Boolean(this._data['takeFileOrders'])}"/>
                 </Task>
                 <!-- Параметры регистрации -->
                 <RegistrationParams>
                     <!-- Картотека в которой будут регистрироваться новые РК -->
-                    <Card>${this._data['Card']}</Card>
+                    <Card>${this._data['cardFile'] || ''}</Card>
                     <!-- Кабинет в котором будут регистрироваться новые РК -->
-                    <Cabinet>${this._data['Cabinet']}</Cabinet>
+                    <Cabinet>${this._data['cabinetFile'] || ''}</Cabinet>
                 </RegistrationParams>
-                <SendToManualQueue>${this._data['SendToManualQueue']}</SendToManualQueue>
+                <SendToManualQueue>${Boolean(this._data['handRegistration'])}</SendToManualQueue>
                 <UpdateParams>
-                    <File Use="${updateParamsFile}"/><Task Use="${updateParamsTask}"/>
+                    <File Use="${Boolean(this._data['FileRK'])}"/><Task Use="${Boolean(this._data['takeOrdersRK'])}"/>
                 </UpdateParams>
             </ScriptConfig>
         </ReceiveDocumentRule>`;
     }
-
+    private considerationInclude(): string {
+        if (!this._data['consideration']) {
+            return 'None';
+        } else {
+            const  kindConsideration = this._data['kindConsideration'];
+            if (kindConsideration === 0) {
+                return 'All';
+            } else if (kindConsideration === 1) {
+                return 'First';
+            } else {
+                return 'Last';
+            }
+        }
+    }
     private sendReportRule(): string {
+        const kindForwardingDocs = !this._data['forwardingDocs'] ? 'None' : this._data['kindForwardingDocs'] === 1 ? 'First' : 'All';
+        const update = this._data['editSet'] ? 'true' : 'None';
+        const updateCalc = this._data['calcDate'] ? 'true' : 'None';
         return `<?xml version="1.0"?>
         <SendReportRule>
             <ScriptConfig>
                 <!-- Субъект документа -->
                 <Contact>
                     <!--Адрес субъекта документа.				Включать в паспорт. Include: true|false -->
-                    <Address Include="${this._data['Address']}">
+                    <Address Include="${Boolean(this._data['address'])}">
                         <!--Регион субъекта документа.					Включать в паспорт. Include: true|false -->
-                        <Region Include="${this._data['Address']}"/>
+                        <Region Include="${Boolean(this._data['region'])}"/>
                     </Address>
                 </Contact>
                 <!-- Поручения. -->
                 <Task>
                     <!-- Текст				Включать в паспорт. Include: true|false -->
-                    <Text Include="${this._data['Address']}"/>
+                    <Text Include="${Boolean(this._data['textConsideration'])}"/>
                     <!-- Категория поручения.				Включать в паспорт. Include: true|false -->
-                    <Category Include="${this._data['Address']}"/>
+                    <Category Include="${Boolean(this._data['categoryConsideration'])}"/>
                     <!-- Примечание.				Включать в паспорт. Include: true|false -->
-                    <Note Include="${this._data['Address']}"/>
+                    <Note Include="${Boolean(this._data['noteConsideration'])}"/>
                     <!-- Контрольность резолюции				Включать в паспорт. Include: true|false -->
-                    <ControlState Include="${this._data['Address']}"/>
+                    <ControlState Include="${Boolean(this._data['controlConsideration'])}"/>
                     <!-- План. дата				Включать в паспорт. Include: true|false -->
-                    <PlanDate Include="${this._data['Address']}"/>
+                    <PlanDate Include="${Boolean(this._data['planConsideration'])}"/>
                     <!-- Контролер поручения.				Включать в паспорт. Include: true|false -->
-                    <Controller Include="${this._data['Address']}"/>
+                    <Controller Include="${Boolean(this._data['controllerMission'])}"/>
                     <!-- Ход исполнения				Включать в паспорт. Include: true|false -->
-                    <Summary Include="${this._data['Address']}"/>
+                    <Summary Include="${Boolean(this._data['Summary'])}"/>
                     <!-- Дата снятия с контроля				Включать в паспорт. Include: true|false -->
-                    <FactDate Include="${this._data['Address']}"/>
+                    <FactDate Include="${Boolean(this._data['FactDate'])}"/>
                     <!-- Состояние исполнения				Включать в паспорт. Include: true|false -->
-                    <Status Include="${this._data['Address']}"/>
+                    <Status Include="${Boolean(this._data['Status'])}"/>
                     <!-- Основание для снятия с контроля				Включать в паспорт. Include: true|false -->
-                    <Resume Include="${this._data['Address']}"/>
+                    <Resume Include="${Boolean(this._data['Resume'])}"/>
                     <!-- Исполнители резолюции				Включать в паспорт. Include: All(Все)|Responsible(Ответственные)|None(Не включать) -->
-                    <Executor Include="${this._data['Address']}">
+                    <Executor Include="${'' + this._data['executors']}">
                         <!-- Отчеты исполнителей					Включать в паспорт. Include: true|false -->
-                        <Report Include="${this._data['Address']}"/>
+                        <Report Include="${Boolean(this._data['NotificationConfigReport'])}"/>
                         <!-- Файлы отчетов исполнителей					Включать в паспорт. Include: true|false -->
-                        <File Include="${this._data['Address']}"/>
-                        <FileOptions Extensions="${this._data['Address']}" MaxLength="${this._data['Address']}"/>
+                        <File Include="${Boolean(this._data['executorFile'])}"/>
+                        <FileOptions Extensions="${'' + this._data['fileExtensions']}" MaxLength="${this._data['fileMaxLength'] || ''}"/>
                     </Executor>
                     <!-- ЭП поручения				Включать в паспорт. Include: true|false -->
-                    <Eds Include="${this._data['Address']}"/>
+                    <Eds Include="${'undefined'}"/>
                 </Task>
             </ScriptConfig>
             <!-- Состав докладов. -->
-            <NotificationConfig StopDayCount="${this._data['Address']}">
+            <NotificationConfig StopDayCount="${this._data['stopDayCount'] || ''}">
                 <!-- Уведомление о приеме.			Включить в доклад. Include: true|false -->
-                <Reception Include="${this._data['Address']}"/>
+                <Reception Include="${Boolean(this._data['reception'])}"/>
                 <!-- Уведомление о регистрации.			Включить в доклад. Include: true|false -->
-                <Registration Include="${this._data['Address']}"/>
+                <Registration Include="${Boolean(this._data['registration'])}"/>
                 <!-- Уведомление о направлении документа.			Включить в доклад. Include: All(Все)|None(Не включать)|First(Первые) -->
-                <Forwarding Include="${this._data['Address']}"/>
+                <Forwarding Include="${kindForwardingDocs}"/>
                 <!--Уведомление о работе с документом
                 Включить в доклад. Include: None(Не включать)|First(Первые)|All(Все)|Last(Последние) -->
-                <Consideration Include="${this._data['Address']}"/>
+                <Consideration Include="${this.considerationInclude()}"/>
                 <!--Уведомление об отчете исполнения.			Включить в доклад. Include: true|false -->
-                <Report Include="${this._data['Address']}"/>
+                <Report Include="${Boolean(this._data['NotificationConfigReport'])}"/>
                 <!--Уведомление о перенаправлении документа.			Включить в доклад. Include: true|false -->
-                <Redirection Include="${this._data['Address']}"/>
+                <Redirection Include="${Boolean(this._data['redirection'])}"/>
                 <!--Уведомление об отправке документа-ответа.			Включить в доклад. Include: true|false -->
-                <Answer Include="${this._data['Address']}"/>
-                <NotificationUpdateOptions Update="${this._data['Address']}" StopDayCalc="${this._data['Address']}"/>
+                <Answer Include="${Boolean(this._data['answer'])}"/>
+                <NotificationUpdateOptions Update="${update}" StopDayCalc="${updateCalc}"/>
             </NotificationConfig>
         </SendReportRule>`;
     }
 
     private receiveReportRule(): string {
+        const addresUse = !this._data['address'] ? 'DoNotUse' : this._data['adrReplace'] === 1 ? 'Always' : 'IfEmpty';
+
         return `<?xml version="1.0"?>
         <ReceiveReportRule>
             <ScriptConfig>
                 <Contact>
-                    <Address Use="${this._data['Address']}">
-                        <Region Use="${this._data['Address']}"/>
+                    <Address Use="${addresUse}">
+                        <Region Use="${Boolean(this._data['region'])}"/>
                     </Address>
-                    <OrganizationFolder>${this._data['Address']}</OrganizationFolder>
+                    <OrganizationFolder>${this._data['OrganizationFolderInput'] || ''}</OrganizationFolder>
                 </Contact>
-                <Registration MarkAddresse="${this._data['Address']}"/>
-                <Task MarkExecutor="${this._data['Address']}"><ExecutorFile Use="${this._data['Address']}"/></Task>
+                <Registration MarkAddresse="${Boolean(this._data['regNumber'])}"/>
+                <Task MarkExecutor="${Boolean(this._data['reportExecution'])}"><ExecutorFile Use="${Boolean(this._data['executorFile'])}"/></Task>
             </ScriptConfig>
         </ReceiveReportRule>`;
     }
@@ -493,67 +868,77 @@ export class EosSevRulesService {
     }
 
     private receiveProjectRule(): string {
+        const Link = !this._data['LinkPD'] ? 'None' : this._data['linkKind'] === 1 ? 'List' : 'All'; // Связки РКПД LinkPD
+        const Executor = !this._data['executorsProject'] ? 'None' : this._data['kindExecutorProject'] === 1 ? 'First' : 'All';
+        const Visa = !this._data['visa'] ? 'None' : this._data['VisaKindTake'] === 1 ? 'Extraction' : 'All';
+        const Sign = !this._data['signatures'] ? 'None' : this._data['signatureKindTake'] === 1 ? 'Extraction' : 'All';
         return `<?xml version="1.0"?>
         <ReceiveProjectRule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
             <ScriptConfig>
                 <Contact>
-                    <Address Use="${this._data['Address']}"><Region Use="${this._data['Address']}"/></Address>
-                    <OrganizationFolder>${this._data['Address']}</OrganizationFolder>
+                    <Address Use="${Boolean(this._data['address'])}"><Region Use="${Boolean(this._data['region'])}"/></Address>
+                    <OrganizationFolder>${this._data['OrganizationFolderInput'] || ''}</OrganizationFolder>
                 </Contact>
                 <Project>
-                    <Link Use="${this._data['Address']}" LinkTypeList="${this._data['Address']}"/>
-                    <Access Use="${this._data['Address']}"/>
-                    <Rubric Use="${this._data['Address']}"/>
-                    <Addressee Use="${this._data['Address']}"/>
-                    <AdditionalField Use="${this._data['Address']}"/>
-                    <Executor Use="${this._data['Address']}"/>
-                    <File Use="${this._data['Address']}"/>
-                    <Visa Use="${this._data['Address']}">
-                        <Content Use="${this._data['Address']}"><File Use="${this._data['Address']}"/></Content>
-                        <SendOptions Send="${this._data['Address']}" TermFlag="${this._data['Address']}" Term="${this._data['Address']}"/>
+                    <Link Use="${Link}" LinkTypeList="${this._data['linkTypeList'] || ''}"/>
+                    <Access Use="${Boolean(this._data['access'])}"/>
+                    <Rubric Use="${Boolean(this._data['rubric'])}"/>
+                    <Addressee Use="${Boolean(this._data['addressee'])}"/>
+                    <AdditionalField Use="${Boolean(this._data['additionalField'])}"/>
+                    <Executor Use="${Executor}"/>
+                    <File Use="${Boolean(this._data['FileRKPD'])}"/>
+                    <Visa Use="${Visa}">
+                        <Content Use="${Boolean(this._data['VisaInfo'])}"><File Use="${Boolean(this._data['VisaFile'])}"/></Content>
+                        <SendOptions Send="${Boolean(this._data['visaForward'])}" TermFlag="${this._data['visaDays'] || ''}" Term="${this._data['visaDate'] || ''}"/>
                     </Visa>
-                    <Sign Use="${this._data['Address']}">
-                        <Content Use="${this._data['Address']}"><File Use="${this._data['Address']}"/></Content>
-                        <SendOptions Send="${this._data['Address']}" TermFlag="${this._data['Address']}" Term="${this._data['Address']}"/>
+                    <Sign Use="${Sign}">
+                        <Content Use="${Boolean(this._data['signaturesInfo'])}"><File Use="${Boolean(this._data['signaturesFile'])}"/></Content>
+                        <SendOptions Send="${Boolean(this._data['signatureForward'])}" TermFlag="${this._data['signatureDays'] || ''}" Term="${this._data['signatureDate'] || ''}"/>
                     </Sign>
                 </Project>
                 <RegistrationParams>
-                    <ExecutorListID>${this._data['Address']}</ExecutorListID>
-                    <RepresentativePerson>${this._data['Address']}</RepresentativePerson>
+                    <ExecutorListID>${this._data['executor'] || ''}</ExecutorListID>
+                    <RepresentativePerson>${this._data['executiveInput'] || ''}</RepresentativePerson>
                 </RegistrationParams>
             </ScriptConfig>
         </ReceiveProjectRule>`;
     }
 
     private sendProjectReportRule(): string {
+        const VisaDirection = !this._data['forwardingVisa'] ? 'None' : this._data['forwardingVisaKind'] === 1 ? 'Sent' : 'All';
+        const SignDirection = !this._data['forwardingSign'] ? 'None' : this._data['forwardingSignKind'] === 1 ? 'Sent' : 'All';
+        const Visa = !this._data['reportVisa'] ? 'None' : this._data['reportVisaKind'] === 1 ? 'Sent' : 'All';
+        const Sign = !this._data['reportSign'] ? 'None' : this._data['reportSignKind'] === 1 ? 'Sent' : 'All';
         return `<?xml version="1.0"?>
         <SendProjectReportRule>
             <ScriptConfig>
                 <Contact>
-                    <Address Include="${this._data['Address']}"><Region Include="${this._data['Address']}"/></Address>
+                    <Address Include="${Boolean(this._data['address'])}"><Region Include="${Boolean(this._data['region'])}"/></Address>
                 </Contact>
             </ScriptConfig>
-            <NotificationConfig StopDayCount="${this._data['Address']}">
-                <Reception Include="${this._data['Address']}"/>
-                <Registration Include="${this._data['Address']}"/>
-                <VisaDirection Include="${this._data['Address']}"/>
-                <SignDirection Include="${this._data['Address']}"/>
-                <Visa Include="${this._data['Address']}"><File Include="${this._data['Address']}"/></Visa>
-                <Sign Include="${this._data['Address']}"><File Include="${this._data['Address']}"/></Sign>
-                <FileOptions Extensions="${this._data['Address']}" MaxLength="${this._data['Address']}"/>
-            </NotificationConfig>
+            <NotificationConfig StopDayCount="${this._data['stopDayCount'] || ''}">
+                <Reception Include="${Boolean(this._data['reception'])}"/>
+                <Registration Include="${Boolean(this._data['registrationProject'])}"/>
+                <VisaDirection Include="${VisaDirection}"/>
+                <SignDirection Include="${SignDirection}"/>
+                <Visa Include="${Visa}"><File Include="${Boolean(this._data['VisaFile'])}"/></Visa>
+                <Sign Include="${Sign}"><File Include="${Boolean(this._data['signaturesFile'])}"/></Sign>
+                <FileOptions Extensions="${this._data['fileExtensions'] || ''}" MaxLength="${this._data['fileMaxLength'] || ''}"/>
+                <ProjectRegistration Include="${Boolean(this._data['progectRegistration'])}"><File Include="${Boolean(this._data['fileDocument'])}"/></ProjectRegistration>
+                </NotificationConfig>
         </SendProjectReportRule>`;
     }
 
     private receiveProjectReportRule(): string {
+        const Executor = !this._data['executorsProject'] ? 'None' : this._data['kindExecutorProject'] === 1 ? 'First' : 'All';
         return `<?xml version="1.0"?>
         <ReceiveProjectReportRule>
             <ScriptConfig>
-                <Executor Use="${this._data['Executor']}"/>
-                <VisaSign Use="${this._data['Executor']}">
-                    <File Use="${this._data['Executor']}"/>
+                <Executor Use="${Executor}"/>
+                <VisaSign Use="${Boolean(this._data['infoVisaign'])}">
+                    <File Use="${Boolean(this._data['fileVisaign'])}"/>
                 </VisaSign>
-                <VisaSignPersonUpdate Use="${this._data['Executor']}"/>
+                <VisaSignPersonUpdate Use="${Boolean(this._data['correctingVisaign'])}"/>
             </ScriptConfig>
         </ReceiveProjectReportRule>`;
     }

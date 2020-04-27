@@ -536,6 +536,15 @@ export abstract class AbstractDictionaryDescriptor {
     loadNames(type, data): Promise<any> {
         return null;
     }
+    readUserLists(query): Promise<any> {
+        return null;
+    }
+    readDepartmentLists(query): Promise<any> {
+        return null;
+    }
+    readCabinetLists(query): Promise<any> {
+        return null;
+    }
 
     presaveSevRoutine(sevData: SEV_ASSOCIATION, record: any, changeData: any[], results: IRecordOperationResult[]): Promise<boolean> {
         if (!Features.cfg.SEV.isIndexesEnable) {

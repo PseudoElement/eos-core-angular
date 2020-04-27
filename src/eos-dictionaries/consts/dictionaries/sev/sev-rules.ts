@@ -10,7 +10,7 @@ import {
     ITEMS_KIND,
     KOR_RULE_SEND, ORDERS_KIND,
     RESOLUTION_KIND, SIGNATURES_KIND,
-    TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE
+    TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE, RESEVER_SELECT
 } from './types.consts';
 import {SECURITY_DICT} from '../security.consts';
 import {ORG_TYPE_DICT} from '../org-type.consts';
@@ -94,8 +94,9 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         }, {
             key: 'departmentReceive', // TODO справочник организаций и подразделений
             type: 'select',
-            options: [],
+            options: RESEVER_SELECT,
             title: 'Получатель',
+            default: 1,
         }, {
             key: 'kindDepartment',
             type: 'select',
@@ -104,6 +105,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'link',
             type: 'boolean',
             title: 'Связки РК',
+            default: false, // для по умолчанию
         }, {
             key: 'linkKind',
             type: 'buttons',
@@ -113,51 +115,52 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'linkTypeList',  // TODO Типы связок
             type: 'select',
             options: [],
+            default: '',
         }, {
             key: 'access',
             type: 'boolean',
             title: 'Гриф доступа',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'rubric',
             type: 'boolean',
             title: 'Рубрики',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'address',
             type: 'boolean',
             title: 'Адрес субъекта документа',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'region',
             type: 'boolean',
             title: 'Регион субъекта документа',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'visa',
             type: 'boolean',
             title: 'Визы',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'addressee',
             type: 'boolean',
             title: 'Адресаты',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'addresseeKind',
             type: 'buttons',
-            default: 0,
+            default: 0, // по умолчанию
             options: ADDRESSEE_KIND,
         }, {
             key: 'additionalField',
             title: 'Доп. реквизиты',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'userGrantedOnly',
             title: 'Только доступные пользователю файлы и поручения',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'file',
             title: 'Файлы',
@@ -180,52 +183,54 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'fileAccessListRk',
             title: 'Грифы доступа:',
             type: 'string',
+            default: '1',
         },
         {
             key: 'fileMaxLength',
             title: 'Max размер',
             type: 'number',
-            pattern: /^\s?\d{0,9}$/
+            pattern: /^[1-9]{1}[1-9]{0,8}$/,
+            default: ''
         }, {
             key: 'item',
             title: 'Пункты',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'itemKind',
             type: 'buttons',
-            default: 1,
+            default: 2, // по умолчанию
             options: ITEMS_KIND,
         }, {
             key: 'resolution',
             title: 'Резолюции',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'resolutionKind',
             type: 'buttons',
-            default: 2,
+            default: 3, // по умолчанию
             options: RESOLUTION_KIND,
         }, {
             key: 'taskCategory',
             title: 'Категория поручения',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'taskController',
             title: 'Контролер поручения',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'taskNote',
             title: 'Примечание',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'taskFile',
             title: 'Файлы',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'taskFileExtensions',
             title: 'С расширением',
@@ -235,65 +240,66 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'taskFileMaxLength',
             title: 'Max размер',
             type: 'number',
-            pattern: /^\s?\d{0,9}$/
+            pattern: /^[1-9]{1}[1-9]{0,8}$/,
+            default: '',
         }, {
             key: 'reception',
             title: 'Уведомление о приеме',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'registration',
             title: 'Доклад о регистрации (отказ в регистрации)/доклад о редактировании данных',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'forwarding',
             title: 'Доклад о направлении документа',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'consideration',
             title: 'Доклад о работе с документом (ввод резолюций)',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'report',
             title: 'Доклад об исполнении поручения',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'redirection',
             title: 'Доклад об отправке документов',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'answer',
             title: 'Доклад об отправке документа-ответа',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'stopDayCount',
             title: 'Доклады направлять в течении (сутки)',
             type: 'numberIncrement',
-            default: 30,
+            default: 30, // по умолчанию
             required: true,
             pattern: /^[1-9]$|^[0-9]{2,3}$/
         }, {
             key: 'handRegistration',
             title: 'Направлять на ручную регистрацию',
             type: 'boolean',
-            default: false
+            default: false // по умолчанию
         }, {
-            key: 'FilterConfig',
+            key: 'filterConfig',
             title: 'Для групп документов',
-            type: 'array',
+            type: 'select',
             options: [],
         }, {
             key: 'cardFile',
             title: 'Картотека автомата',
             type: 'select',
             options: [],
-
+            default: '0.',
         }, {
             key: 'cabinetFile',
             title: 'Кабинет автомата',
@@ -315,7 +321,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'adrReplace',
             type: 'buttons',
             options: ADDRESS_REPLACE,
-            default: 1,
+            default: 2,
         }, {
             key: 'takeFileRK',
             title: 'Принимать файлы РК',
@@ -325,30 +331,32 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'orders',
             title: 'Поручения',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'ordersKind',
             type: 'buttons',
             options: ORDERS_KIND,
-            default: 0,
+            default: 0, // по умолчанию
         }, {
             key: 'noteOrders',
             title: 'Примечание',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'takeFileOrders',
-            title: 'Принимать файлы РК',
+            title: 'Принимать файлы Поручений',
             type: 'boolean',
             default: true,
         }, {
-            key: 'takeFileRK',
+            key: 'FileRK',
             title: 'Файлы РК',
             type: 'boolean',
+            default: false // по умолчанию
         }, {
             key: 'takeOrdersRK',
-            title: 'Проучния РК',
+            title: 'Поручения РК',
             type: 'boolean',
+            default: false // по умолчанию
         }, {
             key: 'forwardingDocs',
             title: 'Доклад о направлениях документа',
@@ -368,42 +376,57 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'textConsideration',
             title: 'Текст резолюции',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'categoryConsideration',
             title: 'Категория резолюции',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'noteConsideration',
             title: 'Примечание',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'controlConsideration',
             title: 'Контрольность резолюции',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'planConsideration',
             title: 'План. дата',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'Summary',
             title: 'Ход исполнения',
             type: 'boolean',
+            default: true, // по умолчанию
+        }, {
+            key: 'controllerMission',
+            title: 'Контролёр поручения',
+            type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'FactDate',
             title: 'Дата снятия с контроля',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'Status',
             title: 'Состояние исполненения',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'Resume',
             title: 'Основание для снятия с контроля',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'executors',
             title: 'Исполнители резолюции',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'kindExecutorConsideration',
             type: 'buttons',
@@ -413,7 +436,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'executorFile',
             title: 'Файлы исполнителя',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'editSet',
             title: 'Редактировать набор отправляемых уведомлений и докладов после повторного документа СЭВ',
@@ -421,22 +444,24 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             default: true,
         }, {
             key: 'calcDate',
-            title: 'Пересчитывать срок отправки докуладов',
+            title: 'Пересчитывать срок отправки докладов',
             type: 'boolean',
-            default: true,
+            default: false, // по умолчанию
         }, {
             key: 'regNumber',
             title: 'Рег.№ в \'Адресат\'',
             type: 'boolean',
+            default: true, // по умолчанию
         }, {
             key: 'reportExecution',
             title: 'Отчет об исполнении в \'Поручение\'',
             type: 'boolean',
-            default: true,
+            default: true, // по умолчанию
         }, {
             key: 'LinkPD',
             type: 'boolean',
             title: 'Связки РКПД:',
+            default: false,
         }, {
             key: 'executorsProject',
             type: 'boolean',
@@ -555,6 +580,8 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'visaDate',
             title: 'Срок визы, если требуемый срок истек',
             type: 'number',
+            pattern: /^\s?\d{0,2}$/,
+            default: ''
         }, {
             key: 'visaDays',
             title: 'дней',
@@ -564,6 +591,8 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'signatureDate',
             title: 'Срок подписи, если требуемый срок истек',
             type: 'number',
+            pattern: /^\s?\d{0,2}$/,
+            default: ''
         }, {
             key: 'signatureDays',
             title: 'дней',
@@ -612,6 +641,43 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             title: 'Корректировать визирующих/подписывающих в РКПД',
             type: 'boolean',
             default: true,
+        }, {
+            key: 'NotificationConfigReport',
+            title: 'Доклад об исполнении поручений',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'OrganizationFolderInput',
+            title: 'Организации создавать:',
+            type: 'string',
+            default: '', // по умолчанию
+        }, {
+            key: 'linkTypeListInput',
+            title: 'Организации создавать:',
+            type: 'string',
+            default: '', // по умолчанию
+        }, {
+            key: 'executiveInput',
+            title: 'ДЛ за "Текущую организацию":',
+            type: 'string',
+        }, {
+            key: 'groupDocument',
+            title: 'Для групп документов:',
+            type: 'string',
+        }, {
+            key: 'fileDocument',
+            title: 'Файл документа:',
+            type: 'boolean',
+            default: false, // по умолчанию
+        }, {
+            key: 'departmentReceiveInput',
+            title: 'Подразделение:',
+            type: 'string',
+        }, {
+            key: 'organizationNow',
+            title: 'Текущая организация',
+            type: 'string',
+            default: ''
         }
     ],
     editFields: ['CLASSIF_NAME', 'RULE_KIND', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DOCGROUP_NAME', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
@@ -629,9 +695,12 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
          'VisaKind', 'VisaInfo', 'VisaFile', 'signatures', 'signaturesKind', 'signaturesInfo', 'signaturesFile', 'registrationProject',
         'forwardingVisa', 'forwardingSign', 'reportVisa', 'reportSign', 'executor', 'executive', 'visaDate', 'visaDays',
         'signatureDate', 'signatureDays', 'visaForward', 'signatureForward', 'VisaKindTake', 'signatureKindTake', 'forwardingVisaKind',
-        'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign', 'progectRegistration', 'fileAccessListRk'],
+        'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign', 'progectRegistration', 'fileAccessListRk',
+        'NotificationConfigReport', 'controllerMission', 'OrganizationFolderInput', 'reportExecution', 'filterConfig', 'linkTypeListInput', 'executiveInput',
+        'groupDocument', 'fileDocument', 'FileRK', 'departmentReceive', 'departmentReceiveInput', 'organizationNow'
+    ],
     listFields: ['CLASSIF_NAME', 'NOTE'],
     allVisibleFields: [],
-    quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'DUE_DOCGROUP'],
+    quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'DUE_DOCGROUP_NAME'],
     searchFields: ['CLASSIF_NAME'],
 });
