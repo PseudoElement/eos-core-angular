@@ -12,6 +12,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_PARMS } from 'eos-rest';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 // Input, Output, EventEmitter
 @Component({
@@ -50,12 +51,22 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public maxLoginLength: string;
     inputFields: IInputParamControl[];
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
+    get checkCurrentUser() {
+        if (this.form) {
+            if (this.form.controls['SELECT_AUTENT'].value === '1' && this._appCtx.CurrentUser.CLASSIF_NAME === this.curentUser.CLASSIF_NAME) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
     constructor(
         private _inputCtrlSrv: InputParamControlService,
         private _userParamSrv: UserParamsService,
         private apiSrvRx: PipRX,
         private _errorSrv: ErrorHelperServices,
         private _msgSrv: EosMessageService,
+        private _appCtx: AppContext,
     ) {
 
     }

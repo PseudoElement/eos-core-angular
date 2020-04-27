@@ -1,19 +1,19 @@
 <div *ngIf="!isLoading" class="autentification-window">
-    <eos-user-params-header 
-        [editMode]="editMode" 
-        [title]='titleHeader' [disableBtn]="false" 
-        [defaultBtn]='false' 
-        [errorSave] = "this.form.status === 'INVALID' || this.form.controls['CLASSIF_NAME'].value === ''"
-        (submitEmit)='preSubmit($event)' 
-        (cancelEmit)='cancel($event)' 
+    <eos-user-params-header
+        [editMode]="editMode"
+        [title]='titleHeader' [disableBtn]="false"
+        [defaultBtn]='false'
+        [errorSave] = "this.form.status === 'INVALID' || this.form.controls['CLASSIF_NAME'].value === '' || checkCurrentUser"
+        (submitEmit)='preSubmit($event)'
+        (cancelEmit)='cancel($event)'
         (editEmit)='edit($event)'
         ></eos-user-params-header><!-- (defaultEmit)='default($event)' -->
     <div class="autentification-control">
         <div class="select-auntef" >
             <label>Система аутентификации</label>
-            <select 
-            class="form-control m-font" 
-            id="selectAut" 
+            <select
+            class="form-control m-font"
+            id="selectAut"
             #autentif
             [disabled]="returnEdit()"
             (change)="onChangeAuntef()">
@@ -36,22 +36,22 @@
         <!-- <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['USERTYPE']" container="body"></eos-dynamic-input> -->
         <!-- <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['pass']" container="body"></eos-dynamic-input>
         <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['passRepeated']" container="body"></eos-dynamic-input> -->
-    </div> 
-    <div style="width: 200px; margin-bottom: 20px;" 
-        class="base-text-input base-login-input autentification-control-type" 
-        [formGroup]="form" 
-        [tooltip]="errorPass && editMode ? 'Для смены логина задайте пароль' : validClassif" 
-        container="body" 
-        placement="bottom" 
+    </div>
+    <div style="width: 200px; margin-bottom: 20px;"
+        class="base-text-input base-login-input autentification-control-type"
+        [formGroup]="form"
+        [tooltip]="errorPass && editMode ? 'Для смены логина задайте пароль' : validClassif"
+        container="body"
+        placement="bottom"
         containerClass="tooltip-error">
-        <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel" 
+        <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel"
         [attr.for]="inputs['CLASSIF_NAME'].key">
             {{inputs['CLASSIF_NAME'].label}}
         </label >
         <input
-            class="form-control m-font" 
-            maxlength="maxLoginLength" 
-            [formControlName]="inputs['CLASSIF_NAME'].key" 
+            class="form-control m-font"
+            maxlength="maxLoginLength"
+            [formControlName]="inputs['CLASSIF_NAME'].key"
             autocomplete="off">
     </div>
     <div *ngIf="getPassDate()" class="autentification-control-type">
@@ -82,14 +82,14 @@
             <div  [formGroup]="form" class="dynamic-input-wrapper base-text-input text-pass-input">
                 <label [hidden]="inputs['passRepeated'].hideLabel" [attr.for]="inputs['passRepeated'].key">{{inputs['passRepeated'].label}}</label>
                 <div class="vision" [ngClass]="{'disabled': inputs['passRepeated'].disabled}">
-                    <input class="form-control m-font" maxlength="30" [formControlName]="inputs['passRepeated'].key" 
-                    [id]="inputs['passRepeated'].key" [type]="type1" 
-                    [readonly]="inputs['passRepeated'].readonly" 
-                    [ngClass]="{'error-focus': errorPass, 'readonly': readonly}" 
+                    <input class="form-control m-font" maxlength="30" [formControlName]="inputs['passRepeated'].key"
+                    [id]="inputs['passRepeated'].key" [type]="type1"
+                    [readonly]="inputs['passRepeated'].readonly"
+                    [ngClass]="{'error-focus': errorPass, 'readonly': readonly}"
                     [placeholder]="curentUser.IS_PASSWORD ? '*******' : inputs['passRepeated'].label"
-                    [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'" 
-                    placement="bottom" 
-                    [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'" 
+                    [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'"
+                    placement="bottom"
+                    [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'"
                     autocomplete="off">
                     <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
                 </div>
