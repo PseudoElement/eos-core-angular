@@ -82,6 +82,9 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         }
         return newData;
     }
+    resetData() {
+        Object.assign(this.data.rec, this.data.rec._orig);
+    }
 
     confirmSave(): Promise<boolean> {
         if (this.baseCardEditRef) {

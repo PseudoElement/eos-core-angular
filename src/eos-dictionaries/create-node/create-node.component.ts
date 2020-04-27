@@ -94,6 +94,8 @@ export class CreateNodeComponent {
                     this.upadating = true;
                     this._sendDataOnCreate(data, hide);
                     this._dictSrv.currentTab = 0;
+                }   else {
+                    this.cardEditRef.resetData();
                 }
             }).catch(e => {
                 this.cardEditRef.isChanged = false;
