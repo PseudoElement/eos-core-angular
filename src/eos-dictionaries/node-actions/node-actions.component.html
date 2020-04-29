@@ -26,7 +26,7 @@
                             class="btn btn-primary-light {{item.buttonClass}}"
                             [ngClass]="{'active': item.isActive}"
                             >
-                            <span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span>
+                            <span [ngClass]="!item.isActive ? item.disabledIconClass  : item.iconClass"></span>
                         </button>
                     </div>
                     <ul *ngIf="item.enabled"
