@@ -88,7 +88,7 @@
     <div class="not-unique-elem-content" [ngClass] = "{'not-unique-elem-content-height': this.notUniqueElem.length === 0}">
         <div *ngFor="let item of notUniqueElem">
             <div class="model-items" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)">
-                <span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-restricted-blue"></span>
+                <span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-lock-blue"></span>
                 <div class="model-items-label">
                     <label>{{item['CLASSIF_NAME']}}</label>
                 </div>
