@@ -381,14 +381,14 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             }
             if (data &&
                 +data['RULE_KIND'] === 6 &&
-                !data['visaForward'] &&
+                data['visaForward'] &&
                 !data['visaDate']
             ) {
                 errors.push(`Срок визы должен быть заполнен`);
             }
             if (data &&
                 +data['RULE_KIND'] === 6 &&
-                !data['signatureForward'] &&
+                data['signatureForward'] &&
                 !data['signatureDate']
             ) {
                 errors.push(`Срок подписи должен быть заполнен`);
@@ -397,6 +397,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             (data['LinkPD'] && data['linkKind'] === 1 && String(data['type']) === '2' && (data['linkTypeList'] === 'null' || !data['linkTypeList']))
             ) {
                 errors.push(`Тип связки должен быть выбран`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data.executiveInput) {
+                errors.push(`Поле \'ДЛ за Текущую организацию\' обязательно для заполнения`);
             }
             return errors;
         } else {

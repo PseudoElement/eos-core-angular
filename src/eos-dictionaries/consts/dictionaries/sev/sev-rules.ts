@@ -586,7 +586,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'visaDays',
             title: 'дней',
             type: 'boolean',
-            default: true,
+            default: false,
         }, {
             key: 'signatureDate',
             title: 'Срок подписи, если требуемый срок истек',
@@ -597,7 +597,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'signatureDays',
             title: 'дней',
             type: 'boolean',
-            default: true,
+            default: false,
         }, {
             key: 'visaForward',
             title: 'Направить на визирование',
@@ -660,6 +660,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'executiveInput',
             title: 'ДЛ за "Текущую организацию":',
             type: 'string',
+            default: '', // по умолчанию
         }, {
             key: 'groupDocument',
             title: 'Для групп документов:',

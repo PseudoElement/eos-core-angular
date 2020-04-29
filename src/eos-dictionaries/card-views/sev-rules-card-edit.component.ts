@@ -436,9 +436,6 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                     return i.DUE_LINK_ORGANIZ;
                 });
             }
-            this.dictSrv['_apiSrv'].read({DELO_OWNER: -99 }).then((o: any[]) => {
-                this.inputs['rec.organizationNow'].value = o[0]['DUE_ORGANIZ'];
-            });
             this.dictSrv['_apiSrv'].read({ ORGANIZ_CL: idsOrganiz }).then((o: ORGANIZ_CL[]) => {
                 const due_depInput = this.inputs['rec.DUE_DEP'];
                 o.forEach((e: ORGANIZ_CL) => {
@@ -570,20 +567,20 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         const formKind = this.form.controls['rec.kind'].value;
         const type = this.form.controls['rec.type'].value;
         this.form.controls['rec.departmentReceive'].setValue(1);
-        if (type === 1) {
-            formRuleKind.patchValue(formKind);
+        if (+type === 1) {
+            formRuleKind.patchValue(+formKind);
         } else {
-            formRuleKind.patchValue(formKind + 4);
+            formRuleKind.patchValue(+formKind + 4);
         }
         this.updateOnDefaultValue(); // обновляем все поля
     }
      private updateOnlyKind(value: number): void {
          const type = this.form.controls['rec.type'].value;
          const kind = this.form.controls['rec.RULE_KIND'];
-         if (type === 1) {
-             kind.patchValue(value);
+         if (+type === 1) {
+             kind.patchValue(+value);
          } else {
-             kind.patchValue(value + 4);
+             kind.patchValue(+value + 4);
          }
          this.updateLabel(value);
          this.form.controls['rec.departmentReceive'].setValue(1);

@@ -5,7 +5,7 @@ import { EosSevRulesService } from '../../services/eos-sev-rules.service';
 import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 /* import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component'; */
-/* import { BUTTON_RESULT_CANCEL, CONFIRM_NOT_CONSLITE } from 'app/consts/confirms.const'; */
+import { /*BUTTON_RESULT_CANCEL,*/ CONFIRM_NOT_CONSLITE } from 'app/consts/confirms.const';
 
 export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
 
@@ -179,9 +179,11 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
         return this.apiSrv.read(query);
     }
     confirmSave(data: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        // data.rec.organizationNow rec.DUE_DEP   картотека автомата => cardFile
-        // data.rec.organizationNow === rec.DUE_DEP сообщение не выдавать
-        /* if (true) {
+        const errors = [];
+        if (data.rec['RULE_KIND'] === 2 && data.rec.DUE_DEP && data.rec.DUE_DEP !== '0.' && String(data.rec.cardFile).indexOf(data.rec.DUE_DEP) !== 0) {
+           errors.push('Подразделение, образующее \"Картотеку автомата\", не входит в состав организации \"Получателя\".\n');
+        }
+        if (errors.length > 0) {
             return confirmSrv.confirm2(Object.assign({}, CONFIRM_NOT_CONSLITE)).then((button) => {
                 if (button['result'] === 1) {
                     return true;
@@ -191,8 +193,9 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
             .catch(er => {
                 return false;
             });
-        } */
-        return Promise.resolve(true);
+        } else {
+            return Promise.resolve(true);
+        }
 
 
     }
