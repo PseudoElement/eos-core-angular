@@ -208,11 +208,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     checkChangeForm(data): void {
         Object.keys(data).forEach((val, index) => {
-                if (data[val] !== this.inputs[val].value) {
-                    this._newData.set(val, data[val]);
-                } else {
-                    this._newData.delete(val);
-                }
+            if (data[val] !== this.inputs[val].value) {
+                this._newData.set(val, data[val]);
+            } else {
+                this._newData.delete(val);
+            }
         });
         this._pushState();
     }
@@ -321,46 +321,53 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         const query = [];
         const accessStr = '';
         this.checkDLSurname(query)
-        .then(() => {
-            this.setQueryNewData(accessStr, newD, query);
-            this.setNewDataFormControl(query, id);
-            if (!this.curentUser['IS_PASSWORD']) {
-                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                    if (res) {
-                        return this.ConfirmAvSystems(accessStr, id, query).then(() => {
-                            this._router.navigate(['/user-params-set/auntefication']);
-                        });
-                    } else {
-                        return this.ConfirmAvSystems(accessStr, id, query);
-                    }
-                });
-            } else {
-                return this.ConfirmAvSystems(accessStr, id, query);
-            }
-        });
+            .then(() => {
+                this.setQueryNewData(accessStr, newD, query);
+                this.setNewDataFormControl(query, id);
+                if (!this.curentUser['IS_PASSWORD']) {
+                    return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                        if (res) {
+                            return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                this._router.navigate(['/user-params-set/auntefication']);
+                            });
+                        } else {
+                            return this.ConfirmAvSystems(accessStr, id, query);
+                        }
+                    });
+                } else {
+                    return this.ConfirmAvSystems(accessStr, id, query);
+                }
+            });
     }
 
     checkDLSurname(mas: any[]): Promise<any> {
-        if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
-            return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
-                if (confirmation['result'] === 1) {
-                    mas.push({
-                        method: 'MERGE',
-                        requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
-                        data: {
-                            SURNAME: this.form.get('SURNAME_PATRON').value
+        if (this._newData.get('SURNAME_PATRON')) {
+            if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
+                return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
+                    if (confirmation) {
+                        if (confirmation['result'] === 1) {
+                            mas.push({
+                                method: 'MERGE',
+                                requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
+                                data: {
+                                    SURNAME: this.form.get('SURNAME_PATRON').value
+                                }
+                            });
+                            this.updateDL = true;
+                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        } else {
+                            this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
                         }
-                    });
-                    this.updateDL = true;
-                    this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
-                } else {
-                    this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
-                }
-                return null;
-            });
+                    }
+                    return null;
+                });
+            } else {
+                return Promise.resolve(null);
+            }
         } else {
             return Promise.resolve(null);
         }
+
     }
 
     ConfirmAvSystems(accessStr: string, id: number, query: any[]): Promise<any> {
@@ -413,19 +420,19 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                    return this._userParamSrv.dropLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
-                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
-                        if (+this.curentUser.USERTYPE !== 1) {
-                            return this.apiSrvRx.batch(queryPas, '').then(() => {
-                                return this.sendData(query, accessStr);
-                            });
-                        } else {
+                return this._userParamSrv.dropLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
+                    this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
+                    if (+this.curentUser.USERTYPE !== 1) {
+                        return this.apiSrvRx.batch(queryPas, '').then(() => {
                             return this.sendData(query, accessStr);
-                        }
-                    }).catch(error => {
-                        this._errorSrv.errorHandler(error);
-                        this.cancel();
-                    });
+                        });
+                    } else {
+                        return this.sendData(query, accessStr);
+                    }
+                }).catch(error => {
+                    this._errorSrv.errorHandler(error);
+                    this.cancel();
+                });
             }
         } else {
             return this.sendData(query, accessStr);
@@ -753,7 +760,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     private _pushState() {
-        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate});
+        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate });
     }
 
     private _subscribe() {
@@ -809,7 +816,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
     private SEARCH_INCORRECT_SYMBOLS() {
-        return  new RegExp('["|\']', 'g');
+        return new RegExp('["|\']', 'g');
     }
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {

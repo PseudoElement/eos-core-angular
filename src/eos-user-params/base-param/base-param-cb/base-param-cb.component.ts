@@ -112,7 +112,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
-                this._userParamSrv.curentUser.USER_PARMS_List.forEach( elem => {
+                this._userParamSrv.curentUser.USER_PARMS_List.forEach(elem => {
                     if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
                         this.criptoView = true;
                     }
@@ -386,74 +386,81 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const query = [];
         const accessStr = '';
         this.checkDLSurname(query)
-        .then(() => {
-            this.setQueryNewData(accessStr, newD, query);
-            this.setNewDataFormControl(query, id);
-            if (this._newData.get('IS_SECUR_ADM') === false) {
-                this.apiSrvRx.read<USER_CL>({
-                    USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1',  'ORACLE_ID': 'isnotnull', 'DELETED': '0'}),
-                    orderby: 'ISN_LCLASSIF',
-                    top: 2,
-                    loadmode: 'Table'
-                  }).then((admns: USER_CL[]) => {
-                    if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
-                        this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
-                        return;
-                    } else {
-                        if (!this.curentUser['IS_PASSWORD']) {
-                            return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                                if (res) {
-                                    return this.ConfirmAvSystems(accessStr, id, query).then(() => {
-                                        this._router.navigate(['/user-params-set/auntefication']);
-                                    });
-                                } else {
-                                    return this.ConfirmAvSystems(accessStr, id, query);
-                                }
-                            });
+            .then(() => {
+                this.setQueryNewData(accessStr, newD, query);
+                this.setNewDataFormControl(query, id);
+                if (this._newData.get('IS_SECUR_ADM') === false) {
+                    this.apiSrvRx.read<USER_CL>({
+                        USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1', 'ORACLE_ID': 'isnotnull', 'DELETED': '0' }),
+                        orderby: 'ISN_LCLASSIF',
+                        top: 2,
+                        loadmode: 'Table'
+                    }).then((admns: USER_CL[]) => {
+                        if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                            this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
+                            return;
                         } else {
-                            return this.ConfirmAvSystems(accessStr, id, query);
-                        }
-                    }
-                });
-            } else {
-                if (!this.curentUser['IS_PASSWORD']) {
-                    return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                        if (res) {
-                            return this.ConfirmAvSystems(accessStr, id, query).then(() => {
-                                this._router.navigate(['/user-params-set/auntefication']);
-                            });
-                        } else {
-                            return this.ConfirmAvSystems(accessStr, id, query);
+                            if (!this.curentUser['IS_PASSWORD']) {
+                                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                                    if (res) {
+                                        return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                            this._router.navigate(['/user-params-set/auntefication']);
+                                        });
+                                    } else {
+                                        return this.ConfirmAvSystems(accessStr, id, query);
+                                    }
+                                });
+                            } else {
+                                return this.ConfirmAvSystems(accessStr, id, query);
+                            }
                         }
                     });
                 } else {
-                    return this.ConfirmAvSystems(accessStr, id, query);
+                    if (!this.curentUser['IS_PASSWORD']) {
+                        return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                            if (res) {
+                                return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                    this._router.navigate(['/user-params-set/auntefication']);
+                                });
+                            } else {
+                                return this.ConfirmAvSystems(accessStr, id, query);
+                            }
+                        });
+                    } else {
+                        return this.ConfirmAvSystems(accessStr, id, query);
+                    }
                 }
-            }
-        });
+            });
     }
 
     checkDLSurname(mas: any[]): Promise<any> {
-        if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
-            return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
-                if (confirmation['result'] === 1) {
-                    mas.push({
-                        method: 'MERGE',
-                        requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
-                        data: {
-                            SURNAME: this.form.get('SURNAME_PATRON').value
+        if (this._newData.get('SURNAME_PATRON')) {
+            if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
+                return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
+                    if (confirmation) {
+                        if (confirmation['result'] === 1) {
+                            mas.push({
+                                method: 'MERGE',
+                                requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
+                                data: {
+                                    SURNAME: this.form.get('SURNAME_PATRON').value
+                                }
+                            });
+                            this.updateDL = true;
+                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        } else {
+                            this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
                         }
-                    });
-                    this.updateDL = true;
-                    this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
-                } else {
-                    this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
-                }
-                return null;
-            });
+                    }
+                    return null;
+                });
+            } else {
+                return Promise.resolve(null);
+            }
         } else {
             return Promise.resolve(null);
         }
+
     }
 
     ConfirmAvSystems(accessStr: string, id: number, query: any[]): Promise<any> {
@@ -529,13 +536,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return Promise.all([
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
-        .then(() => {
-            return this.AfterSubmit(accessStr, query);
-        }).catch(error => {
-            this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
-            this.cancel();
-            this._errorSrv.errorHandler(error);
-        });
+            .then(() => {
+                return this.AfterSubmit(accessStr, query);
+            }).catch(error => {
+                this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
+                this.cancel();
+                this._errorSrv.errorHandler(error);
+            });
     }
     AfterSubmit(accessStr: string, query): Promise<any> {
         if (accessStr.length > 1) {
@@ -664,7 +671,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             let str = '';
             if (this.currentCbFields.length > 1) {
                 str = this.currentCbFields[0].role + ' ...';
-            } else  if (this.currentCbFields.length === 1) {
+            } else if (this.currentCbFields.length === 1) {
                 str = this.currentCbFields[0].role;
             }
             if (str) {
@@ -905,7 +912,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     private _pushState() {
-        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate});
+        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate });
     }
 
     private _subscribe() {
@@ -970,7 +977,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
     private SEARCH_INCORRECT_SYMBOLS() {
-        return  new RegExp('["|\']', 'g');
+        return new RegExp('["|\']', 'g');
     }
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
