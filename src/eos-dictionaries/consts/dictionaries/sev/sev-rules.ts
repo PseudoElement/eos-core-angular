@@ -64,7 +64,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'DUE_DOCGROUP',
             type: 'string',
             title: 'Группа документов',
-            required: true,
+            // required: true, обработка есть у меня в компоненте по этому убираю отсюда
         // dictionaryId: DOCGROUP_DICT.apiInstance,
         //     dictionaryLink: {
         //         pk: 'DUE',
