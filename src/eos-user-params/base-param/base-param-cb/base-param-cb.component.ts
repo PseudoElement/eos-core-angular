@@ -745,10 +745,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
                     depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
                     this._confirmSrv.confirm3(depConfirm, { ignoreBackdropClick: true }).then(confirmation => {
-                        if (confirmation['result'] === 1) {
-                            this.dueDepSurname = dep['SURNAME'];
-                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
-                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        if (confirmation) {
+                            if (confirmation['result'] === 1) {
+                                this.dueDepSurname = dep['SURNAME'];
+                                this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                                this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                            }
                         }
                     });
                 }
