@@ -400,7 +400,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
                             return;
                         } else {
-                            if (!this.curentUser['IS_PASSWORD']) {
+                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query).then(() => {

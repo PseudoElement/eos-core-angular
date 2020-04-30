@@ -324,7 +324,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                if (!this.curentUser['IS_PASSWORD']) {
+                if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
                     return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                         if (res) {
                             return this.ConfirmAvSystems(accessStr, id, query).then(() => {
