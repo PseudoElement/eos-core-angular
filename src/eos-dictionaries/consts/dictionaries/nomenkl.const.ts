@@ -15,6 +15,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         'edit', 'view',  'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
         'OpenSelected',
         'CloseSelected',
+        'showDeleted'
     ],
     defaultOrder: 'NOM_NUMBER',
     visible: true,
