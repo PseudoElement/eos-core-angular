@@ -334,7 +334,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             return this.changePassword('1234', this._userParamSrv.userContextId);
         }
     }
-    preSubmit($event) {
+    preSubmit($event?) {
         // const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
         // const url = `ChangePassword?isn_user=${this._userParamSrv.userContextId}&pass='${encodeURI('1234')}'`;
         this.apiSrvRx.read({ USER_CL: {
@@ -382,18 +382,21 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 if (this.form.controls['CLASSIF_NAME'].value === this.curentUser.CLASSIF_NAME && this.originAutent !== '1') {
                     this.submit($event);
                 } else {
-                    this.apiSrvRx.batch([{
-                        method: 'MERGE',
-                        requestUri: `USER_CL(${this._userParamSrv.userContextId})`,
-                        data: {
-                            USERTYPE: 0,
-                            IS_PASSWORD: 0,
-                            CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value,
-                        }
-                    }], '')
+                    this.dropLogin()
                     .then(() => {
-                        this.curentUser.IS_PASSWORD = 0;
-                        this.submit($event);
+                        this.apiSrvRx.batch([{
+                            method: 'MERGE',
+                            requestUri: `USER_CL(${this._userParamSrv.userContextId})`,
+                            data: {
+                                USERTYPE: 0,
+                                IS_PASSWORD: 0,
+                                CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value,
+                            }
+                        }], '')
+                        .then(() => {
+                            this.curentUser.IS_PASSWORD = 0;
+                            this.submit($event);
+                        });
                     });
                 }
             }
@@ -474,6 +477,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 this.init();
             }
             // this.postSubmit(value);
+            this._msgSrv.addNewMessage({
+                type: 'success',
+                title: 'Сохранение:',
+                msg: 'Изменения успешно сохранены',
+                dismissOnTimeout: 6000,
+            });
         })
         .catch((arr) => {
             this._errorSrv.errorHandler(arr);
@@ -669,6 +678,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     private createLogin(pass, id): Promise<any> {
         const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
+        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    }
+    private dropLogin(): Promise<any> {
+        const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
     private _pushState(date) {
