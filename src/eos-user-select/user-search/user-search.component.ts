@@ -70,13 +70,31 @@ export class UserSearchComponent implements OnInit  {
         }
     }
 
-    get disableBtn() {
+    get disableSearchBtn() {
         if (this.form) {
-            return this.form.status === 'VALID' && (this.form.controls['rec.LOGIN'].value.trim().length > 0 || this.form.controls['rec.DEPARTMENT'].value.trim().length > 0 ||
-            this.form.controls['rec.fullDueName'].value.trim().length > 0  || this.form.controls['rec.SURNAME'].value.trim().length > 0 ||
-                this.form.controls['rec.BLOCK_USER'].value === '2' || this.currTab === 2);
+            return this.form.status === 'VALID' && (
+                this.form.controls['rec.LOGIN'].value.trim().length > 0 ||
+                this.form.controls['rec.DEPARTMENT'].value.trim().length > 0 ||
+                this.form.controls['rec.fullDueName'].value.trim().length > 0  ||
+                this.form.controls['rec.SURNAME'].value.trim().length > 0 ||
+                this.form.controls['rec.BLOCK_USER'].value === '2' ||
+                this.currTab === 2
+            );
         }
     }
+
+    get disableResetBtn() {
+        if (this.form) {
+            return this.form.controls['rec.LOGIN'].value.length > 0 ||
+            this.form.controls['rec.DEPARTMENT'].value.length > 0 ||
+            this.form.controls['rec.fullDueName'].value.length > 0  ||
+            this.form.controls['rec.SURNAME'].value.length > 0 ||
+            this.form.controls['rec.BLOCK_USER'].value === '1' ||
+            this.form.controls['rec.BLOCK_USER'].value === '2' ||
+            this.currTab === 2;
+        }
+    }
+
     ngOnInit() {
         const objSearch = this._getItemsSearchUsers();
         this.pretInputs();
