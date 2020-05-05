@@ -16,8 +16,9 @@
                 </div>
             </ng-template>
             <!-- Логин и Аутентификация с помощью ОС -->
+            <!-- !curentUser['IS_PASSWORD'] && -->
             <div class="wrapper-password">
-                <div style="width: 200px" class="base-text-input base-login-input" [formGroup]="form" [tooltip]="!curentUser['IS_PASSWORD'] && editMode ? 'Для смены логина задайте пароль' : validClassif" container="body" placement="bottom" containerClass="tooltip-error">
+                <div style="width: 200px" class="base-text-input base-login-input" [formGroup]="form" [tooltip]="validClassif" container="body" placement="bottom" containerClass="tooltip-error">
                     <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label >
                     <input class="form-control m-font" maxlength="maxLoginLength" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
                 </div>

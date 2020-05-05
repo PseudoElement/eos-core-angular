@@ -186,12 +186,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         ).subscribe(() => {
             this.dateDisable();
         });
-        this.form.get('CLASSIF_NAME').valueChanges
+        /* this.form.get('CLASSIF_NAME').valueChanges
         .pipe(
             takeUntil(this._ngUnsubscribe)
         ).subscribe(() => {
             this.getErrorSave();
-        });
+        }); */
     }
     getEditDate(): boolean {
         const provElem = !this.form.controls['PASSWORD_DATE'].value;
@@ -319,7 +319,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this._pushState(false);
     }
     getLoginChenge(flag) {
-        if (this.curentUser.IS_PASSWORD === 0 || flag) {
+        if (/* this.curentUser.IS_PASSWORD === 0 ||  */flag) {
             this.form.controls['CLASSIF_NAME'].disable({emitEvent: false});
             return true;
         } else {
@@ -331,7 +331,11 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         if (+this.curentUser.USERTYPE === 1) {
             return Promise.resolve(null);
         } else {
-            return this.changePassword('1234', this._userParamSrv.userContextId);
+            if (+this.curentUser.USERTYPE === 0) {
+                return this.createLogin('1234', this._userParamSrv.userContextId);
+            } else {
+                return this.changePassword('1234', this._userParamSrv.userContextId);
+            }
         }
     }
     preSubmit($event?) {
@@ -681,8 +685,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         return this.apiSrvRx.read({ [url]: ALL_ROWS });
     }
     private dropLogin(): Promise<any> {
-        const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
-        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+        if (this.curentUser.IS_PASSWORD === 0) {
+            return Promise.resolve(null);
+        } else {
+            const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
+            return this.apiSrvRx.read({ [url]: ALL_ROWS });
+        }
     }
     private _pushState(date) {
         this._userParamSrv.setChangeState({ isChange: date });
