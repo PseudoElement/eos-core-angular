@@ -38,8 +38,8 @@
     <div class="btn-nav">
         <h3 class="title">Критерии поиска</h3>
         <div class="btn-search">
-            <button class="btn btn-primary upper" type="button" (click)="resetForm()" [disabled]="!disableBtn">Сбросить</button>
-            <button class="btn btn-primary-full upper" type="submit" [disabled]="!disableBtn">Найти</button>
+            <button class="btn btn-primary upper" type="button" (click)="resetForm()" [disabled]="!disableResetBtn">Сбросить</button>
+            <button class="btn btn-primary-full upper" type="submit" [disabled]="!disableSearchBtn">Найти</button>
         </div>
     </div>
     <div *ngIf=form>
