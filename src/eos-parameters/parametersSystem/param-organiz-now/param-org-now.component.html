@@ -24,23 +24,24 @@
                 ></eos-dynamic-input>
             </div>
             <div class="organ-new-now">
-                <span (click)="openOrganiz()" 
-                class = "eos-icon" 
+                <span (click)="openOrganiz()"
+                class = "eos-icon"
                 tooltip="Выбрать организацию"
                 containerClass="tooltip-info"
                 placement="left"
                 container="body"
+                triggers="hover:click"
                 [ngClass]="{
-                    'eos-icon-building-blue': !form.controls['rec.ISN_ORGANIZ'].disabled, 
+                    'eos-icon-building-blue': !form.controls['rec.ISN_ORGANIZ'].disabled,
                     'eos-icon-building-grey': form.controls['rec.ISN_ORGANIZ'].disabled,
                     'organ-new-now-dis': form.controls['rec.ISN_ORGANIZ'].disabled,
                     'organ-new-now-en': !form.controls['rec.ISN_ORGANIZ'].disabled
                 }"
                 ></span>
             </div>
-            
+
         </div>
-        
+
         <div style="display: flex;">
             <div style="width: 400px; margin-right: 20px;">
                 <eos-dynamic-input
@@ -89,6 +90,6 @@
         <div style="padding: 15px;">
             <span>Система {{sys}} версии {{version}}</span>
         </div>
-        
+
     </div>
 </div>
