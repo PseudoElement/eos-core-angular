@@ -92,7 +92,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
                 label: 'CLASSIF_NAME',
             },
         options: [],
-        default: 0,
+        // default: 0,
     },
     ] : [],
     {
