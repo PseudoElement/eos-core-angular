@@ -324,7 +324,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                if (!this.curentUser['IS_PASSWORD']) {
+                if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
                     return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                         if (res) {
                             return this.ConfirmAvSystems(accessStr, id, query).then(() => {
@@ -408,10 +408,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
-                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
+                /* this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
                 this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
                 this.cancel();
-                return;
+                return; */
+                return this.sendData(query, accessStr);
             } else {
                 const queryPas = [{
                     method: 'MERGE',
@@ -820,9 +821,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
-            if (!this.curentUser['IS_PASSWORD']) {
+            /* if (!this.curentUser['IS_PASSWORD']) {
                 this.inputs['CLASSIF_NAME'].readonly = true;
-            }
+            } */
             if (control.value === this.inputs['CLASSIF_NAME'].value) {
                 return Promise.resolve(null);
             } else if ((control.value).trim() !== '') {

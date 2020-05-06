@@ -4,7 +4,7 @@ import { IBaseInput } from 'eos-common/interfaces';
 import { FormGroup } from '@angular/forms';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { PipRX } from 'eos-rest';
+import { PipRX, DEPARTMENT } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { Router } from '@angular/router';
@@ -13,7 +13,17 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { CONFIRM_OPERATION_NOMENKL_CLOSED, CONFIRM_OPERATION_HARDDELETE } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-
+interface SORTCONFIG {
+    CLASSIF_NAME: SORTITEM;
+    NOM_NUMBER: SORTITEM;
+    YEAR_NUMBER: SORTITEM;
+    END_YEAR: SORTITEM;
+    DEPARTMENT: SORTITEM;
+}
+interface SORTITEM {
+    selected: boolean;
+    up: boolean;
+}
 
 @Component({
     selector: 'eos-check-index-nomenclatur',
@@ -35,6 +45,29 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     public notUniqueElem = [];
     public selectedItem = {};
     public selectedItemLinc = {};
+    public sortConfig: SORTCONFIG = {
+        CLASSIF_NAME: {
+            selected: true,
+            up: true,
+        },
+        NOM_NUMBER: {
+            selected: false,
+            up: true,
+        },
+        YEAR_NUMBER: {
+            selected: false,
+            up: true,
+        },
+        END_YEAR: {
+            selected: false,
+            up: true,
+        },
+        DEPARTMENT: {
+            selected: false,
+            up: true,
+        },
+    };
+    public currentSort  = 'CLASSIF_NAME';
     filterInputs: IBaseInput[] = [
        {
             controlType: 'numberIncrement',
@@ -156,13 +189,52 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
                         return true;
                     }
                 });
-                const config = { ignoreBackdropClick: true };
+                this.loadDepartment();
+                this.sortindex(this.currentSort);
+                const config = { ignoreBackdropClick: true, class: 'custom-modal' };
                 this.modalRef = this._modalSrv.show(this.settingsWindow, config);
             }
         })
         .catch(er => {
             this._errorSrv.errorHandler(er);
         });
+    }
+    loadDepartment() {
+        const ids = [];
+        this.notUniqueElem.forEach(element => {
+            ids.push(element['DUE']);
+        });
+        this.pip.read<DEPARTMENT>({DEPARTMENT: ids}).then(data => {
+            if (data && data.length) {
+                this.notUniqueElem.map(ind => {
+                    const findDepartMent = data.filter(d => {
+                        return d.DUE === ind.DUE;
+                    });
+                    ind['DEPARTMENT'] = findDepartMent[0].CLASSIF_NAME;
+                    return ind;
+                });
+            }
+        }).catch(e => {
+            this._errorSrv.errorHandler(e);
+        });
+    }
+    sortindex(currentSort): void {
+        this.notUniqueElem.sort((a, b) => {
+            const res = String(a[currentSort]).localeCompare(String(b[currentSort]));
+            return (this.sortConfig[currentSort].up ? 1 : -1) * res;
+        });
+    }
+    orderIndex(key: string) {
+        if (this.currentSort !== key) {
+            this.sortConfig[this.currentSort]['selected'] = false;
+            this.currentSort = key;
+            this.sortConfig[this.currentSort]['selected'] = true;
+            this.sortConfig[this.currentSort]['up'] = !this.sortConfig[this.currentSort]['up'];
+        } else {
+            this.sortConfig[this.currentSort]['selected'] = true;
+            this.sortConfig[this.currentSort]['up'] = !this.sortConfig[this.currentSort]['up'];
+        }
+        this.sortindex(this.currentSort);
     }
     updateNomenc() {
         if (this.selectedItem['ISN_LCLASSIF']) {

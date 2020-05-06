@@ -400,7 +400,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
                             return;
                         } else {
-                            if (!this.curentUser['IS_PASSWORD']) {
+                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query).then(() => {
@@ -501,10 +501,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
-                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
+                /* this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
                 this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
                 this.cancel();
-                return;
+                return; */
+                return this.sendData(query, accessStr);
             } else {
                 const queryPas = [{
                     method: 'MERGE',
@@ -745,10 +746,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
                     depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
                     this._confirmSrv.confirm3(depConfirm, { ignoreBackdropClick: true }).then(confirmation => {
-                        if (confirmation['result'] === 1) {
-                            this.dueDepSurname = dep['SURNAME'];
-                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
-                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        if (confirmation) {
+                            if (confirmation['result'] === 1) {
+                                this.dueDepSurname = dep['SURNAME'];
+                                this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                                this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                            }
                         }
                     });
                 }
@@ -981,9 +984,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
-            if (!this.curentUser['IS_PASSWORD']) {
+            /* if (!this.curentUser['IS_PASSWORD']) {
                 this.inputs['CLASSIF_NAME'].readonly = true;
-            }
+            } */
             if (control.value === this.inputs['CLASSIF_NAME'].value) {
                 return Promise.resolve(null);
             } else if ((control.value).trim() !== '') {

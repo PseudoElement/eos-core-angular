@@ -4,12 +4,12 @@
 }
 
 .model-items{
-    border: 1px solid #e6e6e6; 
-    border-bottom: 0; 
+    border: 1px solid #e6e6e6;
+    border-bottom: 0;
     padding-left: 35px;
     position: relative;
     label{
-        text-overflow: ellipsis; 
+        text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
     }
@@ -36,6 +36,59 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: auto;
+}
+.custom-modal {
+    width: 700px;
+}
+.nomenkl-tab-wr {
+    padding: 10px;
+    height: calc(100vh - 300px);
+    overflow: auto;
+    .table-list {
+        cursor: pointer;
+        border: 1px solid #eeeeee;
+        td {
+            border: 1px solid #eeeeee;
+            padding: 5px;
+        }
+    }
+    .table-heder {
+        position: fixed;
+        z-index: 1000;
+        top: 88px;
+        width: 663px;
+        background-color: #fafafa;
+        height: 32px;
+        left: 11px;
+        th {
+            border: 1px solid #eeeeee;
+            height: 30px;
+            padding-left: 2px;
+        }
+    }
+    .first-list {
+        border-top: none;
+        td {
+            border-top: none;;
+        }
+    }
+}
+#nomenkl-table {
+    text-align: left;
+    border: 1px solid #eeeeee;
+    margin-top: 20px;
+}
+.class-other {
+    width: 96px;
+}
+.class-name {
+    width: 220px;
+}
+.class-deep {
+    width: 220px;
+}
+.class-number {
+    width: 120px;
 }
 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {

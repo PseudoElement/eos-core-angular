@@ -2,6 +2,7 @@
     .modal-header {
         padding: 11px 15px;
     }
+
     .modal-body {
         padding: 15px;
         &.manualCR p {
@@ -18,5 +19,10 @@
                 min-width: initial;
             }
         }
+    }
+}
+.modal-open {
+    .custom-modal {
+        width: 700px;
     }
 }

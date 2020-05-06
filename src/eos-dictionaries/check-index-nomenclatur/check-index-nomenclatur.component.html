@@ -1,13 +1,13 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">Задайте параметры проверки уникальности индексов</h4>
-    <button 
+    <button
         type="button"
         tooltip="Закрыть"
         placement="bottom"
-        containerClass="tooltip-info" 
-        class="close pull-right" 
+        containerClass="tooltip-info"
+        class="close pull-right"
         aria-label="Close"
-        style="opacity: 1;" 
+        style="opacity: 1;"
         (click)="cancelCreate()">
         <span class="eos-icon eos-icon-close-blue small" ></span>
     </button>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <hr>
-    
+
     <div>
         <span>Для:</span>
         <div class="radio-inline quick" style="width: 100%;">
@@ -85,15 +85,39 @@
         placement="bottom"
         containerClass="tooltip-info">
         <span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
-    <div class="not-unique-elem-content" [ngClass] = "{'not-unique-elem-content-height': this.notUniqueElem.length === 0}">
-        <div *ngFor="let item of notUniqueElem">
-            <div class="model-items" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)">
-                <span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-restricted-blue"></span>
-                <div class="model-items-label">
-                    <label>{{item['CLASSIF_NAME']}}</label>
-                </div>
-            </div>
+        <div class="nomenkl-tab-wr">
+            <table id="nomenkl-table">
+                <tr  class="table-list table-heder">
+                    <th style="width: 198px;" (click)="orderIndex('CLASSIF_NAME')">ЗАГОЛОВОК
+                        <span *ngIf="this.sortConfig['CLASSIF_NAME'].selected" class="icon eos-icon small"
+                        [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span>
+                   </th>
+                    <th style="width: 106px;"  (click)="orderIndex('NOM_NUMBER')">ИНДЕКС <span *ngIf="this.sortConfig['NOM_NUMBER'].selected" class="icon eos-icon small"
+                        [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span></th>
+                    <th style="width: 89px;"  (click)="orderIndex('YEAR_NUMBER')">ГОД Н  <span *ngIf="this.sortConfig['YEAR_NUMBER'].selected" class="icon eos-icon small"
+                        [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span></th>
+                    <th style="width: 85px;"  (click)="orderIndex('END_YEAR')">ГОД З  <span *ngIf="this.sortConfig['END_YEAR'].selected" class="icon eos-icon small"
+                        [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span></th>
+                    <th style="width: 201px;" (click)="orderIndex('DEPARTMENT')">ПОДРАЗДЕЛЕНИЯ  <span *ngIf="this.sortConfig['DEPARTMENT'].selected" class="icon eos-icon small"
+                        [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span></th>
+                </tr>
+                <tr class="table-list first-list" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)" *ngFor="let item of notUniqueElem">
+                    <td class="class-name">{{item['CLASSIF_NAME']}}</td>
+                    <td class="class-number">{{item['NOM_NUMBER']}}</td>
+                    <td class="class-other">{{item['YEAR_NUMBER']}}</td>
+                    <td class="class-other">{{item['END_YEAR']}}</td>
+                    <td class="class-deep">{{item['DEPARTMENT']}}</td>
+                    <!-- <div class="model-items" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)">
+                        <span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-lock-blue"></span>
+                        <div class="model-items-label">
+                            <label>{{item['CLASSIF_NAME']}}</label>
+                        </div>
+                    </div> -->
+                </tr>
+            </table>
         </div>
+    <div class="not-unique-elem-content" [ngClass] = "{'not-unique-elem-content-height': this.notUniqueElem.length === 0}">
+
     </div>
 </ng-template>
 
@@ -130,11 +154,11 @@
                     [input]="inputs[1]"
                     [readonly]=inputs[1].readonly
                     [form]="searchForm"></eos-dynamic-input>
-                    <!-- <input 
-                    type="text" 
-                    class="input" 
-                    placeholder="..." 
-                    [(ngModel)]="selectedItem['NOM_NUMBER']" 
+                    <!-- <input
+                    type="text"
+                    class="input"
+                    placeholder="..."
+                    [(ngModel)]="selectedItem['NOM_NUMBER']"
                     [tooltip]="!selectedItem['NOM_NUMBER'] ? 'Обязательное поле.' : null"
                     [placement]="'bottom'"
                     [containerClass]="'tooltip-error'"
@@ -164,7 +188,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" [disabled] = "searchForm.controls['NOM_NUMBER'].status === 'INVALID'" (click)="updateNomenc()">Записать</button>

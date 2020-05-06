@@ -8,9 +8,9 @@
                     <input placement="bottom" containerClass="tooltip-info" tooltip="Максимальная длина поля 12 символов " class=" form-control" maxlength="12" type="text" [formControlName]="inputs['classifName'].key" [readonly]="false" />
                 </form>
             </div>
-        </div><br>
+        </div>
         <!-- <eos-dynamic-input class="create-user-login-input" [input]="inputs['classifName']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
-        <eos-dynamic-input *ngIf="!cbBase" [input]="inputs['teсhUser']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <eos-dynamic-input style="margin-left: 27px;" *ngIf="!cbBase" [input]="inputs['teсhUser']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
     <div [ngClass]="{'flex-wr': !cbBase}">
         <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">

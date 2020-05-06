@@ -5,7 +5,7 @@ import { EosSevRulesService } from '../../services/eos-sev-rules.service';
 import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 /* import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component'; */
-/* import { BUTTON_RESULT_CANCEL, CONFIRM_NOT_CONSLITE } from 'app/consts/confirms.const'; */
+import { /*BUTTON_RESULT_CANCEL,*/ CONFIRM_NOT_CONSLITE, CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
 
 export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
 
@@ -178,10 +178,58 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
         }
         return this.apiSrv.read(query);
     }
-    confirmSave(data: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        // data.rec.organizationNow rec.DUE_DEP   картотека автомата => cardFile
-        // data.rec.organizationNow === rec.DUE_DEP сообщение не выдавать
-        /* if (true) {
+    // все проверки по справочникам SEV вынес в одно место так как не знаю будет их много или только одна
+    checkErrorSEV(data): string[] {
+        console.log('data', data);
+        const errors = [];
+        // const data = this.cardEditRef.newData.rec;
+        // if (this.cardEditRef.dictionaryId === 'sev-rules') {
+            if (data &&
+                data['takeFileRK'] === 0 &&
+                data['FileRK'] === 1) {
+                errors.push(`Внимание! Запрещено редактировать реквизиты РК при повторном получении документа "Файлы РК", т.к. эти реквизиты не разрешены к приёму.
+                Необходимо откорректировать настройки параметров правила СЭВ.`);
+            }
+            if (data &&
+                !data['DUE_DOCGROUP_NAME']) {
+                errors.push(`Не задана группа документов`);
+            }
+            if (data &&
+                (+data['RULE_KIND'] === 2 || +data['RULE_KIND'] === 6) &&
+                !data['groupDocument']
+                ) {
+                errors.push(`Поле \'Для групп документов\' обязательно для заполнения`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['executor']
+            ) {
+                errors.push(`Поле \'Исполнитель\' обязательно для заполнения`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['visaForward'] &&
+                !data['visaDate']
+            ) {
+                errors.push(`Срок визы должен быть заполнен`);
+            }
+            if (data &&
+                +data['RULE_KIND'] === 6 &&
+                !data['signatureForward'] &&
+                !data['signatureDate']
+            ) {
+                errors.push(`Срок подписи должен быть заполнен`);
+            }
+            if ((data.link && data.linkKind === 1 && String(data.type) === '1' && (data.linkTypeList === 'null' || !data.linkTypeList)) ||
+            (data['LinkPD'] && data['linkKind'] === 1 && String(data['type']) === '2' && (data['linkTypeList'] === 'null' || !data['linkTypeList']))
+            ) {
+                errors.push(`Тип связки должен быть выбран`);
+            }
+        // }
+        return errors;
+    }
+    confirmEroroMes(errors: any[], confirmSrv: ConfirmWindowService): Promise<any> {
+        if (errors.length > 0) {
             return confirmSrv.confirm2(Object.assign({}, CONFIRM_NOT_CONSLITE)).then((button) => {
                 if (button['result'] === 1) {
                     return true;
@@ -191,10 +239,29 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
             .catch(er => {
                 return false;
             });
-        } */
-        return Promise.resolve(true);
-
-
+        } else {
+            return Promise.resolve(true);
+        }
+    }
+    confirmSave(data: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
+        console.log('test');
+        const errorOK = this.checkErrorSEV(data.rec);
+        const errors = [];
+        if (data.rec['RULE_KIND'] === 2 && data.rec.DUE_DEP && data.rec.DUE_DEP !== '0.' && String(data.rec.cardFile).indexOf(data.rec.DUE_DEP) !== 0) {
+           errors.push('Подразделение, образующее \"Картотеку автомата\", не входит в состав организации \"Получателя\".\n');
+        }
+        if (errorOK.length > 0) {
+            const newMes = Object.assign({}, CONFIRM_SAVE_INVALID);
+            newMes.body = errorOK.join('\n');
+            return confirmSrv.confirm2(newMes).then((button) => {
+                return false;
+            })
+            .catch(er => {
+                return false;
+            });
+        } else {
+            return this.confirmEroroMes(errors, confirmSrv);
+        }
     }
 
     readUserLists(query): Promise<any> {
