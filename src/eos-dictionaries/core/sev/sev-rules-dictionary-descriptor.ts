@@ -260,7 +260,7 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                 return false;
             });
         } else {
-            this.confirmEroroMes(errors, confirmSrv);
+            return this.confirmEroroMes(errors, confirmSrv);
         }
     }
 
