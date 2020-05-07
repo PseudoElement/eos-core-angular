@@ -295,7 +295,8 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isExpanded: false,
                 updating: false,
                 children: [],
-                data: { DEPARTMENT_INDEX: dd.DEPARTMENT_INDEX },
+                visibleFilter: true,
+                data: { DEPARTMENT_INDEX: dd.DEPARTMENT_INDEX, END_DATE: dd.END_DATE, START_DATE: dd.START_DATE },
                 path: this._getPath(dd.DUE),
             };
             if (r.isActive) {

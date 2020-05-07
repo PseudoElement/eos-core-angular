@@ -20,6 +20,7 @@ import { EosStorageService } from 'app/services/eos-storage.service';
 })
 export class DictionaryFilterComponent implements OnDestroy, OnInit {
     @Output() setFilter: EventEmitter<any> = new EventEmitter(); // todo add filter type
+    @Output() setFilterNomenkl: EventEmitter<any> = new EventEmitter(); // todo add filter type
 
     filterInputs: IBaseInput[] = [
         {
@@ -103,7 +104,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
             if (cb1Filter) {
                 nomenklFilt['CB1'] = cb1Filter.value;
             }
-
+            this.setFilterNomenkl.emit(nomenklFilt);
             this._dictSrv.setFilter(nomenklFilt);
         }
 
@@ -132,6 +133,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
     dateFilter(date: Date) {
         if (!date || !this.date || date.getTime() !== this.date.getTime()) {
             this.date = date;
+            this.setFilter.emit(this.date);
             this._dictSrv.setFilter({ date: date ? date.setHours(0, 0, 0, 0) : null });
         }
     }
