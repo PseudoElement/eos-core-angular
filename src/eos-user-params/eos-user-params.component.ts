@@ -222,6 +222,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.accordionList[1].disabled = true;
                 this.accordionList[2].disabled = true;
                 this.accordionList[3].disabled = true;
+                this.accordionList[6].disabled = true;
                 this.accordionList[1].isOpen = false;
                 this.accordionList[2].isOpen = false;
                 this.hideIcon = true;
@@ -230,6 +231,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.accordionList[1].disabled = false;
                 this.accordionList[2].disabled = false;
                 this.accordionList[3].disabled = false;
+                this.accordionList[6].disabled = false;
                 this.hideIcon = false;
             }
         }
