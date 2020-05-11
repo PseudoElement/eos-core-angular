@@ -513,8 +513,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     }
                 }];
                 return this._userParamSrv.dropLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
-                    this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                     if (+this.curentUser.USERTYPE !== 1) {
+                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
                             return this.sendData(query, accessStr);
                         });
