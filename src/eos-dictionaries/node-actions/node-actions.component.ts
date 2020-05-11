@@ -260,11 +260,25 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[this._visibleCount - 1].isMarked;
                     break;
                 case E_RECORD_ACTIONS.export:
+                    if (this.dictionary.id === 'sign-kind' || this.dictionary.id === 'eds-category') {
+                        _show = false;
+                    }
+                    _enabled = true;
+                    _isWriteAction = false;
+                    break;
                 case E_RECORD_ACTIONS.import:
                     if (this.dictionary.id === 'sign-kind' || this.dictionary.id === 'eds-category') {
                         _show = false;
                     } else {
                         _enabled = true;
+                        if (this.dictionary.id === 'rubricator' || this.dictionary.id === 'docgroup' || this.dictionary.id === 'departments' ||
+                            this.dictionary.id === 'nomenkl' || this.dictionary.id === 'cabinet'
+                        ) {
+                            const hash = location.hash.split('/');
+                            _enabled = !!this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
+                        }   else {
+                            _enabled = true;
+                        }
                     }
                     break;
                 case E_RECORD_ACTIONS.remove: {
