@@ -180,7 +180,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
 
     extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {
         if (params.mode === 2) {
-            critery['DUE'] = this._filterDUE;
+            critery['DUE'] = this._filterDUE + '%';
         }
     }
 

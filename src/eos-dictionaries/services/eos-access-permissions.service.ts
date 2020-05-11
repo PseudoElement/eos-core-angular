@@ -172,7 +172,8 @@ export class EosAccessPermissionsService {
     public isAccessGrantedForUsers(): Promise<boolean> {
         return this.appCtx.init()
             .then(() => {
-                return this._checkAccessTech(E_TECH_RIGHT.Users);
+                const access = this.appCtx.CurrentUser.USER_TECH_List.some(tech => tech.FUNC_NUM === 1);
+                return this._checkAccessTech(E_TECH_RIGHT.Users) && !access;
             });
     }
 
