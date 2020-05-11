@@ -580,7 +580,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'visaDate',
             title: 'Срок визы, если требуемый срок истек',
             type: 'number',
-            pattern: /^\s?\d{0,2}$/,
+            pattern: /^[1-9]{1}[1-9]{0,1}$/,
             default: ''
         }, {
             key: 'visaDays',
@@ -591,7 +591,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'signatureDate',
             title: 'Срок подписи, если требуемый срок истек',
             type: 'number',
-            pattern: /^\s?\d{0,2}$/,
+            pattern: /^[1-9]{1}[1-9]{0,1}$/,
             default: ''
         }, {
             key: 'signatureDays',
