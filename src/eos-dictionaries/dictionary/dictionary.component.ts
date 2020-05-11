@@ -950,8 +950,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                     .replace('{{OPERATION}}', 'восстановлены.');
                                 this._msgSrv.addNewMessage(message);
                             });
+                    }   else {
+                        this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
+                        this._dictSrv.reload();
                     }
                 });
+            }   else {
+                this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
+                this._dictSrv.reload();
             }
             return Promise.resolve(null);
         });
