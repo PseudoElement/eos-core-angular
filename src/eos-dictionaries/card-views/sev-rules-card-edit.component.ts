@@ -339,6 +339,8 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         .subscribe(value => {
             if (!value) {
                 this.form.controls['rec.visaDays'].setValue(false);
+            } else {
+                this.form.controls['rec.visaDays'].setValue(true);
             }
         });
         // Подписи signatures
@@ -369,6 +371,8 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         .subscribe(value => {
             if (!value) {
                 this.form.controls['rec.signatureDays'].setValue(false);
+            } else {
+                this.form.controls['rec.signatureDays'].setValue(true);
             }
         });
         // Доклад о визировании
