@@ -1361,6 +1361,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                         node.isMarked = true;
                     });
                     this._physicallyDelete(slicedNode);
+                }   else {
+                    slicedNode.forEach(node => {
+                        node.parent.deleteChild(node);
+                        this.dictionary.nodes.delete(node.id);
+                    });
                 }
             })
             .catch(er => {
