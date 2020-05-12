@@ -1,22 +1,932 @@
+$textMainColor: #505050;
+$bgLeftSidebar: #E7E7E5;
+$bgLeftSidebarActive: #FEE9A9;
+$bgHeader: #CAC7BE;
+$bgMainArea: #FAF8F5;
+$borderTab: #D7D7D2;
+$borderTabActive: #EAD597;
+$bgHeaderForm: #F1EEE8;
+$bgColorInput: #646464;
+$bgInitial: #FFFFFF;
+$bgButton: #E9E6DF;
+$bgButtonSave: #E4DFD2;
+
+@mixin settings-icon {
+    background-size: 75% 58%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+@mixin style-title-bookmarks {
+    display: inline-block;
+    width: 100%;
+    padding: 2px 10px;
+    background-color: $bgHeaderForm;
+    font-weight: bold;
+    color: $textMainColor;
+}
+
+@mixin style-other-button {
+    padding: 4px;
+    margin: 0;
+
+    span.eos-icon-plus-blue,
+    span.eos-icon-folder-blue {
+        height: 23px;
+        width: 23px;
+        background-image: url("assets/icons/Icon-Add-UserSettings.svg");
+        background-size: 23px 21px;
+        background-repeat: no-repeat;
+    }
+
+    span.eos-icon-bin-forever-blue,
+    span.eos-icon-close-blue {
+        height: 23px;
+        width: 23px;
+        background-image: url("assets/icons/Icon-Delete-UserSettings.svg");
+        background-size: 23px 21px;
+        background-repeat: no-repeat;
+    }
+}
+
+//скрываем номер сборки
+.main-container div.content-wrapper>div:last-child {
+    display: none;
+}
+
+//сбрасываем margin вокруг рамки
+.content-wrapper,
+.content-outlet {
+    margin: 0px;
+}
+
 .current-settings {
     display: flex;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: $textMainColor;
+
+    .tooltip-info {
+        &.tooltip.bottom .tooltip-inner::before {
+            background: black;
+        }
+
+        &.tooltip.top .tooltip-inner::before {
+            background: black;
+            // background: $primary-color-main-theme;
+        }
+
+        &.tooltip.left .tooltip-inner::before {
+            background: black;
+            // background: $primary-color-main-theme;
+        }
+
+        &.tooltip.right .tooltip-inner::before {
+            // background: $primary-color-main-theme;
+            background: black;
+        }
+    }
+
     .left {
         position: absolute;
-        left: 0;
+        top: 45px;
+        left: 0px;
+        background-color: $bgLeftSidebar;
+
         .params-nav-list {
+            top: 0;
             left: 0;
-            height: auto;
-            ul {
+            width: 108px;
+            min-width: 108px;
+            height: 100vh;
+            text-align: center;
+            background: $bgLeftSidebar;
+            border-radius: 0;
+
+            .list-group {
+                display: flex;
+                flex-direction: column;
                 margin: 0;
+                border-radius: 0;
+
+                &>li:first-child {
+                    border: 0;
+                }
+
+                &-item {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 45px;
+                    background: inherit;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
+                .active-element-param {
+                    background: $bgLeftSidebarActive;
+                    border: 1px solid $borderTabActive;
+                }
             }
         }
     }
+
     .main {
-        width: 800px;
-        max-height: calc(100vh - 172px);
-        margin-left: calc(50vw - 420px);
-        margin-left: 300px;
+        width: 100%;
+        height: 100vh;
+        margin: 0;
         overflow: auto;
-        background: #fff;
+        background: $bgMainArea;
+
+        /* общие стили */
+        .input-user-wrapper,
+        .input-user-shablony-wrapper {
+
+            /* расположение блока с основной информацией*/
+            &>div:not(.pad-other-set) {
+                margin-right: 20px;
+                margin-left: 110px;
+                margin-top: 20px;
+
+                &:last-of-type {
+                    padding: 0 20px;
+                }
+            }
+
+            /* шапка */
+            header {
+                position: initial;
+
+                .header-wr {
+                    background-color: $bgHeader;
+                    width: 100%;
+                    height: 45px;
+                    min-height: 46px;
+                    padding-left: 58px;
+
+                    &::before {
+                        content: url("assets/icons/Icon-Gear-UserSettings.svg");
+                        position: absolute;
+                        top: 0px;
+                        left: 0px;
+                        width: 45px;
+                        height: 45px;
+                    }
+
+                    .buttons-wrapper {
+                        position: absolute;
+                        bottom: 0px;
+                        right: 20px;
+                        width: inherit;
+                        margin-bottom: 20px;
+
+                        &>div {
+                            flex-direction: row-reverse;
+                            justify-content: flex-start;
+                            margin-right: 20px;
+                        }
+
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            width: 95%;
+                            height: 1px;
+                            margin-bottom: 15px;
+                            border: 1px solid #E9E6DF;
+                        }
+
+                        .btn {
+                            min-width: 100px;
+                            padding: 10px 4px;
+                            color: $textMainColor;
+                            border: 1px solid $borderTab;
+                            background-color: $bgButton;
+
+                            &.btn-primary-full {
+                                background-color: $bgButtonSave;
+                            }
+
+                            &:hover {
+                                background-color: $bgLeftSidebarActive;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* горизонтальный переключатель вкладок */
+            &>div.tabs-wrapper {
+                justify-content: flex-start;
+                padding-right: 0;
+                border: none;
+
+                ul.tabs {
+                    display: flex;
+                    height: 35px;
+                    color: $textMainColor;
+                    font-weight: bold;
+
+                    li.tab-item {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 170px;
+                        height: inherit;
+                        padding: 0;
+                        margin-right: 0px;
+                        border: 1px solid $borderTab;
+                        background-color: $bgLeftSidebar;
+
+                        &>span {
+                            text-align: center;
+                            line-height: 14px;
+                        }
+
+                        &.active {
+                            border: 1px solid $borderTabActive;
+                            background-color: $bgLeftSidebarActive;
+                            color: $textMainColor !important;
+                        }
+                    }
+                }
+            }
+
+            .accordion-position {
+                width: inherit;
+                border: none;
+                background-color: inherit;
+
+                &-main {
+                    width: 87vw;
+                }
+            }
+
+            .set-header,
+            .user-group-form,
+            .inputs-inline,
+            .cab-mar-span {
+                margin: 0;
+
+                >span:not(.input-title):first-child {
+                    @include style-title-bookmarks;
+                }
+            }
+
+            /* инпуты, чекбоксы, выпадаки */
+            eos-dynamic-input {
+
+                div.form-group {
+                    margin: 0;
+                }
+
+                &:first-of-type div.form-group {
+                    margin-top: 15px;
+                }
+
+                &:last-of-type div.form-group {
+                    margin-bottom: 15px;
+                }
+
+                &-checkbox {
+                    &>div {
+                        margin-left: 20px;
+
+                        label.checkbox {
+                            height: 22px;
+                            line-height: initial;
+                            margin: 5px 0 !important;
+
+                            input[type="checkbox"]+span {
+                                margin: 0 8px 0 0;
+                                line-height: initial;
+                                background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
+                                @include settings-icon;
+                            }
+
+                            input[type="checkbox"]:checked+span {
+                                margin: 0 8px 0 0;
+                                line-height: initial;
+                                background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
+                                @include settings-icon;
+                            }
+                        }
+                    }
+                }
+
+                &-radio {
+                    &>div {
+                        margin-left: 20px;
+
+                        label.radio {
+                            height: 22px;
+                            line-height: initial;
+                            margin: 5px 0 !important;
+
+                            input[type="radio"]+span {
+                                margin: 0 5px 0 0;
+                                line-height: initial;
+                                background-image: url("assets/icons/Radio-UserSettings-Black.svg");
+                                @include settings-icon;
+                            }
+
+                            input[type="radio"]:checked+span {
+                                margin: 0 5px 0 0;
+                                line-height: initial;
+                                background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
+                                @include settings-icon;
+                            }
+                        }
+                    }
+                }
+
+                &-select2 {
+                    input.text-input-select2.form-control {
+                        background: $bgInitial;
+                        border: 1px solid #676869;
+                    }
+
+                    span.eos-icon-checkbox-blue {
+                        background-image: url("assets/icons/Checkbox-UserSettings-Grey.svg");
+                    }
+
+                    span.eos-icon-arrow-v-blue-bottom {
+                        background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+                    }
+                }
+
+                &-increment-number {
+                    span::before {
+                        margin-top: 6px;
+                        color: $bgColorInput;
+                        font-size: 18px;
+                    }
+                }
+
+                &-string {
+                    input {
+                        background-color: $bgInitial;
+                    }
+                }
+            }
+
+            accordion.accordion-position-main {
+                width: 90.5vw;
+
+                accordion-group.panel {
+                    div.panel-heading {
+                        background: $bgInitial;
+
+                        button.btn-link {
+                            color: $textMainColor;
+                        }
+
+                        span.eos-icon-arrow-v-blue-bottom {
+                            background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+                        }
+                    }
+
+                    span.eos-icon-open-folder-blue,
+                    span.eos-icon-close-folder-blue {
+                        background-image: url("assets/icons/Open-Close-UserSettings-Folder-Grey.svg");
+                    }
+
+                }
+            }
+        }
+
+        .scrollWrapper {
+            max-height: calc(100vh - 205px) !important;
+        }
+
+        /* частные стили для вкладок */
+
+        //вкладка Регистрация
+        eos-registration-remaster {
+            .user-param-registration-content-wrapper {
+                eos-remaster-addresses {
+                    div.user-input-group {
+                        position: relative;
+                        margin-top: 25px;
+
+                        span:first-child {
+                            flex-basis: 280px;
+                            line-height: initial;
+                            text-align: right;
+                        }
+
+                        span.get-new-org {
+                            flex: 1 1 auto;
+                            padding-right: 10px;
+
+                            input {
+                                width: 100%;
+                            }
+                        }
+
+                        &>div button {
+                            @include style-other-button;
+                        }
+
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            position: absolute;
+                            top: -10px;
+                            width: 100%;
+                            border-top: 1px solid $bgButton;
+                        }
+                    }
+                }
+
+                eos-remaster-scan {
+                    div>div.user-group-form {
+                        &:first-child {
+                            .inputs-inline {
+                                &>span {
+                                    @include style-title-bookmarks;
+                                }
+                                
+                                eos-dynamic-input-radio div {
+                                    display: flex;
+                                    flex-direction: column;
+
+                                    div.elem-input-radio {
+                                        height: 25px;
+                                    }
+                                }
+
+                                eos-dynamic-input-increment-number {
+                                    div.input-increment {
+                                        width: 60%;
+                                        top: 55px;
+                                        left: 140px;
+                                        padding: 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        &:nth-child(2) {
+                            >div:first-child>span {
+                                @include style-title-bookmarks;
+                            }
+
+                            div.radio-form-list {
+                                padding-left: 20px;
+
+                                &>div {
+                                    display: flex;
+                                    align-items: baseline;
+                                    justify-content: flex-end;
+                                    width: 28% !important;
+                                    margin-bottom: 20px;
+
+                                    eos-dynamic-input {
+                                        width: 400px;
+
+                                        span.eos-icon-arrow-v-blue-bottom {
+                                            background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        &:nth-child(3) {
+                            &>span {
+                                margin-bottom: 20px;
+                            }
+                        }
+
+                        &:last-child {
+                            &>span {
+                                margin-bottom: 20px;
+                            }
+                        }
+                    }
+                }
+
+                eos-auto-search .rem-auto-search {
+                    div.user-group-form {
+                        div.sort-link {
+                            position: relative;
+                            height: 90px;
+                            flex-direction: column;
+
+                            eos-dynamic-input-radio>div {
+                                display: flex;
+                                flex-direction: column;
+                            }
+
+                            div.flex-column {
+                                position: absolute;
+                                top: 30px;
+                                left: 350px;
+                            }
+                        }
+
+                        div.inputs-inline,
+                        div.right-input-pos {
+                            justify-content: flex-start;
+                            align-items: baseline;
+
+                            &>span {
+                                width: 195px;
+                                margin-right: 10px;
+                                text-align: right;
+                            }
+                        }
+
+                        div.inputs-inline {
+                            display: flex;
+                        }
+                    }
+                }
+            }
+        }
+
+        //вкладка Кабинеты 
+
+        //вкладка РК
+        .container-rk {
+            position: relative;
+
+            div.btn-controll {
+                justify-content: flex-end;
+                margin: 5px 0;
+                padding: 0;
+
+                button {
+                    @include style-other-button;
+                }
+            }
+
+            div.user-input-group-flex {
+                padding: 10px 1px 0 1px;
+                margin-left: 40px;
+
+                &>span.current {
+                    background: $bgLeftSidebarActive;
+                }
+            }
+
+            div.user-group-form {
+                div.input-right {
+                    margin: 20px 30px;
+                }
+            }
+
+            &>eos-dynamic-input {
+                position: absolute;
+                bottom: 42px;
+                left: 300px;
+            }
+        }
+
+        //вкладка Справочники
+        .wr-scroll-dict {
+            div.user-group-form:first-child {
+                margin-left: 5px;
+
+                eos-dynamic-input-radio div.ng-pristine {
+                    margin-left: -10px;
+                }
+            }
+
+            div.user-group-form:nth-child(2) {
+                display: flex;
+                width: 340px;
+
+                span {
+                    background-color: transparent;
+
+                    &:last-child {
+                        font-weight: normal;
+                    }
+                }
+            }
+
+            >div:not(.user-group-form) {
+                height: 80px;
+
+                >span {
+                    @include style-title-bookmarks;
+                }
+            }
+        }
+
+        //вкладка Внешний обмен
+        .user-param-registration-content-wrapper {
+            eos-remaster-email {
+                div.accordion-position {
+                    // max-height: calc(100vh - 260px);
+
+                    accordion:first-child {
+                        accordion-group:first-child {
+                            div.accord-wr {
+                                margin-bottom: 45px;
+
+                                &>div:last-child {
+                                    margin: 10px 0;
+                                }
+                            }
+                        }
+
+                        accordion-group:nth-child(2) {
+                            div.accord-wr {
+                                div:first-child {
+                                    margin-bottom: 10px;
+
+                                    .user-group-form {
+                                        margin-left: 0;
+
+                                        &>span:not(:first-child) {
+                                            margin-left: 15px;
+                                        }
+                                    }
+                                }
+
+                                div:not(:first-child) {
+                                    height: 30px;
+                                }
+                            }
+                        }
+                    }
+
+                    .panel-group {
+                        margin-bottom: 5px;
+                    }
+                }
+            }
+
+            eos-remaster-seb {
+                div.user-group-form {
+                    margin-left: 0;
+
+                    &>span {
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+
+        //вкладка Электронная подпись
+        &.input-user-other-rk-forwarding-wrapper {
+            div.user-input-group {
+                hr {
+                    margin: 70px 0 0 0;
+                }
+
+                span.l-font {
+                    font-size: 14px;
+                    @include style-title-bookmarks;
+                }
+
+                &:first-child>div.signature-wr:last-child {
+                    margin-bottom: 20px;
+                }
+
+                &:nth-child(3) button {
+                    color: $textMainColor;
+                    border-color: $borderTab;
+
+                    &:first-child {
+                        margin-left: 10px;
+                    }
+
+                    &:hover {
+                        background-color: $bgLeftSidebarActive;
+                    }
+                }
+
+
+                &:nth-child(4) {
+                    height: 55px;
+                }
+
+                &:nth-child(5) {
+                    hr {
+                        display: none;
+                    }
+
+                    div.input-flex {
+                        margin-bottom: 80px;
+                    }
+                }
+            }
+        }
+
+        //вкладка Визуализация
+        .input-user-visualization-wrapper {
+            span.l-font {
+                font-weight: bold;
+            }
+
+            div.eos-select2 {
+                width: 300px;
+            }
+        }
+
+        //вкладка Десктопное приложение
+        div {
+            &.ext-app {
+                div.titles-external-application {
+                    margin-bottom: 10px;
+
+                    span.inscription-application-call-string {
+                        padding: 10px;
+                    }
+
+                    span.inscription-call-options {
+                        padding: 0 0 0 53%;
+                    }
+                }
+
+                div.user-input-group {
+                    margin-bottom: 15px;
+                }
+            }
+
+            &.input-user-directories-wrapper {
+                .inputs-inline {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: baseline;
+                    margin-bottom: 25px;
+                }
+
+                &>div>span {
+                    @include style-title-bookmarks;
+                }
+            }
+        }
+
+        //вкладка Передача
+        .user-param-other-content-wrapper {
+
+            eos-dynamic-input {
+                padding-top: 5px;
+
+                div.elem-input-radio {
+                    height: 20px;
+
+                    &>label {
+                        padding-top: 0;
+                    }
+                }
+            }
+
+            eos-user-param-transfer {
+                &>div {
+                    // height: 75vh;
+                }
+
+                div.pad-other-set {
+
+                    &>div.user-group-form:first-child {
+                        margin-left: 0;
+                    }
+
+                    &>div.user-group-form:nth-child(2)>eos-dynamic-input {
+                        height: 70px;
+                    }
+
+                    &>div.user-group-form:nth-child(3)>eos-dynamic-input {
+                        height: 85px;
+                    }
+                }
+            }
+
+            eos-user-param-addresses {
+                &>div {
+                    // height: 75vh;
+                    padding-right: 25px;
+
+                    &>div:first-child>span {
+                        font-weight: bold;
+                    }
+
+                    &>div:nth-child(2) {
+                        margin-top: 0;
+
+                        div.inputs-inline {
+                            display: flex;
+                            align-items: baseline;
+                            padding-left: 10px;
+                        }
+                    }
+
+                    &>div:nth-child(3) {
+                        eos-dynamic-input {
+                            height: 90px;
+                        }
+                    }
+
+                    &>div:nth-child(n+3)>span {
+                        @include style-title-bookmarks;
+                    }
+                }
+            }
+
+            eos-user-param-reestr {
+                &>div {
+                    // height: 75vh;
+                    padding-right: 25px;
+
+                    &>div:first-child {
+                        height: 75px;
+                        margin-left: 0;
+                    }
+
+                    &>div.user-input-group:nth-of-type(3) {
+                        height: 100px;
+
+                        eos-dynamic-input:last-child {
+                            margin-top: 45px;
+                        }
+                    }
+
+                    div.user-group-form>div {
+                        display: flex;
+                        align-items: baseline;
+
+                        &>span {
+                            width: 330px;
+                            text-align: right;
+                        }
+
+                        eos-dynamic-input {
+                            margin-left: 0 !important;
+                        }
+                    }
+
+                    &>div.user-input-group,
+                    div.user-content-wr {
+                        &>span {
+                            @include style-title-bookmarks;
+                        }
+                    }
+
+                    div.user-content-wr {
+                        span {
+                            margin-bottom: 10px;
+                        }
+
+                        div.user-input-group {
+                            position: relative;
+                            justify-content: flex-end;
+
+                            &-wr {
+                                position: absolute;
+                                top: 50px;
+                                background-color: $bgInitial;
+                                border: 1px solid $borderTab;
+
+                            }
+
+                            button {
+                                @include style-other-button;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //вкладка Шаблоны
+        &>div.table-wrapper {
+            width: initial;
+            margin-left: 108px;
+
+            div.table-header {
+                div.header-cust-other {
+                    width: 100%;
+
+                    span.selected-text {
+                        color: $textMainColor;
+                        font-weight: bold;
+                    }
+
+                    div:nth-child(2) {
+                        width: 13%;
+                    }
+
+                    div:last-child {
+                        width: 24%;
+                    }
+                }
+            }
+
+            div.eos-template-list {
+                // max-height: calc(100vh - 215px);
+
+                eos-dynamic-input-string {
+                    div.dynamic-input-wrapper input {
+                        background-color: $bgInitial;
+                    }
+                }
+            }
+        }
     }
 }
