@@ -24,6 +24,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     @Input() defaultValues;
     @Input() accessSustem;
     @Output() pushChenge = new EventEmitter<any>();
+    @Output() errorSave = new EventEmitter<boolean>();
     public inputs;
     public form: FormGroup;
     private prepareInputs;
@@ -165,6 +166,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                     btn: this.countError > 0,
                     data: this.newDataMap
                 }, this.form.value]);
+                this.errorSave.emit(this.form.invalid);
                 this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
                 this.countError = 0;
             });

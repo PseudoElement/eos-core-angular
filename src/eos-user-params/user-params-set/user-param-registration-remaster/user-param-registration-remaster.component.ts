@@ -31,6 +31,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public accessSustem: Array<string>;
     public currentUser;
     public isSave: boolean;
+    public errorS: boolean = false;
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -186,12 +187,23 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         this.DefaultSubmitEmit.emit(obj);
     }
-
+    errorSave($event) {
+        this.errorS = $event;
+    }
     edit(event) {
         this.editFlag = event;
         this._RemasterService.editEmit.next(this.editFlag);
     }
     submit(event): Promise<any> {
+        if (this.errorS) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Изменения не сохранены',
+                msg: 'Значение поля, \"Количество копий\" должно быть целым положительным числом',
+                dismissOnTimeout: 5000
+            });
+            return Promise.resolve(null);
+        }
         this.isSave = true;
         if (this.defaultUser) {
             this.defaultUserSubmit();

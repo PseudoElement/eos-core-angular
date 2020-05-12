@@ -16,6 +16,11 @@
                     [form]="form"
                     [readonly]="false"
                ></eos-dynamic-input>
+               <div class="incr-scan"
+               *ngIf="form.controls['rec.TYPE_PRINT_BARCODE'].value === '1'"
+               >
+                    <span>&nbsp;шт.</span>
+               </div> 
           </div>
           <eos-dynamic-input
                [input]="inputs['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE']"
