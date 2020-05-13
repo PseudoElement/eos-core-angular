@@ -69,14 +69,14 @@
                             </label>
                         </ng-container>
                     </th>
-                    <th class="text selected-text l-font secondary-block"
+                    <th class="text selected-text l-font secondary-block clicked"
                         (click)="order('SURNAME')">
                         Фамилия И.О.
                         <span [hidden]="orderBy.fieldKey !== 'SURNAME'"
                               class="icon eos-icon small"
                               [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span>
                     </th>
-                    <th class="text selected-text l-font secondary-block"
+                    <th class="text selected-text l-font secondary-block clicked"
                         (click)="order('DUTY')">Должность <span [hidden]="orderBy.fieldKey !== 'DUTY'"
                                                                 class="icon eos-icon small"
                                                                 [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span>

@@ -318,22 +318,23 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     private reorderCabinetOwners() {
         const orderBy = this.orderBy;
         this.cabinetOwners = this.cabinetOwners.sort((a, b) => {
-            let _a = a.data[orderBy.fieldKey];
-            let _b = b.data[orderBy.fieldKey];
-
-            if (typeof _a === 'string' || typeof _b === 'string') {
-                _a = (_a + '').toLocaleLowerCase();
-                _b = (_b + '').toLocaleLowerCase();
-            }
-            if (_a > _b) {
-                return orderBy.ascend ? 1 : -1;
-            }
-            if (_a < _b) {
-                return orderBy.ascend ? -1 : 1;
-            }
-            if (_a === _b) {
-                return 0;
-            }
+            const _a = a.data[orderBy.fieldKey];
+            const _b = b.data[orderBy.fieldKey];
+            const result = String(_a).localeCompare(String(_b));
+            return result * (orderBy.ascend ? 1 : -1);
+            // if (typeof _a === 'string' || typeof _b === 'string') {
+            //     _a = (_a + '').toLocaleLowerCase();
+            //     _b = (_b + '').toLocaleLowerCase();
+            // }
+            // if (_a > _b) {
+            //     return orderBy.ascend ? 1 : -1;
+            // }
+            // if (_a < _b) {
+            //     return orderBy.ascend ? -1 : 1;
+            // }
+            // if (_a === _b) {
+            //     return 0;
+            // }
         });
     }
 
