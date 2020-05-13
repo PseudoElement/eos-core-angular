@@ -36,6 +36,7 @@ export class EosDictionaryNode {
 
     relatedLoaded = false;
     isSliced = false;
+    visibleFilter = true;
 
     /**
      * marked - node checked in list

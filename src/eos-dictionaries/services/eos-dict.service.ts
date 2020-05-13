@@ -1491,23 +1491,23 @@ export class EosDictService {
             //     }
             // }
 
-            if (dictionary.id === 'region') {
-                const params = { deleted: true, mode: SEARCH_MODES.totalDictionary };
-                const _srchCriteries = dictionary.getSearchCriteries(data.rec['CLASSIF_NAME'], params, this._treeNode);
+            // if (dictionary.id === 'region') {
+            //     const params = { deleted: true, mode: SEARCH_MODES.totalDictionary };
+            //     const _srchCriteries = dictionary.getSearchCriteries(data.rec['CLASSIF_NAME'], params, this._treeNode);
 
-                return dictionary.descriptor.search(_srchCriteries)
-                    .then((nodes: any[]) =>
-                        nodes.find((el: any) =>
-                            el['CLASSIF_NAME'].toString().toLowerCase() === data.rec.CLASSIF_NAME.toString().toLowerCase()
-                            && data.rec.DUE !== el.DUE))
-                    .then((node: EosDictionaryNode) => {
-                        if (node) {
-                            return Promise.reject('Запись с этим именем уже существует!');
-                        } else {
-                            return null;
-                        }
-                    });
-            }
+            //     return dictionary.descriptor.search(_srchCriteries)
+            //         .then((nodes: any[]) =>
+            //             nodes.find((el: any) =>
+            //                 el['CLASSIF_NAME'].toString().toLowerCase() === data.rec.CLASSIF_NAME.toString().toLowerCase()
+            //                 && data.rec.DUE !== el.DUE))
+            //         .then((node: EosDictionaryNode) => {
+            //             if (node) {
+            //                 return Promise.reject('Запись с этим именем уже существует!');
+            //             } else {
+            //                 return null;
+            //             }
+            //         });
+            // }
             if (dictionary.id === 'reestrtype') {
                 if (!data.rec._orig || (data.rec['ISN_DELIVERY'] === String(data.rec._orig['ISN_DELIVERY']))) {
                     return Promise.resolve(null);

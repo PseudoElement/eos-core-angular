@@ -53,10 +53,10 @@
         }
     }
     .table-heder {
-        position: fixed;
+        /* position: fixed; */
         z-index: 1000;
         top: 88px;
-        width: 663px;
+        width: 680px;
         background-color: #fafafa;
         height: 32px;
         left: 11px;
@@ -76,7 +76,7 @@
 #nomenkl-table {
     text-align: left;
     border: 1px solid #eeeeee;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 .class-other {
     width: 96px;

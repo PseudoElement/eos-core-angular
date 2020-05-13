@@ -11,7 +11,7 @@
 <ng-template #treeNodeTmpl
     let-node="node"
     let-level="level">
-    <ng-container *ngIf="node && node.isNode && (!node.isDeleted || showDeleted)">
+    <ng-container *ngIf="node && node.isNode && (!node.isDeleted || showDeleted) && node.visibleFilter">
         <div class="node"
             #el
             (click)="onSelect($event, node)"

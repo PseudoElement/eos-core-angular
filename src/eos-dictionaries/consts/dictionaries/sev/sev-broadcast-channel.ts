@@ -99,7 +99,7 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, S
         }, {
             key: 'POP3_ENCRYPTION',
             type: 'boolean',
-            title: 'Требуется шифрование',
+            title: 'Требуется шифрованное подключение (SSL)',
         }, {
             key: 'POP3_LOGIN',
             type: 'string',

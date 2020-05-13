@@ -102,6 +102,7 @@ export class SevCollisionsDictionaryDescriptor extends SevDictionaryDescriptor {
                 updating: false,
                 children: [],
                 data: null,
+                visibleFilter: true,
                 path: this._getPath(list.id),
             };
             if (r.isActive) {
@@ -122,6 +123,7 @@ export class SevCollisionsDictionaryDescriptor extends SevDictionaryDescriptor {
             updating: false,
             children: [...res],
             data: null,
+            visibleFilter: true,
             path: this._getPath('0.'),
         }];
         this._treeData = head;

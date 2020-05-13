@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, HostListener, OnDestroy, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { Subscription } from 'rxjs';
@@ -23,6 +23,7 @@ export class CustomTreeNode {
     updating: boolean;
     path: string[];
     data?: {};
+    visibleFilter?: any;
     children: CustomTreeNode[];
 }
 
@@ -30,9 +31,10 @@ export class CustomTreeNode {
     selector: 'eos-custom-tree',
     templateUrl: './custom-tree.component.html'
 })
-export class CustomTreeComponent implements OnInit, OnDestroy {
+export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
     @Input() data: CustomTreeNode[];
     @Input() showDeleted: boolean;
+    @Input() filters: any;
     @Output() onSetActiveNode: EventEmitter<CustomTreeNode> = new EventEmitter<CustomTreeNode>();
 
     private w: number;
@@ -64,23 +66,51 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
         return null;
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.hasOwnProperty('filters')) {
+            this.updateTreeForFilters(this.data);
+        }
+    }
     ngOnInit() {
         this.onResize();
         this._subscription = this._dictSrv.openedNode$
             .subscribe((n) => {
                 // if (n) {
-                    // this.setActiveNode(this.data, n.data.rec.DUE);
+                // this.setActiveNode(this.data, n.data.rec.DUE);
                 // }
             });
 
         const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
         if (defaultRoot) {
-            setTimeout( () => {
+            setTimeout(() => {
                 this._router.navigate(defaultRoot);
             }, 100);
         }
     }
+    updateTreeForFilters(data: CustomTreeNode[]) {
+        if (data && data.length) {
+            data.forEach((d: CustomTreeNode) => {
+                d.visibleFilter = this.setVisible(d);
+                if (d.children && d.children.length) {
+                    this.updateTreeForFilters(d.children);
+                }
+            });
+        }
+    }
 
+    setVisible(node: CustomTreeNode) {
+        if (node.id !== '0.') {
+            if (this.filters.YEAR) {
+                console.log('yyy');
+                const y = +this.filters.YEAR;
+                const startDate = node.data['START_DATE'] ? new Date(node.data['START_DATE']).getFullYear() : null;
+                const endDate = node.data['END_DATE'] ? new Date(node.data['END_DATE']).getFullYear() : null;
+                return (!startDate || y - startDate >= 0) && (!endDate || endDate - y >= 0);
+            }
+            return true;
+        }
+        return true;
+    }
     ngOnDestroy() {
         this._subscription.unsubscribe();
     }
