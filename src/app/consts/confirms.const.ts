@@ -293,3 +293,12 @@ export const CONFIRM_CHANGE_CONFIDENTIONAL_FLAG: IConfirmWindow2 = {
         {title: 'Да',  result: 2, },
     ],
 };
+export const CONFIRM_CHANGE_ISN_ADDR_CATEGORY: IConfirmWindow2 = {
+    title: 'Ведение справочников',
+    bodyList: [],
+    body: `Менять на новое значение Категории адресатов в подчиненных организациях? `,
+    buttons: [
+        {title: 'Да',  result: 2, },
+        {title: 'Нет', result: 1, isDefault: true, },
+    ],
+};

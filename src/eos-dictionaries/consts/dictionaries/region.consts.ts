@@ -3,7 +3,7 @@ import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
+import { NOT_EMPTY_STRING2 } from 'eos-common/consts/common.consts';
 /*
 */
 export const REGION_DICT: ITreeDictionaryDescriptor = {
@@ -52,7 +52,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
         isUnique: true,
         uniqueInDict: true,
         required: true,
-        pattern: VALID_REQ_STRING,
+        pattern: NOT_EMPTY_STRING2,
         preferences: <IFieldPreferences> { hasIcon: true, },
     }, {
         key: 'CODE',

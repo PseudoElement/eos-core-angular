@@ -99,6 +99,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     SLICE_LEN = 110;
     customTreeData: CustomTreeNode[];
     protocolWindow: Window;
+    filterDate;
+    filterDateNomenkl;
 
     get sliced_title(): string {
         if (this.isTitleSliced) {
@@ -388,6 +390,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._sandwichSrv.treeScrollTop = this._treeScrollTop;
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+    getFilterDate($event) {
+        this.filterDate = $event;
+    }
+    getFilterNomenkl($event) {
+        this.filterDateNomenkl = $event;
     }
 
     onSetActiveNode($event) {
@@ -942,8 +950,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                     .replace('{{OPERATION}}', 'восстановлены.');
                                 this._msgSrv.addNewMessage(message);
                             });
+                    }   else {
+                        this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
+                        this._dictSrv.reload();
                     }
                 });
+            }   else {
+                this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
+                this._dictSrv.reload();
             }
             return Promise.resolve(null);
         });
@@ -1338,20 +1352,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     //
     private pasteNode(slicedNode: any[], dueTo, whenCopy?) {
         this._dictSrv.paste(slicedNode, dueTo, whenCopy)
-        .then(elem => {
-            if (this.dictionaryId === 'departments') {
-                this._dictSrv.getMarkedNodes().forEach(node => {
-                    node.isMarked = false;
-                });
-                slicedNode.forEach(node => {
-                    node.isMarked = true;
-                });
-                this._physicallyDelete(slicedNode);
-            }
-        })
-        .catch(er => {
-            console.log('er', er);
-        });
+            .then(elem => {
+                if (this.dictionaryId === 'departments') {
+                    this._dictSrv.getMarkedNodes().forEach(node => {
+                        node.isMarked = false;
+                    });
+                    slicedNode.forEach(node => {
+                        node.isMarked = true;
+                    });
+                    this._physicallyDelete(slicedNode);
+                }   else {
+                    slicedNode.forEach(node => {
+                        node.parent.deleteChild(node);
+                        this.dictionary.nodes.delete(node.id);
+                    });
+                }
+            })
+            .catch(er => {
+                console.log('er', er);
+            });
     }
     private _copy(): void {
         // то что вырезано и записано
@@ -1395,7 +1414,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение',
-                        msg: 'Для объединения можно выбирать только карточки организаций.' });
+                        msg: 'Для объединения можно выбирать только карточки организаций.'
+                    });
                     return;
                 }
                 break;

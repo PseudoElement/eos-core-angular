@@ -88,6 +88,7 @@
         <div class="nomenkl-tab-wr">
             <table id="nomenkl-table">
                 <tr  class="table-list table-heder">
+                    <th></th> <!-- Для замочка -->
                     <th style="width: 198px;" (click)="orderIndex('CLASSIF_NAME')">ЗАГОЛОВОК
                         <span *ngIf="this.sortConfig['CLASSIF_NAME'].selected" class="icon eos-icon small"
                         [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span>
@@ -102,6 +103,7 @@
                         [ngClass]="this.sortConfig[currentSort].up ? 'eos-icon-arrow-blue-bottom' : 'eos-icon-arrow-blue-top'"></span></th>
                 </tr>
                 <tr class="table-list first-list" [ngClass]="{'selected-item': item['ISN_LCLASSIF'] === selectedItem['ISN_LCLASSIF']}" (click)="clickForItem(item)" *ngFor="let item of notUniqueElem">
+                    <td><span *ngIf="item['CLOSED']" class="folder small eos-icon eos-icon-lock-blue"></span></td>
                     <td class="class-name">{{item['CLASSIF_NAME']}}</td>
                     <td class="class-number">{{item['NOM_NUMBER']}}</td>
                     <td class="class-other">{{item['YEAR_NUMBER']}}</td>

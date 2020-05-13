@@ -14,11 +14,13 @@
         </eos-spinner>
         <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied && !hasTemplateTree"
             [nodes]="treeNodes"
-            [showDeleted]="params.showDeleted"></eos-tree>
+            [showDeleted]="params.showDeleted" [filters] = "filterDate"></eos-tree>
         <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
                          [data]="customTreeData"
                          (onSetActiveNode)="onSetActiveNode($event)"
-                         [showDeleted]="params.showDeleted"></eos-custom-tree>
+                         [showDeleted]="params.showDeleted"
+                         [filters] = "filterDateNomenkl"
+                         ></eos-custom-tree>
         <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>
         <div class="fon highlighted"
             [style.width]="fonConf.width"
@@ -132,7 +134,7 @@
 
             <div class="second-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
                 <div class="">
-                    <eos-dictionary-filter (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
+                    <eos-dictionary-filter (setFilterNomenkl)="getFilterNomenkl($event)" (setFilter)="getFilterDate($event)" (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
                 </div>
             </div>
 

@@ -437,20 +437,18 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this._newData.get('SURNAME_PATRON')) {
             if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
                 return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
-                    if (confirmation) {
-                        if (confirmation['result'] === 1) {
-                            mas.push({
-                                method: 'MERGE',
-                                requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
-                                data: {
-                                    SURNAME: this.form.get('SURNAME_PATRON').value
-                                }
-                            });
-                            this.updateDL = true;
-                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
-                        } else {
-                            this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
-                        }
+                    if (confirmation && confirmation['result'] === 1) {
+                        mas.push({
+                            method: 'MERGE',
+                            requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
+                            data: {
+                                SURNAME: this.form.get('SURNAME_PATRON').value
+                            }
+                        });
+                        this.updateDL = true;
+                        this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                    } else {
+                        this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
                     }
                     return null;
                 });
@@ -515,8 +513,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     }
                 }];
                 return this._userParamSrv.dropLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
-                    this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                     if (+this.curentUser.USERTYPE !== 1) {
+                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
                             return this.sendData(query, accessStr);
                         });
@@ -724,7 +722,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then((data: DEPARTMENT[]) => {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
                 if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
-                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
                     this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                     });
@@ -732,7 +730,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                     if (data) {
-                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
                     }
                     this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
@@ -746,12 +744,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
                     depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
                     this._confirmSrv.confirm3(depConfirm, { ignoreBackdropClick: true }).then(confirmation => {
-                        if (confirmation) {
-                            if (confirmation['result'] === 1) {
-                                this.dueDepSurname = dep['SURNAME'];
-                                this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
-                                this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
-                            }
+                        if (confirmation && confirmation['result'] === 1) {
+                            this.dueDepSurname = dep['SURNAME'];
+                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
                         }
                     });
                 }
@@ -928,8 +924,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 if (data) {
                     this.curentUser.isTechUser = data;
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
-                        this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
-                            if (confirmation) {
+                        this._confirmSrv.confirm3(CONFIRM_UPDATE_USER, { ignoreBackdropClick: true }).then(confirmation => {
+                            if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
@@ -944,13 +940,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             console.log('Ошибка', error);
                         });
                     }
-                    this.form.get('SURNAME_PATRON').patchValue(this.form.get('CLASSIF_NAME').value, { emitEvent: false });
+                    // this.form.get('SURNAME_PATRON').patchValue(this.form.get('CLASSIF_NAME').value, { emitEvent: false });
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
-                    this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
+                    // this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
                     this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();

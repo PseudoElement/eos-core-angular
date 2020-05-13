@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, OnChanges, SimpleChanges } from '@angular/core';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { Router } from '@angular/router';
 import { EosDictService } from '../services/eos-dict.service';
@@ -12,9 +12,10 @@ const BIG_PANEL = 340,
     selector: 'eos-tree',
     templateUrl: './tree.component.html'
 })
-export class TreeComponent implements OnInit {
+export class TreeComponent implements OnInit, OnChanges {
     @Input() nodes: EosDictionaryNode[];
     @Input() showDeleted: boolean;
+    @Input() filters: any;
 
     private w: number;
 
@@ -25,6 +26,32 @@ export class TreeComponent implements OnInit {
 
     ngOnInit() {
         this.onResize();
+    }
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.hasOwnProperty('filters') && this._dictSrv.currentDictionary.id === 'departments') {
+            this.updateTreeForFilters(this.nodes);
+        }
+        console.log(changes);
+        console.log(this);
+    }
+    updateTreeForFilters(data: EosDictionaryNode[]) {
+        if (data && data.length) {
+            data.forEach((d: EosDictionaryNode) => {
+                d.visibleFilter = this.setVisible(d);
+                if (d.children && d.children.length) {
+                    this.updateTreeForFilters(d.children);
+                }
+            });
+        }
+    }
+
+    setVisible(node: EosDictionaryNode) {
+            if (this.filters) {
+                const startDate = node.data.rec['START_DATE'] ? new Date(node.data.rec['START_DATE']).setHours(0, 0, 0, 0) : null;
+                const endDate = node.data.rec['END_DATE'] ? new Date(node.data.rec['END_DATE']).setHours(0, 0, 0, 0) : null;
+            return  (!startDate || this.filters - startDate >= 0) && (!endDate || endDate - this.filters >= 0);
+            }
+        return true;
     }
 
     @HostListener('window:resize')
