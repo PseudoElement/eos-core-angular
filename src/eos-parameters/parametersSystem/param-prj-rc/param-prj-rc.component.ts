@@ -98,6 +98,22 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
         this.form.disable({ emitEvent: false });
     }
 
+    /**
+     * Rewrite parent's method "createObjRequest" for deletion of 2 requests.
+     * Requests for "PRJ_GROUP_FILE_PROTECTED" and "PRJ_RC_SECURLEVEL_CONSIDER" inputs
+     * invoke "500 internal server error".
+     */
+    createObjRequest() {
+        const requests = super.createObjRequest();
+
+        const filteredRequests = requests.filter((req) => {
+            return (!this._appContext.cbBase && req.requestUri.indexOf('PRJ_GROUP_FILE_PROTECTED') === -1) &&
+            req.requestUri.indexOf('PRJ_RC_SECURLEVEL_CONSIDER') === -1;
+        });
+
+        return filteredRequests;
+    }
+
     ngOnDestroy() {
         this._unsubscribe.next();
         this._unsubscribe.complete();
