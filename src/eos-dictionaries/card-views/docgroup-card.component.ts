@@ -272,6 +272,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                 if (tpl) {
                     this.setValue('rec.SHABLON', tpl.replace('{N}', ''));
                 }
+                this.setValue('rec.INITIATIVE_RESOLUTION', false);
                 this.setValue('rec.PRJ_NUM_FLAG', null);
             }
         }
