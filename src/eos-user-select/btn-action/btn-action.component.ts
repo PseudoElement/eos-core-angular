@@ -189,7 +189,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithLimitedUser(RedactUser);
     }
     checkBtnDelete() {
-        this.checkWithLimitedUser(DeliteUser);
+        this.deleteForever(DeliteUser);
     }
     checkBtnBlockUser() {
         this.checkWithBlocketUSer(BlockUser);
@@ -312,4 +312,16 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
 
+    deleteForever(button: BtnActionFields): void {
+        if (!this.selectUser || this.selectUser.deleted) {
+            button.disabled = true;
+            button.isActive = false;
+        } else {
+            if (this.limitCards.length) {
+                button.disabled = true;
+            } else {
+                button.disabled = false;
+            }
+        }
+    }
 }
