@@ -71,7 +71,7 @@
                 <div class="field">
                     <p class="field-title unimportant-text s-font">КАБИНЕТЫ</p>
                     <p class="field-value m-font"><a *ngIf="nodeDataFull.cabinet?.ISN_CABINET"
-                            [routerLink]="'/spravochniki/cabinet/'+nodeDataFull.cabinet?.ISN_CABINET + '/view'">{{nodeDataFull.cabinet?.CABINET_NAME}}</a></p>
+                        (click) = "redirectToEditCabinet($event)">{{nodeDataFull.cabinet?.CABINET_NAME}}</a></p>
                 </div>
                 <hr>
                 <!--<p *ngIf="isUserUpdating"-->

@@ -1119,7 +1119,11 @@ export class EosDictService {
         }
         return access;
     }
-
+    deleteDict(mode: number): void { // удаляю справочник с подразделениеями из массива для корректроного перехода по ссылке на владельза кабинета , из правого стакана.
+        if (this._dictionaries.length > 1 && this._dictionaries[1].id === 'cabinet') {
+            this._dictionaries.shift();
+        }
+    }
 
     setUserOrder(ordered: EosDictionaryNode[]) {
 
