@@ -101,7 +101,6 @@ export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
     setVisible(node: CustomTreeNode) {
         if (node.id !== '0.') {
             if (this.filters.YEAR) {
-                console.log('yyy');
                 const y = +this.filters.YEAR;
                 const startDate = node.data['START_DATE'] ? new Date(node.data['START_DATE']).getFullYear() : null;
                 const endDate = node.data['END_DATE'] ? new Date(node.data['END_DATE']).getFullYear() : null;
