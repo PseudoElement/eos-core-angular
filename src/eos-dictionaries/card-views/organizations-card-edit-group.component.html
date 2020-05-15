@@ -32,6 +32,7 @@
             [input]="inputs['rec.ISN_ADDR_CATEGORY']"
             [form]="form"
             [readonly]="!editMode"
+            [viewOpts]="selOpts"
         ></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.NOTE']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
         <div *ngIf="isSevIndexes">
