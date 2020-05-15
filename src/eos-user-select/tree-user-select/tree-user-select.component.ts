@@ -131,17 +131,21 @@ export class TreeUserSelectComponent implements OnInit {
 
     onSelect(evt: Event, node: TreeUserNode) {
     //    evt.stopPropagation();
-        if (this._store.getItem('quickSearch')) {
-            this._srhSrv.closeSearch.next(true);
+        const {id} = node;
+
+        if (id !== this.id) {
+            if (this._store.getItem('quickSearch')) {
+                this._srhSrv.closeSearch.next(true);
+            }
+            this._apiSrv.confiList$.next({
+                shooseTab: this.currMode,
+                titleDue: node.title,
+            });
+            this._store.removeItem('page_number_user_settings');
+            localStorage.setItem('lastNodeDue', JSON.stringify(node.id));
+            sessionStorage.setItem('isnNodeMy', node.data['ISN_NODE']);
+            this._router.navigate(['user_param', node.id]);
         }
-        this._apiSrv.confiList$.next({
-            shooseTab: this.currMode,
-            titleDue: node.title,
-        });
-        this._store.removeItem('page_number_user_settings');
-        localStorage.setItem('lastNodeDue', JSON.stringify(node.id));
-        sessionStorage.setItem('isnNodeMy', node.data['ISN_NODE']);
-        this._router.navigate(['user_param', node.id]);
     }
 
     getPadding(level: number): number {
