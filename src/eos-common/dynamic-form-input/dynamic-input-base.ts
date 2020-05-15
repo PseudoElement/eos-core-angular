@@ -92,8 +92,10 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
                  this.inputTooltip.visible = false;
                 if (this.inputTooltip.force) {
                     this.updateMessage();
-                    this.inputTooltip.visible = true;
-                    this.inputTooltip.force = false;
+                    setTimeout(() => { // похоже тут рассинхрон, имя не успевает обновиться и если меняется с ошибки на ошибку, то имя ангулар не меняет
+                        this.inputTooltip.visible = true;
+                        this.inputTooltip.force = false;
+                    }, 0);
                 } else {
                     this.inputTooltip.visible = (this.inputTooltip.visible && control.invalid && control.dirty);
                 }

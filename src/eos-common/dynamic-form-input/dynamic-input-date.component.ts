@@ -36,8 +36,8 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
             containerClass: 'theme-dark-blue',
             dateInputFormat: 'DD.MM.YYYY',
             isDisabled: this.readonly,
-            minDate: new Date('01/01/1900'),
-            maxDate: new Date('12/31/2100'),
+            minDate: new Date('01/01/1753'),
+            maxDate: new Date('12/31/2999'),
         };
     }
 

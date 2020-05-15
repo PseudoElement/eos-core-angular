@@ -31,8 +31,6 @@ export class TreeComponent implements OnInit, OnChanges {
         if (changes.hasOwnProperty('filters') && this._dictSrv.currentDictionary.id === 'departments') {
             this.updateTreeForFilters(this.nodes);
         }
-        console.log(changes);
-        console.log(this);
     }
     updateTreeForFilters(data: EosDictionaryNode[]) {
         if (data && data.length) {

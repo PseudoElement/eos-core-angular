@@ -130,9 +130,9 @@ export class InputControlService {
                     error = {'wrongDate': true};
                 } else {
                     const ts = value.setHours(0, 0, 0, 0);
-                    if (ts - new Date('01/01/1900').setHours(0, 0, 0, 0) < 0) {
+                    if (ts - new Date('01/01/1753').setHours(0, 0, 0, 0) < 0) {
                         error = {'minDate': true};
-                    } else if (new Date('12/31/2100').setHours(0, 0, 0, 0) - ts < 0) {
+                    } else if (new Date('12/31/2999').setHours(0, 0, 0, 0) - ts < 0) {
                         error = {'maxDate': true};
                     }
                 }

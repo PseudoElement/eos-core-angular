@@ -140,7 +140,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         if (+$event === 13 || flag) {
             if (!this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.NAME'].value) {
                 const surnameFIO = this.form.controls['rec.SURNAME'].value;
-                const fio = this.form.controls['rec.SURNAME'].value.replace(/\s/g, '');
+                const fio = this.form.controls['rec.SURNAME'].value.replace(/\s{2,}/g, ' ').trim();
                 let patron, name, surname;
                 if (fio.length > 2 && fio.lastIndexOf('.') === fio.length - 1) {
                     patron = fio.substr(fio.length - 2, 1);

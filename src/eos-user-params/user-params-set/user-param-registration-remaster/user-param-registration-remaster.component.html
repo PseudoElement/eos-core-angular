@@ -15,7 +15,7 @@
             <eos-remaster-addresses [userData]='hash' [defaultValues]='defaultValues' (pushChange)="emitChangesAddresses($event)"></eos-remaster-addresses>
         </div>
         <div [hidden]="currTab !==2" class="clearfix">
-            <eos-remaster-scan (pushChenge)='emitChangesScan($event)' [accessSustem]="accessSustem" [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-scan>
+            <eos-remaster-scan (pushChenge)='emitChangesScan($event)' (errorSave)='errorSave($event)' [accessSustem]="accessSustem" [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-scan>
         </div>
         <div [hidden]="currTab !== 3" class="clearfix">
             <eos-auto-search (pushChange)='emitChangesAutoSearch($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-auto-search>
