@@ -34,7 +34,10 @@ export class ConfirmWindowService {
     }
 
     confirm2(content: IConfirmWindow2): Promise<IConfirmButton> { // TODO unsubscribe, memory leak
-        const bsModalRef: BsModalRef = this._bsModalSrv.show(ConfirmWindow2Component);
+        const config = {
+            ignoreBackdropClick: true
+        };
+        const bsModalRef: BsModalRef = this._bsModalSrv.show(ConfirmWindow2Component, config);
         const _wnd: IConfirmWindow2Content = bsModalRef.content;
 
         Object.assign(_wnd, content);
