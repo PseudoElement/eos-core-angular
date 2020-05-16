@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CardRightSrv } from '../card-right.service';
 import { CardRight } from './card.model';
 import { USERCARD } from 'eos-rest';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-list-card-right',
@@ -20,6 +21,7 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
     private _ngUnsubscribe: Subject<void>;
     constructor (
         private _cardSrv: CardRightSrv,
+        private _appCtx: AppContext,
     ) {
         this._ngUnsubscribe = new Subject<void>();
         this._cardSrv.selectingNode$
@@ -54,7 +56,7 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
                 this.listNodes = [];
                 this._cardList = data;
                 this._cardList.forEach((card: USERCARD) => {
-                    this.listNodes.push(new CardRight(this._cardSrv, card));
+                    this.listNodes.push(new CardRight(this._appCtx, this._cardSrv, card));
                 });
         });
     }

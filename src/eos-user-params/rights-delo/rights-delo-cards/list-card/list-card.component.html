@@ -6,12 +6,12 @@
         <span *ngIf="node.expandable && node.value"
             class="eos-icon icon list-triangle small"
             (click)="node.expanded()"
-            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"
+            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && (!editMode || !node?.allowed), 'eos-icon-open-folder-grey': node.isExpanded && (!editMode || !node?.allowed)}"
         ></span>
 
         <label class="checkbox card-node-checked">
             <input type="checkbox"
-                [disabled]="!editMode || !node.limitcard"
+                [disabled]="!editMode || !node?.allowed"
                 hide
                 [(ngModel)]="node.value"
             >
@@ -29,10 +29,10 @@
                         tooltip="Добавить"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        [disabled]="!editMode || !node.limitcard"
+                        [disabled]="!editMode || !node?.allowed"
                         (click)="[node.addInstance()]"
                     >
-                        <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode}">
+                        <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode || !node?.allowed}">
                         </span>
                     </button>
                     <div style="display: inline-block"
@@ -41,9 +41,9 @@
                         containerClass="tooltip-info">
                         <button
                             class="btn"
-                            [disabled]="!node.curentSelectedNode || !editMode || !node.limitcard"
+                            [disabled]="!node.curentSelectedNode || !editMode || !node?.allowed"
                             (click)="[node.deleteInstance()]">
-                            <span class="eos-icon small"  [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode}">
+                            <span class="eos-icon small"  [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode || !node?.allowed}">
                             </span>
                         </button>
                     </div>
@@ -53,7 +53,7 @@
                 <div *ngIf="node.isLimit" class="card-limit">
                     <label class="checkbox">
                         <input type="checkbox"
-                            [disabled]="!editMode || !node.limitcard"
+                            [disabled]="!editMode || !node?.allowed"
                             hide
                             [(ngModel)]="node.limit"
                         >
@@ -66,7 +66,7 @@
                     <eos-list-doc-tree
                         *ngIf="!node.isLoading; else loaderSm"
                         [listNode]="node.listNodes"
-                        [editMode]="editMode && node.limitcard"
+                        [editMode]="editMode && node?.allowed"
                         (select)="node.select($event)"
                         (checkedNode)="node.checkedNode($event)"
                     ></eos-list-doc-tree>

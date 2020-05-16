@@ -113,9 +113,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.buttonName.forEach(name => {
             this.upBtn(name);
         });
-        if (this._appContext.cbBase) {
-            this.adminDisabledBtn(this._appContext.CurrentUser.IS_SECUR_ADM);
-        }
     }
     upBtn(btnName: string) {
         switch (btnName) {
@@ -201,7 +198,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithLimitedUser(OpenAddressManagementWindow);
     }
     checkBtnOpenSystemDelo() {
-        this.checkWithLimitedUser(OpenRightsSystemCaseDelo);
+        this.OpenRightsSystemCaseDelo(OpenRightsSystemCaseDelo);
     }
     checkBtnProtocol() {
         this.checkWittAllUsers(Protocol);
@@ -319,24 +316,14 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             button.isActive = false;
         }
     }
-    adminDisabledBtn(admNum: number): void {
-        if (admNum === 0) {
-            CreateUser.disabled = true;
-            DeliteUser.disabled = true;
+    OpenRightsSystemCaseDelo(button: BtnActionFields): void {
+        if (!this.selectUser || this.selectUser.deleted) {
+            button.disabled = true;
+            button.isActive = false;
         } else {
-            this.buttons.buttons.map((button: BtnActionFields) => {
-                if (button.name !== 'CreateUser' && button.name !== 'DeliteUser') { // button.name !== 'ViewDeletedUsers' || button.name !== 'ViewTechicalUsers'
-                    button.disabled = true;
-                }
-            });
-            this.buttons.moreButtons.map((button: BtnActionFields) => {
-                if (button.name !== 'CreateUser' && button.name !== 'ViewTechicalUsers' && button.name !== 'ViewDeletedUsers' && button.name !== 'DeliteUser') { // button.name !== 'ViewDeletedUsers' || button.name !== 'ViewTechicalUsers'
-                    button.disabled = true;
-                }
-            });
+            button.disabled = false;
         }
     }
-
     deleteForever(button: BtnActionFields): void {
         if (!this.selectUser || this.selectUser.deleted) {
             button.disabled = true;

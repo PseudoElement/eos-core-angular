@@ -246,7 +246,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.accordionList[6].disabled = true;
             //    this.accordionList[1].isOpen = false;
                 this.accordionList[2].isOpen = false;
-                this.hideIcon = true;
+            //    this.hideIcon = true;
             } else {
                 this.accordionList[0].disabled = false;
                 this.accordionList[1].subList[3].disabled = false;
@@ -283,11 +283,16 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.hideIcon = false;
             }
         }
-        if (this._appContext.limitCardsUser.length > 0 && this._userParamService.curentUser !== undefined) {
-            if (this.pageId !== 'protocol' && this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['DEPARTMENT_DUE']) === -1) {
+       if (this._userParamService.curentUser === undefined) {
+            if (this.pageId !== 'protocol') {
                 this._router.navigateByUrl('user_param');
             }
         }
+        // if (this._appContext.limitCardsUser.length > 0 && this._userParamService.curentUser !== undefined) {
+        //     if (this.pageId !== 'protocol' && this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['DEPARTMENT_DUE']) === -1) {
+        //         this._router.navigateByUrl('user_param');
+        //     }
+        // }
     }
 
     private setTabsSCan(flag: boolean): void {

@@ -3,6 +3,7 @@ import { CardRightSrv } from '../card-right.service';
 import { USERCARD, USER_CARD_DOCGROUP } from 'eos-rest';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { _ES } from 'eos-rest/core/consts';
+import { AppContext } from 'eos-rest/services/appContext.service';
 // import { FuncNum } from '../funcnum.model';
 
 export class CardRight {
@@ -46,7 +47,16 @@ export class CardRight {
         this._value = v ? 2 : 1;
         this._setValueEntity();
     }
+    get allowed() {
+        if (this._appCtx && this._appCtx.limitCardsUser.length) {
+            return this._appCtx.limitCardsUser.some(_due => {
+                return _due === this._card.DUE;
+            });
+        }
+        return true;
+    }
     constructor(
+        private _appCtx: AppContext,
         private _srv: CardRightSrv,
         private _card: USERCARD,
     ) {

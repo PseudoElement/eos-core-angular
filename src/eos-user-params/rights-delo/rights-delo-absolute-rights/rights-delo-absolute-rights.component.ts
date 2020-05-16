@@ -796,6 +796,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (node.key === '14' && !(+this.curentUser['USER_PARMS_HASH']['RC_CTRL'])) {
                 continue;
             }
+            if (this.arrDeloRight[+node['key']] === ' ') {
+                this.arrDeloRight[+node['key']] = '0';
+            }
             fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key']), this.curentUser));
         }
         return fields;
