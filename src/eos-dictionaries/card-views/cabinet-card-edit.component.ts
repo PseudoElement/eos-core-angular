@@ -2,7 +2,7 @@ import { Component, Injector, ViewChild, OnChanges, HostListener } from '@angula
 
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { CABINET_FOLDERS } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
-import { DEPARTMENT, PipRX } from 'eos-rest';
+import { DEPARTMENT, PipRX, CABINET } from 'eos-rest';
 import { IOrderBy } from '../interfaces';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
@@ -45,6 +45,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     };
 
     @ViewChild('tableEl') tableEl;
+    @ViewChild('intupString') intupString;
 
     // private _apiSrv: PipRX;
     // private folderList: any[];
@@ -91,7 +92,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     constructor(injector: Injector,
         private _confirmSrv: ConfirmWindowService,
         private _classifSrv: WaitClassifService,
-        ) {
+    ) {
         super(injector);
         this.foldersMap = new Map<number, any>();
         CABINET_FOLDERS.forEach((folder) => {
@@ -112,6 +113,36 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             this.formChanges$ = this.form.valueChanges.subscribe(() => {
                 this.updateValidTabs();
             });
+            setTimeout(() => {
+                this.form.controls['rec.CABINET_NAME'].setAsyncValidators((control: AbstractControl) => {
+                    if (control && control.value && control.value.length) {
+                        return this.appctx['pip']['read']({
+                            CABINET: {
+                                criteries: {
+                                    DUE: this.data.rec.DUE,
+                                    CABINET_NAME: '="' + control.value + '"'
+                                }
+                            }
+                        }).then((date: CABINET[]) => {
+                            if (date && date.length) {
+                                const filteredDate = date.filter((_d) => {
+                                    return _d.ISN_CABINET !== this.data.rec.ISN_CABINET;
+                                });
+                                if (filteredDate.length) {
+                                    setTimeout(() => {
+                                        this.intupString.inpstring.toggleTooltip();
+                                    });
+                                    return { isUnique: true };
+                                }
+                                return null;
+                            }
+                        });
+                    } else {
+                        return Promise.resolve(null);
+                    }
+                });
+                this.form.controls['rec.CABINET_NAME'].updateValueAndValidity();
+            }, 500);
         }
     }
 
