@@ -342,7 +342,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     checkDLSurname(mas: any[]): Promise<any> {
         if (this._newData.get('SURNAME_PATRON')) {
-            if (this.curentUser._orig['SURNAME_PATRON'] === this.surnameDepartment) {
+            if (this.curentUser['SURNAME_PATRON'] === this.surnameDepartment) {
                 return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
                     if (confirmation && confirmation['result'] === 1) {
                         mas.push({
