@@ -278,6 +278,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         newD['NOTE'] = '' + this.form.get('NOTE').value;
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
+                    if (key === 'TECH_DUE_DEP') {
+                        newD['NOTE'] = '' + this.form.get('NOTE').value;
+                        newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
+                    }
                     delete newD['DUE_DEP_NAME'];
                 });
             }
@@ -593,7 +597,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
-                if (data === '') {
+                if (!data || data === '') {
                     throw new Error();
                 }
                 dueDep = data;
@@ -601,13 +605,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             })
             .then((data: DEPARTMENT[]) => {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
-                if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
-                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
-                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
-                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
-                    });
-                    return data[0];
-                }
+                // if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
+                //     this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
+                //     this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                //         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                //     });
+                //     return data[0];
+                // }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                     if (data) {
                         this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
