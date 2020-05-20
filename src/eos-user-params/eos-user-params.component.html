@@ -137,7 +137,7 @@
         >
             <div accordion-heading>
                 {{item.title}}
-                <span *ngIf="!hideIcon" 
+                <span *ngIf="!hideIcon"
                     class="icon eos-icon small float-right pull-right"
                     [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"
                 ></span>
@@ -145,6 +145,7 @@
             <div
                 *ngFor="let subItem of item.subList"
                 class="subItem"
+                [ngClass] = "subItem.disabled ? 'disable' : ''"
                 [routerLink]="['/user-params-set', subItem.url]"
                 routerLinkActive="active-link"
             >
@@ -174,7 +175,7 @@
 <nav
     class="right-accordion-email"
     [ngClass]="{'show-accordion': isShowRightAccordion}"
->   
+>
     <div class="right-email-stage">
             <div class="modal-r">
                 <div class="modal-title-cust-right">

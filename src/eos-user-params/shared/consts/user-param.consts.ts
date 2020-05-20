@@ -53,19 +53,23 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
 export const SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO: IParamAccordionList[] = [
     {
         title: 'Картотеки и кабинеты',
-        url: 'card-files'
+        url: 'card-files',
+        disabled: false,
     },
     {
         title: 'Абсолютные права',
-        url: 'absolute-rights'
+        url: 'absolute-rights',
+        disabled: false,
     },
     {
         title: 'Права в картотеках',
-        url: 'card-index-rights'
+        url: 'card-index-rights',
+        disabled: false,
     },
     {
         title: 'Ограничение доступа',
-        url: 'access-limitation'
+        url: 'access-limitation',
+        disabled: false,
     },
 
 ];

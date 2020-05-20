@@ -238,16 +238,18 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         if (this._appContext.limitCardsUser.length > 0) {
             if (this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['DEPARTMENT_DUE']) === -1) {
                 this.accordionList[0].disabled = true;
-                this.accordionList[1].disabled = true;
+                this.accordionList[1].subList[3].disabled = true;
                 this.accordionList[2].disabled = true;
                 this.accordionList[3].disabled = true;
                 this.accordionList[4].disabled = true;
-                this.accordionList[1].isOpen = false;
+                this.accordionList[5].disabled = true;
+                this.accordionList[6].disabled = true;
+            //    this.accordionList[1].isOpen = false;
                 this.accordionList[2].isOpen = false;
                 this.hideIcon = true;
             } else {
                 this.accordionList[0].disabled = false;
-                this.accordionList[1].disabled = false;
+                this.accordionList[1].subList[3].disabled = false;
                 this.accordionList[2].disabled = false;
                 this.accordionList[3].disabled = false;
                 this.hideIcon = false;

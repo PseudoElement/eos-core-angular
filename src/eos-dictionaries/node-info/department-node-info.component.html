@@ -81,7 +81,7 @@
                 <!--<div *ngIf="!isUserUpdating">-->
                 <div class="field" *ngIf="getUserLogin()">
                     <p class="field-title unimportant-text s-font">ЯВЛЯЕТСЯ ПОЛЬЗОВАТЕЛЕМ</p>
-                    <a [routerLink] = "'/user-params-set/base-param'"
+                    <a [routerLink] = "'/user-params-set/' + urlPathUser"
                        [queryParams] = "{isn_cl: this.nodeDataFull.user.ISN_LCLASSIF}">
                        <p class="field-value m-font">{{getUserLogin()}}</p></a>
                     <!-- p class="field-value m-font"><a [routerLink]="'/spravochniki/user/'+nodeDataFull.user?.ISN_LCLASSIF + '/view'">{{nodeDataFull.user?.CLASSIF_NAME}}</a></p -->

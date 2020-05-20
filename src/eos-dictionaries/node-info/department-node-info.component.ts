@@ -26,6 +26,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     public update: boolean;
     public canCreateUser: boolean;
     public roles = ROLES_IN_WORKFLOW;
+    public urlPathUser = 'base-param';
     createUserModal: BsModalRef;
 
     boss: EosDictionaryNode;

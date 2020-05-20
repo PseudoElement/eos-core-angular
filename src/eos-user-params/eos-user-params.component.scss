@@ -104,6 +104,12 @@
                         outline: none;
                     }
                 }
+                .disable {
+                    pointer-events: none;
+                    cursor: no-drop;
+                    background-color: #eeee;
+                    color: #dedad6;
+                }
             }
         }
     }
@@ -339,7 +345,7 @@
     .elem-input-radio:first-child {
         margin-right: 105px !important;
     }
-    
+
 }
 .in-line-elements-width {
     .inline-block {
