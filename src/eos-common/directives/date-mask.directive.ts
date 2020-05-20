@@ -41,6 +41,13 @@ export class EosDateMaskDirective implements ControlValueAccessor {
                 kbEvt.preventDefault();
                 break;
         }
+
+        const elem = this.ref.nativeElement;
+        const cursorPos = elem.selectionStart;
+
+        if (cursorPos > 9 && kbEvt.key.length === 1) {
+            kbEvt.preventDefault();
+        }
     }
 
     @HostListener('keyup', ['$event'])
