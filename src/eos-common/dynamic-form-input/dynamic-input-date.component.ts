@@ -61,6 +61,25 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
         this.updateDatePickerPlacement();
     }
 
+    delayedTooltip() {
+        this.updateMessage();
+        if (this.inputTooltip.message !== '' && !this._syncTimer && !this.inputTooltip.force) {
+            this.inputTooltip.visible = false;
+            this._syncTimer = setTimeout(() => {
+                this.inputTooltip.force = true;
+                this.inputTooltip.visible = true;
+                this._syncTimer = null;
+            }, 0);
+        }
+    }
+    toggleTooltip() {
+        if (!this.readonly && this.control) {
+            this.delayedTooltip();
+        } else {
+            super.toggleTooltip();
+        }
+    }
+
     private updateDatePickerPlacement() {
         if (this.datePickerWrapper) {
             const rect = this.datePickerWrapper.nativeElement.getBoundingClientRect();
