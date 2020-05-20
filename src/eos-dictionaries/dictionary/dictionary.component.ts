@@ -1101,13 +1101,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
                             .replace('{{OPERATION}}', 'удалены логически.');
 
-                        let flagReq = true; // не добавляем дочерние элементы для 3 справочников в страшно удалять вложенность для всего
-                        if (this.dictionaryId === 'departments' ||
-                            this.dictionaryId === 'rubricator' ||
-                            this.dictionaryId === 'docgroup') {
-                                flagReq = false;
-                        }
-                        return this._dictSrv.setFlagForMarked('DELETED', flagReq, true).then(() => {
+                        return this._dictSrv.setFlagForMarked('DELETED', true, true).then((flag) => {
                             this._dictSrv.setMarkAllNone();
                             this._msgSrv.addNewMessage(message);
                         });
