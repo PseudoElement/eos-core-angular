@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { EosUtils } from '../core/utils';
+import { INPUT_ERROR_MESSAGES } from 'eos-common/consts/common.consts';
 
 @Component({
     selector: 'eos-dynamic-input-date',
@@ -39,6 +40,14 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
             minDate: new Date('01/01/1753'),
             maxDate: new Date('12/31/2999'),
         };
+    }
+
+    getErrorMessage() {
+        const control = this.control;
+        if (control.errors && control.errors['wrongDate'] && !!(+control.value) && control.value > new Date('12/31/3000')) {
+            return INPUT_ERROR_MESSAGES['maxDate'];
+        }
+        return super.getErrorMessage();
     }
 
     dpChanged(value: Date) {
