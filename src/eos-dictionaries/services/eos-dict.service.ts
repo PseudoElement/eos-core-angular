@@ -45,6 +45,7 @@ import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { isArray } from 'util';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
@@ -69,12 +70,12 @@ export class EosDictService {
     public editFromForm: boolean;
     public updateRigth = new BehaviorSubject(null);
     // private dictionary: EosDictionary;
+    private paginationConfig: IPaginationConfig;
     private _treeNode: EosDictionaryNode; // record selected in tree
     private _listNode: EosDictionaryNode; // record selected in list
     private _currentList: EosDictionaryNode[];
     private _visibleListNodes: EosDictionaryNode[];
     private _bufferNodes: EosDictionaryNode[];
-    private paginationConfig: IPaginationConfig;
     private _dictionary$: BehaviorSubject<EosDictionary>;
     private _treeNode$: BehaviorSubject<EosDictionaryNode>;
     private _listNode$: BehaviorSubject<EosDictionaryNode>;
@@ -252,8 +253,8 @@ export class EosDictService {
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
-    //    private departmentsSrv: EosDepartmentsService,
-    //    private confirmSrv: ConfirmWindowService,
+        //    private departmentsSrv: EosDepartmentsService,
+        //    private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _apiSrv: PipRX,
         private _errorHelper: ErrorHelperServices,
@@ -451,21 +452,21 @@ export class EosDictService {
         this._apiSrv.read({
             [url]: ALL_ROWS
         })
-        .then(ans => {
-            this._apiSrv.read({
-                REF_FILE: {
-                    criteries: {
-                        ISN_REF_DOC: ans
+            .then(ans => {
+                this._apiSrv.read({
+                    REF_FILE: {
+                        criteries: {
+                            ISN_REF_DOC: ans
+                        }
                     }
-                }
+                })
+                    .then(fileDownload => {
+                        window.open(`../getfile.aspx/${fileDownload[0]['ISN_REF_FILE']}`);
+                    });
             })
-            .then(fileDownload => {
-                window.open(`../getfile.aspx/${fileDownload[0]['ISN_REF_FILE']}`);
+            .catch(er => {
+                this._errHandler(er);
             });
-        })
-        .catch(er => {
-            this._errHandler(er);
-        });
     }
     getCabinetOwners(departmentDue: string): Promise<any[]> {
         return this.getDictionaryById('cabinet')
@@ -502,7 +503,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach( n => {n.isMarked = false; /* n.isSliced = false; */ } );
+            this._currentList.forEach(n => { n.isMarked = false; /* n.isSliced = false; */ });
         }
         this._currentMarkInfo.nodes = [];
 
@@ -803,14 +804,14 @@ export class EosDictService {
                 return this._preSave(dictionary, data, false)
                     .then((appendChanges) => {
                         return this._updateUserDepartment(node.data.rec, node.dictionaryId)
-                        .then(chenge => {
-                            if (!appendChanges && chenge) {
-                                appendChanges = chenge;
-                            } else if (chenge) {
-                                appendChanges.push(chenge);
-                            }
-                            return dictionary.updateNodeData(node, data, appendChanges);
-                        });
+                            .then(chenge => {
+                                if (!appendChanges && chenge) {
+                                    appendChanges = chenge;
+                                } else if (chenge) {
+                                    appendChanges.push(chenge);
+                                }
+                                return dictionary.updateNodeData(node, data, appendChanges);
+                            });
                     })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
@@ -836,9 +837,26 @@ export class EosDictService {
                 } else if (err && err.error instanceof RestError) {
                     return Promise.reject(err);
                 }
-             //   this._errHandler(err);
+                //   this._errHandler(err);
                 return Promise.reject(err);
             });
+    }
+
+    rememberNewNode(results): void {
+        console.log(results);
+        if (results) {
+            if (typeof results === 'number') {
+                this._storageSrv.setItem('newNode', results, true);
+            } else if (isArray(results)) {
+                if (results[0] && results[0].record && results[0].record.data && results[0].record.data.rec.ISN_LCLASSIF) {
+                    this._storageSrv.setItem('newNode', results[0].record.data.rec.ISN_LCLASSIF, true);
+                } else if (results[0] && typeof results[0].record === 'number') {
+                    this._storageSrv.setItem('newNode', results[0].record, true);
+                } else if (results[0] && results[0].record && results[0].record.ISN_NODE) {
+                    this._storageSrv.setItem('newNode', results[0].record.ISN_NODE, true);
+                }
+            }
+        }
     }
 
     addNode(data: any): Promise<EosDictionaryNode> {
@@ -850,6 +868,7 @@ export class EosDictService {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data, appendChanges);
                 })
                 .then((results) => {
+                    this.rememberNewNode(results);
                     this.updateViewParameters({ updatingList: true });
                     return this._reloadList(true)
                         .then(() => {
@@ -1232,21 +1251,21 @@ export class EosDictService {
     }
     // по идее нужно сюда передать нужные данные
     // flag пока думаю использовать как показатель вырезать = true  копировать = false
-    public paste(slicedNodes: EosDictionaryNode[], dueTo: string, whenCopy?): Promise<any>  {
+    public paste(slicedNodes: EosDictionaryNode[], dueTo: string, whenCopy?): Promise<any> {
         return this.currentDictionary.descriptor.paste(slicedNodes, dueTo, whenCopy)
-        .then(() => {
-            this._storageSrv.removeItem('markedNodes');
-            this.reload();
-        })
-        .catch(er => {
-            if (er) {
-                this._errorHelper.errorHandler(er);
-            }
-            // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
-        });
+            .then(() => {
+                this._storageSrv.removeItem('markedNodes');
+                this.reload();
+            })
+            .catch(er => {
+                if (er) {
+                    this._errorHelper.errorHandler(er);
+                }
+                // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: er.message });
+            });
     }
     public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
-        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        const markedNodes: EosDictionaryNode[] = this.getMarkedNodes();
         const storageNode = [];
         // убираем выделение
         this._currentList.forEach((node: EosDictionaryNode) => {
@@ -1265,9 +1284,9 @@ export class EosDictService {
             this._storageSrv.removeItem('markedNodes');
             this.reload();
         }).catch(e => {
-                if (e) {
-                    this._errorHelper.errorHandler(e);
-                }
+            if (e) {
+                this._errorHelper.errorHandler(e);
+            }
             // this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
         });
     }
@@ -1329,6 +1348,42 @@ export class EosDictService {
             });
         }
 
+    }
+
+    public findNewNodePages(id: number): EosDictionaryNode {
+        let indexNewNode: number;
+        let list = [];
+        if (!this.viewParameters.showDeleted && this._currentList) {
+            list = this._currentList.filter((node) => node.isVisible(this.viewParameters.showDeleted));
+        }
+        list = list.filter((node) => node.filterBy(this.filters));
+        const isnName = list.length ? (list[0].data.rec.ISN_LCLASSIF ? 'ISN_LCLASSIF' : 'ISN_NODE') : null;
+        const nodeT = list.filter((_n, i, nodes) => {
+            if (+_n.data.rec[isnName] === +id) {
+                indexNewNode = i;
+                return true;
+            }
+        })[0];
+        if (list.length > 10 && nodeT) {
+            const pages = Math.ceil(list.length / this.paginationConfig.length);
+            let start = 0;
+            let end;
+            for (let i = 1; i <= pages; i += 1) {
+                end = start + this.paginationConfig.length - 1;
+                if (indexNewNode >= start && indexNewNode <= end) {
+                    if (this.paginationConfig.current === i) {
+                        this._storageSrv.removeItem('newNode');
+                        return nodeT;
+                    } else {
+                        this.changePagination({ current: i, start: i, length: this.paginationConfig.length, itemsQty: this.paginationConfig.itemsQty });
+                    }
+                }
+                start = end + 1;
+            }
+        } else {
+            this._storageSrv.removeItem('newNode');
+        }
+        return nodeT;
     }
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
@@ -1394,7 +1449,7 @@ export class EosDictService {
                     node.children = el;
                     return node;
                 })
-                .then (() => {
+                .then(() => {
                     return node;
                 })
                 .catch((err) => this._errHandler(err));
@@ -1543,8 +1598,8 @@ export class EosDictService {
 
     private _updateUserDepartment(data, dictionaryId): Promise<any> {
         if (dictionaryId === 'departments' &&
-        data._orig['IS_NODE'] === 1 &&
-        data._orig['SURNAME'] !== data['SURNAME']) {
+            data._orig['IS_NODE'] === 1 &&
+            data._orig['SURNAME'] !== data['SURNAME']) {
             return this._apiSrv.read({
                 USER_CL: {
                     criteries: {
@@ -1552,22 +1607,22 @@ export class EosDictService {
                     },
                 }
             })
-            .then((ans: any[]) => {
-                if (ans.length > 0 && ans[0]['SURNAME_PATRON'] === data._orig['SURNAME']) {
-                    return Promise.resolve([{
-                        method: 'MERGE',
-                        requestUri: `USER_CL(${ans[0]['ISN_LCLASSIF']})`,
-                        data: {
-                            SURNAME_PATRON: data['SURNAME']
-                        }
-                    }]);
-                } else {
-                    return Promise.resolve(null);
-                }
-            })
-            .catch(er => {
-                this._errHandler(er);
-            });
+                .then((ans: any[]) => {
+                    if (ans.length > 0 && ans[0]['SURNAME_PATRON'] === data._orig['SURNAME']) {
+                        return Promise.resolve([{
+                            method: 'MERGE',
+                            requestUri: `USER_CL(${ans[0]['ISN_LCLASSIF']})`,
+                            data: {
+                                SURNAME_PATRON: data['SURNAME']
+                            }
+                        }]);
+                    } else {
+                        return Promise.resolve(null);
+                    }
+                })
+                .catch(er => {
+                    this._errHandler(er);
+                });
         } else {
             return Promise.resolve(null);
         }
