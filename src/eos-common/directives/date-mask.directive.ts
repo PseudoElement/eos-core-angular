@@ -41,6 +41,13 @@ export class EosDateMaskDirective implements ControlValueAccessor {
                 kbEvt.preventDefault();
                 break;
         }
+
+        const elem = this.ref.nativeElement;
+        const cursorPos = elem.selectionStart;
+
+        if (cursorPos > 9 && kbEvt.key.length === 1) {
+            kbEvt.preventDefault();
+        }
     }
 
     @HostListener('keyup', ['$event'])
@@ -198,7 +205,7 @@ export class EosDateMaskDirective implements ControlValueAccessor {
         const month = parseInt(parts[1], 10);
         const year = parseInt(parts[2], 10);
 
-        if (year < 1000 || year > 3000 || month === 0 || month > 12) {
+        if (year < 1000 || year > 9999 || month === 0 || month > 12) {
             return false;
         }
 
