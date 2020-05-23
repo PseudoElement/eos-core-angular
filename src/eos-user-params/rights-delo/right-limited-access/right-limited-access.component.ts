@@ -14,7 +14,7 @@ import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
-/* import { AppContext } from 'eos-rest/services/appContext.service'; */
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -72,7 +72,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
         private _snap: ActivatedRoute,
-        /* private _appContext: AppContext, */
+        private _appContext: AppContext,
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
@@ -521,15 +521,18 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     edit($event) {
-        this.editFlag = $event;
+        this.editFlag = $event && this.checkAccess;
         this.editModeForm();
         this._limitservise.editEmit.next();
     }
     get getBtn() {
-        if (!this.statusBtnSub || !this.flagGrifs || !this.flagFileGrifs) {
+        if ((!this.statusBtnSub || !this.flagGrifs || !this.flagFileGrifs) && this.checkAccess) {
             return false;
         }
         return true;
+    }
+    get checkAccess() {
+        return !this._appContext.limitCardsUser.length || this._appContext.limitCardsUser.indexOf(this.currentUser['DEPARTMENT_DUE']) !== -1;
     }
     private _pushState() {
         this._userServices.setChangeState({ isChange: !this.getBtn });
