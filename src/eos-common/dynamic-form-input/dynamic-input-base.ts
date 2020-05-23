@@ -20,7 +20,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
-    private _syncTimer: NodeJS.Timer;
+    protected _syncTimer: NodeJS.Timer;
 
     get currentValue(): any {
         const control = this.control;
@@ -139,7 +139,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this.inputTooltip.message = this.getErrorMessage();
     }
 
-    private toggleTooltip() {
+    protected toggleTooltip() {
         if (!this.readonly) {
             const control = this.control;
             if (control) {

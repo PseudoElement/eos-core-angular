@@ -302,3 +302,13 @@ export const CONFIRM_CHANGE_ISN_ADDR_CATEGORY: IConfirmWindow2 = {
         {title: 'Нет', result: 1, isDefault: true, },
     ],
 };
+
+export const CONFIRM_REPLACE_SAME_FILE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: ``,
+    buttons: [
+        {title: 'Да',  result: 2, },
+        {title: 'Нет', result: 1, isDefault: true, },
+    ],
+};
