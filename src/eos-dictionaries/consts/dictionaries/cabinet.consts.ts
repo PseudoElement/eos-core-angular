@@ -18,7 +18,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order',
         // 'userOrder', 'moveUp', 'moveDown',
         'edit', 'navigateUp', 'navigateDown', /* 'showDeleted', 'remove', */ 'removeHard',
-        /* 'restore', */ 'tableCustomization'],
+      /*   'restore', */ 'tableCustomization', 'showDeleted'],
     fields: [{
         key: 'ISN_CABINET',
         type: 'number',
