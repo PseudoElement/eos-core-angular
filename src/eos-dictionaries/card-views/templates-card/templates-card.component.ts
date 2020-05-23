@@ -3,6 +3,8 @@ import { FormGroup, /* AsyncValidatorFn, AbstractControl, ValidationErrors */ } 
 import { Subscription } from 'rxjs';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { REF_FILE, PipRX, DOCGROUP_CL } from 'eos-rest';
+import {CONFIRM_REPLACE_SAME_FILE} from '../../../app/consts/confirms.const';
+import {ConfirmWindowService} from '../../../eos-common/confirm-window/confirm-window.service';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
@@ -43,6 +45,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         protected _dictSrv: EosDictService,
         private _ref: ChangeDetectorRef,
         private _pipRx: PipRX,
+        private _confirmSrv: ConfirmWindowService,
         //    private _mess: EosMessageService,
     ) {
         this.showDoc = false;
@@ -54,14 +57,22 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     getCardTitle(): any {
         return null;
     }
-    addFileDocTemplates() {
+
+    addFileDocTemplates(data, $event) {
+        this.data.rec.CHANGED_FILE = true; // флаг для загрузки одноименных файлов
+        this._dictSrv.currentDictionary.descriptor['dataNewFile'] = data;
+        this.newFile = data;
+        this.setNameFile(this.newFile.DESCRIPTION, $event);
+    }
+    sameFileCheck() {
         const frame = document.getElementsByTagName('iframe')[0];
         const frameDoc = frame.contentWindow.document;
         const fileDiv = frameDoc.getElementById('UpFile');
+        const replace = Object.assign({}, CONFIRM_REPLACE_SAME_FILE);
 
         try {
             frame.contentWindow['fire'].apply(null, [false, [], false, false, false, true, '',
-            -10000, 701, 1, 1]);
+                -10000, 701, 1, 1]);
         } catch (e) {
             document.location.assign('../login.aspx');
         }
@@ -72,9 +83,20 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
             this.frDatas.promise.always((data: REF_FILE[]) => {
                 try {
                     if (data.length) {
-                        this._dictSrv.currentDictionary.descriptor['dataNewFile'] = data[0];
-                        this.newFile = data[0];
-                        this.setNameFile(this.newFile.DESCRIPTION, $event);
+                        if (this.form.controls['rec.NAME_TEMPLATE'].value) {
+                            replace.body = `Заменить "${this.form.controls['rec.NAME_TEMPLATE'].value}" на "${data[0].DESCRIPTION}"? `;
+                            setTimeout(() => {
+                                this.dom.nativeElement.lastElementChild.click();
+                            }, 0);
+                            this._confirmSrv.confirm2(replace).then(ans => {
+                                if (ans && ans.result === 2) {
+                                    this.addFileDocTemplates(data[0], $event);
+                                }
+                            });
+
+                        } else {
+                            this.addFileDocTemplates(data[0], $event);
+                        }
                     } else {
                         delete this._dictSrv.currentDictionary.descriptor['dataNewFile'];
                         this.newFile = null;
@@ -89,15 +111,14 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
             });
         });
     }
+
     setNameFile(name, $event?) {
         this.form.controls['rec.NAME_TEMPLATE'].patchValue(name);
         if ($event) {
             // после выбора файла и записи в TEMPLATE_NAME не меняется туллтип (например если значение не уникальное)
             try {
                // this.inp.inpstring.onInput($event);
-                setTimeout(() => {
-                    this.dom.nativeElement.lastElementChild.click();
-                }, 500);
+                document.getElementById('rec.NAME_TEMPLATE').focus();
             } catch (e) {
                 this._dictSrv.errHandler(e);
             }
