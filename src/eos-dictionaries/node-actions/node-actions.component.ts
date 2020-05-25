@@ -68,6 +68,9 @@ export class NodeActionsComponent implements OnDestroy {
     get checkNewCitizen(): EosDictionaryNode[] {
         return this._markedNodes.filter(node => node.data.rec.NEW || node.data.rec.NEW_RECORD);
     }
+    get mercedNodesWithoutSliced() {
+        return this._markedNodes.filter(node => !node.isSliced);
+    }
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -419,9 +422,7 @@ export class NodeActionsComponent implements OnDestroy {
                     /* _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && this.slicedInfo.length > 0; */
                     _enabled = _enabled && (marketN && marketN.length > 0);
-                    if (_enabled && dueTo) {
-                        _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
-                    }
+                    _enabled = _enabled && this.mercedNodesWithoutSliced.length > 0;
                     break;
                 case E_RECORD_ACTIONS.uncheckNewEntry:
                     _enabled = _enabled && opts.listHasItems;
@@ -445,9 +446,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.paste:
                     _enabled = _enabled && (marketN && marketN.length > 0);
-                    if (_enabled && dueTo) {
-                        _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
-                    }
+                    _enabled = _enabled && this.mercedNodesWithoutSliced.length > 0;
                     break;
                 case E_RECORD_ACTIONS.copy:
                     _enabled = _enabled && opts.listHasItems;
