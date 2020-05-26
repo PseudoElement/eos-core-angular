@@ -16,6 +16,11 @@
                     [form]="form"
                     [readonly]="false"
                ></eos-dynamic-input>
+               <div class="incr-scan"
+               *ngIf="form.controls['rec.TYPE_PRINT_BARCODE'].value === '1'"
+               >
+                    <span>&nbsp;шт.</span>
+               </div> 
           </div>
           <eos-dynamic-input
                [input]="inputs['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE']"
@@ -28,7 +33,7 @@
                <span>Ориентация листа:</span>
           </div><br>
           <div class="radio-form-list">
-               <div [ngStyle]="{'width': '45%'}">
+               <div [ngStyle]="{'width': '45%', 'margin-right': '5%'}">
                     <div class="type-scan-sp">
                          <span >Книжная</span>
                     </div>

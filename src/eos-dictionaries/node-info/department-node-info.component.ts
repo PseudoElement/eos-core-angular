@@ -15,7 +15,7 @@ import { EosBreadcrumbsService } from 'app/services/eos-breadcrumbs.service';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-department-node-info',
@@ -40,7 +40,8 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         private _msgSrv: EosMessageService,
         private _appctx: AppContext,
         private _breadcrumbsSrv: EosBreadcrumbsService,
-        private dictSrv: EosDictService
+        private dictSrv: EosDictService,
+        private _router: Router,
     ) {
         super();
         this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
@@ -89,7 +90,13 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     ngOnDestroy() {
         this._unsebscribe.next();
         this._unsebscribe.complete();
-
+    }
+    redirectToEditCabinet($event): void {
+        $event.preventDefault();
+        this.dictSrv.deleteDict(1);
+        setTimeout(() => {
+            this._router.navigate(['spravochniki', 'cabinet', this.nodeDataFull.cabinet.ISN_CABINET, 'view']);
+        });
     }
 
     getRole(value: number): string {

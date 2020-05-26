@@ -50,21 +50,57 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
 
     public confirmSave(): Promise<boolean> {
         const req = { REESTRTYPE_CL: ''};
+        const warn: IConfirmWindow2 = {
+            title: 'Ведение справочников',
+            body: 'Значение реестра не уникально',
+            bodyList: [],
+            buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
+        };
         return this._apiSrv.read(req).then ( data => {
+            let notise = 0;
             const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
             const deliv_id = Number(this.data.rec['ISN_DELIVERY']);
+            const cotegory_id = Number(this.data.rec['ISN_ADDR_CATEGORY']);
+            let delivery;
+            let category;
+            this.inputs['rec.ISN_DELIVERY'].options.forEach(elem => {
+                if (elem.value === deliv_id) {
+                    delivery = elem.title;
+                }
+            });
+            this.inputs['rec.ISN_ADDR_CATEGORY'].options.forEach(elem => {
+                if (elem.value === cotegory_id) {
+                    category = elem.title;
+                }
+            });
             for (let i = 0; i < data.length; i++) {
                 const e = data[i];
-                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn) {
-                    const warn: IConfirmWindow2 = {
-                        title: 'Ведение справочников',
-                        body: 'Значение реестра не уникально. Существует ' + e['CLASSIF_NAME'],
-                        buttons: [{ title: 'OK', result: BUTTON_RESULT_OK, isDefault: true }],
-                    };
-                    return this._confirmSrv.confirm2(warn).then((button) => {
-                        return true;
-                    });
+                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_ADDR_CATEGORY'] === cotegory_id && cotegory_id > 0 && e['ISN_LCLASSIF'] !== isn) {
+                    if (notise < 5) {
+                        warn.bodyList.push(`Существует тип реестра ${e['CLASSIF_NAME']} с видом отправки ${delivery}`);
+                        warn.bodyList.push(`Существует тип реестра ${e['CLASSIF_NAME']} с категорией ${category}`);
+                    }
+                    notise++;
                 }
+                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn && cotegory_id <= 0) {
+                    if (e['ISN_ADDR_CATEGORY'] === 0 ||
+                        cotegory_id === 0 ||
+                        e['ISN_ADDR_CATEGORY'] === cotegory_id
+                        ) {
+                        if (notise < 5) {
+                            warn.bodyList.push(`Существует тип реестра ${e['CLASSIF_NAME']}`);
+                        }
+                        notise++;
+                    }
+                }
+            }
+            if (notise >= 5) {
+                warn.bodyList.push(`Существует ещё ${notise - 4} не уникальных реестров.`);
+            }
+            if (notise > 0) {
+                return this._confirmSrv.confirm2(warn).then((button) => {
+                    return true;
+                });
             }
             return true;
         });

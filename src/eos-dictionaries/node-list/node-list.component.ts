@@ -25,6 +25,7 @@ import { takeUntil, } from 'rxjs/operators';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
 import {CopyNodeComponent} from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import {EosStorageService} from 'app/services/eos-storage.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 @Component({
@@ -69,6 +70,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private _cdr: ChangeDetectorRef,
         private _zone: NgZone,
         private _eiCl: ExportImportClService,
+        private _store: EosStorageService,
     ) {
         this.firstColumnIndex = 0;
         _dictSrv.visibleList$
@@ -86,7 +88,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
                     this.customFields = this._dictSrv.customFields;
 
-                    this.updateViewFields(this.customFields, nodes). then ( () => {
+                    this.updateViewFields(this.customFields, nodes).then(() => {
                         const _customTitles = this._dictSrv.customTitles;
                         _customTitles.forEach((_title) => {
                             const vField = this.viewFields.concat(this.customFields).find((_field) => _field.key === _title.key);
@@ -95,7 +97,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                             }
                         });
                         this.nodes = nodes;
-
+                        if (nodes && nodes.length) {
+                            this.highlightNewNode();
+                        }
                         setTimeout(() => {
                             this._countColumnWidth();
                             this._repaintFlag = false;
@@ -127,6 +131,16 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             }
         });
 
+    }
+
+    highlightNewNode(): void {
+        if (this._store.getItem('newNode')) {
+            const id = this._store.getItem('newNode');
+            const findNode = this._dictSrv.findNewNodePages(id);
+            if (findNode) {
+                this.onClickSelect(findNode);
+            }
+        }
     }
 
     updateViewFields(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {

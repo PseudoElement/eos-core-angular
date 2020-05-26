@@ -299,7 +299,13 @@ export class EosDictionary {
      * @param value mark as 1 (true), unmarkmark as 0 (false)
      */
     setFlagForMarked(fieldName: string, recursive = false, value = true): Promise<any> {
-        const nodeSet = this._getMarkedRecords(recursive);
+        let flagReq = recursive;
+        if (fieldName === 'DELETED' && (this.id === 'departments' ||
+            this.id === 'rubricator' ||
+            this.id === 'docgroup')) {
+                flagReq = false;
+        }
+        const nodeSet = this._getMarkedRecords(flagReq);
         // 1 - mark deleted
         // 0 - unmark deleted
         return this.descriptor.markBooleanData(nodeSet, fieldName, +value, recursive)

@@ -6,9 +6,9 @@ import { IRecordOperationResult, IDictionaryDescriptor } from '../interfaces';
 import { RecordDescriptor } from './record-descriptor';
 import { EosUtils } from 'eos-common/core/utils';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
-import {DictionaryComponent} from '../dictionary/dictionary.component';
-import {DANGER_EDIT_ON_ROOT} from '../consts/messages.consts';
-import {IMessage} from '../../eos-common/core/message.interface';
+import { DictionaryComponent } from '../dictionary/dictionary.component';
+import { DANGER_EDIT_ON_ROOT } from '../consts/messages.consts';
+import { IMessage } from '../../eos-common/core/message.interface';
 
 export class CabinetRecordDescriptor extends RecordDescriptor {
     constructor(dictionary: CabinetDictionaryDescriptor, data: IDictionaryDescriptor) {
@@ -100,8 +100,10 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                                 const dept = departments.find((d) => d['DUE'] === rec.DUE);
                                 if (dept) {
                                     rec['DEPARTMENT_NAME'] = dept['CLASSIF_NAME'];
+                                    rec['DELETED'] = dept['DELETED'];
                                 } else {
                                     rec['DEPARTMENT_NAME'] = '';
+                                    rec['DELETED'] = '0';
                                 }
                             });
                             return data;
@@ -201,7 +203,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     _checkDeletion(isn): Promise<any> {
         // OData.svc/CanChangeClassif?type=%27CABINET%27&oper=%27DELETE_CABINET%27&id=%273780%27
         const query = { args: { type: 'CABINET', oper: 'DELETE_CABINET', id: String(isn) } };
-        const req = { CanChangeClassif: query};
+        const req = { CanChangeClassif: query };
         return this.apiSrv.read(req);
     }
 
@@ -211,8 +213,10 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                 return Promise.resolve(<IRecordOperationResult> {
                     record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
                     success: false,
-                    error: {code: 0,
-                        message: 'Папки кабинета не пусты'}
+                    error: {
+                        code: 0,
+                        message: 'Папки кабинета не пусты'
+                    }
                 });
             } else {
                 record._State = _ES.Deleted;
@@ -220,7 +224,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                 return this.apiSrv.batch(changes, '')
                     .then(() => {
                         return <IRecordOperationResult>{
-                            record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
+                            record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
                             success: true
                         };
                     });
@@ -228,7 +232,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
 
         }).catch((err) => {
             return <IRecordOperationResult>{
-                record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
+                record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
                 success: false,
                 error: err
             };

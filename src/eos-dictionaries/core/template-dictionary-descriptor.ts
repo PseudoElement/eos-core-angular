@@ -104,6 +104,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         return this._postChanges(_newRec, data.rec)
             .then((resp: any[]) => {
                 if (resp && resp[0]) {
+
                     return this.createDocTemp(resp[0].ID);
                 } else {
                     return null;
@@ -127,6 +128,8 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 delete this.dataNewFile;
                 return id;
             });
+        }   else {
+            return id;
         }
     }
     deleteTempRc() {

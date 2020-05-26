@@ -276,6 +276,7 @@ export class NodeActionsComponent implements OnDestroy {
                         ) {
                             const hash = location.hash.split('/');
                             _enabled = !!this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
+                            opts.dictGrant = _enabled ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
                         }   else {
                             _enabled = true;
                         }

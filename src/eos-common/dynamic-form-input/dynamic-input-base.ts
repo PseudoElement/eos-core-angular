@@ -20,7 +20,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
-    private _syncTimer: NodeJS.Timer;
+    protected _syncTimer: NodeJS.Timer;
 
     get currentValue(): any {
         const control = this.control;
@@ -92,8 +92,10 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
                  this.inputTooltip.visible = false;
                 if (this.inputTooltip.force) {
                     this.updateMessage();
-                    this.inputTooltip.visible = true;
-                    this.inputTooltip.force = false;
+                    setTimeout(() => { // похоже тут рассинхрон, имя не успевает обновиться и если меняется с ошибки на ошибку, то имя ангулар не меняет
+                        this.inputTooltip.visible = true;
+                        this.inputTooltip.force = false;
+                    }, 0);
                 } else {
                     this.inputTooltip.visible = (this.inputTooltip.visible && control.invalid && control.dirty);
                 }
@@ -137,7 +139,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this.inputTooltip.message = this.getErrorMessage();
     }
 
-    private toggleTooltip() {
+    protected toggleTooltip() {
         if (!this.readonly) {
             const control = this.control;
             if (control) {

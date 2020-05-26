@@ -442,6 +442,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     ViewTechicalUsers() {
+        const id = this._route.params['value'].nodeId;
         this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
         this._apiSrv.stateTehUsers = this._apiSrv.flagTehnicalUsers;
         if (this._apiSrv.flagTehnicalUsers === true && this._apiSrv.configList.shooseTab === 0) {
@@ -454,7 +455,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this._apiSrv.stateDeleteUsers = false;
             this._apiSrv.flagDelitedPermanantly = false;
         }
-        const id = this._route.params['value'].nodeId;
+
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
         if (this._apiSrv.configList.shooseTab === 0) {

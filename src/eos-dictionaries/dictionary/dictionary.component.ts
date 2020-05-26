@@ -31,7 +31,6 @@ import { takeUntil } from 'rxjs/operators';
 
 import {
     DANGER_ACCESS_DENIED_DICT,
-    DANGER_DEPART_IS_LDELETED,
     DANGER_DEPART_NO_NUMCREATION,
     DANGER_EDIT_DELETED_ERROR,
     DANGER_EDIT_DICT_NOTALLOWED,
@@ -448,6 +447,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.showDeleted:
                 this._dictSrv.toggleDeleted();
+                this.params.showDeleted = this.nodeList.params.showDeleted;
                 break;
 
             case E_RECORD_ACTIONS.showAllSubnodes:
@@ -729,12 +729,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
     setDictMode(mode: number) {
-        if (mode === 0 && this.treeNode.isDeleted) {
-            this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
-        } else {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([], []);
-        }
     }
     uniqueIndex() {
         const config = { ignoreBackdropClick: true };
@@ -1073,7 +1069,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             // this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
             return;
         }
-
         for (let i = 0; i < selectedNodes.length; i++) {
             const node = selectedNodes[i];
 
@@ -1102,7 +1097,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
                             .replace('{{OPERATION}}', 'удалены логически.');
 
-                        return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
+                        return this._dictSrv.setFlagForMarked('DELETED', true, true).then((flag) => {
                             this._dictSrv.setMarkAllNone();
                             this._msgSrv.addNewMessage(message);
                         });

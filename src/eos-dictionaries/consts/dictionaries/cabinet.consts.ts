@@ -18,7 +18,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order',
         // 'userOrder', 'moveUp', 'moveDown',
         'edit', 'navigateUp', 'navigateDown', /* 'showDeleted', 'remove', */ 'removeHard',
-        /* 'restore', */ 'tableCustomization'],
+      /*   'restore', */ 'tableCustomization', 'showDeleted'],
     fields: [{
         key: 'ISN_CABINET',
         type: 'number',
@@ -31,7 +31,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         title: 'Краткое наименование кабинета',
         pattern: VALID_REQ_STRING,
         length: 64,
-        isUnique: true,
+    //    isUnique: true,
     }),
     Object.assign({}, COMMON_FIELD_FULLNAME, {
         title: 'Полное наименование кабинета',

@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { EosUtils } from '../core/utils';
+import { INPUT_ERROR_MESSAGES } from 'eos-common/consts/common.consts';
 
 @Component({
     selector: 'eos-dynamic-input-date',
@@ -36,9 +37,17 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
             containerClass: 'theme-dark-blue',
             dateInputFormat: 'DD.MM.YYYY',
             isDisabled: this.readonly,
-            minDate: new Date('01/01/1900'),
-            maxDate: new Date('12/31/2100'),
+            minDate: new Date('01/01/1753'),
+            maxDate: new Date('12/31/2999'),
         };
+    }
+
+    getErrorMessage() {
+        const control = this.control;
+        if (control.errors && control.errors['wrongDate'] && !!(+control.value) && control.value > new Date('12/31/3000')) {
+            return INPUT_ERROR_MESSAGES['maxDate'];
+        }
+        return super.getErrorMessage();
     }
 
     dpChanged(value: Date) {
@@ -50,6 +59,25 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
         this.hidePicker = (this.viewOpts ? this.viewOpts.hidePicker : false);
         this.localeService.use('ru');
         this.updateDatePickerPlacement();
+    }
+
+    delayedTooltip() {
+        this.updateMessage();
+        if (this.inputTooltip.message !== '' && !this._syncTimer && !this.inputTooltip.force) {
+            this.inputTooltip.visible = false;
+            this._syncTimer = setTimeout(() => {
+                this.inputTooltip.force = true;
+                this.inputTooltip.visible = true;
+                this._syncTimer = null;
+            }, 0);
+        }
+    }
+    toggleTooltip() {
+        if (!this.readonly && this.control) {
+            this.delayedTooltip();
+        } else {
+            super.toggleTooltip();
+        }
     }
 
     private updateDatePickerPlacement() {

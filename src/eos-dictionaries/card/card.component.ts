@@ -256,6 +256,9 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             return;
         }
         const _data = this.cardEditRef.getNewData();
+        if (_data.rec.CHANGED_FILE) {
+            this.isChanged = true;
+        }
         this._confirmSave(_data, false)
             .then((res: boolean) => {
                 if (res) {

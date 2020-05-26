@@ -131,7 +131,8 @@ export class CreateNodeComponent {
                 } else if (err === 'cancel') {
 
                 } else {
-                    return this._errHandler(err);
+                    this._windowInvalidSave ([err.message]);
+                    // return this._errHandler(err);
                 }
                 this.upadating = false;
             });
