@@ -35,7 +35,7 @@ export class CardRightSrv {
         private _pipSrv: PipRX,
         private _waitClassifSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
-        private _appContext: AppContext
+        private _appCtx: AppContext,
     ) {
         this._selectingNode$ = new Subject<void>();
         this._chengeState$ = new Subject<boolean>();
@@ -58,10 +58,10 @@ export class CardRightSrv {
         this._selectingNode$.next();
     }
     limitCardAccess(due: string): boolean {
-        if (this._appContext.limitCardsUser.length === 0) {
+        if (this._appCtx.limitCardsUser.length === 0) {
             return true;
         }
-        return this._appContext.limitCardsUser.indexOf(due) !== -1;
+        return this._appCtx.limitCardsUser.indexOf(due) !== -1;
     }
     getlistTreeNode$(docs: USER_CARD_DOCGROUP[]): Promise<NodeDocsTree[]> {
         const listDG: string[] = [];
@@ -139,10 +139,18 @@ export class CardRightSrv {
         return str.slice(0, -2);
     }
 
+    checkAllowedCard(due: string): boolean {
+        return !this._appCtx.limitCardsUser.length || this._appCtx.limitCardsUser.some(_due => _due === due);
+    }
     saveChenge$() {
         const chl = [];
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
-            if (card._State) {
+            /*
+            this.checkAllowedCard(card.DUE)
+             костыль проверка на доступные картотеки , при ограниченном технологе в запрос у тестировщиц попадают не доступные картотеки
+             хрен пойми как.
+            */
+            if (card._State && this.checkAllowedCard(card.DUE)) {
                 this._createChangeList(chl, card);
             }
             for (let i = 0; card.USER_CARD_DOCGROUP_List.length > i; i++) {
