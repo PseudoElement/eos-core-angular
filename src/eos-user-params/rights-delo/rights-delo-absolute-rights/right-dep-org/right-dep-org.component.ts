@@ -190,7 +190,7 @@ export class RightOrganizDepertComponent implements OnInit {
                         title: 'Предупреждение',
                         msg: 'Элемент не был выбран'
                     });
-                    // return Promise.reject('cancel');
+                    return Promise.resolve('cancel');
                 }
             });
     }
