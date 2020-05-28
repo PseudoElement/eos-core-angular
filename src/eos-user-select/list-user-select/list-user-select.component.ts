@@ -458,10 +458,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
-        if (this._apiSrv.configList.shooseTab === 0) {
+        if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
             this._router.navigate(['user_param/0.']);
+        } else {
+            this.initView(id ? id : '0.');
         }
-        this.initView(id ? id : '0.');
     }
     upsavePagConfig() {
         const conf = this._storage.getItem('users');
