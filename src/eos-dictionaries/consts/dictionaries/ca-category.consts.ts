@@ -30,7 +30,7 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
             type: 'string',
             length: 255,
             required: true,
-            pattern: /[^\s]$/,
+            pattern: /^[-.\wА-Яа-я!$#+@%&*?();:"'№/\\\\]*$/,
         }, {
             key: 'CA_SUBJECT',
             title: 'Описание',
