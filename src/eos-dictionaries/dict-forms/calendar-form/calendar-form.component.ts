@@ -71,8 +71,8 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
         containerClass: 'theme-dark-blue',
         todayHighlight: true,
         dateInputFormat: 'DD.MM.YYYY',
-        minDate: new Date('01/01/1900'),
-        maxDate: new Date('12/31/2100'),
+        minDate: new Date('01/01/1753'),
+        maxDate: new Date('12/31/2999'),
     });
 
     tbody: Element;
