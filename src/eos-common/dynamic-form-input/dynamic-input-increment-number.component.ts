@@ -29,8 +29,20 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         }
     }
 
+    onInput(event) {
+        event.stopPropagation();
+    }
+
     ngOnChanges(changes: SimpleChanges) {
-        super.ngOnChanges(changes);
+        // super.ngOnChanges(changes);
+        const control = this.control;
+        this.input.dib = this;
+        if (control) {
+            setTimeout(() => {
+                this.toggleTooltip();
+            });
+        }
+
         if (!this.input.pattern) {
             this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
         }
@@ -58,5 +70,13 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         return !(/^[А-Яа-яA-Za-z ]$/.test(e.key));
     }
 
-
+    patchValidNums() {
+        if (this.control.invalid) {
+            if (this.control.dirty && !this.inputTooltip.visible) {
+                this.delayedTooltip();
+            }
+        } else {
+            this.inputTooltip.visible = false;
+        }
+    }
 }
