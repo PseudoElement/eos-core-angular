@@ -70,7 +70,7 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         return !(/^[А-Яа-яA-Za-z ]$/.test(e.key));
     }
 
-    patchValidNums() {
+    patchValidNums($event) {
         if (this.control.invalid) {
             if (this.control.dirty && !this.inputTooltip.visible) {
                 this.delayedTooltip();
