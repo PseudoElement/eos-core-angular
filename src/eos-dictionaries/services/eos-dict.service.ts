@@ -1168,9 +1168,7 @@ export class EosDictService {
 
         this.viewParameters.showDeleted = !this.viewParameters.showDeleted;
 
-        if (this.currentDictionary) {
-            this.currentDictionary.showDeleted = this.viewParameters.showDeleted;
-        }
+        this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);
 
         if (!this.viewParameters.showDeleted) {
             this._currentList.forEach((node) => {
