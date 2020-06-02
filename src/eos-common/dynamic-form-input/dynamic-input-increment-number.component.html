@@ -13,6 +13,7 @@
                [readonly]="readonly"
                (input)="onInput($event)"
                [ngClass]="{'readonly': readonly}"
+               (ngModelChange)="patchValidNums($event)"
                (keydown)="inputCheck($event)">
         <span *ngIf="!readonly"
               class="decrease fa fa-minus"
