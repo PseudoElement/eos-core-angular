@@ -149,7 +149,7 @@ export class InputControlService {
             return false;
         }
 
-        if (year < 1000 || year > 3000 || month === 0 || month > 12) {
+        if (year < 1000 || year > 9999 || month === 0 || month > 12) {
             return false;
         }
 
