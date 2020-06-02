@@ -76,9 +76,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
+    private rightsCBDueRole: boolean = false;
 
     get newInfo() {
-        if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size || this.queryRoles.length) {
+        if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size || this.queryRoles.length || this.rightsCBDueRole) {
             return false;
         }
         return true;
@@ -595,6 +596,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.editModeF();
             this._pushState();
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
+
+            if (this.curentUser.DUE_DEP && this.currentCbFields.length && this.rightsCBDueRole) {
+                this._userParamSrv.addRightsForCBRole(this.curentUser.ISN_LCLASSIF);
+                this.rightsCBDueRole = false;
+            }
         });
     }
 
@@ -812,8 +818,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
 
-    saveCbRoles(evnt: IRoleCB[]) {
-        this.currentCbFields = evnt;
+    saveCbRoles(evnt: { currentFields: IRoleCB[], rightsDueRole: boolean }) {
+        this.currentCbFields = evnt.currentFields;
+        this.rightsCBDueRole = evnt.rightsDueRole;
+
         if (this.currentCbFields.length) {
             this.patchCbRoles();
         } else {

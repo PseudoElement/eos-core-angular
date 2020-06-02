@@ -136,13 +136,18 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        this.saveCbRoles.emit(this.currentFields);
+        const currentFields = this.currentFields;
+        const rightsDueRole = this.rightsDueRole;
+
+        this.saveCbRoles.emit({ currentFields, rightsDueRole });
         this.closeModal.emit();
     }
 
     close() {
-        this.currentFields = this.startRolesCb;
-        this.saveCbRoles.emit(this.currentFields);
+        const currentFields = this.currentFields = this.startRolesCb;
+        const rightsDueRole = false;
+
+        this.saveCbRoles.emit({ currentFields, rightsDueRole });
         this.closeModal.emit();
     }
 
