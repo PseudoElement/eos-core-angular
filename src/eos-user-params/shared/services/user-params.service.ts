@@ -195,6 +195,23 @@ export class UserParamsService {
 
     }
 
+    addRightsForCBRole(isn: number): Promise<any> {
+        const changes = [];
+        PipRX.invokeSop(changes, 'AdjustCbrUserRights', { isn_user: isn }, 'MERGE', false);
+        return this._pipRx.batch(changes, '')
+        .then()
+        .catch((e) => {
+            if (e.code !== 200) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Ошибка добавления прав для ЦБ роли',
+                    dismissOnTimeout: 6000,
+                });
+            }
+        });
+    }
+
     ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
         const mess: IMessage = {
             title: 'Предупреждение:',
