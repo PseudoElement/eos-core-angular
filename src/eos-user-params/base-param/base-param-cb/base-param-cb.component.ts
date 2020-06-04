@@ -443,15 +443,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             if (this.curentUser['SURNAME_PATRON'] === this.surnameDepartment) {
                 return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
                     if (confirmation && confirmation['result'] === 1) {
-                        mas.push({
-                            method: 'MERGE',
-                            requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
-                            data: {
-                                SURNAME: this.form.get('SURNAME_PATRON').value
-                            }
-                        });
-                        this.updateDL = true;
-                        this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+
                     } else {
                         this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
                     }
