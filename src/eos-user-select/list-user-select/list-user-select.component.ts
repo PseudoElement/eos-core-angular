@@ -432,13 +432,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
-        if (this._apiSrv.configList.shooseTab === 0) {
+        if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
             if (this._apiSrv.flagDelitedPermanantly === true) {
                 localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
             }
             this._router.navigate(['user_param/0.']);
+        } else {
+            this.initView(id ? id : '0.');
         }
-        this.initView(id ? id : '0.');
+
     }
 
     ViewTechicalUsers() {
