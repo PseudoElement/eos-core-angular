@@ -75,3 +75,41 @@ export const COMMON_FIELDS: IFieldDescriptor[] = [{
 },
     COMMON_FIELD_NOTE
 ];
+
+export const DOP_REC = {
+    rec: {
+        text:  {
+            foreignKey: 'text',
+            title: '',
+            type: 0,
+            length: 255,
+        },
+        decimal: {
+            foreignKey: 'decimal',
+            type: 14,
+            title: '',
+            maxValue: 99,
+        },
+        date: {
+            foreignKey: 'date',
+            title: '',
+            type: 4,
+        },
+        flag:  {
+            foreignKey: 'flag',
+            title: '',
+            type:  17,
+            default: 1,
+            options: [
+                {
+                    title: 'Да',
+                    value: 1,
+                },
+                {
+                    title: 'Нет',
+                    value: 0
+                }
+            ],
+        }
+    }
+};

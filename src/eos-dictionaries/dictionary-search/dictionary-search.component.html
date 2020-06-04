@@ -5,7 +5,7 @@
         placement="bottom"
         [container]="'body'"
         #full="bs-popover"
-        [outsideClick]="true">
+        [outsideClick]="false">
         <button [ngClass]="{'hidden': !hasFull, 'opened': isActiveButton()}"
             class="btn btn-primary-light search-btn"
             tooltip="Расширенный поиск"
@@ -41,10 +41,10 @@
     <div class="full-search-top usual-border">
         <span class="pull-left title xl-font">Область поиска</span>
         <div class="pull-right srch-btns">
-            <button [disabled]="noSearchData"
+            <button [disabled]="noSearchData && !hasSelectValue"
                 class="btn btn-primary s-font upper"
                 (click)="clearForm()">Сбросить</button>
-            <button [disabled]="noSearchData"
+            <button [disabled]="noSearchData || !validFormSearch"
                 (click)="fullSearch()"
                 class="btn btn-primary-full s-font upper">Найти</button>
         </div>
@@ -55,7 +55,7 @@
             <label class="radio-inline"><input type="radio" name="full-space" [value]="1" [(ngModel)]="mode"><span></span><span class="m-font">В текущей ветке</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="2" [(ngModel)]="mode"><span></span><span class="m-font">Текущая и подчиненные</span></label>
         </div>
-        <div class="line" *ngIf="dictId !== 'templates' && dictId !== 'citizens'">
+        <div class="line" *ngIf="dictId !== 'templates' && dictId !== 'citizens' && dictId !== 'organization'">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
         </div>
     </div>
@@ -82,10 +82,10 @@
             </div>
             <div class="form-group unimportant-text">
                 <label class="s-font"
-                    for="note">{{fieldsDescription.rec['NOTE']?.title}}</label>
+                    for="notes">{{fieldsDescription.rec['NOTE']?.title}}</label>
                 <div class="search-fld">
-                    <input id="note"
-                        name="note"
+                    <input id="notes"
+                        name="notes"
                         type="text"
                         class="form-control light"
                         [(ngModel)]="searchModel['NOTE']"
@@ -529,10 +529,10 @@
             <div class="second-col">
                 <div class="form-group unimportant-text">
                     <label class="s-font"
-                        for="title">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                        for="titles">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
                     <div class="search-fld">
-                        <input id="title"
-                            name="title"
+                        <input id="titles"
+                            name="titles"
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CLASSIF_NAME']"
@@ -590,8 +590,8 @@
 
 
                 <div class="form-group unimportant-text">
-                    <label class="s-font" for="code" >{{fieldsDescription.rec['CODE']?.title}}</label>
-                    <input id="code" name="code" type="text" class="form-control"
+                    <label class="s-font" for="codes" >{{fieldsDescription.rec['CODE']?.title}}</label>
+                    <input id="codes" name="codes" type="text" class="form-control"
                         [(ngModel)]="searchModel['CODE']"
 
                         maxlength="{{fieldsDescription.rec['CODE']?.length}}">
@@ -644,10 +644,10 @@
                 class="hidden-submit">Найти</button>
             <div class="form-group unimportant-text">
                 <label class="s-font"
-                    for="name">{{fieldsDescription.rec['CABINET_NAME']?.title}}</label>
+                    for="names">{{fieldsDescription.rec['CABINET_NAME']?.title}}</label>
                 <div class="search-fld">
-                    <input id="name"
-                        name="name"
+                    <input id="names"
+                        name="names"
                         type="text"
                         class="form-control"
                         [(ngModel)]="searchModel['CABINET_NAME']"
@@ -680,7 +680,7 @@
     <div [hidden]="dictId !== 'templates'"
     *ngIf="searchModel"
     class="row full-search-form">
-    <form id="docgroup">
+    <form id="templates">
         <button [disabled]="noSearchData"
             type="submit"
             (click)="fullSearch()"
@@ -736,8 +736,13 @@
             </div>
     </form>
 </div>
+ <!--FOR CITIZENS-->
 <div class="row full-search-form" [hidden]="dictId !== 'citizens' && dictId !== 'user_param'">
     <form id="citizen">
+        <button [disabled]="noSearchData"
+            type="submit"
+            (click)="fullSearch()"
+            class="hidden-submit">Найти</button>
         <div class="form-group unimportant-text">
             <label class="s-font"
                 for="citizen-surname">{{fieldsDescription.rec['CITIZEN_SURNAME']?.title}}</label>
@@ -827,4 +832,96 @@
         </div>
     </form>
 </div>
+
+<div class="row full-search-form" [hidden]="dictId !== 'organization'">
+    <form id="organization">
+        <button [disabled]="noSearchData"
+            type="submit"
+            (click)="fullSearch()"
+            class="hidden-submit">Найти</button>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="organization-name">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+            <div class="search-fld">
+                <input id="organization-name"
+                    name="organization-name"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['CLASSIF_NAME']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                    (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="organization-email">{{fieldsDescription.rec['EMAIL']?.title}}</label>
+            <div class="search-fld">
+                <input id="organization-email"
+                    name="organization-email"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['EMAIL']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['EMAIL']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['EMAIL']}"
+                    (click)="searchModel['EMAIL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="organization-inn">{{fieldsDescription.rec['INN']?.title}}</label>
+            <div class="search-fld">
+                <input id="organization-inn"
+                    name="organization-inn"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['INN']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['INN']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['INN']}"
+                    (click)="searchModel['INN'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <ng-content *ngTemplateOutlet="doprec"></ng-content>
+    </form>
+</div>
+
+</ng-template>
+
+<ng-template #doprec>
+    <!-- <eos-dictionary-srarch-dop-rec [formSearch]="formSearch" [inputs]="inputs" [arDescript]="arDescript"></eos-dictionary-srarch-dop-rec> -->
+    <div class="dop-rec-wpapper" *ngIf="arDescript?.length">
+        <div class="margin-r" *ngIf="formSelect">
+            <eos-dynamic-input
+                class="descr-select no-margin"
+                [input]="inputsSelect['rec.select']"
+                [form]="formSelect"
+                [height]="200"
+                [readonly]="false">
+            </eos-dynamic-input>
+            <!-- <select class="descr-select" name="decr" (change)="chendeDescript($event)" [(ngModel)]="currentDescript">
+                <option selected value="">...</option>
+                <ng-container *ngFor="let op of arDescript">
+                    <option [ngValue]="op">{{op['UI_NAME']}}</option>
+                </ng-container>
+            </select> -->
+        </div>
+        <div class="search-fld dop_rec" *ngIf="formSearch">
+            <ng-container>
+                <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'text'" class="no-margin"
+                    [input]="inputs['rec.text']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input style="position: relative; top: 4px;" *ngIf="arType?.AR_TYPE === 'decimal'" class="no-margin"
+                    [input]="inputs['rec.decimal']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'date'" class="no-margin date"
+                    [input]="inputs['rec.date']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'flag'" class="no-margin"
+                    [input]="inputs['rec.flag']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+            </ng-container>
+        </div>
+    </div>
 </ng-template>

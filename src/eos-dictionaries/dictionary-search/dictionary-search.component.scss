@@ -247,6 +247,49 @@
     padding: 0;
 }
 
+.dop-rec-wpapper {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    label{
+        font-size: 16px;
+    }
+    .margin-r {
+        width: 45%;
+        margin-right: 10px;
+        margin-top: -5px;
+    }
+
+    .form-group {
+        width: 100%;
+        eos-dynamic-input {
+            width: 100%;
+        }
+    }
+    .dop_rec{
+        display: inline-block;
+        height: 43px;
+        .form-group {
+            width: 445px;
+        }
+        .date {
+            .form-group {
+                width: 100%;
+            }
+        }
+        .eos-select {
+            .eos-select2 {
+                &.dropdown-menu {
+                    max-height: 500px!important;
+                }
+            }
+
+        }
+
+    }
+}
+
+
 @media (max-width: 1200px) {
     .eos-search {
         top: -19px;

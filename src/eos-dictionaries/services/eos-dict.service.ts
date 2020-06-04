@@ -1061,7 +1061,7 @@ export class EosDictService {
 
     fixSearchSymbols(data: any): any {
         for (const key in data) {
-            if (key !== 'srchMode' && data.hasOwnProperty(key)) {
+            if (key !== 'srchMode' && data.hasOwnProperty(key) && key !== 'DOP_REC') {
                 const list = data[key];
                 if (typeof list === 'string') {
                     data[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
