@@ -46,8 +46,8 @@
                 [form]="formControls"
                 container="body"
                 [ngStyle]="{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
-                [readonly]="curentUser.isTechUser || !editMode"
-                [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input><br>
+                [readonly]="curentUser.isTechUser || !editMode || formControls.controls['SELECT_ROLE'].disabled"
+        ></eos-dynamic-input><br>
         <!-- Доступ к системам 1-й ряд -->
         <span class="l-font">Доступ к системам</span>
         <hr>
