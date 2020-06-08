@@ -114,6 +114,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                 break;
             case 'person':
                 _criteries['IS_NODE'] = '1';
+                _criteries['ISN_CONTACT'] = 'isnull';
 
                 if (data.person['printInfo.NAME']) {
                     _criteries['CB_PRINT_INFO.NAME'] = '"' + data.person['printInfo.NAME'].trim() + '"';
