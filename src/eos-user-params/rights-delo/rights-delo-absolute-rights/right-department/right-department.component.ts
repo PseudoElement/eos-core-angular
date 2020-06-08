@@ -55,6 +55,18 @@ export class RightDepertmentComponent implements OnInit {
         }
         return 0;
     }
+    get limited() {
+        return this._appContext.limitCardsUser.length;
+    }
+    get allowed() {
+        if (this._appContext && this.limited) {
+            return this._appContext.limitCardsUser.some(_due => {
+                return _due === this._userParmSrv.curentUser.TECH_DUE_DEP;
+            });
+        }
+        return true;
+    }
+
     ngOnInit() {
         this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
@@ -250,6 +262,28 @@ export class RightDepertmentComponent implements OnInit {
                     this.isShell = false;
                     return;
                 }
+                if (this.limited) {
+                    let aliensCards: boolean = false;
+                    const filterData = [];
+                    if (data && data.length) {
+                        data.forEach(_d => {
+                            if (this._appContext.limitCardsUser.some(_l => _d.DUE.indexOf(_l) !== -1)) {
+                                filterData.push(_d);
+                            }   else {
+                                aliensCards = true;
+                            }
+                        });
+                        data = filterData;
+                        if (aliensCards) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: 'Элементы справочника, не принадлежащие Вашим картотекам, не были добавлены в список.'
+                            });
+                        }
+                    }
+                }
+
 
                 const newNodes: NodeDocsTree[] = [];
                 data.forEach((dep: DEPARTMENT) => {
