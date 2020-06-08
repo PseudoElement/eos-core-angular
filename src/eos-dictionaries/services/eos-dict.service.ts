@@ -1012,7 +1012,7 @@ export class EosDictService {
 
     quickSearch(settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
+        const fixedString = JSON.stringify(settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, ''));
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
             this._srchParams = settings.opts;
