@@ -326,9 +326,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         } return ' ';
     }
 
-    showSert(selected?: any): void {
-        if (selected) {
-            this.openCarmWindow(selected.id);
+    showSert(): void {
+        if (this.selectedFromAllList) {
+            this.openCarmWindow(this.selectedFromAllList.id);
         } else {
             if (this.selectList) {
                 this.openCarmWindow(this.selectList.id);
@@ -356,6 +356,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 this.carmaSrv.GetCertInfo2(data).then(result => {
                     this.selectedSertificatePopup = this.objectForSertInfo(result, data, false, false, false);
                     this.addSert();
+                    this.addSertificate();
                 });
             }
         }).catch(error => {
@@ -391,7 +392,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         });
     }
 
-    addSertificate(sert: SertInfo): void {
+    addSertificate(): void {
         let newSert: SertInfo = null;
         const findsert = this.findNeedSert();
         if (this.checkSert()) {
@@ -407,7 +408,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 });
             }
         } else {
-            newSert = Object.assign({}, sert);
+            newSert = Object.assign({}, this.selectedFromAllList);
             newSert.create = true;
             newSert.selected = false;
             this.listsSertInfo.push(newSert);

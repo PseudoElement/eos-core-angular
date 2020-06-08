@@ -1,5 +1,7 @@
 .input-user-other-rk-forwarding-wrapper {
     position: relative;
+    -ms-overflow-style: none;
+    overflow: auto;
 }
 
 .selected {
@@ -9,6 +11,7 @@
 .sert-table-nav {
     margin-left: 18px;
     display: flex;
+    justify-content: flex-end;
 }
 
 .sert-table-body {
@@ -41,7 +44,7 @@
 }
 
 .scrollWrapper {
-    overflow: auto;
+    overflow: hidden;
     max-height: calc(100vh - 308px);
     min-height: calc(100vh - 490px);
 }
