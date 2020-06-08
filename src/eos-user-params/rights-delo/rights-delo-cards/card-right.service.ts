@@ -118,11 +118,14 @@ export class CardRightSrv {
     }
 
     checkViewResol(card: USERCARD, viewResol: string[]): void {
-        if (card.USER_CABINET_List.length) {
-            const fold_av = card.USER_CABINET_List[0].FOLDERS_AVAILABLE.charAt(0);
-            if ((fold_av === '1' || fold_av === '2' || fold_av === '3') && card.FUNCLIST.charAt(16) === '0') {
-                viewResol.push(card.DUE);
-            }
+        if (card.USER_CABINET_List.length && card.FUNCLIST.charAt(16) === '0') {
+            card.USER_CABINET_List.forEach( (cab) => {
+                const fold_av = cab.FOLDERS_AVAILABLE.charAt(0);
+                const duplicate_due = viewResol[viewResol.length - 1] !== cab.DEPARTMENT_DUE;
+                if ((fold_av === '1' || fold_av === '2' || fold_av === '3')  && duplicate_due ) {
+                    viewResol.push(cab.DEPARTMENT_DUE);
+                }
+            });
         }
     }
 
