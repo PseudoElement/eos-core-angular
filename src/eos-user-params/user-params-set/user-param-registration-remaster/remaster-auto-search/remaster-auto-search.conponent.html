@@ -4,7 +4,7 @@
     </div>
     <div class="user-group-form">
         <div [ngStyle]="{'margin-bottom': '10px'}">
-            <span>Показывать для связанного документа (проекта документа):</span>   
+            <span>Показывать для связанного документа (проекта документа):</span>
         </div>
         <eos-dynamic-input
                 [input]="inputs['rec.LINKS_SHOW_DG']"
@@ -47,15 +47,15 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.LINKS_SORT_ORDER1']"
                     [form]="form"
-                    [readonly]="false"
-                    [disabled]="form.controls['rec.LINKS_SORT'].value !== 'ORDERNUM'"
+                    [readonly]="form.controls['rec.LINKS_SORT'].value !== 'ORDERNUM'"
+                    [disabled]=""
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputs['rec.LINKS_SORT_ORDER2']"
                     [form]="form"
-                    [readonly]="false"
-                    [disabled]="form.controls['rec.LINKS_SORT'].value === 'ORDERNUM'"
-                ></eos-dynamic-input> 
+                    [readonly]="form.controls['rec.LINKS_SORT'].value === 'ORDERNUM'"
+                    [disabled]=""
+                ></eos-dynamic-input>
                 <!-- <select name="" id=""></select>
                 <select name="" id=""></select> -->
             </div>
