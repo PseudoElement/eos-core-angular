@@ -44,7 +44,7 @@
             <button [disabled]="noSearchData && !hasSelectValue"
                 class="btn btn-primary s-font upper"
                 (click)="clearForm()">Сбросить</button>
-            <button [disabled]="noSearchData || !validFormSearch"
+            <button [disabled]="regionForm?.invalid || noSearchData || !validFormSearch "
                 (click)="fullSearch()"
                 class="btn btn-primary-full s-font upper">Найти</button>
         </div>
@@ -582,18 +582,23 @@
     <!--FOR Regions-->
     <div [hidden]="dictId !== 'region'"
         class="row full-search-form">
-        <form id="region">
-            <button [disabled]="noSearchData"
+        <form id="region" #regionForm="ngForm" >
+            <button [disabled]="noSearchData || regionForm.invalid"
                 type="submit"
                 (click)="fullSearch()"
                 class="hidden-submit">Найти</button>
 
 
-                <div class="form-group unimportant-text">
+                <div class="form-group unimportant-text"
+                     triggers="input:focus"
+                     [tooltip]="!regionForm.controls['codes']?.valid ? 'Введите цифры' : null"
+                     container="body"
+                     placement="bottom"
+                     containerClass="tooltip-error">
                     <label class="s-font" for="codes" >{{fieldsDescription.rec['CODE']?.title}}</label>
-                    <input id="codes" name="codes" type="text" class="form-control"
+                    <input  id="codes" name="codes" type="text" class="form-control"
                         [(ngModel)]="searchModel['CODE']"
-
+                        [pattern]="fieldsDescription.rec['CODE']?.pattern"
                         maxlength="{{fieldsDescription.rec['CODE']?.length}}">
                 </div>
 
