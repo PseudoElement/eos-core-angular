@@ -6,7 +6,7 @@
 
     <div class="eos-select" *ngIf="!readonly || form.disabled" [ngClass]="{ required: isRequired, disabled: disabled }">
         <div
-            *ngIf="!readonly && !form.disabled"
+            *ngIf="!readonly && !disabled && !form.disabled"
             dropdownToggle
             class="input-button-container eos-select2"
             [container]="container"
