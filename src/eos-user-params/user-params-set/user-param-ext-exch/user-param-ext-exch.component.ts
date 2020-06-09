@@ -127,6 +127,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         if ($event) {
             this.MadoChangeFlag = $event[0].btn;
             this.newValuesMado = $event[0].data;
+            if (this.newValuesMado.has('MEDO_RECEIVE_RUBRIC_CHECK')) {
+                this.newValuesMado.delete('MEDO_RECEIVE_RUBRIC_CHECK');
+            }
         } else {
             this.MadoChangeFlag = false;
             this.newValuesMado.clear();
