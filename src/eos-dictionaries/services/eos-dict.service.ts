@@ -1799,6 +1799,7 @@ export class EosDictService {
                     this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
                 } else {
                     this.viewParameters.showDeleted = showDeleted;
+                    this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);
                 }
                 this._setCurrentList(dictionary, nodes);
 
