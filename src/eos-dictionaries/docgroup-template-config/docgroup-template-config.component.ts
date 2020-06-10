@@ -8,6 +8,7 @@ import { DGTplElement, DGTplAdditionalControl } from 'eos-dictionaries/helpers/n
 import { ListSelectorFormComponent, SelectorListItem } from 'eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
 import { PipRX } from 'eos-rest';
 import { DG_TPL_SEPARATOR } from 'eos-dictionaries/features/docgroups/docgroup-template-base.consts';
+import {ALL_ROWS} from '../../eos-rest/core/consts';
 
 const FTemplates = Features.cfg.docgroups.templates;
 
@@ -114,20 +115,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
         // }));
 
-        const req = { LINK_CL: { orderby: 'CLASSIF_NAME'}};
+        const req = { LINK_CL: ALL_ROWS, orderby: 'CLASSIF_NAME asc' /*'WEIGHT'*/};
         this._apiSrv.read(req).then((data) => {
 
             if (data && data.length) {
-                data = data.sort((i1, i2) => {
-                    const item1 = i1['CLASSIF_NAME'].toLowerCase(), item2 = i2['CLASSIF_NAME'].toLowerCase();
-                    if (item1 < item2) {
-                        return -1;
-                    }
-                    if (item1 > item2) {
-                         return 1;
-                    }
-                    return 0;
-                });
                 const list1: SelectorListItem[] = data.map (rec => {
                     // const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
                     return Object.assign({}, {
@@ -306,6 +297,8 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             this.select(obj, 1);
             this.templateItems.push(obj);
             this.updateTemplate();
+            this._selectionReset();
+
         }
 
         // IE fix for hidding elements... hate this
@@ -398,7 +391,8 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     itemCButtonClick(item: DGTplAddControl, $event) {
-        const req = { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
+        const req = { LINK_CL: ALL_ROWS, orderby: 'CLASSIF_NAME asc' /*'WEIGHT'*/};
+        // { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
         this._apiSrv.read(req).then((data) => {
             if (data && data.length) {
                 const list1 = [... this._cachedLinks1];
