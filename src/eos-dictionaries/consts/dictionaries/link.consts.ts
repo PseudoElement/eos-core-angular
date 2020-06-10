@@ -78,7 +78,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         type: 'dictionary',
     }],
 
-    defaultOrder: 'WEIGHT',
+    defaultOrder: 'LINK',
     keyField: 'ISN_LCLASSIF',
     editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'NOTE',
         'PARE_LINK_Ref', 'ISN_PARE_LINK',
