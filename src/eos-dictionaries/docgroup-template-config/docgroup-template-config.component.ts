@@ -114,22 +114,30 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
         // }));
 
-        const req = { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
+        const req = { LINK_CL: { orderby: 'CLASSIF_NAME'}};
         this._apiSrv.read(req).then((data) => {
 
             if (data && data.length) {
-
+                data = data.sort((i1, i2) => {
+                    const item1 = i1['CLASSIF_NAME'].toLowerCase(), item2 = i2['CLASSIF_NAME'].toLowerCase();
+                    if (item1 < item2) {
+                        return -1;
+                    }
+                    if (item1 > item2) {
+                         return 1;
+                    }
+                    return 0;
+                });
                 const list1: SelectorListItem[] = data.map (rec => {
-                    const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
+                    // const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
                     return Object.assign({}, {
                         key: rec['ISN_LCLASSIF'],
                         CONSTR_TYPE: rec['CONSTR_TYPE'],
-                        title: rec['CLASSIF_NAME'] + (pair ? ' - ' + pair['CLASSIF_NAME'] : ''),
+                        title: rec['CLASSIF_NAME'],
                         obj: rec });
 
                 });
                 this._cachedLinks1 = list1;
-
                 this.additionalControls.filter( c => c.storeInInfo === 'L').forEach( (ctrl: DGTplAddControl) => {
 
                     const list2: SelectorListItem[] = [].concat (... this.additionalData['SHABLON_DETAIL_List']
@@ -137,10 +145,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
                     list2.forEach ( l => {
                         const obj = data.find( d => d['ISN_LCLASSIF'] === l.key);
                         if (obj) {
-                            const pair = data.find (d => d['ISN_LCLASSIF'] === obj['ISN_PARE_LINK']);
+                            // const pair = data.find (d => d['ISN_LCLASSIF'] === obj['ISN_PARE_LINK']);
                             // l['CONSTR_TYPE'] = obj['CONSTR_TYPE'];
                             l.obj = obj;
-                            l.title = obj['CLASSIF_NAME'] + (pair ? ' - ' + pair['CLASSIF_NAME'] : '');
+                            l.title = obj['CLASSIF_NAME'];
                         }
                     });
                     ctrl.editValue = list2;
@@ -390,7 +398,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     itemCButtonClick(item: DGTplAddControl, $event) {
-
         const req = { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
         this._apiSrv.read(req).then((data) => {
             if (data && data.length) {

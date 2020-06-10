@@ -28,7 +28,7 @@ export class ListSelectorFormComponent implements OnDestroy {
     @Output() onSave: EventEmitter<any[]> = new EventEmitter<any[]>();
     @Output() onClose: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-    selection: {aviable: SelectorListItem, current: SelectorListItem } = { aviable: null, current: null };
+    selection: {available: SelectorListItem, current: SelectorListItem } = { available: null, current: null };
 
     BAG_NAME = 'list-select-bag';
 
@@ -54,7 +54,7 @@ export class ListSelectorFormComponent implements OnDestroy {
             //     return source.id !== 'selected' && !el.classList.contains('disabled');
             // },
             moves: (el, source) => { //
-            //     // return source.id !== 'availble';
+            //     // return source.id !== 'available';
                 return true;
             },
             copy: (el, source) => {
@@ -145,6 +145,9 @@ export class ListSelectorFormComponent implements OnDestroy {
 
     public close(doSave: boolean ) {
         if (doSave) {
+            if (this.selection.available && !this.currentList.includes(this.selection.available)) {
+                this.currentList.push(this.selection.available);
+            }
             this.onSave.emit([this.currentList]);
         }
         this.onClose.emit();
@@ -152,8 +155,7 @@ export class ListSelectorFormComponent implements OnDestroy {
     }
 
     public selectItem (item: SelectorListItem, panelNum: number) {
-
-
+        panelNum === 0 ? this.selection.available = item :  this.selection.current = item;
     }
 
     ngOnDestroy() {
