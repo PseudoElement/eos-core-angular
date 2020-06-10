@@ -138,19 +138,23 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     }
     inputPersonElem($event, flag?) {
         if (+$event === 13 || flag) {
-            if (!this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.NAME'].value) {
+            if (this.form.controls['rec.SURNAME'].value && !this.form.controls['printInfo.PATRON'].value && !this.form.controls['printInfo.SURNAME'].value && !this.form.controls['printInfo.NAME'].value) {
                 const surnameFIO = this.form.controls['rec.SURNAME'].value;
-                const fio = this.form.controls['rec.SURNAME'].value.replace(/\s{2,}/g, ' ').trim();
+                const fio = this.form.controls['rec.SURNAME'].value.trim().replace(/\s{2,}/g, ' ');
                 let patron, name, surname;
-                if (fio.length > 2 && fio.lastIndexOf('.') === fio.length - 1) {
+                if (fio.length > 6 && fio.lastIndexOf('.') === fio.length - 1 && fio[fio.length - 3] === '.') {
                     patron = fio.substr(fio.length - 2, 1);
                     this.form.controls['printInfo.PATRON'].setValue(patron);
                 }
-                if (fio.length > 6 && patron && fio[fio.length - 3] === '.' && this.checkSpaceStr(surnameFIO, fio, patron)) {
+                if (fio.length > 2  && fio.lastIndexOf('.') === fio.indexOf('.') && fio[fio.length - 1] === '.' ) {
+                    name = fio.substr(fio.length - 2, 1);
+                    this.form.controls['printInfo.NAME'].setValue(name);
+                } else if (fio.length > 2 && patron && fio.lastIndexOf('.') === fio.length - 1 && fio[fio.length - 3] === '.' && this.checkSpaceStr(surnameFIO, fio, patron) ) {
                     name = fio.substr(fio.length - 4, 1);
                     this.form.controls['printInfo.NAME'].setValue(name);
                 }
-                if (patron && !name) {
+
+                if (!patron && name) {
                     surname = fio.substring(0, fio.length - 2);
                 } else if (patron && name) {
                     surname = fio.substring(0, fio.length - 4);
