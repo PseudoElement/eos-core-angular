@@ -169,12 +169,14 @@ export class EosAccessPermissionsService {
         return APS_DICT_GRANT.denied;
     }
     // --------------------------------------------------------------
-    public isAccessGrantedForUsers(): Promise<boolean> {
-        return this.appCtx.init()
-            .then(() => {
-                const access = this.appCtx.CurrentUser.USER_TECH_List.some(tech => tech.FUNC_NUM === 1);
-                return this._checkAccessTech(E_TECH_RIGHT.Users) && !access;
-            });
+    public isAccessGrantedForUsers() {
+        const access = this.appCtx.CurrentUser.USER_TECH_List.some(tech => tech.FUNC_NUM === 1);
+        return this._checkAccessTech(E_TECH_RIGHT.Users) && !access;
+        // return this.appCtx.init()
+        //     .then(() => {
+        //         const access = this.appCtx.CurrentUser.USER_TECH_List.some(tech => tech.FUNC_NUM === 1);
+        //         return this._checkAccessTech(E_TECH_RIGHT.Users) && !access;
+        //     });
     }
 
     // --------------------------------------------------------------
