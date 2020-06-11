@@ -195,6 +195,18 @@ export class RtUserSelectService {
             Trial: '-',
             Expired: '-',
         },
+        MRCHART: {
+            label: 'Аналитические диаграммы',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
+        MTG: {
+            label: 'Управление совещаниями',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
     };
     scrollPosition: number = 0;
     private _ChangeSelectUser: UserSelectNode;
