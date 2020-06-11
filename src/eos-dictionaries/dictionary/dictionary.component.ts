@@ -729,8 +729,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
     setDictMode(mode: number) {
-            this._dictSrv.setDictMode(mode);
-            this.nodeList.updateViewFields([], []);
+        this._dictSrv.setDictMode(mode);
+        this.params.searchResults = false;
+        this.clearFindSettings();
+        this.nodeList.updateViewFields([], []);
     }
     uniqueIndex() {
         const config = { ignoreBackdropClick: true };
