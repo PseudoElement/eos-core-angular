@@ -48,10 +48,6 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         this.canCreateUser = false;
         if (!this.isCBBase && Features.cfg.departments.userCreateButton) {
             this.canCreateUser = this._eaps.isAccessGrantedForUsers();
-            // this._eaps.isAccessGrantedForUsers()
-            // .then((res) => {
-            //     this.canCreateUser = res;
-            // });
         }
         this.dictSrv.updateRigth.pipe(takeUntil(this._unsebscribe)).subscribe(r => {
             this.ngOnChanges();
