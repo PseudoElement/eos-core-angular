@@ -51,6 +51,8 @@ export const ELECTRONIC_SIGNATURE: IInputParamControl[] =
             label: '',
             readonly: false,
         },
+        /*
+        TODO: delete
         {
             controlType: E_FIELD_TYPE.boolean,
             key: 'REMOTE_CRYPTO_SERVER',
@@ -87,7 +89,30 @@ export const ELECTRONIC_SIGNATURE: IInputParamControl[] =
             label: '',
             readonly: false,
         },
-
-
+        */
+        {
+            controlType: E_FIELD_TYPE.boolean,
+            key: 'DIFF_CHECK_EDS',
+            label: 'Использовать отдельные настройки для проверки ЭП',
+            readonly: false,
+        },
+        {
+            controlType: E_FIELD_TYPE.string,
+            key: 'DIFF_CHECK_CRYPTO_INITSTR',
+            label: 'Строка инициализации:',
+            readonly: false,
+        },
+        {
+            controlType: E_FIELD_TYPE.string,
+            key: 'DIFF_CHECK_PKI_INITSTR',
+            label: 'Строка инициализации:',
+            readonly: false,
+        },
+        {
+            controlType: E_FIELD_TYPE.string,
+            key: 'CERT_DIFF_CHECK_STORES',
+            label: '',
+            readonly: false,
+        },
     ];
 

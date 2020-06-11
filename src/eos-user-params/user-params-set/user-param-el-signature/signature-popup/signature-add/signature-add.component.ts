@@ -31,7 +31,8 @@ export class SignatureAddComponent implements OnInit {
     public listStores$: any;
     public sheckSelect: string;
     private mapBtnName = new Map([
-        ['CERT_WEB_STORES', 'sslm'],
+        // ['CERT_WEB_STORES', 'sslm'], TODO: delete
+        ['CERT_DIFF_CHECK_STORES', 'sslm'],
         ['CERT_OTHER_STORES', 'sscu'],
         ['CERT_USER_STORES', 'sscu']
        ]);

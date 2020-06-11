@@ -48,13 +48,14 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     // private modalRef: BsModalRef;
     private newDataForSave = new Map();
     private mapBtnName = new Map([
-        ['CERT_WEB_STORES', 'Хранилища сертификатов для сервера удаленной проверки'],
+        // ['CERT_WEB_STORES', 'Хранилища сертификатов для сервера удаленной проверки'], TODO: delete
+        ['CERT_DIFF_CHECK_STORES', 'Хранилища сертификатов для проверки'],
         ['CERT_OTHER_STORES', 'Хранилища прочих сертификатов'],
         ['CERT_USER_STORES', 'Хранилища сертификатов пользователя']
     ]);
 
-    private readonly first = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
-    private readonly second = ['WEB_CRYPTO_ACTIVEX', 'WEB_CRYPTO_INITSTR', 'WEB_PKI_ACTIVEX', 'WEB_PKI_INITSTR'];
+    // private readonly first = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
+    // private readonly second = ['WEB_CRYPTO_ACTIVEX', 'WEB_CRYPTO_INITSTR', 'WEB_PKI_ACTIVEX', 'WEB_PKI_INITSTR'];
     private listForQuery: Array<string> = [];
     constructor(
         private _userSrv: UserParamsService,
@@ -244,7 +245,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     edit(event) {
         this.editFlag = event;
         this.disableForEditAllForm(event);
-        this.disableOrEnabel();
+        // this.disableOrEnabel(); TODO: delete
     }
 
     default(event) {
@@ -252,12 +253,14 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this.apiSrv.read(defaultListName).then(result => {
             this.inputFieldsDefault = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, this._formHelper.createhash(result));
             this.fillFormDefault(this.inputFieldsDefault);
-            this.disableOrEnabel();
+            // this.disableOrEnabel(); TODO: delete
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
     }
 
+    /*
+    TODO: delete
     disableOrEnabel() {
         const value = this.form.controls['REMOTE_CRYPTO_SERVER'].value;
         this.disablebtnCarma = value;
@@ -276,7 +279,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this.form.controls[el].enable({ emitEvent: false });
             });
         }
-    }
+    }*/
     private _pushState() {
         this._userSrv.setChangeState({ isChange: this.btnDisabled });
     }
