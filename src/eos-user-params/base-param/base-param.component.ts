@@ -217,8 +217,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     createActualLicenze() {
         const masEl = [];
         this.LicenzeInfo.forEach(elem => {
-            if (elem.Users > elem.ActualUsers) {
-                console.log('ttt');
+            if (this.checkDateLicense(elem.Expired) && (+elem.Users === 0 || +elem.Users >= +elem.ActualUsers)) {
                 masEl.push('' + (elem.Id - 1));
             }
         });
@@ -234,6 +233,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         masEl.forEach(elem => {
             this.actualLicenz.push(elem);
         });
+    }
+    checkDateLicense(valueDate: any): boolean {
+        if (valueDate) {
+            const date = new Date(valueDate);
+            return new Date() < date;
+        }   else {
+            return false;
+        }
     }
     setRadioBt($event?) {
         /* попав сюда я знаю что radio содержит только одну лицензию */
