@@ -59,7 +59,7 @@
     -->
     <div class="user-input-group">
         <div class="signature-wr">
-            <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_EDS']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_EDS']" [form]="form" [readonly]="false" (change)='disableOrEnabel()'></eos-dynamic-input>
             <hr>
         </div>
     </div>
