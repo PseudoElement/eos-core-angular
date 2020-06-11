@@ -14,7 +14,7 @@
                     *ngFor="let item of availableList"
                     [id]="'listItem_'+item?.key"
                     (click)="selectItem(item, 0)"
-                    [ngClass]="{'highlighted': (item === selection.left), disabled: false }">
+                    [ngClass]="{'highlighted': (item === selection.available), disabled: false }">
                     <span class="text">{{options.showKeys ? item?.key + ' ': ''}}{{item?.title}}</span>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                 <div class="item"
                     *ngFor="let item of currentList"
                     (click)="selectItem(item, 1)"
-                    [ngClass]="{'highlighted': (item === selection.right), disabled: false }">
+                    [ngClass]="{'highlighted': (item === selection.current), disabled: false }">
                     <span class="text">{{showKeys ? item?.key + ' ': ''}} {{item?.title}}</span>
                 </div>
             </div>

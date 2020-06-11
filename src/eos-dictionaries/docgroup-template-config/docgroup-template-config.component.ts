@@ -8,6 +8,7 @@ import { DGTplElement, DGTplAdditionalControl } from 'eos-dictionaries/helpers/n
 import { ListSelectorFormComponent, SelectorListItem } from 'eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
 import { PipRX } from 'eos-rest';
 import { DG_TPL_SEPARATOR } from 'eos-dictionaries/features/docgroups/docgroup-template-base.consts';
+import {ALL_ROWS} from '../../eos-rest/core/consts';
 
 const FTemplates = Features.cfg.docgroups.templates;
 
@@ -114,22 +115,20 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
         // }));
 
-        const req = { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
+        const req = { LINK_CL: ALL_ROWS, orderby: 'CLASSIF_NAME asc' /*'WEIGHT'*/};
         this._apiSrv.read(req).then((data) => {
 
             if (data && data.length) {
-
                 const list1: SelectorListItem[] = data.map (rec => {
-                    const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
+                    // const pair = data.find (d => d['ISN_LCLASSIF'] === rec['ISN_PARE_LINK']);
                     return Object.assign({}, {
                         key: rec['ISN_LCLASSIF'],
                         CONSTR_TYPE: rec['CONSTR_TYPE'],
-                        title: rec['CLASSIF_NAME'] + (pair ? ' - ' + pair['CLASSIF_NAME'] : ''),
+                        title: rec['CLASSIF_NAME'],
                         obj: rec });
 
                 });
                 this._cachedLinks1 = list1;
-
                 this.additionalControls.filter( c => c.storeInInfo === 'L').forEach( (ctrl: DGTplAddControl) => {
 
                     const list2: SelectorListItem[] = [].concat (... this.additionalData['SHABLON_DETAIL_List']
@@ -137,10 +136,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
                     list2.forEach ( l => {
                         const obj = data.find( d => d['ISN_LCLASSIF'] === l.key);
                         if (obj) {
-                            const pair = data.find (d => d['ISN_LCLASSIF'] === obj['ISN_PARE_LINK']);
+                            // const pair = data.find (d => d['ISN_LCLASSIF'] === obj['ISN_PARE_LINK']);
                             // l['CONSTR_TYPE'] = obj['CONSTR_TYPE'];
                             l.obj = obj;
-                            l.title = obj['CLASSIF_NAME'] + (pair ? ' - ' + pair['CLASSIF_NAME'] : '');
+                            l.title = obj['CLASSIF_NAME'];
                         }
                     });
                     ctrl.editValue = list2;
@@ -298,6 +297,8 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             this.select(obj, 1);
             this.templateItems.push(obj);
             this.updateTemplate();
+            this._selectionReset();
+
         }
 
         // IE fix for hidding elements... hate this
@@ -390,8 +391,8 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     itemCButtonClick(item: DGTplAddControl, $event) {
-
-        const req = { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
+        const req = { LINK_CL: ALL_ROWS, orderby: 'CLASSIF_NAME asc' /*'WEIGHT'*/};
+        // { LINK_CL: { orderby: 'CLASSIF_NAME' /*'WEIGHT'*/}};
         this._apiSrv.read(req).then((data) => {
             if (data && data.length) {
                 const list1 = [... this._cachedLinks1];
