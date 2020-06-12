@@ -288,19 +288,33 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.listRight.forEach((node: NodeAbsoluteRight) => {
                     if (node.touched && node.key === '2') {
                         const sendMethod = node.value === 1 ? 'POST' : 'DELETE';
-                        const q = {
-                            method: sendMethod,
-                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List${sendMethod === 'POST' ? '' : `('${this._userParamsSetSrv.userContextId} 0. 3')`}`,
-                            data: {
-                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                                FUNC_NUM: 3,
-                                DUE: '0.',
-                                WEIGHT: null,
-                                DEEP: 1,
-                                ALLOWED: 1
-                            }
-                        };
-                        this.queryForSave.push(q);
+                        if (sendMethod === 'POST') {
+                            const q = {
+                                method: sendMethod,
+                                requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List`,
+                                data: {
+                                    ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                                    FUNC_NUM: 3,
+                                    DUE: '0.',
+                                    WEIGHT: null,
+                                    DEEP: 1,
+                                    ALLOWED: 1
+                                }
+                            };
+                            this.queryForSave.push(q);
+                        }
+                        if (sendMethod === 'DELETE') {
+                            this.curentUser.USERDEP_List.forEach((dep) => {
+                                if (dep.FUNC_NUM === 3) {
+                                    const query = {
+                                        method: 'DELETE',
+                                        requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List('${this._userParamsSetSrv.userContextId} ${dep.DUE} 3')`,
+                                    };
+                                    this.queryForSave.push(query);
+                                }
+                            });
+                        }
+
                     }
                     if (node.touched) {
                         node.change.forEach(ch => {
