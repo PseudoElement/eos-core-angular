@@ -31,32 +31,6 @@
             <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
         </div>
     </div>
-    <!--
-        TODO: delete this comment
-    <div class="user-input-group checkbox-line">
-        <eos-dynamic-input class="inline-block" [input]="inputs['REMOTE_CRYPTO_SERVER']" [form]="form" [readonly]="false" (change)='disableOrEnabel()'></eos-dynamic-input>
-        <hr>
-    </div>
-    <div class="user-input-group">
-        <span class="l-font">Объект поддержки ЭП и шифрования</span>
-        <div class="input-flex">
-            <eos-dynamic-input class="inline-block" [input]="inputs['WEB_CRYPTO_ACTIVEX']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input class="inline-block" [input]="inputs['WEB_CRYPTO_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-        <hr>
-    </div>
-    <div class="user-input-group">
-        <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
-        <div class="input-flex">
-            <eos-dynamic-input class="inline-block" [input]="inputs['WEB_PKI_ACTIVEX']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input class="inline-block" [input]="inputs['WEB_PKI_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-        <hr>
-    </div>
-    <div class="user-input-group btn-hov">
-        <button [disabled]="!editFlag || !disablebtnCarma" (click)="openPopup(template, 'CERT_WEB_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover">Хранилища сертификатов для сервера удаленной проверки</button>
-    </div>
-    -->
     <div class="user-input-group">
         <div class="signature-wr">
             <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_EDS']" [form]="form" [readonly]="false" (change)='disableOrEnabel()'></eos-dynamic-input>

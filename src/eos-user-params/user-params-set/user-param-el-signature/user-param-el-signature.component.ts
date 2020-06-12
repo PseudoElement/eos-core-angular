@@ -48,7 +48,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     // private modalRef: BsModalRef;
     private newDataForSave = new Map();
     private mapBtnName = new Map([
-        // ['CERT_WEB_STORES', 'Хранилища сертификатов для сервера удаленной проверки'], TODO: delete
         ['CERT_DIFF_CHECK_STORES', 'Хранилища сертификатов для проверки'],
         ['CERT_OTHER_STORES', 'Хранилища прочих сертификатов'],
         ['CERT_USER_STORES', 'Хранилища сертификатов пользователя']
