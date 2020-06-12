@@ -142,6 +142,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     } */
     init() {
         const ABS = /* this._appContext.cbBase ? this.absoluteRightReturnCB() :  */ABSOLUTE_RIGHTS;
+        if (this._appContext.cbBase) {
+            ABS[2].label = 'Централизованная отправка документов';
+        }
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -283,6 +286,22 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this.arrDeloRight = strNewDeloRight.split('');
                 }
                 this.listRight.forEach((node: NodeAbsoluteRight) => {
+                    if (node.touched && node.key === '2') {
+                        const sendMethod = node.value === 1 ? 'POST' : 'DELETE';
+                        const q = {
+                            method: sendMethod,
+                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List${sendMethod === 'POST' ? '' : `('${this._userParamsSetSrv.userContextId} 0. 3')`}`,
+                            data: {
+                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                                FUNC_NUM: 3,
+                                DUE: '0.',
+                                WEIGHT: null,
+                                DEEP: 1,
+                                ALLOWED: 1
+                            }
+                        };
+                        this.queryForSave.push(q);
+                    }
                     if (node.touched) {
                         node.change.forEach(ch => {
                             const batch = this._createBatch(ch, node, qUserCl);
