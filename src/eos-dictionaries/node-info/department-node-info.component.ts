@@ -47,10 +47,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
         this.canCreateUser = false;
         if (!this.isCBBase && Features.cfg.departments.userCreateButton) {
-            this._eaps.isAccessGrantedForUsers()
-            .then((res) => {
-                this.canCreateUser = res;
-            });
+            this.canCreateUser = this._eaps.isAccessGrantedForUsers();
         }
         this.dictSrv.updateRigth.pipe(takeUntil(this._unsebscribe)).subscribe(r => {
             this.ngOnChanges();

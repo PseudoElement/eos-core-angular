@@ -300,6 +300,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
                 this.apiSrv.setData(this.queryForSave)
                     .then(() => {
+                        const contentProp = this.selectedNode.contentProp;
                         this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
                         this.queryForSave = [];
                         this.listRight = [];
@@ -308,6 +309,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                         this.flagDel = false;
                         this._storageSrv.removeItem('abs_prav_mas');
+                        if (this.curentUser['ISN_LCLASSIF'] === this._appContext.CurrentUser['ISN_LCLASSIF'] && contentProp === 6) {
+                            this._appContext.init().then(() => {
+                                if (this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
+                                    this._router.navigate(['/spravochniki']);
+                                }
+
+                            });
+                        }
                         if (!flag) {
                             return this._userParamsSetSrv.getUserIsn({
                                 expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List'
