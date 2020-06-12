@@ -441,7 +441,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     checkDLSurname(mas: any[]): Promise<any> {
         if (this._newData.get('SURNAME_PATRON')) {
             if (this.curentUser['SURNAME_PATRON'] === this.surnameDepartment) {
-                return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
+                return this._confirmSrv.confirm2(CONFIRM_SURNAME_REDACT).then(confirmation => {
                     if (confirmation && confirmation['result'] === 1) {
 
                     } else {
@@ -745,7 +745,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 if (this.dueDepSurname !== dep['SURNAME']) {
                     const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
                     depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
-                    this._confirmSrv.confirm3(depConfirm, { ignoreBackdropClick: true }).then(confirmation => {
+                    this._confirmSrv.confirm2(depConfirm).then(confirmation => {
                         if (confirmation && confirmation['result'] === 1) {
                             this.dueDepSurname = dep['SURNAME'];
                             this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
@@ -928,7 +928,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 if (data) {
                     this.curentUser.isTechUser = data;
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
-                        this._confirmSrv.confirm3(CONFIRM_UPDATE_USER, { ignoreBackdropClick: true }).then(confirmation => {
+                        this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
