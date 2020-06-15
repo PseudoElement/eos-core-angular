@@ -303,11 +303,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                             };
                             this.queryForSave.push(q);
                         }
-                        if (sendMethod === 'DELETE') {
+                        if (sendMethod === 'DELETE' && this.curentUser.USERDEP_List.length) {
                             this.curentUser.USERDEP_List.forEach((dep) => {
                                 if (dep.FUNC_NUM === 3) {
                                     const query = {
-                                        method: 'DELETE',
+                                        method: sendMethod,
                                         requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List('${this._userParamsSetSrv.userContextId} ${dep.DUE} 3')`,
                                     };
                                     this.queryForSave.push(query);
