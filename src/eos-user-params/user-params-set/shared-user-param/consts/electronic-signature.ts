@@ -53,41 +53,27 @@ export const ELECTRONIC_SIGNATURE: IInputParamControl[] =
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: 'REMOTE_CRYPTO_SERVER',
-            label: 'Использовать сервер удаленной проверки ЭП',
+            key: 'DIFF_CHECK_EDS',
+            label: 'Использовать отдельные настройки для проверки ЭП',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
-            key: 'WEB_CRYPTO_ACTIVEX',
-            label: 'Название объекта:',
-            readonly: false,
-        },
-        {
-            controlType: E_FIELD_TYPE.string,
-            key: 'WEB_CRYPTO_INITSTR',
+            key: 'DIFF_CHECK_CRYPTO_INITSTR',
             label: 'Строка инициализации:',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
-            key: 'WEB_PKI_ACTIVEX',
-            label: 'Название объекта:',
-            readonly: false,
-        },
-        {
-            controlType: E_FIELD_TYPE.string,
-            key: 'WEB_PKI_INITSTR',
+            key: 'DIFF_CHECK_PKI_INITSTR',
             label: 'Строка инициализации:',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
-            key: 'CERT_WEB_STORES',
+            key: 'CERT_DIFF_CHECK_STORES',
             label: '',
             readonly: false,
         },
-
-
     ];
 
