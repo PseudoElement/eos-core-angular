@@ -24,10 +24,10 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 24
         key: '2',
-        label: 'Централизованная отправка документов',
+        label: 'Отправка документов по реестрам',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            // rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
