@@ -74,7 +74,9 @@ export class EosDeskService {
         this._selectedDesk$ = new BehaviorSubject(this._selectedDesk);
 
         this.selectedDesk.subscribe((desk) => {
-            this._readReferences(desk ? desk.id : null);
+            this._appCtx.ready().then(() => {
+                this._readReferences(desk ? desk.id : null);
+            });
         });
         this._appCtx.ready()
             .then(() => {
@@ -172,7 +174,7 @@ export class EosDeskService {
     }
 
     reloadDeskList() {
-        this._readDeskList();
+        // this._readDeskList();
     }
 
     /* getDesk(id: string): Promise<EosDesk> {
@@ -300,8 +302,8 @@ export class EosDeskService {
     }
 
     private _readReferences(deskId = null) {
-        this._appCtx.init()
-            .then( () => {
+        // this._appCtx.init()
+        //     .then( () => { });
                 this._dictSrv.getAllDictionariesList(deskId)
                     .then((descriptors) => {
                         this._currentReferences = descriptors.map((descr) =>
@@ -326,7 +328,7 @@ export class EosDeskService {
                             this._currentReferences$.next(this._currentReferences);
                         }
                     });
-            });
+
     }
 
     private _deskItemByDescriptor(descr): IDeskItem {
