@@ -21,7 +21,11 @@
                          [showDeleted]="params.showDeleted"
                          [filters] = "filterDateNomenkl"
                          ></eos-custom-tree>
-        <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>
+        <eos-custom-tree *ngIf="hasTemplateTree && treeNodes"
+                         [data]="treeNodes"
+                         (onSetActiveNode)="onSetActiveNode($event)"
+        ></eos-custom-tree>
+<!--        <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>-->
         <div class="fon highlighted"
             [style.width]="fonConf.width"
             [style.height]="fonConf.height"

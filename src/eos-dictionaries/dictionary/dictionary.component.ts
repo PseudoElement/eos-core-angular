@@ -211,7 +211,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                 if (n) {
                                     this.title = n.title;
                                 }
-
                                 this._dictSrv.setCustomNodeId(this._nodeId);
                                 if (this.dictionaryId === 'templates') {
                                     this._dictSrv.selectTemplateNode(this.treeNodes, this._nodeId).then(() => { });
@@ -266,12 +265,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             const n = this.dictionary.descriptor.getActive();
                             if (n) { this.title = n.title; }
                             this.customTreeData = d;
+                            console.log(d);
                         });
                     }
                     this.hasTemplateTree = dictionary.descriptor.hasTemplateTree();
                     if (this.hasTemplateTree) {
                         dictionary.descriptor.getTemplateTree('').then((d) => {
+                            const n = this.dictionary.descriptor.getActive();
+                            if (n) { this.title = n.title; }
                             this.treeNodes = d;
+                            console.log(d);
                         });
                     }
                 } else {
