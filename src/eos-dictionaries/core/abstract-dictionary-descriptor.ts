@@ -502,16 +502,11 @@ export abstract class AbstractDictionaryDescriptor {
     hasCustomTree() {
         return false;
     }
-    hasTemplateTree() {
-        return false;
-    }
 
     getCustomTreeData(): Promise<CustomTreeNode[]> {
         return Promise.resolve(null);
     }
-    getTemplateTree(data) {
-        return Promise.resolve(null);
-    }
+
     getActive(): CustomTreeNode {
         return null;
     }

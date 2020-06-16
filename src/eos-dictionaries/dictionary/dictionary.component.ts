@@ -142,7 +142,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     hasCustomTable: boolean;
     hasCustomTree: boolean;
-    hasTemplateTree: boolean;
 
     accessDenied: boolean;
 
@@ -265,16 +264,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             const n = this.dictionary.descriptor.getActive();
                             if (n) { this.title = n.title; }
                             this.customTreeData = d;
-                            console.log(d);
-                        });
-                    }
-                    this.hasTemplateTree = dictionary.descriptor.hasTemplateTree();
-                    if (this.hasTemplateTree) {
-                        dictionary.descriptor.getTemplateTree('').then((d) => {
-                            const n = this.dictionary.descriptor.getActive();
-                            if (n) { this.title = n.title; }
-                            this.treeNodes = d;
-                            console.log(d);
                         });
                     }
                 } else {

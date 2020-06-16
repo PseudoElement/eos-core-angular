@@ -48,6 +48,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         .set('2', 'Печать перечня поручений')
         .set('3', 'Печать номенклатуры дел');
 
+    head: CustomTreeNode[] = [];
     staticDataForTree: CustomTreeNode[] = [
         {
             title: 'Информация о системе', parent: '0.', id: '0.1', isNode: true, isDeleted: false, isActive: false,
@@ -127,24 +128,23 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     setRootNode(_nodeId: string): CustomTreeNode {
-        let res = this._activeTreeNode;
         this._filterDUE = _nodeId;
-        if (this.staticDataForTree) {
-            this._parseTree(this.staticDataForTree, (item: CustomTreeNode) => {
-                if (item.id === this._filterDUE) {
+        this.checkActiveTreeNode(this.staticDataForTree, this._filterDUE);
+        this.checkActiveTreeNode(this.head, this._filterDUE);
+        return this._activeTreeNode;
+    }
+
+    checkActiveTreeNode(treeNode: CustomTreeNode[], filterDUE: string) {
+        if (treeNode.length) {
+            this._parseTree(treeNode, (item: CustomTreeNode) => {
+                if (item.id === filterDUE) {
                     item.isActive = true;
                     this._activeTreeNode = item;
-                    res = item;
                 } else {
                     item.isActive = false;
                 }
             });
         }
-        return res;
-    }
-
-    getActive(): CustomTreeNode {
-        return this._activeTreeNode;
     }
 
     _parseTree(treeData: CustomTreeNode[], callback): boolean {
@@ -162,6 +162,12 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         return false;
     }
+
+    getActive(): CustomTreeNode {
+        return this._activeTreeNode;
+    }
+
+
 
     createDocTemp(id: any): Promise<any> {
         if (id && this.dataNewFile) {
@@ -194,9 +200,6 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         delete this.dataNewFile;
     }
     hasCustomTree() {
-        return false;
-    }
-    hasTemplateTree() {
         return true;
     }
 
@@ -242,21 +245,20 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         //  super.extendCritery(critery, { mode, deleted }, selectedNode);
     }
-    public getTemplateTree(data) {
-        const head: CustomTreeNode[] = [
-            {
-                title: 'Шаблоны', parent: null, id: '0.', isNode: true, isDeleted: false, isActive: false,
-                expandable: true, isExpanded: true, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.'],
-                visibleFilter: true, children: []
-            }
-        ];
+    public getCustomTreeData() {
+        const newHead = [{
+            title: 'Шаблоны', parent: null, id: '0.', isNode: true, isDeleted: false, isActive: false,
+            expandable: true, isExpanded: true, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.'],
+            visibleFilter: true, children: []
+        }];
         this.staticDataForTree.sort((el1: CustomTreeNode, el2: CustomTreeNode) => {
             return el1.title.localeCompare(el2.title);
         }).forEach((element) => {
-            head[0].children.push(element);
+            newHead[0].children.push(element);
         });
-        this._activeTreeNode = head[0].children[0];
-        return Promise.resolve(head);
+        this.head = newHead;
+        this._activeTreeNode = newHead[0].children[0];
+        return Promise.resolve(newHead);
     }
 
     public getChildren(params?: string): Promise<any[]> {

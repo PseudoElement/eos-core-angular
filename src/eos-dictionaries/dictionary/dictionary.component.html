@@ -12,7 +12,7 @@
         [hidden]="this.dictionary?.descriptor.type === dictTypes.linear || accessDenied" >
         <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length) && !accessDenied" size="lg">
         </eos-spinner>
-        <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied && !hasTemplateTree"
+        <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied"
             [nodes]="treeNodes"
             [showDeleted]="params.showDeleted" [filters] = "filterDate"></eos-tree>
         <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
@@ -21,10 +21,6 @@
                          [showDeleted]="params.showDeleted"
                          [filters] = "filterDateNomenkl"
                          ></eos-custom-tree>
-        <eos-custom-tree *ngIf="hasTemplateTree && treeNodes"
-                         [data]="treeNodes"
-                         (onSetActiveNode)="onSetActiveNode($event)"
-        ></eos-custom-tree>
 <!--        <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>-->
         <div class="fon highlighted"
             [style.width]="fonConf.width"
