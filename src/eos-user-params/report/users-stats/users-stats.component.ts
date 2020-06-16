@@ -269,9 +269,15 @@ export class EosReportUsersStatsComponent implements OnInit {
     });
   }
 
-  checkUsersLimit (subItem): boolean {
+  checkUsersLimits (subItem): boolean {
     if (subItem) {
-      return this.items.length > 0 && subItem.Users && subItem.Users < subItem.ActualUsers;
+      const setZeroHours = date => date.setHours(0, 0, 0, 0);
+
+      const expiredDate = new Date(subItem.Expired);
+      const currentDate = new Date();
+
+      return (this.items.length > 0 && subItem.Users && subItem.Users < subItem.ActualUsers) ||
+      (+expiredDate && setZeroHours(expiredDate) < setZeroHours(currentDate));
     }
 
     return true;
