@@ -96,7 +96,9 @@ export class CardRightSrv {
             if (countFN > 0 && countFNA === 0) {
                 flag = false;
             }
-            this.checkViewResol(card, viewResol);
+            if (card.FUNCLIST.charAt(16) !== card._orig.FUNCLIST.charAt(16)) {
+                this.checkViewResol(card, viewResol);
+            }
         });
         if (!flag) {
             this._msgSrv.addNewMessage({
