@@ -266,9 +266,8 @@ export class EosDeskService {
 
         return viewMan.saveView(newDesc)
             .then((isn_view) => {
-                return this._appCtx.ready().then(() => {
-                // this._appCtx.init()
-                //     .then(() => {});
+                return this._appCtx.init()
+                    .then(() => {
                         desk.id = isn_view.toString();
                         this._desksList.push(desk);
                         this._sortDeskList();
