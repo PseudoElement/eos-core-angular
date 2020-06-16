@@ -269,4 +269,11 @@ export class EosReportUsersStatsComponent implements OnInit {
     });
   }
 
+  checkUsersLimit (subItem): boolean {
+    if (subItem) {
+      return this.items.length > 0 && subItem.Users && subItem.Users < subItem.ActualUsers;
+    }
+
+    return true;
+  }
 }
