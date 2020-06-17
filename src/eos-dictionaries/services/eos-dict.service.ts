@@ -1330,8 +1330,7 @@ export class EosDictService {
         this._reloadList();
     }
     public resetPagination() {
-        this.changePagination({ current: 1, start: 1, length: this.paginationConfig.length, itemsQty: this.paginationConfig.itemsQty });
-        // this._initPaginationConfig();
+        this._initPaginationConfig();
     }
 
     public checkRelatedNomenkl(nodes: EosDictionaryNode[], param: string): Promise<any> {
