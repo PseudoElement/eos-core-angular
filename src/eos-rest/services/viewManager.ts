@@ -19,10 +19,11 @@ export class ViewManager {
      * Add
      * @param view User
      */
-    public addViewColumn(view: SRCH_VIEW): SRCH_VIEW_DESC {
+    public addViewColumn(view: SRCH_VIEW): { result: SRCH_VIEW_DESC , view: SRCH_VIEW} {
         const result = <SRCH_VIEW_DESC>{ _State: _ES.Added };
         view.SRCH_VIEW_DESC_List.push(result);
-        return result;
+        view._State = _ES.Modified;
+        return {result, view};
     }
 
     public updateViewColumn(view: SRCH_VIEW, blockId: string, newName: string): SRCH_VIEW_DESC {
@@ -80,6 +81,7 @@ export class ViewManager {
                 u.USER_VIEW_List.push(<USER_VIEW>{ _State: _ES.Added, ISN_VIEW: view.ISN_VIEW });
                 modified.push(u);
             }
+            console.log(modified);
             const chl = this.pip.changeList(modified);
             return this.pip.batch(chl, '').then(() => {
                 return this.pip.sequenceMap.GetFixed(view.ISN_VIEW);
