@@ -132,7 +132,7 @@ export class EosDeskService {
             r.result.BLOCK_ID = dictionaryURL || 'user_param';
             r.result.LABEL = item.title;
             this.viewManager.saveView(r.view).then(() => {
-
+                this._appCtx.reInit();
             });
         }
         /* tslint:disable */
@@ -168,7 +168,6 @@ export class EosDeskService {
         const view = this.findView(this._selectedDesk.id);
         if (view) {
             this.viewManager.updateViewColumn(view, deskItem.blockId, deskItem.title);
-            console.log(view);
             this.viewManager.saveView(view)
                 .then(() => {
                     this._readReferences();
