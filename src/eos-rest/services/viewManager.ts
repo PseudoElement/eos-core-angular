@@ -81,7 +81,6 @@ export class ViewManager {
                 u.USER_VIEW_List.push(<USER_VIEW>{ _State: _ES.Added, ISN_VIEW: view.ISN_VIEW });
                 modified.push(u);
             }
-            console.log(modified);
             const chl = this.pip.changeList(modified);
             return this.pip.batch(chl, '').then(() => {
                 return this.pip.sequenceMap.GetFixed(view.ISN_VIEW);
