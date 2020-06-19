@@ -36,7 +36,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showDeleted: boolean;
     @Input() filters: any;
     @Output() onSetActiveNode: EventEmitter<CustomTreeNode> = new EventEmitter<CustomTreeNode>();
-
+    lastSelectedNode: CustomTreeNode;
     private w: number;
     private _subscription: Subscription;
     // private data: CustomTreeNode[];
@@ -129,7 +129,8 @@ export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
         if (!node.isClickable) {
             return;
         }
-        if (!node.isDeleted || Features.cfg.canEditLogicDeleted) {
+        if (!node.isDeleted && this.lastSelectedNode !== node || Features.cfg.canEditLogicDeleted && this.lastSelectedNode !== node) {
+            this.lastSelectedNode =  node;
             this.onSetActiveNode.emit(node);
             this._router.navigate(node.path);
         }

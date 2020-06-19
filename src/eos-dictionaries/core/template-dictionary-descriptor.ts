@@ -3,18 +3,19 @@ import { REF_FILE } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
-interface TreeTempl {
-    id: string;
-    parentId: string;
-    children: [];
-    expandable: boolean;
-    isActive: boolean;
-    isOpened: boolean;
-    isExpanded: boolean;
-    level: number;
-    title: string;
-    path: string;
-}
+import {CustomTreeNode} from '../tree2/custom-tree.component';
+// interface TreeTempl {
+//     id: string;
+//     parentId: string;
+//     children: [];
+//     expandable: boolean;
+//     isActive: boolean;
+//     isOpened: boolean;
+//     isExpanded: boolean;
+//     level: number;
+//     title: string;
+//     path: string;
+// }
 export class TemplateDescriptor extends RecordDescriptor {
     dictionary: TemplateDictionaryDescriptor;
     fullSearchFields: any;
@@ -27,6 +28,8 @@ export class TemplateDescriptor extends RecordDescriptor {
     }
 }
 export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
+    _filterDUE: string;
+    _activeTreeNode: CustomTreeNode;
     record: TemplateDescriptor;
     dataNewFile?: REF_FILE;
     top = '0.';
@@ -45,55 +48,67 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         .set('2', 'Печать перечня поручений')
         .set('3', 'Печать номенклатуры дел');
 
-
-    staticDataForTree: TreeTempl[] = [
+    head: CustomTreeNode[] = [];
+    staticDataForTree: CustomTreeNode[] = [
         {
-            id: '0.1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Информация о системе', path: 'spravochniki/templates/0.1'
+            title: 'Информация о системе', parent: '0.', id: '0.1', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.1'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Файлы документов', path: 'spravochniki/templates/0.2'
+            title: 'Файлы документов', parent: '0.', id: '0.2', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.2'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.3', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка РК', path: 'spravochniki/templates/0.3'
+            title: 'Печать списка РК', parent: '0.', id: '0.3', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.3'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.4', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать штрих-кода (альбомная)', path: 'spravochniki/templates/0.4'
+            title: 'Печать штрих-кода (альбомная)', parent: '0.', id: '0.4', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.4'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.5', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать штрих-кода (книжная)', path: 'spravochniki/templates/0.5'
+            title: 'Печать штрих-кода (книжная)', parent: '0.', id: '0.5', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.5'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.6', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка РКПД', path: 'spravochniki/templates/0.6'
+            title: 'Печать списка РКПД', parent: '0.', id: '0.6', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.6'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.7', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка поручений', path: 'spravochniki/templates/0.7'
+            title: 'Печать списка поручений', parent: '0.', id: '0.7', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.7'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.8', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Реестры внеш. отправки', path: 'spravochniki/templates/0.8'
+            title: 'Реестры внеш. отправки', parent: '0.', id: '0.8', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.8'],
+            visibleFilter: true, children: []
         },
         {
-            id: '0.9', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать РК', path: 'spravochniki/templates/0.9'
+            title: 'Печать РК', parent: '0.', id: '0.9', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.9'],
+            visibleFilter: true, children: []
         },
         {
-            id: '1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'opis_arh.exe', path: 'spravochniki/templates/1'
+            title: 'opis_arh.exe', parent: '0.', id: '1', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '1'],
+            visibleFilter: true, children: []
         },
         {
-            id: '2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать перечня поручений', path: 'spravochniki/templates/2'
+            title: 'Печать перечня поручений', parent: '0.', id: '2', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '2'],
+            visibleFilter: true, children: []
         },
         {
-            id: '3', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать номенклатуры дел', path: 'spravochniki/templates/3'
+            title: 'Печать номенклатуры дел', parent: '0.', id: '3', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '3'],
+            visibleFilter: true, children: []
         },
     ];
 
@@ -111,6 +126,49 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 }
             });
     }
+
+    setRootNode(_nodeId: string): CustomTreeNode {
+        this._filterDUE = _nodeId;
+        this.checkActiveTreeNode(this.staticDataForTree, this._filterDUE);
+        this.checkActiveTreeNode(this.head, this._filterDUE);
+        return this._activeTreeNode;
+    }
+
+    checkActiveTreeNode(treeNode: CustomTreeNode[], filterDUE: string) {
+        if (treeNode.length) {
+            this._parseTree(treeNode, (item: CustomTreeNode) => {
+                if (item.id === filterDUE) {
+                    item.isActive = true;
+                    this._activeTreeNode = item;
+                } else {
+                    item.isActive = false;
+                }
+            });
+        }
+    }
+
+    _parseTree(treeData: CustomTreeNode[], callback): boolean {
+        let i: number;
+
+        for (i = 0; i < treeData.length; i++) {
+            if (callback(treeData[i])) {
+                return true;
+            }
+            if (treeData[i].children && treeData[i].children.length) {
+                if (this._parseTree(treeData[i].children, callback)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    getActive(): CustomTreeNode {
+        return this._activeTreeNode;
+    }
+
+
+
     createDocTemp(id: any): Promise<any> {
         if (id && this.dataNewFile) {
             const entityReq = {
@@ -142,9 +200,6 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         delete this.dataNewFile;
     }
     hasCustomTree() {
-        return false;
-    }
-    hasTemplateTree() {
         return true;
     }
 
@@ -190,19 +245,20 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         //  super.extendCritery(critery, { mode, deleted }, selectedNode);
     }
-    public getTemplateTree(data) {
-        const head = [
-            {
-                id: '0.', parentId: 'null', children: [], expandable: true, isActive: true, isOpened: true, isExpanded: true,
-                path: 'spravochniki/templates/0.', level: 0, title: 'Шаблоны'
-            }
-        ];
-        this.staticDataForTree.sort((el1: TreeTempl, el2: TreeTempl) => {
+    public getCustomTreeData() {
+        const newHead = [{
+            title: 'Шаблоны', parent: null, id: '0.', isNode: true, isDeleted: false, isActive: false,
+            expandable: true, isExpanded: true, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.'],
+            visibleFilter: true, children: []
+        }];
+        this.staticDataForTree.sort((el1: CustomTreeNode, el2: CustomTreeNode) => {
             return el1.title.localeCompare(el2.title);
         }).forEach((element) => {
-            head[0].children.push(element);
+            newHead[0].children.push(element);
         });
-        return Promise.resolve(head);
+        this.head = newHead;
+        this._activeTreeNode = newHead[0].children[0];
+        return Promise.resolve(newHead);
     }
 
     public getChildren(params?: string): Promise<any[]> {
