@@ -31,4 +31,8 @@ export class PushpinComponent {
         }
         this._dropDown.toggle(false);
     }
+
+    hideDropdown(toggleValue: boolean) {
+        this._dropDown.toggle(toggleValue);
+    }
 }

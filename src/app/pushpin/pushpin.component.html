@@ -20,6 +20,6 @@
         class="pushdrop dropdown-menu dropdown-menu-right"
         [ngClass]="{'info': infoOpened}"
         role="menu">
-        <eos-desktop-list [hideSystem]="hideSystem" selectedMarker="showSelected" (onSelectDesk)="pin($event)"></eos-desktop-list>
+        <eos-desktop-list [hideSystem]="hideSystem" selectedMarker="showSelected" (onSelectDesk)="pin($event)" (onDeleteDesk)="hideDropdown($event)"></eos-desktop-list>
     </ul>
 </div>

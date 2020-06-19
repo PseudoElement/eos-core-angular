@@ -19,6 +19,7 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
     @Input() hideSystem = false;
 
     @Output() onSelectDesk: EventEmitter<EosDesk> = new EventEmitter<EosDesk>();
+    @Output() onDeleteDesk: EventEmitter<boolean> = new EventEmitter<boolean>();
     @ViewChild('inputDeskName') inputDeskName: ElementRef;
 
     inputTooltip: any = {
@@ -168,6 +169,9 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
 
     removeDesk(desk: EosDesk, $evt: Event): void {
         $evt.stopPropagation();
+
+        this.onDeleteDesk.emit(false);
+
         const _confrm = Object.assign({}, CONFIRM_DESK_DELETE);
         _confrm.body = _confrm.body.replace('{{name}}', desk.name);
 
