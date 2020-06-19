@@ -96,8 +96,11 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     @HostListener('window:beforeunload', ['$event'])
     canWndUnload(evt: BeforeUnloadEvent): any {
         if (this.isChanged) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
             evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
-            return 'Возможно, внесенные изменения не сохранятся.';
+            return MESSAGE_SAVE_ON_LEAVE;
         }
     }
 
