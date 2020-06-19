@@ -164,8 +164,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this._clearEditingCardLink();
         }
         if (this.isChanged) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
             evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
-            return false;
+            return MESSAGE_SAVE_ON_LEAVE;
         }
     }
 

@@ -66,8 +66,11 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
             // this._clearEditingCardLink();
         }
         if (this.formElement.hasChanges()) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
             evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
-            return false;
+            return MESSAGE_SAVE_ON_LEAVE;
         }
     }
 
