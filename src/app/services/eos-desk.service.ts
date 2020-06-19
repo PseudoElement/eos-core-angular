@@ -74,7 +74,9 @@ export class EosDeskService {
         this._selectedDesk$ = new BehaviorSubject(this._selectedDesk);
 
         this.selectedDesk.subscribe((desk) => {
-            this._readReferences(desk ? desk.id : null);
+            this._appCtx.ready().then(() => {
+                this._readReferences(desk ? desk.id : null);
+            });
         });
         this._appCtx.ready()
             .then(() => {
@@ -126,10 +128,12 @@ export class EosDeskService {
             if (view.SRCH_VIEW_DESC_List.find(el => el.BLOCK_ID === item.blockId)) {
                 return false;
             }
-            const col = this.viewManager.addViewColumn(view);
-            col.BLOCK_ID = dictionaryURL || 'user_param';
-            col.LABEL = item.title;
-            this.viewManager.saveView(view).then(() => this._appCtx.reInit());
+            const r = this.viewManager.addViewColumn(view);
+            r.result.BLOCK_ID = dictionaryURL || 'user_param';
+            r.result.LABEL = item.title;
+            this.viewManager.saveView(r.view).then(() => {
+                this._appCtx.reInit();
+            });
         }
         /* tslint:disable */
         if (!~desk.references.findIndex((_ref: IDeskItem) => _ref.url === item.url)) {
@@ -172,7 +176,7 @@ export class EosDeskService {
     }
 
     reloadDeskList() {
-        this._readDeskList();
+        // this._readDeskList();
     }
 
     /* getDesk(id: string): Promise<EosDesk> {
@@ -237,7 +241,6 @@ export class EosDeskService {
 
     editDesk(desk: EosDesk): Promise<any> {
         const deskView = this.findView(desk.id);
-
         let res = Promise.resolve(null);
         if (deskView) {
             deskView.VIEW_NAME = desk.name.trim();
@@ -261,15 +264,17 @@ export class EosDeskService {
         const viewMan = this.viewManager;
         const newDesc = viewMan.createView('clmanDesc');
         newDesc.VIEW_NAME = desk.name.trim();
-
         return viewMan.saveView(newDesc)
             .then((isn_view) => {
-                return this._appCtx.init()
+                return this._appCtx.ready()
                     .then(() => {
+                        newDesc.SRCH_VIEW_DESC_List = [];
+                        newDesc.ISN_VIEW = isn_view;
                         desk.id = isn_view.toString();
                         this._desksList.push(desk);
                         this._sortDeskList();
                         this._desksList$.next(this._desksList);
+                        this._appCtx.UserViews.push(newDesc);
                         return desk;
                     });
             });
@@ -300,8 +305,8 @@ export class EosDeskService {
     }
 
     private _readReferences(deskId = null) {
-        this._appCtx.init()
-            .then( () => {
+        // this._appCtx.init()
+        //     .then( () => { });
                 this._dictSrv.getAllDictionariesList(deskId)
                     .then((descriptors) => {
                         this._currentReferences = descriptors.map((descr) =>
@@ -326,7 +331,7 @@ export class EosDeskService {
                             this._currentReferences$.next(this._currentReferences);
                         }
                     });
-            });
+
     }
 
     private _deskItemByDescriptor(descr): IDeskItem {
