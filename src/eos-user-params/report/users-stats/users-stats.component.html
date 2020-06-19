@@ -73,10 +73,10 @@
                     <div class="stats-list">
                         <div class="user-item">
                             <div class="table-stats-title" *ngFor="let subItem of subSysArray">
-                                <span class="cust-str1" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.label}}</span>
-                                <span class="cust-str2 text-center" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.ActualUsers}}</span>
-                                <span class="cust-str3 text-center" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.Users || '-'}}</span>
-                                <span class="cust-str4" [ngClass]="{ 'error-rows': items.length > 0 && subItem.Users < subItem.ActualUsers }">{{subItem.Expired || '-'}}</span>
+                                <span class="cust-str1" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.label}}</span>
+                                <span class="cust-str2 text-center" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.ActualUsers}}</span>
+                                <span class="cust-str3 text-center" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.Users || '-'}}</span>
+                                <span class="cust-str4" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.Expired || '-'}}</span>
                             </div>
                         </div>
                     </div>
