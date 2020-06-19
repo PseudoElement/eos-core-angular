@@ -26,6 +26,7 @@ export class UserSearchComponent implements OnInit  {
     public fastSearch: boolean = false;
     public fullSearch: boolean = false;
     public currTab: number = 0;
+    public SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
     private prapareData: any;
     private prepareInputs: any;
     private inputs: any;
@@ -122,18 +123,17 @@ export class UserSearchComponent implements OnInit  {
     }
 
     RemoveQuotes(newObj: any): void {
-       const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
         for (const key in newObj) {
             if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS' && key !== 'BLOCK_USER') {
                 const list = newObj[key];
                 if (typeof list === 'string') {
-                    newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
+                    newObj[key] = list.replace(this.SEARCH_INCORRECT_SYMBOLS, '');
                     this.form.controls[`rec.${key}`].patchValue(newObj[key]);
                     newObj[key] = this.AddUnderscore(newObj[key]);
                 } else {
                     for (const k in list) {
                         if (list.hasOwnProperty(k)) {
-                             let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                             let fixed = list[k].replace(this.SEARCH_INCORRECT_SYMBOLS, '');
                              list[k] = fixed;
                             this.form.controls[`rec.${key}`].patchValue(newObj[key]);
                             fixed = this.AddUnderscore(fixed);
@@ -274,6 +274,7 @@ export class UserSearchComponent implements OnInit  {
         }
     }
     clickKey($event) {
+
         if ($event.keyCode === 27) {
             this.clearQuickForm();
         }
@@ -281,7 +282,7 @@ export class UserSearchComponent implements OnInit  {
             if (this.srchString) {
                 this.fullSearch = false;
                 this.fastSearch = true;
-                const strSearch = this.srchString.trim();
+                const strSearch = this.srchString.trim().replace(this.SEARCH_INCORRECT_SYMBOLS, '');
                 if (strSearch) {
                     const queryF = this.srhSrv.getQueryForFilter({ LOGIN: strSearch });
                     this.users_pagination.resetConfig();
