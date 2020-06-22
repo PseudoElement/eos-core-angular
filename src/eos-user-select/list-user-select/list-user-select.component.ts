@@ -58,6 +58,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     checkAll: string;
     onlyView: boolean;
     currentDue: string;
+    openUserInfo: boolean = false;
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
@@ -865,6 +866,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
+    OpenUsersInfo(closeModal?) {
+        if (closeModal) {
+            this.openUserInfo = false;
+        } else {
+            this.openUserInfo = true;
+        }
+    }
+
     get getflagChecked() {
         switch (this.flagChecked) {
             case true:
@@ -915,4 +924,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         const url = `EraseUser?isn_user=${isn_user}`;
         return url;
     }
+
+
 }

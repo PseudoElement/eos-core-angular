@@ -1,4 +1,11 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input, OnChanges,
+    Output, SimpleChanges,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,7 +17,10 @@ import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-selec
     templateUrl: './users-info.component.html',
     styleUrls: ['./users-info.component.scss']
 })
-export class EosReportUsersInfoComponent implements OnInit {
+export class EosReportUsersInfoComponent implements OnChanges {
+    @Input() open: boolean = false;
+    @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @ViewChild('usersInfo') usersInfo;
     users: any[];
     modalRef: BsModalRef;
     selectUser: any;
@@ -22,11 +32,18 @@ export class EosReportUsersInfoComponent implements OnInit {
     titleDownload: string;
     printUsers: any[] = [{ data: 'Текущем пользователе', value: false }, { data: 'Всех отмеченных пользователях', value: true }];
     private nodeIndex: number = 0;
-    constructor(private _userParamSrv: UserParamsService, private modalService: BsModalService,
-        public sanitizer: DomSanitizer, public _rtSrv: RtUserSelectService) { }
+    constructor(private _userParamSrv: UserParamsService,
+                private modalService: BsModalService,
+                public sanitizer: DomSanitizer,
+                public _rtSrv: RtUserSelectService) { }
 
-    ngOnInit() {
-        this.init();
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.open ) {
+            this.init();
+        } else if (!this.open && !changes.open.firstChange) {
+            this.modalRef.hide();
+        }
     }
 
     init() {
@@ -39,11 +56,13 @@ export class EosReportUsersInfoComponent implements OnInit {
         this.CheckAllUsers = false;
         this.nodeIndex = 0;
         this._updateBorders();
+        setTimeout(() => {
+            this.openModal(this.usersInfo);
+        }, 0);
     }
 
     openModal(template: TemplateRef<any>) {
-        this.init();
-        this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info' }));
+        this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info', ignoreBackdropClick: true }, ));
     }
     getHtmlStr(id: number): any {
         return this.sanitizer.bypassSecurityTrustResourceUrl(`../UserInfo/UserRights.ashx?uisn=${id}`);
@@ -115,9 +134,12 @@ export class EosReportUsersInfoComponent implements OnInit {
         }
     }
 
+    close() {
+        this.closeModal.emit(true);
+    }
+
     private _updateBorders() {
         this.isFirst = this.nodeIndex <= 0;
         this.isLast = this.nodeIndex >= this.users.length - 1 || this.nodeIndex < 0;
     }
-
 }
