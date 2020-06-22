@@ -270,6 +270,7 @@ export class EosDeskService {
                     .then(() => {
                         newDesc.SRCH_VIEW_DESC_List = [];
                         newDesc.ISN_VIEW = isn_view;
+                        newDesc._State = 'MERGE';
                         desk.id = isn_view.toString();
                         this._desksList.push(desk);
                         this._sortDeskList();
