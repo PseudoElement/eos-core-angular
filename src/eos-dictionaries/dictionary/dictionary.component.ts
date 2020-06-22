@@ -67,6 +67,7 @@ import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/se
 import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
 import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
 import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-template.component';
+import {Templates} from '../consts/dictionaries/templates.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -211,12 +212,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                     this.title = n.title;
                                 }
                                 this._dictSrv.setCustomNodeId(this._nodeId);
-                                if (this.dictionaryId === 'templates') {
-                                    this._dictSrv.selectTemplateNode(this.treeNodes, this._nodeId).then(() => { });
-                                } else {
-                                    this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
-                                    });
-                                }
+                                this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
+                                });
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.') {
                                     this._nodeId = '';
@@ -332,7 +329,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
 
                 if (!viewParameters.updatingList && this.treeNode) {
-                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id) {
+                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id || this.dictionaryId === Templates.id ) {
                         const n = this.dictionary.descriptor.getActive();
                         if (n) { this.title = n.title; }
                     } else {
