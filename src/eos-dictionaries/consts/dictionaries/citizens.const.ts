@@ -1,6 +1,6 @@
-import {E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
-import {NOT_EMPTY_STRING} from '../input-validation';
-import {COMMON_FIELDS} from './_common';
+import { E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
+import { NOT_EMPTY_STRING } from '../input-validation';
+import { COMMON_FIELDS } from './_common';
 import { SEARCH_TYPES } from '../search-types';
 import { REGION_DICT } from './region.consts';
 import { ADDR_CATEGORY_DICT } from './addr-category.consts';
@@ -51,9 +51,9 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     title: 'Граждане',
     visible: true,
     iconName: 'eos-icon-citizen-blue',
-    actions: [ 'add', 'markRecords', 'quickSearch', 'fullSearch', 'showDeleted', 'edit',
-     'view', 'restore', 'remove', 'removeHard', 'tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry',
-      'export', 'import'],
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'showDeleted', 'edit',
+        'view', 'restore', 'remove', 'removeHard', 'tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry', 'dopRequisites',
+        'export', 'import'],
     keyField: 'ISN_CITIZEN',
     searchConfig: [SEARCH_TYPES.full],
     fields: COMMON_FIELDS.concat([{
@@ -88,9 +88,9 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         type: 'select',
         dictionaryId: REGION_DICT.apiInstance,
         dictionaryLink: {
-                pk: 'DUE',
-                fk: 'DUE_REGION',
-                label: 'CLASSIF_NAME',
+            pk: 'DUE',
+            fk: 'DUE_REGION',
+            label: 'CLASSIF_NAME',
         },
         options: [],
         preferences: <IFieldPreferences>{
@@ -130,9 +130,9 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         type: 'select',
         dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
         dictionaryLink: {
-                pk: 'ISN_LCLASSIF',
-                fk: 'ISN_ADDR_CATEGORY',
-                label: 'CLASSIF_NAME',
+            pk: 'ISN_LCLASSIF',
+            fk: 'ISN_ADDR_CATEGORY',
+            label: 'CLASSIF_NAME',
         },
         options: [],
     },
@@ -180,27 +180,32 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         key: 'ISN_REGION',
         title: 'ISN_Регион',
         type: 'dictionary',
-            dictionaryId: 'REGION_CL',
-            dictionaryLink: {
-                pk: 'ISN_NODE',
-                fk: 'ISN_REGION',
-                label: 'CLASSIF_NAME',
-            },
+        dictionaryId: 'REGION_CL',
+        dictionaryLink: {
+            pk: 'ISN_NODE',
+            fk: 'ISN_REGION',
+            label: 'CLASSIF_NAME',
+        },
+    },
+    {
+        key: 'DOP_REC',
+        title: 'Доп. реквизит',
+        type: 'string',
     },
 
 
     ]),
     treeFields: ['CITIZEN_SURNAME'],
-    searchFields: ['CITIZEN_SURNAME',   'CITIZEN_CITY',  'ZIPCODE', ],
-    listFields: ['CITIZEN_SURNAME', ],
-    fullSearchFields: ['CITIZEN_SURNAME',   'CITIZEN_CITY',  'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW'],
+    searchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE'],
+    listFields: ['CITIZEN_SURNAME'],
+    fullSearchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW', 'DOP_REC'],
     quickViewFields: ['CITIZEN_SURNAME', 'DUE_REGION'],
     shortQuickViewFields: [],
     editFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ISN_REGION', 'ZIPCODE', 'CITIZEN_ADDR',
         'ISN_ADDR_CATEGORY', 'PHONE', 'SEX', 'N_PASPORT', 'SERIES', 'GIVEN', 'INN', 'NEW', 'E_MAIL', 'EDS_FLAG',
-        'ENCRYPT_FLAG', 'ID_CERTIFICATE', 'MAIL_FORMAT', 'SNILS', ],
+        'ENCRYPT_FLAG', 'ID_CERTIFICATE', 'MAIL_FORMAT', 'SNILS'],
     /** customize view fields */
-    allVisibleFields: [ 'CITIZEN_CITY', 'DUE_REGION', 'CITIZEN_ADDR', 'ZIPCODE', 'INN', 'SNILS', 'PHONE', 'SEX',
-        'SERIES', 'N_PASPORT', 'GIVEN', 'E_MAIL', 'NOTE', 'NEW' ],
+    allVisibleFields: ['CITIZEN_CITY', 'DUE_REGION', 'CITIZEN_ADDR', 'ZIPCODE', 'INN', 'SNILS', 'PHONE', 'SEX',
+        'SERIES', 'N_PASPORT', 'GIVEN', 'E_MAIL', 'NOTE', 'NEW'],
 };
 /* tslint:enable:max-line-length */

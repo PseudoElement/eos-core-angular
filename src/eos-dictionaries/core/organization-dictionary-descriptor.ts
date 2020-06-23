@@ -13,7 +13,7 @@ const inheritFiields = [
 ];
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
-    organizAr_Descript = [];
+    dopRec = [];
     getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
         const newPreset = {};
         EosUtils.deepUpdate(newPreset, preSetData);
@@ -43,7 +43,6 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
     searchDopRec(criteries: any[]): Promise<any> {
         const vaslues = JSON.parse(criteries[0].DOP_REC);
-        delete criteries[0].DOP_REC;
         const newCriteries = {};
         const critName = 'AR_ORGANIZ_VALUE.' + vaslues.API_NAME;
         let values;
@@ -59,6 +58,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 break;
         }
         Object.assign(newCriteries, criteries[0], {[critName]: values});
+        delete newCriteries['DOP_REC'];
         return this.apiSrv.read({
             ORGANIZ_CL: {
                 criteries: newCriteries
@@ -69,7 +69,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
-        if (!this.organizAr_Descript.length) {
+        if (!this.dopRec.length) {
             this.ar_Descript();
         }
         if (!query) {
@@ -103,7 +103,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 }
             }, expand: 'AR_VALUE_LIST_List'
         }).then(_descript => {
-            this.organizAr_Descript = _descript;
+            this.dopRec = _descript;
         });
     }
 

@@ -940,12 +940,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                     .replace('{{OPERATION}}', 'восстановлены.');
                                 this._msgSrv.addNewMessage(message);
                             });
-                    }   else {
+                    } else {
                         this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
                         this._dictSrv.reload();
                     }
                 });
-            }   else {
+            } else {
                 this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
                 this._dictSrv.reload();
             }
@@ -1350,7 +1350,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                         node.isMarked = true;
                     });
                     this._physicallyDelete(slicedNode);
-                }   else {
+                } else {
                     slicedNode.forEach(node => {
                         node.parent.deleteChild(node);
                         this.dictionary.nodes.delete(node.id);
@@ -1443,6 +1443,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = {
             classif: 'AR_EDITOR',
         };
+        config.id = this.dictionary.id !== 'citizens' ? 'organiz_cl' : 'citizen';
         this._waitClassif.openClassif(config).then(() => { }).catch(e => { console.log(e); });
     }
 

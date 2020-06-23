@@ -89,7 +89,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
     get arDescript(): AR_DESCRIPT[] {
         if (this.dictionary) {
-            return this.dictionary.descriptor['organizAr_Descript'];
+            return this.dictionary.descriptor['dopRec'];
         }
     }
     isActiveButton(): boolean {

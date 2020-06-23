@@ -251,6 +251,7 @@
     width: 100%;
     display: inline-flex;
     align-items: center;
+    padding-top: 10px;
     label{
         font-size: 16px;
     }
@@ -258,6 +259,7 @@
         width: 45%;
         margin-right: 10px;
         margin-top: -5px;
+        position: relative;
     }
 
     .form-group {
@@ -265,6 +267,12 @@
         eos-dynamic-input {
             width: 100%;
         }
+    }
+    .label-dop-rec {
+        font-size: 14px;
+        position: absolute;
+        top: -18px;
+        text-transform: uppercase;
     }
     .dop_rec{
         display: inline-block;
@@ -283,9 +291,7 @@
                     max-height: 500px!important;
                 }
             }
-
         }
-
     }
 }
 
