@@ -208,10 +208,9 @@ export class EosDictionary {
         const nodes = nodeIds.map((id) => this._nodes.get(id))
             .filter((node) => !!node);
 
-        if (updateTree) {
+        if (updateTree || this.id === 'docgroup') {
             this._updateTree(nodes);
         }
-
         return nodes;
     }
 
