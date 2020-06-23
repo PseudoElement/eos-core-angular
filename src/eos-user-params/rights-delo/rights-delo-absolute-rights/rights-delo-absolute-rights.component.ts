@@ -677,6 +677,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this._pushState();
     }
+
+    addIndepRights() {
+        this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
+        this.checkChange();
+    }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
@@ -981,4 +986,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _pushState() {
         this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisabled });
     }
+
+
 }
