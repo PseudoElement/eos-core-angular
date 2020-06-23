@@ -1,3 +1,4 @@
+
 <div class="modal-header">
     <h4 class="modal-title pull-left">Добавление записи</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCreate()">
@@ -5,6 +6,9 @@
     </button>
 </div>
 <div class="create-new-node modal-body">
+    <div *ngIf="upadating" class="independent-wrapper" >
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
     <eos-card-edit
         #cardEditEl
         [dictionaryId]="dictionaryId"
@@ -30,3 +34,4 @@
     </button>
     <button class="btn btn-primary-full" [disabled]="this.upadating" (click)="create(true)">Добавить</button>
 </div>
+
