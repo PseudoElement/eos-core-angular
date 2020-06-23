@@ -332,7 +332,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             return Promise.resolve(null);
         } else {
             if (+this.curentUser.USERTYPE === 0) {
-                return this.createLogin('1234', this._userParamSrv.userContextId);
+                return this.dropLogin().then(() => {
+                    return this.createLogin('1234', this._userParamSrv.userContextId);
+                });
             } else {
                 return this.changePassword('1234', this._userParamSrv.userContextId);
             }
