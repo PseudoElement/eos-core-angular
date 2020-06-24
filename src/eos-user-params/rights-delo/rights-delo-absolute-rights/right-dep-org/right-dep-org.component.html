@@ -19,8 +19,7 @@
                 [disabled]="checkFlag"
                 triggers="hover"
                 containerClass="tooltip-info"
-                (click)="addDep()"
-            >
+                (click)="addDep()">
                 <span class="eos-icon eos-icon-plus-blue small"></span>
             </button>
             <button *ngIf="editMode && !selectedNode.control.disabled"
@@ -53,7 +52,7 @@
              [ngClass]="{'redact-tree': editMode,
              'redact-resolution-tree-top': selectedNode.key === '4' && editMode,
              'redact-tree-top': selectedNode.key !== '4' && editMode}"
-             [ngStyle]="selectedNode.key === '4' && !editMode ? {top: '30px'}: {}">
+             [ngStyle]=" {top: selectedNode.key === '4' && !editMode ? '30px': ''}">
             <div *ngIf="getAllDep">
                 <label class="checkbox" >
                     <input type="checkbox"
