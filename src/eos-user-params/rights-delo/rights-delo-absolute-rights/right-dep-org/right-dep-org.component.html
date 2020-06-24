@@ -1,7 +1,6 @@
 <div class="right-dep-list">
     <div *ngIf="!isLoading; else spiner" class="right-dep-org-list-content">
-        <label *ngIf="editMode" style="text-align: center;">Должность/Подразделение</label>
-        <div *ngIf="getAllDep" class="independents-right" [ngClass]="{'view-right': editMode}">
+        <div *ngIf="getAllDep" class="independents-right">
             <label *ngIf="getAllDep" class="checkbox" >
                 <input type="checkbox"
                        [disabled]="(!editMode || selectedNode.control.disabled)"
@@ -11,6 +10,7 @@
                 Ограничить картотекой Автора
             </label>
         </div>
+        <label *ngIf="editMode" style="text-align: center;">Должность/Подразделение</label>
         <div>
             <button *ngIf="editMode && !selectedNode.control.disabled"
                 class="btn"
