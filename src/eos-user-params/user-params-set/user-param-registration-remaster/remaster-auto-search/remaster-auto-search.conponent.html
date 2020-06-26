@@ -30,7 +30,7 @@
     <div class="user-group-form">
         <div class="sort-link">
             <div class="sort-sp">
-                <span>Сортировать по:</span>
+                <span>Сортировать связки:</span>
             </div>
             <eos-dynamic-input
                 [ngStyle]="{'width': '50%'}"
@@ -59,6 +59,17 @@
                 <!-- <select name="" id=""></select>
                 <select name="" id=""></select> -->
             </div>
+        </div>
+        <div class="sort-link">
+            <div class="sort-sp">
+                <span>Сортировать переписку по регистрационной дате:</span>
+            </div>
+            <eos-dynamic-input
+                [ngStyle]="{'width': '50%'}"
+                [input]="inputs['rec.CORRESPONDENCE_SORT_ORDER']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
         </div>
     </div>
     <div class="set-header bold">

@@ -1528,8 +1528,8 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: 'ORDERNUM', title: 'порядку связок'},
-                {value: 'DOC_DATE', title: 'дате регистрации документа (проекта)'}
+                {value: 'ORDERNUM', title: 'по порядку'},
+                {value: 'DOC_DATE', title: 'по дате регистрации документа (проекта)'}
             ],
             keyPosition: 0,
         },
@@ -1550,6 +1550,16 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
                 {value: '0', title: 'Сначала новые'},
                 {value: '1', title: 'Сначала старые'},
             ]
+        },
+        {
+            key: 'CORRESPONDENCE_SORT_ORDER',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '0', title: 'Сначала новые '},
+                {value: '1', title: 'Сначала старые '}
+            ],
+            keyPosition: 0,
         },
         {
             key: 'DEF_SEARCH_CITIZEN_CITY',
