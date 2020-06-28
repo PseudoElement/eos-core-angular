@@ -221,6 +221,8 @@ export class ParamFielsComponent extends BaseParamComponent {
                         console.log(err);
                     }
                 });
+        } else {
+            this.cancelEdit();
         }
     }
      mesInfoNew() {
