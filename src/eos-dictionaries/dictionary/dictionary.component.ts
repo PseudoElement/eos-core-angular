@@ -1,6 +1,14 @@
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
-import { AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    DoCheck,
+    HostListener,
+    OnDestroy,
+    ViewChild,
+    OnInit
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -380,7 +388,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.ngUnsubscribe.complete();
     }
     getFilterDate($event) {
-        this.filterDate = $event;
+        setTimeout(() => {
+            this.filterDate = $event;
+        }, 0);
     }
     getFilterNomenkl($event) {
         this.filterDateNomenkl = $event;
