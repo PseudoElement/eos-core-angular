@@ -208,10 +208,9 @@ export class EosDictionary {
         const nodes = nodeIds.map((id) => this._nodes.get(id))
             .filter((node) => !!node);
 
-        if (updateTree) {
+        if (updateTree /*|| this.id === 'docgroup'*/) {
             this._updateTree(nodes);
         }
-
         return nodes;
     }
 
@@ -388,6 +387,7 @@ export class EosDictionary {
             .search(criteries)
             .then((data) => {
                 const nodes = this.updateNodes(data, false);
+                this.setVisibleTitleRoot();
                 return Promise.all(nodes);
             });
     }
@@ -559,6 +559,12 @@ export class EosDictionary {
         }
     }
 
+    setVisibleTitleRoot() {
+        this.root.title = this.descriptor.title;
+        this.root.data.rec['DELETED'] = false;
+        this.root.isExpanded = true;
+    }
+
     public orderNodesByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 
@@ -629,11 +635,8 @@ export class EosDictionary {
 
             this.root = rootNode;
         }
-
         /* force set title and visible for root */
-        this.root.title = this.descriptor.title;
-        this.root.data.rec['DELETED'] = false;
-        this.root.isExpanded = true;
+        this.setVisibleTitleRoot();
 
         nodes.forEach((node) => {
             if (!node.parent && node !== this.root) {
