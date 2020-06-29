@@ -35,9 +35,11 @@ export class ListSelectorFormComponent implements OnDestroy {
     public title: string = '';
     public availableList: SelectorListItem[] = [];
     public currentList: SelectorListItem[] = [];
+    public bufferAvailableList: SelectorListItem[] = [];
     public showKeys: false;
-
+    public withDel: boolean = false;
     private subscriptions: Subscription[] = [];
+
 
 
     constructor (
@@ -103,6 +105,8 @@ export class ListSelectorFormComponent implements OnDestroy {
 
 
     }
+
+
     static showModal(title: string, availableList: SelectorListItem[], currentList: SelectorListItem[]): ListSelectorFormComponent {
         const modalSrv = InjectorInstance.get(BsModalService);
         const templateModal = modalSrv.show(ListSelectorFormComponent, {
@@ -113,6 +117,7 @@ export class ListSelectorFormComponent implements OnDestroy {
 
         const modalObj = <ListSelectorFormComponent>templateModal.content;
         modalObj.availableList = availableList;
+        modalObj.bufferAvailableList = availableList;
         modalObj.currentList = currentList;
         modalObj.title = title,
         // modalObj.forProject = forProject;
@@ -167,4 +172,12 @@ export class ListSelectorFormComponent implements OnDestroy {
 
     b1() { }
     b2() { }
+
+    deletedWith() {
+        this.withDel = !this.withDel;
+    }
+
+    search(value: string) {
+        this.availableList = this.bufferAvailableList.filter((item) => item.title.toLowerCase().includes(value.toLowerCase()));
+    }
 }
