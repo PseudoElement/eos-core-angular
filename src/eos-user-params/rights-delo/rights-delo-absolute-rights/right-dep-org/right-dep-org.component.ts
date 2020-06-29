@@ -21,6 +21,7 @@ export class RightOrganizDepertComponent implements OnInit {
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() listRigth: NodeAbsoluteRight[];
     @Input() curentUser: IParamUserCl;
+    @Input() rights: boolean = false;
     @Output() Changed = new EventEmitter();
     @Output() createRcpdD = new EventEmitter();
     @Output() emitDeletedRc = new EventEmitter();
@@ -36,7 +37,7 @@ export class RightOrganizDepertComponent implements OnInit {
     isShell: Boolean = false;
     selectedDep: NodeDocsTree;
     checkFlag: boolean = false;
-    rights: boolean = false;
+
     constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
@@ -47,8 +48,6 @@ export class RightOrganizDepertComponent implements OnInit {
     ) {
     }
     ngOnInit() {
-        this.rights = !!+this.curentUser['DELO_RIGHTS'].split('')[26];
-        this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
             this.massMy = this._storageSrv.getItem('abs_prav_mas');
         }
@@ -459,7 +458,6 @@ export class RightOrganizDepertComponent implements OnInit {
 
 
     indepRights() {
-        this.rights = !this.rights;
         this.independetRight.emit();
     }
 
