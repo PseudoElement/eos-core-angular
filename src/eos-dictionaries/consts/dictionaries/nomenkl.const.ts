@@ -128,9 +128,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     //     default: null,
     //     // isNoDBInput: true,
     },
-        Object.assign({}, COMMON_FIELD_ICONS, {
-            title: '',
-        }),
+        COMMON_FIELD_ICONS,
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
             length: 2000,

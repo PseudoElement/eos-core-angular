@@ -62,7 +62,7 @@ export class NodeFieldComponent implements OnInit {
             if (this.node.data.rec['CLOSED'] === 1) {
                 this.iconsArray.push({
                     class: 'eos-icon-deal-close-blue',
-                    tooltip: 'Начальник',
+                    tooltip: 'Закрыто',
                 });
             }
 
