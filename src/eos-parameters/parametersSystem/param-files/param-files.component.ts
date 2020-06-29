@@ -221,6 +221,8 @@ export class ParamFielsComponent extends BaseParamComponent {
                         console.log(err);
                     }
                 });
+        } else {
+            this.cancelEdit();
         }
     }
      mesInfoNew() {
@@ -343,12 +345,19 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.paramApiSrv
                 .setData(dataRes)
                 .then(data => {
-                    if (this.newData) {
-                        this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    }
-                    if (this.newDataAttach) {
-                        this.newDataAttach.rec = Object.assign({}, this.newDataAttach.rec);
-                    }
+                    this.formAttach.reset();
+                    this.ngOnDestroy();
+                    this.init()
+                    .then(() => {
+                        // b-119380
+                        this.updateFormInput();
+                        this.afterInit();
+                    })
+                    .catch(err => {
+                        if (err.code !== 434) {
+                            console.log(err);
+                        }
+                    });
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 .catch(data => {
