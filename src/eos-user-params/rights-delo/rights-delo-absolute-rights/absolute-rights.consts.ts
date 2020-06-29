@@ -48,15 +48,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         }
     },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 5
-        key: '26',
-        label: 'Ввод резолюций не ограничен картотекой автора',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 5
+    //     key: '26',
+    //     label: 'Ввод резолюций не ограничен картотекой автора',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
     {
         controlType: E_FIELD_TYPE.boolean, // отобразить чекбокс Разрешить операцию рассылки проекта резолюции
         key: '22',

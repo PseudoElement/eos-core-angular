@@ -1,5 +1,15 @@
 <div class="right-dep-list">
     <div *ngIf="!isLoading; else spiner" class="right-dep-org-list-content">
+        <div *ngIf="getAllDep" class="independents-right">
+            <label *ngIf="getAllDep" class="checkbox" >
+                <input type="checkbox"
+                       [disabled]="(!editMode || selectedNode.control.disabled)"
+                       [checked]="!rights"
+                       (change)="indepRights()">
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                Ограничить картотекой Автора
+            </label>
+        </div>
         <label *ngIf="editMode" style="text-align: center;">Должность/Подразделение</label>
         <div>
             <button *ngIf="editMode && !selectedNode.control.disabled"
@@ -9,8 +19,7 @@
                 [disabled]="checkFlag"
                 triggers="hover"
                 containerClass="tooltip-info"
-                (click)="addDep()"
-            >
+                (click)="addDep()">
                 <span class="eos-icon eos-icon-plus-blue small"></span>
             </button>
             <button *ngIf="editMode && !selectedNode.control.disabled"
@@ -27,9 +36,8 @@
             </button>
         </div>
 
-        
 
-        <div *ngIf="selectedNode && selectedNode.contentProp === 8">
+        <div *ngIf="selectedNode   && selectedNode.contentProp === 8">
             <label class="checkbox">
                 <input type="checkbox"
                 [disabled]="!editMode || selectedNode.control.disabled"
@@ -40,7 +48,11 @@
                 Разрешить операцию рассылки проекта резолюции
             </label>
         </div>
-        <div class="over-tree-dep" [ngClass]="{'redact-tree': editMode}">
+        <div class="over-tree-dep resolution"
+             [ngClass]="{'redact-tree': editMode,
+             'redact-resolution-tree-top': selectedNode.key === '4' && editMode,
+             'redact-tree-top': selectedNode.key !== '4' && editMode}"
+             [ngStyle]=" {top: selectedNode.key === '4' && !editMode ? '30px': ''}">
             <div *ngIf="getAllDep">
                 <label class="checkbox" >
                     <input type="checkbox"
@@ -52,7 +64,7 @@
                     За всех
                 </label>
             </div>
-    
+
             <div *ngIf="!checkFlag" class="list-tree-dep">
                 <eos-list-doc-tree
                     class="tree-classif-node"

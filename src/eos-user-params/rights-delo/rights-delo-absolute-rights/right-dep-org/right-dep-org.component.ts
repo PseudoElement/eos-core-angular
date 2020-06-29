@@ -24,6 +24,7 @@ export class RightOrganizDepertComponent implements OnInit {
     @Output() Changed = new EventEmitter();
     @Output() createRcpdD = new EventEmitter();
     @Output() emitDeletedRc = new EventEmitter();
+    @Output() independetRight = new EventEmitter();
 
     isLoading: boolean = false;
     massMy: USERDEP[] = [];
@@ -35,6 +36,7 @@ export class RightOrganizDepertComponent implements OnInit {
     isShell: Boolean = false;
     selectedDep: NodeDocsTree;
     checkFlag: boolean = false;
+    rights: boolean = false;
     constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
@@ -45,6 +47,7 @@ export class RightOrganizDepertComponent implements OnInit {
     ) {
     }
     ngOnInit() {
+        this.rights = !!+this.curentUser['DELO_RIGHTS'].split('')[26];
         this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
             this.massMy = this._storageSrv.getItem('abs_prav_mas');
@@ -452,6 +455,12 @@ export class RightOrganizDepertComponent implements OnInit {
         this.massMy = [];
         this._storageSrv.removeItem('abs_prav_mas');
         this.Changed.emit();
+    }
+
+
+    indepRights() {
+        this.rights = !this.rights;
+        this.independetRight.emit();
     }
 
     private _getMaxWeight(): number {

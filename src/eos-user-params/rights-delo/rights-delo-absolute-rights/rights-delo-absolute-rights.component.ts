@@ -440,6 +440,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._deleteAllDep(item);
                 if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
                     this._deleteAllOrg(item);
+                    if (item.key === '4') {
+                        this.arrNEWDeloRight[26] = '0';
+                    }
                 }
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
@@ -676,6 +679,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.btnDisabled = false;
         }
         this._pushState();
+    }
+
+    addIndepRights() {
+        this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
+        this.checkChange();
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
@@ -981,4 +989,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _pushState() {
         this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisabled });
     }
+
+
 }
