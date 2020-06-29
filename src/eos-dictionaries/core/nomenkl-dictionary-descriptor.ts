@@ -216,7 +216,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
             const nodesafterChecked = { closed: [], deleted: [], oldClosed: [] };
             selectedNode.forEach((node: EosDictionaryNode) => {
                 const query = this.canChangeClassifRequest(node.id).then(val => {
-                    if (val === 'DELO_EXISTS') {
+                    if (val === 'DELO_EXISTS' || val === 'DOC_RC_EXISTS' || val === 'PRJ_RC_EXISTS') {
                         if (node.data.rec.CLOSED) {
                             node.isMarked = false;
                             nodesafterChecked.oldClosed.push(node);
