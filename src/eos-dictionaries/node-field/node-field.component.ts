@@ -129,7 +129,6 @@ export class NodeFieldComponent implements OnInit {
     }
 
     public getFolderIcon() {
-        console.log(1);
         if (this.node.isNode) {
             if (this.node.isDeleted) {
                     return 'eos-icon-folder-grey';
