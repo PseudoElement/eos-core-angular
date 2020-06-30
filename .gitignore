@@ -29,3 +29,4 @@ debug.log
 !gulpfile.js
 remote-profile/*
 src/app/app.config.local.ts
+.tfignore

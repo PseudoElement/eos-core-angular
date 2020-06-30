@@ -23,6 +23,13 @@ $bgButtonSave: #E4DFD2;
     padding: 2px 10px;
     background-color: $bgHeaderForm;
     font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+@mixin reset-style-title-bookmarks {
+    background-color: initial !important;
+    font-weight: initial !important;
 }
 
 @mixin style-other-button {
@@ -33,6 +40,7 @@ $bgButtonSave: #E4DFD2;
     span.eos-icon-folder-blue {
         height: 23px;
         width: 23px;
+        margin-bottom: 0;
         background-image: url("assets/icons/Icon-Add-UserSettings.svg");
         background-size: 23px 21px;
         background-repeat: no-repeat;
@@ -42,6 +50,7 @@ $bgButtonSave: #E4DFD2;
     span.eos-icon-close-blue {
         height: 23px;
         width: 23px;
+        margin-bottom: 0;
         background-image: url("assets/icons/Icon-Delete-UserSettings.svg");
         background-size: 23px 21px;
         background-repeat: no-repeat;
@@ -54,6 +63,28 @@ $bgButtonSave: #E4DFD2;
     position: absolute;
     width: 100%;
     border-top: 1px solid $bgButton;
+}
+
+@mixin style-arrow-button {
+    content: "";
+    width: 16px;
+    height: 15px;
+    background-image: url("assets/icons/Counter-UserSettings.svg");
+    background-repeat: no-repeat;
+}
+
+@mixin set-margin-for-dynamic-ipnputs {
+    &>eos-dynamic-input {
+        margin-left: 20px;
+
+        &:first-of-type {
+            margin-top: 15px;
+        }
+
+        &:last-of-type {
+            margin-bottom: 15px;
+        }
+    }
 }
 
 //скрываем номер сборки
@@ -266,148 +297,140 @@ $bgButtonSave: #E4DFD2;
             }
 
             /* инпуты, чекбоксы, выпадаки */
-            eos-dynamic-input {
+            div.user-group-form,
+            div.form-group {
+                @include set-margin-for-dynamic-ipnputs;
 
-                &:not(.incr-scan) {
-                    width: 100%;
-                }
+                eos-dynamic-input {
+                    &:not(.incr-scan) {
+                        width: 100%;
+                    }
 
-                div.form-group {
-                    margin: 0;
-                }
+                    div.form-group {
+                        margin: 0;
+                    }
 
-                &:first-of-type div.form-group {
-                    margin-top: 15px;
-                }
+                    &-checkbox {
+                        &>div {
+                            //margin: 0 20px;
 
-                &:last-of-type div.form-group {
-                    margin-bottom: 15px;
-                }
-
-                &-checkbox {
-                    &>div {
-                        margin-left: 20px;
-
-                        label.checkbox {
-                            height: 22px;
-                            line-height: initial;
-                            margin: 5px 0 !important;
-
-                            input[type="checkbox"]+span {
-                                margin: 0 8px 0 0;
+                            label.checkbox {
+                                height: 22px;
                                 line-height: initial;
-                                background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
-                                @include settings-icon;
-                            }
+                                margin: 0 !important;
 
-                            input[type="checkbox"]:checked+span {
-                                margin: 0 8px 0 0;
-                                line-height: initial;
-                                background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
-                                @include settings-icon;
-                            }
-                        }
-                    }
-                }
-
-                &-radio {
-                    &>div {
-                        margin-left: 20px;
-
-                        label.radio {
-                            height: 22px;
-                            line-height: initial;
-                            margin: 5px 0 !important;
-
-                            input[type="radio"]+span {
-                                margin: 0 5px 0 0;
-                                line-height: initial;
-                                background-image: url("assets/icons/Radio-UserSettings-Black.svg");
-                                @include settings-icon;
-                            }
-
-                            input[type="radio"]:checked+span {
-                                margin: 0 5px 0 0;
-                                line-height: initial;
-                                background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
-                                @include settings-icon;
-                            }
-                        }
-                    }
-                }
-
-                &-select2 {
-                    input.text-input-select2.form-control {
-                        height: 24px;
-                        min-height: 24px;
-                        padding: 2px 8px;
-                        background: $bgInitial;
-                        border: 1px solid #676869;
-                    }
-                    
-                    div.inbutton {
-                        top: 2px;
-                    }
-
-                    span.eos-icon-checkbox-blue {
-                        background-image: url("assets/icons/Checkbox-UserSettings-Grey.svg");
-                    }
-
-                    span.eos-icon-arrow-v-blue-bottom {
-                        background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
-                    }
-                }
-
-                &-increment-number {
-                    div.input-increment-inline-block {
-                        width: 50px;
-                        min-width: 50px;
-
-                        div.input-increment {
-                            min-width: inherit;
-                            padding: 0;
-
-                            input {
-                                padding: 0 0 3px 6px;
-                            }
-                            
-                            span {
-                                &.decrease {
-                                    top: -7px;
-                                    right: -6px;
-
-                                    &:before {
-                                        content: "";
-                                        width: 16px;
-                                        height: 12px;
-                                        background-image: url("assets/icons/Counter-UserSettings.svg");
-                                        background-repeat: no-repeat;
-                                        background-size: cover;
-                                    }
+                                input[type="checkbox"]+span {
+                                    margin: 0 8px 0 0;
+                                    line-height: initial;
+                                    background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
+                                    @include settings-icon;
                                 }
 
-                                &.increase {
-                                    top: 4px;
-                                    right: -7px;
+                                input[type="checkbox"]:checked+span {
+                                    margin: 0 8px 0 0;
+                                    line-height: initial;
+                                    background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
+                                    @include settings-icon;
+                                }
+                            }
+                        }
+                    }
 
-                                    &:before {
-                                        content: "";
-                                        width: 16px;
-                                        height: 12px;
-                                        background-image: url("assets/icons/Counter-UserSettings.svg");
-                                        background-repeat: no-repeat;
-                                        background-size: cover;
-                                        transform: rotate(180deg);
+                    &-radio {
+                        &>div {
+                            //margin: 15px 20px;
+
+                            label.radio {
+                                height: 22px;
+                                line-height: initial;
+                                margin: 0 !important;
+
+                                input[type="radio"]+span {
+                                    margin: 0 5px 0 0;
+                                    line-height: initial;
+                                    background-image: url("assets/icons/Radio-UserSettings-Black.svg");
+                                    @include settings-icon;
+                                }
+
+                                input[type="radio"]:checked+span {
+                                    margin: 0 5px 0 0;
+                                    line-height: initial;
+                                    background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
+                                    @include settings-icon;
+                                }
+                            }
+                        }
+                    }
+
+                    &-select2 {
+                        input.text-input-select2.form-control {
+                            height: 24px;
+                            min-height: 24px;
+                            padding: 2px 8px;
+                            background: $bgInitial;
+                            border: 1px solid #676869;
+                        }
+
+                        div.inbutton {
+                            top: 2px;
+                        }
+
+                        span.eos-icon-checkbox-blue {
+                            background-image: url("assets/icons/Checkbox-UserSettings-Grey.svg");
+                        }
+
+                        span.eos-icon-arrow-v-blue-bottom {
+                            background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+                        }
+                    }
+
+                    &-increment-number {
+                        div.input-increment-inline-block {
+                            width: 50px;
+                            min-width: 50px;
+
+                            div.input-increment {
+                                min-width: inherit;
+                                padding: 0;
+
+                                input {
+                                    padding: 0 0 2px 6px;
+                                }
+
+                                span {
+                                    &.decrease {
+                                        top: 0px;
+                                        right: -7px;
+
+                                        &:before {
+                                            @include style-arrow-button;
+                                            transform: rotate(180deg);
+                                        }
+                                    }
+
+                                    &.increase {
+                                        top: -7px;
+                                        right: -7px;
+
+                                        &:before {
+                                            @include style-arrow-button;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                &-string {
-                    input {
-                        background-color: $bgInitial;
+                    &-string {
+                        label {
+                            display: none;
+                        }
+
+                        input.form-control {
+                            height: 24px;
+                            min-height: initial;
+                            background-color: $bgInitial;
+                        }
                     }
                 }
             }
@@ -446,6 +469,18 @@ $bgButtonSave: #E4DFD2;
         //вкладка Регистрация
         eos-registration-remaster {
             .user-param-registration-content-wrapper {
+                eos-dop-operation {
+                    &>div.user-group-form {
+
+                        &:nth-child(3),
+                        &:nth-child(4) {
+                            div.inputs-inline {
+                                @include set-margin-for-dynamic-ipnputs;
+                            }
+                        }
+                    }
+                }
+
                 eos-remaster-addresses {
                     div.user-input-group {
                         position: relative;
@@ -471,7 +506,7 @@ $bgButtonSave: #E4DFD2;
                         }
 
                         &::before {
-                            @include style-horizontal-line; 
+                            @include style-horizontal-line;
                             top: -10px;
                         }
                     }
@@ -482,11 +517,11 @@ $bgButtonSave: #E4DFD2;
                         &:first-child {
                             .inputs-inline {
                                 position: relative;
-                                
+
                                 &>span {
                                     @include style-title-bookmarks;
                                 }
-                                
+
                                 eos-dynamic-input-radio div {
                                     display: flex;
                                     flex-direction: column;
@@ -498,8 +533,14 @@ $bgButtonSave: #E4DFD2;
 
                                 eos-dynamic-input.incr-scan {
                                     position: absolute;
-                                    top: 93px;
-                                    left: 155px;
+                                    top: 70px;
+                                    left: 140px;
+                                }
+
+                                div.incr-scan {
+                                    position: absolute;
+                                    top: 80px;
+                                    left: 215px;
                                 }
                             }
                         }
@@ -511,24 +552,29 @@ $bgButtonSave: #E4DFD2;
 
                             /* выпадающий список */
                             div.radio-form-list {
+                                flex-direction: column;
                                 margin: -10px 0 15px 20px;
-                                
-                                >div {
-                                   display: flex;
-                                   align-items: baseline;
-                                   width: 450px !important;
-                                   margin: 5px 0;
-    
-                                   div.type-scan-sp {
-                                       width: 70px;
-                                       min-width: 70px;
-                                       margin-right: 5px;
-                                       text-align: right;
-                                   }
 
-                                   eos-dynamic-input div.form-group {
-                                       margin: 0;
-                                   }
+                                >div {
+                                    display: flex;
+                                    align-items: baseline;
+                                    width: 450px !important;
+                                    margin: 5px 0;
+
+                                    div.type-scan-sp {
+                                        width: 70px;
+                                        min-width: 70px;
+                                        margin-right: 5px;
+                                        text-align: right;
+                                    }
+
+                                    eos-dynamic-input {
+                                        margin: 0;
+
+                                        div.form-group {
+                                            margin: 0;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -550,65 +596,126 @@ $bgButtonSave: #E4DFD2;
                                 text-align: right;
                             }
 
-                            eos-dynamic-input div.form-group {
-                                width: 315px;
+                            eos-dynamic-input {
                                 margin: 0;
 
-                                input.form-control {
-                                    height: 30px;
-                                }
+                                div.form-group {
+                                    width: 315px;
+                                    margin: 0;
 
-                                div.inbutton {
-                                    top: 5px;
+                                    input.form-control {
+                                        height: 30px;
+                                    }
+
+                                    div.inbutton {
+                                        top: 5px;
+                                    }
                                 }
                             }
 
                             &::before {
-                                @include style-horizontal-line; 
+                                @include style-horizontal-line;
                                 top: -20px;
-                            }
-
-                            &::after {
-                                @include style-horizontal-line; 
-                                bottom: -55px;
                             }
                         }
                     }
+
+                    div>eos-dynamic-input {
+                        margin: 10px 20px;
+                    }
                 }
 
-                eos-auto-search .rem-auto-search {
+                eos-auto-search {
                     div.user-group-form {
-                        div.sort-link {
-                            position: relative;
-                            height: 90px;
-                            flex-direction: column;
+                        &:nth-child(2) {
+                            &>div {
+                                margin-top: 20px;
+                                margin-left: 20px;
+                            }
+                        }
 
-                            eos-dynamic-input-radio>div {
+                        &:nth-child(3) {
+                            &>div.sort-link {
+                                display: block;
+                                position: relative;
+
+                                .sort-sp {
+                                    margin: 0 0 10px 20px;
+                                }
+
+                                eos-dynamic-input {
+                                    margin-left: 20px;
+                                }
+
+                                div.flex-column {
+                                    position: relative;
+                                    bottom: 40px;
+                                    left: 315px;
+                                    width: 50%;
+                                }
+                            }
+                        }
+
+                        &:nth-child(5) {
+                            padding: 15px 20px;
+
+                            div.inputs-inline {
                                 display: flex;
-                                flex-direction: column;
+
+                                &>span {
+                                    margin-right: 10px;
+                                }
                             }
 
-                            div.flex-column {
-                                position: absolute;
-                                top: 30px;
-                                left: 350px;
+                            div.right-input-pos {
+                                justify-content: initial;
+                                margin-right: 0;
+
+                                &:nth-child(3) {
+                                    margin-left: calc(100% - 420px);
+                                }
+
+                                &:nth-child(4) {
+                                    &>eos-dynamic-input {
+                                        width: 477px !important;
+                                    }
+                                }
+                            }
+
+                            &>eos-dynamic-input {
+                                margin: 0;
                             }
                         }
 
-                        div.inputs-inline,
-                        div.right-input-pos {
-                            justify-content: flex-start;
-                            align-items: baseline;
+                        ul.search-citizens-in-the-directory-by-fields-radio {
+                            padding-left: 20px;
 
-                            &>span {
-                                width: 195px;
-                                margin-right: 10px;
-                                text-align: right;
+                            eos-dynamic-input:last-child {
+                                margin: 0;
                             }
-                        }
 
-                        div.inputs-inline {
-                            display: flex;
+                            li {
+                                margin-top: 15px;
+
+                                &:nth-child(5) {
+                                    div.def_search_citizen {
+                                        margin-left: 104px;
+
+                                        div.elem-input-radio:first-child {
+                                            margin-right: 40px;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            div.def_search_citizen {
+                                margin-left: 0;
+
+                                div.elem-input-radio:first-of-type {
+                                    margin-right: 13px;
+                                }
+                            }
                         }
                     }
                 }
@@ -804,44 +911,83 @@ $bgButtonSave: #E4DFD2;
         //вкладка Визуализация
         .input-user-visualization-wrapper {
             span.l-font {
-                font-weight: bold;
+                @include style-title-bookmarks;
+                margin-bottom: 20px;
+            }
+
+            hr {
+                display: none;
             }
 
             div.eos-select2 {
-                width: 300px;
+                width: 500px;
+                margin: 0 10px;
             }
         }
 
         //вкладка Десктопное приложение
-        div {
-            &.ext-app {
+        eos-user-param-external-application {
+            .ext-app {
                 div.titles-external-application {
-                    margin-bottom: 10px;
+                    width: 100%;
+                    background-color: #F1eee8;
+                    margin-bottom: 20px;
 
-                    span.inscription-application-call-string {
-                        padding: 10px;
-                    }
+                    span {
+                        padding-left: 10px;
+                        color: $textMainColor;
+                        font-size: 14px;
+                        font-weight: bold;
 
-                    span.inscription-call-options {
-                        padding: 0 0 0 53%;
+                        &:last-child {
+                            padding-left: 42%;
+                        }
                     }
+                }  
+                
+                label {
+                    padding-left: 10px;
                 }
 
                 div.user-input-group {
-                    margin-bottom: 15px;
+                    eos-dynamic-input {
+                        &:first-child {
+                            padding-left: 10px;
+                        }
+
+                        &:last-child {
+                            width: 35%;
+                        }
+                    }
                 }
             }
 
-            &.input-user-directories-wrapper {
+            .input-user-directories-wrapper {
                 .inputs-inline {
                     display: flex;
                     justify-content: flex-start;
                     align-items: baseline;
-                    margin-bottom: 25px;
+                    margin-bottom: 15px;
+
+                    span.input-title {
+                        padding-left: 20px;
+                        flex-basis: 1100px;
+                    }
                 }
 
-                &>div>span {
-                    @include style-title-bookmarks;
+                &>div:not(.user-group-form) {
+                    &>span {
+                        @include style-title-bookmarks;
+                    }
+
+                    eos-dynamic-input {
+                        padding-left: 20px;
+
+                        &-radio>div {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                    }
                 }
             }
         }
@@ -850,7 +996,7 @@ $bgButtonSave: #E4DFD2;
         .user-param-other-content-wrapper {
 
             eos-dynamic-input {
-                padding-top: 5px;
+                padding-top: 0;
 
                 div.elem-input-radio {
                     height: 20px;
@@ -872,101 +1018,163 @@ $bgButtonSave: #E4DFD2;
                         margin-left: 0;
                     }
 
-                    &>div.user-group-form:nth-child(2)>eos-dynamic-input {
-                        height: 70px;
-                    }
 
-                    &>div.user-group-form:nth-child(3)>eos-dynamic-input {
-                        height: 85px;
-                    }
                 }
             }
 
             eos-user-param-addresses {
                 &>div {
-                    // height: 75vh;
-                    padding-right: 25px;
+                    position: relative;
 
                     &>div:first-child>span {
-                        font-weight: bold;
+                        @include style-title-bookmarks;
                     }
 
                     &>div:nth-child(2) {
-                        margin-top: 0;
+                        margin-bottom: 20px;
+
+                        &>span {
+                            @include reset-style-title-bookmarks;
+                            margin-bottom: 20px;
+                        }
+
+                        br {
+                            display: none;
+                        }
 
                         div.inputs-inline {
                             display: flex;
                             align-items: baseline;
                             padding-left: 10px;
+
+                            &>span {
+                                margin-right: 10px;
+                            }
                         }
                     }
 
                     &>div:nth-child(3) {
+                        &>p {
+                            @include style-title-bookmarks;
+                        }
+
+                        &>span {
+                            @include reset-style-title-bookmarks;
+                            margin-bottom: 0 !important;
+                        }
+                    }
+
+                    div.user-input-group {
+                        padding-left: 10px;
+
                         eos-dynamic-input {
-                            height: 90px;
+                            &:nth-child(2) {
+                                height: 45px;
+                            }
+
+                            &:last-child {
+                                padding-left: 10px;
+                            }
+                        }
+
+                        div.form-group {
+                            margin-bottom: 0;
+                        }
+
+                        &::after {
+                            @include style-horizontal-line;
+                            bottom: 250px;
                         }
                     }
 
                     &>div:nth-child(n+3)>span {
                         @include style-title-bookmarks;
+                        margin-bottom: 15px;
                     }
                 }
             }
 
             eos-user-param-reestr {
                 &>div {
-                    // height: 75vh;
-                    padding-right: 25px;
 
-                    &>div:first-child {
-                        height: 75px;
-                        margin-left: 0;
+                    br {
+                        display: none;
                     }
 
-                    &>div.user-input-group:nth-of-type(3) {
-                        height: 100px;
-
-                        eos-dynamic-input:last-child {
-                            margin-top: 45px;
-                        }
+                    div.user-input-group>span,
+                    div.user-content-wr>span {
+                        @include style-title-bookmarks;
                     }
 
-                    div.user-group-form>div {
-                        display: flex;
-                        align-items: baseline;
+                    div.user-input-group:not(.fl) {
+                        &:nth-child(2) {
+                            position: relative;
+                            padding-left: 10px;
+                            margin-bottom: 20px;
 
-                        &>span {
-                            width: 330px;
-                            text-align: right;
+                            div.form-group {
+                                margin-bottom: 0 !important;
+                            }
+
+                            &::before {
+                                @include style-horizontal-line;
+                                bottom: 70px;
+                            }
                         }
 
-                        eos-dynamic-input {
-                            margin-left: 0 !important;
+                        &:nth-child(4) {
+                            eos-dynamic-input {
+                                padding-left: 10px;
+
+                                &:first-of-type {
+                                    padding-top: 15px;
+
+                                    div.form-group {
+                                        margin-bottom: 5px;
+                                    }
+                                }
+                            }
+
+                            br {
+                                display: none;
+                            }
                         }
+
                     }
 
-                    &>div.user-input-group,
-                    div.user-content-wr {
-                        &>span {
-                            @include style-title-bookmarks;
-                        }
-                    }
+                    div.user-group-form:nth-child(6) {
+                        margin-bottom: 20px;
 
-                    div.user-content-wr {
-                        span {
+                        div.inputs-inline {
+                            display: flex;
                             margin-bottom: 10px;
-                        }
 
+                            span {
+                                width: 520px;
+                                text-align: right;
+                            }
+
+                            eos-dynamic-input {
+                                margin-left: 0 !important;
+
+                                div.form-group {
+                                    margin-left: 10px;
+                                }
+                            }
+                        }
+                    }
+
+                    div.user-content-wr {
                         div.user-input-group {
                             position: relative;
                             justify-content: flex-end;
 
                             &-wr {
                                 position: absolute;
-                                top: 50px;
+                                top: 30px;
                                 background-color: $bgInitial;
                                 border: 1px solid $borderTab;
-
+                                height: 105px;
                             }
 
                             button {
@@ -979,35 +1187,70 @@ $bgButtonSave: #E4DFD2;
         }
 
         //вкладка Шаблоны
-        &>div.table-wrapper {
-            width: initial;
-            margin-left: 108px;
+        eos-user-param-shablony {
+            div.table-wrapper {
+                width: inherit !important;
+                border-style: none;
 
-            div.table-header {
-                div.header-cust-other {
-                    width: 100%;
+                .table-header {
+                    height: 24px;
+                    min-height: 24px;
+                    line-height: initial;
+                    margin-bottom: 20px;
 
-                    span.selected-text {
-                        color: $textMainColor;
-                        font-weight: bold;
+                    &-content {
+                        padding: 0 10px;
+                        background-color: #F1eee8;
                     }
 
-                    div:nth-child(2) {
-                        width: 13%;
-                    }
+                    .header-cust-other {
+                        padding: 0;
+                        width: 100%;
 
-                    div:last-child {
-                        width: 24%;
+                        span.text {
+                            color: $textMainColor;
+                            font-size: 14px;
+                            font-weight: bold;
+                        }
+
+                        div.l-font {
+                            flex-basis: 30%;
+
+                            &:nth-child(2) {
+                                margin: 0 20px;
+                            }
+
+                            &:last-of-type {
+                                flex-basis: 40%;
+                            }
+                        }
                     }
                 }
-            }
 
-            div.eos-template-list {
-                // max-height: calc(100vh - 215px);
+                .eos-template-list {
+                    max-height: calc(100vh - 190px);
+                    padding: 0 10px;
 
-                eos-dynamic-input-string {
-                    div.dynamic-input-wrapper input {
-                        background-color: $bgInitial;
+                    div.template-list-wrapper {
+                        margin-bottom: 20px;
+
+                        span {
+                            flex-basis: 30%;
+                            padding: 0;
+
+                            &:nth-child(2) {
+                                margin: 0 20px;
+                            }
+                        }
+
+                        eos-dynamic-input.temlate_list_item {
+                            flex-basis: 40%;
+                            padding-left: 10px;
+
+                            div.form-group {
+                                margin: 0;
+                            }
+                        }
                     }
                 }
             }
