@@ -386,8 +386,8 @@ export class EosDictionary {
         return this.descriptor
             .search(criteries)
             .then((data) => {
-                const nodes = this.updateNodes(data, false);
-                this.setVisibleTitleRoot();
+                const nodes = this.updateNodes(data, true);
+                // this.setVisibleTitleRoot();
                 return Promise.all(nodes);
             });
     }
