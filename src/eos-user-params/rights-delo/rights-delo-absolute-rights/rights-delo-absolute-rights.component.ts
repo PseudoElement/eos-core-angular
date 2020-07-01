@@ -49,6 +49,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     limitUserTech: boolean;
     flagDel: boolean = false;
     groupDelRK = [];
+    rights: number;
     public editMode: boolean = false;
     get titleHeader() {
         if (this.curentUser) {
@@ -438,11 +439,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
             ) {
                 this._deleteAllDep(item);
+                if (item.key === '4') {
+                    this.arrNEWDeloRight[26] = '0';
+                    this.rights = +this.arrNEWDeloRight[26];
+                }
                 if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
                     this._deleteAllOrg(item);
-                    if (item.key === '4') {
-                        this.arrNEWDeloRight[26] = '0';
-                    }
+
                 }
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
@@ -684,6 +687,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     addIndepRights() {
         this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
         this.checkChange();
+        this.rights = +this.arrNEWDeloRight[26];
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
