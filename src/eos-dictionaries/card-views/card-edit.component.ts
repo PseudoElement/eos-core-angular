@@ -8,7 +8,6 @@ import {
     OnDestroy,
     SimpleChanges,
     HostListener,
-    AfterViewInit, ChangeDetectorRef
 } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
@@ -31,7 +30,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
     selector: 'eos-card-edit',
     templateUrl: 'card-edit.component.html'
 })
-export class CardEditComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class CardEditComponent implements OnChanges, OnDestroy {
     @Input() dictionaryId: string;
     @Input() data: any;
     @Input() editMode: boolean;
@@ -60,7 +59,6 @@ export class CardEditComponent implements OnChanges, OnDestroy, AfterViewInit {
         private _rulesSrv: EosSevRulesService,
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
-        private _cdr: ChangeDetectorRef,
     ) {
         this.subscriptions = [];
     }
@@ -156,16 +154,15 @@ export class CardEditComponent implements OnChanges, OnDestroy, AfterViewInit {
     }
 
     getCardTitle(): any {
-        this._cdr.detectChanges();
-        if (this.baseCardEditRef) {
-            return this.baseCardEditRef.getCardTitle();
-        }
-        return '';
+        setTimeout(() => {
+            if (this.baseCardEditRef) {
+                return this.baseCardEditRef.getCardTitle();
+            }
+            return '';
+        }, 0);
     }
 
-    ngAfterViewInit() {
-        this._cdr.detach();
-    }
+
     afterGetForm(inputs: any): any {
         if (this.dictionaryId === RUBRICATOR_DICT.id) {
             const input = inputs['rec.CLASSIF_NAME'];
