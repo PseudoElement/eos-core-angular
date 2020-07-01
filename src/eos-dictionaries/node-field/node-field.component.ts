@@ -59,6 +59,12 @@ export class NodeFieldComponent implements OnInit {
                     tooltip: 'Начальник',
                 });
             }
+            if (this.node.data.rec['CLOSED'] === 1) {
+                this.iconsArray.push({
+                    class: 'eos-icon-deal-close-blue',
+                    tooltip: 'Закрыто',
+                });
+            }
 
 
         } else if (this.field.type === E_FIELD_TYPE.icon_sev) {
@@ -130,6 +136,7 @@ export class NodeFieldComponent implements OnInit {
                     return 'eos-icon-folder-blue';
             }
         }
+
         return 'emptyicon';
     }
 }
