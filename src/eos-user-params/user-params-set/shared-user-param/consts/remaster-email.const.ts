@@ -1326,6 +1326,16 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             title: 'Проверять повторность документа по полю "Корреспондент"'
         },
         {
+            key: 'PRJ2RC_DIALOG',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: 'NO', title: 'Без диалога'},
+                {value: 'YES', title: 'С диалогом'}
+            ]
+        },
+        {
             key: 'FILELOCK',
             type: 'boolean',
             title: 'на редактирование прикрепляемых файлов'
@@ -1736,16 +1746,6 @@ export const REGISTRATION_RC: IBaseUsers =  {
         key: 'CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA',
         type: 'boolean',
         title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы'
-    },
-    {
-        key: 'PRJ2RC_DIALOG',
-        type: 'radio',
-        title: '',
-        readonly: false,
-        options: [
-            {value: 'NO', title: 'Без диалога'},
-            {value: 'YES', title: 'С диалогом'}
-        ]
     },
     ]
 };
