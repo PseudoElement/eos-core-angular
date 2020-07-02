@@ -57,7 +57,7 @@ export const RC_USER: IBaseUsers = {
         {
             key: 'CLOSE_RC_AFTER_SAVE_RESOLUTION',
             type: 'boolean',
-            title: 'Закрывать окно документа при вводе резолюции, проекта резолюции или отчета',
+            title: 'Закрывать окно документа при вводе резолюции, проекта резолюции или отчета в АРМ «ДелоWeb»',
             readonly: false,
         },
         {
