@@ -21,7 +21,7 @@ export class RightOrganizDepertComponent implements OnInit {
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() listRigth: NodeAbsoluteRight[];
     @Input() curentUser: IParamUserCl;
-    @Input() rights: boolean = false;
+    @Input() resolutions: number;
     @Output() Changed = new EventEmitter();
     @Output() createRcpdD = new EventEmitter();
     @Output() emitDeletedRc = new EventEmitter();
@@ -458,7 +458,7 @@ export class RightOrganizDepertComponent implements OnInit {
 
 
     indepRights() {
-        this.independetRight.emit();
+        this.independetRight.emit('RESOLUTION');
     }
 
     private _getMaxWeight(): number {

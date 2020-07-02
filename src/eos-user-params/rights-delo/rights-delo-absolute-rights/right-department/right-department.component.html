@@ -1,5 +1,15 @@
 <div class="right-dep-list">
     <div *ngIf="!isLoading; else spiner" class="right-dep-list-content">
+        <div *ngIf="selectedNode && selectedNode.contentProp === 8">
+            <label  class="checkbox" >
+                <input type="checkbox"
+                       [disabled]="(!editMode || selectedNode.control.disabled)"
+                       [checked]="!projectResol"
+                       (change)="indepRights()">
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                Ограничить картотекой Автора
+            </label>
+        </div>
         <div>
             <button *ngIf="editMode && !selectedNode.control.disabled"
                 class="btn"
