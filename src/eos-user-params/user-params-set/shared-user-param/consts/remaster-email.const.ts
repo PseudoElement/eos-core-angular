@@ -1665,7 +1665,7 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     fields: [{
         key: 'SEV_HIDE_SENDING',
         type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ" в десктопном приложении'
+        title: 'Скрыть операцию "Отправить сообщение СЭВ" в приложении Документы'
     },
     {
         key: 'SEV_ALLOW_DELIVERY',
