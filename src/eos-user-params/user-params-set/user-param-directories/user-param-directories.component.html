@@ -11,7 +11,7 @@
             <span [ngStyle]="{'margin-right': '10px'}">Вызов окна списков:</span><span>{{getValueWindowList()}}</span>
         </div>
         <div class="user-group-form">
-            <span>Поиск представителей организаций по полю:</span>
+            <span>Поиск представителей организаций в приложении Документы по полю:</span>
             <div class="user-input-group-section">
                 <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_CONTACT_FIELDS_SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input class="inline-block input-right" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DUTY']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -19,11 +19,11 @@
             </div>
         </div>
         <div>
-            <span>Окна справочников десктопного приложения</span>
+            <span>Окна справочников приложения Документы</span>
             <eos-dynamic-input [input]="inputs['rec.WINPOS']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <div>
-            <span>Сортировка результатов поиска по справочникам</span>
+            <span>Сортировка результатов поиска по справочникам в приложении Документы</span>
             <eos-dynamic-input [input]="inputs['rec.SORT']" class="input-mar-right" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
     </div>
