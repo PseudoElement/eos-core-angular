@@ -118,12 +118,12 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
             type: 'boolean',
-            title: 'удалять документы без поручений из кабинета'
+            title: 'удалять документы без поручений из кабинета в АРМ «ДелоWeb»'
         },
         {
             key: 'OZN_FILL_REPLY',
             type: 'boolean',
-            title: 'вводить отчет об исполнении поручения с текстом:'
+            title: 'вводить отчет об исполнении поручения в АРМ «ДелоWeb» с текстом:'
         },
         {
             key: 'OZN_FILL_REPLY_TEXT',
@@ -144,7 +144,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'RESOLUTION_DATE',
             type: 'radio',
-            title: 'Дата поручения:',
+            title: 'Дата поручения в приложении Документы:',
             options: [
                 {value: 'TODAY', title: 'сегодня'},
                 {value: 'LAST', title: 'от предыдущей резолюции'},
@@ -179,22 +179,22 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'CORRECT_CTRL_DATE',
             type: 'boolean',
-            title: 'Ставить поручение на контроль при проставлении плановой даты'
+            title: 'Ставить поручение на контроль при проставлении плановой даты (корректировать значение контрольности при изменении плановой и фактической даты)'
         },
         {
             key: 'INFORM_DIFFERENCE_CTRL_DATE',
             type: 'boolean',
-            title: 'Сообщать о несоответствии контрольности поручения плановой и фактической дате'
+            title: 'Сообщать о несоответствии контрольности поручения плановой и фактической дате в АРМ «ДелоWeb»'
         },
         {
             key: 'RESOLUTION_PLAN_DATE_ASK',
             type: 'boolean',
-            title: 'Предлагать заполнить пустую плановую дату РК при вводе контрольного поручения'
+            title: 'Предлагать заполнить пустую плановую дату РК при вводе контрольного поручения в АРМ «ДелоWeb»'
         },
         {
             key: 'CASCADE_CONTROL',
             type: 'boolean',
-            title: 'Снимать поручение с контроля, если снято вышестоящее поручение'
+            title: 'Снимать поручение с контроля, если снято вышестоящее поручение в АРМ «ДелоWeb»'
         },
         {
             key: 'PLAN_DATE_PARENT',
@@ -273,7 +273,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'RESOLUTION_PRINT',
             type: 'boolean',
-            title: 'Доступна печать поручения в десктопном приложении',
+            title: 'Доступна печать поручения в приложении Документы',
         },
         {
             key: 'SEND_ORDER_TO',

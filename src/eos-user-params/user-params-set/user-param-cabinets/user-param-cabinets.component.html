@@ -44,7 +44,7 @@
         </div>
         <div class="user-group-form">
             <div class="cab-mar-span">
-                <span>Подсвечивать новые записи в папке десктопного приложения:</span>
+                <span>Подсвечивать новые записи в папке приложения Документы:</span>
             </div>
             <div [ngStyle]="{'padding': '0'}" class="cabinets-highlight-new-enntries-in-the-folder">
                 <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_RECEIVED']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -64,13 +64,13 @@
         </div>
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Сортировать записи в кабинете по:</span>
+                <span class="input-title">Сортировать записи в кабинете приложения Документы по:</span>
                 <eos-dynamic-input class="cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
         <div class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
             <div class="inputs-inline">
-                <span class="input-title">Максимальное количество записей для отображения в кабинете:</span>
+                <span class="input-title">Максимальное количество записей для отображения в кабинете в приложении Документы:</span>
                 <eos-dynamic-input [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
@@ -78,7 +78,7 @@
     <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Дата поручения:</span>
+                <span class="input-title">Дата поручения в приложении Документы:</span>
                 <div class="date-resolution">
                     <eos-dynamic-input [input]="inputs['rec.RESOLUTION_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
@@ -86,7 +86,7 @@
         </div>
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="author-res-title input-title">Автор резолюции:</span>
+                <span class="author-res-title input-title">Автор резолюции в приложении Документы:</span>
                 <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.RESOLUTION_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
@@ -121,7 +121,7 @@
             <eos-dynamic-input [input]="inputs['rec.CASCADE_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <div class="send-res">
-            <span>Рассылать поручения:</span>
+            <span>Рассылать поручения в приложении Документы:</span>
             <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
             <div>
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -155,7 +155,7 @@
         </div>
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Показывать в окне поручения десктопного приложения:</span>
+                <span class="input-title">Показывать в окне поручения в приложении Документы:</span>
                 <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
