@@ -1,51 +1,38 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest';
-import {USERCARD, DEPARTMENT, CABINET, /* USER_CABINET */} from '../../../eos-rest/interfaces/structures';
-import {CardsClass} from '../../rights-delo/rights-cabinets/helpers/cards-class';
+import { USERCARD, DEPARTMENT, CABINET, /* USER_CABINET */ } from '../../../eos-rest/interfaces/structures';
+import { CardsClass } from '../../rights-delo/rights-cabinets/helpers/cards-class';
 // import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 import { Subject } from 'rxjs';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Injectable()
 
 export class RigthsCabinetsServices {
     public cardsArray: CardsClass[] = [];
-    public cardsOrigin: CardsClass[] = [];
     public user_id;
     public changeCabinets = new Subject();
     public submitRequest = new Subject();
-    arrResult = [];
     constructor(
-        private _pipRx: PipRX
-        ) {}
-    getUserCard(userCard: USERCARD[], id_user, flag?): Promise<any> {
+        private _pipRx: PipRX,
+        private _apCtx: AppContext,
+    ) { }
+    getUserCard(userCard: USERCARD[], id_user, isNew?: boolean): Promise<any> {
         this.user_id = id_user;
-        // const queryString = [];
-        const queryArray = this.createArrayQueryFor(userCard, true);
-     return   this.getDepartmentName(queryArray).then((department: DEPARTMENT[]) => {
-            // const arrayUpDepart = [];
-            // userCard.forEach((depart: USERCARD, index) => {
-            //     const pip = this._pipRx.read(this.criterCabinet(depart)).then((cabinets: CABINET[]) => {
-            //     queryString.push(...this.gitStringQueryUserCabinets(cabinets));
-            //     return  depart['_d'] = cabinets;
-            //     });
-            //     arrayUpDepart.push(pip);
-            // });
-            this.fillArrayCards(userCard, flag ? true : false);
+        const queryArray = this.createArrayQueryFor(userCard);
+        return this.getDepartmentName(queryArray).then((department: DEPARTMENT[]) => {
+            this.fillArrayCards(userCard, isNew);
             this.fillArrayCardsName(department);
-        //  return   Promise.all([...arrayUpDepart]).then(departmentUp => {
-        //         return  this.getUserCabinet(queryString).then((user_cab: USER_CABINET[]) => {
-        //         });
-        //     });
         });
     }
     getCabinets(due, isn): Promise<any> {
-     return   this._pipRx.read(this.criterCabinet(due)).then((cabinet: CABINET[]) => {
+        return this._pipRx.read(this.criterCabinet(due)).then((cabinets: CABINET[]) => {
             const queryString = [];
-            queryString.push(...this.gitStringQueryUserCabinets(cabinet));
+            queryString.push(...this.gitStringQueryUserCabinets(cabinets));
             if (queryString.length) {
-                return this.getUserCabinet(queryString, isn).then(user_cab => {
-                    return {cabinet, user_cab} as any;
-             });
-            }   else {
+                return this.getUserCabinet(queryString, isn).then(folders => {
+                    return { cabinets, folders } as any;
+                });
+            } else {
                 return Promise.resolve();
             }
         });
@@ -61,49 +48,42 @@ export class RigthsCabinetsServices {
         return arrayCaString;
     }
     criterCabinet(depart) {
-      return  {
+        return {
             CABINET: {
-                criteries: {'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${depart}`},
+                criteries: { 'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${depart}` },
             }
         };
     }
     fillArrayCardsName(department: DEPARTMENT[]): void {
         department.forEach((depart: DEPARTMENT) => {
             this.cardsArray.map((card: CardsClass) => {
-              if (depart.DUE === card.cardDue) {
-                  card.cardName = depart.CARD_NAME;
-              }
-              return card;
+                if (depart.DUE === card.data.DUE) {
+                    card.cardName = depart.CARD_NAME;
+                }
+                return card;
             });
         });
     }
 
-    fillArrayCards(deep: USERCARD[], flag: boolean): void {
-        deep.forEach((card: USERCARD) => {
-            this.cardsArray.push(new CardsClass(card, flag));
+    fillArrayCards(cards: USERCARD[], isNew?: boolean): void {
+        cards.forEach((card: USERCARD) => {
+            this.cardsArray.push(new CardsClass(this._apCtx, card, isNew));
         });
     }
 
-    createArrayQueryFor(info, flag?): Array<any> {
+    createArrayQueryFor(cards: USERCARD[]): string[] {
         const arr = [];
-        if (flag) {
-            info.forEach((card) => {
+        cards.forEach((card: USERCARD) => {
                 arr.push(card.DUE);
             });
-        }  else {
-            info.forEach((card) => {
-                arr.push(card);
-            });
-        }
-
-        return  arr;
+        return arr;
     }
 
-    getDepartmentName(querystring: Array<any>): Promise<DEPARTMENT[]> {
-        const queryDepartment = {
-                DEPARTMENT: querystring
+    getDepartmentName(arrayDues: string[]): Promise<DEPARTMENT[]> {
+        const getDepartments = {
+            DEPARTMENT: arrayDues
         };
-        return this._pipRx.read(queryDepartment);
+        return this._pipRx.read(getDepartments);
     }
 
     splitStrQuery(queryString: Array<any>): Array<any> {
@@ -120,10 +100,9 @@ export class RigthsCabinetsServices {
         return arrResult;
     }
     getUserCabinet(queryArray: Array<any>, isn): Promise<any> {
-        if (queryArray.length && queryArray.length < 100) {
-            return   this._pipRx.read(this.getCriteriesUserCab(queryArray, isn));
-        }   else if (queryArray.length > 100) {
-            this.arrResult = [];
+        if (queryArray.length && queryArray.length <= 100) {
+            return this._pipRx.read(this.getCriteriesUserCab(queryArray, isn));
+        } else if (queryArray.length > 100) {
             const newQuery = this.splitStrQuery(queryArray);
             const arrPromise = [];
             newQuery.forEach(el => {
@@ -133,30 +112,28 @@ export class RigthsCabinetsServices {
             });
             return Promise.all([...arrPromise]).then(result => {
                 const res = [];
-                if (result.length) {
                     result.forEach(el => {
                         res.push(...el);
                     });
-                }
                 return res;
             });
-        }   else {
+        } else {
             return Promise.resolve([]);
         }
     }
 
     getCriteriesUserCab(param: Array<any>, isn) {
-       return {
+        return {
             USER_CABINET: {
                 criteries: {
                     ISN_CABINET: param.join('|'),
-                 //   ISN_LCLASSIF: String(72509)
+                    //   ISN_LCLASSIF: String(72509)
                 }
             },
         };
     }
     createUSERCARDArray(typeArrayUserCard): USERCARD[] {
-        return  typeArrayUserCard.map(el => {
+        return typeArrayUserCard.map(el => {
             return {
                 ISN_LCLASSIF: this.user_id,
                 DUE: el,
@@ -164,7 +141,7 @@ export class RigthsCabinetsServices {
                 FUNCLIST: '010000000000010010000',
                 USER_CARD_DOCGROUP_List: null,
                 USER_CABINET_List: null
-            }as USERCARD ;
+            } as USERCARD;
         });
     }
 }

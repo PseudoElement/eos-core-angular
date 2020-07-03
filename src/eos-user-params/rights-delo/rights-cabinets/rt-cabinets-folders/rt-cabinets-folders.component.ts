@@ -1,10 +1,10 @@
-import {Component, OnInit, Input, OnChanges, OnDestroy, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy, /*  Output, EventEmitter */ } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CardsClass, Cabinets} from '../helpers/cards-class';
-import {RigthsCabinetsServices} from '../../../shared/services/rigths-cabinets.services';
+import { CardsClass, Cabinets } from '../helpers/cards-class';
+import { RigthsCabinetsServices } from '../../../shared/services/rigths-cabinets.services';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { FormGroup } from '@angular/forms';
@@ -19,18 +19,46 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
 
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
-    @Output() sendNewValues: EventEmitter<any> = new EventEmitter<any>();
-    public Cabinet: Cabinets;
     public limitCard: boolean = false;
+    public currentCabinet: Cabinets;
     form: FormGroup;
     selectCabinetInput: DropdownInput = new DropdownInput({
         key: 'selectedCabinet',
         options: [],
         hideLabel: true,
     });
-
+    // folders = [
+    //     { key: '1', title: 'Поступившие' },
+    //     { key: '2', title: 'На исполнении' },
+    //     { key: '3', title: 'На контроле' },
+    //     { key: '4', title: 'У руководства' },
+    //     { key: '5', title: 'На рассмотрении' },
+    //     { key: '6', title: 'В дело' },
+    //     { key: '7', title: 'Управление проектами' },
+    //     { key: '8', title: 'На визировании' },
+    //     { key: '9', title: 'На подписи' },
+    //     { key: 'HIDE_INACCESSIBLE', title: 'Учитывать ограничения доступа к РК по грифам и группам документов' },
+    //     { key: 'HIDE_INACCESSIBLE_PRJ', title: 'Учитывать права для работы с РКПД' },
+    // ];
+    private regExpFolders1 = /[1|2|3|4|5|6]/;
+    private regExpFolders2 = /[7|8|9]/;
+    private regExpFolders3 = /[1|2|3|4|5|6|7|8|9]/;
+    get disabledInAcces() {
+        if (this.currentCabinet) {
+            return this.regExpFolders1.test(this.currentCabinet.data.FOLDERS_AVAILABLE);
+        }
+        return false;
+    }
+    get disabledInAccesPrj() {
+        if (this.currentCabinet) {
+            return this.regExpFolders2.test(this.currentCabinet.data.FOLDERS_AVAILABLE);
+        }
+        return false;
+    }
+    get checkHome() {
+        return this.regExpFolders3.test(this.currentCabinet.data.FOLDERS_AVAILABLE);
+    }
     private unSubscribe: Subject<any> = new Subject();
-    private changedValuesMap = new Map();
     constructor(
         private _rtCabintsSrv: RigthsCabinetsServices,
         private _msgSrv: EosMessageService,
@@ -39,154 +67,90 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     ) {
         this.form = this.inputCtrlSrv.toFormGroup([this.selectCabinetInput], false);
         this.form.valueChanges.subscribe((data) => {
-            this.Cabinet = this.card.cabinets[this.form.controls['selectedCabinet'].value];
-            if (this._appContext.limitCardsUser.length > 0) {
-                this.limitCard = this.updateCardLimit(this.Cabinet.parent);
-            }
+            this.currentCabinet = this.card.cabinets[this.form.controls['selectedCabinet'].value];
         });
 
         this._rtCabintsSrv.changeCabinets
-        .pipe(
-            takeUntil(this.unSubscribe)
-        )
-        .subscribe((newCabinets: CardsClass) => {
-            this.card = newCabinets;
-            this.setFolders(this.card.cabinets[0]);
-            this._updateSelect();
-        });
-        this._rtCabintsSrv.submitRequest
-        .pipe(
-            takeUntil(this.unSubscribe)
-        )
-        .subscribe(() => {
-           this.changedValuesMap.clear();
-        });
+            .pipe(
+                takeUntil(this.unSubscribe)
+            )
+            .subscribe((changedCard: CardsClass) => {
+                this.card = changedCard;
+                this.setFolders(this.card.cabinets[0]);
+                this._updateSelect();
+            });
+    }
+    checkedFolder(value): boolean {
+        // tslint:disable-next-line: no-bitwise
+        return ~this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(value) !== 0;
     }
     ngOnInit() {
         this.setFolders(this.card.cabinets[0]);
         this._updateSelect();
     }
-    ngOnChanges() {}
+    ngOnChanges() {
+    }
     updateCardLimit(newCabinets) {
         if (this._appContext.limitCardsUser.indexOf(newCabinets.cardDue) === -1) {
             return true;
         }
         return false;
     }
-    changeFolders(changedCabinets: Cabinets, folder): void {
-        folder.selected = !folder.selected;
-        this.CheckChanges(changedCabinets);
-        this.checkMapNewValues(changedCabinets);
-        if (this.changedValuesMap.size) {
-            this.sendNewValues.emit(this.changedValuesMap);
-        }   else {
-            this.sendNewValues.emit(false);
+    changeFolders(key): void {
+        if (key === 'HIDE_INACCESSIBLE' || key === 'HIDE_INACCESSIBLE_PRJ') {
+            this.currentCabinet.data[key] = +!this.currentCabinet.data[key];
+            return;
         }
-    }
-    CheckChanges(changedCabinets: Cabinets): void {
-        let countChanges: number = 0;
-        const arrValues: Array<string|number> = [];
-        changedCabinets.folders.forEach(((folder, index) => {
-            if (folder.selected) {
-                  arrValues.push(folder.value);
-            }
-            if (folder.selected !== changedCabinets.originFolders[index].selected) {
-                countChanges++;
-            }
-       }));
-       if ((countChanges > 0) ||
-       ((changedCabinets.originHomeCabinet !== changedCabinets.homeCabinet) && !(countChanges === 0 && changedCabinets.isEmptyOrigin))) {
-        changedCabinets.isChanged = true;
-       } else {
-        changedCabinets.isChanged = false;
-       }
-       this.checkDisabled(changedCabinets, arrValues.join(''));
-    }
-    checkMapNewValues(changedCabinets: Cabinets): void {
-        const isnCab = changedCabinets.isnCabinet;
-        const isnClass = changedCabinets.isnClassif;
-        if (changedCabinets.isChanged) {
-              this.changedValuesMap.set(`${isnCab}|${isnClass}`, {
-                cabinet: changedCabinets,
-                due: this.card.cardDue,
-                delete: changedCabinets.deleted,
-            });
-        }   else {
-            if (this.changedValuesMap.has(`${isnCab}|${isnClass}`)) {
-                this.changedValuesMap.delete(`${isnCab}|${isnClass}`);
-            }
-        }
-    }
-    checkDisabled(changedCabinets: Cabinets, newStringAvalable: string): void {
-        changedCabinets.deleted = false;
-        changedCabinets.isEmpty = false;
-        const str1 = changedCabinets.checkDisabled(newStringAvalable, true);
-        const str2 = changedCabinets.checkDisabled(newStringAvalable, false);
-        if (!str1) {
-            changedCabinets.folders[9].selected = false;
-            changedCabinets.folders[9].disabled = true;
-        }   else {
-            changedCabinets.folders[9].disabled = false;
+        // tslint:disable-next-line: no-bitwise
+        if (~this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(key) !== 0) {
+            const reg = new RegExp(`${key}`, 'g');
+            this.currentCabinet.data.FOLDERS_AVAILABLE = this.currentCabinet.data.FOLDERS_AVAILABLE.replace(reg, '');
+        } else {
+            const folders = this.currentCabinet.data.FOLDERS_AVAILABLE.split('');
+            folders.push(key);
+            this.currentCabinet.data.FOLDERS_AVAILABLE = folders.join('');
         }
 
-        if (!str2) {
-            changedCabinets.folders[10].selected = false;
-            changedCabinets.folders[10].disabled = true;
-        }   else {
-            changedCabinets.folders[10].disabled = false;
+        if (!this.disabledInAcces) {
+            this.currentCabinet.data['HIDE_INACCESSIBLE'] = 0;
         }
-        if (!str1 && !str2 && !changedCabinets.folders[6].selected) {
-            this.checkDeletedCabinet(changedCabinets);
+        if (!this.disabledInAccesPrj) {
+            this.currentCabinet.data['HIDE_INACCESSIBLE_PRJ'] = 0;
+        }
+        if (!this.checkHome && this.currentCabinet.data.HOME_CABINET) {
+            this.currentCabinet.data.HOME_CABINET = 0;
+            this._updateSelect(true);
+            this.alertWarning();
+        }
+        if (this.checkHome && !this.mainCabinets() && !this.currentCabinet.data.HOME_CABINET) {
+            this.currentCabinet.data.HOME_CABINET = 1;
+            this._updateSelect(true);
         }
     }
-    checkDeletedCabinet(changedCabinets: Cabinets): void {
-        changedCabinets.isEmpty = true;
-        if (changedCabinets.isEmpty && changedCabinets.isEmptyOrigin) {
-            changedCabinets.isChanged = false;
-        }
-        if (changedCabinets.homeCabinet) {
-            this.alertWarning();
-            changedCabinets.homeCabinet = false;
-        }
-        if (changedCabinets.isChanged) {
-            changedCabinets.deleted = true;
-        }
+
+    mainCabinets(): boolean {
+        return this.currentCabinet.parent.cabinets.some((cab: Cabinets) => {
+            return !!cab.data.HOME_CABINET && (cab.data.ISN_CABINET !== this.currentCabinet.data.ISN_CABINET);
+        });
     }
-    changeMainCabinet() {
-        if (this.Cabinet.homeCabinet) {
-            this.alertWarning();
-            this.Cabinet.homeCabinet = false;
-            this.Cabinet.parent.homeCardCabinet = false;
-        }   else {
-            if (!this.Cabinet.parent.homeCardCabinet) {
-                this.Cabinet.homeCabinet = true;
-                this.Cabinet.parent.homeCardCabinet = true;
-            }   else {
-                this.findHomeCabinet();
-                this.Cabinet.homeCabinet = true;
+    checkHomeCabinet(): void {
+        this.currentCabinet.data.HOME_CABINET = +!this.currentCabinet.data.HOME_CABINET;
+        if (this.currentCabinet.data.HOME_CABINET && this.mainCabinets()) {
+            this.currentCabinet.parent.cabinets.forEach((cab: Cabinets) => {
+                if (cab.data.HOME_CABINET && (cab.data.ISN_CABINET !== this.currentCabinet.data.ISN_CABINET)) {
+                    cab.data.HOME_CABINET = 0;
+                }
+            });
+        } else {
+            if (!this.currentCabinet.data.HOME_CABINET) {
+                this.alertWarning();
             }
-        }
-        this.CheckChanges(this.Cabinet);
-        this.checkMapNewValues(this.Cabinet);
-        if (this.changedValuesMap.size) {
-            this.sendNewValues.emit(this.changedValuesMap);
-        }   else {
-            this.sendNewValues.emit(false);
         }
         this._updateSelect(true);
     }
-    findHomeCabinet() {
-     const findCabinet =   this.Cabinet.parent.cabinets.filter((cabinet: Cabinets) => {
-            return cabinet.homeCabinet === true;
-        });
-        if (findCabinet.length) {
-            findCabinet[0].homeCabinet = false;
-            this.CheckChanges(findCabinet[0]);
-            this.checkMapNewValues(findCabinet[0]);
-        }
-    }
-    setFolders(folders): void {
-        this.Cabinet = folders;
+
+    setFolders(cabinet): void {
+        this.currentCabinet = cabinet;
     }
     alertWarning() {
         this._msgSrv.addNewMessage({
@@ -197,12 +161,13 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         });
     }
     ngOnDestroy() {
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
+          this.unSubscribe.next();
+          this.unSubscribe.complete();
     }
     private _updateSelect(flag?): void {
-        const opts = this.card.cabinets.map( (c, i) => ({ value: i, title: c.name, cabinet: c,
-            style: {color: c.homeCabinet ? 'red' : 'black'}
+        const opts = this.card.cabinets.map((c, i) => ({
+            value: i, title: c.name, cabinet: c,
+            style: { color: c.data.HOME_CABINET ? 'red' : 'black' }
         }));
         this.selectCabinetInput.options = opts;
         if (!flag && opts.length) {

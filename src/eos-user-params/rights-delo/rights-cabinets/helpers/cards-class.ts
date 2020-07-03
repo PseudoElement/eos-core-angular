@@ -1,175 +1,144 @@
-import {USERCARD, USER_CABINET, CABINET} from 'eos-rest/interfaces/structures';
+import { USERCARD, USER_CABINET, CABINET } from 'eos-rest/interfaces/structures';
+import { AppContext } from 'eos-rest/services/appContext.service';
 // import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 export class Cabinets {
-    name: string;
-    isnCabinet: number;
-    isnClassif: number;
+    get name(): string {
+        return this.cabinetInfo.CABINET_NAME;
+    }
     folders = [];
-    originFolders = [];
-    isEmpty: boolean;
-    isEmptyOrigin: boolean;
-    homeCabinet: boolean = false;
-    originHomeCabinet: boolean = false;
-    foldersString: string = '';
-    deleted: boolean = false;
+    origin: USER_CABINET = null;
+    data: USER_CABINET = null;
     isChanged = false;
+
     parent: CardsClass;
-    get stringFolders() {
-        let str = '';
-        let t = '';
-        this.folders.forEach(el => {
-            if (el['value'] === 'A' && el['selected']) {
-                t = el['value'];
-            } else if (el['value'] !== 'H' && el['value'] !== 'HR') {
-                if (el['selected'] === true) {
-                    str += el['value'];
+    // get stringFolders() {
+    //     let str = '';
+    //     let t = '';
+    //     this.folders.forEach(el => {
+    //         if (el['value'] === 'A' && el['selected']) {
+    //             t = el['value'];
+    //         } else if (el['value'] !== 'H' && el['value'] !== 'HR') {
+    //             if (el['selected'] === true) {
+    //                 str += el['value'];
+    //             }
+    //         }
+    //     });
+    //     return str + t;
+    // }
+    // get hideAccess() {
+    //     if (this.folders[9].selected) {
+    //         return 1;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+
+    // get hideAccessPR() {
+    //     if (this.folders[10].selected) {
+    //         return 1;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+    // private arrayKey = new Map()
+    //     .set('Поступившие', 1)
+    //     .set('На исполнении', 2)
+    //     .set('На контроле', 3)
+    //     .set('У руководства', 4)
+    //     .set('На рассмотрении', 5)
+    //     .set('В дело', 6)
+    //     .set('Управление проектами', 7)
+    //     .set('На визировании', 8)
+    //     .set('На подписи', 9)
+    //     .set('Учитывать ограничения доступа к РК по грифам и группам документов', 'H')
+    //     .set('Учитывать права для работы с РКПД', 'HR');
+    public cabinetInfo: CABINET;
+    constructor(cabinet: CABINET, parent: CardsClass, cabinet_folders?: USER_CABINET[]) {
+        this.parent = parent;
+        this.cabinetInfo = cabinet;
+        this.initData(cabinet_folders);
+    }
+    initData(folders: USER_CABINET[]) {
+        const findCabinets = folders.filter((folder: USER_CABINET) => {
+            return folder.ISN_CABINET === this.cabinetInfo.ISN_CABINET && this.parent.data.ISN_LCLASSIF === folder.ISN_LCLASSIF;
+        });
+        if (findCabinets.length) {
+            this.data = { ...findCabinets[0] };
+            this.origin = { ...findCabinets[0] };
+        } else {
+            this.data = this.initEmptyData();
+        }
+    }
+    change() {
+        if (this.origin) {
+            for (const key in this.data) {
+                if (this.data.hasOwnProperty(key)) {
+                    const element = this.data[key];
+                    if (element !== this.origin[key]) {
+                        this.isChanged = true;
+                        return;
+                    }
                 }
             }
-        });
-        return str + t;
-    }
-    get hideAccess() {
-        if (this.folders[9].selected) {
-            return 1;
+            this.isChanged = false;
         } else {
-            return 0;
-        }
-    }
-
-    get hideAccessPR() {
-        if (this.folders[10].selected) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-    private arrayKey = new Map()
-    .set('Поступившие', 1)
-    .set('На исполнении', 2)
-    .set('На контроле', 3)
-    .set('У руководства', 4)
-    .set('На рассмотрении', 5)
-    .set('В дело', 6)
-    .set('Управление проектами', 7)
-    .set('На визировании', 8)
-    .set('На подписи', 9)
-    .set('Учитывать ограничения доступа к РК по грифам и группам документов', 'H')
-    .set('Учитывать права для работы с РКПД', 'HR');
-    constructor(classif: number, cabinetName: CABINET, parent: CardsClass, cuserCard?: USER_CABINET[], ) {
-        this.parent = parent;
-        this.isnCabinet = cabinetName.ISN_CABINET;
-        this.isnClassif = classif;
-        this.name = cabinetName.CABINET_NAME;
-        this.createFolders(cuserCard);
-    }
-    createFolders(data: USER_CABINET[]): void {
-        let findDate: USER_CABINET[] = null;
-        let arrgAvalable = [];
-        findDate =  this.initProperties(data);
-        if (findDate.length) {
-            arrgAvalable = this.foldersString.split('');
-        }
-        this.setvaluesVoldeers(arrgAvalable, findDate);
-    }
-    initProperties(data): USER_CABINET[] {
-        const parceString = data.filter((user_cab: USER_CABINET) => {
-            return user_cab.ISN_CABINET === this.isnCabinet && this.isnClassif  === user_cab.ISN_LCLASSIF;
-        });
-        if (parceString.length) {
-            this.isEmpty = false;
-            this.foldersString = parceString[0].FOLDERS_AVAILABLE;
-            this.homeCabinet = parceString[0]['HOME_CABINET'] ? true : false;
-            if (this.homeCabinet) {
-                this.parent.homeCardCabinet = true;
+            if (this.data.FOLDERS_AVAILABLE !== '') {
+                this.isChanged = true;
+                return;
             }
-        }   else {
-            this.isEmpty = true;
-            this.homeCabinet = false;
-        }
-        this.isEmptyOrigin = this.isEmpty;
-        this.originHomeCabinet = this.homeCabinet;
-        return parceString;
-    }
-    setvaluesVoldeers(arrgAvalable, arrayUser_Cabinet): void {
-        this.arrayKey.forEach((value, key, map) => {
-            const obj = {
-                name: key,
-                value: value,
-            };
-            if (value === 'H') {
-                obj['selected'] =  !arrayUser_Cabinet.length ? false :  arrayUser_Cabinet[0]['HIDE_INACCESSIBLE'] ? true : false;
-                obj['disabled'] = !this.checkDisabled(arrayUser_Cabinet[0] ? this.foldersString : '', true);
-                this.folders.push(obj);
-            } else if (value === 'HR') {
-                obj['selected'] =  !arrayUser_Cabinet.length ? false :  arrayUser_Cabinet[0]['HIDE_INACCESSIBLE_PRJ'] ? true : false;
-                obj['disabled'] = !this.checkDisabled(arrayUser_Cabinet[0] ? this.foldersString : '', false);
-                this.folders.push(obj);
-            }  else {
-                obj['selected'] = this.searchValueForParceString(value, arrgAvalable);
-                this.folders.push(obj);
-            }
-        });
-        this.originFolders = JSON.parse(JSON.stringify(this.folders));
-    }
-    checkDisabled(folderAvalable: string, flag: boolean) {
-        if (flag) {
-            return /[123456]/g.test(folderAvalable);
-        }   else {
-            return /[789]/g.test(folderAvalable);
+            this.isChanged = false;
         }
     }
-    searchValueForParceString(value, arrayValues: Array<any>): boolean {
-        if (arrayValues.length) {
-            return arrayValues.some(el => {
-                return String(el) === String(value);
-            });
-        }   else {
-            return false;
-        }
+    initEmptyData(): USER_CABINET {
+        return {
+            ISN_CABINET: this.cabinetInfo.ISN_CABINET,
+            ISN_LCLASSIF: this.parent.data.ISN_LCLASSIF,
+            FOLDERS_AVAILABLE: '',
+            ORDER_WORK: null,
+            HOME_CABINET: 0,
+            HIDE_CONF_RESOL: 0,
+            HIDE_INACCESSIBLE: 0,
+            HIDE_INACCESSIBLE_PRJ: 0,
+            IS_ASSISTANT: 0,
+            DEPARTMENT_DUE: this.parent.data.DUE,
+        };
     }
 }
 
 export class CardsClass {
     public cardTitle;
-    public get cardName () {
+    public get cardName() {
         return this.cardTitle;
     }
     public set cardName(name: string) {
         this.cardTitle = name;
     }
-    public cabinetsName;
-    public homeCard: boolean;
-
-    public homeCardOrigin: boolean;
-    public cardDue: string;
-    public isnClassif: number;
-    // меняется только при смене флага главного кабинета
-    public changed: boolean = false;
-    public deleted: boolean = false;
-    public newCard: boolean;
-    public homeCardCabinet: boolean = false;
-    current: boolean = false;
-    cabinets: Array<Cabinets> = [];
-    data: USERCARD;
-    public SetChangedCabinets = new Set();
-    constructor(card: USERCARD, flagcreate, /* cardsInfo?: CardInit */) {
+    public deleted = false;
+    public current = false;
+    public cabinets: Cabinets[] = [];
+    public data: USERCARD;
+    public origin: USERCARD;
+    appSrv: AppContext;
+    constructor(appSrv: AppContext, card: USERCARD, isNew?: boolean) {
         this.data = card;
-        this.initProperties(flagcreate);
-     //   this.createCabinets(card, cardsInfo);
+        this.origin = !isNew ? Object.assign({}, card) : null;
+        this.appSrv = appSrv;
     }
-    initProperties(cardsInfo) {
-        this.data.HOME_CARD !== 1 ? this.homeCard = false : this.homeCard = true;
-        this.homeCardOrigin = this.homeCard;
-        this.cardDue = this.data.DUE;
-        this.isnClassif = this.data.ISN_LCLASSIF;
-        this.newCard = cardsInfo;
-    }
-    createCabinets({cabinet, user_cab}) {
-        if (cabinet.length) {
-            cabinet.forEach((cab: CABINET) => {
-                    this.cabinets.push(new Cabinets(this.isnClassif, cab, this, user_cab ));
+
+    createCabinets({ cabinets, folders }) {
+        if (cabinets.length) {
+            cabinets.forEach((cabinet: CABINET) => {
+                this.cabinets.push(new Cabinets(cabinet, this, folders));
             });
             this.cabinets.sort((a, b) => a.name.localeCompare(b.name));
         }
+    }
+    get allowed() {
+        if (this.appSrv && this.appSrv.limitCardsUser.length) {
+            return this.appSrv.limitCardsUser.some(_due => {
+                return _due === this.data.DUE;
+            });
+        }
+        return true;
     }
 }

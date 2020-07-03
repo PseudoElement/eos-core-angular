@@ -3413,6 +3413,8 @@ export interface USER_CABINET extends IEnt {
      * DEPARTMENT_DUE
      */
     DEPARTMENT_DUE: string;
+    HIDE_CONF_RESOL?: number;
+    IS_ASSISTANT?: number;
 }
 
 /**
