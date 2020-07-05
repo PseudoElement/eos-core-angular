@@ -30,7 +30,7 @@
         </ng-container>
         <ng-container *ngSwitchCase="'external-application'">
             <eos-user-param-external-application *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-              [defaultTitle]="'Десктопное приложение по умолчанию'" [defaultUser]="defaultUser"></eos-user-param-external-application>
+              [defaultTitle]="'Приложение Документы по умолчанию'" [defaultUser]="defaultUser"></eos-user-param-external-application>
         </ng-container>
         <ng-container *ngSwitchCase="'other'">
             <eos-user-param-other *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)" [defaultTitle]="'Передача по умолчанию'" 
