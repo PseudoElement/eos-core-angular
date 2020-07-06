@@ -696,7 +696,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             case 'PROJECT':
                 this.arrNEWDeloRight[27] = this.arrNEWDeloRight[27] === '1' ? '0' : '1';
                 this.checkChange();
-                this.resolutionsRights = +this.arrNEWDeloRight[27];
+                this.projectResol = +this.arrNEWDeloRight[27];
                 break;
             case 'RESOLUTION':
                 this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
