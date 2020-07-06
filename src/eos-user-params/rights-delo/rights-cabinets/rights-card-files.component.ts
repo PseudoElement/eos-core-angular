@@ -230,7 +230,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             return card.data.DUE !== this.currentCard.data.DUE;
         });
     }
-    submit() {
+    submit(event) {
         this.isLoading = true;
         const changes = [];
         this.mainArrayCards.forEach((card: CardsClass) => {
