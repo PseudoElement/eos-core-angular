@@ -108,6 +108,17 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         this.isShell = true;
         return this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
             .then(data => {
+                if (this.checkedUsers.length === 1 && this.checkedUsers.includes(+data)) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Выберите другого пользователя',
+                    });
+                    return;
+                }
+                if (this.checkedUsers.includes(+data)) {
+                    this.checkedUsers = this.checkedUsers.filter(isn => isn !== +data);
+                }
                 this._isnCopyFrom = +data;
                 return this._getUserCl(data);
             })
