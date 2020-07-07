@@ -125,7 +125,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     get title(): string {
         if (this.curentUser) {
-            if (this.curentUser.isTechUser) {
+            if (this.curentUser.isTechUser || this.curentUser._orig.isTechUser && !this.curentUser.isTechUser) {
                 return this.curentUser.CLASSIF_NAME;
             } else {
                 return `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
