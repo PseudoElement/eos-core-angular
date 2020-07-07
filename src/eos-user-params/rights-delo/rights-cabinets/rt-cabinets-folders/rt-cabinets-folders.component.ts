@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, OnChanges, OnDestroy, /*  Output, EventEmitter */ } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    EventEmitter, /*  Output, EventEmitter */
+} from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,6 +27,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
 
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
+    @Output() changes = new EventEmitter();
     public limitCard: boolean = false;
     public currentCabinet: Cabinets;
     form: FormGroup;
@@ -126,6 +135,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
             this.currentCabinet.data.HOME_CABINET = 1;
             this._updateSelect(true);
         }
+        this.changes.emit();
     }
 
     mainCabinets(): boolean {

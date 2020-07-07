@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Router} from '@angular/router';
 import { PipRX } from 'eos-rest';
 import { RigthsCabinetsServices } from 'eos-user-params/shared/services/rigths-cabinets.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
@@ -10,6 +10,7 @@ import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
+
 @Component({
     selector: 'eos-card-files',
     templateUrl: 'rights-card-files.component.html',
@@ -45,6 +46,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _pipSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
         private _appContext: AppContext,
+        private _userParamsSetSrv: UserParamsService,
     ) { }
     ngOnInit() {
         this._userSrv.getUserIsn({
@@ -63,7 +65,28 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 this._errorSrv.errorHandler(e);
             });
     }
-    ngOnDestroy() { }
+    ngOnDestroy() {
+    }
+
+    checkGlobalChanges() {
+        let change = false;
+        this.mainArrayCards.forEach(el => {
+            if (el.origin !== null && el.data.HOME_CARD !== el.origin.HOME_CARD
+                || el.deleted
+                || el.origin === null) {
+                change = true;
+                return;
+            }
+            el.cabinets.forEach(cab => {
+                cab.change();
+                if (cab.isChanged) {
+                    change = true;
+                    return;
+                }
+            });
+        });
+        this._userParamsSetSrv.setChangeState({ isChange: change });
+    }
 
     init(): Promise<any> {
         return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
@@ -93,6 +116,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.flagBacground = false;
             this.prepareWarnindMessage(dueCards).then(() => {
                 this.selectFromAddedCards();
+                this.checkGlobalChanges();
             }).catch(error => {
                 this.sendMessage('Предупреждение', 'Потеряно соединение с сервером ');
             });
@@ -220,6 +244,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         } else {
             this.sendMessage('Предупреждение', 'Не определена главная картотека');
         }
+        this.checkGlobalChanges();
     }
 
     deleteNewCard() {
