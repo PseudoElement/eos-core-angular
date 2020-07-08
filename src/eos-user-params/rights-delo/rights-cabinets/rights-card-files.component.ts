@@ -69,23 +69,25 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     checkGlobalChanges() {
-        let change = false;
-        this.mainArrayCards.forEach(el => {
-            if (el.origin !== null && el.data.HOME_CARD !== el.origin.HOME_CARD
-                || el.deleted
-                || el.origin === null) {
-                change = true;
-                return;
-            }
-            el.cabinets.forEach(cab => {
-                cab.change();
-                if (cab.isChanged) {
+        if (this.flagEdit) {
+            let change = false;
+            this.mainArrayCards.forEach(el => {
+                if (el.origin !== null && el.data.HOME_CARD !== el.origin.HOME_CARD
+                    || el.deleted
+                    || el.origin === null) {
                     change = true;
                     return;
                 }
+                el.cabinets.forEach(cab => {
+                    cab.change();
+                    if (cab.isChanged) {
+                        change = true;
+                        return;
+                    }
+                });
             });
-        });
-        this._userParamsSetSrv.setChangeState({ isChange: change });
+            this._userParamsSetSrv.setChangeState({ isChange: change });
+        }
     }
 
     init(): Promise<any> {
@@ -278,6 +280,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                     dismissOnTimeout: 6000
                 });
                 this.cancel(null);
+                this._userParamsSetSrv.setChangeState({ isChange: false });
             }).catch(e => {
                 this.cancel(null);
                 this._errorSrv.errorHandler(e);
@@ -419,6 +422,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.flagEdit = false;
         this.mainArrayCards.length = 0;
         this._rightsCabinetsSrv.cardsArray.length = 0;
+        this._userParamsSetSrv.setChangeState({ isChange: false });
         this.ngOnInit();
     }
     sendMessage(tittle: string, msg: string) {
