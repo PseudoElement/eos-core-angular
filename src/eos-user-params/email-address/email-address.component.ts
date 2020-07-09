@@ -74,7 +74,11 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private _navSrv: NavParamService,
     ) { }
 
-     ngOnInit() {
+    ngOnInit() {
+        this.preInit();
+    }
+
+    preInit() {
         this._navSrv.StateSandwichRight$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -107,8 +111,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             .catch(error => {
                 this.cathError(error);
             });
-
-
     }
     init() { // возможно лучше переименовать по другому
         this._emailService.getCode2()
@@ -201,6 +203,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.delitedSetStore.clear();
         this.clearForm();
         this.chooseCurrentField();
+        this.preInit();
     }
     openModal(template: TemplateRef<any>, edit?: boolean) {
         this.defaultAlerts.clear();
@@ -583,6 +586,12 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     default(event?) {
         return;
     }
+
+    closeModal() {
+        this.updateEmail = false;
+        this.modalRef.hide();
+    }
+
     private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
             return undefined;
