@@ -252,6 +252,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 } else {
                     dataInput.rec[key] = false;
                 }
+            } else if (this._fieldsType[key] === 'text' && !this.prepareData.rec[key]) {
+                this.prepareData.rec[key] = '';
             } else {
                 if (this._fieldsType[key] === 'numberIncrement') {
                     if (this.prepareData.rec[key] === 'null' || this.prepareData.rec[key] === null) {
