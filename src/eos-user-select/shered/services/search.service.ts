@@ -183,15 +183,15 @@ export class SearchServices {
                     query.USER_CL.criteries['DELETED'] = `${params.BLOCK_USER}`;
                     query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
                 }
+                query.USER_CL.criteries['USER_CL.Removed'] = `false`;
                 break;
             case 1:
                 query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
-                query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
-                query.USER_CL.criteries['DELETED'] = `1`;
+                query.USER_CL.criteries['USER_CL.Removed'] = `true`;
                 break;
             case 2:
                 query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
-                query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
+                query.USER_CL.criteries['USER_CL.Removed'] = `false`;
                 break;
             default:
                 if (params.LOGIN) {

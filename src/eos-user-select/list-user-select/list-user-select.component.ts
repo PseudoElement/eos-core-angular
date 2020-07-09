@@ -64,8 +64,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     shadow: boolean = false;
     deleteOwnUser: any;
 
-    get showCloseQuickSearch() {
-        if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries.ORACLE_ID === 'isnull') {
+    get showSearch() {
+        if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries['USER_CL.Removed'] === 'true') {
             this._apiSrv.sortDelUsers = true;
         } else {
             this._apiSrv.sortDelUsers = false;
