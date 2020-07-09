@@ -224,6 +224,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.prepareData = this.formHelp.parse_Create(DIRECTORIES_USER.fields, this.hashDefolt);
                 this.prepareInputs = this.formHelp.getObjectInputFields(DIRECTORIES_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+                this.defoltInputs['rec.CLASSIF_WEB_SUGGESTION'].value = '0';
                 this.parseInputs(this.hashDefolt['SRCH_CONTACT_FIELDS'], this.defoltInputs);
                 this.prepFormCancel(this.defoltInputs, true);
             })
