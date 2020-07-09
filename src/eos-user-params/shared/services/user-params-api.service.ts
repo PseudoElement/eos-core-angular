@@ -133,17 +133,14 @@ export class UserParamApiSrv {
                 };
                 if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
                     ob1['DUE_DEP'] = 'isnotnull';
+                    ob1['USER_CL.Removed'] = 'false';
                 }
                 if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
-                    ob1['ORACLE_ID'] = 'isnull';
-                    ob1['DELETED'] = '1';
+                    ob1['USER_CL.Removed'] = 'true';
                 }
                 if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
                     ob1['DUE_DEP'] = 'isnull';
-                    ob1['CLASSIF_NAME'] = '_';
-                }
-                if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-                    ob1['CLASSIF_NAME'] = '_';
+                    ob1['USER_CL.Removed'] = 'false';
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
@@ -181,9 +178,6 @@ export class UserParamApiSrv {
             if (this.currentSort === 'fullDueName') {
                 propOrderBy = 'SURNAME_PATRON';
                 propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-                //   q.orderby = `${propOrderBy}`;
-                // propOrderBy = 'DEP.CARD.CLASSIF_NAME';
-                // ob['orderby'] = propOrderBy;
             }
             const ob = {};
             ob['USERCARD.DUE'] = `${dueDep ? dueDep : '0.'}`;
@@ -196,21 +190,13 @@ export class UserParamApiSrv {
                 loadmode: 'Table'
             };
             if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
-                // ob['DUE_DEP'] = 'isnotnull';
-                q.USER_CL.criteries['ORACLE_ID'] = 'isnull';
+                q.USER_CL.criteries['USER_CL.Removed'] = 'true';
             }
             if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
                 q.USER_CL.criteries['DUE_DEP'] = 'isnotnull';
+                q.USER_CL.criteries['USER_CL.Removed'] = 'false';
             }
         }
-        // constq = {
-        //     USER_CL: PipRX.criteries(ob),
-        //     orderby: `${propOrderBy}`,
-        //     top: `${top}`,
-        //     skip: `${skip}`,
-        //     inlinecount: 'allpages',
-        //     loadmode: 'Table'
-        // };
         return q;
     }
 
