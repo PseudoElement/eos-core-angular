@@ -48,6 +48,7 @@ export class RightOrganizDepertComponent implements OnInit {
     ) {
     }
     ngOnInit() {
+        this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
             this.massMy = this._storageSrv.getItem('abs_prav_mas');
         }
