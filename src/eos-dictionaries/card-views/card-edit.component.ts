@@ -154,12 +154,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     }
 
     getCardTitle(): any {
-        setTimeout(() => {
             if (this.baseCardEditRef) {
                 return this.baseCardEditRef.getCardTitle();
             }
             return '';
-        }, 0);
     }
 
 
