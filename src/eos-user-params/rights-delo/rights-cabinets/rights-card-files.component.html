@@ -41,7 +41,7 @@
             <div class="title-cards">
                 <span>Кабинеты</span>
             </div>
-            <eos-cabinets-folders *ngIf="currentCard && !loadCabinets"  [card]="currentCard" [flagEdit]="flagEdit"></eos-cabinets-folders>
+            <eos-cabinets-folders *ngIf="currentCard && !loadCabinets"  [card]="currentCard" [flagEdit]="flagEdit" (changes)="checkGlobalChanges()"></eos-cabinets-folders>
             <div class="user-input-group sp" *ngIf="loadCabinets">
                 <eos-spinner size="lg"></eos-spinner>
             </div>
