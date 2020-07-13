@@ -80,7 +80,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
     }
 
     selectNode(evt: Event): void {
-        evt.stopPropagation();
+        // evt.stopPropagation();
         this.clickSelect.emit(this.node);
     }
 
