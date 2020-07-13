@@ -34,18 +34,29 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        super.ngOnChanges(changes);
-        // const control = this.control;
-        // this.input.dib = this;
-        // if (control) {
-        //     setTimeout(() => {
-        //         this.toggleTooltip();
-        //     });
-        // }
+        // super.ngOnChanges(changes);
+        const control = this.control;
+        this.input.dib = this;
+        if (control) {
+            setTimeout(() => {
+                this.toggleTooltip();
+            });
+        }
 
         if (!this.input.pattern) {
             this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
         }
+        this.subscriptions.push(control.statusChanges.subscribe(() => {
+            if (this.inputTooltip.force) {
+                this.updateMessage();
+                setTimeout(() => { // похоже тут рассинхрон, имя не успевает обновиться и если меняется с ошибки на ошибку, то имя ангулар не меняет
+                    this.inputTooltip.visible = true;
+                    this.inputTooltip.force = false;
+                }, 0);
+            } else {
+                this.inputTooltip.visible = (this.inputTooltip.visible && control.invalid && control.dirty);
+            }
+        }));
     }
 
     checkMinValue() {
