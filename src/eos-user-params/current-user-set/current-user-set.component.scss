@@ -51,7 +51,8 @@ $bgButtonSave: #E4DFD2;
 
     span.eos-icon-bin-forever-blue,
     span.eos-icon-close-blue,
-    span.eos-icon-close-grey {
+    span.eos-icon-close-grey,
+    span.eos-icon-bin-forever-grey {
         background-image: url("assets/icons/Icon-Delete-UserSettings.svg");
     }
 
@@ -939,38 +940,50 @@ $bgButtonSave: #E4DFD2;
         }
 
         //вкладка РК
-        .container-rk {
-            position: relative;
+        eos-user-param-rc {
+            .container-rk {
+                max-height: calc(100vh - 150px);
+    
+                div.user-group-form {
+                    &:first-child {
+                        &>eos-dynamic-input:first-child {
+                            margin-top: 0;
+                        }
+                    }
 
-            div.btn-controll {
-                justify-content: flex-end;
-                margin: 5px 0;
-                padding: 0;
+                    &:nth-child(2) {
+                        div.btn-controll {
+                            justify-content: flex-end;
+                            margin: 0;
+            
+                            button {
+                                @include style-other-button;
+                                padding: 4px 0 0 4px;
+                                border-width: 0;
+            
+                                &:last-child {
+                                    padding-right: 0;
+                                }
+                            }
+                        }
 
-                button {
-                    @include style-other-button;
+                        div.user-input-group-flex {
+                            margin-left: 20px;
+                        }
+                    }
+
+                    div.inputs-inline.input-right {
+                        margin: 15px 20px 15px;
+
+                        &>span {
+                            padding-left: 5px;
+                        }
+                    }
                 }
-            }
-
-            div.user-input-group-flex {
-                padding: 10px 1px 0 1px;
-                margin-left: 40px;
-
-                &>span.current {
-                    background: $bgLeftSidebarActive;
+                
+                &>eos-dynamic-input {
+                    margin-left: 20px;
                 }
-            }
-
-            div.user-group-form {
-                div.input-right {
-                    margin: 20px 30px;
-                }
-            }
-
-            &>eos-dynamic-input {
-                position: absolute;
-                bottom: 42px;
-                left: 300px;
             }
         }
 
