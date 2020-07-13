@@ -150,7 +150,8 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     }
 
     getValueWindowList(): string {
-        return this.inputs['rec.CLASSIF_WEB_SUGGESTION'].options[this.form.controls['rec.CLASSIF_WEB_SUGGESTION'].value].title;
+        const value = this.form.controls['rec.CLASSIF_WEB_SUGGESTION'].value === '1' ? '0' : '1';
+        return this.inputs['rec.CLASSIF_WEB_SUGGESTION'].options[value].title;
     }
 
     prepFormForSave() {
