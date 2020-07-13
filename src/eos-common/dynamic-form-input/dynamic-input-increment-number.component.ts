@@ -34,14 +34,14 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // super.ngOnChanges(changes);
-        const control = this.control;
-        this.input.dib = this;
-        if (control) {
-            setTimeout(() => {
-                this.toggleTooltip();
-            });
-        }
+        super.ngOnChanges(changes);
+        // const control = this.control;
+        // this.input.dib = this;
+        // if (control) {
+        //     setTimeout(() => {
+        //         this.toggleTooltip();
+        //     });
+        // }
 
         if (!this.input.pattern) {
             this.control.setValidators(Validators.pattern(/^\d{0,5}$/));

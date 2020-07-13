@@ -89,7 +89,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
             this.ngOnDestroy();
             this.subscriptions.push(control.statusChanges.subscribe(() => {
-                 this.inputTooltip.visible = false;
+                 // this.inputTooltip.visible = false;
                 if (this.inputTooltip.force) {
                     this.updateMessage();
                     setTimeout(() => { // похоже тут рассинхрон, имя не успевает обновиться и если меняется с ошибки на ошибку, то имя ангулар не меняет
