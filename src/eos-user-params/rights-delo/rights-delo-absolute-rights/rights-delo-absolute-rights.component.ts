@@ -571,7 +571,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (item.key === '28') {
                 this.checkExecOrder(flag);
             }
-            if (item.key === '18') {
+            if (item.key === '18' &&  !this._appContext.limitCardsUser.length) {
                 setTimeout(() => this.checkGroupDelRK(flag), 500);
             }
         }
