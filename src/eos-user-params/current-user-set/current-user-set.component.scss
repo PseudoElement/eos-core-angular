@@ -10,6 +10,7 @@ $bgColorInput: #646464;
 $bgInitial: #FFFFFF;
 $bgButton: #E9E6DF;
 $bgButtonSave: #E4DFD2;
+$borderListRC: #c1c1c1;
 
 @mixin settings-icon {
     background-size: 75% 58%;
@@ -438,6 +439,24 @@ $bgButtonSave: #E4DFD2;
                             background-color: $bgInitial;
                         }
                     }
+                }
+            }
+
+            div.input_wrapper {
+                span.list-triangle {
+                    top: 7px;
+                    left: -10px;
+                }
+
+                span.eos-icon-close-folder-grey,
+                span.eos-icon-open-folder-grey {
+                    background-image: url("assets/icons/Icon-Open-Close-UserSettings.svg");
+                    background-repeat: no-repeat;
+                    background-size: 10px 10px;
+                }
+
+                span.eos-icon-open-folder-grey {
+                    left: -30px !important;
                 }
             }
 
@@ -968,7 +987,21 @@ $bgButtonSave: #E4DFD2;
                         }
 
                         div.user-input-group-flex {
-                            margin-left: 20px;
+                            height: 100px;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                            margin: 0 0 15px 20px;
+                            padding-top: 0;
+                            overflow-y: auto;
+
+                            &>span.rc-doc {
+                                padding: 2px 5px;
+
+                                &.current {
+                                    background: $bgLeftSidebarActive;
+                                    border: 1px solid $borderListRC;
+                                }
+                            }
                         }
                     }
 
@@ -988,133 +1021,289 @@ $bgButtonSave: #E4DFD2;
         }
 
         //вкладка Справочники
-        .wr-scroll-dict {
-            div.user-group-form:first-child {
-                margin-left: 5px;
+        eos-user-param-directories {
+            .wr-scroll-dict {
+                div.elem-input-radio {
+                    display: block;
 
-                eos-dynamic-input-radio div.ng-pristine {
-                    margin-left: -10px;
-                }
-            }
+                    label.inline-block {
+                        padding-top: 0;
+                    }
+                }           
+                
+                div.user-group-form {
+                    &:first-child {
+                        div.inputs-inline {
+                            @include set-margin-for-dynamic-ipnputs;
+                            margin-bottom: 5px;
 
-            div.user-group-form:nth-child(2) {
-                display: flex;
-                width: 340px;
+                            &>span {
+                                @include style-title-bookmarks;
+                                padding-top: 0 !important;
+                            }                                                    
+                        }
+                    }
 
-                span {
-                    background-color: transparent;
+                    &:nth-child(2) {
+                        margin: 0 0 15px 25px;
 
-                    &:last-child {
-                        font-weight: normal;
+                        &>span {
+                            @include reset-style-title-bookmarks;
+                            width: 140px !important;
+                            padding: 0 !important;
+                            margin-right: 0 !important;
+                        }
+                    }
+
+                    &:nth-child(3) {
+                        div.user-input-group-section {
+                            eos-dynamic-input.inline-block {
+                                padding-top: 0;
+                            }
+                            
+                            @include set-margin-for-dynamic-ipnputs;
+                        }
                     }
                 }
-            }
 
-            >div:not(.user-group-form) {
-                height: 80px;
+                &>div:not(.user-group-form) {
+                    &>span {
+                        @include style-title-bookmarks;
+                    }
 
-                >span {
-                    @include style-title-bookmarks;
-                }
+                    div.form-group {
+                        margin: 0;
+                    }
+
+                    @include set-margin-for-dynamic-ipnputs;
+
+                }   
             }
         }
 
         //вкладка Внешний обмен
-        .user-param-registration-content-wrapper {
+        eos-ext-exch {
             eos-remaster-email {
                 div.accordion-position {
-                    // max-height: calc(100vh - 260px);
+                    max-height: calc(100vh - 205px);
 
-                    accordion:first-child {
-                        accordion-group:first-child {
-                            div.accord-wr {
-                                margin-bottom: 45px;
+                    .panel-group {
+                        width: calc(100vw - 145px);                       
+                        margin-bottom: 0; 
 
-                                &>div:last-child {
-                                    margin: 10px 0;
-                                }
-                            }
+                        br {
+                            display: none;
                         }
-
-                        accordion-group:nth-child(2) {
-                            div.accord-wr {
-                                div:first-child {
-                                    margin-bottom: 10px;
-
-                                    .user-group-form {
-                                        margin-left: 0;
-
-                                        &>span:not(:first-child) {
-                                            margin-left: 15px;
+                        
+                        &:first-child {
+                            accordion-group.panel {
+                                &:first-child {
+                                    .accord-wr>div:last-child {
+                                        margin-top: 15px;
+                                        
+                                        div.receipe-email {
+                                            width: 500px;
                                         }
                                     }
                                 }
 
-                                div:not(:first-child) {
-                                    height: 30px;
+                                &:nth-child(2) {
+                                    .accord-wr>div {
+                                        div.user-group-form {
+                                            padding-left: 7px;
+                                            margin-bottom: 15px;
+
+                                            span.set-header {
+                                                @include reset-style-title-bookmarks;
+                                                padding: 0 !important;
+                                                margin-bottom: 15px;
+                                            }            
+                                        }
+
+                                        &:first-child {
+                                            div.input_wrapper {
+                                                &>eos-dynamic-input {
+                                                    margin-bottom: 15px;
+    
+                                                    div.elem-input-radio {
+                                                        display: block;
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        &:nth-child(2),
+                                        &:nth-child(4) {
+                                            float: left;
+                                            width: 100px;
+                                            margin-right: 30px;
+                                        }
+
+                                        &:nth-child(3),
+                                        &:nth-child(5) {
+                                            div.elem-input-radio {
+                                                width: 235px;
+                                            }
+                                        }
+
+                                        &:nth-child(2),
+                                        &:nth-child(3) {
+                                            margin-bottom: 15px;
+                                        }
+                                    }
+                                }
+                            }                                                       
+                        }
+
+                        &:last-child {
+                            .panel {
+                                &:last-child {
+                                    div.accord-wr {
+                                        &:not(:first-child) {
+                                            margin-top: 0 !important;
+                                        }
+    
+                                        &:not(:last-child) {
+                                            margin-bottom: 0 !important;
+                                        }
+    
+                                        &>div {
+                                            margin-top: 0 !important;
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    .panel-group {
-                        margin-bottom: 5px;
+                        .panel {
+                            margin-bottom: initial; 
+                            background-color: $bgHeaderForm; 
+                            border: none; 
+                            border-radius: initial; 
+                            box-shadow: initial;                            
+
+                            &+.panel {
+                                margin-top: 0;
+                            }
+
+                            .panel-default {
+                                .panel-heading {
+                                    padding: 0;
+                                    background: initial;
+
+                                    div.accordion-toggle[role=button] {
+                                        cursor: default;
+                                    }
+
+                                    button {
+                                        &.btn {
+                                            padding: 2px 10px;
+                                            font-weight: bold;
+                                            font-size: 14px;
+                                            line-height: 16px;
+                                        }
+
+                                        &.btn-link:hover {
+                                            text-decoration: initial;
+                                            cursor: default;
+                                        }
+                                    }
+
+                                    span.panel-icon {
+                                        display: none;
+                                    }
+                                }
+
+                                .panel-collapse {
+                                    display: block !important;
+                                    background-color: $bgMainArea;
+
+                                    &>.panel-body {
+                                        padding: 0;
+                                        border: none;
+
+                                        div.accord-wr {
+                                            padding: 0;
+                                            margin: 15px 20px;                                           
+
+                                            div.form-group {
+                                                margin: 0;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
 
             eos-remaster-seb {
+                br {
+                    display: none;
+                }
+               
                 div.user-group-form {
-                    margin-left: 0;
+                    div.elem-input-radio {
+                        display: block;
+                    }
 
-                    &>span {
-                        margin-bottom: 10px;
+                    eos-dynamic-input:nth-child(2) {
+                        margin-bottom: 15px;
+                    }
+                }
+            }
+
+            eos-remaster-mado {
+                div.mado-inputs {
+                    height: calc(100vh - 220px);
+
+                    eos-dynamic-input {
+                        &:nth-child(1),
+                        &:nth-child(2),
+                        &:nth-child(3) {
+                            margin-bottom: 0;
+                        }
+
+                        &:nth-child(1) {
+                            margin-top: 0 !important;
+                        }
+
+                        &:nth-child(4) {
+                            margin-top: 15px;
+
+                            div.elem-input-radio {
+                                display: block;
+                            }
+                        }
+
+                        &:last-child {
+                            margin-left: 20px !important;
+                        }
                     }
                 }
             }
         }
 
         //вкладка Электронная подпись
-        &.input-user-other-rk-forwarding-wrapper {
-            div.user-input-group {
-                hr {
-                    margin: 70px 0 0 0;
-                }
+        eos-user-param-el-signature {
+            div.signature {
+                max-height: calc(100vh - 150px) !important;
+                margin: 20px;
+                margin-right: 0;
+                padding: 0;
 
-                span.l-font {
-                    font-size: 14px;
-                    @include style-title-bookmarks;
-                }
-
-                &:first-child>div.signature-wr:last-child {
-                    margin-bottom: 20px;
-                }
-
-                &:nth-child(3) button {
-                    color: $textMainColor;
-                    border-color: $borderTab;
-
-                    &:first-child {
-                        margin-left: 10px;
-                    }
-
-                    &:hover {
-                        background-color: $bgLeftSidebarActive;
-                    }
-                }
-
-
-                &:nth-child(4) {
-                    height: 55px;
-                }
-
-                &:nth-child(5) {
+                div.user-input-group {
                     hr {
                         display: none;
                     }
 
-                    div.input-flex {
-                        margin-bottom: 80px;
+                    span.l-font {
+                        @include style-title-bookmarks;
+                    }
+
+                    &:first-child {
+                        margin-top: 0;
                     }
                 }
             }
@@ -1220,10 +1409,6 @@ $bgButtonSave: #E4DFD2;
             }
 
             eos-user-param-transfer {
-                &>div {
-                    // height: 75vh;
-                }
-
                 div.pad-other-set {
 
                     &>div.user-group-form:first-child {
