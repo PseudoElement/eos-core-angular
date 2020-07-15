@@ -21,9 +21,11 @@ export class RightDepertmentComponent implements OnInit {
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() listRigth: NodeAbsoluteRight[];
     @Input() curentUser: IParamUserCl;
+    @Input() projectResol: number;
     @Output() Changed = new EventEmitter();
     @Output() createRcpdD = new EventEmitter();
     @Output() emitDeletedRc = new EventEmitter();
+    @Output() independetRight = new EventEmitter();
 
     isLoading: boolean = false;
     massMy: USERDEP[] = [];
@@ -566,6 +568,10 @@ export class RightDepertmentComponent implements OnInit {
         this.massMy = [];
         this._storageSrv.removeItem('abs_prav_mas');
         this.Changed.emit();
+    }
+
+    indepRights() {
+        this.independetRight.emit('PROJECT');
     }
 
     private _getMaxWeight(): number {

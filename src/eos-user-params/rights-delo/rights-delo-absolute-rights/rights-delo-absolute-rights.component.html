@@ -73,8 +73,8 @@
 
 <!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
-    <eos-right-absolute-department style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight"
-        (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)"></eos-right-absolute-department>
+    <eos-right-absolute-department style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight" [projectResol]="projectResol"
+        (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)" (independetRight)="addIndepRights($event)"></eos-right-absolute-department>
 </ng-template>
 
 <!-- всех/незаполненых -->
@@ -97,8 +97,8 @@
 <ng-template #departOrganiz>
     <div style="height: 100%;">
         <div style="height: 50%;position: relative;">
-            <eos-right-absolute-depart-organiz style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight" [rights]="rights"
-            (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)" (independetRight)="addIndepRights()"></eos-right-absolute-depart-organiz>
+            <eos-right-absolute-depart-organiz style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight" [resolutions]="resolutionsRights"
+            (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)" (independetRight)="addIndepRights($event)"></eos-right-absolute-depart-organiz>
         </div>
         <hr style="margin-bottom: 5px;margin-top: 5px;" />
         <div style="height: 47%;position: relative;">

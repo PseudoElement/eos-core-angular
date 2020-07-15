@@ -4,7 +4,7 @@
             <label *ngIf="getAllDep" class="checkbox" >
                 <input type="checkbox"
                        [disabled]="(!editMode || selectedNode.control.disabled)"
-                       [checked]="!rights"
+                       [checked]="!resolutions"
                        (change)="indepRights()">
                 <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
                 Ограничить картотекой Автора

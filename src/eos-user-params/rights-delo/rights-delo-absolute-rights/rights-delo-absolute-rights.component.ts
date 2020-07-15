@@ -49,7 +49,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     limitUserTech: boolean;
     flagDel: boolean = false;
     groupDelRK = [];
-    rights: number;
+    resolutionsRights: number;
+    projectResol: number;
     public editMode: boolean = false;
     get titleHeader() {
         if (this.curentUser) {
@@ -151,6 +152,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
+        this.resolutionsRights = +this.arrNEWDeloRight[26];
+        this.projectResol = +this.arrNEWDeloRight[27];
         this.fields = this._writeValue(ABS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
@@ -441,7 +444,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._deleteAllDep(item);
                 if (item.key === '4') {
                     this.arrNEWDeloRight[26] = '0';
-                    this.rights = +this.arrNEWDeloRight[26];
+                    this.resolutionsRights = +this.arrNEWDeloRight[26];
+                }
+                if (item.key === '22') {
+                    this.arrNEWDeloRight[27] = '0';
+                    this.projectResol = +this.arrNEWDeloRight[27];
                 }
                 if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
                     this._deleteAllOrg(item);
@@ -684,10 +691,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._pushState();
     }
 
-    addIndepRights() {
-        this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
-        this.checkChange();
-        this.rights = +this.arrNEWDeloRight[26];
+    addIndepRights(rights_type: string) {
+        switch (rights_type) {
+            case 'PROJECT':
+                this.arrNEWDeloRight[27] = this.arrNEWDeloRight[27] === '1' ? '0' : '1';
+                this.checkChange();
+                this.projectResol = +this.arrNEWDeloRight[27];
+                break;
+            case 'RESOLUTION':
+                this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
+                this.checkChange();
+                this.resolutionsRights = +this.arrNEWDeloRight[26];
+                break;
+        }
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
