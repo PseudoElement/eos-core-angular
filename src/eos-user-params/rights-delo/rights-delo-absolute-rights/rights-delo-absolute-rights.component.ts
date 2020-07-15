@@ -448,7 +448,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
                 if (item.key === '22') {
                     this.arrNEWDeloRight[27] = '0';
-                    this.resolutionsRights = +this.arrNEWDeloRight[27];
+                    this.projectResol = +this.arrNEWDeloRight[27];
                 }
                 if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
                     this._deleteAllOrg(item);
