@@ -129,7 +129,10 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             this.cathError(error);
         });
     }
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
 
     hideToolTip() {
         const element = document.querySelector('.tooltip');
