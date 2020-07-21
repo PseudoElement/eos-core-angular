@@ -1279,6 +1279,10 @@ export class EosDictService {
     public combine(slicedNodes, markedNodes): Promise<any> {
         return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
             this._msgSrv.addNewMessage({ type: 'success', title: 'Сообщение', msg: 'Объединение завершено' });
+            slicedNodes.forEach(node => {
+                node.delete();
+                this.currentDictionary.nodes.delete(node.id);
+            });
             this._storageSrv.removeItem('markedNodes');
             this.reload();
         }).catch(e => {
