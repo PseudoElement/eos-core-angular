@@ -35,7 +35,7 @@ export class CreateNodeBroadcastChannelComponent extends CreateNodeComponent {
         const props = ['CLASSIF_NAME', 'NOTE', 'CHANNEL_TYPE', 'PARAMS'];
 
         for (const prop in data.rec) {
-            if (data.rec.hasOwnProperty(prop) && !props.includes(prop)) {
+            if (data.rec.hasOwnProperty(prop) && !(props.indexOf(prop) !== -1)) {
                 delete data.rec[prop];
             }
         }
