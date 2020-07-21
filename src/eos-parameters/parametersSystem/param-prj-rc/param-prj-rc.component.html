@@ -30,15 +30,15 @@
         ></eos-dynamic-input>
         <span>и выше</span>
        </div>
-       <div class="key-protected left">
-        <span>для групп документов:</span>
-        <eos-dynamic-input class="key-protected-top" *ngIf="this._appContext.cbBase"
-            [ngClass]="['inline-block', 'input-select-sub']"
-            [input]="inputs['rec.PRJ_GROUP_FILE_PROTECTED']"
-            [form]="form"
-            [readonly]="form.controls['rec.PRJ_STAGE_FILE_PROTECTED'].value === '000000000'"
-        ></eos-dynamic-input>
-       </div>
+        <div class="key-protected left" *ngIf="this._appContext.cbBase">
+            <span>для групп документов:</span>
+            <eos-dynamic-input class="key-protected-top"
+                               [ngClass]="['inline-block', 'input-select-sub']"
+                               [input]="inputs['rec.PRJ_GROUP_FILE_PROTECTED']"
+                               [form]="form"
+                               [readonly]="form.controls['rec.PRJ_STAGE_FILE_PROTECTED'].value === '000000000'"
+            ></eos-dynamic-input>
+        </div>
     </div>
     <hr>
     <div class="param-input-group">
