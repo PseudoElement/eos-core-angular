@@ -1,7 +1,6 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
 import { Features } from 'eos-dictionaries/features/features-current.const';
-import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DictUtils } from 'eos-dictionaries/utils/dict-utils';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
@@ -13,6 +12,7 @@ const FeaturesRK = Features.cfg.rkdefaults;
 })
 
 export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements OnChanges {
+
     static rkDaysVariations = [];
 
     flagEn_extAddr: boolean;
@@ -21,7 +21,7 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     flagEn_spinnum: boolean;
     dayTypeTitle: string;
 
-    isCB = Features.cfg.variant === EOSDICTS_VARIANT.CB;
+    isCB = this._appCtx.cbBase;
 
 
 
@@ -90,6 +90,7 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        console.log(this.isCB );
         // this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
         this.selOpts.events = {
             select: this.journalNomencClickSel.bind(this),
