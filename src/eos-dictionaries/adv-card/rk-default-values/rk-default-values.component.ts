@@ -90,7 +90,6 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log(this.isCB );
         // this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
         this.selOpts.events = {
             select: this.journalNomencClickSel.bind(this),
