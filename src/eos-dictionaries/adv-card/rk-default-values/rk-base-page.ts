@@ -4,6 +4,7 @@ import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
 import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap';
+import {AppContext} from '../../../eos-rest/services/appContext.service';
 
 @Injectable()
 export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
@@ -28,6 +29,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
 
     constructor (
         protected _modalSrv: BsModalService,
+        protected _appCtx: AppContext,
     ) {
 
     }
