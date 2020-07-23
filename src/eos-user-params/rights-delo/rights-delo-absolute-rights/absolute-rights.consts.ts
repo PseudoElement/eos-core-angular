@@ -231,7 +231,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 22
         key: '24',
-        label: 'Чтение РК персонального доступа',
+        label: 'Чтение РК персонифицированного доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
@@ -241,7 +241,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 23
         key: '25',
-        label: 'Чтение файлов персонального доступа',
+        label: 'Чтение файлов персонифицированного доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
