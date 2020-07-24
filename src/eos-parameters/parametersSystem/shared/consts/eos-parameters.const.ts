@@ -33,6 +33,9 @@ export const EOS_PARAMETERS_TAB = [{
 }, {
     title: 'Текущая организация',
     url: 'now-organiz'
+}, {
+    title: 'Служба конвертации',
+    url: 'conversion'
 }];
 
 
