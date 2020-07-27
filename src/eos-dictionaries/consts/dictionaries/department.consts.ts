@@ -259,7 +259,15 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             key: 'ISN_PHOTO',
             title: 'ISN фотографии',
             type: 'number',
-        }, {
+        },
+        {
+            key: 'MEDO_ID',
+            title: 'Идентификатор МЭДО',
+            type: 'string',
+            isUnique: true,
+            uniqueInDict: true,
+        },
+        {
             key: 'printInfo',
             type: 'dictionary',
             title: '',
@@ -360,7 +368,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
         'nametitleDep', 'nametitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG',
-        'ISN_STAMP',
+        'ISN_STAMP', 'MEDO_ID',
     ],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
     allVisibleFields: ['fullTitle', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
