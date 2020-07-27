@@ -1,11 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-param-header',
     templateUrl: 'header.component.html'
 })
-export class ParamHeaderComponent implements OnInit {
+export class ParamHeaderComponent implements OnInit, OnChanges {
     public editMode;
     public flag: boolean = false;
     public selfLink: string;
@@ -26,9 +26,9 @@ export class ParamHeaderComponent implements OnInit {
         } else {
             this.editMode = true;
         }
-        if (this.editBtn && this.editBtn === true) {
-            this.flag = true;
-        }
+        // if (this.editBtn && this.editBtn === true) {
+        //     this.flag = true;
+        // }
         this.selfLink = this._router.url.split('?')[0];
     }
     edit() {
@@ -47,5 +47,12 @@ export class ParamHeaderComponent implements OnInit {
             this.editMode = false;
         /* } */
         this.cancelForm.emit();
+    }
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.editBtn && this.editBtn === true) {
+            this.flag = true;
+        } else {
+            this.flag = false;
+        }
     }
 }
