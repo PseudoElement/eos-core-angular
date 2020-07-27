@@ -46,7 +46,7 @@ export class UserHeaderComponent implements OnInit {
 
     cancel() {
         if (this.checkSegment) {
-            window.opener.close();
+            window.close();
             return;
         }
         this.editMode = false;

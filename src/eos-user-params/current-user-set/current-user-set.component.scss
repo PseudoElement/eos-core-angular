@@ -1294,6 +1294,8 @@ $borderListRC: #c1c1c1;
                 padding: 0;
 
                 div.user-input-group {
+                    margin-top: 0;                    
+
                     hr {
                         display: none;
                     }
@@ -1303,7 +1305,32 @@ $borderListRC: #c1c1c1;
                     }
 
                     &:first-child {
-                        margin-top: 0;
+                        div.signature-wr:last-child {
+                            eos-dynamic-input {
+                                padding-top: 0;
+                            }
+                        }
+                    }
+
+                    &:nth-child(3) {
+                        button {
+                            margin-top: 0;
+                            color: $textMainColor;
+                            border-color: $borderTab;
+
+                            &:hover {
+                                background-color: $bgLeftSidebarActive;
+                                border-color: $borderTabActive;
+                            }
+                        }
+                    }
+
+                    &:last-child {
+                        padding-left: 0;
+
+                        button {
+                            margin-top: 0;
+                        }
                     }
                 }
             }
