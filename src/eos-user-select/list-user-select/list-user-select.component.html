@@ -22,6 +22,7 @@
         <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
+            <eos-users-info [open]='openUserInfo' (closeModal)="OpenUsersInfo($event)" ></eos-users-info>
             <div class="checkbox only-view" *ngIf="shooseP===0  && currentDue !=='0.'">
                 <label class="user-check-label">
                     <input [checked]="onlyView" type="checkbox" (change)="setChengeOnlyView()">
@@ -112,7 +113,7 @@
                                     <span *ngIf="!user.deep"
                                         class="eos-icon eos-icon-Techuser-Grey small icon-user"></span>
                                     <span *ngIf="user.deep"
-                                        class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
+                                        class="eos-icon eos-icon-DeepUser-Black small icon-user"></span>
                                     {{ user.fullDueName}}
                                 </span>
                                 <span *ngIf="user.department === 'null' || user.department === '...'; else depUser" class="user-list-first-colomn"

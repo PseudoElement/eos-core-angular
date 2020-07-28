@@ -247,6 +247,14 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.serverSystem.PPO_SSTY.Trial = '+'; // elem.Trial;
         this.serverSystem.PPO_SSTY.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
+      if (elem.Id === 37) {
+        this.serverSystem.MRCHART.Trial = '+'; // elem.Trial;
+        this.serverSystem.MRCHART.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
+      if (elem.Id === 38) {
+        this.serverSystem.MTG.Trial = '+'; // elem.Trial;
+        this.serverSystem.MTG.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
+      }
     });
 
     // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
@@ -261,4 +269,17 @@ export class EosReportUsersStatsComponent implements OnInit {
     });
   }
 
+  checkUsersLimits (subItem): boolean {
+    if (subItem) {
+      const setZeroHours = date => date.setHours(0, 0, 0, 0);
+
+      const expiredDate = new Date(subItem.Expired);
+      const currentDate = new Date();
+
+      return (this.items.length > 0 && subItem.Users && subItem.Users < subItem.ActualUsers) ||
+      (+expiredDate && setZeroHours(expiredDate) < setZeroHours(currentDate));
+    }
+
+    return true;
+  }
 }

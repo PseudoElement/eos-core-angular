@@ -21,9 +21,11 @@ export class RightOrganizDepertComponent implements OnInit {
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() listRigth: NodeAbsoluteRight[];
     @Input() curentUser: IParamUserCl;
+    @Input() resolutions: number;
     @Output() Changed = new EventEmitter();
     @Output() createRcpdD = new EventEmitter();
     @Output() emitDeletedRc = new EventEmitter();
+    @Output() independetRight = new EventEmitter();
 
     isLoading: boolean = false;
     massMy: USERDEP[] = [];
@@ -35,6 +37,7 @@ export class RightOrganizDepertComponent implements OnInit {
     isShell: Boolean = false;
     selectedDep: NodeDocsTree;
     checkFlag: boolean = false;
+
     constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
@@ -452,6 +455,11 @@ export class RightOrganizDepertComponent implements OnInit {
         this.massMy = [];
         this._storageSrv.removeItem('abs_prav_mas');
         this.Changed.emit();
+    }
+
+
+    indepRights() {
+        this.independetRight.emit('RESOLUTION');
     }
 
     private _getMaxWeight(): number {

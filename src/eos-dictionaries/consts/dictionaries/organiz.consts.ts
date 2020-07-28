@@ -21,7 +21,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes', 'uncheckNewEntry'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
-    searchConfig: [SEARCH_TYPES.quick /*, SEARCH_TYPES.full*/],
+    searchConfig: [SEARCH_TYPES.quick , SEARCH_TYPES.full],
     fields: COMMON_FIELDS.concat([{
         key: 'DUE',
         type: 'string',
@@ -154,13 +154,27 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     type: 'string',
         //     length: 16,
         //     pattern: NOT_EMPTY_STRING,
-        // }, {
-        //     key: 'INN',
-        //     title: 'ИНН',
-        //     type: 'string',
-        //     length: 64,
-        //     pattern: NOT_EMPTY_STRING,
-        // }, {
+        // },
+        {
+            key: 'INN',
+            title: 'ИНН',
+            type: 'string',
+            length: 64,
+            pattern: NOT_EMPTY_STRING,
+        },
+        {
+            key: 'EMAIL',
+            title: 'Почта',
+            type: 'string',
+            length: 64,
+            pattern: NOT_EMPTY_STRING,
+        },
+        {
+            key: 'DOP_REC',
+            title: 'Доп. реквизит',
+            type: 'string',
+        },
+       // {
         //     key: 'ISN_REGION',
         //     title: 'Регион',
         //     type: 'dictionary',
@@ -244,7 +258,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         // ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
-    fullSearchFields: [],
+    fullSearchFields: ['CLASSIF_NAME', 'EMAIL', 'INN', 'DOP_REC'],
     // quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',
     //     'ISN_ORGANIZ_TYPE', 'SERTIFICAT',  'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'sev'],
     quickViewFields: ['FULLNAME',

@@ -58,6 +58,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     checkAll: string;
     onlyView: boolean;
     currentDue: string;
+    openUserInfo: boolean = false;
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
@@ -432,13 +433,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
-        if (this._apiSrv.configList.shooseTab === 0) {
+        if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
             if (this._apiSrv.flagDelitedPermanantly === true) {
                 localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
             }
             this._router.navigate(['user_param/0.']);
+        } else {
+            this.initView(id ? id : '0.');
         }
-        this.initView(id ? id : '0.');
+
     }
 
     ViewTechicalUsers() {
@@ -458,10 +461,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
-        if (this._apiSrv.configList.shooseTab === 0) {
+        if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
             this._router.navigate(['user_param/0.']);
+        } else {
+            this.initView(id ? id : '0.');
         }
-        this.initView(id ? id : '0.');
     }
     upsavePagConfig() {
         const conf = this._storage.getItem('users');
@@ -862,6 +866,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
+    OpenUsersInfo(closeModal?) {
+        if (closeModal) {
+            this.openUserInfo = false;
+        } else {
+            this.openUserInfo = true;
+        }
+    }
+
     get getflagChecked() {
         switch (this.flagChecked) {
             case true:
@@ -912,4 +924,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         const url = `EraseUser?isn_user=${isn_user}`;
         return url;
     }
+
+
 }

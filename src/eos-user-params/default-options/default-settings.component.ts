@@ -9,6 +9,7 @@ import { PipRX, USER_PARMS, ICancelFormChangesEvent } from 'eos-rest';
 import { IUserSetChanges } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-default-settings',
@@ -73,8 +74,11 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
     @HostListener('window:beforeunload', ['$event'])
     canWndUnload(evt: BeforeUnloadEvent): any {
         if (this._isChanged) {
-            evt.returnValue = '';
-            return false;
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
+            return MESSAGE_SAVE_ON_LEAVE;
         }
     }
 

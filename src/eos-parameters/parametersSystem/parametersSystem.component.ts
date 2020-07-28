@@ -12,6 +12,7 @@ import { NavParamService } from 'app/services/nav-param.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -63,8 +64,11 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     @HostListener('window:beforeunload', ['$event'])
     canWndUnload(evt: BeforeUnloadEvent): any {
         if (this.isChanged) {
-            evt.returnValue = 'Возможно, внесенные изменения не сохранятся.';
-            return false;
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
+            return MESSAGE_SAVE_ON_LEAVE;
         }
     }
     canDeactivate(_nextState?: any): boolean | Promise<boolean> {

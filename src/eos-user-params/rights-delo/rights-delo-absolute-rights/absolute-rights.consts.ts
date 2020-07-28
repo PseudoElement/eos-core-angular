@@ -24,10 +24,10 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 24
         key: '2',
-        label: 'Централизованная отправка документов',
+        label: 'Отправка документов по реестрам',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            // rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
@@ -48,15 +48,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         }
     },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 5
-        key: '26',
-        label: 'Ввод резолюций не ограничен картотекой автора',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 5
+    //     key: '26',
+    //     label: 'Ввод резолюций не ограничен картотекой автора',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
     {
         controlType: E_FIELD_TYPE.boolean, // отобразить чекбокс Разрешить операцию рассылки проекта резолюции
         key: '22',
@@ -66,15 +66,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject
         }
     },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 7
-        key: '27',
-        label: 'Ввод проектов резолюций не ограничен картотекой автора',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 7
+    //     key: '27',
+    //     label: 'Ввод проектов резолюций не ограничен картотекой автора',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
     {
         controlType: E_FIELD_TYPE.boolean, // 8
         key: '5',
@@ -231,7 +231,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 22
         key: '24',
-        label: 'Чтение РК персонального доступа',
+        label: 'Чтение РК персонифицированного доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
@@ -241,7 +241,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 23
         key: '25',
-        label: 'Чтение файлов персонального доступа',
+        label: 'Чтение файлов персонифицированного доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,

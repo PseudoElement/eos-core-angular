@@ -9,10 +9,8 @@ import { CA_CATEGORY } from 'eos-rest/interfaces/structures';
 export class CaCategoryDictionaryDescriptor extends DictionaryDescriptor {
 
     confirmSave(nodeData: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-
-
         return this.apiSrv.read<CA_CATEGORY>({'CA_CATEGORY': PipRX.criteries({
-            'CA_SERIAL': nodeData.rec.CA_SERIAL,
+            'CA_SERIAL': JSON.stringify(nodeData.rec.CA_SERIAL),
             // 'CA_SUBJECT': nodeData.rec.CA_SUBJECT,
             'CA_CATEGORY.CA_SUBJECT_1024': nodeData.rec.CA_SUBJECT,
             'ISN_EDS_CATEGORY': String(nodeData.rec.ISN_EDS_CATEGORY)}), })

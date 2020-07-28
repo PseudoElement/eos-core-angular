@@ -42,14 +42,14 @@ export class NodeFieldComponent implements OnInit {
         if (this.field.type === E_FIELD_TYPE.icon) {
             if (this.node.data.rec['CARD_FLAG']) {
                 this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-card-index-grey' : 'eos-icon-card-index-blue',
+                    class: this.node.isDeleted ? 'eos-icon-card-index-grey' : 'eos-icon-card-index-black',
                     tooltip: 'Картотека',
                 });
             }
 
             if (this.node.data.rec['DOCNUMBER_FLAG'] || this.node.data.rec['NUMCREATION_FLAG']) {
                 this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-checkbox-grey' : 'eos-icon-checkbox-blue',
+                    class: this.node.isDeleted ? 'eos-icon-checkbox-grey' : 'eos-icon-checkbox-black',
                     tooltip: 'Номерообразование',
                 });
             }
@@ -57,6 +57,12 @@ export class NodeFieldComponent implements OnInit {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-icon-user-ceo-grey' : 'eos-icon-user-ceo-blue',
                     tooltip: 'Начальник',
+                });
+            }
+            if (this.node.data.rec['CLOSED'] === 1) {
+                this.iconsArray.push({
+                    class: 'eos-icon-deal-close-blue',
+                    tooltip: 'Закрыто',
                 });
             }
 
@@ -130,6 +136,7 @@ export class NodeFieldComponent implements OnInit {
                     return 'eos-icon-folder-blue';
             }
         }
+
         return 'emptyicon';
     }
 }

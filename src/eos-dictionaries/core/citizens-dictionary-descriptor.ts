@@ -3,6 +3,8 @@ import { RecordDescriptor } from './record-descriptor';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
+import { ALL_ROWS } from 'eos-rest/core/consts';
+import { AR_DESCRIPT } from 'eos-rest';
 // interface search {
 //     CITIZEN_SURNAME?: string;
 //     CITIZEN_CITY?: string;
@@ -13,7 +15,7 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 export class CitizenDescriptor extends RecordDescriptor {
     dictionary: CitizensDictionaryDescriptor;
     fullSearchFields: any;
-    constructor(dictionary: CitizensDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor, ) {
+    constructor(dictionary: CitizensDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
         this._initFieldSets([
@@ -23,6 +25,7 @@ export class CitizenDescriptor extends RecordDescriptor {
 }
 export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: CitizenDescriptor;
+    dopRec: AR_DESCRIPT[] = [];
     public addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
         return Promise.resolve();
     }
@@ -40,8 +43,12 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     public getRoot() {
-        return Promise.resolve([]);
-        // return this.getData({  вернуть после перевода на нормальную пагинацию
+        if (!this.dopRec.length) {
+            return this.ar_Descript();
+        } else {
+            return Promise.resolve([]);
+        }
+        // return this.getData({
         //     CITIZEN: ALL_ROWS
         // });
     }
@@ -65,33 +72,17 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public cutNode(node?: EosDictionaryNode): void {
         console.log(this);
     }
-    // public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> { // перенос в abstra
-    //     const preSave = [];
-    //     let paramsSop = '';
-    //     let change: Array<any> = [{
-    //         method: 'MERGE',
-    //         requestUri: `CITIZEN(${markedNodes[0].id})`,
-    //         data: {
-    //             DELETED: 0
-    //         }
-    //     }];
-    //     slicedNodes.forEach((node, i) => {
-    //         preSave.push({
-    //             method: 'DELETE',
-    //             requestUri: `CITIZEN(${node.id})`
-    //         });
-    //         i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
-    //     });
-    //     PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'CITIZEN', 'ids': paramsSop }, 'POST', false);
-    //     change = change.concat(preSave);
-    //     return this.apiSrv.batch(change, '');
-    // }
     public search(criteries: any[]): Promise<any[]> {
         const crit = criteries[0];
         if (crit.ISN_REGION) {
             crit.ISN_REGION = crit.ISN_REGION.replace(/"/g, '');
         }
-        return super.search(criteries);
+        if (criteries[0].hasOwnProperty('DOP_REC')) {
+            return this.searchDopRec(criteries);
+        } else {
+            return super.search(criteries);
+        }
+        //   return super.search(criteries);
     }
     public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, paramsMode) {
         const config = {
@@ -128,6 +119,67 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
             return this.apiSrv.batch(change, '');
         }
         return Promise.resolve();
+    }
+
+    getData(query?: any, order?: string, limit?: number): Promise<any[]> {
+        if (!query) {
+            query = ALL_ROWS;
+        }
+
+        const req = { [this.apiInstance]: query };
+
+        if (limit) {
+            req.top = limit;
+        }
+
+        if (order) {
+            req.orderby = order;
+        }
+
+        return this.apiSrv
+            .read(req)
+            .then((data: any[]) => {
+                this.prepareForEdit(data);
+                return data;
+            });
+    }
+    ar_Descript(): Promise<any> {
+        return this.apiSrv.read({
+            AR_DESCRIPT: {
+                criteries: {
+                    OWNER: 'C',
+                }
+            }, expand: 'AR_VALUE_LIST_List'
+        }).then((_descript: AR_DESCRIPT[]) => {
+            this.dopRec = _descript;
+            return Promise.resolve([]);
+        });
+    }
+    searchDopRec(criteries: any[]): Promise<any> {
+        const vaslues = JSON.parse(criteries[0].DOP_REC);
+        const newCriteries = {};
+        const critName = 'AR_CITIZEN_VALUE.' + vaslues.API_NAME;
+        let values;
+        switch (vaslues.type) {
+            case 'text':
+                values = `%${vaslues.SEARCH_VALUE}%`;
+                break;
+            case 'date':
+                values = new Date(vaslues.SEARCH_VALUE).toLocaleDateString().replace(/[^0-9\.]/g, '').replace(/\./g, '/');
+                break;
+            default:
+                values = `${vaslues.SEARCH_VALUE}`;
+                break;
+        }
+        Object.assign(newCriteries, criteries[0], { [critName]: values });
+        delete newCriteries['DOP_REC'];
+        return this.apiSrv.read({
+            CITIZEN: {
+                criteries: newCriteries
+            }
+        }).then(_d => {
+            return _d;
+        });
     }
     protected _initRecord(data: ITreeDictionaryDescriptor) {
         this.record = new CitizenDescriptor(this, data);

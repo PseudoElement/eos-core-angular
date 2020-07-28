@@ -153,7 +153,8 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     }
 
     getValueWindowList(): string {
-        return this.inputs['rec.CLASSIF_WEB_SUGGESTION'].options[this.form.controls['rec.CLASSIF_WEB_SUGGESTION'].value].title;
+        const value = this.form.controls['rec.CLASSIF_WEB_SUGGESTION'].value === '1' ? '0' : '1';
+        return this.inputs['rec.CLASSIF_WEB_SUGGESTION'].options[value].title;
     }
 
     prepFormForSave() {
@@ -227,6 +228,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.prepareData = this.formHelp.parse_Create(DIRECTORIES_USER.fields, this.hashDefolt);
                 this.prepareInputs = this.formHelp.getObjectInputFields(DIRECTORIES_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+                this.defoltInputs['rec.CLASSIF_WEB_SUGGESTION'].value = '0';
                 this.parseInputs(this.hashDefolt['SRCH_CONTACT_FIELDS'], this.defoltInputs);
                 this.prepFormCancel(this.defoltInputs, true);
             })

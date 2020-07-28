@@ -23,8 +23,8 @@ export class OrganizationsCardEditGroupComponent extends BaseCardEditComponent i
     }
     confirmSave(): Promise<any> {
         if (!this.isNewRecord) {
-            if (+this.data.rec.ISN_ADDR_CATEGORY !== this.data.rec._orig.ISN_ADDR_CATEGORY) {
-                return this._confSrv.confirm2(CONFIRM_CHANGE_ISN_ADDR_CATEGORY).then(ans => {
+            if (+this.data.rec.ISN_ADDR_CATEGORY !== +this.data.rec._orig.ISN_ADDR_CATEGORY) {
+                 return this._confSrv.confirm2(CONFIRM_CHANGE_ISN_ADDR_CATEGORY).then(ans => {
                     if (ans && ans.result === 2) {
                         this.upDateChildren();
                         return Promise.resolve(true);

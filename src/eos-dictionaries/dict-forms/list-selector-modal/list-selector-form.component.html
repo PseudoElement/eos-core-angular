@@ -14,8 +14,8 @@
                     *ngFor="let item of availableList"
                     [id]="'listItem_'+item?.key"
                     (click)="selectItem(item, 0)"
-                    [ngClass]="{'highlighted': (item === selection.left), disabled: false }">
-                    <span class="text">{{options.showKeys ? item?.key + ' ': ''}}{{item?.title}}</span>
+                    [ngClass]="{'highlighted': (item === selection.available), disabled: false, 'deleted': item.obj.DELETED }">
+                    <span class="text" *ngIf="!item.obj.DELETED || withDel">{{options.showKeys ? item?.key + ' ': ''}}{{item?.title}}</span>
                 </div>
             </div>
         </div>
@@ -36,8 +36,8 @@
                 <div class="item"
                     *ngFor="let item of currentList"
                     (click)="selectItem(item, 1)"
-                    [ngClass]="{'highlighted': (item === selection.right), disabled: false }">
-                    <span class="text">{{showKeys ? item?.key + ' ': ''}} {{item?.title}}</span>
+                    [ngClass]="{'highlighted': (item === selection.current), disabled: false, 'deleted': item.obj.DELETED }">
+                    <span class="text" *ngIf="!item.obj.DELETED || withDel">{{showKeys ? item?.key + ' ': ''}} {{item?.title}}</span>
                 </div>
             </div>
         </div>
@@ -50,6 +50,21 @@
 </div>
 
 <div class="modal-footer">
+    <div class="checkbox-search-block">
+        <span class="search-block">
+            <input #searchForm
+                   type="text"
+                   (input)=search(searchForm.value)>
+            <button class="btn btn-primary-full" type="submit" (click)="search(searchForm.value)"> Найти </button>
+        </span>
+        <label  class="checkbox" >
+            <input type="checkbox"
+                   [checked]="withDel"
+                   (change)="deletedWith()">
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+            с логически удаленными
+        </label>
+    </div>
     <span class="pull-right">
         <button type="button" class="btn btn-primary-full upper fixed-width"
                 (click)="close(true)">Выбрать</button>

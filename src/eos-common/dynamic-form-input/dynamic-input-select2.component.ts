@@ -16,6 +16,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
     @Output() buttonClickRemove: EventEmitter<any> = new EventEmitter<any>();
     @Input() container: string;
     @Input() dropup: boolean;
+    @Input () height: number;
 
     public focusedItem: any;
 
@@ -80,7 +81,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
     }
     getMenuWidthStyle(): any {
         const w = this.getMenuWidth();
-        return { 'min-width.px': w, 'max-width.px': w };
+        return { 'min-width.px': w, 'max-width.px': w, 'max-height.px': this.height ? this.height : 500};
     }
 
     getMenuWidth(): number {
@@ -90,9 +91,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         }
         this._lastWrapperWidth = w;
         this._calcItemWidth = w;
-
         return this._calcItemWidth;
-
     }
     selectClick(evt: Event) {
         if (this.readonly) {

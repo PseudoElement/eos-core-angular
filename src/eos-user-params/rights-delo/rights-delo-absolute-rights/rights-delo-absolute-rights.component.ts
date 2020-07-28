@@ -49,6 +49,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     limitUserTech: boolean;
     flagDel: boolean = false;
     groupDelRK = [];
+    resolutionsRights: number;
+    projectResol: number;
     public editMode: boolean = false;
     get titleHeader() {
         if (this.curentUser) {
@@ -142,11 +144,16 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     } */
     init() {
         const ABS = /* this._appContext.cbBase ? this.absoluteRightReturnCB() :  */ABSOLUTE_RIGHTS;
+        if (this._appContext.cbBase) {
+            ABS[2].label = 'Централизованная отправка документов';
+        }
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
+        this.resolutionsRights = +this.arrNEWDeloRight[26];
+        this.projectResol = +this.arrNEWDeloRight[27];
         this.fields = this._writeValue(ABS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
@@ -283,6 +290,36 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this.arrDeloRight = strNewDeloRight.split('');
                 }
                 this.listRight.forEach((node: NodeAbsoluteRight) => {
+                    if (node.touched && node.key === '2') {
+                        const sendMethod = node.value === 1 ? 'POST' : 'DELETE';
+                        if (sendMethod === 'POST') {
+                            const q = {
+                                method: sendMethod,
+                                requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List`,
+                                data: {
+                                    ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                                    FUNC_NUM: 3,
+                                    DUE: '0.',
+                                    WEIGHT: null,
+                                    DEEP: 1,
+                                    ALLOWED: 1
+                                }
+                            };
+                            this.queryForSave.push(q);
+                        }
+                        if (sendMethod === 'DELETE' && this.curentUser.USERDEP_List.length) {
+                            this.curentUser.USERDEP_List.forEach((dep) => {
+                                if (dep.FUNC_NUM === 3) {
+                                    const query = {
+                                        method: sendMethod,
+                                        requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List('${this._userParamsSetSrv.userContextId} ${dep.DUE} 3')`,
+                                    };
+                                    this.queryForSave.push(query);
+                                }
+                            });
+                        }
+
+                    }
                     if (node.touched) {
                         node.change.forEach(ch => {
                             const batch = this._createBatch(ch, node, qUserCl);
@@ -300,6 +337,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
                 this.apiSrv.setData(this.queryForSave)
                     .then(() => {
+                        const contentProp = this.selectedNode.contentProp;
                         this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
                         this.queryForSave = [];
                         this.listRight = [];
@@ -308,6 +346,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                         this.flagDel = false;
                         this._storageSrv.removeItem('abs_prav_mas');
+                        if (this.curentUser['ISN_LCLASSIF'] === this._appContext.CurrentUser['ISN_LCLASSIF'] && contentProp === 6) {
+                            this._appContext.init().then(() => {
+                                if (this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
+                                    this._router.navigate(['/spravochniki']);
+                                }
+
+                            });
+                        }
                         if (!flag) {
                             return this._userParamsSetSrv.getUserIsn({
                                 expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List'
@@ -396,8 +442,17 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
             ) {
                 this._deleteAllDep(item);
+                if (item.key === '4') {
+                    this.arrNEWDeloRight[26] = '0';
+                    this.resolutionsRights = +this.arrNEWDeloRight[26];
+                }
+                if (item.key === '22') {
+                    this.arrNEWDeloRight[27] = '0';
+                    this.projectResol = +this.arrNEWDeloRight[27];
+                }
                 if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
                     this._deleteAllOrg(item);
+
                 }
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
@@ -516,7 +571,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (item.key === '28') {
                 this.checkExecOrder(flag);
             }
-            if (item.key === '18') {
+            if (item.key === '18' &&  !this._appContext.limitCardsUser.length) {
                 setTimeout(() => this.checkGroupDelRK(flag), 500);
             }
         }
@@ -634,6 +689,21 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.btnDisabled = false;
         }
         this._pushState();
+    }
+
+    addIndepRights(rights_type: string) {
+        switch (rights_type) {
+            case 'PROJECT':
+                this.arrNEWDeloRight[27] = this.arrNEWDeloRight[27] === '1' ? '0' : '1';
+                this.checkChange();
+                this.projectResol = +this.arrNEWDeloRight[27];
+                break;
+            case 'RESOLUTION':
+                this.arrNEWDeloRight[26] = this.arrNEWDeloRight[26] === '1' ? '0' : '1';
+                this.checkChange();
+                this.resolutionsRights = +this.arrNEWDeloRight[26];
+                break;
+        }
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
@@ -939,4 +1009,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _pushState() {
         this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisabled });
     }
+
+
 }

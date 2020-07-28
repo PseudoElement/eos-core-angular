@@ -82,7 +82,7 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
                     }
                     notise++;
                 }
-                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn && cotegory_id <= 0) {
+                if (e['ISN_DELIVERY'] === deliv_id && e['ISN_LCLASSIF'] !== isn && cotegory_id <= 0 && e['ISN_ADDR_CATEGORY'] <= 0) {
                     if (e['ISN_ADDR_CATEGORY'] === 0 ||
                         cotegory_id === 0 ||
                         e['ISN_ADDR_CATEGORY'] === cotegory_id

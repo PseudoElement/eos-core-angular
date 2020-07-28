@@ -1,4 +1,14 @@
-import { Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges, HostListener } from '@angular/core';
+import {
+    Component,
+    Output,
+    Input,
+    EventEmitter,
+    ViewChild,
+    OnChanges,
+    OnDestroy,
+    SimpleChanges,
+    HostListener,
+} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -96,8 +106,11 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     @HostListener('window:beforeunload', ['$event'])
     canWndUnload(evt: BeforeUnloadEvent): any {
         if (this.isChanged) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
             evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
-            return 'Возможно, внесенные изменения не сохранятся.';
+            return MESSAGE_SAVE_ON_LEAVE;
         }
     }
 
@@ -141,11 +154,12 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     }
 
     getCardTitle(): any {
-        if (this.baseCardEditRef) {
-            return this.baseCardEditRef.getCardTitle();
-        }
-        return '';
+            if (this.baseCardEditRef) {
+                return this.baseCardEditRef.getCardTitle();
+            }
+            return '';
     }
+
 
     afterGetForm(inputs: any): any {
         if (this.dictionaryId === RUBRICATOR_DICT.id) {

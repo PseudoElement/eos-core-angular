@@ -130,7 +130,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                                 });
                                 if (filteredDate.length) {
                                     setTimeout(() => {
-                                        this.intupString.inpstring.toggleTooltip();
+                                        this.intupString.input.dib.toggleTooltip();
                                     });
                                     return { isUnique: true };
                                 }

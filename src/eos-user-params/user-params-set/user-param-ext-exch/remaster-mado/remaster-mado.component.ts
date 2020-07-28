@@ -64,6 +64,9 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         .subscribe(data => {
             this.flagEdit = true;
             this.form.enable({emitEvent: false});
+            if (!this.inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK'].value) {
+                this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].disable();
+            }
         });
     }
     ngOnInit() {
@@ -81,7 +84,7 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         this.prapareData =  this.formHelp.parse_Create(REMASTER_MADO.fields, this.userData);
         this.prepareInputs = this.formHelp.getObjectInputFields(REMASTER_MADO.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, {rec: this.prapareData});
-        // this.inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK'].value = this.userData['MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'] === '0' ? false : true;
+        this.inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK'].value = this.userData['MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'] !== '0';
     }
     subscribeChange() {
         this.form.valueChanges
@@ -90,25 +93,9 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         )
         .subscribe(data => {
             Object.keys(data).forEach(item => {
-                // if (item === 'rec.MEDO_RECEIVE_RUBRIC_CHECK') {
-                //     if (this.form.controls[item].value && this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].value === '0') {
-                //         this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].patchValue('1', {emitEvent: false});
-                //         this.checkChanges(data, 'rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY');
-                //     } else if (!this.form.controls[item].value) {
-                //         this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].patchValue('0', {emitEvent: false});
-                //         if (this.userData['MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'] !== '0') {
-                //             this.newDataMap.set('MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY', '0');
-                //         } else {
-                //             this.newDataMap.delete('MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY');
-                //         }
-                //     }
-                // }
                  if (!this.checkChanges(data, item)) {
                     this.countError++;
                 }
-                // if (item !== 'rec.MEDO_RECEIVE_RUBRIC_CHECK' && !this.checkChanges(data, item)) {
-                //     this.countError++;
-                // }
             });
             if (this.countError) {
                 this.pushChange.emit([{
@@ -159,11 +146,6 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
     }
     cancel() {
         if (this.btnDisabled) {
-            // if (this.inputs['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].value === '0') {
-            //     this.form.controls['rec.MEDO_RECEIVE_RUBRIC_CHECK'].patchValue(false);
-            // } else {
-            //     this.form.controls['rec.MEDO_RECEIVE_RUBRIC_CHECK'].patchValue(true);
-            // }
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
@@ -182,4 +164,13 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         this.ngUnsub.complete();
     }
 
+    checkRadio($event) {
+        if (!$event.target.checked) {
+            this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].setValue('0');
+            this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].disable();
+        } else {
+            this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].enable();
+            this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].setValue('1');
+        }
+    }
 }

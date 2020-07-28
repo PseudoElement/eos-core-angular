@@ -7,9 +7,19 @@
     overflow-y: auto;
     width: 100%;
 }
-.redact-tree{
+
+.independents-right{
+    height: 100%;
+    width: 100%;
+}
+.redact-tree-top{
     top: 77px;
-    height: calc(100% - 77px);
+}
+.redact-resolution-tree-top{
+    top: 112px;
+}
+.redact-tree{
+    height: calc(100% - 110px);
 }
 .redact-tree-org{
     height: calc(100% - 70px);

@@ -1,6 +1,6 @@
 import {E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
-import {COMMON_FIELD_NAME} from './_common';
+import {COMMON_FIELD_ICONS, COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN, VALID_REQ_MULTIPLE_STRING} from 'eos-common/consts/common.consts';
 import { SECURITY_DICT } from './security.consts';
 
@@ -128,6 +128,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     //     default: null,
     //     // isNoDBInput: true,
     },
+        COMMON_FIELD_ICONS,
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
             length: 2000,
@@ -147,8 +148,8 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     quickViewFields: ['NOM_NUMBER', 'SHELF_LIFE', 'SECURITY', 'E_DOCUMENT', 'CLOSED',  'YEAR_NUMBER',
     'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'ARCH_FLAG', 'ARCH_DATE', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['NOM_NUMBER', 'CLASSIF_NAME', ],
+    listFields: ['ICONS_TYPE', 'NOM_NUMBER', 'CLASSIF_NAME', ],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'SHELF_LIFE', 'YEAR_NUMBER',
-        'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
+        'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'ICONS_TYPE' ],
 
 });

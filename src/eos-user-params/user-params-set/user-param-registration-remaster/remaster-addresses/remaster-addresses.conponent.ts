@@ -178,14 +178,16 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         }
     }
     cancel() {
-        const dataVal = this.userData !== null ? this.userData : this.defaultValues;
-        this.getOrgGroupValue(dataVal['ORGGROUP']);
+        // const dataVal = this.userData !== null ? this.userData : this.defaultValues;
+        // this.getOrgGroupValue(dataVal['ORGGROUP']);
         if (this.btnDisabled) {
           //  this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
             this.orgName = this.orgSaveName;
+            const orgISN = this.form.controls['rec.ORGGROUP'].value;
+            this.getOrgGroupValue(orgISN);
         }
         this.form.disable({emitEvent: false});
         this.flagEdit = false;

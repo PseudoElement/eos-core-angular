@@ -1,6 +1,14 @@
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
-import { AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    DoCheck,
+    HostListener,
+    OnDestroy,
+    ViewChild,
+    OnInit
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -67,6 +75,7 @@ import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/se
 import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
 import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
 import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-template.component';
+import {Templates} from '../consts/dictionaries/templates.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -142,7 +151,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     hasCustomTable: boolean;
     hasCustomTree: boolean;
-    hasTemplateTree: boolean;
 
     accessDenied: boolean;
 
@@ -211,14 +219,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                 if (n) {
                                     this.title = n.title;
                                 }
-
                                 this._dictSrv.setCustomNodeId(this._nodeId);
-                                if (this.dictionaryId === 'templates') {
-                                    this._dictSrv.selectTemplateNode(this.treeNodes, this._nodeId).then(() => { });
-                                } else {
-                                    this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
-                                    });
-                                }
+                                this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
+                                });
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.') {
                                     this._nodeId = '';
@@ -266,12 +269,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             const n = this.dictionary.descriptor.getActive();
                             if (n) { this.title = n.title; }
                             this.customTreeData = d;
-                        });
-                    }
-                    this.hasTemplateTree = dictionary.descriptor.hasTemplateTree();
-                    if (this.hasTemplateTree) {
-                        dictionary.descriptor.getTemplateTree('').then((d) => {
-                            this.treeNodes = d;
                         });
                     }
                 } else {
@@ -340,7 +337,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
 
                 if (!viewParameters.updatingList && this.treeNode) {
-                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id) {
+                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id || this.dictionaryId === Templates.id ) {
                         const n = this.dictionary.descriptor.getActive();
                         if (n) { this.title = n.title; }
                     } else {
@@ -391,7 +388,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.ngUnsubscribe.complete();
     }
     getFilterDate($event) {
-        this.filterDate = $event;
+        setTimeout(() => {
+            this.filterDate = $event;
+        }, 0);
     }
     getFilterNomenkl($event) {
         this.filterDateNomenkl = $event;
@@ -632,8 +631,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     resetSearch() {
         this.clearFindSettings();
-        this._dictSrv.resetSearch();
         this._dictSrv.updateViewParameters({ searchResults: false });
+        this._dictSrv.resetSearch();
         this.forcedCloseFastSrch();
     }
 
@@ -729,8 +728,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
     setDictMode(mode: number) {
-            this._dictSrv.setDictMode(mode);
-            this.nodeList.updateViewFields([], []);
+        this._dictSrv.setDictMode(mode);
+        this.params.searchResults = false;
+        this.clearFindSettings();
+        this.nodeList.updateViewFields([], []);
     }
     uniqueIndex() {
         const config = { ignoreBackdropClick: true };
@@ -946,12 +947,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                     .replace('{{OPERATION}}', 'восстановлены.');
                                 this._msgSrv.addNewMessage(message);
                             });
-                    }   else {
+                    } else {
                         this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
                         this._dictSrv.reload();
                     }
                 });
-            }   else {
+            } else {
                 this._dictSrv.getMarkedNodes().forEach(n => n.isMarked = false);
                 this._dictSrv.reload();
             }
@@ -1356,7 +1357,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                         node.isMarked = true;
                     });
                     this._physicallyDelete(slicedNode);
-                }   else {
+                } else {
                     slicedNode.forEach(node => {
                         node.parent.deleteChild(node);
                         this.dictionary.nodes.delete(node.id);
@@ -1449,6 +1450,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = {
             classif: 'AR_EDITOR',
         };
+        config.id = this.dictionary.id !== 'citizens' ? 'organiz_cl' : 'citizen';
         this._waitClassif.openClassif(config).then(() => { }).catch(e => { console.log(e); });
     }
 

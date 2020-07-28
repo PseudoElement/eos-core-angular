@@ -11,6 +11,11 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 // }
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
+import { AR_DESCRIPT } from 'eos-rest';
+import { InputControlService } from 'eos-common/services/input-control.service';
+import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { DOP_REC } from 'eos-dictionaries/consts/dictionaries/_common';
+import { FormGroup } from '@angular/forms';
 // import { PipRX } from 'eos-rest';
 
 export interface IQuickSrchObj {
@@ -47,6 +52,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     type: E_DICT_TYPE;
     searchModel = {};
     public mode = 0;
+    public formSearch: FormGroup;
+    public inputs;
+    inputsSelect;
+    formSelect: FormGroup;
+    mapAr_Descr: Map<string, AR_DESCRIPT> = new Map();
     private dictionary: EosDictionary;
     private subscriptions: Subscription[] = [];
     private searchData = {
@@ -54,11 +64,13 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     };
     constructor(
         private _dictSrv: EosDictService,
-        private _classif: WaitClassifService
+        private _classif: WaitClassifService,
+        private _inputCtrlSrv: InputControlService,
+        private _dataSrv: EosDataConvertService,
     ) {
     }
 
-    ngOnChanges () {
+    ngOnChanges() {
 
     }
     ngOnInit(): void {
@@ -74,6 +86,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
     get searchActive(): boolean {
         return this._dictSrv.viewParameters.searchResults;
+    }
+    get arDescript(): AR_DESCRIPT[] {
+        if (this.dictionary) {
+            return this.dictionary.descriptor['dopRec'];
+        }
     }
     isActiveButton(): boolean {
         return (this.fSearchPop.isOpen || this.settings.lastSearch === SEARCHTYPE.full /*|| (!this.noSearchData && this.searchActive) || this.searchActive*/);
@@ -97,6 +114,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         const model = (this.dictId === 'departments') ? this.searchData : this.getSearchModel();
         this.settings.full.data = model;
         this.searchRun.emit(this.settings);
+        this.fSearchPop.hide();
     }
     clearForm() {
         this.clearModel(this.getModelName());
@@ -110,10 +128,29 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     get isQuickOpened(): boolean {
         return this.settings && this.settings.lastSearch === SEARCHTYPE.quick;
     }
+    get validFormSearch() {
+        if (this.formSearch) {
+            return this.formSearch.valid;
+        }
+        return true;
+    }
+    get hasSelectValue (): boolean {
+        if (this.formSelect) {
+            return !!this.formSelect.controls['rec.select'].value;
+        }   else {
+            return true;
+        }
+    }
+    get arType(): AR_DESCRIPT {
+        if (this.formSelect.controls['rec.select'].value) {
+            return this.mapAr_Descr.get(this.formSelect.controls['rec.select'].value);
+        }
+        return null;
+    }
 
     public rest($event) {
         /* console.log($event); */
-        $event.target.checked ?  this.searchModel['NEW'] = '1' : delete this.searchModel['NEW'];
+        $event.target.checked ? this.searchModel['NEW'] = '1' : delete this.searchModel['NEW'];
     }
 
     public considerDel() {
@@ -129,7 +166,46 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             console.log(e);
         });
     }
+    initFormDopRec() {
+        const options = [];
+        this.arDescript.forEach(_d => {
+            this.mapAr_Descr.set(_d.API_NAME, _d);
+            options.push({ title: _d.UI_NAME, value: _d.API_NAME });
+        });
+        this.inputsSelect = this._dataSrv.getInputs({
+            rec: {
+                select: {
+                    foreignKey: 'select',
+                    title: '',
+                    type: 17,
+                    options: [
+                        { title: '...', value: '' },
+                        ...options
+                    ]
+                }
+            }
+        } as any, { rec: { select: '' } });
+        this.formSelect = this._inputCtrlSrv.toFormGroup(this.inputsSelect);
+        this.formSelect.valueChanges.subscribe(() => {
+            this.formSearch.reset();
+        });
+
+        this.inputs = this._dataSrv.getInputs(DOP_REC as any, { rec: { text: '', decimal: '', date: '', flag: '' } });
+        this.formSearch = this._inputCtrlSrv.toFormGroup(this.inputs);
+        this.formSearch.valueChanges.subscribe(_d => {
+            if (this.arType) {
+                const value = _d[`${'rec.' + this.arType.AR_TYPE}`];
+                this.searchModel['DOP_REC'] = JSON.stringify({ API_NAME: String(this.arType.API_NAME), SEARCH_VALUE: String(value), type: String(this.arType.AR_TYPE) });
+            } else {
+                this.searchModel['DOP_REC'] = null;
+            }
+        });
+    }
     private clearModel(modelName: string) {
+        if (this.formSearch) {
+            this.formSearch.reset();
+            this.formSelect.reset();
+        }
         this.mode = 0;
         this.settings.opts.deleted = false;
         this.settings.opts.onlyNew = false;
@@ -175,7 +251,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
 
 
             if (this.modes) {
-                const i = this.modes.findIndex( m => m.key === (this.settings && this.settings.entity));
+                const i = this.modes.findIndex(m => m.key === (this.settings && this.settings.entity));
                 this.setTab(this.modes[i >= 0 ? i : 0].key);
             } else {
                 this.searchModel = this.getSearchModel();
@@ -186,6 +262,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             this.hasQuick = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.quick);
             // tslint:disable-next-line:no-bitwise
             this.hasFull = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.full);
+            if (this.arDescript && this.arDescript.length) {
+                this.initFormDopRec();
+            }
         }
     }
     private openRubricCL(classif: string): Promise<any> {

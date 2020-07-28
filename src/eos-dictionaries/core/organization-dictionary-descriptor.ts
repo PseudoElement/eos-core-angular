@@ -13,15 +13,15 @@ const inheritFiields = [
 ];
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
-
+    dopRec = [];
     getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
         const newPreset = {};
         EosUtils.deepUpdate(newPreset, preSetData);
         if (parentNode) {
             [
-                ... inheritFiields,
+                ...inheritFiields,
             ]
-            .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
+                .forEach((f) => this.fillParentField(newPreset, parentNode.data, f));
         }
         return super.getNewRecord(newPreset, parentNode);
     }
@@ -29,8 +29,49 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     getRoot(): Promise<any[]> {
         return this.getData({ criteries: { IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
     }
+    search(criteries: any[]): Promise<any> {
+        if (criteries[0].hasOwnProperty('EMAIL')) {
+            const email = criteries[0].EMAIL;
+            delete criteries[0].EMAIL;
+            criteries[0]['CONTACT.E_MAIL'] = email;
+        }
+        if (criteries[0].hasOwnProperty('DOP_REC')) {
+            return this.searchDopRec(criteries);
+        } else {
+            return super.search(criteries);
+        }
+    }
+    searchDopRec(criteries: any[]): Promise<any> {
+        const vaslues = JSON.parse(criteries[0].DOP_REC);
+        const newCriteries = {};
+        const critName = 'AR_ORGANIZ_VALUE.' + vaslues.API_NAME;
+        let values;
+        switch (vaslues.type) {
+            case 'text':
+                values = `%${vaslues.SEARCH_VALUE}%`;
+                break;
+            case 'date':
+                values = new Date(vaslues.SEARCH_VALUE).toLocaleDateString().replace(/[^0-9\.]/g, '').replace(/\./g, '/');
+                break;
+            default:
+                values = `${vaslues.SEARCH_VALUE}`;
+                break;
+        }
+        Object.assign(newCriteries, criteries[0], {[critName]: values});
+        delete newCriteries['DOP_REC'];
+        return this.apiSrv.read({
+            ORGANIZ_CL: {
+                criteries: newCriteries
+            }
+        }).then(_d => {
+            return _d;
+        });
+    }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
+        if (!this.dopRec.length) {
+            this.ar_Descript();
+        }
         if (!query) {
             query = ALL_ROWS;
         }
@@ -53,6 +94,17 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 this.prepareForEdit(data);
                 return data;
             });
+    }
+    ar_Descript(): void {
+        this.apiSrv.read({
+            AR_DESCRIPT: {
+                criteries: {
+                    OWNER: 'O',
+                }
+            }, expand: 'AR_VALUE_LIST_List'
+        }).then(_descript => {
+            this.dopRec = _descript;
+        });
     }
 
     addContacts(newContacts: any[], orgDUE: string): Promise<IRecordOperationResult[]> {
@@ -103,34 +155,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 return results;
             });
     }
-    // public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
-    //     const preSave = [];
-    //     let paramsSop = '';
-    //     let change: Array<any> = [{
-    //         method: 'MERGE',
-    //         requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
-    //         data: {
-    //             DELETED: 1
-    //         }
-    //     }];
-    //     slicedNodes.forEach((node, i) => {
-    //         preSave.push({
-    //             method: 'DELETE',
-    //             requestUri: `ORGANIZ_CL('${node.id}')`
-    //         });
-    //         i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
-    //     });
-    //     PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'ORGANIZ_CL', 'ids': paramsSop }, 'POST', false);
-    //     preSave.push({
-    //         method: 'MERGE',
-    //         requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
-    //         data: {
-    //             DELETED: 0
-    //         }
-    //     });
-    //     change = change.concat(preSave);
-    //     return this.apiSrv.batch(change, '');
-    // }
+
     public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId: string, paramsMode) {
         const config = {
             classif: 'gop_rc',
@@ -149,7 +174,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
         return config;
     }
-    public getRelatedFields2(tables: {table: string, order?: string } [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    public getRelatedFields2(tables: { table: string, order?: string }[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         return super.getRelatedFields2(tables, nodes, loadAll, ignoreMetadata).then(result => {
             if (result.hasOwnProperty('ADDR_CATEGORY_CL')) {
                 result['ADDR_CATEGORY_CL'] = result['ADDR_CATEGORY_CL'].filter((data: ADDR_CATEGORY_CL) => {

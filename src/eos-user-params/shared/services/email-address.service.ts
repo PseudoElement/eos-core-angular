@@ -40,10 +40,10 @@ export class EmailAddressService {
         const queryUserCl = data;
         if (data.length) {
             return this._pipSrv.setData(queryUserCl).then(res => {
-        return res;
-        });
-    }
-     return Promise.resolve(1);
+                return res;
+            });
+        }
+        return Promise.resolve(1);
     }
     preAddEmail(form: FormArray) {
         const data = [];
@@ -64,19 +64,20 @@ export class EmailAddressService {
                 }
             });
         });
-       return this.addMail(data);
+        return this.addMail(data);
     }
 
 
     editEmail(data) {
         const queryUserCl = data;
-       return this._pipSrv.setData(queryUserCl).then(res => {
-           return res;
-       });
+        return this._pipSrv.setData(queryUserCl).then(res => {
+            return res;
+        });
     }
 
     preEditEmail(form: FormArray, emailsInfo?) {
         const data = [];
+        const post = [];
         const chengedFields = form.value.filter(element => {
             return element.change === true && element.newField !== true;
         });
@@ -91,14 +92,25 @@ export class EmailAddressService {
                 }
             });
         });
-        if (emailsInfo) {
+        if (emailsInfo.length) {
             form.controls.forEach((elem, index) => {
-                if (emailsInfo[index].EMAIL !== elem.value.email) {
+                if (elem.value.newField !== true && !emailsInfo[index].prevEMAIL) {
+                    data.push({
+                        method: 'MERGE',
+                        requestUri: `USER_CL(${this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List(\'${this._userServices.curentUser['ISN_LCLASSIF']} ${elem.value.email}\')`,
+                        data: {
+                            IS_ACTIVE: elem.value.checkbox ? '1' : '0',
+                            WEIGHT: elem.value.weigth,
+                            EXCLUDE_OPERATION: this.parseCodeFroMerge(elem.value.params)
+                        }
+                    });
+                }
+                if (elem.value.newField !== true && emailsInfo[index].prevEMAIL && emailsInfo[index].prevEMAIL !== elem.value.email) {
                     data.push({
                         method: 'DELETE',
-                        requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List(\'${ this._userServices.curentUser['ISN_LCLASSIF']} ${emailsInfo[index].EMAIL}\')`
+                        requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List(\'${ this._userServices.curentUser['ISN_LCLASSIF']} ${emailsInfo[index].prevEMAIL}\')`
                     });
-                    data.push({
+                    post.push({
                         method: 'POST',
                         requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List`,
                         data: {
@@ -112,7 +124,7 @@ export class EmailAddressService {
                 }
             });
         }
-        return this.editEmail(data);
+        return this.editEmail([...data, ...post]);
 
     }
 
@@ -120,9 +132,9 @@ export class EmailAddressService {
         let EncodedParams = '';
         if (params && params.length) {
             const paramsToArray = params.split(';')
-            .filter((el, index) => {
-                return el !== '';
-            });
+                .filter((el, index) => {
+                    return el !== '';
+                });
             const SetParams = new Set(paramsToArray);
             this.NTFY_CODE.forEach((value, key, map) => {
                 if ( SetParams.has(value.trim())) {
@@ -139,7 +151,7 @@ export class EmailAddressService {
         if (data.length) {
             const queryUserCl = data;
             return this._pipSrv.setData(queryUserCl).then(res => {
-               return res;
+                return res;
             });
         }
         return Promise.resolve(1);
@@ -147,13 +159,13 @@ export class EmailAddressService {
 
     preDeliteEmail(value: Set<any>) {
         const dataDelite = [];
-         Array.from(value).forEach(element => {
+        Array.from(value).forEach(element => {
             dataDelite.push({
                 method: 'DELETE',
                 requestUri: `USER_CL(${this._userServices.curentUser['ISN_LCLASSIF']})/NTFY_USER_EMAIL_List(\'${this._userServices.curentUser['ISN_LCLASSIF']} ${element.email}\')`,
             });
-         });
-         return this.deliteEmail(dataDelite);
+        });
+        return this.deliteEmail(dataDelite);
     }
 
     getCode2() {
@@ -162,12 +174,12 @@ export class EmailAddressService {
             NTFY_OPERATION: ALL_ROWS
         };
         return this._pipSrv.getData(query)
-        .then((result: NTYF_OPERATION[]) => {
-            result.forEach((el) => {
-                map.set(el.CODE, el.NAME);
+            .then((result: NTYF_OPERATION[]) => {
+                result.forEach((el) => {
+                    map.set(el.CODE, el.NAME);
+                });
+                return map;
             });
-            return map;
-        });
     }
 
     getAllEmails(email: string): Promise<boolean> {
@@ -176,16 +188,16 @@ export class EmailAddressService {
             NTFY_USER_EMAIL: {
                 criteries: {
                     ISN_USER: String(this._userServices.userContextId)
+                }
             }
-        }
-    };
-       return this._pipSrv.getData(query).then(result => {
+        };
+        return this._pipSrv.getData(query).then(result => {
             if (result.length > 0) {
-               return result.some(el => {
-                  return  el['EMAIL'] === email;
-               });
+                return result.some(el => {
+                    return  el['EMAIL'] === email;
+                });
             }
-       });
+        });
     }
 
     getMaxWeigth(array) {

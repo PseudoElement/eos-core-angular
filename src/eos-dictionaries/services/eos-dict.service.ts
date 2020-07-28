@@ -1012,7 +1012,7 @@ export class EosDictService {
 
     quickSearch(settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
+        const fixedString = JSON.stringify(settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, ''));
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
             this._srchParams = settings.opts;
@@ -1061,7 +1061,7 @@ export class EosDictService {
 
     fixSearchSymbols(data: any): any {
         for (const key in data) {
-            if (key !== 'srchMode' && data.hasOwnProperty(key)) {
+            if (key !== 'srchMode' && data.hasOwnProperty(key) && key !== 'DOP_REC') {
                 const list = data[key];
                 if (typeof list === 'string') {
                     data[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
@@ -1168,9 +1168,7 @@ export class EosDictService {
 
         this.viewParameters.showDeleted = !this.viewParameters.showDeleted;
 
-        if (this.currentDictionary) {
-            this.currentDictionary.showDeleted = this.viewParameters.showDeleted;
-        }
+        this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);
 
         if (!this.viewParameters.showDeleted) {
             this._currentList.forEach((node) => {
@@ -1281,6 +1279,10 @@ export class EosDictService {
     public combine(slicedNodes, markedNodes): Promise<any> {
         return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
             this._msgSrv.addNewMessage({ type: 'success', title: 'Сообщение', msg: 'Объединение завершено' });
+            slicedNodes.forEach(node => {
+                node.delete();
+                this.currentDictionary.nodes.delete(node.id);
+            });
             this._storageSrv.removeItem('markedNodes');
             this.reload();
         }).catch(e => {
@@ -1801,6 +1803,7 @@ export class EosDictService {
                     this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
                 } else {
                     this.viewParameters.showDeleted = showDeleted;
+                    this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);
                 }
                 this._setCurrentList(dictionary, nodes);
 

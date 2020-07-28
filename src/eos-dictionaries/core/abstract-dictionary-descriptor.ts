@@ -195,7 +195,7 @@ export abstract class AbstractDictionaryDescriptor {
         const _criteries = {};
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
-                if (fld.foreignKey !== 'CODE') {
+                if (fld.foreignKey !== 'CODE' && fld.foreignKey !== 'DOP_REC') {
                       _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
                 }   else {
                     _criteries[fld.foreignKey] =  data[fld.foreignKey].trim();
@@ -502,16 +502,11 @@ export abstract class AbstractDictionaryDescriptor {
     hasCustomTree() {
         return false;
     }
-    hasTemplateTree() {
-        return false;
-    }
 
     getCustomTreeData(): Promise<CustomTreeNode[]> {
         return Promise.resolve(null);
     }
-    getTemplateTree(data) {
-        return Promise.resolve(null);
-    }
+
     getActive(): CustomTreeNode {
         return null;
     }

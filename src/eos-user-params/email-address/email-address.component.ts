@@ -3,10 +3,6 @@ import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { EmailAddressService } from '../shared/services/email-address.service';
 import { UserParamsService } from '../shared/services/user-params.service';
 import { NTFY_USER_EMAIL } from 'eos-rest';
@@ -15,7 +11,9 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
+import { takeUntil } from 'rxjs/operators';
 import { NavParamService } from 'app/services/nav-param.service';
+import { Subject } from 'rxjs';
 @Component({
     selector: 'eos-params-email-address',
     styleUrls: ['email-address.component.scss'],
@@ -50,10 +48,12 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public inputsInfo: any;
     public showRigth: boolean = false;
     public isLoading: boolean = false;
+    public changeWeight: boolean = false;
     selfLink;
     link;
     flagEdit: boolean = false;
     currentUser;
+    private _ngUnsubscribe: Subject<any> = new Subject();
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -64,7 +64,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         return '';
     }
     private ArrayForm: FormArray;
-    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _emailService: EmailAddressService,
         private modalService: BsModalService,
@@ -73,8 +72,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _navSrv: NavParamService,
     ) { }
-
-     ngOnInit() {
+    ngOnInit() {
         this._navSrv.StateSandwichRight$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -127,9 +125,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                     this.chooseCurrentField();
                 }
             }).catch(error => {
-                error.message = 'Ошибка сервера';
-                this.cathError(error);
-            });
+            error.message = 'Ошибка сервера';
+            this.cathError(error);
+        });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -164,7 +162,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     }
     saveAllForm(event): Promise<any> {
         this.isLoading = true;
-        return Promise.all([this._emailService.preAddEmail(this.ArrayForm),
+        return Promise.all([
+            this._emailService.preAddEmail(this.ArrayForm),
             this._emailService.preDeliteEmail(this.delitedSetStore),
             this._emailService.preEditEmail(this.ArrayForm, this.umailsInfo)])
             .then(result => {
@@ -192,7 +191,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                         this.isLoading = false;
                     });
             }).catch(error => {
-                this.isLoading = false;
                 this._errorSrv.errorHandler(error);
                 this.backForm(false);
             });
@@ -201,6 +199,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.delitedSetStore.clear();
         this.clearForm();
         this.chooseCurrentField();
+        this.ngOnInit();
     }
     openModal(template: TemplateRef<any>, edit?: boolean) {
         this.defaultAlerts.clear();
@@ -308,9 +307,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     parseParams() {
         this.storeParams.clear();
         if (this.currentParams !== null || '') {
-               this.currentParams.split(';').forEach(el => {
+                this.currentParams.split(';').forEach(el => {
                 this.storeParams.add(el.trim());
-        });
+            });
         }
 
         return this.storeParams;
@@ -339,7 +338,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             if (!this.updateEmail) {
                 this.checkMail_PreSave(email);
             } else {
-                this.updateEmail = false;
                 this.upEmaileditEmail(email);
             }
         }
@@ -347,22 +345,27 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     upEmaileditEmail(email: string) {
         if (email !== this.umailsInfo[this.currentIndex].EMAIL) {
             this._emailService.getAllEmails(email)
-            .then(result => {
-                if (!result && !this.checkEmailCurrentfields(email)) {
-                    this.statusBtnSub = true;
-                    const newElem = this.ArrayForm.controls[this.currentIndex].value;
-                    newElem['email'] = email;
-                    this.updateForm(newElem);
-                    this.modalRef.hide();
-                } else {
-                    const m: IMessage = {
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Такая почта уже существует',
-                    };
-                    this._msgSrv.addNewMessage(m);
-                }
-            }).catch(error => {
+                .then(result => {
+                    if (!result && !this.checkEmailCurrentfields(email)) {
+                        this.updateEmail = false;
+                        this.statusBtnSub = true;
+                        const newElem = this.ArrayForm.controls[this.currentIndex].value;
+                        const old = this.umailsInfo[this.currentIndex].EMAIL;
+                        this.umailsInfo[this.currentIndex].prevEMAIL = old;
+                        this.umailsInfo[this.currentIndex].EMAIL = email;
+                        newElem['email'] = email;
+                        this.updateForm(newElem);
+                        this.emailAddres.emit(this.inputsInfo);
+                        this.modalRef.hide();
+                    } else {
+                        const m: IMessage = {
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Такая почта уже существует',
+                        };
+                        this._msgSrv.addNewMessage(m);
+                    }
+                }).catch(error => {
                 error.message = 'Ошибка сервера';
                 this.cathError(error);
             });
@@ -410,6 +413,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                     this.currentIndex = this.umailsInfo.length - 1;
                     this.modalRef.hide();
                     this.chooseCurrentField();
+                    this.showNav();
                 } else {
                     const m: IMessage = {
                         type: 'warning',
@@ -419,10 +423,19 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage(m);
                 }
             }).catch(error => {
-                error.message = 'Ошибка сервера';
-                this.cathError(error);
-            });
+            error.message = 'Ошибка сервера';
+            this.cathError(error);
+        });
     }
+
+    showNav(): void {
+        if (this.myForm.controls['groupForm'].value.length === 1) {
+            this._navSrv.showRightSandwich(true);
+            this._navSrv.changeStateRightSandwich(true);
+            this._navSrv.blockChangeStateRightSandwich(false);
+        }
+    }
+
     validEmail(email: string): boolean {
         const regul = '^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$';
         const regexp = RegExp(regul).test(email);
@@ -463,10 +476,10 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             const checkedField = data.groupForm[index];
             const checkedData = element;
             if (checkedField) {
-                if (checkedField['email'] !== checkedData['EMAIL'] || Number(checkedField['checkbox']) !== Number(checkedData['IS_ACTIVE'])
+                if (checkedData['prevEMAIL'] && checkedField['email'] !== checkedData['prevEMAIL'] || Number(checkedField['checkbox']) !== Number(checkedData['IS_ACTIVE'])
                     || checkedField['params'] !== checkedData['EXCLUDE_OPERATION'] || checkedField['newField'] === true) {
                     this.statusBtnSub = false;
-                    if (checkedField['email'] !== checkedData['EMAIL']) {
+                    if (checkedData['prevEMAIL'] && checkedField['email'] !== checkedData['prevEMAIL']) {
                         this.myForm.get('groupForm')
                             .get(String(index))
                             .patchValue({ changeEmail: true }, { emitEvent: false });
@@ -487,12 +500,13 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 }
             }
         });
-        if (this.delitedSetStore.size) {
+        if (this.delitedSetStore.size || this.changeWeight) {
             count_error++;
         }
         count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
         this._pushState();
         count_error = 0;
+        this.changeWeight = false;
     }
 
     addFormControls(newFieldEmail: NTFY_USER_EMAIL, change: boolean, newField: boolean) {
@@ -511,11 +525,32 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.getSetValues();
     }
     getSetValues() {
+        this.changeWeight = true;
         const current = this.ArrayForm.controls[this.currentIndex].value;
         const prev = this.ArrayForm.controls[this.prevIndex].value;
+        this.reWeight(current, prev);
         const controlInfo = this.arrChangesValues(current, prev);
         this.changeCurrentWeight(controlInfo);
+        this.umailsChanges();
     }
+
+    reWeight(current, prev) {
+        const curWeight = current.weigth;
+        const prevWeight = prev.weigth;
+        current.weigth = prevWeight;
+        prev.weigth = curWeight;
+    }
+
+    umailsChanges () {
+        if (this.currentIndex < this.prevIndex) {
+            const current = this.umailsInfo.splice(this.currentIndex, 1, ...this.umailsInfo.splice(this.prevIndex, 1));
+            this.umailsInfo.splice(this.prevIndex, 0, ...current);
+        } else {
+            const current = this.umailsInfo.splice(this.prevIndex, 1, ...this.umailsInfo.splice(this.currentIndex, 1));
+            this.umailsInfo.splice(this.currentIndex, 0, ...current);
+        }
+    }
+
     arrChangesValues(current, prev): Array<Array<any>> {
         const T = [[], []];
         let CurrentParams = {};
@@ -554,7 +589,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     }
 
     constParams(): Array<string> {
-        return ['email', 'checkbox', 'params', 'change', 'newField'];
+        return ['email', 'checkbox', 'params', 'change', 'newField', 'weigth'];
     }
 
     checkEmailCurrentfields(email: string): boolean {
@@ -583,6 +618,12 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     default(event?) {
         return;
     }
+
+    closeModal() {
+        this.updateEmail = false;
+        this.modalRef.hide();
+    }
+
     private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
             return undefined;

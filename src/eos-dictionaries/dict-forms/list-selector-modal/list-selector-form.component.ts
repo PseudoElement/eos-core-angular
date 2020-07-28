@@ -28,16 +28,18 @@ export class ListSelectorFormComponent implements OnDestroy {
     @Output() onSave: EventEmitter<any[]> = new EventEmitter<any[]>();
     @Output() onClose: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-    selection: {aviable: SelectorListItem, current: SelectorListItem } = { aviable: null, current: null };
+    selection: {available: SelectorListItem, current: SelectorListItem } = { available: null, current: null };
 
     BAG_NAME = 'list-select-bag';
 
     public title: string = '';
     public availableList: SelectorListItem[] = [];
     public currentList: SelectorListItem[] = [];
+    public bufferAvailableList: SelectorListItem[] = [];
     public showKeys: false;
-
+    public withDel: boolean = false;
     private subscriptions: Subscription[] = [];
+
 
 
     constructor (
@@ -54,7 +56,7 @@ export class ListSelectorFormComponent implements OnDestroy {
             //     return source.id !== 'selected' && !el.classList.contains('disabled');
             // },
             moves: (el, source) => { //
-            //     // return source.id !== 'availble';
+            //     // return source.id !== 'available';
                 return true;
             },
             copy: (el, source) => {
@@ -103,6 +105,8 @@ export class ListSelectorFormComponent implements OnDestroy {
 
 
     }
+
+
     static showModal(title: string, availableList: SelectorListItem[], currentList: SelectorListItem[]): ListSelectorFormComponent {
         const modalSrv = InjectorInstance.get(BsModalService);
         const templateModal = modalSrv.show(ListSelectorFormComponent, {
@@ -113,6 +117,7 @@ export class ListSelectorFormComponent implements OnDestroy {
 
         const modalObj = <ListSelectorFormComponent>templateModal.content;
         modalObj.availableList = availableList;
+        modalObj.bufferAvailableList = availableList;
         modalObj.currentList = currentList;
         modalObj.title = title,
         // modalObj.forProject = forProject;
@@ -145,6 +150,9 @@ export class ListSelectorFormComponent implements OnDestroy {
 
     public close(doSave: boolean ) {
         if (doSave) {
+            if (this.selection.available && !this.currentList.includes(this.selection.available)) {
+                this.currentList.push(this.selection.available);
+            }
             this.onSave.emit([this.currentList]);
         }
         this.onClose.emit();
@@ -152,8 +160,7 @@ export class ListSelectorFormComponent implements OnDestroy {
     }
 
     public selectItem (item: SelectorListItem, panelNum: number) {
-
-
+        panelNum === 0 ? this.selection.available = item :  this.selection.current = item;
     }
 
     ngOnDestroy() {
@@ -165,4 +172,12 @@ export class ListSelectorFormComponent implements OnDestroy {
 
     b1() { }
     b2() { }
+
+    deletedWith() {
+        this.withDel = !this.withDel;
+    }
+
+    search(value: string) {
+        this.availableList = this.bufferAvailableList.filter((item) => item.title.toLowerCase().includes(value.toLowerCase()));
+    }
 }

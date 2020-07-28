@@ -38,7 +38,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
-    title: string;
     /* инпуты */
     inputs;
     controls;
@@ -97,30 +96,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _rtUserSel: RtUserSelectService
     ) {
     }
-    ngOnInit() {
-        this._userParamSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERCARD_List',
-            shortSys: true
-        }).then((data) => {
-            if (data) {
-                this.selfLink = this._router.url.split('?')[0];
-                this.init();
-                this.getTitle();
-                if (!this.curentUser['IS_PASSWORD']) {
-                    this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
-                }
-                this.editModeF();
-                this._subscribe();
-            }
-        });
-        // if (localStorage.getItem('lastNodeDue') == null) {
-        //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
-        // }
-    }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
     get validClassif() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
         if (val !== null) {
@@ -148,31 +123,64 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             return false;
         }
     }
-
-    init() {
-        this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
-        this.curentUser = this._userParamSrv.curentUser;
-        if (this.curentUser.DUE_DEP) {
-            this.getPhotoUser(this.curentUser.DUE_DEP);
+    get title(): string {
+        if (this.curentUser) {
+            if (this.curentUser.isTechUser || this.curentUser._orig.isTechUser && !this.curentUser.isTechUser) {
+                return this.curentUser.CLASSIF_NAME;
+            } else {
+                return `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+            }
         }
-        this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
-        this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
-        this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
+        return '';
+    }
+    ngOnInit() {
+        this.selfLink = this._router.url.split('?')[0];
+        this.init().then(() => {
+            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
+                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+            }
+        });
+    }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
 
-        this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
-        this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
-        this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
+    init(message?: boolean): Promise<any> {
+        return this._userParamSrv.getUserIsn({
+            expand: 'USER_PARMS_List,USERCARD_List',
+            shortSys: true
+        }).then((data) => {
+            if (data) {
+                this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
+                this.curentUser = this._userParamSrv.curentUser;
+                if (this.curentUser.DUE_DEP) {
+                    this.getPhotoUser(this.curentUser.DUE_DEP);
+                }
+                this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
+                this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+                this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
 
-        this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
-        this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
-        this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-        this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
-        this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
-        this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
-        this.isLoading = false;
-        this.setValidators();
-        this.subscribeForms();
-        return Promise.resolve();
+                this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
+                this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+                this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
+
+                this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
+                this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
+                this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
+                this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+                this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
+                this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
+                this.isLoading = false;
+                setTimeout(() => {
+                    this.editModeF();
+                    this.setValidators();
+                    this.subscribeForms();
+                    this._subscribe();
+                });
+            }
+            return Promise.resolve();
+        });
     }
 
     getPhotoUser(due: string): Promise<any> {
@@ -192,9 +200,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     subscribeForms() {
-        this.form.valueChanges.pipe(
-            takeUntil(this._ngUnsubscribe)
-        ).subscribe(data => {
+        this.form.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => {
             this.checkChangeForm(data);
         });
 
@@ -237,15 +243,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
         this._pushState();
     }
-
-    dueDepNameNullUndef(date: any): boolean {
-        if (!date) {
-            return false;
-        }
-        return true;
-    }
     cheackCtech(): boolean {
-        if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
+        if (!this.form.get('DUE_DEP_NAME').value && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение:',
@@ -305,7 +304,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
-
     uncheckedAvSystems(): boolean {
         if (this._newDataformAccess.size) {
             const accessStr = this._createAccessSystemsString(this.formAccess.controls);
@@ -347,17 +345,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     checkDLSurname(mas: any[]): Promise<any> {
         if (this._newData.get('SURNAME_PATRON')) {
             if (this.curentUser['SURNAME_PATRON'] === this.surnameDepartment) {
-                return this._confirmSrv.confirm3(CONFIRM_SURNAME_REDACT, { ignoreBackdropClick: true }).then(confirmation => {
+                return this._confirmSrv.confirm2(CONFIRM_SURNAME_REDACT).then(confirmation => {
                     if (confirmation && confirmation['result'] === 1) {
-                        mas.push({
-                            method: 'MERGE',
-                            requestUri: `DEPARTMENT('${this.curentUser['DUE_DEP']}')`,
-                            data: {
-                                SURNAME: this.form.get('SURNAME_PATRON').value
-                            }
-                        });
-                        this.updateDL = true;
-                        this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+
                     } else {
                         this.form.get('SURNAME_PATRON').setValue(this.curentUser._orig['SURNAME_PATRON']);
                     }
@@ -410,10 +400,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
-                /* this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
-                this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
-                this.cancel();
-                return; */
                 return this.sendData(query, accessStr);
             } else {
                 const queryPas = [{
@@ -451,47 +437,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
     }
-    AfterSubmit(accessStr: string): Promise<any> {
+    AfterSubmit(accessStr: string): void {
+        this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
+        this.editMode = false;
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
         }
-        this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
-        return this._userParamSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERCARD_List',
-            shortSys: true
-        }).then(() => {
-            this.editMode = false;
-            if (this.updateDL) {
-                this.updateDL = false;
-                this.dueDepName = String(this.form.controls['DUE_DEP_NAME'].value).replace(this.curentUser._orig['SURNAME_PATRON'], this.form.controls['SURNAME_PATRON'].value);
-                this.form.controls['DUE_DEP_NAME'].setValue(this.dueDepName, { emitEvent: false });
-            } else {
-                this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
-            }
-            this.curentUser = this._userParamSrv.curentUser;
-            this.getTitle();
-            this.upform(this.inputs, this.form);
-            this.upform(this.controls, this.formControls);
-            this.upform(this.accessInputs, this.formAccess);
-            this.dueDepSurname = this.form.controls['SURNAME_PATRON'].value;
-            this.isLoading = false;
-            this.editModeF();
-            this._pushState();
-            this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
-            if (this.curentUser.DUE_DEP) {
-                return this.getPhotoUser(this.curentUser.DUE_DEP);
-            }
-        });
-    }
-
-    getTitle(): void {
-        if (this.curentUser.isTechUser) {
-            this.title = this.curentUser.CLASSIF_NAME;
-        } else {
-            this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
-        }
+        this._pushState();
+        this.ngOnDestroy();
+        this.init();
     }
 
     clearMap() {
@@ -499,31 +456,16 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._newDataformAccess.clear();
         this._newDataformControls.clear();
     }
-    upform(inputs, form: FormGroup) {
-        Object.keys(form.controls).forEach((key, val, arr) => {
-            inputs[key].value = form.controls[key].value;
-        });
-    }
+
     cancel() {
         this.isLoading = false;
-        this.editMode = !this.editMode;
-        this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
-        this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
-        this.isPhoto = this.startIsPhoto;
-        this.startUrlPhoto = this.startUrlPhoto;
-        this.cancelValues(this.inputs, this.form);
-        this.cancelValues(this.controls, this.formControls);
-        this.cancelValues(this.accessInputs, this.formAccess);
-        this.form.controls['NOTE2'].patchValue(this.inputs['NOTE2'].value);
+        this.editMode = false;
         this.clearMap();
+        this.ngOnDestroy();
+        this.init();
         this._pushState();
-        this.editModeF();
     }
-    cancelValues(inputs, form: FormGroup) {
-        Object.keys(inputs).forEach((key, val, arr) => {
-            form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
-        });
-    }
+
     gt(): any {
         const delo = this.formAccess.get('0').value;
         const delo_web_delo = this.formAccess.get('0-1').value;
@@ -604,14 +546,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
-                // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
-                // if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
-                //     this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
-                //     this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
-                //         this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
-                //     });
-                //     return data[0];
-                // }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                     if (data) {
                         this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
@@ -627,7 +561,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (this.dueDepSurname !== dep['SURNAME']) {
                     const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
                     depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
-                    this._confirmSrv.confirm3(depConfirm, { ignoreBackdropClick: true }).then(confirmation => {
+                    this._confirmSrv.confirm2(depConfirm).then(confirmation => {
                         if (confirmation && confirmation['result'] === 1) {
                             this.dueDepSurname = dep['SURNAME'];
                             this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
@@ -775,8 +709,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
-                    if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
-                        this._confirmSrv.confirm3(CONFIRM_UPDATE_USER, { ignoreBackdropClick: true }).then(confirmation => {
+                    if (this.form.get('DUE_DEP_NAME').value) {
+                        this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
@@ -792,13 +726,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                             console.log('Ошибка', error);
                         });
                     }
-                    // this.form.get('SURNAME_PATRON').patchValue(this.form.get('CLASSIF_NAME').value, { emitEvent: false });
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
-                    // this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
                     this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
