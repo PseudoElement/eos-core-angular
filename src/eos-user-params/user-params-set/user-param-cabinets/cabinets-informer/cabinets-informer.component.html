@@ -1,0 +1,294 @@
+<div class="informer scrollWrapper" *ngIf="userData && isInformer">
+    <div class="set-header bold">
+        <span>Папки кабинетов</span>
+    </div>
+    <div class="user-group-form">
+        <div class="informer-flex">
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDER_ITEM_CHECK']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+            <div class="informer-radio-inline">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_CABINET_RADIO']"
+                    [form]="form"
+                    [readonly]="isFoldersGroupDisabled"
+                ></eos-dynamic-input>
+            </div>
+            <div class="informer-select">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_CABINET']"
+                    [form]="form"
+                    [readonly]="isCabinetsSelectDisabled"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+        <div class="informer-flex informer-end">
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDER_ITEM_NOTIFY']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+        </div>
+
+        <div [ngStyle]="{ 'padding': '0' }" class="cabinets-informer-folders-line">
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_RECEIVED']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_FOR_EXECUTION']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_UNDER_CONTROL']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+        </div>
+        <div class="cabinets-informer-folders-line">
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_HAVE_LEADERSHIP']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_FOR_CONSIDERATION']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_INTO_THE_BUSINESS']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+        </div>
+        <div class="cabinets-informer-folders-line">
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_PROJECT_MANAGEMENT']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_ON_SIGHT']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_FOLDERS_ON_THE_SIGNATURE']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+        </div>
+
+        <div class="informer-flex informer-big-top-margin"><!-- Все новые записи / checkbox -->
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_MODE']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_ALL_NEW']"
+                [form]="form"
+                [readonly]="isAllNewDisabled"
+            ></eos-dynamic-input>
+        </div>
+
+        <div class="user-group-form"><!-- В кабинетах снимать отметку "Новая запись" при просмотре / checkbox -->
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_DFI_GREEN_FLAG']"
+                [form]="form"
+                [readonly]="isFoldersGroupDisabled"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+
+    <div class="set-header bold">
+        <span>Исполнение поручений</span>
+    </div>
+    <div class="user-group-form">
+        <div class="inputs-inline">
+            <span class="input-title">Поручения для исполнителей</span>
+            <div class="informer-radio-inline">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_REPLY_MODE']"
+                    [form]="form"
+                    [readonly]="isReplyModeDisabled"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+        <div class="informer-flex informer-big-top-margin">
+            <eos-dynamic-input
+                class="first-field"
+                [input]="inputs['rec.INFORMER_REPLY_OVER_CHECK_ON']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+            <div class="user-input-increment-cabinets second-field">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_REPLY_OVER_CHECK']"
+                    [form]="form"
+                    [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_OVER_CHECK_ON')"
+                ></eos-dynamic-input>
+                <span class="user-input-span-for-increment-cabinets">дней назад</span>
+            </div>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_REPLY_OVER_NOTIFY']"
+                [form]="form"
+                [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_OVER_CHECK_ON')"
+            ></eos-dynamic-input>
+        </div>
+        <div class="informer-flex">
+            <eos-dynamic-input
+                class="first-field"
+                [input]="inputs['rec.INFORMER_REPLY_DELTA_CHECK_ON']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+            <div class="user-input-increment-cabinets second-field">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_REPLY_DELTA_CHECK']"
+                    [form]="form"
+                    [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_DELTA_CHECK_ON')"
+                ></eos-dynamic-input>
+                <span class="user-input-span-for-increment-cabinets">дней и ранее</span>
+            </div>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_REPLY_DELTA_NOTIFY']"
+                [form]="form"
+                [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_DELTA_CHECK_ON')"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+
+    <div class="set-header bold">
+        <span>Контроль поручений</span>
+    </div>
+    <div class="user-group-form">
+        <div class="informer-flex">
+            <eos-dynamic-input
+                class="first-field"
+                [input]="inputs['rec.INFORMER_CTRL_OVER_CHECK_ON']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+            <div class="user-input-increment-cabinets second-field">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_CTRL_OVER_CHECK']"
+                    [form]="form"
+                    [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_OVER_CHECK_ON')"
+                ></eos-dynamic-input>
+                <span class="user-input-span-for-increment-cabinets">дней назад</span>
+            </div>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_CTRL_OVER_NOTIFY']"
+                [form]="form"
+                [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_OVER_CHECK_ON')"
+            ></eos-dynamic-input>
+        </div>
+        <div class="informer-flex">
+            <eos-dynamic-input
+                class="first-field"
+                [input]="inputs['rec.INFORMER_CTRL_DELTA_CHECK_ON']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+            <div class="user-input-increment-cabinets second-field">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_CTRL_DELTA_CHECK']"
+                    [form]="form"
+                    [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_DELTA_CHECK_ON')"
+                ></eos-dynamic-input>
+                <span class="user-input-span-for-increment-cabinets">дней и ранее</span>
+            </div>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_CTRL_DELTA_NOTIFY']"
+                [form]="form"
+                [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_DELTA_CHECK_ON')"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+
+    <div class="user-group-form">
+        <div class="inputs-inline">
+            <span class="input-title">Максимальное количество записей:</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_LIMIT_RESULT']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+
+    <div class="user-group-form">
+        <span>Параметры оповещения</span>
+        <div class="informer-flex informer-small-top-margin">
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_TIMER_ON']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+            <div class="user-input-increment-cabinets">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_TIMER']"
+                    [form]="form"
+                    [readonly]="checkIncrementsVisibility('rec.INFORMER_TIMER_ON')"
+                ></eos-dynamic-input>
+                <span class="user-input-span-for-increment-cabinets">мин.</span>
+            </div>
+            <div class="informer-rl-padding">
+                <eos-dynamic-input
+                    [input]="inputs['rec.INFORMER_SOUND']"
+                    [form]="form"
+                    [readonly]="checkIncrementsVisibility('rec.INFORMER_TIMER_ON')"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+        <div class="informer-small-top-margin">
+            <span>Изменить звуковой сигнал (.wav):</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_SOUND_PATH']"
+                [form]="form"
+                [readonly]="checkIncrementsVisibility('rec.INFORMER_TIMER_ON')"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+
+    <!-- Запускать информер при входе в систему / checkbox -->
+    <div class="user-group-form informer-big-top-margin">
+        <eos-dynamic-input
+            [input]="inputs['rec.INFORMER_START']"
+            [form]="form"
+            [readonly]="!flagEdit"
+        ></eos-dynamic-input>
+    </div>
+</div>
+
+<div class="notificator scrollWrapper" *ngIf="userData && !isInformer">
+    <div class="user-group-form">
+        <div>
+            <span>Оповещать о:</span>
+            <eos-dynamic-input
+                class="informer-small-top-margin"
+                [input]="inputs['rec.NOTIFICATOR_MODE']"
+                [form]="form"
+                [readonly]="isNotificatorModeDisabled"
+            ></eos-dynamic-input>
+        </div>
+
+        <div class="informer-big-top-margin">
+            <eos-dynamic-input
+                [input]="inputs['rec.START_NOTIFICATOR']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+</div>
+
+<div class="sp" *ngIf="!userData">
+    <eos-spinner size="lg"></eos-spinner>
+</div>

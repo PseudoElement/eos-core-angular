@@ -162,7 +162,25 @@
         </div>
         <eos-dynamic-input [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
     </div>
-    <div class="informer" *ngIf="currTab === 2">
+    <div class="informer-container clearfix" [hidden]="currTab !== 2">
+        <eos-cabinets-informer
+            #informerTabEl
+            [userData]="allData"
+            [flagEdit]="flagEdit"
+            [isInformer]="isInformer"
+            [isnClassif]="isnClassif"
+            (pushState)="emitInformerChanges($event)"
+        ></eos-cabinets-informer>
+    </div>
+    <div class="informer-container clearfix" [hidden]="currTab !== 3" *ngIf="defaultTitle">
+        <eos-cabinets-informer
+            #defaultNotificatorEl
+            [userData]="allData"
+            [flagEdit]="flagEdit"
+            [isInformer]="false"
+            [isnClassif]="isnClassif"
+            (pushState)="emitNotificatorChanges($event)"
+        ></eos-cabinets-informer>
     </div>
 </div>
 <div *ngIf="bacgHeader" class="bacgrFixed"></div>

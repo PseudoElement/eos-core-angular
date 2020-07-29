@@ -1,6 +1,10 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 // const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
 const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}|[1-9](\d{1,2})?|0|\s*)$/; // 0-1000
+const REG_ONE_HUNDRED_SIZE = /(^\d$)|(^[1-9]\d$)/; // 0-99
+const REG_ONE_THOUSAND_SIZE = /(^\d$)|(^[1-9]\d{1,2}$)/; // 0-999
+const REG_TEN_THOUSAND_SIZE = /(^\d$)|(^[1-9]\d{1,3}$)/; // 0-9999
+const REG_SOUND_FILE_WAV = /^[A-Z]\:\\.+\.wav$/; // system path for .wav file
  const REG_MIN_VAL: RegExp = /^[1-9][0-9]{0,4}$/;
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
@@ -37,7 +41,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'FOLDERCOLORSTATUS_FOR_CONSIDERATION',
             type: 'boolean',
-            title: 'На рассмотрение'
+            title: 'На рассмотрении'
         },
         {
             key: 'FOLDERCOLORSTATUS_INTO_THE_BUSINESS',
@@ -435,4 +439,363 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
         },
     ]
+};
+
+export const CABINETS_USER_INFORMER: IBaseUsers = {
+    id: 'cabinets',
+    title: 'Кабинеты',
+    apiInstance: 'USER_PARMS',
+    disabledFields: [
+    ],
+    fields: [
+        {
+            key: 'INFORMER_FOLDER_ITEM_CHECK',
+            type: 'boolean',
+            title: 'Отслеживать записи',
+        },
+        {
+            key: 'INFORMER_CABINET_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: 'ALL', title: 'Всех кабинетов'},
+                {value: 'CABINET', title: 'Выбранного'},
+            ],
+            keyPosition: 0,
+        },
+        {
+            key: 'INFORMER_CABINET',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '', title: ''}
+            ]
+        },
+        {
+            key: 'INFORMER_FOLDER_ITEM_NOTIFY',
+            type: 'boolean',
+            title: 'Выдавать оповещение',
+        },
+        {
+            key: 'INFORMER_FOLDERS',
+            type: 'text',
+            title: ''
+        },
+        {
+            key: 'INFORMER_FOLDERS_RECEIVED',
+            type: 'boolean',
+            title: 'Поступившие'
+        },
+        {
+            key: 'INFORMER_FOLDERS_FOR_EXECUTION',
+            type: 'boolean',
+            title: 'На исполнении'
+        },
+        {
+            key: 'INFORMER_FOLDERS_UNDER_CONTROL',
+            type: 'boolean',
+            title: 'На контроле'
+        },
+        {
+            key: 'INFORMER_FOLDERS_HAVE_LEADERSHIP',
+            type: 'boolean',
+            title: 'У руководства'
+        },
+        {
+            key: 'INFORMER_FOLDERS_FOR_CONSIDERATION',
+            type: 'boolean',
+            title: 'На рассмотрении'
+        },
+        {
+            key: 'INFORMER_FOLDERS_INTO_THE_BUSINESS',
+            type: 'boolean',
+            title: 'В дело'
+        },
+        {
+            key: 'INFORMER_FOLDERS_PROJECT_MANAGEMENT',
+            type: 'boolean',
+            title: 'Управление проектами'
+        },
+        {
+            key: 'INFORMER_FOLDERS_ON_SIGHT',
+            type: 'boolean',
+            title: 'На визировании'
+        },
+        {
+            key: 'INFORMER_FOLDERS_ON_THE_SIGNATURE',
+            type: 'boolean',
+            title: 'На подписи'
+        },
+        {
+            key: 'INFORMER_MODE',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: 'CHECK_NEW', title: 'Новые'},
+                {value: 'CHECK_UNREAD', title: 'Не прочитанные'},
+            ],
+            keyPosition: 0,
+        },
+        {
+            key: 'INFORMER_ALL_NEW',
+            type: 'boolean',
+            title: 'Все новые записи'
+        },
+        {
+            key: 'INFORMER_DFI_GREEN_FLAG',
+            type: 'boolean',
+            title: 'В кабинетах снимать отметку "Новая запись" при просмотре'
+        },
+        {
+            key: 'INFORMER_REPLY_MODE',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: 'MAIN', title: 'Ответственных'},
+                {value: 'ALL', title: 'Всех'},
+            ],
+            keyPosition: 0,
+        },
+        {
+            key: 'INFORMER_REPLY_OVER_CHECK_ON',
+            type: 'boolean',
+            title: 'Просроченные не более'
+        },
+        {
+            key: 'INFORMER_REPLY_OVER_CHECK',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_ONE_HUNDRED_SIZE,
+        },
+        {
+            key: 'INFORMER_REPLY_OVER_NOTIFY',
+            type: 'boolean',
+            title: 'Выдавать оповещение'
+        },
+        {
+            key: 'INFORMER_REPLY_DELTA_CHECK_ON',
+            type: 'boolean',
+            title: 'Срок истекает через'
+        },
+        {
+            key: 'INFORMER_REPLY_DELTA_CHECK',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_ONE_HUNDRED_SIZE,
+        },
+        {
+            key: 'INFORMER_REPLY_DELTA_NOTIFY',
+            type: 'boolean',
+            title: 'Выдавать оповещение'
+        },
+        {
+            key: 'INFORMER_CTRL_OVER_CHECK_ON',
+            type: 'boolean',
+            title: 'Просроченные не более'
+        },
+        {
+            key: 'INFORMER_CTRL_OVER_CHECK',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_ONE_HUNDRED_SIZE,
+        },
+        {
+            key: 'INFORMER_CTRL_OVER_NOTIFY',
+            type: 'boolean',
+            title: 'Выдавать оповещение'
+        },
+        {
+            key: 'INFORMER_CTRL_DELTA_CHECK_ON',
+            type: 'boolean',
+            title: 'Срок истекает через'
+        },
+        {
+            key: 'INFORMER_CTRL_DELTA_CHECK',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_ONE_HUNDRED_SIZE,
+        },
+        {
+            key: 'INFORMER_CTRL_DELTA_NOTIFY',
+            type: 'boolean',
+            title: 'Выдавать оповещение'
+        },
+        {
+            key: 'INFORMER_LIMIT_RESULT',
+            type: 'numberIncrement',
+            title: 'Максимальное количество записей',
+            pattern: REG_TEN_THOUSAND_SIZE,
+        },
+        {
+            key: 'INFORMER_TIMER_ON',
+            type: 'boolean',
+            title: 'Проверять состояние каждые:'
+        },
+        {
+            key: 'INFORMER_TIMER',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_ONE_THOUSAND_SIZE,
+        },
+        {
+            key: 'INFORMER_SOUND',
+            type: 'boolean',
+            title: 'Звуковой сигнал'
+        },
+        {
+            key: 'INFORMER_SOUND_PATH',
+            type: 'string',
+            title: '',
+            pattern: REG_SOUND_FILE_WAV,
+        },
+        {
+            key: 'INFORMER_START',
+            type: 'boolean',
+            title: 'Запускать информер при входе в систему'
+        },
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'INFORMER_FOLDER_ITEM_CHECK',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_CABINET',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_FOLDER_ITEM_NOTIFY',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_FOLDERS',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_MODE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_ALL_NEW',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_DFI_GREEN_FLAG',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_REPLY_MODE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_REPLY_OVER_CHECK',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_REPLY_OVER_NOTIFY',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_REPLY_DELTA_CHECK',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_REPLY_DELTA_NOTIFY',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_CTRL_OVER_CHECK',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_CTRL_OVER_NOTIFY',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_CTRL_DELTA_CHECK',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_CTRL_DELTA_NOTIFY',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_LIMIT_RESULT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_TIMER',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORMER_SOUND',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_SOUND_PATH',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORMER_START',
+            type: '',
+            title: ''
+        },
+    ],
+};
+
+export const CABINETS_USER_NOTIFICATOR: IBaseUsers = {
+    id: 'cabinets',
+    title: 'Кабинеты',
+    apiInstance: 'USER_PARMS',
+    disabledFields: [
+    ],
+    fields: [
+        {
+            key: 'NOTIFICATOR_MODE',
+            type: 'radio',
+            title: 'Оповещать о:',
+            options: [
+                {value: 'CHECK_NEW', title: 'Появлении в папках новых записей'},
+                {value: 'CHECK_UNREAD', title: 'Непрочитанных РК, поручениях и РКПД'},
+            ],
+            keyPosition: 0,
+        },
+        {
+            key: 'START_NOTIFICATOR',
+            type: 'boolean',
+            title: 'Запускать "оповещатель кабинетов" при входе в систему'
+        },
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'NOTIFICATOR_MODE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'START_NOTIFICATOR',
+            type: '',
+            title: '',
+        },
+    ],
 };

@@ -1,0 +1,50 @@
+.informer, .notificator {
+    .user-group-form {
+        .informer-radio-inline {
+            margin-left: 20px;
+
+            .elem-input-radio {
+                display: inline;
+            }
+        }
+        .informer-flex {
+            display: flex;
+
+            .informer-rl-padding {
+                padding: 0 10px;
+            }
+            &.informer-end {
+                justify-content: flex-end;
+            }
+            .first-field {
+                width: 30%;
+            }
+            .second-field {
+                width: 40%;
+
+                .grey-increment {
+                    color: green;
+                }
+            }
+        }
+        .cabinets-informer-folders-line {
+            display: inline-block;
+            padding-left: 40px;
+        }
+        .sound-path-input {
+            display: none;
+        }
+        .sound-path-label {
+            font-weight: bold;
+        }
+        .informer-select {
+            width: 25%;
+        }
+        .informer-big-top-margin {
+            margin-top: 20px;
+        }
+        .informer-small-top-margin {
+            margin-top: 10px;
+        }
+    }
+}
