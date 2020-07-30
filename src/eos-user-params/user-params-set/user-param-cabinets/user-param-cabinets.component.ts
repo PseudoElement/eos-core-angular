@@ -96,13 +96,24 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         });
     }
     ngOnInit() {
-        this.init()
-        .catch(error => {});
-    }
-    init(): Promise<any> {
         if (this.defaultTitle) {
             this.currentUser = this.defaultUser;
             this.allData = this.defaultUser;
+        }
+        this.init()
+        .catch(error => {});
+    }
+    init(reload?): Promise<any> {
+        if (this.defaultTitle) {
+            if (reload) {
+                const prep = this.formHelp.getObjQueryInputsField();
+                return this._pipRx.read(prep).then((data) => {
+                    const defUser = this.formHelp.createhash(data);
+                    this.currentUser = defUser;
+                    this.allData = defUser;
+                    return this.initForm();
+                });
+            }
             return this.initForm();
         }
         return this._userParamsSetSrv.getUserIsn({
@@ -380,18 +391,14 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
                 this.ngOnDestroy();
                 this.routeSubscriber();
-                if (this.defaultTitle) {
-                    const formValues = Object.assign({}, this.form.value, this.informerTabRef.form.value, this.defaultNotificatorRef.form.value);
-                    this.DefaultSubmitEmit.emit(formValues);
-                }
-                this.init()
+                this.init(true)
                 .then(() => {
-                    this.informerTabRef.submit();
-                    if (this.defaultTitle) {
-                        this.defaultNotificatorRef.submit();
-                    }
                     this.btnDisable = true;
                     this.flagEdit = false;
+                    this.informerTabRef.submit(this.flagEdit);
+                    if (this.defaultTitle) {
+                        this.defaultNotificatorRef.submit(this.flagEdit);
+                    }
                     this.editMode();
                     this._pushState();
                 });
@@ -518,27 +525,22 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
         };
     }
-
     cancel($event?) {
-        this.flagEdit = false;
-        this.prepFormCancel(this.inputs, true);
-        this.newFolderString = this.FOLDERCOLORSTATUS;
-        this.informerTabRef.cancel();
-        if (this.defaultTitle) {
-            this.defaultNotificatorRef.cancel();
-        }
-        this.mapChanges.clear();
-        this.btnDisable = true;
-        this.flagEdit = false;
-        this.getControlAuthor().then(res => {
-            if (res) {
-                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(res[0]['CLASSIF_NAME']), { emitEvent: false });
+        this.ngOnDestroy();
+        this.routeSubscriber();
+        this.init(true)
+        .then(() => {
+            this.mapChanges.clear();
+            this.btnDisable = true;
+            this.flagEdit = false;
+            this.informerTabRef.cancel(this.flagEdit);
+            if (this.defaultTitle) {
+                this.defaultNotificatorRef.cancel(this.flagEdit);
             }
+            this.editMode();
+            this._pushState();
         });
-        this._pushState();
-        this.editMode();
     }
-
     prepFormCancel(input, flag) {
         Object.keys(input).forEach((key) => {
             const val = input[key].value;
@@ -547,6 +549,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     edit($event) {
         this.flagEdit = $event;
+        this.informerTabRef.edit(this.flagEdit);
+        if (this.defaultTitle) {
+            this.defaultNotificatorRef.edit(this.flagEdit);
+        }
         this.editMode();
         this.checkDataToDisabled();
     }

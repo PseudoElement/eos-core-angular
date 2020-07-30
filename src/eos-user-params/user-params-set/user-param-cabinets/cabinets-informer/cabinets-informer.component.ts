@@ -116,20 +116,15 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe$.next();
         this._ngUnsubscribe$.complete();
     }
-    public cancel() {
-        Object.keys(this.inputs).forEach((key) => {
-            const val = this.inputs[key].value;
-            this.form.controls[key].setValue(val, { emitEvent: false });
-        });
-        Object.keys(this.form.controls).forEach((inputKey) => {
-            this.compareFormValues(this.form.controls[inputKey].value, inputKey);
-        });
-        this.newDataMap.clear();
-        this.pushState.emit({
-            data: this.newDataMap,
-        });
+    public edit(flagEdit) {
+        this.flagEdit = flagEdit;
+        this.checkIncrementsVisibility();
     }
-    public submit() {
+    public cancel(flagEdit) {
+        this.submit(flagEdit);
+    }
+    public submit(flagEdit) {
+        this.flagEdit = flagEdit;
         this.ngOnDestroy();
         this.init();
         this.newDataMap.clear();
@@ -153,14 +148,42 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
             data: this.newDataMap,
         });
     }
-    public checkIncrementsVisibility(key): boolean {
-        return !this.form.controls[key].value || !this.flagEdit;
+    public checkIncrementsVisibility() {
+        if (this.isInformer) {
+            this.informerIncrementCheckboxKeys.forEach((relatedKeys, checkboxKey) => {
+                relatedKeys.forEach((key) => {
+                    if (this.flagEdit && this.form.controls[checkboxKey].value) {
+                        this.form.controls[key].enable({emitEvent: false});
+                    } else {
+                        this.form.controls[key].disable({emitEvent: false});
+                    }
+                });
+            });
+            if (this.flagEdit) {
+                this.form.controls['rec.INFORMER_LIMIT_RESULT'].enable({emitEvent: false});
+            } else {
+                this.form.controls['rec.INFORMER_LIMIT_RESULT'].disable({emitEvent: false});
+            }
+        }
+    }
+    public checkOnlyIncrementVisibility(inputKey, val) {
+        if (this.isInformer) {
+            const relatedKeys = this.informerIncrementCheckboxKeys.get(inputKey);
+            relatedKeys.forEach((key) => {
+                if (this.flagEdit && val) {
+                    this.form.controls[key].enable({emitEvent: false});
+                } else {
+                    this.form.controls[key].disable({emitEvent: false});
+                }
+            });
+        }
     }
     private init(): void {
         this.inputs = this.pretInputs(this.userData);
         this.parseInputsFromString(this.inputs, this.userData['INFORMER_FOLDERS']);
         this.patchInputs(this.inputs);
         this.form = this.inpSrv.toFormGroup(this.inputs);
+        this.checkIncrementsVisibility();
         this.addSubscribers();
         if (this.isInformer) {
             this.getCabinets();
@@ -275,20 +298,20 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
         const key = inputKey.substring(4);
         const oldValue = this.inputs[inputKey].value;
         let newValue = val;
-        if (!this.informerIncrementCheckboxKeys.has(inputKey)) {
-            if (this.informerFoldersFieldsKeys.has(key)) {
-                this.setInformerFoldersValue(key, newValue);
-            } else if (key.indexOf(this.cabinetsSelect.selectKey) > -1) {
-                this.setCabinetsValue(val, key);
-            } else if (oldValue !== newValue && !this.form.controls[inputKey].invalid) {
-                const isCheckbox = this.inputs[inputKey].controlType === E_FIELD_TYPE.boolean;
-                if (isCheckbox) {
-                    newValue = newValue ? 'YES' : 'NO';
-                }
-                this.newDataMap.set(key, newValue);
-            } else if (this.newDataMap.has(key)) {
-                this.newDataMap.delete(key);
+        if (this.informerFoldersFieldsKeys.has(key)) {
+            this.setInformerFoldersValue(key, newValue);
+        } else if (this.informerIncrementCheckboxKeys.has(inputKey)) {
+            this.checkOnlyIncrementVisibility(inputKey, val);
+        } else if (key.indexOf(this.cabinetsSelect.selectKey) > -1) {
+            this.setCabinetsValue(val, key);
+        } else if (oldValue !== newValue && !this.form.controls[inputKey].invalid) {
+            const isCheckbox = this.inputs[inputKey].controlType === E_FIELD_TYPE.boolean;
+            if (isCheckbox) {
+                newValue = newValue ? 'YES' : 'NO';
             }
+            this.newDataMap.set(key, newValue);
+        } else if (this.newDataMap.has(key)) {
+            this.newDataMap.delete(key);
         }
     }
     private setCabinetsValue(val, key) {
@@ -333,17 +356,13 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
                 const getKey = (inputKey) => inputKey.substring(4);
                 if (!this.form.controls[checkboxKey].value) {
                     if (this.form.controls[incrementKey].value) {
-                        this.form.controls[incrementKey].setValue('', {emitEvent: false});
                         this.newDataMap.set(getKey(incrementKey), '');
                     }
                     if (this.form.controls[notifyKey].value) {
-                        this.form.controls[notifyKey].setValue(false, {emitEvent: false});
                         this.newDataMap.set(getKey(notifyKey), 'NO');
                     }
                 }
                 if (this.form.controls[incrementKey].invalid && this.newDataMap.has(getKey(incrementKey))) {
-                    const originVal = this.userData[getKey(incrementKey)];
-                    this.form.controls[incrementKey].setValue(originVal, {emitEvent: false});
                     this.newDataMap.delete(getKey(incrementKey));
                 }
             });

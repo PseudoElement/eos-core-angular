@@ -131,14 +131,14 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_REPLY_OVER_CHECK']"
                     [form]="form"
-                    [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_OVER_CHECK_ON')"
+                    [readonly]="!flagEdit"
                 ></eos-dynamic-input>
                 <span class="user-input-span-for-increment-cabinets">дней назад</span>
             </div>
             <eos-dynamic-input
                 [input]="inputs['rec.INFORMER_REPLY_OVER_NOTIFY']"
                 [form]="form"
-                [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_OVER_CHECK_ON')"
+                [readonly]="!flagEdit"
             ></eos-dynamic-input>
         </div>
         <div class="informer-flex">
@@ -152,14 +152,14 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_REPLY_DELTA_CHECK']"
                     [form]="form"
-                    [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_DELTA_CHECK_ON')"
+                    [readonly]="!flagEdit"
                 ></eos-dynamic-input>
                 <span class="user-input-span-for-increment-cabinets">дней и ранее</span>
             </div>
             <eos-dynamic-input
                 [input]="inputs['rec.INFORMER_REPLY_DELTA_NOTIFY']"
                 [form]="form"
-                [readonly]="checkIncrementsVisibility('rec.INFORMER_REPLY_DELTA_CHECK_ON')"
+                [readonly]="!flagEdit"
             ></eos-dynamic-input>
         </div>
     </div>
@@ -179,14 +179,14 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_CTRL_OVER_CHECK']"
                     [form]="form"
-                    [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_OVER_CHECK_ON')"
+                    [readonly]="!flagEdit"
                 ></eos-dynamic-input>
                 <span class="user-input-span-for-increment-cabinets">дней назад</span>
             </div>
             <eos-dynamic-input
                 [input]="inputs['rec.INFORMER_CTRL_OVER_NOTIFY']"
                 [form]="form"
-                [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_OVER_CHECK_ON')"
+                [readonly]="!flagEdit"
             ></eos-dynamic-input>
         </div>
         <div class="informer-flex">
@@ -200,14 +200,14 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_CTRL_DELTA_CHECK']"
                     [form]="form"
-                    [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_DELTA_CHECK_ON')"
+                    [readonly]="!flagEdit"
                 ></eos-dynamic-input>
                 <span class="user-input-span-for-increment-cabinets">дней и ранее</span>
             </div>
             <eos-dynamic-input
                 [input]="inputs['rec.INFORMER_CTRL_DELTA_NOTIFY']"
                 [form]="form"
-                [readonly]="checkIncrementsVisibility('rec.INFORMER_CTRL_DELTA_CHECK_ON')"
+                [readonly]="!flagEdit"
             ></eos-dynamic-input>
         </div>
     </div>
@@ -235,7 +235,7 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_TIMER']"
                     [form]="form"
-                    [readonly]="checkIncrementsVisibility('rec.INFORMER_TIMER_ON')"
+                    [readonly]="!flagEdit"
                 ></eos-dynamic-input>
                 <span class="user-input-span-for-increment-cabinets">мин.</span>
             </div>
@@ -243,7 +243,7 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_SOUND']"
                     [form]="form"
-                    [readonly]="checkIncrementsVisibility('rec.INFORMER_TIMER_ON')"
+                    [readonly]="!flagEdit"
                 ></eos-dynamic-input>
             </div>
         </div>
@@ -252,7 +252,7 @@
             <eos-dynamic-input
                 [input]="inputs['rec.INFORMER_SOUND_PATH']"
                 [form]="form"
-                [readonly]="checkIncrementsVisibility('rec.INFORMER_TIMER_ON')"
+                [readonly]="!flagEdit"
             ></eos-dynamic-input>
         </div>
     </div>
