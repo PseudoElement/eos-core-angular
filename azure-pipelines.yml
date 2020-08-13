@@ -1,0 +1,19 @@
+trigger:
+  batch: 'true'
+  branches:
+    include:
+    - dev
+    - dev_/20.0
+    - release/1.0
+    - release/19.6
+    - release/v20.1
+    
+pool:
+  name: Default
+
+steps:
+- task: PowerShell@2
+  displayName: Build
+  inputs:
+    targetType: filePath
+    filePath: ./build.ps1
