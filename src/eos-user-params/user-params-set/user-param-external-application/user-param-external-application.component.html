@@ -66,12 +66,12 @@
     <div *ngIf="currTab === 1" class="input-user-directories-wrapper input-user-search-wrapper">
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Отображать в результатах поиска максимальное количество записей:</span>
+                <span class="input-title max-notices-title">Отображать в результатах поиска в приложении Документы максимальное количество записей:</span>
                 <eos-dynamic-input [input]="inputs['rec.SRCH_LIMIT_RESULT']" [form]="form"></eos-dynamic-input>
             </div>
         </div>
         <div>
-            <span>Картотека для поиска РК по умолчанию:</span>
+            <span>Картотека для поиска РК по умолчанию в приложении Документы:</span>
             <eos-dynamic-input [input]="inputs['rec.SEARCH_CONTEXT_CARD_EMPTY']" [form]="form"></eos-dynamic-input>
         </div>
     </div>

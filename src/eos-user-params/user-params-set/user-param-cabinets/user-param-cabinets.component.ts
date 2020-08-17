@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CABINETS_USER } from '../shared-user-param/consts/cabinets.consts';
+import { CABINETS_USER, CABINETS_USER_INFORMER, CABINETS_USER_NOTIFICATOR } from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -16,6 +16,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer.component';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -26,6 +27,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
+    @ViewChild('informerTabEl') informerTabRef: CabinetsInformerComponent;
+    @ViewChild('defaultNotificatorEl') defaultNotificatorRef: CabinetsInformerComponent;
     userId: string;
     isChanged: boolean;
     prepInputsAttach;
@@ -38,7 +41,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public defoltInputs;
     public inputs;
     public form: FormGroup;
-    readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
     public currTab: number = 0;
     public allData;
     public mapChanges = new Map();
@@ -46,13 +48,18 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public newFolderString = '';
     public creatchesheDefault;
     public currentUser;
+    public isInformer: boolean = false;
+    public lastTabs: string[] = ['Информер', 'Оповещатель'];
+    public fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
     readonly fieldsKeys: Map<string, number> = new Map([['FOLDERCOLORSTATUS_RECEIVED', 0],
     ['FOLDERCOLORSTATUS_FOR_EXECUTION', 1], ['FOLDERCOLORSTATUS_UNDER_CONTROL', 2], ['FOLDERCOLORSTATUS_HAVE_LEADERSHIP', 3],
     ['FOLDERCOLORSTATUS_FOR_CONSIDERATION', 4], ['FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 5], ['FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 6],
     ['FOLDERCOLORSTATUS_ON_SIGHT', 7], ['FOLDERCOLORSTATUS_ON_THE_SIGNATURE', 8]]);
     _ngUnsubscribe: Subject<any> = new Subject();
-
     public btnDisable: boolean = true;
+
+    private newInformerData: Map<string, any> = new Map();
+    private newNotificatorData: Map<string, any> = new Map();
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -61,6 +68,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             return this.defaultTitle ? 'Кабинеты по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Кабинеты`;
         }
         return '';
+    }
+    get isnClassif() {
+        return this.currentUser && this.currentUser['ISN_LCLASSIF'];
     }
     constructor(
         private _userParamsSetSrv: UserParamsService,
@@ -89,59 +99,56 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         if (this.defaultTitle) {
             this.currentUser = this.defaultUser;
             this.allData = this.defaultUser;
-            this.init();
-            Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
-                CABINETS_USER.fields.map(fields => {
-                    if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
-                        // fields.options.splice(0, fields.options.length);
-                        sort.forEach(element => {
-                            fields.options.push({
-                                value: element.ISN_LIST,
-                                title: element.NAME
-                            });
-                        });
-                    }
-                });
-                if (author) {
-                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
-                }
-            });
-        } else {
-            this._userParamsSetSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            }).then(() => {
-                this.currentUser = this._userParamsSetSrv.curentUser;
-                this.allData = this._userParamsSetSrv.hashUserContext;
-                this.init();
-                Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
-                    CABINETS_USER.fields.map(fields => {
-                        if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
-                            // fields.options.splice(0, fields.options.length);
-                            sort.forEach(element => {
-                                fields.options.push({
-                                    value: element.ISN_LIST,
-                                    title: element.NAME
-                                });
-                            });
-                        }
-                    });
-                    if (author) {
-                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
-                    }
-                });
-                })
-                .catch(error => {
-            });
         }
+        this.init()
+        .catch(error => {});
     }
-
-    init() {
+    init(reload?): Promise<any> {
+        if (this.defaultTitle) {
+            if (reload) {
+                const prep = this.formHelp.getObjQueryInputsField();
+                return this._pipRx.read(prep).then((data) => {
+                    const defUser = this.formHelp.createhash(data);
+                    this.currentUser = defUser;
+                    this.allData = defUser;
+                    return this.initForm();
+                });
+            }
+            return this.initForm();
+        }
+        return this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        })
+        .then(() => {
+            this.currentUser = this._userParamsSetSrv.curentUser;
+            this.allData = this._userParamsSetSrv.hashUserContext;
+            return this.initForm();
+        });
+    }
+    initForm(): Promise<any> {
+        this.defineLastTab();
         this.pretInputs();
         this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
         this.patchInputValue();
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
         this.formSubscriber();
+        return Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
+            CABINETS_USER.fields.map(fields => {
+                if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                    // fields.options.splice(0, fields.options.length);
+                    sort.forEach(element => {
+                        fields.options.push({
+                            value: element.ISN_LIST,
+                            title: element.NAME
+                        });
+                    });
+                }
+            });
+            if (author) {
+                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+            }
+        });
     }
 
     pretInputs(): void {
@@ -187,13 +194,26 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
         }
     }
-
     formSubscriber() {
-        this.form.valueChanges.subscribe(data => {
+        this.form.valueChanges
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(data => {
             this.checkTouch(data);
         });
     }
-
+    routeSubscriber() {
+        this._snap.queryParams
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((data: Object) => {
+            if (data.hasOwnProperty('BackCabinets')) {
+                this.currTab = 1;
+            }
+        });
+    }
     checkTouch(data) {
         let countError = 0;
         Object.keys(data).forEach(key => {
@@ -216,7 +236,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.mapChanges.delete('FOLDERCOLORSTATUS');
             }
         }
-        if (countError > 0 || this.mapChanges.size) {
+        if (countError > 0 || this.mapChanges.size || this.newInformerData.size || (this.newNotificatorData.size && this.defaultTitle)) {
             this.btnDisable = false;
         } else {
             this.btnDisable = true;
@@ -365,28 +385,23 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this._ngUnsubscribe.complete();
     }
     submit(): Promise<any> {
-        if (this.mapChanges.size) {
+        if (this.mapChanges.size || this.newInformerData.size || (this.newNotificatorData.size && this.defaultTitle)) {
             const query = this.parseMapForCreate();
             return this._pipRx.batch(query, '').then(() => {
-                this.prepFormForSave();
-                this.FOLDERCOLORSTATUS = this.newFolderString;
-                this.btnDisable = true;
-                this.flagEdit = false;
-                this.editMode();
-                this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
-                if (this.defaultTitle === undefined) {
-                    this._userParamsSetSrv.getUserIsn({
-                        expand: 'USER_PARMS_List'
-                    });
-                } else {
-                    this.form.value['rec.FOLDERCOLORSTATUS'] = this.newFolderString;
-                    const val1 = this.form.controls['rec.HILITE_RESOLUTION'].value;
-                    const val2 = this.form.controls['rec.HILITE_PRJ_RC'].value;
-                    this.form.value['rec.HILITE_RESOLUTION'] = String(val1);
-                    this.form.value['rec.HILITE_PRJ_RC'] = String(val2);
-                    this.DefaultSubmitEmit.emit(this.form.value);
-                }
+                this.ngOnDestroy();
+                this.routeSubscriber();
+                this.init(true)
+                .then(() => {
+                    this.btnDisable = true;
+                    this.flagEdit = false;
+                    this.informerTabRef.submit(this.flagEdit);
+                    if (this.defaultTitle) {
+                        this.defaultNotificatorRef.submit(this.flagEdit);
+                    }
+                    this.editMode();
+                    this._pushState();
+                });
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
                 this.cancel();
@@ -432,6 +447,18 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 }
             }
         });
+        if (this.defaultTitle) {
+            this.newInformerData.forEach((value, key) => {
+                arrayQuery.push(this.createReqDefault(key, value));
+            });
+            this.newNotificatorData.forEach((value, key) => {
+                arrayQuery.push(this.createReqDefault(key, value));
+            });
+        } else {
+            this.newInformerData.forEach((value, key) => {
+                arrayQuery.push(this.createReq(key, value));
+            });
+        }
     }
     checkTypeValue(value) {
         if (typeof value === 'boolean') {
@@ -498,23 +525,22 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
         };
     }
-
     cancel($event?) {
-        this.flagEdit = false;
-        this.prepFormCancel(this.inputs, true);
-        this.newFolderString = this.FOLDERCOLORSTATUS;
-        this.mapChanges.clear();
-        this.btnDisable = true;
-        this.flagEdit = false;
-        this.getControlAuthor().then(res => {
-            if (res) {
-                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(res[0]['CLASSIF_NAME']), { emitEvent: false });
+        this.ngOnDestroy();
+        this.routeSubscriber();
+        this.init(true)
+        .then(() => {
+            this.mapChanges.clear();
+            this.btnDisable = true;
+            this.flagEdit = false;
+            this.informerTabRef.cancel(this.flagEdit);
+            if (this.defaultTitle) {
+                this.defaultNotificatorRef.cancel(this.flagEdit);
             }
+            this.editMode();
+            this._pushState();
         });
-        this._pushState();
-        this.editMode();
     }
-
     prepFormCancel(input, flag) {
         Object.keys(input).forEach((key) => {
             const val = input[key].value;
@@ -523,6 +549,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     edit($event) {
         this.flagEdit = $event;
+        this.informerTabRef.edit(this.flagEdit);
+        if (this.defaultTitle) {
+            this.defaultNotificatorRef.edit(this.flagEdit);
+        }
         this.editMode();
         this.checkDataToDisabled();
     }
@@ -536,11 +566,15 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(CABINETS_USER, 'fieldsDefaultValue'));
+        const mainParams = this.formHelp.queryparams(CABINETS_USER, 'fieldsDefaultValue');
+        const lastTabFields = this.isInformer ? CABINETS_USER_INFORMER : CABINETS_USER_NOTIFICATOR ;
+        const lastTabParams = this.formHelp.queryparams(lastTabFields, 'fieldsDefaultValue');
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault([...mainParams, ...lastTabParams]);
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;
                 this.creatchesheDefault = this.formHelp.createhash(data);
+                this.informerTabRef.default(this.creatchesheDefault);
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
@@ -568,6 +602,38 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             msg: msg,
             dismissOnTimeout: 6000,
         };
+    }
+    public emitInformerChanges(event): void {
+        if (event.data && event.data.size) {
+            this.newInformerData = event.data;
+        } else {
+            this.newInformerData.clear();
+        }
+        const emptyObj = {};
+        this.checkTouch(emptyObj);
+    }
+    public emitNotificatorChanges(event): void {
+        if (event.data && event.data.size) {
+            this.newNotificatorData = event.data;
+        } else {
+            this.newNotificatorData.clear();
+        }
+        const emptyObj = {};
+        this.checkTouch(emptyObj);
+    }
+    private defineLastTab() {
+        if (this.defaultTitle) {
+            this.isInformer = true;
+            if (this.fieldGroupsForCabinets.length < 4) {
+                this.fieldGroupsForCabinets = [...this.fieldGroupsForCabinets, ...this.lastTabs];
+            }
+        } else {
+            this.isInformer = this.currentUser['AV_SYSTEMS'][26] === '1';
+            if (this.fieldGroupsForCabinets.length < 3) {
+                const tabName = this.isInformer ? this.lastTabs[0] : this.lastTabs[1];
+                this.fieldGroupsForCabinets.push(tabName);
+            }
+        }
     }
     private _pushState() {
         this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement });
