@@ -38,7 +38,7 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'visualization'
     },
     {
-        title: 'Десктопное приложение',
+        title: 'Приложение Документы',
         url: 'external-application'
     },
     {

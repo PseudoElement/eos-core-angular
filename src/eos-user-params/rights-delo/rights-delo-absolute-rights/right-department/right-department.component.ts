@@ -307,7 +307,7 @@ export class RightDepertmentComponent implements OnInit {
                         title: 'Предупреждение',
                         msg: 'Необходимо выбрать элемент'
                     });
-                    return Promise.reject('cancel');
+                    return Promise.resolve('cancel');
                 }
             });
     }

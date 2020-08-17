@@ -480,6 +480,7 @@ const commonMeta = {
             ID_GAS_PS: _t.s,
             NUMCREATION_FLAG: _t.i,
             EXPEDITION_FLAG: _t.i,
+            MEDO_ID: _t.s,
         },
         readonly: [
 

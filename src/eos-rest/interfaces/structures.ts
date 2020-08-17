@@ -994,6 +994,7 @@ export interface DEPARTMENT extends IHierCL, IStamp {
     WDUE: string;
     ISN_STAMP: number;
     EXPEDITION_FLAG: number;
+    MEDO_ID: string;
 
 }
 

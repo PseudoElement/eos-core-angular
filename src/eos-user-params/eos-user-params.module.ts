@@ -47,6 +47,7 @@ import { RemasterAddressesComponent } from '../eos-user-params/user-params-set/u
 import { RemasterScanComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-scan/remaster-scan.conponent';
 import { RemasterAutoSearchComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
 import { RemasterRcComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
+import { CabinetsInformerComponent } from '../eos-user-params/user-params-set/user-param-cabinets/cabinets-informer/cabinets-informer.component';
 import { RtCabinetsFoldersComponent } from './rights-delo/rights-cabinets/rt-cabinets-folders/rt-cabinets-folders.component';
 import { RigthsCabinetsServices } from '../eos-user-params/shared/services/rigths-cabinets.services';
 import { ListCardRightComponent } from './rights-delo/rights-delo-cards/list-card/list-card.component';
@@ -119,6 +120,7 @@ import { CurrentUserSetComponent } from './current-user-set/current-user-set.com
         RemasterAutoSearchComponent,
         RemasterSebComponent,
         RemasterRcComponent,
+        CabinetsInformerComponent,
         RtCabinetsFoldersComponent,
         ListCardRightComponent,
         UserParamTransferComponent,

@@ -33,7 +33,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     public editFlag: boolean = false;
     public titleHeader: string;
     public currTab: number = 0;
-    readonly fieldGroupsForDeskApl: string[] = ['Десктопное приложение', 'Поиск'];
+    readonly fieldGroupsForDeskApl: string[] = ['Внешние приложения', 'Поиск'];
     private newData = new Map();
     private prepDate;
     private allData;
@@ -58,7 +58,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             }
             this._userParamsSetSrv.getUserIsn(config)
             .then(() => {
-                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Десктопное приложение';
+                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Приложение Документы';
                 this.init();
             })
             .catch(err => {

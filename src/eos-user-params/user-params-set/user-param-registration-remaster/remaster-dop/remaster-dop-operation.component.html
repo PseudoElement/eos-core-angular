@@ -27,7 +27,7 @@
     </div>
 </div>
 <div class="user-group-form">
-    <span>Печатать регистрационный штамп:</span>  
+    <span>Печатать регистрационный штамп в приложении Документы:</span>  
     <div class="inputs-inline">
         <eos-dynamic-input
             class="input-right"
@@ -73,6 +73,15 @@
     [form]="form"
     [readonly]="false"
 ></eos-dynamic-input>
+</div>
+<div class="user-group-form">
+    <span>Регистрировать РК из РКПД:</span><br>
+    <eos-dynamic-input
+        class="input-right"
+        [input]="inputs['rec.PRJ2RC_DIALOG']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
 </div>
 <div class="user-group-form">
     <span>Установить запрет:</span>

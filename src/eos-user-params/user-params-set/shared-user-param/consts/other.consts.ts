@@ -128,7 +128,7 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
         {
             key: 'RS_INNER_FILL_SEND_DATE',
             type: 'boolean',
-            title: 'Добавлять с отметкой об отправке'
+            title: 'Добавлять с отметкой об отправке в АРМ «ДелоWeb»'
         },
     ]
 };
@@ -596,7 +596,7 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'RS_INNER_FILL_SEND_DATE',
             type: 'boolean',
-            title: 'Добавлять с отметкой об отправке'
+            title: 'Добавлять с отметкой об отправке в АРМ «ДелоWeb»'
         },
         {
             key: 'CUR_CABINET',

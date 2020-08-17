@@ -1273,7 +1273,7 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'AUTOSEND',
             type: 'boolean',
-            title: 'Вызывать функцию "Переслать документ"'
+            title: 'Вызывать функцию "Переслать документ" в приложении Документы'
         },
         {
             key: 'AUTOLOAD_TO_EXEC_CURR_CAB',
@@ -1324,6 +1324,16 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             key: 'TESTRAPID_USECORRESP',
             type: 'boolean',
             title: 'Проверять повторность документа по полю "Корреспондент"'
+        },
+        {
+            key: 'PRJ2RC_DIALOG',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: 'NO', title: 'Без диалога'},
+                {value: 'YES', title: 'С диалогом'}
+            ]
         },
         {
             key: 'FILELOCK',
@@ -1655,7 +1665,7 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     fields: [{
         key: 'SEV_HIDE_SENDING',
         type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ" в десктопном приложении'
+        title: 'Скрыть операцию "Отправить сообщение СЭВ" в приложении Документы'
     },
     {
         key: 'SEV_ALLOW_DELIVERY',
@@ -1736,16 +1746,6 @@ export const REGISTRATION_RC: IBaseUsers =  {
         key: 'CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA',
         type: 'boolean',
         title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы'
-    },
-    {
-        key: 'PRJ2RC_DIALOG',
-        type: 'radio',
-        title: '',
-        readonly: false,
-        options: [
-            {value: 'NO', title: 'Без диалога'},
-            {value: 'YES', title: 'С диалогом'}
-        ]
     },
     ]
 };
