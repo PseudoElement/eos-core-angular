@@ -155,6 +155,10 @@ export class EosUtils {
             if (control.invalid) {
                 const title = input.label;
                 control.updateValueAndValidity();
+                // костыль для отображения сообщения об ошибке, при асинхронном валидаторе updateValueAndValidity затирает ошибку
+                if (input.key === 'rec.CABINET_NAME' && control.errors === null) {
+                    control.errors = {isUnique: true};
+                }
                 const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length, uniqueInDict: !!input.uniqueInDict });
                 invalid.push(title + ' (' + validateMessage + ')');
             }
