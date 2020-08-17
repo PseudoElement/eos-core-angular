@@ -160,7 +160,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'userGrantedOnly',
             title: 'Только доступные пользователю файлы и поручения',
             type: 'boolean',
-            default: true, // по умолчанию
+            default: false, // по умолчанию
         }, {
             key: 'file',
             title: 'Файлы',
