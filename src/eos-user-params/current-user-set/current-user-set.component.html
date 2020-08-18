@@ -3,7 +3,7 @@
         <div  class="params-nav-list">
             <ul class="list-group">
                 <ng-container *ngFor="let param of listSettings">
-                    <li *ngIf="param.url !== 'prof-sert'" class="list-group-item"
+                    <li *ngIf="param.url" class="list-group-item"
                         [routerLink]="['/user_param/current-settings', param.url]"
                         routerLinkActive="active-element-param">{{param.title}}</li>
                 </ng-container>
@@ -40,6 +40,9 @@
                 </ng-container>
                 <ng-container *ngSwitchCase="'el-signature'">
                     <eos-user-param-el-signature [mainUser]="mainUser"></eos-user-param-el-signature>
+                </ng-container>
+                <ng-container *ngSwitchCase="'prof-sert'">
+                    <eos-prof-sert></eos-prof-sert>
                 </ng-container>
                 <ng-container *ngSwitchCase="'visualization'">
                     <eos-user-param-visualization [mainUser]="mainUser"></eos-user-param-visualization>

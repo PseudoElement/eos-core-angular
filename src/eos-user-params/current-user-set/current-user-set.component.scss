@@ -1,16 +1,17 @@
 $textMainColor: #505050;
-$bgLeftSidebar: #E7E7E5;
-$bgLeftSidebarActive: #FEE9A9;
-$bgHeader: #CAC7BE;
-$bgMainArea: #FAF8F5;
-$borderTab: #D7D7D2;
-$borderTabActive: #EAD597;
-$bgHeaderForm: #F1EEE8;
+$bgLeftSidebar: #e7e7e5;
+$bgLeftSidebarActive: #fee9a9;
+$bgHeader: #cac7be;
+$bgMainArea: #faf8f5;
+$borderTab: #d7d7d2;
+$borderTabActive: #ead597;
+$bgHeaderForm: #f1eee8;
 $bgColorInput: #646464;
-$bgInitial: #FFFFFF;
-$bgButton: #E9E6DF;
-$bgButtonSave: #E4DFD2;
+$bgInitial: #ffffff;
+$bgButton: #e9e6df;
+$bgButtonSave: #e4dfd2;
 $borderListRC: #c1c1c1;
+$active-field-color-main-theme: #646464;
 
 @mixin settings-icon {
     background-size: 75% 58%;
@@ -81,7 +82,7 @@ $borderListRC: #c1c1c1;
 }
 
 @mixin set-margin-for-dynamic-ipnputs {
-    &>eos-dynamic-input {
+    & > eos-dynamic-input {
         margin-left: 20px;
 
         &:first-of-type {
@@ -95,8 +96,25 @@ $borderListRC: #c1c1c1;
 }
 
 //скрываем номер сборки
-.main-container div.content-wrapper>div:last-child {
+.main-container div.content-wrapper > div:last-child {
     display: none;
+}
+
+//перекрашиваем тултип
+.tooltip-info,
+.tooltip-error {
+    &.tooltip.right .tooltip-arrow {
+        border-right-color: $active-field-color-main-theme;
+    }
+    &.tooltip.left .tooltip-arrow {
+        border-left-color: $active-field-color-main-theme;
+    }
+    &.tooltip.top .tooltip-arrow {
+        border-top-color: $active-field-color-main-theme;
+    }
+    &.tooltip.bottom .tooltip-arrow {
+        border-bottom-color: $active-field-color-main-theme;
+    }
 }
 
 //сбрасываем margin вокруг рамки
@@ -107,7 +125,7 @@ $borderListRC: #c1c1c1;
 
 .current-settings {
     display: flex;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: $textMainColor;
 
     .left {
@@ -132,7 +150,7 @@ $borderListRC: #c1c1c1;
                 margin: 0;
                 border-radius: 0;
 
-                &>li:first-child {
+                & > li:first-child {
                     border: 0;
                 }
 
@@ -166,9 +184,8 @@ $borderListRC: #c1c1c1;
         /* общие стили */
         .input-user-wrapper,
         .input-user-shablony-wrapper {
-
             /* расположение блока с основной информацией*/
-            &>div:not(.pad-other-set) {
+            & > div:not(.pad-other-set) {
                 margin-right: 20px;
                 margin-left: 110px;
                 margin-top: 20px;
@@ -205,7 +222,7 @@ $borderListRC: #c1c1c1;
                         width: inherit;
                         margin-bottom: 20px;
 
-                        &>div {
+                        & > div {
                             flex-direction: row-reverse;
                             justify-content: flex-start;
                             margin-right: 20px;
@@ -223,7 +240,7 @@ $borderListRC: #c1c1c1;
                             width: 95%;
                             height: 1px;
                             margin-bottom: 15px;
-                            border: 1px solid #E9E6DF;
+                            border: 1px solid #e9e6df;
                         }
 
                         .btn {
@@ -246,7 +263,7 @@ $borderListRC: #c1c1c1;
             }
 
             /* горизонтальный переключатель вкладок */
-            &>div.tabs-wrapper {
+            & > div.tabs-wrapper {
                 justify-content: flex-start;
                 padding-right: 0;
                 border: none;
@@ -268,7 +285,7 @@ $borderListRC: #c1c1c1;
                         border: 1px solid $borderTab;
                         background-color: $bgLeftSidebar;
 
-                        &>span {
+                        & > span {
                             text-align: center;
                             line-height: 14px;
                         }
@@ -298,7 +315,7 @@ $borderListRC: #c1c1c1;
             .cab-mar-span {
                 margin: 0;
 
-                >span:not(.input-title):first-child {
+                > span:not(.input-title):first-child {
                     @include style-title-bookmarks;
                 }
             }
@@ -318,7 +335,7 @@ $borderListRC: #c1c1c1;
                     }
 
                     &-checkbox {
-                        &>div {
+                        & > div {
                             //margin: 0 20px;
 
                             label.checkbox {
@@ -326,14 +343,14 @@ $borderListRC: #c1c1c1;
                                 line-height: initial;
                                 margin: 0 !important;
 
-                                input[type="checkbox"]+span {
+                                input[type="checkbox"] + span {
                                     margin: 0 8px 0 0;
                                     line-height: initial;
                                     background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
                                     @include settings-icon;
                                 }
 
-                                input[type="checkbox"]:checked+span {
+                                input[type="checkbox"]:checked + span {
                                     margin: 0 8px 0 0;
                                     line-height: initial;
                                     background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
@@ -344,7 +361,7 @@ $borderListRC: #c1c1c1;
                     }
 
                     &-radio {
-                        &>div {
+                        & > div {
                             //margin: 15px 20px;
 
                             label.radio {
@@ -352,14 +369,14 @@ $borderListRC: #c1c1c1;
                                 line-height: initial;
                                 margin: 0 !important;
 
-                                input[type="radio"]+span {
+                                input[type="radio"] + span {
                                     margin: 0 5px 0 0;
                                     line-height: initial;
                                     background-image: url("assets/icons/Radio-UserSettings-Black.svg");
                                     @include settings-icon;
                                 }
 
-                                input[type="radio"]:checked+span {
+                                input[type="radio"]:checked + span {
                                     margin: 0 5px 0 0;
                                     line-height: initial;
                                     background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
@@ -480,7 +497,6 @@ $borderListRC: #c1c1c1;
                     span.eos-icon-close-folder-blue {
                         background-image: url("assets/icons/Open-Close-UserSettings-Folder-Grey.svg");
                     }
-
                 }
             }
         }
@@ -495,8 +511,7 @@ $borderListRC: #c1c1c1;
         eos-registration-remaster {
             .user-param-registration-content-wrapper {
                 eos-dop-operation {
-                    &>div.user-group-form {
-
+                    & > div.user-group-form {
                         &:nth-child(3),
                         &:nth-child(4) {
                             div.inputs-inline {
@@ -526,7 +541,7 @@ $borderListRC: #c1c1c1;
                             }
                         }
 
-                        &>div button {
+                        & > div button {
                             @include style-other-button;
                         }
 
@@ -538,12 +553,12 @@ $borderListRC: #c1c1c1;
                 }
 
                 eos-remaster-scan {
-                    div>div.user-group-form {
+                    div > div.user-group-form {
                         &:first-child {
                             .inputs-inline {
                                 position: relative;
 
-                                &>span {
+                                & > span {
                                     @include style-title-bookmarks;
                                 }
 
@@ -571,7 +586,7 @@ $borderListRC: #c1c1c1;
                         }
 
                         &:nth-child(2) {
-                            >div:first-child>span {
+                            > div:first-child > span {
                                 @include style-title-bookmarks;
                             }
 
@@ -580,7 +595,7 @@ $borderListRC: #c1c1c1;
                                 flex-direction: column;
                                 margin: -10px 0 15px 20px;
 
-                                >div {
+                                > div {
                                     display: flex;
                                     align-items: baseline;
                                     width: 450px !important;
@@ -610,7 +625,7 @@ $borderListRC: #c1c1c1;
                             align-items: center;
                             margin-top: 40px;
 
-                            &>span {
+                            & > span {
                                 display: block !important;
                                 width: 130px !important;
                                 margin-left: 20px;
@@ -645,7 +660,7 @@ $borderListRC: #c1c1c1;
                         }
                     }
 
-                    div>eos-dynamic-input {
+                    div > eos-dynamic-input {
                         margin: 10px 20px;
                     }
                 }
@@ -653,14 +668,14 @@ $borderListRC: #c1c1c1;
                 eos-auto-search {
                     div.user-group-form {
                         &:nth-child(2) {
-                            &>div {
+                            & > div {
                                 margin-top: 20px;
                                 margin-left: 20px;
                             }
                         }
 
                         &:nth-child(3) {
-                            &>div.sort-link {
+                            & > div.sort-link {
                                 display: block;
                                 position: relative;
 
@@ -687,7 +702,7 @@ $borderListRC: #c1c1c1;
                             div.inputs-inline {
                                 display: flex;
 
-                                &>span {
+                                & > span {
                                     margin-right: 10px;
                                 }
                             }
@@ -701,13 +716,13 @@ $borderListRC: #c1c1c1;
                                 }
 
                                 &:nth-child(4) {
-                                    &>eos-dynamic-input {
+                                    & > eos-dynamic-input {
                                         width: 477px !important;
                                     }
                                 }
                             }
 
-                            &>eos-dynamic-input {
+                            & > eos-dynamic-input {
                                 margin: 0;
                             }
                         }
@@ -733,7 +748,6 @@ $borderListRC: #c1c1c1;
                                 }
                             }
 
-
                             div.def_search_citizen {
                                 margin-left: 0;
 
@@ -752,7 +766,7 @@ $borderListRC: #c1c1c1;
                         }
 
                         &:last-child {
-                            eos-dynamic-input-radio>div {
+                            eos-dynamic-input-radio > div {
                                 display: flex;
                                 flex-direction: column;
                             }
@@ -762,8 +776,12 @@ $borderListRC: #c1c1c1;
             }
         }
 
-        //вкладка Кабинеты 
+        //вкладка Кабинеты
         eos-user-param-cabinets {
+            div.scrollWrapper {
+                padding: 0 20px;
+            }
+
             .input-user-cabinets-rk-forwarding-wrapper {
                 div.user-group-form {
                     &:first-child {
@@ -772,7 +790,7 @@ $borderListRC: #c1c1c1;
                             margin-bottom: 15px;
                         }
 
-                        .user-input-increment-cabinets>span {
+                        .user-input-increment-cabinets > span {
                             width: 100%;
                             padding-top: 0;
                         }
@@ -782,7 +800,7 @@ $borderListRC: #c1c1c1;
                         div.inputs-inline {
                             margin: -10px 20px 20px;
 
-                            &>.reply-input {
+                            & > .reply-input {
                                 margin-top: 10px;
                                 margin-left: 0;
                             }
@@ -828,8 +846,7 @@ $borderListRC: #c1c1c1;
                 }
 
                 div.user-group-form {
-
-                    div.inputs-inline>span {
+                    div.inputs-inline > span {
                         @include style-title-bookmarks;
                     }
 
@@ -867,24 +884,24 @@ $borderListRC: #c1c1c1;
                             div.elem-input-radio {
                                 display: block;
                             }
-                        }                       
+                        }
 
-                        &>eos-dynamic-input {
+                        & > eos-dynamic-input {
                             margin-top: 0;
                         }
                     }
 
                     &:nth-child(5) {
-                        margin-left: 0;                       
-                    }     
-                    
-                    &:nth-child(8) {                      
+                        margin-left: 0;
+                    }
+
+                    &:nth-child(8) {
                         .add-to-juornal-radio,
                         .add-to-juornal {
                             @include set-margin-for-dynamic-ipnputs;
                         }
 
-                        .add-to-juornal-radio {                            
+                        .add-to-juornal-radio {
                             div.elem-input-radio {
                                 display: block;
                             }
@@ -893,7 +910,7 @@ $borderListRC: #c1c1c1;
                         .add-to-juornal {
                             display: block;
 
-                            &>eos-dynamic-input:first-of-type {
+                            & > eos-dynamic-input:first-of-type {
                                 margin-top: 0;
                             }
                         }
@@ -903,12 +920,12 @@ $borderListRC: #c1c1c1;
                         position: relative;
                         margin: 0 0 20px 15px;
 
-                        &>span {
+                        & > span {
                             @include reset-style-title-bookmarks;
                             width: 170px !important;
                         }
 
-                        &>div {
+                        & > div {
                             margin-left: 0;
                             width: 375px;
                             height: 20px;
@@ -931,7 +948,7 @@ $borderListRC: #c1c1c1;
                 .send-res {
                     @include set-margin-for-dynamic-ipnputs;
 
-                    &>span {
+                    & > span {
                         @include style-title-bookmarks;
                     }
 
@@ -939,7 +956,7 @@ $borderListRC: #c1c1c1;
                         display: block;
                     }
 
-                    &>div {
+                    & > div {
                         @include set-margin-for-dynamic-ipnputs;
                     }
                 }
@@ -948,11 +965,204 @@ $borderListRC: #c1c1c1;
                     margin-left: 20px;
                 }
 
-                &>eos-dynamic-input {
+                & > eos-dynamic-input {
                     margin-left: 20px;
 
                     div.form-group {
                         margin: 0 !important;
+                    }
+                }
+            }
+
+            .informer-container {
+                div.scrollWrapper {
+                    padding: 0;
+                    padding-right: 20px;
+                }
+
+                .notificator {
+                    height: calc(100vh - 205px);
+
+                    div.user-group-form {
+                        & > div {
+                            & > span {
+                                @include style-title-bookmarks;
+                            }
+
+                            & > eos-dynamic-input {
+                                margin-left: 20px;
+                            }
+                        }
+
+                        div.informer-big-top-margin {
+                            margin-top: 0;
+                        }
+                    }
+                }
+
+                .informer {
+                    & > div.user-group-form {
+                        margin-left: 20px;
+                        margin-top: 15px;
+
+                        &:nth-child(2) {
+                            div.informer-flex {
+                                & > eos-dynamic-input {
+                                    width: 25%;
+                                }
+
+                                .informer-radio-inline {
+                                    div.ng-pristine.ng-valid {
+                                        display: flex;
+                                    }
+                                }
+
+                                .informer-select {
+                                    height: 22px;
+                                }
+                            }
+
+                            div.informer-flex.informer-end {
+                                position: relative;
+                                margin-top: 20px;
+                                justify-content: flex-start;
+
+                                &:before {
+                                    @include style-horizontal-line;
+                                    width: calc(100% + 20px);
+                                    top: -5px;
+                                    left: -20px;
+                                }
+                            }
+
+                            div.cabinets-informer-folders-line {
+                                &:nth-child(4) {
+                                    padding-left: 80px;
+                                }
+
+                                &:nth-child(5) {
+                                    padding-left: 25px;
+                                }
+                            }
+
+                            div.informer-big-top-margin {
+                                position: relative;
+
+                                & > eos-dynamic-input {
+                                    width: 27%;
+                                }
+
+                                &:before {
+                                    @include style-horizontal-line;
+                                    width: calc(100% + 20px);
+                                    top: -13px;
+                                    left: -20px;
+                                }
+                            }
+
+                            div.user-group-form {
+                                & > eos-dynamic-input {
+                                    margin-left: 0;
+                                }
+                            }
+                        }
+
+                        &:nth-child(4),
+                        &:nth-child(6) {
+                            div.informer-flex {
+                                margin-top: 15px;
+
+                                & > eos-dynamic-input {
+                                    width: 30%;
+                                }
+
+                                .user-input-increment-cabinets {
+                                    width: 25%;
+
+                                    & > eos-dynamic-input {
+                                        width: initial;
+                                    }
+
+                                    & > span {
+                                        width: 150px;
+                                        padding-top: 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        &:nth-child(4) {
+                            margin-bottom: 15px;
+
+                            div.inputs-inline {
+                                & > span {
+                                    padding-left: 3px;
+                                }
+
+                                div.informer-radio-inline {
+                                    margin-top: 5px;
+                                    margin-left: 0;
+                                }
+                            }
+                        }
+
+                        &:nth-child(7) {
+                            span.input-title {
+                                margin-right: 10px;
+                            }
+
+                            eos-dynamic-input {
+                                width: initial;
+                                display: inline-block;
+                            }
+                        }
+
+                        &:nth-child(8) {
+                            & > span {
+                                width: calc(100% + 20px);
+                                margin-left: -20px;
+                            }
+
+                            div.informer-flex {
+                                & > eos-dynamic-input {
+                                    display: inline-block;
+                                    width: initial;
+                                }
+
+                                div.user-input-increment-cabinets {
+                                    padding-left: 15px;
+
+                                    span.user-input-span-for-increment-cabinets {
+                                        padding-top: 0;
+                                    }
+                                }
+
+                                div.informer-rl-padding {
+                                    padding-left: 90px;
+                                }
+
+                                & > span {
+                                    margin-right: 25px;
+                                }
+                            }
+
+                            div.informer-small-top-margin:last-child {
+                                & > span {
+                                    margin-right: 25px;
+                                }
+
+                                & > eos-dynamic-input {
+                                    display: inline-block;
+                                    width: 400px;
+                                }
+                            }
+                        }
+                    }
+
+                    div.informer-big-top-margin {
+                        & > eos-dynamic-input {
+                            margin-left: 0;
+                        }
                     }
                 }
             }
@@ -962,10 +1172,10 @@ $borderListRC: #c1c1c1;
         eos-user-param-rc {
             .container-rk {
                 max-height: calc(100vh - 150px);
-    
+
                 div.user-group-form {
                     &:first-child {
-                        &>eos-dynamic-input:first-child {
+                        & > eos-dynamic-input:first-child {
                             margin-top: 0;
                         }
                     }
@@ -974,12 +1184,12 @@ $borderListRC: #c1c1c1;
                         div.btn-controll {
                             justify-content: flex-end;
                             margin: 0;
-            
+
                             button {
                                 @include style-other-button;
                                 padding: 4px 0 0 4px;
                                 border-width: 0;
-            
+
                                 &:last-child {
                                     padding-right: 0;
                                 }
@@ -994,7 +1204,7 @@ $borderListRC: #c1c1c1;
                             padding-top: 0;
                             overflow-y: auto;
 
-                            &>span.rc-doc {
+                            & > span.rc-doc {
                                 padding: 2px 5px;
 
                                 &.current {
@@ -1008,13 +1218,13 @@ $borderListRC: #c1c1c1;
                     div.inputs-inline.input-right {
                         margin: 15px 20px 15px;
 
-                        &>span {
+                        & > span {
                             padding-left: 5px;
                         }
                     }
                 }
-                
-                &>eos-dynamic-input {
+
+                & > eos-dynamic-input {
                     margin-left: 20px;
                 }
             }
@@ -1029,25 +1239,25 @@ $borderListRC: #c1c1c1;
                     label.inline-block {
                         padding-top: 0;
                     }
-                }           
-                
+                }
+
                 div.user-group-form {
                     &:first-child {
                         div.inputs-inline {
                             @include set-margin-for-dynamic-ipnputs;
                             margin-bottom: 5px;
 
-                            &>span {
+                            & > span {
                                 @include style-title-bookmarks;
                                 padding-top: 0 !important;
-                            }                                                    
+                            }
                         }
                     }
 
                     &:nth-child(2) {
                         margin: 0 0 15px 25px;
 
-                        &>span {
+                        & > span {
                             @include reset-style-title-bookmarks;
                             width: 140px !important;
                             padding: 0 !important;
@@ -1060,14 +1270,14 @@ $borderListRC: #c1c1c1;
                             eos-dynamic-input.inline-block {
                                 padding-top: 0;
                             }
-                            
+
                             @include set-margin-for-dynamic-ipnputs;
                         }
                     }
                 }
 
-                &>div:not(.user-group-form) {
-                    &>span {
+                & > div:not(.user-group-form) {
+                    & > span {
                         @include style-title-bookmarks;
                     }
 
@@ -1076,8 +1286,7 @@ $borderListRC: #c1c1c1;
                     }
 
                     @include set-margin-for-dynamic-ipnputs;
-
-                }   
+                }
             }
         }
 
@@ -1088,19 +1297,19 @@ $borderListRC: #c1c1c1;
                     max-height: calc(100vh - 205px);
 
                     .panel-group {
-                        width: calc(100vw - 145px);                       
-                        margin-bottom: 0; 
+                        width: calc(100vw - 145px);
+                        margin-bottom: 0;
 
                         br {
                             display: none;
                         }
-                        
+
                         &:first-child {
                             accordion-group.panel {
                                 &:first-child {
-                                    .accord-wr>div:last-child {
+                                    .accord-wr > div:last-child {
                                         margin-top: 15px;
-                                        
+
                                         div.receipe-email {
                                             width: 500px;
                                         }
@@ -1108,7 +1317,7 @@ $borderListRC: #c1c1c1;
                                 }
 
                                 &:nth-child(2) {
-                                    .accord-wr>div {
+                                    .accord-wr > div {
                                         div.user-group-form {
                                             padding-left: 7px;
                                             margin-bottom: 15px;
@@ -1117,14 +1326,14 @@ $borderListRC: #c1c1c1;
                                                 @include reset-style-title-bookmarks;
                                                 padding: 0 !important;
                                                 margin-bottom: 15px;
-                                            }            
+                                            }
                                         }
 
                                         &:first-child {
                                             div.input_wrapper {
-                                                &>eos-dynamic-input {
+                                                & > eos-dynamic-input {
                                                     margin-bottom: 15px;
-    
+
                                                     div.elem-input-radio {
                                                         display: block;
                                                     }
@@ -1152,7 +1361,7 @@ $borderListRC: #c1c1c1;
                                         }
                                     }
                                 }
-                            }                                                       
+                            }
                         }
 
                         &:last-child {
@@ -1162,12 +1371,12 @@ $borderListRC: #c1c1c1;
                                         &:not(:first-child) {
                                             margin-top: 0 !important;
                                         }
-    
+
                                         &:not(:last-child) {
                                             margin-bottom: 0 !important;
                                         }
-    
-                                        &>div {
+
+                                        & > div {
                                             margin-top: 0 !important;
                                         }
                                     }
@@ -1176,13 +1385,13 @@ $borderListRC: #c1c1c1;
                         }
 
                         .panel {
-                            margin-bottom: initial; 
-                            background-color: $bgHeaderForm; 
-                            border: none; 
-                            border-radius: initial; 
-                            box-shadow: initial;                            
+                            margin-bottom: initial;
+                            background-color: $bgHeaderForm;
+                            border: none;
+                            border-radius: initial;
+                            box-shadow: initial;
 
-                            &+.panel {
+                            & + .panel {
                                 margin-top: 0;
                             }
 
@@ -1191,7 +1400,7 @@ $borderListRC: #c1c1c1;
                                     padding: 0;
                                     background: initial;
 
-                                    div.accordion-toggle[role=button] {
+                                    div.accordion-toggle[role="button"] {
                                         cursor: default;
                                     }
 
@@ -1218,13 +1427,13 @@ $borderListRC: #c1c1c1;
                                     display: block !important;
                                     background-color: $bgMainArea;
 
-                                    &>.panel-body {
+                                    & > .panel-body {
                                         padding: 0;
                                         border: none;
 
                                         div.accord-wr {
                                             padding: 0;
-                                            margin: 15px 20px;                                           
+                                            margin: 15px 20px;
 
                                             div.form-group {
                                                 margin: 0;
@@ -1242,7 +1451,7 @@ $borderListRC: #c1c1c1;
                 br {
                     display: none;
                 }
-               
+
                 div.user-group-form {
                     div.elem-input-radio {
                         display: block;
@@ -1294,7 +1503,7 @@ $borderListRC: #c1c1c1;
                 padding: 0;
 
                 div.user-input-group {
-                    margin-top: 0;                    
+                    margin-top: 0;
 
                     hr {
                         display: none;
@@ -1336,6 +1545,54 @@ $borderListRC: #c1c1c1;
             }
         }
 
+        //вкладка профиль сертификатов
+        eos-prof-sert {
+            div.input-user-wrapper.input-user-other-rk-forwarding-wrapper {
+                margin-left: 110px;
+                max-height: calc(100vh - 165px) !important;
+
+                & > div {
+                    margin: 0;
+
+                    span.sert-title {
+                        @include style-title-bookmarks;
+                    }
+                }
+
+                & > div.scrollWrapper {
+                    padding: 0;
+
+                    .sert-table {
+                        position: relative;
+
+                        .sert-table-nav {
+                            position: absolute;
+                            right: -8px;
+                            @include style-other-button;
+
+                            button.btn {
+                                padding: 7px 0;
+                            }
+                        }
+
+                        .sert-table-head {
+                            height: 35px;
+                            border-bottom: initial;
+                            border-top: initial;
+                            font-weight: bolder;
+                        }
+
+                        .sert-table-body {
+                            height: 350px;
+                            margin-left: 20px;
+                            border: 1px solid #676869;
+                            background-color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+
         //вкладка Визуализация
         .input-user-visualization-wrapper {
             span.l-font {
@@ -1358,7 +1615,7 @@ $borderListRC: #c1c1c1;
             .ext-app {
                 div.titles-external-application {
                     width: 100%;
-                    background-color: #F1eee8;
+                    background-color: #f1eee8;
                     margin-bottom: 20px;
 
                     span {
@@ -1403,15 +1660,15 @@ $borderListRC: #c1c1c1;
                     }
                 }
 
-                &>div:not(.user-group-form) {
-                    &>span {
+                & > div:not(.user-group-form) {
+                    & > span {
                         @include style-title-bookmarks;
                     }
 
                     eos-dynamic-input {
                         padding-left: 20px;
 
-                        &-radio>div {
+                        &-radio > div {
                             display: flex;
                             flex-direction: column;
                         }
@@ -1422,14 +1679,13 @@ $borderListRC: #c1c1c1;
 
         //вкладка Передача
         .user-param-other-content-wrapper {
-
             eos-dynamic-input {
                 padding-top: 0;
 
                 div.elem-input-radio {
                     height: 20px;
 
-                    &>label {
+                    & > label {
                         padding-top: 0;
                     }
                 }
@@ -1437,27 +1693,24 @@ $borderListRC: #c1c1c1;
 
             eos-user-param-transfer {
                 div.pad-other-set {
-
-                    &>div.user-group-form:first-child {
+                    & > div.user-group-form:first-child {
                         margin-left: 0;
                     }
-
-
                 }
             }
 
             eos-user-param-addresses {
-                &>div {
+                & > div {
                     position: relative;
 
-                    &>div:first-child>span {
+                    & > div:first-child > span {
                         @include style-title-bookmarks;
                     }
 
-                    &>div:nth-child(2) {
+                    & > div:nth-child(2) {
                         margin-bottom: 20px;
 
-                        &>span {
+                        & > span {
                             @include reset-style-title-bookmarks;
                             margin-bottom: 20px;
                         }
@@ -1471,18 +1724,18 @@ $borderListRC: #c1c1c1;
                             align-items: baseline;
                             padding-left: 10px;
 
-                            &>span {
+                            & > span {
                                 margin-right: 10px;
                             }
                         }
                     }
 
-                    &>div:nth-child(3) {
-                        &>p {
+                    & > div:nth-child(3) {
+                        & > p {
                             @include style-title-bookmarks;
                         }
 
-                        &>span {
+                        & > span {
                             @include reset-style-title-bookmarks;
                             margin-bottom: 0 !important;
                         }
@@ -1511,7 +1764,7 @@ $borderListRC: #c1c1c1;
                         }
                     }
 
-                    &>div:nth-child(n+3)>span {
+                    & > div:nth-child(n + 3) > span {
                         @include style-title-bookmarks;
                         margin-bottom: 15px;
                     }
@@ -1519,14 +1772,13 @@ $borderListRC: #c1c1c1;
             }
 
             eos-user-param-reestr {
-                &>div {
-
+                & > div {
                     br {
                         display: none;
                     }
 
-                    div.user-input-group>span,
-                    div.user-content-wr>span {
+                    div.user-input-group > span,
+                    div.user-content-wr > span {
                         @include style-title-bookmarks;
                     }
 
@@ -1563,7 +1815,6 @@ $borderListRC: #c1c1c1;
                                 display: none;
                             }
                         }
-
                     }
 
                     div.user-group-form:nth-child(6) {
@@ -1624,7 +1875,7 @@ $borderListRC: #c1c1c1;
 
                     &-content {
                         padding: 0 10px;
-                        background-color: #F1eee8;
+                        background-color: #f1eee8;
                     }
 
                     .header-cust-other {
