@@ -122,8 +122,6 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * @description hide modal and cancel all changes
      */
     public hideModal(): void {
-        this.cancelTitleEdit();
-        this.moveTitlesBack();
         this.bsModalRef.hide();
     }
 
@@ -267,9 +265,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * remove all custom titles
      */
     public moveTitlesBack() {
-        if (this.modalRef) {
-            this.modalRef.hide();
-        }
+        this.modalRef.hide();
         this.currentFields.forEach((_f) => {
             _f.customTitle = null;
         });
