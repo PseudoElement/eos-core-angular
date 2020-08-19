@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 
 import { IFieldView } from 'eos-dictionaries/interfaces';
 import { EosDictService } from '../services/eos-dict.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     selector: 'eos-column-settings',
@@ -17,7 +18,10 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
     @Input() dictionaryFields: IFieldView[] = [];
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('editedCurrentItem') editedCurrentItemRef: ElementRef;
+    @ViewChild('editFixedItem') editFixedItemRef: ElementRef;
     public haveCustomTitle = false;
+    public tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     selectedDictItem: IFieldView;
     selectedCurrItem: IFieldView;
@@ -63,11 +67,15 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
                 this.selectedFixedItem = null;
             });
         dragulaService.setOptions('bag-one', {
-            moves: (el/*, source, handle, sibling*/) => !el.classList.contains('fixed-item')
+            moves: (el/*, source, handle, sibling*/) => {
+                return !el.classList.contains('fixed-item') && !this.editedItem;
+            }
         });
 
         dragulaService.setOptions('fixed-bag', {
-            moves: (el/*, source, handle, sibling*/) => el.classList.contains('fixed-item')
+            moves: (el/*, source, handle, sibling*/) => {
+                return el.classList.contains('fixed-item') && !this.editedItem;
+            }
         });
     }
 
@@ -111,16 +119,18 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
     }
 
     /**
-     * @description hide modal
+     * @description hide modal and cancel all changes
      */
     public hideModal(): void {
+        this.cancelTitleEdit();
+        this.moveTitlesBack();
         this.bsModalRef.hide();
     }
 
     /**
      * @description emit custom fields and hide modal
      */
-    save() {
+    public save() {
         const customsTitles = [].concat(
             this.fixedFields.filter(el => el.customTitle),
             this.dictionaryFields.filter(el => el.customTitle),
@@ -135,8 +145,8 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * @description move item from all fields (left) to custom fields (right)
      * use with arrows
      */
-    addToCurrent() {
-        if (this.selectedDictItem) {
+    public addToCurrent() {
+        if (this.selectedDictItem && !this.editedItem) {
             // console.log('addToCurrent, this.selectedDictItem', this.selectedDictItem);
             /* tslint:disable:no-bitwise */
             if (!~this.currentFields.findIndex((_f) => _f.key === this.selectedDictItem.key)) {
@@ -152,8 +162,8 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * @description move item from custom fields (right) to all fields (left)
      * use with arrows
      */
-    removeFromCurrent() {
-        if (this.selectedCurrItem) {
+    public removeFromCurrent() {
+        if (this.selectedCurrItem && !this.editedItem) {
             /* tslint:disable:no-bitwise */
             if (!~this.dictionaryFields.findIndex((_f) => _f.key === this.selectedCurrItem.key)) {
                 this.dictionaryFields.push(this.selectedCurrItem);
@@ -172,7 +182,10 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * 2 - dictionary
      * 3 - fixed
      */
-    select(item: IFieldView, type: number) {
+    public select(item: IFieldView, type: number) {
+        if (this.editedItem && item.key !== this.editedItem.key) {
+            this.saveNewTitle();
+        }
         switch (type) {
             case 1:
                 this.selectedCurrItem = item;
@@ -194,16 +207,30 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
     /*
      * make item edited
      * @param item edited item
+     * add autofocus on input
      */
-    edit(item: IFieldView) {
+    public edit(item: IFieldView, isFixed?: boolean) {
         this.editedItem = item;
         this.newTitle = item.customTitle || item.title;
+        if (isFixed) {
+            setTimeout(() => {
+                if (this.editFixedItemRef) {
+                    this.editFixedItemRef.nativeElement.focus();
+                }
+            }, 0);
+        } else {
+            setTimeout(() => {
+                if (this.editedCurrentItemRef) {
+                    this.editedCurrentItemRef.nativeElement.focus();
+                }
+            }, 0);
+        }
     }
 
     /**
      * @description set newTitle as customTitle for editedItem
      */
-    saveNewTitle() {
+    public saveNewTitle() {
         const trimNewTitle = this.newTitle; // .trim();
         if (trimNewTitle !== this.editedItem.title) {
             this.editedItem.customTitle = trimNewTitle;
@@ -221,7 +248,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * @description cancel title edit, set selectedCurrItem, selectedDictItem,
      * editedItem, newTitle equal to null
      */
-    cancelTitleEdit() {
+    public cancelTitleEdit() {
         this.selectedCurrItem = null;
         this.selectedDictItem = null;
         this.editedItem = null;
@@ -232,15 +259,17 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * open modal with remove custom titles confirmation
      * @param template modal template
      */
-    openModal(template: TemplateRef<any>) {
+    public openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template);
     }
 
     /**
      * remove all custom titles
      */
-    moveTitlesBack() {
-        this.modalRef.hide();
+    public moveTitlesBack() {
+        if (this.modalRef) {
+            this.modalRef.hide();
+        }
         this.currentFields.forEach((_f) => {
             _f.customTitle = null;
         });
@@ -251,6 +280,15 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
             _f.customTitle = null;
         });
         this.haveCustomTitle = false;
+    }
+
+    /**
+     * @description save title by Enter click
+     */
+    public onKeyUp(event?: KeyboardEvent) {
+        if (event && event.keyCode === 13) {
+            this.saveNewTitle();
+        }
     }
 
 }

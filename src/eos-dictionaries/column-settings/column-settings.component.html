@@ -17,18 +17,34 @@
                     *ngFor="let item of dictionaryFields"
                     (click)="select(item, 2)"
                     [ngClass]="{'highlighted': item === selectedDictItem}">
-                    <span class="text">{{item?.customTitle || item?.title}}</span>
+                    <span class="text"
+                    [tooltip]="item.title"
+                    #itemTooltip="bs-tooltip"
+                    [delay]="tooltipDelay"
+                    placement="bottom"
+                    triggers="hover:click"
+                    container="body"
+                    containerClass="tooltip-info" >{{item?.customTitle || item?.title}}</span>
                 </div>
             </div>
         </div>
         <div class="driver-col">
             <span>
-                <button class="btn btn-primary-light" (click)="addToCurrent()">
-                    <span class="eos-icon eos-icon-arrow-v-blue-right"></span>
-            </button>
-            <button class="btn btn-primary-light"
-                (click)="removeFromCurrent()">
-                    <span class="eos-icon eos-icon-arrow-v-blue-left"></span>
+                <button
+                class="btn btn-primary-light"
+                [disabled]="editedItem || selectedFixedItem"
+                (click)="addToCurrent()" >
+                    <span
+                    class="eos-icon"
+                    [ngClass]="editedItem || selectedFixedItem ? 'eos-icon-arrow-v-grey-right' : 'eos-icon-arrow-v-blue-right'" ></span>
+                </button>
+                <button
+                class="btn btn-primary-light"
+                [disabled]="editedItem || selectedFixedItem"
+                (click)="removeFromCurrent()" >
+                    <span
+                    class="eos-icon"
+                    [ngClass]="editedItem || selectedFixedItem ? 'eos-icon-arrow-v-grey-left' : 'eos-icon-arrow-v-blue-left'" ></span>
                 </button>
             </span>
         </div>
@@ -42,21 +58,36 @@
                         <i class="fa fa-lock unimportant-text"
                             aria-hidden="true"></i>
                         <span *ngIf="editedItem !== item"
-                            class="text fixed">{{item?.customTitle || item?.title}}</span>
+                            class="text fixed"
+                            [tooltip]="item.title"
+                            #itemTooltip="bs-tooltip"
+                            [delay]="tooltipDelay"
+                            placement="bottom"
+                            triggers="hover:click"
+                            container="body"
+                            containerClass="tooltip-info" >{{item?.customTitle || item?.title}}</span>
                         <button [hidden]="item !== selectedFixedItem"
                             class="btn-primary-light edit-btn eos-icon eos-icon-edit-blue small"
-                            (click)="edit(item)"></button>
-                        <input *ngIf="editedItem === item"
+                            [tooltip]="'Редактировать'"
+                            #itemTooltip="bs-tooltip"
+                            [delay]="tooltipDelay"
+                            placement="left"
+                            triggers="hover:click"
+                            container="body"
+                            containerClass="tooltip-info"
+                            (click)="edit(item, true)"></button>
+                        <input #editFixedItem
+                            *ngIf="editedItem === item"
                             class="form-control new-title"
-                            autofocus
                             [(ngModel)]="newTitle"
-                            [maxlength]="MAX_LEN" />
-                        <button [hidden]="editedItem !== item"
+                            [maxlength]="MAX_LEN"
+                            (keyup)="onKeyUp($event)" />
+                        <!-- <button [hidden]="editedItem !== item"
                             class="btn-primary-light ok-btn eos-icon eos-icon-checkbox-blue small"
                             (click)="saveNewTitle()"></button>
                         <button [hidden]="editedItem !== item"
                             class="btn-primary-light cancel-btn eos-icon eos-icon-close-blue small"
-                            (click)="cancelTitleEdit()"></button>
+                            (click)="cancelTitleEdit()"></button> -->
                     </div>
                 </div>
                 <div class="current"
@@ -68,21 +99,36 @@
                         (click)="select(item, 1)"
                         [ngClass]="{'highlighted': item === selectedCurrItem, 'fixed-item': editedItem === item}">
                         <span *ngIf="editedItem !== item"
-                            class="text">{{item?.customTitle || item?.title}}</span>
+                            class="text"
+                            [tooltip]="item.title"
+                            #itemTooltip="bs-tooltip"
+                            [delay]="tooltipDelay"
+                            placement="bottom"
+                            triggers="hover:click"
+                            container="body"
+                            containerClass="tooltip-info" >{{item?.customTitle || item?.title}}</span>
                         <button [hidden]="item !== selectedCurrItem"
                             class="btn-primary-light edit-btn eos-icon eos-icon-edit-blue small"
-                            (click)="edit(item)"></button>
-                        <input *ngIf="editedItem === item"
+                            [tooltip]="'Редактировать'"
+                            #itemTooltip="bs-tooltip"
+                            [delay]="tooltipDelay"
+                            placement="left"
+                            triggers="hover:click"
+                            container="body"
+                            containerClass="tooltip-info"
+                            (click)="edit(item, false)"></button>
+                        <input #editedCurrentItem
+                            *ngIf="editedItem === item"
                             class="form-control new-title"
-                            autofocus
                             [(ngModel)]="newTitle"
-                            [maxlength]="MAX_LEN" />
-                        <button [hidden]="editedItem !== item"
+                            [maxlength]="MAX_LEN"
+                            (keyup)="onKeyUp($event)" />
+                        <!-- <button [hidden]="editedItem !== item"
                             class="btn-primary-light ok-btn eos-icon eos-icon-checkbox-blue small"
                             (click)="saveNewTitle()"></button>
                         <button [hidden]="editedItem !== item"
                             class="btn-primary-light cancel-btn eos-icon eos-icon-close-blue small"
-                            (click)="cancelTitleEdit()"></button>
+                            (click)="cancelTitleEdit()"></button> -->
                     </div>
                 </div>
             </div>
