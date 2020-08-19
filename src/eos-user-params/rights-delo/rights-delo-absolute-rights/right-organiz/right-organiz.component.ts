@@ -175,8 +175,10 @@ export class RightDepertOrganizComponent implements OnInit {
             });
     }
     // только для исполнения поручений, спрашиваем на создание права ркпд
+    // Проверка 'Создание РКПД' по ключу, вместо поиска по индексу в массиве
     confirmPkpd() {
-        if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !this.listRigth[8].control.value) {
+        const rkpdRight = this.listRigth.filter((right) => right.key === '28')[0];
+        if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !rkpdRight.control.value) {
             return new Promise((res, rej) => {
                 if (confirm('У пользователя нет права \'создание РКПД\', создать его?')) {
                     res(true);
