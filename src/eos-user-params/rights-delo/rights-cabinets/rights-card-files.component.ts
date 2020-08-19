@@ -93,6 +93,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     init(): Promise<any> {
         return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
             this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
+            this.currentCard = null;
             if (this.mainArrayCards.length) {
                 this.selectCurentCard(this.mainArrayCards[0]);
             }
@@ -229,7 +230,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }
     }
     removeCards() {
-        if (!this.currentCard.data.HOME_CARD) {
+        if (!this.currentCard || !this.currentCard.data.HOME_CARD) {
             this.currentCard.deleted = true;
             this.currentCard.current = false;
             if (!this.currentCard.origin) {
@@ -251,10 +252,10 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
 
     deleteNewCard() {
         this.mainArrayCards = this.mainArrayCards.filter((card: CardsClass) => {
-            return card.data.DUE !== this.currentCard.data.DUE;
+            return this.currentCard && card.data.DUE !== this.currentCard.data.DUE;
         });
         this._rightsCabinetsSrv.cardsArray = this._rightsCabinetsSrv.cardsArray.filter((card: CardsClass) => {
-            return card.data.DUE !== this.currentCard.data.DUE;
+            return this.currentCard && card.data.DUE !== this.currentCard.data.DUE;
         });
     }
     submit(event) {
