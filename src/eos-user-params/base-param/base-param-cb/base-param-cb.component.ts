@@ -474,7 +474,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
         if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
-                if (cab || cab === undefined) {
+                if (cab/* || cab === undefined*/) {
                     return true;
                 } else {
                     return false;
