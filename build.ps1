@@ -17,7 +17,6 @@ if ( "$env:SYSTEM_DEBUG" -eq "true")
 $Classif = (Get-Item $PSScriptRoot).FullName
 "$(get-date) - INFO: Build started. Classif: $Classif" | Out-Host
 <# =========================3.3.1============================= #>
-$env:EOS_NODEJS_12 = "C:\Program Files\nodejs"
 $npm_cmd = Join-PathList $env:EOS_NODEJS_12 "npm.cmd"
 if ( -not (Test-Path $npm_cmd -PathType Leaf) )
 {
