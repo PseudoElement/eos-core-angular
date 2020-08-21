@@ -40,7 +40,7 @@ else
 {
     $userconfigparam = $null
 }
-<# ==========================3.3.3============================
+<# ==========================3.3.3============================ #>
 Invoke-CommandText "Installing packages npm" `
     "& `"$npm_cmd`" install @angular/cli --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
 
