@@ -3,11 +3,7 @@ trigger:
   branches:
     include:
     - dev
-    - dev_/20.0
-    - release/1.0
-    - release/19.6
-    - release/v20.1
-    
+        
 pool:
   name: Default
 
