@@ -1,0 +1,15 @@
+trigger:
+  batch: 'true'
+  branches:
+    include:
+    - dev
+        
+pool:
+  name: Default
+
+steps:
+- task: PowerShell@2
+  displayName: Build
+  inputs:
+    targetType: filePath
+    filePath: ./build.ps1
