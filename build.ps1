@@ -42,10 +42,10 @@ else
 }
 <# ==========================3.3.3============================
 Invoke-CommandText "Installing packages npm" `
-    "& `"$npm_cmd`" install @angular/cli --no-progress --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
+    "& `"$npm_cmd`" install @angular/cli --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
 
 Invoke-CommandText "Installing packages npm" `
-    "& `"$npm_cmd`" install --no-progress --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
+    "& `"$npm_cmd`" install --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
 
 Invoke-CommandText "Compiling source" `
     "& `"$npm_cmd`" run build-prod --no-progress --scripts-prepend-node-path=true `"2>&1`""
