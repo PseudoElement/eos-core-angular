@@ -2,7 +2,7 @@
 #
 # Путь к nodejs версии 12 (или более поздней)
 # $env:EOS_NODEJS_12 = "C:\Program Files\nodejs"
-# 
+#
 # Путь к tf.exe или алиас
 # Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
 
@@ -75,7 +75,6 @@ $OutputFiles = Join-PathList $Classif "dist" "*"
 Invoke-CommandText "Create Output folder" "New-Item -Type Directory `"$OutputDir`" -Force" | ForEach-Object FullName
 Invoke-CommandText "Copying published files from Classif/dist" "Copy-Item `"$OutputFiles`" `"$OutputDir`" -Recurse"
 <# ============================3.7============================== #>
-Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
 $tf_cmd = Get-Command tf -ErrorAction Ignore
 $tfauth = if ( "$env:SYSTEM_ACCESSTOKEN" -eq "" ) { "" } else { "/loginType:OAuth /login:.,$env:SYSTEM_ACCESSTOKEN /noprompt" }
 $tfsColUrl = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" "http://tfs:8080/tfs/DefaultCollection/"
@@ -83,18 +82,16 @@ $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
 
-
+#>
 
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
-    "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri" 
+    "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
 
-   
 $ClassifBuildVstfsUrl = (Get-Content $ClassifBuildUriFile)[0]
 $ClassifBuildId = $ClassifBuildVstfsUrl.Substring($ClassifBuildVstfsUrl.LastIndexOf("/") + 1)
 
 
 
-
-<# ====================================================== #>
+<# ======================================================
 
 "$(get-date) - INFO: Done." | Out-Host

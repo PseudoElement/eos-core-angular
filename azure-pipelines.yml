@@ -3,9 +3,11 @@ trigger:
   branches:
     include:
     - dev
-        
+
 pool:
   name: Default
+  demands:
+      - EOS_NODEJS_12
 
 steps:
 - task: PowerShell@2
