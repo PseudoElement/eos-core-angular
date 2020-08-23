@@ -82,7 +82,7 @@ $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
 
-#>
+<#
 
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
     "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
@@ -91,7 +91,9 @@ $ClassifBuildVstfsUrl = (Get-Content $ClassifBuildUriFile)[0]
 $ClassifBuildId = $ClassifBuildVstfsUrl.Substring($ClassifBuildVstfsUrl.LastIndexOf("/") + 1)
 
 
+#>
 
-<# ======================================================
+
+<# ====================================================== #>
 
 "$(get-date) - INFO: Done." | Out-Host
