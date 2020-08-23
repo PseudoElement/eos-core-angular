@@ -81,7 +81,7 @@ $tfsColUrl = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIO
 $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f '', $env:SYSTEM_ACCESSTOKEN)))
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
-Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
+Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\TF.exe"
 
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
     "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
