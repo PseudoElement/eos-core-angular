@@ -10,6 +10,8 @@ pool:
 steps:
 - task: PowerShell@2
   displayName: Build
+  env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   inputs:
     targetType: filePath
     filePath: ./build.ps1
