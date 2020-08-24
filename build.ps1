@@ -40,13 +40,13 @@ else
 {
     $userconfigparam = $null
 }
-<# ==========================3.3.3============================ #>
+<# ==========================3.3.3============================ 
 Invoke-CommandText "Installing packages npm" `
     "& `"$npm_cmd`" install @angular/cli --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
 
 Invoke-CommandText "Installing packages npm" `
     "& `"$npm_cmd`" install --scripts-prepend-node-path=true $userconfigparam `"2>&1`""
-
+#>
 Invoke-CommandText "Compiling source" `
     "& `"$npm_cmd`" run build-prod --no-progress --scripts-prepend-node-path=true `"2>&1`""
 <# ==========================3.4============================== #>
@@ -81,7 +81,6 @@ $tfsColUrl = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIO
 $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f '', $env:SYSTEM_ACCESSTOKEN)))
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
-Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\TF.exe"
 
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
     "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
