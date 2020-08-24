@@ -12,17 +12,17 @@ function Read-EnvironmentOrDefaultValue ($envValue, $defaultValue) {
 }
 
 function Join-PathList() {
-    $res = $args[0] 
+    $res = $args[0]
     for ($i = 1; $i -lt $args.Length; $i += 1)
     {
         $res = Join-Path $res $args[$i]
     }
-    return $res 
+    return $res
 }
 
-function Get-ToolCommand (    
-    [string] $toolInfo,    
-    [scriptblock] $toolPathBlock,    
+function Get-ToolCommand (
+    [string] $toolInfo,
+    [scriptblock] $toolPathBlock,
     [string] $toolName
     ) {
     $toolPath = & $toolPathBlock
@@ -40,10 +40,10 @@ function Get-ToolCommand (
     return $tool_cmd
 }
 
-function Invoke-CommandText(    
-	[string] $commandInfo,    
-	[string] $commandText,    
-	[Switch] $ignoreExitCode) {    
+function Invoke-CommandText(
+	[string] $commandInfo,
+	[string] $commandText,
+	[Switch] $ignoreExitCode) {
 		"$(get-date) - INFO:${commandInfo}: $commandText" | Out-Host
 		$commandScriptBlock = [scriptblock]::Create($commandText)
 		& $commandScriptBlock
@@ -78,7 +78,7 @@ function Invoke-TfsRest (    [string] $commandInfo,    [uri] $uri,    [object]$b
     {
         $parameters.Add("AllowUnencryptedAuthentication", $true)
     }
-    
+
     if ( "$env:SYSTEM_ACCESSTOKEN" -eq "" )
     {
         $parameters.Add("UseDefaultCredentials", $true)
@@ -102,13 +102,8 @@ function Invoke-TfsRest (    [string] $commandInfo,    [uri] $uri,    [object]$b
     return Invoke-RestMethod @parameters
 }
 
-
-
-
-
-<#
-function Invoke-BuildDropLocationTfsRest (    
-    [string]$DropRootUnc) {    
+function Invoke-BuildDropLocationTfsRest (
+    [string]$DropRootUnc) {
         ${tfsColUrl} = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" "http://tfs:8080/tfs/DefaultCollection/"
 
     if ( "$env:BUILD_BUILDID" -ne "" )
@@ -117,7 +112,7 @@ function Invoke-BuildDropLocationTfsRest (
         $resp = Invoke-TfsRest "Link Drop Location to Build" `
             "${tfsColUrl}$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$env:BUILD_BUILDID/artifacts?api-version=5.0" `
             ($artifact|ConvertTo-Json)
-        
+
         $resp | ConvertTo-Json -Depth 5 | Out-Host
     }
     else
@@ -125,4 +120,3 @@ function Invoke-BuildDropLocationTfsRest (
         "$(get-date) - WRN. BUILD_BUILDID not set. Assume this is a local build run. Artifacts linking skipped." | Out-Host
     }
 }
-#>
