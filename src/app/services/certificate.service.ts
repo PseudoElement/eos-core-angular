@@ -34,7 +34,7 @@ export class CertificateService {
         });
     }
     getUrl(params?: ICertificateInit): string {
-        let url = '../WebRc/Shared/Certificate.aspx';
+        let url = '../WebRc/Pages/Certificate.html';
         let connector = '?';
         if (params.UseUserStores) {
             url += `${connector}UseUserStores=${params.UseUserStores}`;
