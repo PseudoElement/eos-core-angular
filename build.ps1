@@ -95,20 +95,22 @@ $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
 
+Set-Alias tf "C:\agent\externals\vstsom\TF.exe"
 
-<#
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
     "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
 
 $ClassifBuildVstfsUrl = (Get-Content $ClassifBuildUriFile)[0]
 $ClassifBuildId = $ClassifBuildVstfsUrl.Substring($ClassifBuildVstfsUrl.LastIndexOf("/") + 1)
-#>
 
+
+
+
+<# =========================3.9============================= #>
 
 $DropStorageUnc = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE_UNC "\\tfbd\Storage"
 $DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdir) -replace "/","\\" # UNC - always with Windows path separator
 Invoke-BuildDropLocationTfsRest $DropRootUnc
-<# =========================3.9============================= #>
 <# ====================================================== #>
 
 "$(get-date) - INFO: Done." | Out-Host
