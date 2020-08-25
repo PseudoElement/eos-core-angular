@@ -66,9 +66,7 @@ if ( "$env:BUILD_BUILDID" -ne "" )
 <# ===========================3.5============================== #>
 
 $buildNumber = Read-EnvironmentOrDefaultValue $env:BUILD_BUILDNUMBER "BUILDNUMBER"
-$DropSubdir = Join-PathList "_delo\Classif" "${env:BUILD_DEFINITIONNAME}_dev_$buildNumber"
-#$DropSubdir = Join-PathList "_delo\Classif" "${env:BUILD_DEFINITIONNAME}_release-1-0_$buildNumber"
-#$DropSubdir = Join-PathList "_delo\Classif" "${env:BUILD_DEFINITIONNAME}_release-v20-1_$buildNumber"
+$DropSubdir = Join-PathList "_delo\Classif" "${env:BUILD_DEFINITIONNAME}_$buildNumber"
 $DropStorageDir = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE "c:\tfbd\storage"
 $DropRootDir = Join-PathList $DropStorageDir $DropSubdir
 if ( Test-Path $DropRootDir )
@@ -77,10 +75,10 @@ if ( Test-Path $DropRootDir )
 }
 <# ============================3.6.1============================ #>
 
-<#$OutputSubdir = Join-PathList "dev"
- $OutputSubdir = Join-PathList "release-1-0"
-$OutputSubdir = Join-PathList "release-v20-1" #>
-$OutputDir = Join-PathList $DropRootDir
+$OutputSubdir = Join-PathList "dev"
+#$OutputSubdir = Join-PathList "release-1-0"
+#$OutputSubdir = Join-PathList "release-v20-1"
+$OutputDir = Join-PathList $DropRootDir $OutputSubdir
 $OutputFiles = Join-PathList $Classif "dist" "*"
 <# ============================3.6.2============================ #>
 
@@ -94,14 +92,14 @@ $tfsColUrl = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIO
 $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f '', $env:SYSTEM_ACCESSTOKEN)))
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
-
+<#
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
     "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
 
 $ClassifBuildVstfsUrl = (Get-Content $ClassifBuildUriFile)[0]
 $ClassifBuildId = $ClassifBuildVstfsUrl.Substring($ClassifBuildVstfsUrl.LastIndexOf("/") + 1)
 
-
+#>
 
 
 <# =========================3.9============================= #>
