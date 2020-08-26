@@ -1,9 +1,11 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
-import { BaseParamComponent } from '../shared/base-param.component';
-import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
+import {Component, Injector, Input, OnInit} from '@angular/core';
+import {BaseParamComponent} from '../shared/base-param.component';
+import {PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
 import {CONVERSION_PARAM} from '../shared/consts/conversion.const';
 import {Validators} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
+import {PipRX} from '../../../eos-rest';
+import {ALL_ROWS} from '../../../eos-rest/core/consts';
 
 @Component({
     selector: 'eos-parameters-conversion',
@@ -22,9 +24,11 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         Validators.pattern(/[1-9][0-9]*/),
         Validators.maxLength(255)
     ];
-    constructor( injector: Injector
+
+    constructor(injector: Injector,
+               private pipRX: PipRX
     ) {
-        super( injector, CONVERSION_PARAM);
+        super(injector, CONVERSION_PARAM);
     }
 
     subscribeChangeForm() {
@@ -55,32 +59,32 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
     }
 
     ngOnInit() {
-       this.init();
+        this.init();
     }
 
     init(): Promise<any> {
         this.isLoading = false;
         this.prepareDataParam();
-        return  this.getData(this.queryObj)
-        .then(data => {
-            this.prepareData = this.convData(data);
-            this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE !== '0';
-            this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
-            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-            this.form.controls['rec.CONVERTER_USE'].disable();
-            this.setStartValidators();
-            this.isLoading = true;
-            this.subscribeChangeForm();
-        })
-        .catch(err => {
-            this.prepareData = this.convData([]);
-            this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
-            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-            this.subscribeChangeForm();
-            this.cancelEdit();
-            this.isLoading = true;
-            throw err;
-        });
+        return this.getData(this.queryObj)
+            .then(data => {
+                this.prepareData = this.convData(data);
+                this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE !== '0';
+                this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.form.controls['rec.CONVERTER_USE'].disable();
+                this.setStartValidators();
+                this.isLoading = true;
+                this.subscribeChangeForm();
+            })
+            .catch(err => {
+                this.prepareData = this.convData([]);
+                this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.subscribeChangeForm();
+                this.cancelEdit();
+                this.isLoading = true;
+                throw err;
+            });
     }
 
     setStartValidators() {
@@ -91,7 +95,7 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
     }
 
     edit() {
-        this.form.enable({ emitEvent: false });
+        this.form.enable({emitEvent: false});
         this.editMode = true;
     }
 
@@ -102,30 +106,68 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
                 this.masDisable.push(key);
             }
         });
-        this.form.disable({ emitEvent: false });
+        this.form.disable({emitEvent: false});
+    }
+
+    checkedPath(directory): Promise<any>  {
+        let url = 'CheckDirectoryRight?';
+        url += `&directory=${directory}`;
+        return this.pipRX.read({
+            [url]: ALL_ROWS
+        });
+    }
+
+    checkControlsEmpty(inputs): string[] {
+        const emptyContrl = [];
+
+        inputs.forEach((inp) => {
+            if (!this.form.controls[inp.input].value) {
+                emptyContrl.push(`Поле ${inp.dirName} не заполнено.`);
+            }
+        });
+        return emptyContrl;
+    }
+
+    checkControlsDir(inputs) {
+        const errDirPath = [];
+        inputs.forEach((inp) => {
+            if (this.form.controls[inp.input].value && inp.isDir) {
+                errDirPath.push(this.checkedPath(this.form.controls[inp.input].value));
+            }
+        });
+        return errDirPath;
     }
 
     preSubmit() {
-        const invalidControls = [];
+        let emptyControls = [];
+        let req = [];
+        const pathInputs = [
+            {input: 'rec.CONVERTER_INPUT_DIR', dirName: '«Папка входящих файлов»', isDir: true},
+            {input: 'rec.CONVERTER_OUTPUT_DIR', dirName: ' «Папка результатов конвертации»', isDir: true},
+            {input: 'rec.CONVERTER_TEMP_DIR', dirName: ' «Папка временных файлов»', isDir: true},
+            {input: 'rec.CONVERTER_OUTPUT_SIZE', dirName: ' «Максимальный размер папки результатов, Гб»', isDir: false},
+        ];
         if (this.form.controls['rec.CONVERTER_USE'].value) {
-            if (!this.form.controls['rec.CONVERTER_INPUT_DIR'].value) {
-                invalidControls.push('Поле «Папка входящих файлов» не заполнено.');
-            }
-            if (!this.form.controls['rec.CONVERTER_OUTPUT_DIR'].value) {
-                invalidControls.push('Поле «Папка результатов конвертации» не заполнено.');
-            }
-            if (!this.form.controls['rec.CONVERTER_TEMP_DIR'].value) {
-                invalidControls.push('Поле «Папка временных файлов» не заполнено.');
-            }
-            if (!this.form.controls['rec.CONVERTER_OUTPUT_SIZE'].value) {
-                invalidControls.push('Поле «Максимальный размер папки результатов, Гб» не заполнено.');
-            }
+            emptyControls = [...this.checkControlsEmpty(pathInputs)];
         }
-
-        if (invalidControls.length) {
-            alert(`${invalidControls.join('\n')} `);
+        req = this.checkControlsDir(pathInputs);
+        if (emptyControls.length) {
+            alert(`${emptyControls.join('\n')} `);
         } else {
-            this.submit();
+                Promise.all(req).then((res: any) => {
+                    const err = [];
+                    res.forEach((answ: any) => {
+                        if (answ !== 'Ок') {
+                            err.push(answ);
+                        }
+                    });
+                    if (err.length) {
+                        alert(`${err.join('\n')} `);
+                    } else {
+                        this.submit();
+                    }
+                });
+
         }
     }
 
@@ -160,6 +202,7 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
                 this.cancelEdit();
             });
     }
+
     cancel() {
         this.cancelEdit();
         this.isLoading = false;
@@ -174,15 +217,15 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         this.isLoading = true;
     }
 
-    changeValidators() {
-        // if (this.form.controls['rec.CONVERTER_USE'].value) {
-        //     this.form.controls['rec.CONVERTER_INPUT_DIR'].setValidators([...this.maxLength2000, Validators.required]);
-        //     this.form.controls['rec.CONVERTER_OUTPUT_DIR'].setValidators([...this.maxLength2000, Validators.required]);
-        //     this.form.controls['rec.CONVERTER_TEMP_DIR'].setValidators([...this.maxLength2000, Validators.required]);
-        //     this.form.controls['rec.CONVERTER_OUTPUT_SIZE'].setValidators([...this.outputSizeValid, Validators.required]);
-        // } else {
-        //     this.setStartValidators();
-        // }
-        // this.edit();
-    }
+    // changeValidators() {
+    //     if (this.form.controls['rec.CONVERTER_USE'].value) {
+    //         this.form.controls['rec.CONVERTER_INPUT_DIR'].setValidators([...this.maxLength2000, Validators.required]);
+    //         this.form.controls['rec.CONVERTER_OUTPUT_DIR'].setValidators([...this.maxLength2000, Validators.required]);
+    //         this.form.controls['rec.CONVERTER_TEMP_DIR'].setValidators([...this.maxLength2000, Validators.required]);
+    //         this.form.controls['rec.CONVERTER_OUTPUT_SIZE'].setValidators([...this.outputSizeValid, Validators.required]);
+    //     } else {
+    //         this.setStartValidators();
+    //     }
+    //     this.edit();
+    // }
 }
