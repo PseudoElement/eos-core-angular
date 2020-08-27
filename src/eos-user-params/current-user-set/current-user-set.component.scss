@@ -339,7 +339,6 @@ $active-field-color-main-theme: #646464;
                             //margin: 0 20px;
 
                             label.checkbox {
-                                height: 22px;
                                 line-height: initial;
                                 margin: 0 !important;
 
@@ -675,23 +674,50 @@ $active-field-color-main-theme: #646464;
                         }
 
                         &:nth-child(3) {
-                            & > div.sort-link {
-                                display: block;
-                                position: relative;
+                            margin-bottom: 20px;
 
+                            div.sort-link {
                                 .sort-sp {
                                     margin: 0 0 10px 20px;
                                 }
 
-                                eos-dynamic-input {
-                                    margin-left: 20px;
+                                &:first-child {
+                                    display: block;
+                                    position: relative;
+                                    margin-bottom: 20px;
+
+                                    eos-dynamic-input {
+                                        margin-left: 20px;
+
+                                        eos-dynamic-input-radio > div {
+                                            display: flex;
+                                            flex-direction: column;
+                                        }
+                                    }
+
+                                    div.flex-column {
+                                        eos-dynamic-input {
+                                            &:first-child {
+                                                position: absolute;
+                                                top: 30px;
+                                                left: 115px;
+                                                width: 140px;
+                                            }
+
+                                            &:last-child {
+                                                position: absolute;
+                                                bottom: 0px;
+                                                left: 310px;
+                                                width: 170px;
+                                            }
+                                        }
+                                    }
                                 }
 
-                                div.flex-column {
-                                    position: relative;
-                                    bottom: 40px;
-                                    left: 315px;
-                                    width: 50%;
+                                &:last-child {
+                                    eos-dynamic-input {
+                                        margin-left: 20px;
+                                    }
                                 }
                             }
                         }
@@ -1679,6 +1705,8 @@ $active-field-color-main-theme: #646464;
 
         //вкладка Передача
         .user-param-other-content-wrapper {
+            height: calc(100vh - 205px) !important;
+            
             eos-dynamic-input {
                 padding-top: 0;
 
