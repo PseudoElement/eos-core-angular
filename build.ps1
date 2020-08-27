@@ -66,7 +66,7 @@ if ( "$env:BUILD_BUILDID" -ne "" )
 <# ===========================3.5============================== #>
 
 $buildNumber = Read-EnvironmentOrDefaultValue $env:BUILD_BUILDNUMBER "BUILDNUMBER"
-$DropSubdir = Join-PathList "_delo\Classif" "${env:BUILD_DEFINITIONNAME}_$buildNumber"
+$DropSubdir = Join-PathList "_delo\Classif" "classif_${env:BUILD_SOURCEBRANCHNAME}_$buildNumber"
 $DropStorageDir = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE "c:\tfbd\storage"
 $DropRootDir = Join-PathList $DropStorageDir $DropSubdir
 if ( Test-Path $DropRootDir )
@@ -75,10 +75,7 @@ if ( Test-Path $DropRootDir )
 }
 <# ============================3.6.1============================ #>
 
-$OutputSubdir = Join-PathList "dev"
-#$OutputSubdir = Join-PathList "release-1-0"
-#$OutputSubdir = Join-PathList "release-v20-1"
-$OutputDir = Join-PathList $DropRootDir $OutputSubdir
+$OutputDir = Join-PathList $DropRootDir
 $OutputFiles = Join-PathList $Classif "dist" "*"
 <# ============================3.6.2============================ #>
 
