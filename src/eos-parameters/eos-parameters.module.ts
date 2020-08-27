@@ -32,6 +32,7 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
 import { CollectionService } from './parametersSystem/param-authentication/collection/collection.service';
 import { ParamDictionariesComponent } from './parametersSystem/param-dictionaries/param-dictionaries.component';
 import { ParamLoggingComponent } from './parametersSystem/param-logging/param-logging.component';
+import {ParamConversionComponent} from './parametersSystem/param-conversion/param-conversion.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { ParamLoggingComponent } from './parametersSystem/param-logging/param-lo
         AddCertStoresComponent,
         ParamLoggingComponent,
         ParamOrganizNowComponent,
+        ParamConversionComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent
