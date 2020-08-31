@@ -52,14 +52,12 @@ export class UserHeaderComponent {
         this._router.navigate(['user_param', id]);
     }
     async saveFile() {
-        if (!this._userServices.curentUser.USER_PARMS_List || !this._userServices.curentUser.USER_PARMS_List.length) {
-            const data = await this._userServices.getUserIsn({
-                expand: 'USER_PARMS_List,USERCARD_List',
-                shortSys: true
-            });
-            if (!data) {
-                return data;
-            }
+        const data = await this._userServices.getUserIsn({
+            expand: 'USER_PARMS_List,USERCARD_List',
+            shortSys: true
+        });
+        if (!data) {
+            return data;
         }
 
         const getUserTable = () => {
