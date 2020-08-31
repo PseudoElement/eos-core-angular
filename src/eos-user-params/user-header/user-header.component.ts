@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UserParamsService } from '../shared/services/user-params.service';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 @Component({
     selector: 'eos-user-params-header',
     styleUrls: ['user-header.component.scss'],
@@ -49,5 +50,139 @@ export class UserHeaderComponent {
         let id;
         queryRout ? id = queryRout : id = '0.';
         this._router.navigate(['user_param', id]);
+    }
+    async saveFile() {
+        const data = await this._userServices.getUserIsn({
+            expand: 'USER_PARMS_List,USERCARD_List',
+            shortSys: true
+        });
+        if (!data) {
+            return data;
+        }
+
+        const getUserTable = () => {
+            const isn = this._userServices.curentUser.ISN_LCLASSIF;
+            const surname = this._userServices.curentUser.SURNAME_PATRON;
+            const login = this._userServices.curentUser.CLASSIF_NAME;
+
+            return `
+            <table>
+                <caption>Пользователь</caption>
+                <tr>
+                    <th>ISN</th>
+                    <th>ФИО</th>
+                    <th>Логин</th>
+                </tr>
+
+                <tr>
+                    <td>${isn}</td>
+                    <td>${surname}</td>
+                    <td>${login}</td>
+                </tr>
+
+            </table>
+            `;
+        };
+
+        const getSettingsData = () => {
+            let t = '';
+
+            this._userServices.curentUser.USER_PARMS_List.forEach((param) => {
+                let parmValue = param.PARM_VALUE || '';
+                let parmName = param.PARM_NAME || '';
+
+                // условия для переноса слов в строках
+                // для нормального отображения в Microsoft Word
+                if (parmValue.indexOf(';') !== -1) {
+                    parmValue = parmValue.replace(/\;/gi, ';\r');
+                } else if (parmValue.indexOf(',') !== -1) {
+                    parmValue = parmValue.replace(/\,/gi, ',\r');
+                } else if (parmValue.length > 35) {
+                    const values = parmValue.split('');
+                    parmValue = '';
+                    values.forEach((v, i) => {
+                        const val = (i % 35 === 0 && i >= 35) ? v + '\r' : v;
+                        parmValue += val;
+                    });
+                }
+                if (parmName.length > 10) {
+                    const names = parmName.split('_');
+                    parmName = '';
+                    names.forEach((n, i) => {
+                        let updatedN = (i + 1 === names.length) ? n : n + '_';
+                        if (i % 2 === 0) {
+                            updatedN += '\n';
+                        }
+                        parmName += updatedN;
+                    });
+                }
+
+                const textData = `
+                <tr>
+                    <td>${parmName}</td>
+                    <td>${param.PARM_GROUP}</td>
+                    <td>${parmValue}</td>
+                </tr>
+                `;
+
+                t = t + textData;
+            });
+
+            return t;
+        };
+
+        const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Настройки пользователя</title>
+          <style>
+            table {
+              margin: 1em;
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+            caption {
+              font-size: 22px;
+              font-weight: bold;
+            }
+            th {
+              border: 1px solid black;
+              font-size: 16px;
+              padding: .5em;
+              min-width: 100px;
+              max-width: 400px;
+            }
+            td {
+              border: 1px solid black;
+              font-size: 16px;
+              padding: .5em;
+              min-width: 100px;
+              max-width: 400px;
+              word-wrap: break-word;
+            }
+          </style>
+        </head>
+        <body>
+
+          ${getUserTable()}
+
+          <table>
+            <caption>Настройки пользователя</caption>
+            <tr>
+              <th>Имя параметра</th>
+              <th>Группа параметра</th>
+              <th>Значение параметра</th>
+            </tr>
+
+            ${getSettingsData()}
+
+          </table>
+        </body>
+        </html>
+        `;
+        const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
+        saveAs(blobHtml, 'Настройки пользователя.html');
     }
 }
