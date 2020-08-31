@@ -6,6 +6,14 @@
 # Путь к tf.exe или алиас
 # Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
 Set-Alias tf "C:\agent\externals\vstsom\TF.exe"
+
+<# =========================VAR=============================== #>
+
+$SourceBranchLongName = switch ($env:BUILD_REASON) {
+      'PullRequest' { $env:BUILD_SOURCEBRANCH.Replace('refs/pull/','').Replace('/merge','') }
+      default { $env:BUILD_SOURCEBRANCH.Replace('refs/heads/','').Replace('refs/tags/','') }
+    }
+$SourceBranchModName = $SourceBranchLongName.Replace('/','-').Replace('.','-')
 <# =========================3.1=============================== #>
 
 $ErrorActionPreference = "Stop"
@@ -58,15 +66,15 @@ Invoke-CommandText "Compiling source" `
 
 if ( "$env:BUILD_BUILDID" -ne "" )
 {
-    $env:BuildVersion = $env:BUILD_BUILDID.Remove($env:BUILD_BUILDID.Length - 2)
-    $env:RevisionVersion = $env:BUILD_BUILDID.Substring($env:BUILD_BUILDID.Length - 2)
+    $env:BuildVersion = $env:BUILD_BUILDID.Remove($env:BUILD_BUILDID.Length - 3)
+    $env:RevisionVersion = $env:BUILD_BUILDID.Substring($env:BUILD_BUILDID.Length - 3)
     "$(get-date) - INFO: Vesion info. BuildVersion: $env:BuildVersion, RevisionVersion:: $env:RevisionVersion" | Out-Host
 }
 
 <# ===========================3.5============================== #>
 
 $buildNumber = Read-EnvironmentOrDefaultValue $env:BUILD_BUILDNUMBER "BUILDNUMBER"
-$DropSubdir = Join-PathList "_delo\Classif" "classif_${env:BUILD_SOURCEBRANCHNAME}_$buildNumber"
+$DropSubdir = Join-PathList "$env:SYSTEM_TEAMPROJECT" "$env:BUILD_REPOSITORY_NAME" "$SourceBranchModName" "$buildNumber"
 $DropStorageDir = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE "c:\tfbd\storage"
 $DropRootDir = Join-PathList $DropStorageDir $DropSubdir
 if ( Test-Path $DropRootDir )
@@ -89,6 +97,7 @@ $tfsColUrl = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIO
 $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f '', $env:SYSTEM_ACCESSTOKEN)))
 "$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
 <# =============================Test============================= #>
+
 <#
 $ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
     "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
