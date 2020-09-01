@@ -2,10 +2,6 @@
 #
 # Путь к nodejs версии 12 (или более поздней)
 # $env:EOS_NODEJS_12 = "C:\Program Files\nodejs"
-#
-# Путь к tf.exe или алиас
-# Set-Alias tf "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
-Set-Alias tf "C:\agent\externals\vstsom\TF.exe"
 
 <# =========================VAR=============================== #>
 
@@ -91,28 +87,68 @@ Invoke-CommandText "Create Output folder" "New-Item -Type Directory `"$OutputDir
 Invoke-CommandText "Copying published files from Classif/dist" "Copy-Item `"$OutputFiles`" `"$OutputDir`" -Recurse"
 <# ============================3.7============================== #>
 
-$tf_cmd = Get-Command tf -ErrorAction Ignore
 $tfauth = if ( "$env:SYSTEM_ACCESSTOKEN" -eq "" ) { "" } else { "/loginType:OAuth /login:.,$env:SYSTEM_ACCESSTOKEN /noprompt" }
 $tfsColUrl = Read-EnvironmentOrDefaultValue "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" "http://tfs:8080/tfs/DefaultCollection/"
 $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f '', $env:SYSTEM_ACCESSTOKEN)))
-"$(get-date) - INFO: Find tf result: $tf_cmd" | Out-Host
-<# =============================Test============================= #>
 
-<#
-$ClassifBuildUriFile = Invoke-TfCli "Resolve workspace mappings for dev-delo-classif_dev buildUri" `
-    "tf vc resolvepath $/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri"
-
-$ClassifBuildVstfsUrl = (Get-Content $ClassifBuildUriFile)[0]
-$ClassifBuildId = $ClassifBuildVstfsUrl.Substring($ClassifBuildVstfsUrl.LastIndexOf("/") + 1)
-
-#>
-
-
-<# =========================3.9============================= #>
+<# =========================3.8================================= #>
 
 $DropStorageUnc = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE_UNC "\\tfbd\Storage"
 $DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdir) -replace "/","\\" # UNC - always with Windows path separator
 Invoke-BuildDropLocationTfsRest $DropRootUnc
-<# ====================================================== #>
+<# =========================3.9================================= #>
+
+$tbdServerPath = "`$/$env:SYSTEM_TEAMPROJECT/TeamBuildDrops/dev-delo-classif_"
+$tbdServerRootPath = Join-PathList "$tbdServerPath$SourceBranchModName" "buildUri"
+
+$resp = Invoke-TfsRest "Get buildUri path and version" `
+    -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/items?scopePath=$tbdServerRootPath&api-version=4.1"
+$buildUriPath = $resp.value[0].url
+$buildUriVersion = $resp.value[0].version
+<# =============================Test============================= #>
+echo "buildUriVersion" $buildUriVersion
+$buildUriLines = Invoke-TfsRest "Get buildUri file" `
+     -Uri "$buildUriPath"
+$buildUriLinesArr = $buildUriLines.Split("")[1]
+$counterBuild = "$(($buildUriLinesArr) + 1)"
+
+if ( "$buildUriVersion" -ne "" ){
+
+$objUpdate = '[{
+             "changes": [
+               {
+                 "item": {
+                   "version": 0,
+                   "path": "$/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri",
+                   "contentMetadata": {
+                     "encoding": 1200,
+                     "contentType": "text/plain"
+                   }
+                 },
+                 "changeType": "edit",
+                 "newContent": {
+                   "content": ""
+                 }
+               }
+             ],
+             "comment": "(sample) Editing the file via API"
+           }]'|ConvertFrom-Json
+$objUpdate.changes[0].item.version = "$buildUriVersion"
+#$objUpdate.changes[0].item.path = "$tbdServerRootPath"
+$objUpdate.changes[0].newContent.content =
+"$env:BUILD_BUILDURI
+1
+$DropRootUnc"
+
+$temp = $objUpdate|ConvertTo-Json -Compress -Depth 10
+
+$resp = Invoke-TfsRest "Post buildUri" `
+    -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/changesets?api-version=4.1" "$temp"
+
+}
+    else
+{
+    "$(get-date) - WRN. buildUriVersion not set. " | Out-Host
+}
 
 "$(get-date) - INFO: Done." | Out-Host
