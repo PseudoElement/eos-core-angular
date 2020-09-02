@@ -70,7 +70,8 @@ if ( "$env:BUILD_BUILDID" -ne "" )
 <# ===========================3.5============================== #>
 
 $buildNumber = Read-EnvironmentOrDefaultValue $env:BUILD_BUILDNUMBER "BUILDNUMBER"
-$DropSubdir = Join-PathList "$env:SYSTEM_TEAMPROJECT" "$env:BUILD_REPOSITORY_NAME" "$SourceBranchModName" "$buildNumber"
+$DropSubdirUnc = Join-PathList "$env:SYSTEM_TEAMPROJECT" "$env:BUILD_REPOSITORY_NAME" "$SourceBranchModName" "$buildNumber"
+$DropSubdir = Join-PathList "_$env:SYSTEM_TEAMPROJECT" "$env:BUILD_REPOSITORY_NAME" "$SourceBranchModName" "$buildNumber"
 $DropStorageDir = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE "c:\tfbd\storage"
 $DropRootDir = Join-PathList $DropStorageDir $DropSubdir
 if ( Test-Path $DropRootDir )
@@ -94,11 +95,11 @@ $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("
 <# =========================3.8================================= #>
 
 $DropStorageUnc = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE_UNC "\\tfbd\Storage"
-$DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdir) -replace "/","\\" # UNC - always with Windows path separator
+$DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdirUnc) -replace "/","\\" # UNC - always with Windows path separator
 Invoke-BuildDropLocationTfsRest $DropRootUnc
 <# =========================3.9================================= #>
 
-$tbdServerPath = "`$/$env:SYSTEM_TEAMPROJECT/TeamBuildDrops/dev-delo-classif_"
+$tbdServerPath = "`$/$env:SYSTEM_TEAMPROJECT/TeamBuildDrops/classif_"
 $tbdServerRootPath = Join-PathList "$tbdServerPath$SourceBranchModName" "buildUri"
 $tbdServerRootPathRepl = $tbdServerRootPath.Replace('\','/')
 
