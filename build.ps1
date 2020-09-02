@@ -111,7 +111,7 @@ $buildUriLines = Invoke-TfsRest "Get buildUri file" `
      -Uri "$buildUriPath"
 
 $buildUriLinesArr = $buildUriLines.Split("`n")
-$counterBuild = "$(([int]$buildUriLinesArr[1]) + 1)"
+$counterBuild = "1"
 
 if ( "$buildUriVersion" -ne "" ){
     #__Object for update
