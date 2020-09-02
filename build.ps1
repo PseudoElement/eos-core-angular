@@ -133,7 +133,7 @@ if ( "$buildUriVersion" -ne "" ){
     			}
     		}
     	)
-    	comment = "(sample) Editing the file via API"
+    	comment = "- Compilation Succeeded ($env:BUILD_DEFINITIONNAME)"
     }
 
     $jsonRequest = $objUpdate|ConvertTo-Json -Depth 10
