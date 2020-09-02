@@ -100,50 +100,46 @@ Invoke-BuildDropLocationTfsRest $DropRootUnc
 
 $tbdServerPath = "`$/$env:SYSTEM_TEAMPROJECT/TeamBuildDrops/dev-delo-classif_"
 $tbdServerRootPath = Join-PathList "$tbdServerPath$SourceBranchModName" "buildUri"
+$tbdServerRootPathRepl = $tbdServerRootPath.Replace('\','/')
 
 $resp = Invoke-TfsRest "Get buildUri path and version" `
     -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/items?scopePath=$tbdServerRootPath&api-version=4.1"
 $buildUriPath = $resp.value[0].url
 $buildUriVersion = $resp.value[0].version
 <# =============================Test============================= #>
-echo "buildUriVersion" $buildUriVersion
 $buildUriLines = Invoke-TfsRest "Get buildUri file" `
      -Uri "$buildUriPath"
-$buildUriLinesArr = $buildUriLines.Split("")[1]
-$counterBuild = "$(($buildUriLinesArr) + 1)"
+
+$buildUriLinesArr = $buildUriLines.Split("`n")
+$counterBuild = "$(([int]$buildUriLinesArr[1]) + 1)"
 
 if ( "$buildUriVersion" -ne "" ){
+    #__Object for update
+    $objUpdate = [ordered]@{
+    	changes = @(
+    		[ordered]@{
+    			item = [ordered]@{
+    				version = "$buildUriVersion"
+    				path = "$tbdServerRootPathRepl"
+    				contentMetadata = [ordered]@{
+    					encoding = 1250
+    					contentType = "text/plain"
+    				}
+    			}
+    			changeType = "edit"
+    			newContent = @{
+    				content = "$env:BUILD_BUILDURI`n$counterBuild`n$DropRootUnc"
+    			}
+    		}
+    	)
+    	comment = "(sample) Editing the file via API"
+    }
 
-$objUpdate = '[{
-             "changes": [
-               {
-                 "item": {
-                   "version": 0,
-                   "path": "$/Delo96/TeamBuildDrops/dev-delo-classif_dev/buildUri",
-                   "contentMetadata": {
-                     "encoding": 1200,
-                     "contentType": "text/plain"
-                   }
-                 },
-                 "changeType": "edit",
-                 "newContent": {
-                   "content": ""
-                 }
-               }
-             ],
-             "comment": "(sample) Editing the file via API"
-           }]'|ConvertFrom-Json
-$objUpdate.changes[0].item.version = "$buildUriVersion"
-#$objUpdate.changes[0].item.path = "$tbdServerRootPath"
-$objUpdate.changes[0].newContent.content =
-"$env:BUILD_BUILDURI
-1
-$DropRootUnc"
-
-$temp = $objUpdate|ConvertTo-Json -Compress -Depth 10
+    $jsonRequest = $objUpdate|ConvertTo-Json -Depth 10
+    echo "jsonRequest===" $jsonRequest
 
 $resp = Invoke-TfsRest "Post buildUri" `
-    -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/changesets?api-version=4.1" "$temp"
+    -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/changesets?api-version=4.1" "$jsonRequest"
 
 }
     else
