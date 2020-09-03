@@ -80,7 +80,7 @@ if ( Test-Path $DropRootDir )
 }
 <# ============================3.6.1============================ #>
 
-$OutputDir = Join-PathList $DropRootDir "BuildResult"
+$OutputDir = Join-PathList $DropRootDir "BuildResult" "dist"
 $OutputFiles = Join-PathList $Classif "dist" "*"
 <# ============================3.6.2============================ #>
 
