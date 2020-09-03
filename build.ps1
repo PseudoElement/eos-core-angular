@@ -80,7 +80,7 @@ if ( Test-Path $DropRootDir )
 }
 <# ============================3.6.1============================ #>
 
-$OutputDir = Join-PathList $DropRootDir
+$OutputDir = Join-PathList $DropRootDir "BuildResult"
 $OutputFiles = Join-PathList $Classif "dist" "*"
 <# ============================3.6.2============================ #>
 
@@ -95,7 +95,7 @@ $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("
 <# =========================3.8================================= #>
 
 $DropStorageUnc = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE_UNC "\\tfbd\Storage"
-$DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdirUnc) -replace "/","\\" # UNC - always with Windows path separator
+$DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdir) -replace "/","\\" # UNC - always with Windows path separator
 Invoke-BuildDropLocationTfsRest $DropRootUnc
 <# =========================3.9================================= #>
 
