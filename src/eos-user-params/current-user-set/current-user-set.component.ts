@@ -16,16 +16,17 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     listSettings = SUB_PARAMS_LIST_NAV;
     paramId: string = 'rc';
     public mainUser;
+    private checkCB: boolean;
     private _isChanged: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private router: ActivatedRoute,
         private _userParamService: UserParamsService,
         private _apContext: AppContext,
-    ) {
-    }
+    ) {}
     ngOnInit() {
         this._apContext.setHeader.next(false);
+        this.checkCB = this._apContext.cbBase;
         this.mainUser = this._apContext.CurrentUser.ISN_LCLASSIF;
         this.router.params.subscribe(params => {
             this.paramId = params['field-id'];
@@ -33,7 +34,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         this._userParamService.hasChanges$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
-            )
+                )
             .subscribe(({ isChange }: IUserSetChanges) => {
                 this._isChanged = isChange;
             });
@@ -65,6 +66,9 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
             return Promise.resolve(true);
         }
     }
-
-
+    toggleTheme() {
+        if (this.checkCB) {
+            return { 'current-settings-CB': true };
+        }
+    }
 }
