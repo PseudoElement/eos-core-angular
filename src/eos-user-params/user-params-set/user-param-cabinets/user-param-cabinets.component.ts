@@ -117,9 +117,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
             return this.initForm();
         }
-        return this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
+        const config = {expand: 'USER_PARMS_List'};
+        if (this.mainUser) {
+            config['isn_cl'] = this.mainUser;
+        }
+        return this._userParamsSetSrv.getUserIsn(config)
         .then(() => {
             this.currentUser = this._userParamsSetSrv.curentUser;
             this.allData = this._userParamsSetSrv.hashUserContext;
