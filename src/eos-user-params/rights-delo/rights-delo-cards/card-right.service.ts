@@ -228,29 +228,25 @@ export class CardRightSrv {
     }
     newDateRG(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
-        let flag = true;
-        const cardADD = [13, 14, 15, 16];
+        let cardADD = [13, 14, 15, 16];
         card.USER_CARD_DOCGROUP_List.forEach(elem => {
             if (elem.FUNC_NUM === 13 || elem.FUNC_NUM === 14 || elem.FUNC_NUM === 15 || elem.FUNC_NUM === 16) {
-                flag = false;
                 if (card.FUNCLIST[2] === '1') {
                     delete elem._State;
                 }
-                cardADD.filter(el => el !== elem.FUNC_NUM);
+                cardADD = cardADD.filter(el => el !== elem.FUNC_NUM);
             }
         });
-        if (flag) {
-            cardADD.forEach((FUNC: number) => {
-                const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
-                    ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                    DUE_CARD: card.DUE,
-                    DUE: '0.',
-                    FUNC_NUM: FUNC,
-                    ALLOWED: 1,
-                }, 'USER_CARD_DOCGROUP');
-                newUserCardDG.push(dg);
-            });
-        }
+        cardADD.forEach((FUNC: number) => {
+            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
+                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                DUE_CARD: card.DUE,
+                DUE: '0.',
+                FUNC_NUM: FUNC,
+                ALLOWED: 1,
+            }, 'USER_CARD_DOCGROUP');
+            newUserCardDG.push(dg);
+        });
         return newUserCardDG;
     }
     createRootEntity(card: USERCARD) {
@@ -399,6 +395,7 @@ export class CardRightSrv {
     }
     private _checkChenge() {
         let state: boolean = false;
+        console.log('this._userParamsSetSrv.curentUser.USERCARD_List: ', this._userParamsSetSrv.curentUser.USERCARD_List);
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             if (card.FUNCLIST !== card._orig.FUNCLIST) {
                 card._State = _ES.Modified;

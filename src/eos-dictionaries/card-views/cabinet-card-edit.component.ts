@@ -80,8 +80,8 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
     get possibleOwners(): any[] {
         const res = this.cabinetOwners
-        .filter((owner) => !owner.data['ISN_CABINET'] && !owner.data['ISN_ORGANIZ']
-            && owner.data['ISN_HIGH_NODE'] && !owner.data['DELETED']);
+            .filter((owner) => !owner.data['ISN_CABINET'] && !owner.data['ISN_ORGANIZ']
+                && owner.data['ISN_HIGH_NODE'] && !owner.data['DELETED']);
         return res;
     }
 
@@ -130,7 +130,9 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                                 });
                                 if (filteredDate.length) {
                                     setTimeout(() => {
-                                        this.intupString.input.dib.toggleTooltip();
+                                        if (this.intupString) {
+                                            this.intupString.input.dib.toggleTooltip();
+                                        }
                                     });
                                     return { isUnique: true };
                                 }
@@ -194,7 +196,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
 
     _checkDeletion(due): Promise<any> {
-        return this._classifSrv.canChangeClassifRequest('DEPARTMENT', 'DELETE_FROM_CABINET', {id: String(due)} );
+        return this._classifSrv.canChangeClassifRequest('DEPARTMENT', 'DELETE_FROM_CABINET', { id: String(due) });
     }
 
     remove() {
@@ -217,11 +219,11 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                                 if (!this.data['updateTrules']) {
                                     this.data['updateTrules'] = [];
                                 }
-                                PipRX.invokeSop(this.data['updateTrules'], 'DepartmentCabinet_TRule', {'due' : owner.data['DUE'], 'ClearCabinet': 1,  'MoveCabinet': 0});
+                                PipRX.invokeSop(this.data['updateTrules'], 'DepartmentCabinet_TRule', { 'due': owner.data['DUE'], 'ClearCabinet': 1, 'MoveCabinet': 0 });
                             }
                         });
                     }
-                }).then( () => {
+                }).then(() => {
                     if (!canceled) {
                         this.setValue(this.getOwnerPath(owner.index), null);
                         owner.data['ISN_CABINET'] = null;

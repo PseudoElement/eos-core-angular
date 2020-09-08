@@ -88,6 +88,14 @@
                 [btnError] = "disableSave"
             ></eos-parameters-organiz-now>
         </ng-container>
+        <ng-container *ngSwitchCase="'conversion'">
+            <eos-parameters-conversion
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-parameters-conversion>
+        </ng-container>
     </ng-container>
 </div>
 

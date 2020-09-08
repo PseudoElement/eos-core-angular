@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
-import { DynamicInputBase } from './dynamic-input-base';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { EosUtils } from '../core/utils';
+import {Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import {DynamicInputBase} from './dynamic-input-base';
+import {BsDatepickerConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {EosUtils} from '../core/utils';
 
 @Component({
     selector: 'eos-dynamic-input-date',
@@ -52,24 +52,35 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
         this.updateDatePickerPlacement();
     }
 
-    delayedTooltip() {
+    onEnter() {
         this.updateMessage();
-        if (this.inputTooltip.message !== '' && !this._syncTimer && !this.inputTooltip.force) {
-            this.inputTooltip.visible = false;
-            this._syncTimer = setTimeout(() => {
-                this.inputTooltip.force = true;
-                this.inputTooltip.visible = true;
-                this._syncTimer = null;
-            }, 0);
-        }
+        this.inputTooltip.force = true;
+        this.inputTooltip.visible = true;
     }
-    toggleTooltip() {
-        if (!this.readonly && this.control) {
-            this.delayedTooltip();
-        } else {
-            super.toggleTooltip();
-        }
+
+    onLeave() {
+        this.inputTooltip.force = false;
+        this.inputTooltip.visible = false;
     }
+
+    // delayedTooltip() {
+    //     this.updateMessage();
+    //     if (this.inputTooltip.message !== '' && !this._syncTimer && !this.inputTooltip.force) {
+    //         this.inputTooltip.visible = false;
+    //         this._syncTimer = setTimeout(() => {
+    //             this.inputTooltip.force = true;
+    //             this.inputTooltip.visible = true;
+    //             this._syncTimer = null;
+    //         }, 0);
+    //     }
+    // }
+    // toggleTooltip() {
+    //     if (!this.readonly && this.control) {
+    //         this.delayedTooltip();
+    //     } else {
+    //         super.toggleTooltip();
+    //     }
+    // }
 
     private updateDatePickerPlacement() {
         if (this.datePickerWrapper) {

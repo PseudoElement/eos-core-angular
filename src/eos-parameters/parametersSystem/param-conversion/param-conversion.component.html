@@ -1,0 +1,42 @@
+<div class="input-param-wrapper " *ngIf="inputs && isLoading"><!--  -->
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="preSubmit()"
+        (cancelForm)="cancel();"
+        [statusBtnSub]="(this.form.status === 'INVALID')"
+        [editBtn]="!editMode"
+        (editForm)="edit()"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.CONVERTER_USE']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        Папка входящих файлов
+        <eos-dynamic-input
+            [input]="inputs['rec.CONVERTER_INPUT_DIR']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        Папка результатов конвертации
+        <eos-dynamic-input
+            [input]="inputs['rec.CONVERTER_OUTPUT_DIR']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        Папка временных файлов
+        <eos-dynamic-input
+            [input]="inputs['rec.CONVERTER_TEMP_DIR']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+            <span class="mar-right">Максимальный размер папки результатов, Гб:  </span>
+            <eos-dynamic-input class="inline-block conversion_wer pad-left"
+               [input]="inputs['rec.CONVERTER_OUTPUT_SIZE']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+
+    </div>
+</div>

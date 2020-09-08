@@ -10,7 +10,7 @@
             <div class="cabinet-main">
                 <label class="checkbox">
                     <!-- (change)="changeMainCabinet()" -->
-                    <input [disabled]="!flagEdit || !card?.allowed" type="checkbox"
+                    <input [disabled]="!flagEdit || !card?.allowed || !currentCabinet?.data?.FOLDERS_AVAILABLE" type="checkbox"
                         [checked]="!!currentCabinet?.data.HOME_CABINET" (change)='checkHomeCabinet()'/>
                     <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
                     главный

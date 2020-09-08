@@ -3,6 +3,9 @@
         <div class="title-wrapper">
             <span class="edit-title primary-text">{{title}}</span>
         </div>
+        <div>
+            <button class="btn btn-primary" (click)="saveFile()">СОХРАНИТЬ НАСТРОЙКИ В ФАЙЛ</button>
+        </div>
         <div class="buttons-wrapper" *ngIf="editMode">
             <div>
                 <button *ngIf='defaultBtn' class="btn btn-primary default-btn" (click)="default()">ПО УМОЛЧАНИЮ</button>
