@@ -846,7 +846,6 @@ export class EosDictService {
     }
 
     rememberNewNode(results): void {
-        console.log(results);
         if (results) {
             if (typeof results === 'number') {
                 this._storageSrv.setItem('newNode', results, true);
@@ -962,7 +961,7 @@ export class EosDictService {
     /**
      * @description Delete marked nodes from dictionary
      */
-    deleteMarked(): Promise<IRecordOperationResult[]> {
+    deleteMarked(title?: string): Promise<IRecordOperationResult[]> {
         if (this.currentDictionary) {
             this.updateViewParameters({ updatingList: true });
             return this.currentDictionary.deleteMarked()
@@ -984,6 +983,9 @@ export class EosDictService {
                     });
                     return this._reloadList()
                         .then(() => {
+                            const deletedList = results.filter(r => !r.error)
+                            .map(r => r.record[title] || r.record['CLASSIF_NAME']);
+                            this.deleteCutedNodes(title, deletedList);
                             this.updateViewParameters({ updatingList: false });
                             return results;
                         });
@@ -992,6 +994,15 @@ export class EosDictService {
         } else {
             return Promise.resolve(null);
         }
+    }
+     deleteCutedNodes(title: string, deletedList: any[]) {
+        let cuted: Array<EosDictionaryNode> = this._storageSrv.getItem('markedNodes');
+        this._storageSrv.removeItem('markedNodes');
+        cuted = cuted.filter((_n) => {
+            const titlei = _n.data.rec[title] || _n.data.rec['CLASSIF_NAME'];
+            return !deletedList.some((dt) => dt === titlei);
+        });
+        this._storageSrv.setItem('markedNodes', cuted);
     }
 
     emitResetSearch() {
