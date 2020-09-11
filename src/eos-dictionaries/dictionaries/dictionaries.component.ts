@@ -46,6 +46,10 @@ export class DictionariesComponent implements OnDestroy {
     isAccessEnabled(dict: any) {
         return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
     }
+    isAccessLicense(id) {
+        return this._eaps.isAssessSev(id);
+    }
+
     routeForDict(dictId: string) {
         const d = this._dictSrv.getDescr(dictId);
         if (d && d.dictType === E_DICT_TYPE.form) {

@@ -116,6 +116,9 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* п
         listedUT: false },
 ];
 
+const LicenseTech = {
+    SEV: 23
+};
 
 export enum APS_DICT_GRANT {
     denied = 0,
@@ -160,13 +163,26 @@ export class EosAccessPermissionsService {
 
         dict = SEV_DICTIONARIES.find (n => n.id === dictId);
         if (dict) {
-            return this._checkAccessTech(E_TECH_RIGHT.SevCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            return this._checkAccessTech(E_TECH_RIGHT.SevCL) && this.isAssessSev('SEV') ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.read;
         }
 
 
 
 
         return APS_DICT_GRANT.denied;
+    }
+    isAssessSev(dictionary: string) {
+        const id = LicenseTech[dictionary];
+        if (id) {
+            const licenze: any[] = this.appCtx.licenze;
+            if (licenze && licenze.length) {
+                const l = licenze.filter((_l) => _l.Id === id);
+                return l.length;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
     // --------------------------------------------------------------
     public isAccessGrantedForUsers() {
