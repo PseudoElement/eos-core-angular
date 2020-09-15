@@ -984,7 +984,7 @@ export class EosDictService {
                     return this._reloadList()
                         .then(() => {
                             const deletedList = results.filter(r => !r.error)
-                            .map(r => r.record[title] || r.record['CLASSIF_NAME']);
+                                .map(r => r.record[title] || r.record['CLASSIF_NAME']);
                             this.deleteCutedNodes(title, deletedList);
                             this.updateViewParameters({ updatingList: false });
                             return results;
@@ -995,14 +995,16 @@ export class EosDictService {
             return Promise.resolve(null);
         }
     }
-     deleteCutedNodes(title: string, deletedList: any[]) {
+    deleteCutedNodes(title: string, deletedList: any[]) {
         let cuted: Array<EosDictionaryNode> = this._storageSrv.getItem('markedNodes');
-        this._storageSrv.removeItem('markedNodes');
-        cuted = cuted.filter((_n) => {
-            const titlei = _n.data.rec[title] || _n.data.rec['CLASSIF_NAME'];
-            return !deletedList.some((dt) => dt === titlei);
-        });
-        this._storageSrv.setItem('markedNodes', cuted);
+        if (cuted) {
+            this._storageSrv.removeItem('markedNodes');
+            cuted = cuted.filter((_n) => {
+                const titlei = _n.data.rec[title] || _n.data.rec['CLASSIF_NAME'];
+                return !deletedList.some((dt) => dt === titlei);
+            });
+            this._storageSrv.setItem('markedNodes', cuted);
+        }
     }
 
     emitResetSearch() {
