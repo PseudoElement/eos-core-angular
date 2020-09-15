@@ -25,6 +25,7 @@
     }
     .doc-wr {
         margin-bottom: 50px;
+        max-height: 200px;
         .doc-list{
             .doc-item {
                 display: flex;
@@ -43,6 +44,12 @@
             width: 80%;
             border-bottom: 1px solid #ededed;
             cursor: pointer;
+        }
+        .show_doc_list {
+            list-style-type: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 3px;
         }
     }
 }

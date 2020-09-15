@@ -36,12 +36,10 @@
                     class="eos-icon small" [ngClass]="showClass"></span></span>
         </div>
         <div *ngIf="showDoc">
-            <span class="sort-name" (click)="sortDoc( flagSort = !flagSort)">
-                Название
-                <span class="eos-icon small" [ngClass]="classSort"></span>
-            </span>
-            <ul class="doc-list-items">
-                <li *ngFor="let doc of docGroupList">{{doc.CLASSIF_NAME}}</li>
+            <ul>
+                <span class="sort-name" (click)="sortDoc( flagSort = !flagSort)">Название<span class="eos-icon small"
+                        [ngClass]="classSort"></span></span>
+                <li class="show_doc_list" *ngFor="let doc of docGroupList">{{doc.CLASSIF_NAME}}</li>
             </ul>
         </div>
     </div>

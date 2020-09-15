@@ -3,8 +3,8 @@ import { FormGroup, /* AsyncValidatorFn, AbstractControl, ValidationErrors */ } 
 import { Subscription } from 'rxjs';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { REF_FILE, PipRX, DOCGROUP_CL } from 'eos-rest';
-import {CONFIRM_REPLACE_SAME_FILE} from '../../../app/consts/confirms.const';
-import {ConfirmWindowService} from '../../../eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_REPLACE_SAME_FILE } from '../../../app/consts/confirms.const';
+import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
@@ -117,7 +117,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         if ($event) {
             // после выбора файла и записи в TEMPLATE_NAME не меняется туллтип (например если значение не уникальное)
             try {
-               // this.inp.inpstring.onInput($event);
+                // this.inp.inpstring.onInput($event);
                 document.getElementById('rec.NAME_TEMPLATE').focus();
             } catch (e) {
                 this._dictSrv.errHandler(e);
@@ -135,17 +135,31 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     getGocGroupForTemplates() {
         this.showDocGrList = false;
         if (this.inputs && this.inputs['rec.CATEGORY'].value === 'Файлы документов') {
-            this._pipRx.read({
+            const crit1 = this._pipRx.read({
                 DOCGROUP_CL: {
                     criteries: {
                         'DOC_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
                         'DOC_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
                     }
                 }
-            }).then((data: DOCGROUP_CL[]) => {
-                if (data.length) {
+            });
+            const crit2 = this._pipRx.read({
+                DOCGROUP_CL: {
+                    criteries: {
+                        'PRJ_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
+                        'PRJ_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
+                    }
+                }
+            });
+            Promise.all([crit1, crit2]).then((data: Array<any>) => {
+                const d = [...data[0], ...data[1]];
+                if (d.length) {
+                    const map = new Map();
+                    d.forEach((f: DOCGROUP_CL) => {
+                        map.set(f.ISN_NODE, f);
+                    });
                     this.showDocGrList = true;
-                    this.docGroupList = data;
+                    this.docGroupList = Array.from(map).map(v => v[1]);
                     this.sortDoc(false);
                 }
                 return;
