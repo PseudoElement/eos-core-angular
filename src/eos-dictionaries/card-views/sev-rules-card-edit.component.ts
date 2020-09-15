@@ -621,7 +621,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             OPEN_CLASSIF_SECURITY_CL.selected = '';
         }
         this._waitClassif.openClassif(OPEN_CLASSIF_SECURITY_CL).then(data => {
-            control.patchValue(data, {emitEvent: false});
+            control.patchValue(data);
             this.loadGrifsNames(this.typeDoc);
         }).catch(e => {
             if (e) {
