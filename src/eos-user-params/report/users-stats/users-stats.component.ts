@@ -25,7 +25,6 @@ export class EosReportUsersStatsComponent implements OnInit {
   subServerArray = [];
   protUsers;
   deletedUsers;
-  systemRegistr;
 
 
   constructor(
@@ -38,6 +37,9 @@ export class EosReportUsersStatsComponent implements OnInit {
     const serverSystem = Object.assign({}, this._selectedUser.ArrayServerHelper);
     this.subsystem = this.deletDeloDeloWeb(ArraySystem);
     this.serverSystem = serverSystem;
+  }
+  get systemRegistr() {
+      return this.items.length === 0 ? 'Система не зарегистрирована' : 'Система зарегистрирована';
   }
 
   ngOnInit() {
@@ -55,7 +57,6 @@ export class EosReportUsersStatsComponent implements OnInit {
         this._errorSrv.errorHandler(error);
       });
     /* this.items = this._appContext.sysLicenseInfo; */
-    this.systemRegistr = this.items.length === 0 ? 'Система не зарегистрирована' : 'Система зарегистрирована';
     const b = this.pip.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
     }).then((r: any) => {
