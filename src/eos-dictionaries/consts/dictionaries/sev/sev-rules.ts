@@ -177,6 +177,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             type: 'select',
             dictionaryId: SECURITY_DICT.apiInstance,
             options: [],
+            default: '1'
         },
         {
             key: 'fileAccessListRk',
