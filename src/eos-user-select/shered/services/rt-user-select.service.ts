@@ -5,6 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DEPARTMENT } from 'eos-rest';
 import { BtnActionFields } from '../interfaces/btn-action.interfase';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Injectable()
 export class RtUserSelectService {
@@ -14,6 +15,7 @@ export class RtUserSelectService {
     btnDisabled: boolean = false;
     hashUsers = new Map();
     usersInfo: BtnActionFields;
+    updateSettings: boolean = false;
     ArraySystemHelper = {
         delo: {
             id: 1,
@@ -247,7 +249,18 @@ export class RtUserSelectService {
         };
         return this.apiSrv.read(query);
     }
-    get_cb_print_info(isn_user, isnDeep?: number): Promise<any> {
+    getCB_User_Role(due, _appContext: AppContext): Promise<any> {
+        if (_appContext.cbBase) {
+            return this.apiSrv.read({
+                CBR_USER_ROLE: {
+                    criteries: { DUE_PERSON: due }
+                }
+            });
+        } else {
+            return Promise.resolve(null);
+        }
+    }
+    get_cb_print_info(isn_user, isnDeep?: number, _appContext?: AppContext): Promise<any> {
         const queryUserParams = {
             USER_PARMS: {
                 criteries: {
@@ -266,7 +279,7 @@ export class RtUserSelectService {
                             }
                         }
                     };
-                    return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(deep[0]), this.apiSrv.read(query)]);
+                    return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(deep[0]), this.apiSrv.read(query), this.getCB_User_Role(isnDeep, _appContext)]);
                 }
             });
         } else {

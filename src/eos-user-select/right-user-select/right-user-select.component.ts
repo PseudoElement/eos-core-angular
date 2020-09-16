@@ -13,6 +13,7 @@ import { EosStorageService } from 'app/services/eos-storage.service';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -58,11 +59,12 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             .subscribe(currentUser => {
                 this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUser = currentUser;
-                if (currentUser && this.flagFirstGetInfo) {
+                if ((currentUser && this.flagFirstGetInfo) || (currentUser && this._selectedUser.updateSettings)) {
                     this.chooseTemplate = 'spinner';
                     this.geyInfo(currentUser);
                     this.ctf = currentUser;
                     this.flagFirstGetInfo = false;
+                    this._selectedUser.updateSettings = false;
                 }
                 if (currentUser && this.ctf['id'] !== currentUser.id) {
                     // if (this.flagRtBlock) {
@@ -121,8 +123,8 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             }
             this.getObjectForSystems();
         } else {
-            this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
-                .then(([user_role, deep = null, cb_print = null]) => {
+            this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue, this._appContext)
+                .then(([user_role, deep = null, cb_print = null, cb_role = null]) => {
                     this.getObjectForSystems();
                     if (this.CurrentUser.deep) {
                         this.departmentInfo = deep;
@@ -149,7 +151,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                         this.DueInfo = null;
                         this.showDep = false;
                     }
-                    this.role = this.getRoleForUser(user_role);
+                    this.role = this.getRoleForUser(user_role, cb_role);
                     this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
                         .then((res: [USER_CL, DEPARTMENT]) => {
                             this.UserCabinetInfo = res;
@@ -180,9 +182,13 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         return url;
     }
 
-    getRoleForUser(array: USER_PARMS[]): string {
+    getRoleForUser(array: USER_PARMS[], cb_role: Array<any>): string {
+        if (cb_role && cb_role.length) {
+            const idRole = cb_role[0]['KIND_ROLE'];
+            return KIND_ROLES_CB[idRole - 1];
+        }
         if (array[0]) {
-            return array[0].PARM_VALUE;
+            return array[0].PARM_VALUE ? array[0].PARM_VALUE : 'Не указана';
         } else {
             return 'Не указана';
         }
