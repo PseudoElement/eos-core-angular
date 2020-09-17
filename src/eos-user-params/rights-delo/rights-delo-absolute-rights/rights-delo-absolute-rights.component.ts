@@ -402,6 +402,18 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     edit() {
         const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
+        if (!this._userParamsSetSrv.curentUser.USERCARD_List.length) {
+            this._router.navigate(['user-params-set/', 'card-files'],
+            {
+                queryParams: { isn_cl: id }
+            });
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Не определена главная картотека'
+            });
+            return;
+        }
         if (this.flagGrifs) {
             this.editMode = true;
             this.init();
@@ -415,6 +427,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 title: 'Предупреждение',
                 msg: 'Не заданы грифы доступа'
             });
+            return;
         }
         // this.setDisableOrEneble();
         this.formAllEditType();
