@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, OnDestroy } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import {
@@ -8,12 +8,14 @@ import {
     OPEN_CLASSIF_DEPARTMENT_SEV,
     OPEN_CLASSIF_DEPARTMENT_SEV_FULL,
     OPEN_CLASSIF_DOCGR_LEAFS,
-    OPEN_CLASSIF_DOCGR_SEV} from 'eos-user-select/shered/consts/create-user.consts';
-import { LINK_CL, SECURITY_CL, DEPARTMENT, ORGANIZ_CL, DOCGROUP_CL, DELIVERY_CL, USER_LISTS, CABINET } from 'eos-rest';
+    OPEN_CLASSIF_DOCGR_SEV,
+} from 'eos-user-select/shered/consts/create-user.consts';
+import { CABINET, DELIVERY_CL, DEPARTMENT, DOCGROUP_CL, LINK_CL, ORGANIZ_CL, SECURITY_CL, USER_LISTS } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { BsModalRef } from 'ngx-bootstrap';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { EosMessageService } from '../../eos-common/services/eos-message.service';
 
 @Component({
     selector: 'eos-sev-rules-card-edit',
@@ -37,7 +39,8 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     private ngUnsubscribe: Subject<any> = new Subject();
     private _errorHelper: ErrorHelperServices;
     constructor(injector: Injector,
-        private _waitClassif: WaitClassifService
+                private _waitClassif: WaitClassifService,
+                private msgSrv: EosMessageService,
     ) {
         super(injector);
         this._errorHelper = injector.get(ErrorHelperServices);
@@ -657,6 +660,15 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         const due = this.form.controls['rec.DUE_DOCGROUP'].value;
         if (due) {
             this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[]) => {
+                if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE === 3) {
+                    this.msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение:',
+                        msg: `Для приема документов нельзя использовать группу документов типа "Исходящие"`
+                    });
+                    this.form.controls['rec.DUE_DOCGROUP'].patchValue('');
+                    return;
+                }
                 this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(data.length ? data[0].CLASSIF_NAME : '');
             }).catch(e => {
                 this._errorHelper.errorHandler(e);
