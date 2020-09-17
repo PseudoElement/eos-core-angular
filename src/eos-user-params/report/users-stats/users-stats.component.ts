@@ -25,6 +25,7 @@ export class EosReportUsersStatsComponent implements OnInit {
   subServerArray = [];
   protUsers;
   deletedUsers;
+  actualLicenz = 0;
 
 
   constructor(
@@ -39,8 +40,8 @@ export class EosReportUsersStatsComponent implements OnInit {
     this.serverSystem = serverSystem;
   }
   get systemRegistr() {
-      return this.items.length === 0 ? 'Система не зарегистрирована' : 'Система зарегистрирована';
-  }
+    return !this.actualLicenz ? 'Система не зарегистрирована' : 'Система зарегистрирована';
+}
 
   ngOnInit() {
     this.getData();
@@ -137,7 +138,11 @@ export class EosReportUsersStatsComponent implements OnInit {
           }
         });
     });
+    let enablelLicenze = 0;
     items.forEach(elem => {
+        if (elem.enabled && elem.enbled !== null && elem.enabled !== '') {
+            enablelLicenze++;
+        }
       if (elem.Id === 1) {
         this.subsystem.delo.Users = elem.Users;
         this.subsystem.delo.ActualUsers = elem.ActualUsers;
@@ -257,7 +262,7 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.serverSystem.MTG.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
     });
-
+    this.actualLicenz = enablelLicenze;
     // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
     Object.keys(this.subsystem).forEach(key => {
       if (masFull[this.subsystem[key].id - 1] !== 0 && this.subsystem[key].ActualUsers === 0) {
