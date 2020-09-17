@@ -144,8 +144,8 @@ export class EosDataConvertService {
                                         isUnique: descr[_key].isUnique,
                                         uniqueInDict: descr[_key].uniqueInDict,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey]
-                                            || descr[_key].default,
+                                        value: data[_dict][descr[_key].foreignKey] === void 0 ? descr[_key].default :
+                                        data[_dict][descr[_key].foreignKey],
                                         length: descr[_key].length,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
@@ -188,8 +188,8 @@ export class EosDataConvertService {
                                                                 options: descr[_dataKey].options,
                                                                 required: descr[_dataKey].required,
                                                                 forNode: descr[_dataKey].forNode,
-                                                                value: data[_dict][descr[_dataKey].foreignKey]
-                                                                || descr[_dataKey].default,
+                                                                value: data[_dict][descr[_key].foreignKey] === void 0 ? descr[_key].default :
+                                                                data[_dict][descr[_key].foreignKey],
                                                                 disabled: !editMode,
                                                             });
                                                             break;

@@ -49,12 +49,12 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
         label: 'Списки стандарных текстов',
         value: false,
     },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '9',
-        label: 'Личные папки',
-        value: false,
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '9',
+    //     label: 'Личные папки',
+    //     value: false,
+    // },
     {
         controlType: E_FIELD_TYPE.string,
         key: 'USER_COPY',

@@ -570,6 +570,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.settingsManagementModal.content.closedModal.subscribe(() => {
             setTimeout(() => {
                 this.settingsManagementModal.hide();
+                const id = this._route.params['value'].nodeId;
+                this.initView(id ? id : '0.');
             });
         });
     }

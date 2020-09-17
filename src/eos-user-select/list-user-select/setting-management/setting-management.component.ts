@@ -12,6 +12,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/confirm.consts';
 import { Subscription } from 'rxjs';
+import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 
 @Component({
     selector: 'eos-setting-management',
@@ -36,6 +37,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
         private _confirmSrv: ConfirmWindowService,
+        private _rtSrv: RtUserSelectService,
     ) { }
 
     get disabledCopy(): boolean {
@@ -56,6 +58,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     }
 
     copySettings(): Promise<any> {
+        this._rtSrv.hashUsers.clear();
         const url = this._createUrlForSop(this.formCopy, true);
         this.isLoading = true;
         return this._confirmSrv.confirm(CONFIRM_COPY_USER).then(res => {
@@ -63,6 +66,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._pipeSrv.read({
                     [url]: ALL_ROWS
                 }).then(() => {
+                    this._rtSrv.updateSettings = true;
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this._pathForm(true);
                     this.isLoading = false;

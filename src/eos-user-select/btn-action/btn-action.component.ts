@@ -53,6 +53,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     get limitCards() {
         return this._appContext.limitCardsUser;
     }
+    get checkedUsers() {
+        return this.listUsers.filter(user => user.isChecked || user.isSelected || user.selectedMark);
+    }
     constructor(
         private _rtSrv: RtUserSelectService,
         private _appContext: AppContext,
@@ -201,15 +204,15 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithLimitedUser(OpenRightsSystemCaseDelo);
     }
     checkBtnProtocol() {
-       this.checkWittAllUsers(Protocol);
+        this.checkWittAllUsers(Protocol);
     }
     checkBtnUserInfo() {
         this.checkWittAllUsers(UsersInfo);
         this._rtSrv.usersInfo = UsersInfo;
     }
     checkBtnSettingsManagement() {
-        this.checkWittAllUsers(SettingsManagement);
-     }
+        this.checkSettingsManagement(SettingsManagement);
+    }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted) {
             OpenStreamScanSystem.disabled = true;
@@ -265,7 +268,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     checkWithBlocketUSer(button: BtnActionFields) {
-        const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected) && user.isEditable && !user.deleted);
+        const usersEdit = this.checkedUsers.filter(user => user.isEditable && !user.deleted);
         if (usersEdit.length) {
             if (this.limitCards.length) {
                 button.disabled = false;
@@ -277,8 +280,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             button.isActive = false;
         }
     }
+
     checkWittAllUsers(button: BtnActionFields): void {
-        const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected) && user.isEditable);
+        const usersEdit = this.checkedUsers.filter(user => user.isEditable);
         if (usersEdit.length) {
             if (this.limitCards.length) {
                 button.disabled = false;
@@ -293,7 +297,21 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             button.isActive = false;
         }
     }
-
+    checkSettingsManagement(button: BtnActionFields): void {
+        const checkedEditable = this.checkedUsers.some(user => user.isEditable);
+        const checkedNotEditable = this.checkedUsers.some(user => !user.isEditable);
+        if (checkedEditable) {
+            if (checkedNotEditable) {
+                button.disabled = true;
+                button.isActive = false;
+            } else {
+                button.disabled = false;
+            }
+        } else {
+            button.disabled = true;
+            button.isActive = false;
+        }
+    }
     adminDisabledBtn(admNum: number): void {
         if (admNum === 0) {
             CreateUser.disabled = true;

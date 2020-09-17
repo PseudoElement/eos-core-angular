@@ -520,8 +520,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     onListScroll(evt: any) {
         let offset = -this.headerOffset;
-        if (evt.srcElement) {
-            offset = evt.srcElement.scrollLeft;
+        if (evt.target) {
+            offset = evt.target.scrollLeft;
         } else if (evt.target) {
             offset = (evt.target as Element).scrollLeft;
         }
@@ -533,7 +533,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             element.setAttribute('style', 'display: none');
         }
 
-        this._dictSrv.currentScrollTop = evt.srcElement.scrollTop;
+        this._dictSrv.currentScrollTop = evt.target.scrollTop;
 
     }
 

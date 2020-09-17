@@ -25,7 +25,7 @@ export class EosReportUsersStatsComponent implements OnInit {
   subServerArray = [];
   protUsers;
   deletedUsers;
-  systemRegistr;
+  actualLicenz = 0;
 
 
   constructor(
@@ -39,6 +39,9 @@ export class EosReportUsersStatsComponent implements OnInit {
     this.subsystem = this.deletDeloDeloWeb(ArraySystem);
     this.serverSystem = serverSystem;
   }
+  get systemRegistr() {
+    return !this.actualLicenz ? 'Система не зарегистрирована' : 'Система зарегистрирована';
+}
 
   ngOnInit() {
     this.getData();
@@ -55,7 +58,6 @@ export class EosReportUsersStatsComponent implements OnInit {
         this._errorSrv.errorHandler(error);
       });
     /* this.items = this._appContext.sysLicenseInfo; */
-    this.systemRegistr = this.items.length === 0 ? 'Система не зарегистрирована' : 'Система зарегистрирована';
     const b = this.pip.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
     }).then((r: any) => {
@@ -136,7 +138,11 @@ export class EosReportUsersStatsComponent implements OnInit {
           }
         });
     });
+    let enablelLicenze = 0;
     items.forEach(elem => {
+        if (elem.enabled && elem.enbled !== null && elem.enabled !== '') {
+            enablelLicenze++;
+        }
       if (elem.Id === 1) {
         this.subsystem.delo.Users = elem.Users;
         this.subsystem.delo.ActualUsers = elem.ActualUsers;
@@ -256,7 +262,7 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.serverSystem.MTG.Expired = elem.Expired ? elem.Expired.slice(0, elem.Expired.indexOf('T')) : '-';
       }
     });
-
+    this.actualLicenz = enablelLicenze;
     // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
     Object.keys(this.subsystem).forEach(key => {
       if (masFull[this.subsystem[key].id - 1] !== 0 && this.subsystem[key].ActualUsers === 0) {

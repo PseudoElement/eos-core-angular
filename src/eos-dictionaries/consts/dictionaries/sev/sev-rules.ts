@@ -177,13 +177,12 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             type: 'select',
             dictionaryId: SECURITY_DICT.apiInstance,
             options: [],
-            default: '1',
+            default: '1'
         },
         {
             key: 'fileAccessListRk',
             title: 'Грифы доступа:',
             type: 'string',
-            default: '1',
         },
         {
             key: 'fileMaxLength',
