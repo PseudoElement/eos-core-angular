@@ -301,7 +301,7 @@ export class RightDepertmentComponent implements OnInit {
                         msg: 'Необходимо выбрать элемент'
                     });
                 } else if (this.checkAllDep && this.listUserDep.length === 0) {
-                    this.checkFlag = true;
+                    // this.checkFlag = true;
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение',
