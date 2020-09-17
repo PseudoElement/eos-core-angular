@@ -249,11 +249,11 @@ export class RtUserSelectService {
         };
         return this.apiSrv.read(query);
     }
-    getCB_User_Role(due, _appContext: AppContext): Promise<any> {
+    getCB_User_Role(isn_user, _appContext: AppContext): Promise<any> {
         if (_appContext.cbBase) {
             return this.apiSrv.read({
                 CBR_USER_ROLE: {
-                    criteries: { DUE_PERSON: due }
+                    criteries: { ISN_USER: isn_user }
                 }
             });
         } else {
@@ -279,7 +279,7 @@ export class RtUserSelectService {
                             }
                         }
                     };
-                    return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(deep[0]), this.apiSrv.read(query), this.getCB_User_Role(isnDeep, _appContext)]);
+                    return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(deep[0]), this.apiSrv.read(query), this.getCB_User_Role(isn_user, _appContext)]);
                 }
             });
         } else {
