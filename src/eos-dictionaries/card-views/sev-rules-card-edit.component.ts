@@ -418,6 +418,10 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 this.form.controls['rec.linkKind'].setValue(0);
             }
         });
+        this.form.controls['rec.cardFile'].valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(value => {
+            console.log(value);
+            this.inputCabinetSelect(value, true);
+        });
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next(null);
