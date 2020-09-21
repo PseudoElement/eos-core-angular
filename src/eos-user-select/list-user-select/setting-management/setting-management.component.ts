@@ -13,6 +13,7 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/confirm.consts';
 import { Subscription } from 'rxjs';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 
 @Component({
     selector: 'eos-setting-management',
@@ -38,6 +39,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _confirmSrv: ConfirmWindowService,
         private _rtSrv: RtUserSelectService,
+        private _userSrv: UserParamsService,
     ) { }
 
     get disabledCopy(): boolean {
@@ -66,6 +68,12 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._pipeSrv.read({
                     [url]: ALL_ROWS
                 }).then(() => {
+                    this.checkedUsers.forEach(u => {
+                        this._userSrv.ProtocolService(u, 5);
+                        if (this.formCopy.controls[7].value) {
+                            this._userSrv.ProtocolService(u, 6);
+                        }
+                    });
                     this._rtSrv.updateSettings = true;
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this._pathForm(true);
@@ -90,6 +98,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._pipeSrv.read({
                     [url]: ALL_ROWS
                 }).then(() => {
+                    this.checkedUsers.forEach(u => {
+                        this._userSrv.ProtocolService(u, 5);
+                    });
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this.formCut.reset();
                     this.isLoading = false;
