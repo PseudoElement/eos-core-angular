@@ -606,6 +606,9 @@ export class EosSevRulesService {
         const resolutionKindText = ((resolutionKind === 1) ? 'All' : ((resolutionKind === 2) ? 'ExtractionWithParent' : 'Extraction'));
         const resolutionInclude = this._data['resolution'] ? resolutionKindText : 'None';
         const linkTypeList = linkInclude === 'List' ? this.data['linkTypeList'] : ''; // TODO список link_cl.isn_lclassif через символ |
+        const taskFileExtensions = !this._data['taskFileExtensions'] || this._data['taskFileExtensions'] === 'null' ? '' : this._data['taskFileExtensions'];
+        const fileExtensions = !this._data['fileExtensions'] || this._data['fileExtensions'] === 'null' ? '' : this._data['fileExtensions'];
+        const fileAccessList = !this._data['fileAccessList'] || this._data['fileAccessList'] === 'null' ? '' : this._data['fileAccessList'];
         return `<?xml version="1.0"?>
         <SendDocumentRule>
             <ScriptConfig>
@@ -621,8 +624,8 @@ export class EosSevRulesService {
                     <Visa Include="${Boolean(this._data['visa'])}"/>
                     <Addressee Include="${addresseeInclude}"/>
                     <AdditionalField Include="${Boolean(this._data['additionalField'])}"/>
-                    <File Include="${Boolean(this._data['file'])}" Extensions="${this._data['fileExtensions']}"
-                        AccessList="${this._data['fileAccessList']}" MaxLength="${this._data['fileMaxLength']}"/>
+                    <File Include="${Boolean(this._data['file'])}" Extensions="${fileExtensions}"
+                        AccessList="${fileAccessList}" MaxLength="${this._data['fileMaxLength']}"/>
                     <Item Include="${itemInculde}"/>
                     <Resolution Include="${resolutionInclude}"/>
                 </Document>
@@ -641,7 +644,7 @@ export class EosSevRulesService {
                         <Report Include="true"/>
                     </Executor>
                     <File Include="${Boolean(this._data['taskFile'])}"/>
-                    <FileOptions Extensions="${this._data['taskFileExtensions']}" MaxLength="${this._data['taskFileMaxLength']}"/>
+                    <FileOptions Extensions="${taskFileExtensions}" MaxLength="${this._data['taskFileMaxLength']}"/>
                 </Task>
             </ScriptConfig>
             <Subscriptions StopDayCount="${this._data['stopDayCount']}">
