@@ -74,6 +74,11 @@ import { EosDictService } from './services/eos-dict.service';
 import { EosSandwichService } from './services/eos-sandwich.service';
 import { EosBroadcastChannelService } from './services/eos-broadcast-channel.service';
 import { EosSevRulesService } from './services/eos-sev-rules.service';
+
+/* directives */
+import { TooltipErrorFixDirective } from 'eos-common/directives/tooltip-error-fix.directive';
+
+/* components */
 import {CitizenCardComponent} from './card-views/citizen-card.component';
 import {NomenklCardComponent} from './card-views/nomenkl-card.component';
 import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.component';
@@ -171,7 +176,7 @@ import { PrintTemplateComponent } from './print-template/print-template.componen
         SevCollisionsNodeInfoComponent,
         DictionaryPasteComponent,
         PrintTemplateComponent,
-
+        TooltipErrorFixDirective,
     ],
     entryComponents: [
         ColumnSettingsComponent,
