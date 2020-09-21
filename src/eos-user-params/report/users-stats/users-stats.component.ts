@@ -140,7 +140,7 @@ export class EosReportUsersStatsComponent implements OnInit {
     });
     let enablelLicenze = 0;
     items.forEach(elem => {
-        if (elem.enabled && elem.enbled !== null && elem.enabled !== '') {
+        if (elem.Expired && elem.Expired !== null && elem.Expired !== '') {
             enablelLicenze++;
         }
       if (elem.Id === 1) {
