@@ -989,11 +989,45 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
-        const titleId = selectedNodes[0].nodeTitleid;
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
         if (slicedNode) {
             confirmDelete.body = 'Вы действительно хотите навсегда удалить копируемые записи:';
         }
+
+        if (this.dictionaryId === 'sev-rules') {
+            this._dictSrv.readSevRule(selectedNodes).then(data => {
+                if (data.length) {
+                    const part = data.filter((p) => p.PARTICIPANT.length > 0);
+                    if (part.length) {
+                        const records = part.map((rec) => rec.RULE_TITLE).join(', ');
+                        const tab = part.map((rec) => rec.PARTICIPANT.map((t) => t.CLASSIF_NAME).join(',')).join(',');
+                        const tables = tab.split(',').filter((item, pos) => tab.split(',').indexOf(item) === pos);
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Внимание',
+                            msg: `Записи "${records}" удалить нельзя. Записи используются "${tables.join(', ')}"`
+                        });
+                    }
+                    const r = data.map((node) => {
+                        if (!node.PARTICIPANT.length) {
+                            return node.RULE_ID;
+                        }
+                    });
+                    const actualNodes = selectedNodes.filter((el) => r.indexOf(el.id) !== -1);
+                    if (actualNodes.length) {
+                        this._getConfirmMarkedItems(actualNodes, confirmDelete);
+                    }
+                    return;
+                }
+                this._getConfirmMarkedItems(selectedNodes, confirmDelete);
+            });
+        } else {
+            this._getConfirmMarkedItems(selectedNodes, confirmDelete);
+        }
+    }
+
+    private _getConfirmMarkedItems(selectedNodes, confirmDelete): void {
+        const titleId = selectedNodes[0].nodeTitleid;
         this._confirmMarkedItems(selectedNodes, confirmDelete)
             .then((button: IConfirmButton) => {
                 if (button && button.result === 2) {

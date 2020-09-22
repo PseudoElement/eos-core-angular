@@ -14,7 +14,6 @@ import {
     IFieldView,
     IOrderBy,
     IRecordOperationResult,
-    // ISearchSettings,
     SEARCH_MODES,
     SearchFormSettings,
     ISearchSettings,
@@ -24,7 +23,11 @@ import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerfa
 import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
 import { IImage } from 'eos-dictionaries/interfaces/image.interface';
 import { LS_PAGE_LENGTH, PAGES } from '../node-list-pagination/node-list-pagination.consts';
-import { WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND } from '../consts/messages.consts';
+import {
+    WARN_NO_ORGANIZATION,
+    WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE,
+    WARN_SEARCH_NOTFOUND
+} from '../consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 // import { EosDepartmentsService } from './eos-department-service';
@@ -1297,6 +1300,46 @@ export class EosDictService {
             this._reloadList();
         });
 
+    }
+
+    readSevRule(selectedNodes: EosDictionaryNode[]): Promise<any> {
+        const ruleIsn = selectedNodes.map((node) => node.id);
+        return this._apiSrv
+            .read({
+                SEV_PARTICIPANT_RULE: PipRX.criteries({ 'ISN_RULE': ruleIsn.join('|') }),
+            })
+            .then((data: any) => {
+                if (data.length) {
+                    const parIsn = data.map((el) => el.ISN_PARTICIPANT);
+                    return this._apiSrv
+                        .read({
+                            SEV_PARTICIPANT: PipRX.criteries({'ISN_LCLASSIF': parIsn.join('|')}),
+                        })
+                        .then((participant: any) => {
+                            const result = selectedNodes.map((node): any[] => {
+                                const matchParIsn = data.map((p) => {
+                                    if (p.ISN_RULE.toString() === node.id) {
+                                        return p.ISN_PARTICIPANT;
+                                    }
+                                });
+                                const obj: any = {
+                                    RULE_TITLE: node.title,
+                                    RULE_ID: node.id,
+                                    PARTICIPANT_ID: matchParIsn,
+                                    PARTICIPANT: participant.filter((pp: any) => matchParIsn.indexOf(pp.ISN_LCLASSIF) !== -1)
+                                };
+                                return obj;
+                            });
+                            return Promise.resolve(result);
+                        });
+                }
+                return Promise.resolve([]);
+            })
+            .catch(e => {
+                if (e) {
+                    this._errorHelper.errorHandler(e);
+                }
+            });
     }
 
 
