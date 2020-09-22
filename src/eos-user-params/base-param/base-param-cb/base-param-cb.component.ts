@@ -359,7 +359,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this._newData.size) {
             const newDl = this._newData.get('DUE_DEP_NAME');
             if (newDl) {
-                const newDue = this._newData.get('TECH_DUE_DEP');
+                const newDue = this.curentUser.DUE_DEP;
                 let F26 = false;
                 let F25 = false;
                 let F34 = false;

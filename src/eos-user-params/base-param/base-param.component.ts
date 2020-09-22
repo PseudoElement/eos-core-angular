@@ -296,10 +296,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (this._newData.size) {
             const newDl = this._newData.get('DUE_DEP_NAME');
             if (newDl) {
-                const newDue = this._newData.get('TECH_DUE_DEP');
+                const newDue = this.curentUser.DUE_DEP;
                 let F26 = false;
                 let F25 = false;
-                let F34 = false;
                 this.curentUser.USERDEP_List.forEach((_udep: USERDEP) => {
                     if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 26) {
                         F26 = true;
@@ -307,14 +306,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 25) {
                         F25 = true;
                     }
-                    if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 34) {
-                        F34 = true;
-                    }
                 });
                 const DELO_RIGHTS = this.curentUser.DELO_RIGHTS;
                 const arr = DELO_RIGHTS.split('');
                 const newDELO_RIGHTS = arr.map((v, i) => {
-                    if (i === 24 || i === 25 || i === 33) {
+                    if (i === 24 || i === 25) {
                         return 1;
                     }
                     return v;
@@ -342,15 +338,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         requestUri: `USER_CL(${id})/USERDEP_List`,
                         data: {
                             'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 25, 'DEEP': 1, 'ALLOWED': 0
-                        }
-                    });
-                }
-                if (!F34) {
-                    query.push({
-                        method: 'POST',
-                        requestUri: `USER_CL(${id})/USERDEP_List`,
-                        data: {
-                            'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 34, 'DEEP': 1, 'ALLOWED': 0
                         }
                     });
                 }
