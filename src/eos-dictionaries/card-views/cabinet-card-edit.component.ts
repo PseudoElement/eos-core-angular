@@ -112,6 +112,11 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe(() => {
                 this.updateValidTabs();
+                if (this.form.controls['rec.CABINET_NAME'].value && this.form.controls['rec.CABINET_NAME'].value.indexOf('"') !== -1) {
+                    const val = this.form.controls['rec.CABINET_NAME'].value.replace('"', '');
+                    this.form.controls['rec.CABINET_NAME'].patchValue(val);
+                    this.inputs['rec.CABINET_NAME'].value = val;
+                }
             });
             setTimeout(() => {
                 this.form.controls['rec.CABINET_NAME'].setAsyncValidators((control: AbstractControl) => {
