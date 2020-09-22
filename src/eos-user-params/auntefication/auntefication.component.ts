@@ -558,7 +558,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     getNewDate() {
         // параметр который говорит о возможности изменения пароля пользователем this.paramsChengePass
         if (!this.paramsChengePass || this.checkUpdateDate()) {
-            const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
+            const n_d = String(this.form.controls['PASSWORD_DATE'].value).trim() ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
             if (!n_d) {
                 return null;
             }
