@@ -694,7 +694,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             ans.forEach(elem => {
                 lists.push({value: elem.DEPARTMENT_DUE, title: elem.CARD_NAME});
             });
-            this.inputs['rec.cardFile'].options = lists;
+            this.inputs['rec.cardFile'].options = lists.sort((a, b) =>  a.title.localeCompare(b.title));
             this.inputCabinetSelect(this.form.controls['rec.cardFile'].value, false);
             // this.form.controls['rec.cardFile'].setValue({emitEvent: false});
         })
