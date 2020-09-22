@@ -7,6 +7,12 @@ import { DEPARTMENT } from 'eos-rest';
 import { BtnActionFields } from '../interfaces/btn-action.interfase';
 import { AppContext } from 'eos-rest/services/appContext.service';
 
+/**
+ * флаг "withLicense" для опций, которые
+ * должны отображаться в окне «Статистика»
+ * только при наличии соответствующих лицензий.
+ * В демо-версии не отображаются.
+ */
 @Injectable()
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
@@ -166,36 +172,42 @@ export class RtUserSelectService {
             checked: false,
             Trial: '-',
             Expired: '-',
+            withLicense: true,
         },
         AC_OG: {
             label: 'Модуль взаимодействия с АС ОГ',
             checked: false,
             Trial: '-',
             Expired: '-',
+            withLicense: true,
         },
         webWork: {
             label: 'Модуль интеграции с интернет приёмной',
             checked: false,
             Trial: '-',
             Expired: '-',
+            withLicense: true,
         },
         work_OG: {
             label: 'Опубликования хода работ с ОГ',
             checked: false,
             Trial: '-',
             Expired: '-',
+            withLicense: true,
         },
         MEDO_2_7: {
             label: 'Модуль сопряжения работ с МЭДО 2.7',
             checked: false,
             Trial: '-',
             Expired: '-',
+            withLicense: true,
         },
         PPO_SSTY: {
             label: 'Модуль взаимодействия с РРО ССТУ',
             checked: false,
             Trial: '-',
             Expired: '-',
+            withLicense: true,
         },
         MRCHART: {
             label: 'Аналитические диаграммы',

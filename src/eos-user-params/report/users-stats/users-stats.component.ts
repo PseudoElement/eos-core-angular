@@ -271,7 +271,9 @@ export class EosReportUsersStatsComponent implements OnInit {
       this.subSysArray.push(this.subsystem[key]);
     });
     Object.keys(this.serverSystem).forEach(key => {
-      this.subServerArray.push(this.serverSystem[key]);
+      if (!this.serverSystem[key].withLicense || this.actualLicenz > 0) {
+        this.subServerArray.push(this.serverSystem[key]);
+      }
     });
   }
 
