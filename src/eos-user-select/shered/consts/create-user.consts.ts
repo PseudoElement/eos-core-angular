@@ -99,7 +99,7 @@ export const OPEN_CLASSIF_DEPARTMENT_SEV_FULL: IOpenClassifParams = {
     classif: 'DEPARTMENT',
     return_due: true,
     id: '0.',
-    skipDeleted: false,
+    skipDeleted: true,
     selectMulty: false,
 };
 
@@ -107,13 +107,13 @@ export const OPEN_CLASSIF_DOCGR_SEV: IOpenClassifParams = {
     classif: 'DOCGROUP_CL',
     selectMulty: false,
     return_due: true,
-    skipDeleted: false,
+    skipDeleted: true,
 };
 
 export const OPEN_CLASSIF_DOCGR_LEAFS: IOpenClassifParams = {
     classif: 'DOCGROUP_CL',
     return_due: true,
-    skipDeleted: false,
+    skipDeleted: true,
     selectLeafs: true,
     selectNodes: false,
     selectMulty: false,
