@@ -1,0 +1,19 @@
+trigger:
+  batch: 'true'
+  branches:
+    include:
+    - dev/20.2
+
+pool:
+  name: Default
+  demands:
+      - EOS_NODEJS_12
+
+steps:
+- task: PowerShell@2
+  displayName: Build
+  env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    targetType: filePath
+    filePath: ./build.ps1
