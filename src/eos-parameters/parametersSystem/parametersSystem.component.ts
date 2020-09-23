@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, /* Router */ } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -29,13 +29,20 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     constructor(
         private _navSrv: NavParamService,
         private _route: ActivatedRoute,
+        // private _rout: Router,
         private _appContext: AppContext,
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
-    //    private _confirmSrv: ConfirmWindowService,
-    //    private _paramDescSrv: ParamDescriptorSrv
+        //    private _confirmSrv: ConfirmWindowService,
+        //    private _paramDescSrv: ParamDescriptorSrv
     ) {
-        this._route.params.subscribe(params => (this.paramId = params['id']));
+        this._route.params.subscribe(params => {
+            this.paramId = params['id'];
+            // const access = this.disabledAutent({ url: this.paramId });
+            // if (!access) {
+            //     this._rout.navigate(['user_param']);
+            // }
+        });
         this._navSrv.StateSandwich$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -83,8 +90,24 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
 
     disabledAutent(param): boolean {
         if (this._appContext.cbBase) {
-            if (param.url === 'authentication' && (this._appContext.limitCardsUser.length > 0 || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0')) {
-                return false;
+            const limit = this._appContext.limitCardsUser.length;
+            const urlName = param.url === 'authentication';
+            const userAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[0];
+            const paramAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[25];
+            if (urlName) {
+                if (userAccess && !paramAccess) {
+                    return true;
+                } else if (limit > 0 || !userAccess) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                if (!paramAccess) {
+                    return false;
+                } else if (paramAccess) {
+                    return true;
+                }
             }
         }
         // пока убираем проверку на эти параметры
@@ -106,22 +129,22 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
                     return res(false);
                 }
             });
-        // if (this.isChanged) {
-        //     return this._confirmSrv
-        //         .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this.disableSave }))
-        //         .then(doSave => {
-        //             if (doSave) {
-        //                 this._paramDescSrv.saveDataFromAsk();
-        //                 this.isChanged = false;
-        //                 return true;
-        //             } else {
-        //                 this.isChanged = false;
-        //                 return true;
-        //             }
-        //         })
-        //         .catch((err) => {
-        //             return false;
-        //         });
+            // if (this.isChanged) {
+            //     return this._confirmSrv
+            //         .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this.disableSave }))
+            //         .then(doSave => {
+            //             if (doSave) {
+            //                 this._paramDescSrv.saveDataFromAsk();
+            //                 this.isChanged = false;
+            //                 return true;
+            //             } else {
+            //                 this.isChanged = false;
+            //                 return true;
+            //             }
+            //         })
+            //         .catch((err) => {
+            //             return false;
+            //         });
         } else {
             return Promise.resolve(true);
         }
