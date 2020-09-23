@@ -14,8 +14,8 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 export class EosReportUsersStatsComponent implements OnInit {
   subsystem: any;
   serverSystem: any;
-  items: [] = [];
-  users: USER_CL[] = [];
+  items: [];
+  users: USER_CL[];
   blockByTech: number = 0;
   blockAuthUsers: number = 0;
   usersNumber: number = 0;
@@ -51,10 +51,12 @@ export class EosReportUsersStatsComponent implements OnInit {
     const a = this.pip.read<USER_CL>({
       USER_CL: PipRX.criteries({ 'DELETED': '0', 'ISN_LCLASSIF': '1:null' }),
       loadmode: 'Table'
-    }).then((r: any) => {
-      this.users = r;
+    })
+    .then((r: any) => {
+      this.users = r || [];
     })
       .catch((error) => {
+        this.users = [];
         this._errorSrv.errorHandler(error);
       });
     /* this.items = this._appContext.sysLicenseInfo; */
@@ -77,9 +79,10 @@ export class EosReportUsersStatsComponent implements OnInit {
       loadmode: 'Table'
     })
       .then((r: any) => {
-        this.deletedUsers = r;
+        this.deletedUsers = r || [];
       })
       .catch((error) => {
+        this.deletedUsers = [];
         this._errorSrv.errorHandler(error);
       });
     const d =  this.pip.read<any>({
@@ -90,7 +93,7 @@ export class EosReportUsersStatsComponent implements OnInit {
       if (typeof(ans) === 'string') {
           ans = JSON.parse(ans);
       }
-      this.items = ans;
+      this.items = ans || [];
     })
     .catch(er => {
       this.items = [];

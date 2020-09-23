@@ -1,5 +1,9 @@
 <div class="users-stats-wrapper usual-border">
-    <div class="table-wrapper-stats">
+    <div *ngIf="!users || !deletedUsers || !items" class="spinner-wrapper">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+
+    <div *ngIf="users && deletedUsers && items" class="table-wrapper-stats">
         <div class="table-header">
             <div class="table-stats-wrapper">
                 <div class="selected-stats-title">
