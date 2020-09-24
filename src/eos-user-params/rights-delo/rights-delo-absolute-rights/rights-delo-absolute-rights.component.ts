@@ -349,7 +349,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._storageSrv.removeItem('abs_prav_mas');
                         if (this.curentUser['ISN_LCLASSIF'] === this._appContext.CurrentUser['ISN_LCLASSIF'] && contentProp === 6) {
                             this._appContext.init().then(() => {
-                                if (this._appContext.CurrentUser.TECH_RIGHTS && this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
+                                if (!this._appContext.CurrentUser.TECH_RIGHTS || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
                                     this._router.navigate(['/spravochniki']);
                                 }
 
