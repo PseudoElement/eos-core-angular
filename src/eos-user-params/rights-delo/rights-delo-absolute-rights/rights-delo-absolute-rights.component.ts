@@ -15,7 +15,7 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USER_TECH, PipRX, USERDEP, ORGANIZ_CL, USER_RIGHT_DOCGROUP, USER_CL } from 'eos-rest';
+import { USER_TECH, USERDEP, ORGANIZ_CL, USER_RIGHT_DOCGROUP } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
@@ -74,7 +74,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
-        private pipRx: PipRX,
+        // private pipRx: PipRX,
         private _errorSrv: ErrorHelperServices,
         private _storageSrv: EosStorageService,
         private _appContext: AppContext
@@ -190,39 +190,39 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
     }
 
-    GetSysTechUser(): Promise<any> {
-        return this.pipRx.read({
-            USER_CL: {
-                criteries: {
-                    DELO_RIGHTS: '1%',
-                    DELETED: '0',
-                    ISN_LCLASSIF: '1:null'
-                },
-            },
-            loadmode: 'Table',
-            expand: 'USER_TECH_List'
-        }).then((data: USER_CL[]) => {
-            const countNotLim = [];
-            const curLimUser = data.filter(user => this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && !this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List));
-            for (const user of data) {
-                if (!this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List) && user.TECH_RIGHTS.charAt(0) === '1') {
-                    countNotLim.push(user);
-                }
-            }
-            if (countNotLim.length > curLimUser.length || (countNotLim.length === curLimUser.length  && countNotLim[0].ISN_LCLASSIF !== curLimUser[0].ISN_LCLASSIF)) {
-                this.limitUserTech = false;
-            } else {
-                this.limitUserTech = true;
-                if (this.checkChangeToLimitUser(countNotLim)) {
-                    this.limitUserTech = true;
-                } else {
-                    this.limitUserTech = false;
-                }
-            }
-        });
-    }
+    // GetSysTechUser(): Promise<any> {
+    //     return this.pipRx.read({
+    //         USER_CL: {
+    //             criteries: {
+    //                 DELO_RIGHTS: '1%',
+    //                 DELETED: '0',
+    //                 ISN_LCLASSIF: '1:null'
+    //             },
+    //         },
+    //         loadmode: 'Table',
+    //         expand: 'USER_TECH_List'
+    //     }).then((data: USER_CL[]) => {
+    //         const countNotLim = [];
+    //         const curLimUser = data.filter(user => this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && !this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List));
+    //         for (const user of data) {
+    //             if (!this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List) && user.TECH_RIGHTS.charAt(0) === '1') {
+    //                 countNotLim.push(user);
+    //             }
+    //         }
+    //         if (countNotLim.length > curLimUser.length || (countNotLim.length === curLimUser.length  && countNotLim[0].ISN_LCLASSIF !== curLimUser[0].ISN_LCLASSIF)) {
+    //             this.limitUserTech = false;
+    //         } else {
+    //             this.limitUserTech = true;
+    //             if (this.checkChangeToLimitUser(countNotLim)) {
+    //                 this.limitUserTech = true;
+    //             } else {
+    //                 this.limitUserTech = false;
+    //             }
+    //         }
+    //     });
+    // }
 
-    checkChangeToLimitUser(curLimUser: USER_CL[]): boolean {
+    checkChangeToLimitUser(): boolean {
         let sysTechBol = false;
         const arr = this.listRight[0].change;
         if (this.listRight[0].change.length !== 0) {
@@ -262,7 +262,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 return Promise.resolve(true);
             }
         }
-        return this.GetSysTechUser().then(() => {
+        return this._userParamsSetSrv.getSysTechUser(true).then((limited: boolean) => {
+            this.limitUserTech = limited ? false : this.checkChangeToLimitUser();
             if (this.limitUserTech === false) {
                 if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
                     if (this._checkCreatePRJNotEmptyAllowed()) {
@@ -348,7 +349,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._storageSrv.removeItem('abs_prav_mas');
                         if (this.curentUser['ISN_LCLASSIF'] === this._appContext.CurrentUser['ISN_LCLASSIF'] && contentProp === 6) {
                             this._appContext.init().then(() => {
-                                if (this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
+                                if (this._appContext.CurrentUser.TECH_RIGHTS && this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
                                     this._router.navigate(['/spravochniki']);
                                 }
 

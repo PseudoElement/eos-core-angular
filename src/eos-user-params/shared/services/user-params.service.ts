@@ -139,7 +139,6 @@ export class UserParamsService {
                     this._userContext['DEPARTMENT_DUE'] = this._userContextDeparnment['DEPARTMENT_DUE'];
                 }
                 this._userContext = this._pipRx.entityHelper.prepareForEdit(this._userContext);
-                // console.log(this._userContext.USERCARD_List);
                 this._updateUser$.next();
                 return true;
             })
@@ -519,6 +518,38 @@ export class UserParamsService {
             const url = `DropLogin?isn_user=${id}`;
             return this._pipRx.read({ [url]: ALL_ROWS });
         }
+    }
+
+    getSysTechUser(forCurrentUser: boolean = false): Promise<any> {
+        return this._pipRx.read({
+            USER_CL: {
+                criteries: {
+                    DELO_RIGHTS: '1%',
+                    DELETED: '0',
+                    ISN_LCLASSIF: '1:null'
+                },
+            },
+            loadmode: 'Table',
+            expand: 'USER_TECH_List'
+        }).then((data: USER_CL[]) => {
+            const countNotLim = [];
+            let checkedUsers = [];
+            if (forCurrentUser) {
+                checkedUsers = data.filter(user => this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && !this.CheckLimitTech(user.USER_TECH_List));
+            } else {
+                const checkedUsersIsn = this.checkedUsers.map((user) => user.data.ISN_LCLASSIF);
+                checkedUsers = data.filter(user => checkedUsersIsn.indexOf(user.ISN_LCLASSIF) !== -1 && !this.CheckLimitTech(user.USER_TECH_List));
+            }
+            for (const user of data) {
+                if (!this.CheckLimitTech(user.USER_TECH_List) && user.TECH_RIGHTS.charAt(0) === '1') {
+                    countNotLim.push(user);
+                }
+            }
+            return countNotLim.length > checkedUsers.length ||
+                (countNotLim.length === checkedUsers.length &&
+                countNotLim.length && checkedUsers.length &&
+                !countNotLim.some((user) => user.ISN_LCLASSIF === checkedUsers[0].ISN_LCLASSIF));
+        });
     }
 
     private _createHash() {
