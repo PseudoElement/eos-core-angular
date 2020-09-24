@@ -451,12 +451,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.setNewDataFormControl(query, id);
                 if (this._newData.get('IS_SECUR_ADM') === false) {
                     this.apiSrvRx.read<USER_CL>({
-                        USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1', 'ORACLE_ID': 'isnotnull', 'DELETED': '0' }),
+                        USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1', 'ORACLE_ID': 'isnotnull' }),
                         orderby: 'ISN_LCLASSIF',
                         top: 2,
                         loadmode: 'Table'
                     }).then((admns: USER_CL[]) => {
-                        if (admns.length === 1 && admns[0].ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                        const adminUsers = this._apiSrv._getListUsers(admns).filter((user) => {
+                            return user.id !== this.curentUser.ISN_LCLASSIF && !user.blockedUser && !user.blockedSystem && !user.deleted;
+                        });
+                        if (!adminUsers.length) {
                             this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
                             return;
                         } else {
