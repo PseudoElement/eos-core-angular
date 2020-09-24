@@ -307,7 +307,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         F25 = true;
                     }
                 });
-                const DELO_RIGHTS = this.curentUser.DELO_RIGHTS;
+                 // у нового пользователя тут может быть null -> записываем  строку '000000000000000000000000000000 000      '
+                 const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
                 const arr = DELO_RIGHTS.split('');
                 const newDELO_RIGHTS = arr.map((v, i) => {
                     if (i === 24 || i === 25) {

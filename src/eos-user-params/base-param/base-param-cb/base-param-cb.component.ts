@@ -362,7 +362,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 const newDue = this.curentUser.DUE_DEP;
                 let F26 = false;
                 let F25 = false;
-                let F34 = false;
                 this.curentUser.USERDEP_List.forEach((_udep: USERDEP) => {
                     if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 26) {
                         F26 = true;
@@ -370,11 +369,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 25) {
                         F25 = true;
                     }
-                    if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 34) {
-                        F34 = true;
-                    }
                 });
-                const DELO_RIGHTS = this.curentUser.DELO_RIGHTS;
+                // у нового пользователя тут может быть null -> записываем  строку '000000000000000000000000000000 000      '
+                const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
                 const arr = DELO_RIGHTS.split('');
                 const newDELO_RIGHTS = arr.map((v, i) => {
                     if (i === 24 || i === 25 || i === 33) {
@@ -405,15 +402,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         requestUri: `USER_CL(${id})/USERDEP_List`,
                         data: {
                             'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 25, 'DEEP': 1, 'ALLOWED': 0
-                        }
-                    });
-                }
-                if (!F34) {
-                    query.push({
-                        method: 'POST',
-                        requestUri: `USER_CL(${id})/USERDEP_List`,
-                        data: {
-                            'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 34, 'DEEP': 1, 'ALLOWED': 0
                         }
                     });
                 }
