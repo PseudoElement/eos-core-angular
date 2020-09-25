@@ -705,7 +705,10 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     private inputCabinetSelect(value, flag?) {
         const query = {
             CABINET: {
-                criteries: {'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${value}`},
+                criteries: {
+                    'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${value}`,
+                    orderby: 'CABINET_NAME',
+                },
             }
         };
         this.dictSrv.currentDictionary.descriptor.readCabinetLists(query)
