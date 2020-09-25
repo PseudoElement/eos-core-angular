@@ -90,7 +90,7 @@ export const OPEN_CLASSIF_DEPARTMENT_SEV: IOpenClassifParams = {
     classif: 'DEPARTMENT',
     return_due: true,
     id: '0.',
-    skipDeleted: false,
+    skipDeleted: true,
     selectMulty: false,
     selectLeafs: true,
     selectNodes: false,
