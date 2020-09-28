@@ -664,7 +664,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         const due = this.form.controls['rec.DUE_DOCGROUP'].value;
         if (due) {
             this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[]) => {
-                if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE === 3 || this.form.controls['rec.type'].value === '2' && !data[0].PRJ_NUM_FLAG) {
+                if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE === 3 && this.form.controls['rec.type'].value !== '2' || this.form.controls['rec.type'].value === '2' && !data[0].PRJ_NUM_FLAG) {
                     this.msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение:',
