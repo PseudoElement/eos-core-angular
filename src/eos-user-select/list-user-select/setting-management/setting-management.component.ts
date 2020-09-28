@@ -16,6 +16,7 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { IMessage } from '../../../eos-common/core/message.interface';
+import { WARNING_CUT_OWN_RIGHTS } from 'eos-user-select/consts/user-select.consts';
 
 
 @Component({
@@ -95,6 +96,13 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     }
 
     cutRights(): Promise<any> {
+        const currentUserIsn = this._appCtx.CurrentUser['ISN_LCLASSIF'];
+        if (this.checkedUsers && this.checkedUsers.length === 1 && this.checkedUsers[0] === currentUserIsn) {
+            this._msgSrv.addNewMessage(WARNING_CUT_OWN_RIGHTS);
+            this.close();
+            return Promise.resolve(null);
+        }
+
         const url = this._createUrlForSop(this.formCut);
         this.isLoading = true;
         return this._confirmSrv.confirm(CONFIRM_CUT_USER).then(res => {
