@@ -44,7 +44,14 @@ export class PermissionsGuard implements CanActivate {
                     ) {
                         return false;
                     } else {
-                        return true;
+                        if (!access) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение:',
+                                msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
+                            });
+                        }
+                        return access;
                     }
 
                 } else {
