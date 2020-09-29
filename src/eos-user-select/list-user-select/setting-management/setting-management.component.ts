@@ -173,9 +173,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     private _createUrlForSop(form: FormGroup, copy?: boolean): string {
         let url;
         if (copy) {
-            url = 'UserRightsCopy?';
+            url = !this._appCtx.cbBase ? 'UserRightsCopy?' : 'UserRightsCopy_CB?';
         } else {
-            url = 'UserRightsReset?';
+            url = !this._appCtx.cbBase ? 'UserRightsReset?' : 'UserRightsReset_CB?';
         }
         url += `users=${this.checkedUsers.join('|')}`;
         if (copy) {
