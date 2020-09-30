@@ -1,9 +1,9 @@
 <div class="users-stats-wrapper usual-border">
-    <div *ngIf="!users || !deletedUsers || !items" class="spinner-wrapper">
+    <div *ngIf="!users || !items" class="spinner-wrapper">
         <eos-spinner size="lg"></eos-spinner>
     </div>
 
-    <div *ngIf="users && deletedUsers && items" class="table-wrapper-stats">
+    <div *ngIf="users && items" class="table-wrapper-stats">
         <div class="table-header">
             <div class="table-stats-wrapper">
                 <div class="selected-stats-title">
@@ -17,7 +17,7 @@
                     Всего Пользователей
                 </span>
                 <span class="item-count-param1">
-                    {{usersNumber}}
+                    {{users}}
                 </span>
             </div>
             <div class="mar-items">

@@ -1,22 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
-import { PipRX, USER_CL, USER_PARMS } from 'eos-rest';
+import { PipRX, USER_PARMS } from 'eos-rest';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 /* import { ALL_ROWS } from 'eos-rest/core/consts'; */
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
-
+interface IUserCount {
+    All: number;
+    BlockedBecauseOfBadPassword: number;
+    BlockedByAdmin: number;
+    NotBlocked: number;
+}
 @Component({
     selector: 'eos-report-stats',
     templateUrl: './users-stats.component.html',
     styleUrls: ['./users-stats.component.scss']
 })
+
 export class EosReportUsersStatsComponent implements OnInit {
     subsystem: any;
     serverSystem: any;
     items: [];
-    users: USER_CL[];
-    usersBlockedAuth: USER_CL[] = [];
+    users: number;
     blockByTech: number = 0;
     blockAuthUsers: number = 0;
     usersNumber: number = 0;
@@ -24,8 +29,6 @@ export class EosReportUsersStatsComponent implements OnInit {
     logUsers: string;
     subSysArray = [];
     subServerArray = [];
-    protUsers;
-    deletedUsers;
     actualLicenz = 0;
 
 
@@ -49,17 +52,28 @@ export class EosReportUsersStatsComponent implements OnInit {
     }
 
     getData() {
-        const a = this.pip.read<USER_CL>({
-            USER_CL: PipRX.criteries({ 'DELETED': '0', 'ISN_LCLASSIF': '1:null' }),
-            loadmode: 'Table'
-        })
-            .then((r: any) => {
-                this.users = r || [];
-            })
-            .catch((error) => {
-                this.users = [];
-                this._errorSrv.errorHandler(error);
-            });
+        const a = this.pip.read<IUserCount>({
+            ['UserCount']: ALL_ROWS,
+        }).then((data: Array<IUserCount>) => {
+            if (data && data.length) {
+                this.users = data[0].All;
+                this.blockAuthUsers = data[0].BlockedBecauseOfBadPassword;
+                this.blockByTech = data[0].BlockedByAdmin;
+            }
+        }).catch(e => {
+            this._errorSrv.errorHandler(e);
+        });
+        // const a = this.pip.read<USER_CL>({
+        //     USER_CL: PipRX.criteries({ 'DELETED': '0', 'ISN_LCLASSIF': '1:null' }),
+        //     loadmode: 'Table'
+        // })
+        //     .then((r: any) => {
+        //         this.users = r || [];
+        //     })
+        //     .catch((error) => {
+        //         this.users = [];
+        //         this._errorSrv.errorHandler(error);
+        //     });
         /* this.items = this._appContext.sysLicenseInfo; */
         const b = this.pip.read<USER_PARMS>({
             USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
@@ -75,17 +89,17 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this._errorSrv.errorHandler(error);
             });
 
-        const c = this.pip.read<USER_CL>({
-            USER_CL: PipRX.criteries({ 'DELETED': '1' }),
-            loadmode: 'Table'
-        })
-            .then((r: any) => {
-                this.deletedUsers = r || [];
-            })
-            .catch((error) => {
-                this.deletedUsers = [];
-                this._errorSrv.errorHandler(error);
-            });
+        // const c = this.pip.read<USER_CL>({
+        //     USER_CL: PipRX.criteries({ 'DELETED': '1' }),
+        //     loadmode: 'Table'
+        // })
+        //     .then((r: any) => {
+        //         this.deletedUsers = r || [];
+        //     })
+        //     .catch((error) => {
+        //         this.deletedUsers = [];
+        //         this._errorSrv.errorHandler(error);
+        //     });
         const d = this.pip.read<any>({
             'LicenseInfo': ALL_ROWS
         })
@@ -100,10 +114,9 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this.items = [];
                 /* this._errorSrv.errorHandler(er); */
             });
-        Promise.all([a, b, c, d]).then(() => {
-            this.usersNumber = this.usersNumber + this.users.length;
-            this.getProtectedUsers(this.deletedUsers, this.usersNumber);
+        Promise.all([a, b, d]).then(() => {
             this.getSubSystems(this.items);
+            //   this.getProtectedUsers(this.deletedUsers, this.usersNumber);
         }
         )
             .catch((error) => {
@@ -115,39 +128,35 @@ export class EosReportUsersStatsComponent implements OnInit {
         return any;
     }
 
-    getProtectedUsers(data: any, usNum: number) {
-        this.usersBlockedAuth = [];
-        for (const i of data) {
-            if (i.DELETED === 1 && i.LOGIN_ATTEMPTS < this.paramValue && String(i.ORACLE_ID) !== 'null') {
-                this.blockByTech++;
-            }
-            if (i.DELETED === 1 && i.LOGIN_ATTEMPTS === this.paramValue && String(i.ORACLE_ID) !== 'null') {
-                this.blockAuthUsers++;
-                this.usersBlockedAuth.push(i);
-            }
-        }
-        this.usersNumber = usNum + this.blockByTech + this.blockAuthUsers;
-    }
+    // getProtectedUsers(data: any, usNum: number) {
+    //     for (const i of data) {
+    //         if (i.DELETED === 1 && i.LOGIN_ATTEMPTS < this.paramValue && String(i.ORACLE_ID) !== 'null') {
+    //             this.blockByTech++;
+    //         }
+    //         if (i.DELETED === 1 && i.LOGIN_ATTEMPTS === this.paramValue && String(i.ORACLE_ID) !== 'null') {
+    //             this.blockAuthUsers++;
+    //         }
+    //     }
+    //     this.usersNumber = usNum + this.blockByTech + this.blockAuthUsers;
+    // }
 
 
     getSubSystems(items: any[]) {
-        const masFull = '0000000000000000000000000000'.split('').map(elem => Number(elem));
-        const licenseUsers = [...this.users, ...this.usersBlockedAuth];
-        licenseUsers.forEach((user, index) => {
-            const nUser = user['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
-            masFull.forEach((element, numb) => {
-                if (numb === 1) {
-                    masFull[numb] += nUser[numb] === 1 && nUser[numb] === 0 ? 1 : 0;
-                } else {
-                    if (typeof (nUser[numb]) === 'number') {
-                        masFull[numb] += nUser[numb];
-                    }
-                }
-            });
-        });
-        const dateNow = new Date(Date.now());
-
+        // const masFull = '0000000000000000000000000000'.split('').map(elem => Number(elem));
+        // this.users.forEach((user, index) => {
+        //     const nUser = user['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
+        //     masFull.forEach((element, numb) => {
+        //         if (numb === 1) {
+        //             masFull[numb] += 0;
+        //         } else {
+        //             if (typeof (nUser[numb]) === 'number') {
+        //                 masFull[numb] += nUser[numb];
+        //             }
+        //         }
+        //     });
+        // });
         let enablelLicenze = 0;
+        const dateNow = new Date(Date.now());
         items.forEach(elem => {
             // бессрочная лицензия
             if (elem.Enabled && !elem.Expired) {
@@ -286,10 +295,10 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.actualLicenz = enablelLicenze;
         // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
         Object.keys(this.subsystem).forEach(key => {
-            if (masFull[this.subsystem[key].id - 1] !== 0 && this.subsystem[key].ActualUsers === 0) {
-                this.subsystem[key].ActualUsers = masFull[this.subsystem[key].id - 1];
-            }
-            this.subSysArray.push(this.subsystem[key]);
+            // if (masFull[this.subsystem[key].id - 1] !== 0 && this.subsystem[key].ActualUsers === 0) {
+            //     this.subsystem[key].ActualUsers = masFull[this.subsystem[key].id - 1];
+            // }
+        this.subSysArray.push(this.subsystem[key]);
         });
         Object.keys(this.serverSystem).forEach(key => {
             if (!this.serverSystem[key].withLicense || this.actualLicenz > 0) {
