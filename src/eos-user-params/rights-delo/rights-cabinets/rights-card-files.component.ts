@@ -286,6 +286,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 this.cancel(null);
                 this._errorSrv.errorHandler(e);
             });
+        } else {
+            this.cancel(null);
         }
         this.isLoading = false;
     }

@@ -14,6 +14,7 @@ import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/con
 import { Subscription } from 'rxjs';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { AppContext } from '../../../eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-setting-management',
@@ -40,6 +41,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         private _confirmSrv: ConfirmWindowService,
         private _rtSrv: RtUserSelectService,
         private _userSrv: UserParamsService,
+        private _appCtx: AppContext,
     ) { }
 
     get disabledCopy(): boolean {
@@ -139,8 +141,23 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
             })
             .then(data => {
                 this.isShell = false;
-                this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
-                this._pathForm();
+                if (data) {
+                    if (this._appCtx.limitCardsUser.length) {
+                        const due = data[0]['DUE_DEP'] ? data[0]['DUE_DEP'].split('.') : [];
+                        const parentDue = due.splice(0, due.length - 2).concat(['']).join('.');
+                        if (!(this._appCtx.limitCardsUser.indexOf(parentDue) !== -1)) {
+                            this._isnCopyFrom = null;
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: 'Выберите пользователя, от которого необходимо скопировать права, относящегося к доступному подразделению для ограниченного технолога',
+                            });
+                            return;
+                        }
+                    }
+                    this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                    this._pathForm();
+                }
             })
             .catch((e) => {
                 if (e) {

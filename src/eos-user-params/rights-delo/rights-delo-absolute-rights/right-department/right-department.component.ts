@@ -381,6 +381,10 @@ export class RightDepertmentComponent implements OnInit {
         this.selectedNode.value = event.target.checked ? 2 : 1;
     }
     checkedNode($event: NodeDocsTree) {
+        const node: NodeDocsTree = this.listUserDep.find((ud) => $event.DUE === ud.DUE);
+        if (node) {
+            node.data.userDep.DEEP = Number($event.isAllowed);
+        }
         if (this.funcNum === 3 /* && this._appContext.cbBase */) {
             /* $event.flagCheckNode.deepValue = Number($event.isAllowed); */
             const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });

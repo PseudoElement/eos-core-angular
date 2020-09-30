@@ -703,54 +703,64 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     BlockUser() {
         const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
-        this._pipeSrv.read<USER_CL>({
-            USER_CL: {
-                criteries: this.getQuery(),
-            }
-        }).then((data: USER_CL[]) => {
-            this.isLoading = true;
-            const blockedUsers = this.listUsers.filter(user => !user.blockedUser && !user.blockedSystem && (user.selectedMark || user.isChecked) && user.data.IS_SECUR_ADM === 1);
-            let lastAdmin = false;
-            if (this._appContext.cbBase) {
-                if (data['TotalRecords'] === blockedUsers.length) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение:',
-                        msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
-                    });
-                    lastAdmin = true;
-                }
-            }
-
-            this._apiSrv.blokedUser(this.getUsersBlocked(lastAdmin), idMain).then(user => {
-                this.getUsersBlocked(lastAdmin).forEach(users => {
-                    if (users.id === +idMain && (users.isChecked || users.selectedMark)) {
-                        this._msgSrv.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение:',
-                            msg: `Нельзя заблокировать самого себя.`
-                        });
+        this._userParamSrv.getSysTechUser().then((allSysTech: boolean) => {
+            if (!allSysTech) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение:',
+                    msg: `Ни один из незаблокированных пользователей не имеет права «Системный технолог» с доступом к модулю «Пользователи» без ограничений.`
+                });
+            } else {
+                this._pipeSrv.read<USER_CL>({
+                    USER_CL: {
+                        criteries: this.getQuery(),
                     }
-                    if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
-                        if (users.blockedUser) {
-                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                        } else {
-                            if (!users.blockedUser && !users.blockedSystem) {
-                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
-                            }
-                            if (users.blockedSystem) {
-                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                            }
+                }).then((data: USER_CL[]) => {
+                    this.isLoading = true;
+                    const blockedUsers = this.listUsers.filter(user => !user.blockedUser && !user.blockedSystem && (user.selectedMark || user.isChecked) && user.data.IS_SECUR_ADM === 1);
+                    let lastAdmin = false;
+                    if (this._appContext.cbBase) {
+                        if (data['TotalRecords'] === blockedUsers.length) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение:',
+                                msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
+                            });
+                            lastAdmin = true;
                         }
                     }
-                    users.isChecked = false;
-                    return users;
+
+                    this._apiSrv.blokedUser(this.getUsersBlocked(lastAdmin), idMain).then(user => {
+                        this.getUsersBlocked(lastAdmin).forEach(users => {
+                            if (users.id === +idMain && (users.isChecked || users.selectedMark)) {
+                                this._msgSrv.addNewMessage({
+                                    type: 'warning',
+                                    title: 'Предупреждение:',
+                                    msg: `Нельзя заблокировать самого себя.`
+                                });
+                            }
+                            if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
+                                if (users.blockedUser) {
+                                    this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
+                                } else {
+                                    if (!users.blockedUser && !users.blockedSystem) {
+                                        this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
+                                    }
+                                    if (users.blockedSystem) {
+                                        this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
+                                    }
+                                }
+                            }
+                            users.isChecked = false;
+                            return users;
+                        });
+                        this.initView(this.currentDue);
+                    }).catch(error => {
+                        this.isLoading = false;
+                        this._errorSrv.errorHandler(error);
+                    });
                 });
-                this.initView(this.currentDue);
-            }).catch(error => {
-                this.isLoading = false;
-                this._errorSrv.errorHandler(error);
-            });
+            }
         });
     }
     getLoginDeleted(): string {

@@ -521,6 +521,14 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         this.groupDocument.splice(this.checkItemForDelet, 1);
         this.checkItemForDelet = null;
     }
+    cancelSelectedDocgroup(msg: string) {
+        this.msgSrv.addNewMessage({
+            type: 'warning',
+            title: 'Предупреждение:',
+            msg: msg
+        });
+        this.form.controls['rec.DUE_DOCGROUP'].patchValue('');
+    }
     public openOrganizCl(value, flag) {
         if (!flag) {
             const control = this.form.controls[value];
@@ -664,13 +672,14 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         const due = this.form.controls['rec.DUE_DOCGROUP'].value;
         if (due) {
             this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[]) => {
-                if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE === 3 || this.form.controls['rec.type'].value === '2' && !data[0].PRJ_NUM_FLAG) {
-                    this.msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение:',
-                        msg: `Для приема документов нельзя использовать группу документов типа "Исходящие"`
-                    });
-                    this.form.controls['rec.DUE_DOCGROUP'].patchValue('');
+                const [documents, projects] = [`Для приема документов нельзя использовать группу документов типа "Исходящие"`,
+                    `Для приема проектов нельзя использовать группу документов типа "Входящие"`];
+                if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE !== 1 && this.form.controls['rec.type'].value !== '2') {
+                    this.cancelSelectedDocgroup(documents);
+                    return;
+                }
+                if (this.form.controls['rec.type'].value === '2'  && !data[0].PRJ_NUM_FLAG && data[0].RC_TYPE !== 3) {
+                    this.cancelSelectedDocgroup(projects);
                     return;
                 }
                 this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(data.length ? data[0].CLASSIF_NAME : '');
@@ -705,7 +714,10 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     private inputCabinetSelect(value, flag?) {
         const query = {
             CABINET: {
-                criteries: {'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${value}`},
+                criteries: {
+                    'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${value}`,
+                    orderby: 'CABINET_NAME',
+                },
             }
         };
         this.dictSrv.currentDictionary.descriptor.readCabinetLists(query)

@@ -34,8 +34,8 @@ export class CertificateService {
         });
     }
     getUrl(params?: ICertificateInit): string {
-        let url = '../WebRc/Pages/Certificate.html';
-        let connector = '?';
+        let url = '../WebRc/Pages/Certificate.html?showLdapFilter=true';
+        let connector = '&';
         if (params.UseUserStores) {
             url += `${connector}UseUserStores=${params.UseUserStores}`;
             connector = '&';
