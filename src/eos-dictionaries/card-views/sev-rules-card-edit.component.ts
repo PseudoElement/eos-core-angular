@@ -342,6 +342,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         .subscribe(value => {
             if (!value) {
                 this.form.controls['rec.visaDays'].setValue(false);
+                this.form.controls['rec.visaDate'].setValue('');
             } else {
                 this.form.controls['rec.visaDays'].setValue(true);
             }
@@ -374,6 +375,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         .subscribe(value => {
             if (!value) {
                 this.form.controls['rec.signatureDays'].setValue(false);
+                this.form.controls['rec.signatureDate'].setValue('');
             } else {
                 this.form.controls['rec.signatureDays'].setValue(true);
             }
