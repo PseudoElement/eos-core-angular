@@ -180,7 +180,6 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
     }
     // все проверки по справочникам SEV вынес в одно место так как не знаю будет их много или только одна
     checkErrorSEV(data): string[] {
-        console.log('data', data);
         const errors = [];
         // const data = this.cardEditRef.newData.rec;
         // if (this.cardEditRef.dictionaryId === 'sev-rules') {
@@ -261,7 +260,6 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
         }
     }
     confirmSave(data: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        console.log('test');
         const errorOK = this.checkErrorSEV(data.rec);
         const errors = [];
         if (data.rec['RULE_KIND'] === 2 && data.rec.DUE_DEP && data.rec.DUE_DEP !== '0.' && String(data.rec.cardFile).indexOf(data.rec.DUE_DEP) !== 0) {

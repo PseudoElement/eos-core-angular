@@ -837,7 +837,7 @@ export class EosSevRulesService {
         const signatures = !this._data['signatures'] ? 'None' : this._data['signaturesKind'] === 0 ? 'All' : 'Addressee';
         const linkTypeList = linkRk === 'List' ? this.data['linkTypeList'] : '';
         const eccessList = this._data['fileAccessListRk'] ? this._data['fileAccessListRk'] : '';
-        const taskFileExt = this._data['taskFileExtensions'] !== 'null' ? this._data['taskFileExtensions'] : '';
+        const taskFileExt = !this._data['taskFileExtensions'] || this._data['taskFileExtensions'] === 'null' ? '' : this._data['taskFileExtensions'];
         const taskFileMaxLength = !this._data['taskFileMaxLength'] || this._data['taskFileMaxLength'] === 'null' ? '' : this._data['taskFileMaxLength'];
         return `<?xml version="1.0"?>
         <SendProjectRule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
