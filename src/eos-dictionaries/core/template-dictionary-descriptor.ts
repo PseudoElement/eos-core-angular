@@ -45,8 +45,9 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         .set('0.8', 'Реестры внеш. отправки')
         .set('0.9', 'Печать РК')
         .set('1', '%opis_arh.exe%')
-        .set('2', 'Печать перечня поручений')
-        .set('3', 'Печать номенклатуры дел');
+        .set('2', 'Основной файл документа')
+        .set('3', 'Печать перечня поручений')
+        .set('4', 'Печать номенклатуры дел');
 
     head: CustomTreeNode[] = [];
     staticDataForTree: CustomTreeNode[] = [
@@ -101,13 +102,18 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             visibleFilter: true, children: []
         },
         {
-            title: 'Печать перечня поручений', parent: '0.', id: '2', isNode: true, isDeleted: false, isActive: false,
+            title: 'Основной файл документа', parent: '0.', id: '2', isNode: true, isDeleted: false, isActive: false,
             expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '2'],
             visibleFilter: true, children: []
         },
         {
-            title: 'Печать номенклатуры дел', parent: '0.', id: '3', isNode: true, isDeleted: false, isActive: false,
+            title: 'Печать перечня поручений', parent: '0.', id: '3', isNode: true, isDeleted: false, isActive: false,
             expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '3'],
+            visibleFilter: true, children: []
+        },
+        {
+            title: 'Печать номенклатуры дел', parent: '0.', id: '4', isNode: true, isDeleted: false, isActive: false,
+            expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', '4'],
             visibleFilter: true, children: []
         },
     ];
