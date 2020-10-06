@@ -206,20 +206,20 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
             ) {
                 errors.push(`Поле \'Исполнитель\' обязательно для заполнения`);
             }
-            if (data &&
-                +data['RULE_KIND'] === 6 &&
-                !data['visaForward'] &&
-                !data['visaDate']
-            ) {
-                errors.push(`Срок визы должен быть заполнен`);
-            }
-            if (data &&
-                +data['RULE_KIND'] === 6 &&
-                !data['signatureForward'] &&
-                !data['signatureDate']
-            ) {
-                errors.push(`Срок подписи должен быть заполнен`);
-            }
+            // if (data &&
+            //     +data['RULE_KIND'] === 6 &&
+            //     !data['visaForward'] &&
+            //     !data['visaDate']
+            // ) {
+            //     errors.push(`Срок визы должен быть заполнен`);
+            // }
+            // if (data &&
+            //     +data['RULE_KIND'] === 6 &&
+            //     !data['signatureForward'] &&
+            //     !data['signatureDate']
+            // ) {
+            //     errors.push(`Срок подписи должен быть заполнен`);
+            // }
             if (+data['RULE_KIND'] === 6 &&
             !data['executiveInput']
             ) {
