@@ -25,6 +25,7 @@ import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/conf
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT } from 'eos-dictionaries/consts/confirm.consts';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -92,6 +93,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     get getCbRole() {
         return this.editMode && !this.singleOwnerCab && (this.gt()['delo_web_delo'] || this.gt()['delo_web']) && !this.curentUser.isTechUser;
     }
+    get appctx() {
+        return this._appCtx.limitCardsUser.length;
+    }
     constructor(
         private _router: Router,
         private _msgSrv: EosMessageService,
@@ -105,6 +109,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
         private _rtUserSel: RtUserSelectService,
+        private _appCtx: AppContext,
     ) {
     }
     ngOnInit() {

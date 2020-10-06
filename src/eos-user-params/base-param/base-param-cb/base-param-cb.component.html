@@ -54,7 +54,7 @@
                     (click)="getTemplateUser(cbRole, 'roles')"
                     [ngClass]="{'btn-primary': editMode, 'btn-light': !editMode}"
                 >Настроить роль</button>
-                <eos-dynamic-input  [input]="inputs['IS_SECUR_ADM']" [form]="form" tooltip="Администратор системы" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['IS_SECUR_ADM']" [form]="form"  [readonly]="appctx" tooltip="Администратор системы"  placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
             </div><br>
             <!-- Доступ к системам 1-й ряд -->
             <span class="l-font">Доступ к системам</span>
@@ -94,7 +94,7 @@
           <div>
             <eos-dynamic-input class="note-textarea" onkeypress="return event.keyCode != 13;" [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
           </div>
-        </div> 
+        </div>
     </div>
 
     <div class="base-param-wrapper">
@@ -102,9 +102,9 @@
             <eos-spinner [size]="'lg'"></eos-spinner>
         </div>
     </div>
-    
+
     <div *ngIf="isShell" class="shell"></div>
-    
+
     <ng-template #template>
         <eos-base-serts (closeModal)="closeSerts()"></eos-base-serts>
     </ng-template>
@@ -112,4 +112,3 @@
     <ng-template #cbRole>
         <eos-cb-user-role (closeModal)="closeSerts()" (saveCbRoles)="saveCbRoles($event)" [currentFields]="currentCbFields"></eos-cb-user-role>
     </ng-template>
-    
