@@ -2,14 +2,6 @@
 #
 # Путь к nodejs версии 12 (или более поздней)
 # $env:EOS_NODEJS_12 = "C:\Program Files\nodejs"
-
-<# =========================VAR=============================== #>
-
-$SourceBranchLongName = switch ($env:BUILD_REASON) {
-      'PullRequest' { $env:BUILD_SOURCEBRANCH.Replace('refs/pull/','').Replace('/merge','') }
-      default { $env:BUILD_SOURCEBRANCH.Replace('refs/heads/','').Replace('refs/tags/','') }
-    }
-$SourceBranchModName = $SourceBranchLongName.Replace('/','-').Replace('.','-')
 <# =========================3.1=============================== #>
 
 $ErrorActionPreference = "Stop"
@@ -62,6 +54,12 @@ Invoke-CommandText "Compiling source" `
 
 if ( "$env:BUILD_BUILDID" -ne "" )
 {
+    $SourceBranchLongName = switch ($env:BUILD_REASON) {
+          'PullRequest' { $env:BUILD_SOURCEBRANCH.Replace('refs/pull/','').Replace('/merge','') }
+          default { $env:BUILD_SOURCEBRANCH.Replace('refs/heads/','').Replace('refs/tags/','') }
+        }
+    $SourceBranchModName = $SourceBranchLongName.Replace('/','-').Replace('.','-')
+
     $env:BuildVersion = $env:BUILD_BUILDID.Remove($env:BUILD_BUILDID.Length - 3)
     $env:RevisionVersion = $env:BUILD_BUILDID.Substring($env:BUILD_BUILDID.Length - 3)
     "$(get-date) - INFO: Vesion info. BuildVersion: $env:BuildVersion, RevisionVersion:: $env:RevisionVersion" | Out-Host
@@ -80,7 +78,18 @@ if ( Test-Path $DropRootDir )
 }
 <# ============================3.6.1============================ #>
 
-$OutputDir = Join-PathList $DropRootDir "BuildResult" "dist"
+if ( "$env:BUILD_BUILDID" -ne "" )
+    {
+        $OutputDir = Join-PathList $DropRootDir "BuildResult" "dist"
+    } else {
+        $OutputDir = Join-PathList $DropStorageDir "BuildResult"
+
+        if ( Test-Path $OutputDir )
+            {
+                throw "Drop folder already exists: $OutputDir"
+            }
+    }
+
 $OutputFiles = Join-PathList $Classif "dist" "*"
 <# ============================3.6.2============================ #>
 
@@ -94,25 +103,28 @@ $tfsRestAuthToken = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("
 
 <# =========================3.8================================= #>
 
-$DropStorageUnc = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE_UNC "\\tfbd\Storage"
-$DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdir) -replace "/","\\" # UNC - always with Windows path separator
-Invoke-BuildDropLocationTfsRest $DropRootUnc
+if ( "$env:BUILD_BUILDID" -ne "" )
+{
+    $DropStorageUnc = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE_UNC "\\tfbd\Storage"
+    $DropRootUnc = (Join-PathList $DropStorageUnc $DropSubdir) -replace "/","\\" # UNC - always with Windows path separator
+    Invoke-BuildDropLocationTfsRest $DropRootUnc
+
+    $tbdServerPath = "`$/$env:SYSTEM_TEAMPROJECT/TeamBuildDrops/$env:BUILD_REPOSITORY_NAME`_"
+    $tbdServerRootPath = Join-PathList "$tbdServerPath$SourceBranchModName" "buildUri"
+    $tbdServerRootPathRepl = $tbdServerRootPath.Replace('\','/')
+
+    $resp = Invoke-TfsRest "Get buildUri path and version" `
+        -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/items?scopePath=$tbdServerRootPath&api-version=4.1"
+    $buildUriPath = $resp.value[0].url
+    $buildUriVersion = $resp.value[0].version
+
+    $buildUriLines = Invoke-TfsRest "Get buildUri file" `
+         -Uri "$buildUriPath"
+
+    $buildUriLinesArr = $buildUriLines.Split("`n")
+    $counterBuild = "$(([int]$buildUriLinesArr[1]) + 1)"
+}
 <# =========================3.9================================= #>
-
-$tbdServerPath = "`$/$env:SYSTEM_TEAMPROJECT/TeamBuildDrops/classif_"
-$tbdServerRootPath = Join-PathList "$tbdServerPath$SourceBranchModName" "buildUri"
-$tbdServerRootPathRepl = $tbdServerRootPath.Replace('\','/')
-
-$resp = Invoke-TfsRest "Get buildUri path and version" `
-    -Uri "${tfsColUrl}$env:SYSTEM_TEAMPROJECT/_apis/tfvc/items?scopePath=$tbdServerRootPath&api-version=4.1"
-$buildUriPath = $resp.value[0].url
-$buildUriVersion = $resp.value[0].version
-<# =============================Test============================= #>
-$buildUriLines = Invoke-TfsRest "Get buildUri file" `
-     -Uri "$buildUriPath"
-
-$buildUriLinesArr = $buildUriLines.Split("`n")
-$counterBuild = "$(([int]$buildUriLinesArr[1]) + 1)"
 
 if ( "$buildUriVersion" -ne "" ){
     #__Object for update

@@ -53,19 +53,6 @@ function Invoke-CommandText(
 		}
 }
 
-function Invoke-TfCli(    [string] $commandInfo,    [string] $commandText){
-    $saveEncoding = [Console]::OutputEncoding
-    try
-    {
-        [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(0)
-        Invoke-CommandText $commandInfo ($commandText + " " + $tfauth)
-    }
-    finally
-    {
-        [Console]::OutputEncoding = $saveEncoding
-    }
-}
-
 function Invoke-TfsRest (    [string] $commandInfo,    [uri] $uri,    [object]$body){
     "$(get-date) - INFO: ${commandInfo}: $uri" | Out-Host
     $parameters = @{
