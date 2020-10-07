@@ -97,6 +97,17 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         this.cancelEdit();
 
     }
+    submit() {
+        // добавил поле PASS_DATE чтобы убрать ошибку смены пароля
+        ['PASS_SPEC', 'PASS_NUM', 'PASS_ALF', 'PASS_MINLEN', 'PASS_DATE'].forEach(VALUE => { // при сохранении пустой строки на новом пользователе при вервом входе будет ошибка 118057
+            const control = this.form.controls[`rec.${VALUE}`];
+            if (!control.value || control.value === '') {
+                control.patchValue('0', {emitEvent: false});
+                this.newData.rec[VALUE] = '0';
+            }
+        });
+        super.submit();
+    }
     edit() {
         Object.keys(this.form.controls).forEach(key => {
             if (this.masDisable.indexOf(key) >= 0) {
