@@ -68,7 +68,6 @@ if ( "$env:BUILD_BUILDID" -ne "" )
 <# ===========================3.5============================== #>
 
 $buildNumber = Read-EnvironmentOrDefaultValue $env:BUILD_BUILDNUMBER "BUILDNUMBER"
-$DropSubdirUnc = Join-PathList "$env:SYSTEM_TEAMPROJECT" "$env:BUILD_REPOSITORY_NAME" "$SourceBranchModName" "$buildNumber"
 $DropSubdir = Join-PathList "_$env:SYSTEM_TEAMPROJECT" "$env:BUILD_REPOSITORY_NAME" "$SourceBranchModName" "$buildNumber"
 $DropStorageDir = Read-EnvironmentOrDefaultValue $env:EOS_TFBD_STORAGE "c:\tfbd\storage"
 $DropRootDir = Join-PathList $DropStorageDir $DropSubdir
