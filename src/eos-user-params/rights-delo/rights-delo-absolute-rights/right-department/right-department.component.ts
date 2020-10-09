@@ -481,7 +481,8 @@ export class RightDepertmentComponent implements OnInit {
         });
     }
     get getAllDep() {
-        return this.selectedNode && (this.selectedNode.key === '4' || this.selectedNode.key === '24' || this.selectedNode.key === '25');
+        const rightsAllDep = ['4', '24', '25', '34', '35'];
+        return this.selectedNode && (rightsAllDep.indexOf(this.selectedNode.key) !== -1);
     }
     checkAllDep() {
         return this.getAllDep && this.selectedNode.value === 2 ? true : false;

@@ -320,6 +320,26 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
+    {
+        controlType: E_FIELD_TYPE.boolean, // 23
+        key: '34',
+        label: 'Чтение событий',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
+            flagcheck: false,
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean, // 23
+        key: '35',
+        label: 'Работа с событиями',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
+            flagcheck: false,
+        }
+    },
 ];
 
 export const CONTROL_ALL_NOTALL: IInputParamControl = {
