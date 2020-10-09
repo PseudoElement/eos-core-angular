@@ -14,7 +14,9 @@ import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/con
 import { Subscription } from 'rxjs';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { AppContext } from '../../../eos-rest/services/appContext.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
+import { IMessage } from '../../../eos-common/core/message.interface';
+
 
 @Component({
     selector: 'eos-setting-management',
@@ -140,24 +142,43 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._getUserCl(data);
             })
             .then(data => {
-                this.isShell = false;
                 if (data) {
                     if (this._appCtx.limitCardsUser.length) {
-                        const due = data[0]['DUE_DEP'] ? data[0]['DUE_DEP'].split('.') : [];
-                        const parentDue = due.splice(0, due.length - 2).concat(['']).join('.');
-                        if (!(this._appCtx.limitCardsUser.indexOf(parentDue) !== -1)) {
-                            this._isnCopyFrom = null;
-                            this._msgSrv.addNewMessage({
-                                type: 'warning',
-                                title: 'Предупреждение',
-                                msg: 'Выберите пользователя, от которого необходимо скопировать права, относящегося к доступному подразделению для ограниченного технолога',
+                        const msg: IMessage = {
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Выберите пользователя, от которого необходимо скопировать права, относящегося к доступному подразделению для ограниченного технолога',
+                        };
+                        if (data[0]['TECH_DUE_DEP']) {
+                            return this._getDepDue(data[0]['TECH_DUE_DEP']).then((dep) => {
+                                this.isShell = false;
+                                if (this._appCtx.limitCardsUser.length ) {
+                                    const parentDue = dep[0]['DEPARTMENT_DUE'];
+                                    if (!(this._appCtx.limitCardsUser.indexOf(parentDue) !== -1)) {
+                                        this._isnCopyFrom = null;
+                                        this._msgSrv.addNewMessage(msg);
+                                        return;
+                                    }
+                                }
+                                this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                                this._pathForm();
                             });
+                        } else {
+                            this.isShell = false;
+                            this._isnCopyFrom = null;
+                            this._msgSrv.addNewMessage(msg);
                             return;
                         }
+
+                    } else {
+                        this.isShell = false;
+                        if (data) {
+                            this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                            this._pathForm();
+                        }
                     }
-                    this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
-                    this._pathForm();
                 }
+
             })
             .catch((e) => {
                 if (e) {
@@ -242,6 +263,18 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
             USER_CL: {
                 criteries: {
                     ISN_LCLASSIF: isn
+                }
+            }
+        };
+        return this._pipeSrv.read<USER_CL>(queryUser);
+    }
+
+
+    private _getDepDue(due): Promise<USER_CL[]> {
+        const queryUser = {
+            DEPARTMENT: {
+                criteries: {
+                    DUE: due
                 }
             }
         };
