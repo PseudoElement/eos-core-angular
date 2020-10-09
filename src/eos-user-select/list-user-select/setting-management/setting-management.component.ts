@@ -133,6 +133,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                         title: 'Предупреждение',
                         msg: 'Выберите другого пользователя',
                     });
+                    this.isShell = false;
                     return;
                 }
                 if (this.checkedUsers.indexOf(+data) !== -1) {
