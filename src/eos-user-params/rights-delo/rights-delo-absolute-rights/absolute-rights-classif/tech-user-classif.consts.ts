@@ -186,6 +186,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         label: 'Категории ЭП',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
+    {
+        key: 41,
+        label: 'Типы файлов',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
     /* {
         key: 40,
         label: 'Статусы проекта поручения',

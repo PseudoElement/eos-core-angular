@@ -276,7 +276,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string = /* this._appContext.cbBase ?  */'1'.repeat(40) /* : '1'.repeat(21) + '0' + '1'.repeat(18) */;
+            const techRights: string = '1'.repeat(21) + '0' + '1'.repeat(18) + '1';
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -293,7 +293,8 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     arr[index] = '0';
                 }
             });
-            this.curentUser['TECH_RIGHTS'] = arr.join('');
+            // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
+            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 41);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         /* if (!this._appContext.cbBase) {
