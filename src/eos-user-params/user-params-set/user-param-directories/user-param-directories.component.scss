@@ -18,7 +18,7 @@
         display: inline-block;
         margin-right: 40px;
     }
-    
+
     .input-mar-right .elem-input-radio{
         margin-right: 42px;
     }
@@ -28,6 +28,17 @@
         .span-or {
             padding-left: 33px;
             padding-right: 33px;
+        }
+    }
+    .show_deep {
+        display: flex;
+        align-items: baseline;
+        // justify-content: flex-end;
+        .show_deep-marg {
+            margin-left: 15px;
+        }
+        .show_deep_span {
+            margin-left: 5px;
         }
     }
 }
