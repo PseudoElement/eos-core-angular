@@ -3885,6 +3885,19 @@ export interface USER_EDIT_ORG_TYPE extends IEnt {
     ISN_USER: number;
     ISN_ORG_TYPE: number;
 }
+export interface FILE_TYPE_CL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    DELETED: number;
+    PROTECTED: number;
+    WEIGHT: number;
+    TAG: string;
+    UNIQUE_FLAG: number;
+    ISN_WHO: number;
+    ISN_DATE: number;
+    UPD_WHO: string;
+    UPD_DATE: string;
+}
 
 export interface MEDO_PARTICIPANT {
     ISN_ORGANI: number;

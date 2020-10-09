@@ -30,6 +30,7 @@ import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category
 import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.const';
 import { SEV_FOLDER, SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { TYPE_DOCUM_DICT } from 'eos-dictionaries/consts/dictionaries/type-docum.const';
+import { FILE_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/file-type.const';
 
 const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
     // Рубрикатор
@@ -175,6 +176,9 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         id: TYPE_DOCUM_DICT.id, tech: E_TECH_RIGHT.Templates,
         listedUT: false
     },
+
+    { id: FILE_TYPE_DICT.id,    tech: E_TECH_RIGHT.Citizens,
+        listedUT: false },
 ];
 
 const LicenseTech = {

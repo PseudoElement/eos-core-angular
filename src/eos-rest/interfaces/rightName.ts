@@ -39,6 +39,7 @@ export enum E_TECH_RIGHT {
     NadzorCL = 38, // Справочники Надзора
     NpObst = 39, // Обстоятельства дел
     StatPrjPor = 40, // Статусы проекта поручения
+    FileType = 41, // Типы файлов
 }
 
 export enum E_CARD_RIGHT {
