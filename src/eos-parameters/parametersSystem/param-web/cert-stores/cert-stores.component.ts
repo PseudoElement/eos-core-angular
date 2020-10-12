@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterContentInit, ElementRef, Input } from '@angular/core';
 import { CertStoresService, IListCertStotes } from '../cert-stores.service';
-import { Observable ,  Subject } from 'rxjs';
+import { /* Observable, */ Subject } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
+// import { EosMessageService } from 'eos-common/services/eos-message.service';
+// import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -21,22 +21,23 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     formControlStores: AbstractControl;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
+    listCertNode: any[] = [];
     orderBy: boolean = true;
     isCarma: boolean = false;
     CertStoresModal = false;
-    listCertNode$: Observable<string[]>;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
         public certStoresService: CertStoresService,
-        private msgSrv: EosMessageService
-    ) {}
+        //    private msgSrv: EosMessageService
+    ) { }
     ngOnInit() {
         this.formControlStores = this.certStoresService.formControl;
         let certStores = [];
         if (typeof this.formControlStores.value === 'string') {
             certStores = this.formControlStores.value.split('\t');
         }
+
         this.certStoresService.initCarma(certStores);
         this.listCertStores = this.certStoresService.getListCetsStores;
         this.certStoresService.getCurrentSelectedNode$
@@ -44,22 +45,15 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((list: IListCertStotes) => {
-            this.CurrentSelect = list;
-        });
-        this.certStoresService.getIsCarmaServer$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
-            .subscribe((data: boolean) => {
-            this.isCarma = data;
-        });
+                this.CurrentSelect = list;
+            });
         this.certStoresService.updateFormControlStore$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((data: string) => {
-            this.formControlStores.patchValue(data);
-        });
+                this.formControlStores.patchValue(data);
+            });
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
@@ -91,22 +85,21 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     }
     showCert() {
         if (this.editMode) {
-            this.listCertNode$ = this.certStoresService.showListCertNode();
-            if (this.listCertNode$) {
+            this.certStoresService.showListCertNode().then(data => {
+                this.listCertNode = data.certificates;
                 this.InfoCertModal.show();
-            }
+            }).catch(e => {
+                console.log(e);
+                this.InfoCertModal.hide();
+            });
         }
     }
     showCertInfo(certId: string) {
         this.certStoresService.showCert(certId);
     }
     addStores() {
-        if (this.isCarma) {
-            this.CertStoresModal = true;
-            this.addCertStoresModal.show();
-        } else {
-            this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
-        }
+        this.CertStoresModal = true;
+        this.addCertStoresModal.show();
     }
     deleteStores() {
         this.formControlStores.patchValue(this.certStoresService.deleteStores());

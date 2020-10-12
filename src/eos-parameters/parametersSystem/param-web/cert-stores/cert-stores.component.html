@@ -121,13 +121,13 @@
                 </div>
                 <div
                     class="modal-body"
-                    *ngIf="listCertNode$ | async as cert; else loaderCarma"
+                    *ngIf="listCertNode; else loaderCarma"
                 >
                     <div
-                        *ngIf="cert.length; else emptyCert"
+                        *ngIf="listCertNode.length; else emptyCert"
                     >
                         <ul>
-                            <li *ngFor="let c of cert">
+                            <li *ngFor="let c of listCertNode">
                                 <div class="list-item-cert">
                                     {{c}}
                                 </div>

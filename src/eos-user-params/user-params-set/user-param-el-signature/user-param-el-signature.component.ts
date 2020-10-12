@@ -10,6 +10,7 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE, PARM_ERROR_DB } from '../shared-
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
+import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -64,16 +65,17 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        public carmaHttp2Srv: CarmaHttp2Service,
         public certStoresService: CarmaHttpService,
     ) { }
-    ngOnDestroy() {}
+    ngOnDestroy() { }
     ngOnInit() {
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.init();
-            const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
-            this.certStoresService.init(null, store);
+            const stores: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
+            this.carmaHttp2Srv.connect(null, stores);
         } else {
             this._userSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
@@ -82,6 +84,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this.init();
             })
                 .catch(err => {
+                    console.log(err);
                 });
         }
     }

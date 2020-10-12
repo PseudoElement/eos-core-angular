@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { Subject, of, Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+/* import { catchError } from 'rxjs/operators'; */
 
-import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
+import { Istore } from 'app/services/carmaHttp.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_NOT_CARMA_SERVER, PARM_ERR_OPEN_CERT_STORES, CARMA_UNIC_VALUE } from '../shared/consts/eos-parameters.const';
+import { /* PARM_NOT_CARMA_SERVER, */ /* PARM_ERR_OPEN_CERT_STORES, */ CARMA_UNIC_VALUE } from '../shared/consts/eos-parameters.const';
 import { IListStores } from '../shared/consts/web.consts';
+import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -19,21 +20,20 @@ export class CertStoresService {
     isMarkNode: boolean = false;
     private currentSelectedNode: IListCertStotes;
     private _currentSelectedNode$: Subject<IListCertStotes>;
-    private _isCarmaServer$: Subject<boolean>;
     private updateFormControl$: Subject<string>;
-    private isCarmaServer: boolean = false;
+    //  private isCarmaServer: boolean = false;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
     private formControlStore: AbstractControl;
     private formControlInitString: AbstractControl;
-   private unicStoreName: Set<string> = new Set();
+    private unicStoreName: Set<string> = new Set();
     constructor(
-        private carmaService: CarmaHttpService,
+    //    private carmaService: CarmaHttpService,
+        private carmaHttp2Srv: CarmaHttp2Service,
         private msgSrv: EosMessageService
     ) {
         this._currentSelectedNode$ = new Subject();
-        this._isCarmaServer$ = new Subject();
         this.updateFormControl$ = new Subject();
     }
     get getListCetsStores() {
@@ -41,9 +41,6 @@ export class CertStoresService {
     }
     get getCurrentSelectedNode$() {
         return this._currentSelectedNode$.asObservable();
-    }
-    get getIsCarmaServer$() {
-        return this._isCarmaServer$.asObservable();
     }
     get updateFormControlStore$() {
         return this.updateFormControl$.asObservable();
@@ -83,11 +80,10 @@ export class CertStoresService {
                 node.marked = e.target.checked;
             });
         } else {
-                this.listsCetsStores.forEach(node => {
-                    node.marked = e.target.checked;
-                    node.selectedMark = e.target.checked;
-                    // node.isSelected = false;
-                });
+            this.listsCetsStores.forEach(node => {
+                node.marked = e.target.checked;
+                node.selectedMark = e.target.checked;
+            });
         }
         this.checkMarkNode();
     }
@@ -112,30 +108,22 @@ export class CertStoresService {
             this.unicStoreName.add(node.name);
             this.listsCetsStores.push(this.createListCertStotes(node));
             this.updateFormControl$.next(this.createStringForUpdate());
-            this.carmaService.SetCurrentStores(this.listsCetsStores);
         }
     }
-    showListCertNode(): Observable<string[]> {
-        if (this.isCarmaServer) {
-            const curName = this.currentSelectedNode.Name;
-            let name;
-            if (curName.indexOf('\\') !== -1) {
-                name = curName.split('\\')[1];
-            } else {
-                name = curName;
+    showListCertNode(): Promise<any> {
+        const curName = this.currentSelectedNode.Name;
+        return this.carmaHttp2Srv.EnumCertificates(
+            this.currentSelectedNode.Location,
+            this.currentSelectedNode.Address,
+            curName
+        );
+    }
+   public showListStores(location, address): Promise<any> {
+        return this.carmaHttp2Srv.EnumStores(location, address).then(data => {
+            if (data && data.stores) {
+                return data.stores;
             }
-            return this.carmaService.EnumCertificates(
-                this.currentSelectedNode.Location,
-                this.currentSelectedNode.Address,
-                name
-            );
-        } else {
-            this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
-            return new Subject();
-        }
-    }
-    showListStores(location, address): Observable<string[]> {
-        return this.carmaService.EnumStores(location, address);
+        });
     }
     deleteStores(): string {
         const actuallyStores: string[] = [];
@@ -150,7 +138,7 @@ export class CertStoresService {
                     this.unicStoreName.delete(node.Name);
                 }
                 this.listsCetsStores.splice(i, 1);
-                i --;
+                i--;
             } else {
                 actuallyStores.push(`${node.Location}:${node.Name}`);
             }
@@ -161,15 +149,8 @@ export class CertStoresService {
         }
         return '';
     }
-    showCert(certId: string) {
-        this.carmaService.ShowCert(certId)
-            .pipe(
-                catchError(e => {
-                    this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                    return of(null);
-                })
-            )
-            .subscribe(() => {});
+    public showCert(certId: string): void {
+        this.carmaHttp2Srv.showCertInfo(certId);
     }
     private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
@@ -217,17 +198,8 @@ export class CertStoresService {
         });
     }
     private initCarmaServer() {
-        return this.carmaService.init(this.formControlInitString.value, this.initCarmaStores)
-        .subscribe(
-            (data: boolean) => {
-                this.isCarmaServer = data;
-                this._isCarmaServer$.next(data);
-            },
-            () => {
-                this.isCarmaServer = false;
-                this._isCarmaServer$.next(false);
-            }
-        );
+        const initString = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
+        return this.carmaHttp2Srv.connect(initString, this.initCarmaStores);
     }
     private checkMarkNode() {
         let check = false;

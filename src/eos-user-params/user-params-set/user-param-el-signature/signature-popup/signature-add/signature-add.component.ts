@@ -1,13 +1,10 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-
-import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
 import { CertStoresService } from '../../../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
-import { PARM_ERR_OPEN_CERT_STORES } from '../../../../../eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
+// import { PARM_ERR_OPEN_CERT_STORES } from '../../../../../eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
+// import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IListStores } from '../../../../../eos-parameters/parametersSystem/shared/consts/web.consts';
+import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 //  import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 @Component({
     selector: 'eos-signature-add',
@@ -18,7 +15,6 @@ import { IListStores } from '../../../../../eos-parameters/parametersSystem/shar
 export class SignatureAddComponent implements OnInit {
     @Input() inputName: string;
     @Input() input: FormControl;
-
     @Input() form: FormGroup;
 
     @Output('closeAddCertModal') closeAddCertModal = new EventEmitter;
@@ -26,9 +22,7 @@ export class SignatureAddComponent implements OnInit {
     public certSystemAddress: string;
     public currentSelectNode: IListStores;
     public statusBtnSub;
-    public listStores:  IListStores[];
-
-    public listStores$: any;
+    public listStores: IListStores[] = [];
     public sheckSelect: string;
     private mapBtnName = new Map([
         ['CERT_DIFF_CHECK_STORES', 'sslm'],
@@ -38,69 +32,54 @@ export class SignatureAddComponent implements OnInit {
    // private modalRef: BsModalRef;
     constructor(
         public certStoresService: CertStoresService,
-        private msgSrv: EosMessageService
-     //   private _modalService: BsModalService,
-        ) {
+        public cermaHttp2Srv: CarmaHttp2Service,
+        // private msgSrv: EosMessageService
+        //   private _modalService: BsModalService,
+    ) {
 
     }
     searchStore() {
         if (this.certSystemStore === 'sslm' || this.certSystemStore === 'sscu' || this.certSystemStore === 'remote') {
-            this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
-                .pipe(
-                    catchError(e => {
-                        this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                        return of(null);
-                    }),
-                    map(data => {
-                        const listStores = [];
-                        if (data && data.length) {
-                            data.forEach(item => {
-                                const arr = item.split('\\');
-                                listStores.push({
-                                    title: arr[arr.length - 1],
-                                    name: arr[arr.length - 1],
-                                    selected: false,
-                                    location: this.certSystemStore === 'sslm' ? 'ssml' : 'sscu',
-                                    address: arr[arr.length - 2] || ''
-                                });
-                            });
-                        }
-                        this.listStores = listStores;
-                        if (this.listStores.length === 0) {
-                            this.currentSelectNode = null;
-                        }
-                        return data;
-                    })
-                );
-            }
-            if (this.certSystemStore === 'sss') {
-                this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
-                    .pipe(
-                        catchError(e => {
-                            this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                            return of(null);
-                        }),
-                        map(data => {
-                            const listStores = [];
-                            if (data && data.length) {
-                                data.forEach(item => {
-                                    const arr = item.split('\\');
-                                    listStores.push({
-                                        title: arr[arr.length - 1],
-                                        name: item,
-                                        selected: false,
-                                        location: 'sss',
-                                        address: arr[arr.length - 2]
-                                    });
-                                });
-                            }
-                            this.listStores = listStores;
-                            if (this.listStores.length === 0) {
-                                this.currentSelectNode = null;
-                            }
-                            return data;
-                        })
-                    );
+            this.cermaHttp2Srv.EnumStores(this.certSystemStore, this.certSystemAddress).then(stores => {
+                const listStores = [];
+                if (stores && stores.length) {
+                    stores.forEach(item => {
+                        const arr = item.split('\\');
+                        listStores.push({
+                            title: arr[arr.length - 1],
+                            name: arr[arr.length - 1],
+                            selected: false,
+                            location: this.certSystemStore === 'sslm' ? 'ssml' : 'sscu',
+                            address: arr[arr.length - 2] || ''
+                        });
+                    });
+                }
+                this.listStores = listStores;
+                if (this.listStores.length === 0) {
+                    this.currentSelectNode = null;
+                }
+            });
+        }
+        if (this.certSystemStore === 'sss') {
+            this.cermaHttp2Srv.EnumStores(this.certSystemStore, this.certSystemAddress).then(stores => {
+                const listStores = [];
+                if (stores && stores.length) {
+                    stores.forEach(item => {
+                        const arr = item.split('\\');
+                        listStores.push({
+                            title: arr[arr.length - 1],
+                            name: item,
+                            selected: false,
+                            location: 'sss',
+                            address: arr[arr.length - 2]
+                        });
+                    });
+                }
+                this.listStores = listStores;
+                if (this.listStores.length === 0) {
+                    this.currentSelectNode = null;
+                }
+            });
         }
     }
     selectNode(list: IListStores) {

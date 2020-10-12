@@ -47,8 +47,9 @@
                 </div>
             </div>
             <div class="list-stores">
-                <ul *ngIf="listStores$ | async">
-                    <li *ngFor="let list of listStores" [ngClass]="{highlighted: list.selected}" (click)="selectNode(list)" (dblclick)="submit()">
+                <ul *ngIf="listStores">
+                    <li *ngFor="let list of listStores" [ngClass]="{highlighted: list.selected}"
+                        (click)="selectNode(list)" (dblclick)="submit()">
                         {{list.title}}
                     </li>
                 </ul>
