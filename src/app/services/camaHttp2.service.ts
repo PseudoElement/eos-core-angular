@@ -14,6 +14,7 @@ export class CarmaHttp2Service {
         try {
             this.clientCarma = new CarmaHttp(connectStirng, stores);
         } catch (e) {
+            this.clientCarma = null;
             this.errHalper.errorHandler(e);
         }
     }

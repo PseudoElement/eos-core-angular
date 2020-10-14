@@ -29,7 +29,7 @@ export class CertStoresService {
     private formControlInitString: AbstractControl;
     private unicStoreName: Set<string> = new Set();
     constructor(
-    //    private carmaService: CarmaHttpService,
+        //    private carmaService: CarmaHttpService,
         private carmaHttp2Srv: CarmaHttp2Service,
         private msgSrv: EosMessageService
     ) {
@@ -102,10 +102,10 @@ export class CertStoresService {
         }
     }
     addStores(node: IListStores) {
-        if (this.unicStoreName.has(node.name)) {
+        if (this.unicStoreName.has(this.parseName(node))) {
             this.msgSrv.addNewMessage(CARMA_UNIC_VALUE);
         } else {
-            this.unicStoreName.add(node.name);
+            this.unicStoreName.add(this.parseName(node));
             this.listsCetsStores.push(this.createListCertStotes(node));
             this.updateFormControl$.next(this.createStringForUpdate());
         }
@@ -124,7 +124,7 @@ export class CertStoresService {
             name
         );
     }
-   public showListStores(location, address): Promise<any> {
+    public showListStores(location, address): Promise<any> {
         return this.carmaHttp2Srv.EnumStores(location, address).then(data => {
             if (data && data.stores) {
                 return data.stores;
@@ -140,13 +140,13 @@ export class CertStoresService {
                     this.currentSelectedNode = null;
                     this._currentSelectedNode$.next(null);
                 }
-                if (this.unicStoreName.has(node.Name)) {
-                    this.unicStoreName.delete(node.Name);
+                if (this.unicStoreName.has(this.parseName(node))) {
+                    this.unicStoreName.delete(this.parseName(node));
                 }
                 this.listsCetsStores.splice(i, 1);
                 i--;
             } else {
-                actuallyStores.push(`${node.Location}:${node.Name}`);
+                actuallyStores.push(this.createDbList(node));
             }
         }
         this.checkMarkNode();
@@ -155,31 +155,59 @@ export class CertStoresService {
         }
         return '';
     }
+
     public showCert(certId: string): void {
         this.carmaHttp2Srv.showCertInfo(certId);
     }
     private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
         listCertStores.forEach((str: string) => {
-            let address = '';
+            // let address = '';
             const arr = str.split(':');
-            if (arr[1].indexOf('\\') !== -1) {
-                address = arr[1].split('\\')[0];
-            }
+            // if (arr[1].indexOf('\\') !== -1) {
+            //     address = arr[1].split('\\')[0];
+            // }
             list.push({
                 Location: arr[0],
-                Address: address,
-                Name: arr[1]
+                Address: this.getAddress(arr),
+                Name: this.getTitle(arr)
             });
         });
         this.initCarmaStores = list;
+    }
+
+    private getTitle(arr: string[]): string {
+        const location = arr[0];
+        const AddressWithName = arr[1];
+        if (location === 'sslm') {
+            const parse = AddressWithName.split('/');
+            if (parse.length > 1) {
+                return parse[1];
+            }
+            return parse[0];
+        } else {
+            return arr[1];
+        }
+    }
+    private getAddress(arr: string[]): string {
+        const location = arr[0];
+        const AddressWithName = arr[1];
+        if (location === 'sslm') {
+            const parse = AddressWithName.split('/');
+            if (parse.length > 1) {
+                return String(parse[0]).trim();
+            }
+            return '';
+        } else {
+            return '';
+        }
     }
 
     private createListCetsStores(): IListCertStotes[] {
         this.unicStoreName.clear();
         const a = [];
         this.initCarmaStores.forEach(elem => {
-            this.unicStoreName.add(elem.Name);
+            this.unicStoreName.add(this.parseName(elem));
             a.push(Object.assign({
                 marked: false,
                 isSelected: false,
@@ -187,6 +215,17 @@ export class CertStoresService {
             }, elem));
         });
         return a;
+    }
+    private parseName(elem): string {
+        if (elem.Location === 'sslm') {
+            const address = String(elem.Address).trim();
+            if (address.length) {
+                return `${elem.Location}:${address}/${elem.Name}`;
+            }
+            return `${elem.Location}:${elem.Name}`;
+        } else {
+            return `${elem.Location}:${elem.Name}`;
+        }
     }
     private _orderByField() {
         this.listsCetsStores.sort((a: IListCertStotes, b: IListCertStotes) => {
@@ -218,9 +257,9 @@ export class CertStoresService {
     }
     private createListCertStotes(node: IListStores): IListCertStotes {
         return {
-            Location: node.location,
-            Address: node.address,
-            Name: node.name,
+            Location: node.Location,
+            Address: node.Address,
+            Name: node.Name,
             marked: false,
             isSelected: false,
             selectedMark: false
@@ -230,11 +269,19 @@ export class CertStoresService {
         if (this.listsCetsStores.length) {
             const stores: string[] = [];
             this.listsCetsStores.forEach(node => {
-                stores.push(`${node.Location}:${node.Name}`);
+                stores.push(this.createDbList(node));
             });
             return stores.join('\t');
         } else {
             return '';
+        }
+    }
+    private createDbList(node: any): string {
+        const standartName = `${node.Location}:${node.Name}`;
+        if (node.Location === 'sslm') {
+            return node.Address ? `${node.Location}:${node.Address}/${node.Name}` : standartName;
+        } else {
+            return standartName;
         }
     }
 }

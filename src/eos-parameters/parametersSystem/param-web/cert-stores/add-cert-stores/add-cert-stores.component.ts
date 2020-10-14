@@ -41,7 +41,7 @@ export class AddCertStoresComponent {
                         const arr = item.split('\\');
                         listStores.push({
                             title: arr[arr.length - 1],
-                            name: arr[arr.length - 1],
+                            Name: arr[arr.length - 1],
                             selected: false,
                             Location: 'sslm',
                             Address: this.certSystemAddress || ''
@@ -59,7 +59,7 @@ export class AddCertStoresComponent {
                         const arr = item.split('\\');
                         listStores.push({
                             title: arr[arr.length - 1],
-                            name: item,
+                            Name: item,
                             selected: false,
                             Location: 'sss',
                             Address: this.certSystemAddress || ''

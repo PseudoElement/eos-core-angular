@@ -41,13 +41,13 @@ export class SignatureAddComponent implements OnInit {
     searchStore() {
         if (this.certSystemStore === 'sslm' || this.certSystemStore === 'sscu' || this.certSystemStore === 'remote') {
             this.cermaHttp2Srv.EnumStores(this.certSystemStore, this.certSystemAddress).then(stores => {
-                const listStores = [];
+                const listStores: IListStores[] = [];
                 if (stores && stores.length) {
                     stores.forEach(item => {
                         const arr = item.split('\\');
                         listStores.push({
                             title: arr[arr.length - 1],
-                            name: arr[arr.length - 1],
+                            Name: arr[arr.length - 1],
                             selected: false,
                             Location: this.certSystemStore === 'sslm' ? 'sslm' : 'sscu',
                             Address: this.certSystemAddress || ''
@@ -68,7 +68,7 @@ export class SignatureAddComponent implements OnInit {
                         const arr = item.split('\\');
                         listStores.push({
                             title: arr[arr.length - 1],
-                            name: item,
+                            Name: item,
                             selected: false,
                             Location: 'sss',
                             Address: this.certSystemAddress || ''
