@@ -558,8 +558,8 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     getNewDate() {
         // параметр который говорит о возможности изменения пароля пользователем this.paramsChengePass
         if (!this.paramsChengePass || this.checkUpdateDate()) {
-            const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
-            if (!n_d) {
+            const n_d = String(this.form.controls['PASSWORD_DATE'].value).trim() ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
+            if (!n_d || this.paramsChengePass && !this.form.controls['PASSWORD_DATE'].value) {
                 return null;
             }
             let month: string = String(n_d.getMonth() + 1);
@@ -581,7 +581,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             if (this.passDate !== 0 ) {
                 this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
             } else {
-                this.form.controls['PASSWORD_DATE'].setValue(' ', { emitEvent: false });
+                // this.form.controls['PASSWORD_DATE'].setValue(' ', { emitEvent: false });
             }
         } else {
             this.newLogin = true;

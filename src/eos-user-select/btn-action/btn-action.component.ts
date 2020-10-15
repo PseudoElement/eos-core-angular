@@ -299,7 +299,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     checkSettingsManagement(button: BtnActionFields): void {
         const checkedEditable = this.checkedUsers.some(user => user.isEditable);
-        const checkedNotEditable = this.checkedUsers.some(user => !user.isEditable);
+        const checkedNotEditable = this.checkedUsers.some(user => !user.isEditable || user.deleted);
         if (checkedEditable) {
             if (checkedNotEditable) {
                 button.disabled = true;

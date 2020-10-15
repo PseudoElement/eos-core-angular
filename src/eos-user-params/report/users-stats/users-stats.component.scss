@@ -1,6 +1,15 @@
 .users-stats-wrapper {
     border-style: solid;
     background-color: #fafafa;
+
+    .spinner-wrapper {
+        width: 100%;
+        height: calc(100vh - 230px + 48px);
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+    }
     .error-rows{
         color: red;
     }

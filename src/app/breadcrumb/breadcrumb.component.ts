@@ -148,7 +148,7 @@ export class BreadcrumbsComponent implements OnDestroy {
             }
             return false;
         } else {
-            if (data && !data.deep) {
+            if (data && (!data.isEditable || data.deleted)) {
                 return false;
             }
         }

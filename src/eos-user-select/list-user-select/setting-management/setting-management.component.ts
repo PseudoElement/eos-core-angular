@@ -13,6 +13,10 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { CONFIRM_CUT_USER, CONFIRM_COPY_USER } from 'eos-dictionaries/consts/confirm.consts';
 import { Subscription } from 'rxjs';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
+import { IMessage } from '../../../eos-common/core/message.interface';
+
 
 @Component({
     selector: 'eos-setting-management',
@@ -38,6 +42,8 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _confirmSrv: ConfirmWindowService,
         private _rtSrv: RtUserSelectService,
+        private _userSrv: UserParamsService,
+        private _appCtx: AppContext,
     ) { }
 
     get disabledCopy(): boolean {
@@ -66,6 +72,12 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._pipeSrv.read({
                     [url]: ALL_ROWS
                 }).then(() => {
+                    this.checkedUsers.forEach(u => {
+                        this._userSrv.ProtocolService(u, 5);
+                        if (this.formCopy.controls[7].value) {
+                            this._userSrv.ProtocolService(u, 6);
+                        }
+                    });
                     this._rtSrv.updateSettings = true;
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this._pathForm(true);
@@ -90,6 +102,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._pipeSrv.read({
                     [url]: ALL_ROWS
                 }).then(() => {
+                    this.checkedUsers.forEach(u => {
+                        this._userSrv.ProtocolService(u, 5);
+                    });
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this.formCut.reset();
                     this.isLoading = false;
@@ -118,6 +133,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                         title: 'Предупреждение',
                         msg: 'Выберите другого пользователя',
                     });
+                    this.isShell = false;
                     return;
                 }
                 if (this.checkedUsers.indexOf(+data) !== -1) {
@@ -127,9 +143,43 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 return this._getUserCl(data);
             })
             .then(data => {
-                this.isShell = false;
-                this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
-                this._pathForm();
+                if (data) {
+                    if (this._appCtx.limitCardsUser.length) {
+                        const msg: IMessage = {
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Выберите пользователя, от которого необходимо скопировать права, относящегося к доступному подразделению для ограниченного технолога',
+                        };
+                        if (data[0]['TECH_DUE_DEP']) {
+                            return this._getDepDue(data[0]['TECH_DUE_DEP']).then((dep) => {
+                                this.isShell = false;
+                                if (this._appCtx.limitCardsUser.length ) {
+                                    const parentDue = dep[0]['DEPARTMENT_DUE'];
+                                    if (!(this._appCtx.limitCardsUser.indexOf(parentDue) !== -1)) {
+                                        this._isnCopyFrom = null;
+                                        this._msgSrv.addNewMessage(msg);
+                                        return;
+                                    }
+                                }
+                                this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                                this._pathForm();
+                            });
+                        } else {
+                            this.isShell = false;
+                            this._isnCopyFrom = null;
+                            this._msgSrv.addNewMessage(msg);
+                            return;
+                        }
+
+                    } else {
+                        this.isShell = false;
+                        if (data) {
+                            this.formCopy.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+                            this._pathForm();
+                        }
+                    }
+                }
+
             })
             .catch((e) => {
                 if (e) {
@@ -162,9 +212,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     private _createUrlForSop(form: FormGroup, copy?: boolean): string {
         let url;
         if (copy) {
-            url = 'UserRightsCopy?';
+            url = !this._appCtx.cbBase ? 'UserRightsCopy?' : 'UserRightsCopy_CB?';
         } else {
-            url = 'UserRightsReset?';
+            url = !this._appCtx.cbBase ? 'UserRightsReset?' : 'UserRightsReset_CB?';
         }
         url += `users=${this.checkedUsers.join('|')}`;
         if (copy) {
@@ -214,6 +264,18 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
             USER_CL: {
                 criteries: {
                     ISN_LCLASSIF: isn
+                }
+            }
+        };
+        return this._pipeSrv.read<USER_CL>(queryUser);
+    }
+
+
+    private _getDepDue(due): Promise<USER_CL[]> {
+        const queryUser = {
+            DEPARTMENT: {
+                criteries: {
+                    DUE: due
                 }
             }
         };

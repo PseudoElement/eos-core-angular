@@ -1,5 +1,9 @@
 <div class="users-stats-wrapper usual-border">
-    <div class="table-wrapper-stats">
+    <div *ngIf="!users || !deletedUsers || !items" class="spinner-wrapper">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+
+    <div *ngIf="users && deletedUsers && items" class="table-wrapper-stats">
         <div class="table-header">
             <div class="table-stats-wrapper">
                 <div class="selected-stats-title">
@@ -44,8 +48,8 @@
                         </span>
                         <span class="item-count-param4">
                            {{logUsers}}
-                        </span>             
-                </div>    
+                        </span>
+                </div>
             </div>
             <div>
                 <div style="height: 540px;">
@@ -55,16 +59,16 @@
                         </span>
                     </div>
                     <div class="table-header">
-                        <div class="table-stats-title">    
+                        <div class="table-stats-title">
                                 <span class="user-title-name user-first-colomn text-center">
-                                    Подсистема   
+                                    Подсистема
                                 </span>
                                 <span class="user-two-colomn text-center">
                                     Всего
                                 </span>
                                 <span class="user-third-colomn text-center">
                                     Макс.
-                                </span> 
+                                </span>
                                 <span class="user-four-colomn text-center">
                                     Срок Действия
                                 </span>
@@ -75,14 +79,14 @@
                             <div class="table-stats-title" *ngFor="let subItem of subSysArray">
                                 <span class="cust-str1" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.label}}</span>
                                 <span class="cust-str2 text-center" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.ActualUsers}}</span>
-                                <span class="cust-str3 text-center" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.Users || '-'}}</span>
+                                <span class="cust-str3 text-center" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{actualLicenz ? subItem.Users || '-' : '-'}}</span>
                                 <span class="cust-str4" [ngClass]="{ 'error-rows': checkUsersLimits(subItem) }">{{subItem.Expired || '-'}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-    
+
+
                 <div>
                     <div class="mar-items4">
                         <span class="item-count-content">
@@ -90,13 +94,13 @@
                         </span>
                     </div>
                     <div class="table-header">
-                        <div class="table-stats-title">    
+                        <div class="table-stats-title">
                                 <span class="user-title-name user-first-colomn text-center">
-                                    Подсистема   
+                                    Подсистема
                                 </span>
                                 <span class="user-third-colomn text-center">
                                     Наличие
-                                </span> 
+                                </span>
                                 <span class="user-four-colomn text-center">
                                     Срок Действия
                                 </span>
@@ -113,8 +117,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
         </div>
-    </div>     
+    </div>
 </div>

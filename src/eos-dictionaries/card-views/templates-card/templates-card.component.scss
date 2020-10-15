@@ -46,6 +46,11 @@
         }
     }
 }
+.doc-list-items{
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 160px;
+}
 .divlock {
     display: flex;
     align-items: center;

@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB } from 'eos-rest';
+import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB, USERDEP } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -148,7 +148,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     init(message?: boolean): Promise<any> {
         return this._userParamSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERCARD_List',
+            expand: 'USER_PARMS_List,USERCARD_List,USERDEP_List',
             shortSys: true
         }).then((data) => {
             if (data) {
@@ -289,6 +289,60 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 requestUri: `USER_CL(${id})`,
                 data: newD
             });
+        }
+        this.setRulesForDl(id, query);
+    }
+    setRulesForDl(id, query) {
+        if (this._newData.size) {
+            const newDl = this._newData.get('DUE_DEP_NAME');
+            if (newDl) {
+                const newDue = this.curentUser.DUE_DEP;
+                let F26 = false;
+                let F25 = false;
+                this.curentUser.USERDEP_List.forEach((_udep: USERDEP) => {
+                    if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 26) {
+                        F26 = true;
+                    }
+                    if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 25) {
+                        F25 = true;
+                    }
+                });
+                 // у нового пользователя тут может быть null -> записываем  строку '000000000000000000000000000000 000      '
+                 const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
+                const arr = DELO_RIGHTS.split('');
+                const newDELO_RIGHTS = arr.map((v, i) => {
+                    if (i === 24 || i === 25) {
+                        return 1;
+                    }
+                    return v;
+                }).join('');
+                query.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${id})`,
+                    data: {
+                        DELO_RIGHTS: newDELO_RIGHTS
+                    }
+                });
+
+                if (!F26) {
+                    query.push({
+                        method: 'POST',
+                        requestUri: `USER_CL(${id})/USERDEP_List`,
+                        data: {
+                            'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 26, 'DEEP': 1, 'ALLOWED': 0
+                        }
+                    });
+                }
+                if (!F25) {
+                    query.push({
+                        method: 'POST',
+                        requestUri: `USER_CL(${id})/USERDEP_List`,
+                        data: {
+                            'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 25, 'DEEP': 1, 'ALLOWED': 0
+                        }
+                    });
+                }
+            }
         }
     }
     setNewDataFormControl(query, id) {

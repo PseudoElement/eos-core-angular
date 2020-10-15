@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlSegment } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlSegment, Router } from '@angular/router';
 import { PipRX, USER_CL } from 'eos-rest';
 import { KEY_RIGHT_TECH, IKeyRightTech } from 'app/consts/permission.consts';
 import { ALL_ROWS } from 'eos-rest/core/consts';
@@ -12,8 +12,9 @@ export class PermissionsGuard implements CanActivate {
     private _userProfile: USER_CL;
     constructor(
         private _msgSrv: EosMessageService,
-           private _pipSrv: PipRX,
+        private _pipSrv: PipRX,
         private _apCtx: AppContext,
+        private _route: Router,
     ) { }
     canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> {
         const urlSegment: UrlSegment = _route.url[0];
@@ -23,14 +24,47 @@ export class PermissionsGuard implements CanActivate {
             .then((user: USER_CL[]) => {
                 this._userProfile = user[0];
                 const access: boolean = (this._userProfile.IS_SECUR_ADM === 1 && conf.name !== 'Параметры системы') || !!(+this._userProfile.TECH_RIGHTS[(conf.key - 1)]);
-                if (!access) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение:',
-                        msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
-                    });
+                if (this._apCtx.cbBase) {
+                    if (
+                        conf.name === 'Параметры системы'
+                        && !!+this._userProfile.TECH_RIGHTS[0]
+                        && this._apCtx.limitCardsUser.length <= 0
+                        && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)]
+                    ) {
+                        if (state.url === '/parameters/authentication') {
+                            return true;
+                        }
+                        this._route.navigate(['/parameters/authentication']);
+                        return undefined;
+                    } else if (
+                        conf.name === 'Параметры системы'
+                        && ((!!+this._userProfile.TECH_RIGHTS[0] && this._apCtx.limitCardsUser.length > 0 && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)])
+                            || !!!+this._userProfile.TECH_RIGHTS[0] && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)]
+                        )
+                    ) {
+                        return false;
+                    } else {
+                        if (!access) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение:',
+                                msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
+                            });
+                        }
+                        return access;
+                    }
+
+                } else {
+                    if (!access) {
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение:',
+                            msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
+                        });
+                    }
+                    return access;
                 }
-                return access;
+
             })
             .catch((err) => {
                 if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
@@ -43,7 +77,7 @@ export class PermissionsGuard implements CanActivate {
     private _getContext(): Promise<USER_CL[]> {
         if (this._apCtx.CurrentUser) {
             return Promise.resolve([this._apCtx.CurrentUser]);
-        }   else {
+        } else {
             return this._pipSrv.read<USER_CL>({
                 CurrentUser: ALL_ROWS
             });

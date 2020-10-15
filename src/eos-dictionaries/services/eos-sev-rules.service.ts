@@ -506,7 +506,7 @@ export class EosSevRulesService {
                         this._msgSrv.addNewMessage(e);
                         return resolve({});
                     }
-                    const ScriptConfig =  SendProjectReportRule['ScriptConfig'][0];
+                    const ScriptConfig = SendProjectReportRule['ScriptConfig'][0];
                     const NotificationConfig = SendProjectReportRule['NotificationConfig'][0];
                     try {
                         this._data = {};
@@ -566,7 +566,7 @@ export class EosSevRulesService {
                         this._msgSrv.addNewMessage(e);
                         return resolve({});
                     }
-                    const ScriptConfig =  ReceiveProjectReportRule['ScriptConfig'][0];
+                    const ScriptConfig = ReceiveProjectReportRule['ScriptConfig'][0];
                     try {
                         this._data = {};
                         this._data['type'] = 2;
@@ -606,6 +606,11 @@ export class EosSevRulesService {
         const resolutionKindText = ((resolutionKind === 1) ? 'All' : ((resolutionKind === 2) ? 'ExtractionWithParent' : 'Extraction'));
         const resolutionInclude = this._data['resolution'] ? resolutionKindText : 'None';
         const linkTypeList = linkInclude === 'List' ? this.data['linkTypeList'] : ''; // TODO список link_cl.isn_lclassif через символ |
+        const taskFileExtensions = !this._data['taskFileExtensions'] || this._data['taskFileExtensions'] === 'null' ? '' : this._data['taskFileExtensions'];
+        const fileExtensions = !this._data['fileExtensions'] || this._data['fileExtensions'] === 'null' ? '' : this._data['fileExtensions'];
+        const fileAccessList = !this._data['fileAccessList'] || this._data['fileAccessList'] === 'null' ? '' : this._data['fileAccessList'];
+        const maxLength = !this._data['fileMaxLength'] || this._data['fileMaxLength'] === 'null' ? '' : this._data['fileMaxLength'];
+        const taskFileMaxLength = !this._data['taskFileMaxLength'] || this._data['taskFileMaxLength'] === 'null' ? '' : this._data['taskFileMaxLength'];
         return `<?xml version="1.0"?>
         <SendDocumentRule>
             <ScriptConfig>
@@ -621,8 +626,8 @@ export class EosSevRulesService {
                     <Visa Include="${Boolean(this._data['visa'])}"/>
                     <Addressee Include="${addresseeInclude}"/>
                     <AdditionalField Include="${Boolean(this._data['additionalField'])}"/>
-                    <File Include="${Boolean(this._data['file'])}" Extensions="${this._data['fileExtensions']}"
-                        AccessList="${this._data['fileAccessList']}" MaxLength="${this._data['fileMaxLength']}"/>
+                    <File Include="${Boolean(this._data['file'])}" Extensions="${fileExtensions}"
+                        AccessList="${fileAccessList}" MaxLength="${maxLength}"/>
                     <Item Include="${itemInculde}"/>
                     <Resolution Include="${resolutionInclude}"/>
                 </Document>
@@ -641,7 +646,7 @@ export class EosSevRulesService {
                         <Report Include="true"/>
                     </Executor>
                     <File Include="${Boolean(this._data['taskFile'])}"/>
-                    <FileOptions Extensions="${this._data['taskFileExtensions']}" MaxLength="${this._data['taskFileMaxLength']}"/>
+                    <FileOptions Extensions="${taskFileExtensions}" MaxLength="${taskFileMaxLength}"/>
                 </Task>
             </ScriptConfig>
             <Subscriptions StopDayCount="${this._data['stopDayCount']}">
@@ -723,7 +728,7 @@ export class EosSevRulesService {
         if (!this._data['consideration']) {
             return 'None';
         } else {
-            const  kindConsideration = this._data['kindConsideration'];
+            const kindConsideration = this._data['kindConsideration'];
             if (kindConsideration === 0) {
                 return 'All';
             } else if (kindConsideration === 1) {
@@ -737,6 +742,8 @@ export class EosSevRulesService {
         const kindForwardingDocs = !this._data['forwardingDocs'] ? 'None' : this._data['kindForwardingDocs'] === 1 ? 'First' : 'All';
         const update = this._data['editSet'] ? 'true' : 'None';
         const updateCalc = this._data['calcDate'] ? 'true' : 'None';
+        const fileMaxLength = !this._data['fileMaxLength'] || this._data['fileMaxLength'] === 'null' ? '' : this._data['fileMaxLength'];
+        const fileExtensions = !this._data['fileExtensions'] || this._data['fileExtensions'] === 'null' ? '' : this._data['fileExtensions'];
         return `<?xml version="1.0"?>
         <SendReportRule>
             <ScriptConfig>
@@ -776,7 +783,7 @@ export class EosSevRulesService {
                         <Report Include="${Boolean(this._data['NotificationConfigReport'])}"/>
                         <!-- Файлы отчетов исполнителей					Включать в паспорт. Include: true|false -->
                         <File Include="${Boolean(this._data['executorFile'])}"/>
-                        <FileOptions Extensions="${'' + this._data['fileExtensions']}" MaxLength="${this._data['fileMaxLength'] || ''}"/>
+                        <FileOptions Extensions="${fileExtensions}" MaxLength="${fileMaxLength}"/>
                     </Executor>
                     <!-- ЭП поручения				Включать в паспорт. Include: true|false -->
                     <Eds Include="${'undefined'}"/>
@@ -831,6 +838,7 @@ export class EosSevRulesService {
         const linkTypeList = linkRk === 'List' ? this.data['linkTypeList'] : '';
         const eccessList = this._data['fileAccessListRk'] ? this._data['fileAccessListRk'] : '';
         const taskFileExt = this._data['taskFileExtensions'] !== 'null' ? this._data['taskFileExtensions'] : '';
+        const taskFileMaxLength = !this._data['taskFileMaxLength'] || this._data['taskFileMaxLength'] === 'null' ? '' : this._data['taskFileMaxLength'];
         return `<?xml version="1.0"?>
         <SendProjectRule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
             <ScriptConfig>
@@ -845,7 +853,7 @@ export class EosSevRulesService {
                     <AdditionalField Include="${Boolean(this._data['additionalField'])}"/>
                     <Executor Include="${executor}"/>
                     <Term Include="${dateExecutionProject}"/>
-                    <FileOptions Extensions="${taskFileExt}" AccessList="${eccessList}" MaxLength="${this._data['taskFileMaxLength']}"/>
+                    <FileOptions Extensions="${taskFileExt}" AccessList="${eccessList}" MaxLength="${taskFileMaxLength}"/>
                     <File Include="${Boolean(this._data['FileRKPD'])}"/>
                     <Visa Include="${visa}">
                         <Content Include="${Boolean(this._data['VisaInfo'])}"><File Include="${Boolean(this._data['VisaFile'])}"/></Content>
@@ -909,6 +917,8 @@ export class EosSevRulesService {
         const SignDirection = !this._data['forwardingSign'] ? 'None' : this._data['forwardingSignKind'] === 1 ? 'Sent' : 'All';
         const Visa = !this._data['reportVisa'] ? 'None' : this._data['reportVisaKind'] === 1 ? 'Sent' : 'All';
         const Sign = !this._data['reportSign'] ? 'None' : this._data['reportSignKind'] === 1 ? 'Sent' : 'All';
+        const fileMaxLength = !this._data['fileMaxLength'] || this._data['fileMaxLength'] === 'null' ? '' : this._data['fileMaxLength'];
+        const fileExtensions = !this._data['fileExtensions'] || this._data['fileExtensions'] === 'null' ? '' : this._data['fileExtensions'];
         return `<?xml version="1.0"?>
         <SendProjectReportRule>
             <ScriptConfig>
@@ -923,7 +933,7 @@ export class EosSevRulesService {
                 <SignDirection Include="${SignDirection}"/>
                 <Visa Include="${Visa}"><File Include="${Boolean(this._data['VisaFile'])}"/></Visa>
                 <Sign Include="${Sign}"><File Include="${Boolean(this._data['signaturesFile'])}"/></Sign>
-                <FileOptions Extensions="${this._data['fileExtensions'] || ''}" MaxLength="${this._data['fileMaxLength'] || ''}"/>
+                <FileOptions Extensions="${fileExtensions}" MaxLength="${fileMaxLength}"/>
                 <ProjectRegistration Include="${Boolean(this._data['progectRegistration'])}"><File Include="${Boolean(this._data['fileDocument'])}"/></ProjectRegistration>
                 </NotificationConfig>
         </SendProjectReportRule>`;
