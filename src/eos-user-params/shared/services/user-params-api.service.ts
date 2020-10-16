@@ -262,6 +262,23 @@ export class UserParamApiSrv {
                 } else {
                     this.users_pagination.totalPages = data.length;
                 }
+                // если на данной сранице пользователей не осталось
+                // то переходить на первую страницу
+                if (!this.users_pagination.totalPages) {
+                    let hasUsers = false;
+                    const conf = this._storageSrv.getItem('users');
+                    if (conf.showMore && conf.start > 1) {
+                        conf.start = 1;
+                        hasUsers = true;
+                    } else if (conf.current > 1) {
+                        conf.current = 1;
+                        hasUsers = true;
+                    }
+                    if (hasUsers) {
+                        this._storageSrv.setItem('users', conf, true);
+                        return this.getUsers(dueDep);
+                    }
+                }
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
                     this.users_pagination.UsersList =  this._getListUsers(res);

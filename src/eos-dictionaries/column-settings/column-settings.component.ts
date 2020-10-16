@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, TemplateRef, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,8 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('editedCurrentItem') editedCurrentItemRef: ElementRef;
     @ViewChild('editFixedItem') editFixedItemRef: ElementRef;
+    @ViewChildren('curEditBtn') curEditBtnRefs: QueryList<ElementRef>;
+    @ViewChildren('fixedEditBtn') fixedEditBtnRefs: QueryList<ElementRef>;
     public haveCustomTitle = false;
     public tooltipDelay = TOOLTIP_DELAY_VALUE;
 
@@ -62,6 +64,13 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         });
         this._subscriptionDrag = dragulaService.drag
             .subscribe(() => {
+                if (this.curEditBtnRefs && this.curEditBtnRefs.length) {
+                    this.curEditBtnRefs.toArray().forEach(elemRef => elemRef.nativeElement.hidden = true);
+                }
+                if (this.fixedEditBtnRefs && this.fixedEditBtnRefs.length) {
+                    this.fixedEditBtnRefs.toArray().forEach(elemRef => elemRef.nativeElement.hidden = true);
+                }
+
                 this.selectedDictItem = null;
                 this.selectedCurrItem = null;
                 this.selectedFixedItem = null;
