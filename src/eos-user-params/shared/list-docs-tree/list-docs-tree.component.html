@@ -14,12 +14,15 @@
     let-node="node">
     <div
         [ngClass]="{'highlighted': node.isSelected}"
-        [ngStyle]="{'padding-left.px': node.layer * 27 }">
+        [ngStyle]="{'padding-left.px': node.layer * 27 * (hideExpand ? 0 : 1) }">
 
         <div class="tree-node-due">
             <!-- icon for open -->
-            <div class="tree-btn"
-                (click)="onExpand($event, node)">
+            <div
+                *ngIf="!hideExpand"
+                class="tree-btn"
+                (click)="onExpand($event, node)"
+            >
                 <span *ngIf="node.children.length"
                     class="eos-icon tringle-size icon"
                     [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"

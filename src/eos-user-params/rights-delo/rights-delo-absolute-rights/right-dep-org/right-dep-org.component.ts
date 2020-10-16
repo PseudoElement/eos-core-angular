@@ -75,6 +75,7 @@ export class RightOrganizDepertComponent implements OnInit {
                                 dep: dep,
                                 userDep: userDep,
                             },
+                            weight: userDep.WEIGHT,
                         };
                         this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
                         if (!(this.getAllDep && cfg.due === '0.')) {
@@ -148,7 +149,7 @@ export class RightOrganizDepertComponent implements OnInit {
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: this._getMaxWeight(),
+                        WEIGHT: -1,
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -160,6 +161,7 @@ export class RightOrganizDepertComponent implements OnInit {
                             dep: dep,
                             userDep: newUserDep,
                         },
+                        weight: this._getNewWeight(),
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     const newNode = new NodeDocsTree(cfg);
@@ -173,6 +175,7 @@ export class RightOrganizDepertComponent implements OnInit {
                 });
                 this.confirmPkpd();
                 this.listUserDep = this.listUserDep.concat(newNodes);
+                this._changeWeight();
                 this.selectedNode.isCreate = false;
                 this.isShell = false;
                 this.Changed.emit();
@@ -239,6 +242,7 @@ export class RightOrganizDepertComponent implements OnInit {
         });
         // this.emitDeleteRcpd();
         this.selectedDep = null;
+        this._changeWeight();
         this.Changed.emit('del');
     }
     /* emitDeleteRcpd() {
@@ -464,14 +468,42 @@ export class RightOrganizDepertComponent implements OnInit {
         this.independetRight.emit('RESOLUTION');
     }
 
-    private _getMaxWeight(): number {
-        let w = 0;
-        this.userDep.forEach(i => {
-            if (i.WEIGHT > w) {
-                w = i.WEIGHT;
+    setMain() {
+        if (this.selectedDep.weight !== 1) {
+            this.selectedDep.weight = 0;
+            this._changeWeight();
+            this.Changed.emit('setMain');
+        }
+    }
+
+    // private _getMaxWeight(): number {
+    //     let w = 0;
+    //     this.userDep.forEach(i => {
+    //         if (i.WEIGHT > w) {
+    //             w = i.WEIGHT;
+    //         }
+    //     });
+    //     return w;
+    // }
+    private _getNewWeight(): number {
+        if (this.userDepFuncNumber && this.userDepFuncNumber.length) {
+            return this.userDepFuncNumber.length + 1;
+        } else {
+            return 1;
+        }
+    }
+    private _changeWeight(): void {
+        this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
+        this.listUserDep.forEach((node: NodeDocsTree, index: number) => {
+            if (node.weight !== (index + 1) || node.data.userDep['WEIGHT'] < 1) {
+                node.weight = index + 1;
+                if (node.weight !== node.data.userDep['WEIGHT']) {
+                    this.selectedNode.addWeightChanges(node);
+                    return;
+                }
             }
+            this.selectedNode.checkWeightChanges(node);
         });
-        return w;
     }
     private _checkRepeat(arrDep: DEPARTMENT[]) {
         this.listUserDep.forEach((node: NodeDocsTree) => {
