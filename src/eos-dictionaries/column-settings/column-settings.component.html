@@ -66,7 +66,9 @@
                             triggers="hover:click"
                             container="body"
                             containerClass="tooltip-info" >{{item?.customTitle || item?.title}}</span>
-                        <button [hidden]="item !== selectedFixedItem"
+                        <button
+                            #fixedEditBtn
+                            [hidden]="item !== selectedFixedItem"
                             class="btn-primary-light edit-btn eos-icon eos-icon-edit-blue small"
                             [tooltip]="'Редактировать'"
                             #itemTooltip="bs-tooltip"
@@ -107,7 +109,9 @@
                             triggers="hover:click"
                             container="body"
                             containerClass="tooltip-info" >{{item?.customTitle || item?.title}}</span>
-                        <button [hidden]="item !== selectedCurrItem"
+                        <button
+                            #curEditBtn
+                            [hidden]="item !== selectedCurrItem"
                             class="btn-primary-light edit-btn eos-icon eos-icon-edit-blue small"
                             [tooltip]="'Редактировать'"
                             #itemTooltip="bs-tooltip"
