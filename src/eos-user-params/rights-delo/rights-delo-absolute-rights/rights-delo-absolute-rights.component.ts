@@ -322,6 +322,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
                     }
                     if (node.touched) {
+                        node.submitWeightChanges();
                         node.change.forEach(ch => {
                             const batch = this._createBatch(ch, node, qUserCl);
                             if (batch) {
@@ -685,7 +686,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         } */
     }
     checkChange(event?) {
-        if (event && event === 'del') {
+        if (event && event === 'del' || event === 'setMain') {
             this.flagDel = true;
         }
         let c = false;

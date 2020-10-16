@@ -69,6 +69,7 @@ export interface INodeDocsTreeCfg {
     data?: any;
     viewAllowed?: boolean;
     flagCheckNode?: any;
+    weight?: number;
 }
 
 export interface NpUserLinks {

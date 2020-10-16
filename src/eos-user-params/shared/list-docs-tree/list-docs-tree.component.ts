@@ -9,6 +9,7 @@ export class ListDocsTreeComponent implements OnChanges {
     @Input() editMode: boolean = true;
     @Input() listNode: NodeDocsTree[];
     @Input() systemTech: number;
+    @Input() hideExpand?: boolean;
     @Output() select = new EventEmitter();
     @Output() checkedNode = new EventEmitter();
     list: NodeDocsTree[] = [];
@@ -35,20 +36,26 @@ export class ListDocsTreeComponent implements OnChanges {
         }
     }
     onExpand(evt: Event, node: NodeDocsTree) {
-        evt.stopPropagation();
-        node.isExpanded = !node.isExpanded;
+        if (!this.hideExpand) {
+            evt.stopPropagation();
+            node.isExpanded = !node.isExpanded;
+        }
     }
     private _createStructure(liNodes: NodeDocsTree[]) {
         this.list = [];
         this._resetNodes(liNodes);
         const minLength = this._findMinLength(liNodes);
-        liNodes.forEach((node: NodeDocsTree) => {
-            if (node.link.length === minLength) {
-                this.list.push(node);
-            } else {
-                this._findParent(node);
-            }
-        });
+        if (this.hideExpand) {
+            this.list = liNodes;
+        } else {
+            liNodes.forEach((node: NodeDocsTree) => {
+                if (node.link.length === minLength) {
+                    this.list.push(node);
+                } else {
+                    this._findParent(node);
+                }
+            });
+        }
         this._writeLayer(this.list, 0);
     }
     private _findParent(node: NodeDocsTree) {
@@ -65,6 +72,7 @@ export class ListDocsTreeComponent implements OnChanges {
             index--;
         }
         if (parent) {
+            parent.isExpanded = this.hideExpand ? this.hideExpand : parent.isExpanded;
             parent.addChildren(node);
             node.parent = parent;
         } else {

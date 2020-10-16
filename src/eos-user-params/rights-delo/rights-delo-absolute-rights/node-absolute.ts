@@ -1,6 +1,7 @@
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { AbstractControl } from '@angular/forms';
 import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from './right-delo.intefaces';
+import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 
 export class NodeAbsoluteRight {
     isSelected: boolean;
@@ -46,6 +47,7 @@ export class NodeAbsoluteRight {
     private _valueDb: number;
     private _change: IChengeItemAbsolute[] = [];
     private _curentUser: IParamUserCl;
+    private _weightChanges: IChengeItemAbsolute[] = [];
     constructor(node: IInputParamControl, v: number, con: AbstractControl, user: IParamUserCl) {
         this._constData = node;
         this._value = v;
@@ -107,6 +109,34 @@ export class NodeAbsoluteRight {
 
         this.touched = true;
         this._change.push(node);
+    }
+    submitWeightChanges() {
+        if (this._weightChanges && this._weightChanges.length) {
+            this._change.push(...this._weightChanges);
+        }
+    }
+    addWeightChanges(node: NodeDocsTree) {
+        this.touched = true;
+        const nodeChange = this._weightChanges.find(ch => ch.due === node.DUE);
+        if (nodeChange) {
+            nodeChange.data['WEIGHT'] = node.weight;
+        } else {
+            this._weightChanges.push({
+                method: 'MERGE',
+                due: node.DUE,
+                data: {
+                    'WEIGHT': node.weight,
+                    'FUNC_NUM': node.data.userDep['FUNC_NUM'],
+                    'DEEP': node.data.userDep['DEEP'],
+                },
+            });
+        }
+    }
+    checkWeightChanges(node: NodeDocsTree) {
+        this._weightChanges = this._weightChanges.filter(ch => ch.due !== node.DUE);
+        if (!this._weightChanges.length) {
+            this._checkTouched();
+        }
     }
     deleteChange() {
         this.touched = false;
