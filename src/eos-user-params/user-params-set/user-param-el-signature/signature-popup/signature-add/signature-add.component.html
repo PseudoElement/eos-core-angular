@@ -19,7 +19,7 @@
                         </label>
                 <br>
                 <div class="eos-select">
-                    <select class="form-control m-font" id="selectStores" [(ngModel)]="certSystemStore">
+                    <select class="form-control m-font" id="selectStores" [(ngModel)]="certSystemStore" (ngModelChange)="onChangeSelect($event)">
                             <option  value="sscu" *ngIf="sheckSelect !== 'sslm'">
                                 Учетная запись пользователя
                             </option>

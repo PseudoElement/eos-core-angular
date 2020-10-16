@@ -46,14 +46,16 @@ export class CarmaHttp2Service {
         };
         return this.getStores(store);
     }
-    public EnumStores(lacation, address): Promise<any> {
+    public EnumStores(location, address): Promise<any> {
+        const objstore = {
+            location: location
+        };
+        if (address) {
+            objstore['address'] = address;
+        }
         const store = {
             mode: 37,
-            storeAddress:
-            {
-                location: lacation,
-                address: address,
-            }
+            storeAddress: objstore
         };
         return this.getStores(store).then(data => {
             if (data && data.stores) {

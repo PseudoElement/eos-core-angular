@@ -112,10 +112,16 @@ export class CertStoresService {
     }
     showListCertNode(): Promise<any> {
         const curName = this.currentSelectedNode.Name;
+        let name;
+        if (curName.indexOf('\\') !== -1) {
+            name = curName.split('\\')[1];
+        } else {
+            name = curName;
+        }
         return this.carmaHttp2Srv.EnumCertificates(
             this.currentSelectedNode.Location,
             this.currentSelectedNode.Address,
-            curName
+            name
         );
     }
    public showListStores(location, address): Promise<any> {

@@ -18,7 +18,7 @@
                 <select
                     class="form-control m-font"
                     id="selectStores"
-                    [(ngModel)]="certSystemStore"
+                    [(ngModel)]="certSystemStore" (ngModelChange)="onChangeSelect($event)"
                 >
                     <option value="sslm">
                         Учетная запись компьютера

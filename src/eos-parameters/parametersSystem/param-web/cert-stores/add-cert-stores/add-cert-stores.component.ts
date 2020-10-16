@@ -29,6 +29,9 @@ export class AddCertStoresComponent {
     cancel() {
         this.closeAddCertModal.emit();
     }
+    onChangeSelect($event) {
+        this.certSystemAddress = '';
+    }
     searchStore() {
         if (this.certSystemStore === 'sslm') {
             this.carmeHttp2srv.EnumStores(this.certSystemStore, this.certSystemAddress).then(stores => {
@@ -40,8 +43,8 @@ export class AddCertStoresComponent {
                             title: arr[arr.length - 1],
                             name: arr[arr.length - 1],
                             selected: false,
-                            location: 'sslm',
-                            address: arr[arr.length - 2] || ''
+                            Location: 'sslm',
+                            Address: this.certSystemAddress || ''
                         });
                     });
                 }
@@ -58,8 +61,8 @@ export class AddCertStoresComponent {
                             title: arr[arr.length - 1],
                             name: item,
                             selected: false,
-                            location: 'sss',
-                            address: arr[arr.length - 2]
+                            Location: 'sss',
+                            Address: this.certSystemAddress || ''
                         });
                     });
                 }

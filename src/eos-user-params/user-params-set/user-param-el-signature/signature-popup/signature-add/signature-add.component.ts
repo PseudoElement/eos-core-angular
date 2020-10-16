@@ -49,8 +49,8 @@ export class SignatureAddComponent implements OnInit {
                             title: arr[arr.length - 1],
                             name: arr[arr.length - 1],
                             selected: false,
-                            location: this.certSystemStore === 'sslm' ? 'ssml' : 'sscu',
-                            address: arr[arr.length - 2] || ''
+                            Location: this.certSystemStore === 'sslm' ? 'sslm' : 'sscu',
+                            Address: this.certSystemAddress || ''
                         });
                     });
                 }
@@ -70,8 +70,8 @@ export class SignatureAddComponent implements OnInit {
                             title: arr[arr.length - 1],
                             name: item,
                             selected: false,
-                            location: 'sss',
-                            address: arr[arr.length - 2]
+                            Location: 'sss',
+                            Address: this.certSystemAddress || ''
                         });
                     });
                 }
@@ -92,6 +92,9 @@ export class SignatureAddComponent implements OnInit {
             }
         });
     }
+    onChangeSelect($event) {
+        this.certSystemAddress = '';
+    }
 
     submit() {
         this.certStoresService.addStores(this.currentSelectNode);
@@ -108,6 +111,9 @@ export class SignatureAddComponent implements OnInit {
     }
     ngOnInit() {
         this.init();
+        if (this.certSystemStore === 'sscu') {
+            this.searchStore();
+        }
     }
 
 
