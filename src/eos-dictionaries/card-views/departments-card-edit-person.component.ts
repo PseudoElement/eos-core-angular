@@ -17,7 +17,9 @@ import { BUTTON_RESULT_OK, CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES } fr
 import { CONFIRM_CHANGE_BOSS } from 'eos-dictionaries/consts/confirm.consts';
 import { EosDepartmentsService } from 'eos-dictionaries/services/eos-department-service';
 import { PipRX } from 'eos-rest';
-
+import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { REPLACE_REASONS } from 'eos-dictionaries/consts/dictionaries/department.consts';
 
 interface IToDeclineFields {
     fio?: boolean;
@@ -32,12 +34,15 @@ interface IToDeclineFields {
     templateUrl: 'departments-card-edit-person.component.html',
 })
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges, OnInit {
-    readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения'];
+    readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения', 'Отсутствие и замещение'];
 
     photo: any;
     isStampEnable = Features.cfg.departments.stamp;
+    isShell: boolean = false;
 
     private bossWarning: boolean;
+    private _newDueReplace: string = null;
+    private _tempReasonVal: string | number = REPLACE_REASONS[0].value;
 
     constructor(
         private injector: Injector,
@@ -45,6 +50,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         private _confirmSrv: ConfirmWindowService,
         private departMentService: EosDepartmentsService,
         private _apiSrv: PipRX,
+        private _waitClassifSrv: WaitClassifService,
         //    private _intupControlSrv: InputControlService
 
     ) {
@@ -65,6 +71,10 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         if (parent && parent.data.rec.END_DATE) {
             return new Date(parent.data.rec.END_DATE);
         }
+    }
+    get isHistoryUpdated() {
+        return !this.data.replace['REASON'] ||
+        !this.data.replace['START_DATE'] || !this.data.replace['END_DATE'];
     }
 
     ngOnInit() {
@@ -120,8 +130,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     }, 10);
                 }
             }
-
-
+            this._newDueReplace = this.data.replace['DUE_REPLACE'];
         }
 
         this.prevValues = this.makePrevValues(this.data);
@@ -180,6 +189,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         } else {
             this.photo = null;
         }
+        this._setReplaceReason();
     }
     updateValidators() {
         const extensibleValidators = this.form.controls['rec.START_DATE'].validator;
@@ -333,6 +343,10 @@ formatSurname(fam: string, name: string, patron: string): string {
         const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
         let isNeedCorrectStart = false;
         let isNeedCorrectEnd = false;
+        if (!this.data.replace['DUE']) {
+            this.data.replace['DUE'] = this.data.rec['DUE'];
+        }
+        this.data.replace['DUE_REPLACE'] = this._newDueReplace;
         if (parent.data.rec['START_DATE']) {
             if (!this.data.rec['START_DATE']) {
                 isNeedCorrectStart = true;
@@ -416,6 +430,40 @@ formatSurname(fam: string, name: string, patron: string): string {
             }
         }
         return Promise.resolve(true);
+    }
+
+    public selectDL(status: boolean) {
+        if (status) {
+            this._selectDL();
+        }
+    }
+
+    public deleteDL() {
+        if (this._newDueReplace) {
+            this.form.controls['replace.DUE_REPLACE_NAME'].patchValue('');
+            this._newDueReplace = null;
+        }
+    }
+
+    public clearReplaceFields() {
+        if (this.form) {
+            const defaultReason = REPLACE_REASONS[0].value;
+            this.form.controls['replace.START_DATE'].patchValue(null);
+            this.form.controls['replace.END_DATE'].patchValue(null);
+            this.form.controls['replace.REASON'].patchValue(defaultReason);
+            this.deleteDL();
+        }
+    }
+
+    /**
+     * override 'setTab' method
+     * ADD change REASON input value from 'null' to '0'
+     * if edit mode is true
+     * @param {i: number} tab number
+     */
+    public setTab(i: number) {
+        super.setTab(i);
+        this._setReplaceReason();
     }
 
     public fillDeclineFields(opt: IToDeclineFields, fio: string = null): void {
@@ -586,7 +634,6 @@ if (opt.fio || opt.gender || opt.nomenative) {
 }
 
     private updateForm(formChanges: any) {
-
         let setSurname = null;
         if (this.prevValues['rec.DUTY'] !== formChanges['rec.DUTY']) {
             this.prevValues['rec.DUTY'] = formChanges['rec.DUTY'];
@@ -628,6 +675,80 @@ if (opt.fio || opt.gender || opt.nomenative) {
                 this.fillDeclineFields({ fio: true });
             }
             this.prevValues = formChanges;
+        }
+    }
+
+    private _selectDL() {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.skipDeleted = true;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+            .then((due: string) => {
+                if (!due) {
+                    this.isShell = false;
+                    throw new Error('Не выбран ДЛ!');
+                } else if (due === this.data.rec['DUE']) {
+                    this.isShell = false;
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение: ',
+                        msg: 'Должностное лицо не может замещать само себя',
+                    });
+                    throw new Error('Должностное лицо не может замещать само себя');
+                }
+                this._apiSrv.read({
+                    DEPARTMENT: {
+                        criteries: { DUE: String(due) },
+                    },
+                })
+                    .then(deps => {
+                        if (!deps.length || !deps[0]['CLASSIF_NAME']) {
+                            this.isShell = false;
+                            throw new Error('Выбранный ДЛ не найден!');
+                        }
+                        const chosenDep = deps[0];
+                        const limitDeps = this.appctx.CurrentUser.USER_TECH_List.filter(techItem => techItem['FUNC_NUM'] === 10);
+                        let isAvailableDL = false;
+                        let sortedDeps = limitDeps;
+
+                        if (sortedDeps.length > 1) {
+                            sortedDeps = sortedDeps.sort((techItemA, techItemB) => techItemB['DUE'].length - techItemA['DUE'].length);
+                        }
+                        const relatedDep = sortedDeps.find((techItem) => chosenDep['DUE'].indexOf(techItem['DUE']) !== -1);
+                        isAvailableDL = relatedDep && relatedDep['ALLOWED'] === 1;
+                        if (isAvailableDL) {
+                            this._newDueReplace = due;
+                            this.form.controls['replace.DUE_REPLACE_NAME'].patchValue(chosenDep['CLASSIF_NAME']);
+                        } else {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение: ',
+                                msg: 'Должностное лицо не принадлежит доступным Подразделениям',
+                            });
+                        }
+                        this.isShell = false;
+                    });
+            })
+            .catch(error => {
+                this.isShell = false;
+                const msg = error && error.message ? error.message : 'Ошибка выбора ДЛ';
+                console.error('error message: ', msg);
+            });
+    }
+
+    private _setReplaceReason() {
+        const controlVal = this.form.controls['replace.REASON'].value;
+
+        if (this.editMode && this.currTab === 2 && !controlVal) {
+            const reasonVal = this._tempReasonVal ? this._tempReasonVal : REPLACE_REASONS[1].value;
+            this.form.controls['replace.REASON'].setValue(reasonVal, { eventEmit: false });
+        } else if (this.editMode && this.currTab !== 2 && controlVal) {
+            const startVal = this.form.controls['replace.START_DATE'].value;
+            const endVal = this.form.controls['replace.END_DATE'].value;
+
+            if (!startVal && !endVal) {
+                this._tempReasonVal = controlVal;
+                this.form.controls['replace.REASON'].setValue(REPLACE_REASONS[0].value, { eventEmit: false });
+            }
         }
     }
 }

@@ -24,7 +24,41 @@ export const GENDERS_CITIZEN: ISelectOption[] = [
     {value: 0, title: 'Женский'}
 ];
 
+export const REPLACE_REASONS: ISelectOption[] = [
+    { value: '', title: '...' },
+    { value: 'Отпуск', title: 'Отпуск' },
+    { value: 'Командировка', title: 'Командировка' },
+    { value: 'Болезнь', title: 'Болезнь' },
+    { value: 'Прочее', title: 'Прочее' },
+];
 
+export const REPLACE_FIELDS = [
+    {
+        key: 'START_DATE',
+        type: 'date',
+        title: '',
+    }, {
+        key: 'END_DATE',
+        type: 'date',
+        title: '',
+    }, {
+        key: 'REASON',
+        type: 'select',
+        title: '',
+        options: REPLACE_REASONS,
+        default: REPLACE_REASONS[0].value,
+    }, {
+        key: 'DUE_REPLACE_NAME',
+        type: 'string',
+        title: '',
+    }, {
+        key: 'HISTORY',
+        type: 'text',
+        length: 1999,
+        title: '',
+        disabled: true,
+    },
+];
 /* tslint:disable:max-line-length */
 export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     id: 'departments',
@@ -302,6 +336,10 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             key: 'user',
             type: 'dictionary',
             title: '',
+        }, {
+            key: 'replace',
+            type: 'dictionary',
+            title: '',
         },
         /*NO DISCRIPTION FIELDS*/
         {
@@ -374,7 +412,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     shortQuickViewFields: ['firstName', 'fathersName', 'lastName', 'nametitle'],
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
-        'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
+        'user', 'photo', 'replace', 'ID_GAS_PS', 'NUMCREATION_FLAG',
         'nametitleDep', 'nametitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG',
         'ISN_STAMP', 'MEDO_ID',
     ],

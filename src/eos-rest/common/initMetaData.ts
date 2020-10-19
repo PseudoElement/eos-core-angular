@@ -492,9 +492,23 @@ const commonMeta = {
             { name: 'LINK_ORGANIZ_Ref', __type: 'ORGANIZ_CL', sf: 'DUE_LINK_ORGANIZ', tf: 'DUE' },
             { name: 'ORGANIZ_Ref', __type: 'ORGANIZ_CL', sf: 'DUE_ORGANIZ', tf: 'DUE' },
             { name: 'PHOTO_Ref', __type: 'DELO_BLOB', sf: 'ISN_PHOTO', tf: 'ISN_BLOB' },
+            { name: 'DEP_REPLACE_Ref', __type: 'DEP_REPLACE', sf: 'DUE', tf: 'DUE' },
             // { name: 'STAMP_Ref', __type: 'DELO_BLOB', sf: 'ISN_STAMP', tf: 'ISN_BLOB' }
 
         ]
+    },
+    DEP_REPLACE: {
+        pk: 'DUE',
+        properties: {
+            DUE: _t.s,
+            DUE_REPLACE: _t.s,
+            END_DATE: _t.d,
+            HISTORY: _t.s,
+            REASON: _t.s,
+            START_DATE: _t.d,
+        },
+        readonly: [],
+        relations: [],
     },
     DG_FILE_CONSTRAINT: {
         pk: 'ISN_DOCGROUP',
