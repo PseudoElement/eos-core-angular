@@ -43,7 +43,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
         }, {
             controlType: 'boolean',
             key: 'filter.CB1',
-            value: 0,
+            value: 1,
             label: 'переходящие',
             hideLabel: true,
             readonly: false
