@@ -109,6 +109,7 @@ export class RightDepertmentComponent implements OnInit {
                             this.checkFlag = true;
                         }
                     });
+                    this._sortWeight();
                     this.isLoading = false;
                 })
                 .catch(e => {
@@ -609,6 +610,13 @@ export class RightDepertmentComponent implements OnInit {
             return 1;
         }
     }
+
+    private _sortWeight(): void {
+        if (this.funcNum !== 3) {
+            this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
+        }
+    }
+
     private _changeWeight(): void {
         if (this.funcNum !== 3) {
             this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
@@ -617,6 +625,11 @@ export class RightDepertmentComponent implements OnInit {
                     node.weight = index + 1;
                     if (node.weight !== node.data.userDep['WEIGHT']) {
                         this.selectedNode.addWeightChanges(node);
+                        this.curentUser['USERDEP_List'].forEach(li => {
+                            if (li.FUNC_NUM === this.funcNum && li.DUE === node.DUE) {
+                                li.WEIGHT = node.weight;
+                            }
+                        });
                         return;
                     }
                 }
