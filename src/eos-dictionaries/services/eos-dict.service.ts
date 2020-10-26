@@ -51,7 +51,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 import { isArray } from 'util';
 
 export const SORT_USE_WEIGHT = true;
-export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
+export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\'!]', 'g');
 
 export class MarkedInformation {
     get anyMarked(): boolean { return (this.nodes && this.nodes.length > 0); }
@@ -1028,7 +1028,7 @@ export class EosDictService {
 
     quickSearch(settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = JSON.stringify(settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, ''));
+        const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
             this._srchParams = settings.opts;
