@@ -106,7 +106,31 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             this.form.controls['rec.SAVEFORMAT'].disable({ onlySelf: true, emitEvent: false });
             return;
         }
+        if (this.form.controls['rec.SHABLONBARCODE'].value === 'barcode5.dot' ||
+            this.form.controls['rec.SHABLONBARCODEL'].value === 'barcodeL5.dot' ||
+            this.form.controls['rec.TYPE_PRINT_BARCODE'].value === '0'
+        ) {
+            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].disable({ onlySelf: true, emitEvent: false });
+        }
+
     }
+
+
+    checkFlag(data) {
+        if (data['rec.SHABLONBARCODE'] === 'barcode5.dot' ||
+            data['rec.SHABLONBARCODEL'] === 'barcodeL5.dot' ||
+            data['rec.TYPE_PRINT_BARCODE'] === '0') {
+            data['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'] = false;
+            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].patchValue(false, { onlySelf: true });
+            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].disable({ onlySelf: true, emitEvent: false });
+        }
+        if (data['rec.SHABLONBARCODE'] !== 'barcode5.dot' &&
+            data['rec.SHABLONBARCODEL'] !== 'barcodeL5.dot' &&
+            data['rec.TYPE_PRINT_BARCODE'] !== '0') {
+            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].enable({ onlySelf: true, emitEvent: false });
+        }
+    }
+
     fillOptionsForConst(data): void {
         REGISTRATION_SCAN.fields.map((field: IFieldDescriptor) => {
             if (field.key === 'SHABLONBARCODE') {
@@ -157,6 +181,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                 takeUntil(this.ngUnsub)
             )
             .subscribe(data => {
+                this.checkFlag(data);
                 Object.keys(data).forEach(item => {
                     if (!this.checkChanges(data, item)) {
                         this.countError++;
