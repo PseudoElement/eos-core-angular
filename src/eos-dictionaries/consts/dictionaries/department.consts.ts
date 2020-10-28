@@ -17,6 +17,14 @@ export const GENDERS: ISelectOption[] = [
     {value: 1, title: 'Мужской'},
     {value: 2, title: 'Женский'}
 ];
+
+export const GENDERS_CITIZEN: ISelectOption[] = [
+    {value: null, title: 'Не указан'},
+    {value: 1, title: 'Мужской'},
+    {value: 0, title: 'Женский'}
+];
+
+
 /* tslint:disable:max-line-length */
 export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     id: 'departments',
