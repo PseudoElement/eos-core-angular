@@ -59,7 +59,7 @@ export const RKPDdictionaries = [
         isEmpty: false,
     }, {
         name: 'doc_templates',
-        req: { DOC_TEMPLATES: PipRX.criteries({ CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ' }), orderby: 'WEIGHT' },
+        req: {DOC_TEMPLATES: PipRX.criteries({CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ|Основной файл документа'}), orderby: 'WEIGHT'},
         titleFieldName: 'DESCRIPTION',
         isnFieldName: 'ISN_TEMPLATE',
     }, {
