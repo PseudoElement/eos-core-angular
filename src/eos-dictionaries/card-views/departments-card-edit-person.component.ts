@@ -20,6 +20,7 @@ import { PipRX } from 'eos-rest';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { REPLACE_REASONS } from 'eos-dictionaries/consts/dictionaries/department.consts';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 interface IToDeclineFields {
     fio?: boolean;
@@ -34,15 +35,18 @@ interface IToDeclineFields {
     templateUrl: 'departments-card-edit-person.component.html',
 })
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges, OnInit {
-    readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения', 'Отсутствие и замещение'];
+    // readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения', 'Отсутствие и замещение'];
 
     photo: any;
     isStampEnable = Features.cfg.departments.stamp;
     isShell: boolean = false;
+    public hasLicenses: boolean = false;
+    public fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения'];
 
     private bossWarning: boolean;
     private _newDueReplace: string = null;
     private _tempReasonVal: string | number = REPLACE_REASONS[0].value;
+    private _optionalTab = 'Отсутствие и замещение';
 
     constructor(
         private injector: Injector,
@@ -86,6 +90,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         //     );
         // }
         // this.data
+        this._checkLicense();
 
         if (!this.isNewRecord && this.editMode) {
             const changes = [];
@@ -750,5 +755,40 @@ if (opt.fio || opt.gender || opt.nomenative) {
                 this.form.controls['replace.REASON'].setValue(REPLACE_REASONS[0].value, { eventEmit: false });
             }
         }
+    }
+
+    private _checkLicense() {
+        this._apiSrv.read<any>({
+            LicenseInfo: ALL_ROWS,
+        })
+            .then(data => {
+                let licenseInfo;
+                if (typeof (data) === 'string') {
+                    licenseInfo = JSON.parse(data);
+                } else {
+                    licenseInfo = data;
+                }
+
+                if (licenseInfo && licenseInfo.length) {
+                    const lic = licenseInfo.find(license => license.id === 39);
+                    if (lic) {
+                        const setZeroHours = date => date.setHours(0, 0, 0, 0);
+                        const expiredDate = lic.Expired ? Number(setZeroHours(new Date(lic.Expired))) : 0;
+                        const currentDate = Number(setZeroHours(new Date()));
+
+                        if ((expiredDate > currentDate) && (Number(lic.Users) === 0 || Number(lic.Users) >= Number(lic.ActualUsers))) {
+                            this.hasLicenses = true;
+                            if (this.fieldGroups.length < 3) {
+                                this.fieldGroups.push(this._optionalTab);
+                            }
+                            return;
+                        }
+                    }
+                }
+                this.hasLicenses = false;
+            })
+            .catch(err => {
+                this.hasLicenses = false;
+            });
     }
 }
