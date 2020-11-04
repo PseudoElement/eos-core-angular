@@ -20,7 +20,6 @@ import { PipRX } from 'eos-rest';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { REPLACE_REASONS } from 'eos-dictionaries/consts/dictionaries/department.consts';
-import { ALL_ROWS } from 'eos-rest/core/consts';
 
 interface IToDeclineFields {
     fio?: boolean;
@@ -758,37 +757,13 @@ if (opt.fio || opt.gender || opt.nomenative) {
     }
 
     private _checkLicense() {
-        this._apiSrv.read<any>({
-            LicenseInfo: ALL_ROWS,
-        })
-            .then(data => {
-                let licenseInfo;
-                if (typeof (data) === 'string') {
-                    licenseInfo = JSON.parse(data);
-                } else {
-                    licenseInfo = data;
-                }
-
-                if (licenseInfo && licenseInfo.length) {
-                    const lic = licenseInfo.find(license => license.id === 39);
-                    if (lic) {
-                        const setZeroHours = date => date.setHours(0, 0, 0, 0);
-                        const expiredDate = lic.Expired ? Number(setZeroHours(new Date(lic.Expired))) : 0;
-                        const currentDate = Number(setZeroHours(new Date()));
-
-                        if ((expiredDate > currentDate) && (Number(lic.Users) === 0 || Number(lic.Users) >= Number(lic.ActualUsers))) {
-                            this.hasLicenses = true;
-                            if (this.fieldGroups.length < 3) {
-                                this.fieldGroups.push(this._optionalTab);
-                            }
-                            return;
-                        }
-                    }
-                }
-                this.hasLicenses = false;
-            })
-            .catch(err => {
-                this.hasLicenses = false;
-            });
+        try {
+            this.hasLicenses = this.appctx.SysParms['_more_json'].licensed.some(license => license === 39);
+        } catch (error) {
+            this.hasLicenses = false;
+        }
+        if (this.hasLicenses && this.fieldGroups.length < 3) {
+            this.fieldGroups.push(this._optionalTab);
+        }
     }
 }
