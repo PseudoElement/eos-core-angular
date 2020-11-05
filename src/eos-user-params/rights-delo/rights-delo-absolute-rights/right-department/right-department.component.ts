@@ -76,8 +76,9 @@ export class RightDepertmentComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
-        if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
-            if (this.funcNum === 3 /* && this._appContext.cbBase */) {
+        const rules = [35, 36];
+        if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0 && rules.indexOf(this.funcNum) === -1) {
+            if (this.funcNum === 3 && this._appContext.cbBase) {
                 this.addNewDepAll();
             } else {
                 this.addDep();
