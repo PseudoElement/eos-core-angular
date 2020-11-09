@@ -741,15 +741,17 @@ if (opt.fio || opt.gender || opt.nomenative) {
 
     private _setReplaceReason() {
         const controlVal = this.form.controls['replace.REASON'].value;
+        const defaultVisibleReason = REPLACE_REASONS[1].value;
 
         if (this.editMode && this.currTab === 2 && !controlVal) {
-            const reasonVal = this._tempReasonVal ? this._tempReasonVal : REPLACE_REASONS[1].value;
+            const reasonVal = this._tempReasonVal ? this._tempReasonVal : defaultVisibleReason;
             this.form.controls['replace.REASON'].setValue(reasonVal, { eventEmit: false });
         } else if (this.editMode && this.currTab !== 2 && controlVal) {
             const startVal = this.form.controls['replace.START_DATE'].value;
             const endVal = this.form.controls['replace.END_DATE'].value;
+            const isDefaultReason = controlVal === defaultVisibleReason;
 
-            if (!startVal && !endVal) {
+            if (!startVal && !endVal && isDefaultReason && !this._newDueReplace) {
                 this._tempReasonVal = controlVal;
                 this.form.controls['replace.REASON'].setValue(REPLACE_REASONS[0].value, { eventEmit: false });
             }
