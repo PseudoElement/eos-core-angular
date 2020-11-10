@@ -177,7 +177,7 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         listedUT: false
     },
 
-    { id: FILE_TYPE_DICT.id,    tech: E_TECH_RIGHT.Citizens,
+    { id: FILE_TYPE_DICT.id,    tech: E_TECH_RIGHT.FileType,
         listedUT: false },
 ];
 
