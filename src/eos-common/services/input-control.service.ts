@@ -98,7 +98,7 @@ export class InputControlService {
                 const group = <FormGroup>control.parent;
                 if (group) {
                     const compareCtrl = group.controls[commparePath];
-                    if (compareCtrl && compareCtrl.value && compareCtrl.value instanceof Date) {
+                    if (compareCtrl && compareCtrl.value && compareCtrl.value instanceof Date && !isNaN(compareCtrl.value.getTime())) {
                         switch (operand) {
                             case 'gt':
                                 valid = value.getTime() > compareCtrl.value.getTime();
