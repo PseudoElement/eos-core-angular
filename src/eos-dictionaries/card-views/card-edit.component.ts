@@ -93,7 +93,15 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         return newData;
     }
     resetData() {
-        Object.assign(this.data.rec, this.data.rec._orig);
+        if (this.dictionaryId === 'departments') {
+            Object.keys(this.data).forEach((key) => {
+                if (this.data[key] && this.data[key]._orig) {
+                    Object.assign(this.data[key], this.data[key]._orig);
+                }
+            });
+        } else {
+            Object.assign(this.data.rec, this.data.rec._orig);
+        }
     }
 
     confirmSave(): Promise<boolean> {
