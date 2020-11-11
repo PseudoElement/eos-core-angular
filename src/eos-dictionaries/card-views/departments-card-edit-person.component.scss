@@ -148,6 +148,17 @@
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
+
+                &.align-items-end {
+                    align-items: flex-end;
+
+                    .title-replace {
+                        margin-bottom: 7px;
+                    }
+                    .title-reason {
+                        margin-bottom: 6px;
+                    }
+                }
             }
             .clear-fields-btn {
                 display: flex;
