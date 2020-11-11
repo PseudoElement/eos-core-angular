@@ -466,6 +466,7 @@ formatSurname(fam: string, name: string, patron: string): string {
      * @param {i: number} tab number
      */
     public setTab(i: number) {
+        this._fixInvaliddate(i);
         super.setTab(i);
         this._setReplaceReason();
     }
@@ -766,6 +767,18 @@ if (opt.fio || opt.gender || opt.nomenative) {
         }
         if (this.hasLicenses && this.fieldGroups.length < 3) {
             this.fieldGroups.push(this._optionalTab);
+        }
+    }
+    private _fixInvaliddate(i: number) {
+        if (i !== 0) {
+            const stDate = this.form.controls['rec.START_DATE'].value;
+            const endDate = this.form.controls['rec.END_DATE'].value;
+            if (stDate && isNaN(stDate.getTime())) {
+                this.form.controls['rec.START_DATE'].patchValue(null);
+            }
+            if (endDate && isNaN(endDate.getTime())) {
+                this.form.controls['rec.END_DATE'].patchValue(null);
+            }
         }
     }
 }
