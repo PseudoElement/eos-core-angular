@@ -342,7 +342,7 @@ export abstract class AbstractDictionaryDescriptor {
                         }
                         break;
                     case 'replace':
-                        if (data) {
+                        if (data && data['DUE']) {
                             if (!data._orig || !data._orig['DUE'] || data._State === _ES.Stub) {
                                 data._State = _ES.Added;
                             }
