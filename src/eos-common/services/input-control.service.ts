@@ -115,6 +115,14 @@ export class InputControlService {
                         }
                     }
                 }
+            } else {
+                const group = <FormGroup>control.parent;
+                if (group) {
+                    const compareCtrl = group.controls[commparePath];
+                    if (compareCtrl && compareCtrl.invalid) {
+                        compareCtrl.updateValueAndValidity();
+                    }
+                }
             }
 
             return (valid ? null : {dateCompare: errMessage});
