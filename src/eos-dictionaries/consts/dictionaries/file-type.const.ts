@@ -28,7 +28,7 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
             title: 'Наименование',
             type: 'string',
             isUnique: true,
-            length: 255,
+            length: 64,
             required: true,
         },
         {
