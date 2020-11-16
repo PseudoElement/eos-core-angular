@@ -28,7 +28,6 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -76,7 +75,6 @@ export class NodeActionsComponent implements OnDestroy {
         _dictSrv: EosDictService,
         private _eaps: EosAccessPermissionsService,
         private _storageSrv: EosStorageService,
-        private _router: Router,
     ) {
         this._markedNodes = [];
         this._initButtons();
@@ -249,6 +247,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _show = false;
         let _isWriteAction = true;
         const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
+        const dueTo = this._selectedTreeNode && this._selectedTreeNode.id;
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
 
@@ -429,6 +428,9 @@ export class NodeActionsComponent implements OnDestroy {
                     /* _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && this.slicedInfo.length > 0; */
                     _enabled = _enabled && (marketN && marketN.length > 0);
+                    if (_enabled && dueTo) {
+                        _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
+                    }
                     break;
                 case E_RECORD_ACTIONS.uncheckNewEntry:
                     _enabled = _enabled && opts.listHasItems;
@@ -452,8 +454,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.paste:
                     _enabled = _enabled && (marketN && marketN.length > 0);
-                    if (_enabled && this.dictionary.id === 'departments') {
-                        const dueTo = this._router.url.split('/').pop();
+                    if (_enabled && dueTo) {
                         _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
                     }
                     break;
