@@ -780,5 +780,15 @@ if (opt.fio || opt.gender || opt.nomenative) {
                 this.form.controls['rec.END_DATE'].patchValue(null);
             }
         }
+        if (i !== 2) {
+            const stRepDate = this.form.controls['replace.START_DATE'].value;
+            const endRepDate = this.form.controls['replace.END_DATE'].value;
+            if (stRepDate && isNaN(stRepDate.getTime())) {
+                this.form.controls['replace.START_DATE'].patchValue(null);
+            }
+            if (endRepDate && isNaN(endRepDate.getTime())) {
+                this.form.controls['replace.END_DATE'].patchValue(null);
+            }
+        }
     }
 }
