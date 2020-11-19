@@ -506,12 +506,12 @@ formatSurname(fam: string, name: string, patron: string): string {
                     if (key !== 'PRINT_DEPARTMENT') {
                         if ((opt.dep && (key === 'DUTY_RP' || key === 'DUTY_DP' || key === 'DUTY_VP' || key === 'DEPARTMENT_RP')) ||
                             (opt.adv && (key === 'PRINT_DEPARTMENT' || key === 'PRINT_DUTY'))
-
-                        ) {
-                            this.setValue('printInfo.' + key, res[key]);
-                            this.setDirty('printInfo.' + key);
-                        }
-                    }
+                                ) {
+                                    const updatedValue = res[key] && res[key].length > 255 ? res[key].substring(0, 255) : res[key];
+                                    this.setValue('printInfo.' + key, updatedValue);
+                                    this.setDirty('printInfo.' + key);
+                                }
+                   }
                 });
             }
         });
@@ -589,11 +589,11 @@ if (opt.fio || opt.gender || opt.nomenative) {
         data.SURNAME = rn.lastName(rn.gcaseNom);
         data.PATRON = rn.middleName(rn.gcaseNom);
     }
-
     if (data) {
         Object.keys(data).forEach((key) => {
             if (key !== 'PRINT_DEPARTMENT') {
-                this.setValue('printInfo.' + key, data[key]);
+                const updatedValue = data[key] && data[key].length > 64 ? data[key].substring(0, 64) : data[key];
+                this.setValue('printInfo.' + key, updatedValue);
                 this.setDirty('printInfo.' + key);
             }
         });
