@@ -22,6 +22,9 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode?: string;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public btnDisabled: boolean = true;
     public _fieldsType = {};
@@ -47,6 +50,9 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices
     ) {}
     ngOnInit() {
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForDeskApl.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this.defaultTitle) {
             this.titleHeader = this.defaultTitle;
             this.allData = this.defaultUser;

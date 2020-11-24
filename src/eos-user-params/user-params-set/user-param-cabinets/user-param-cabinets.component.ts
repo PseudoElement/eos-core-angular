@@ -26,8 +26,11 @@ import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer
 export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
-    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode?: string;
+
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     @ViewChild('informerTabEl') informerTabRef: CabinetsInformerComponent;
     @ViewChild('defaultNotificatorEl') defaultNotificatorRef: CabinetsInformerComponent;
     userId: string;
@@ -97,6 +100,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         });
     }
     ngOnInit() {
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this.defaultTitle) {
             this.currentUser = this.defaultUser;
             this.allData = this.defaultUser;
@@ -130,6 +136,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     initForm(): Promise<any> {
         this.defineLastTab();
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         this.pretInputs();
         this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
         this.patchInputValue();

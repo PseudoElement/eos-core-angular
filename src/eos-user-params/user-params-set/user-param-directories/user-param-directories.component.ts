@@ -17,8 +17,10 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
-    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     @Input() mainUser?;
+    @Input() appMode?: string;
+
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     public form: FormGroup;
     public inputs;

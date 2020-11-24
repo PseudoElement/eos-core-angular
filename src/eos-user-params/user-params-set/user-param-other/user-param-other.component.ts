@@ -17,6 +17,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode?: string;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public userId: string;
     public disableSave: boolean;
@@ -58,6 +61,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _appContext: AppContext,
     ) {}
     ngOnInit() {
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroups.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this._appContext.cbBase) {
             this.cbBase = true;
         }

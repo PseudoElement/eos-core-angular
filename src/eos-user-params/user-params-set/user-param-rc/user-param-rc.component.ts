@@ -19,8 +19,10 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 export class UserParamRCComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
-    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     @Input() mainUser?;
+    @Input() appMode?;
+
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     flagEdit: boolean;
     public inputs;
