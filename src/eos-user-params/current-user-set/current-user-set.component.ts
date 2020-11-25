@@ -18,7 +18,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     paramId: string = 'rc';
     public mainUser;
     public appMode: IUserSettingsModes = {
-        arm: true,
+        tk: true,
     };
     public openingOptionalTab: number = 0;
 
@@ -59,7 +59,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                         break;
                     }
                     default:
-                        this.appMode.arm = true;
+                        this.appMode.tk = true;
                         break;
                 }
                 this.appMode.hasMode = true;

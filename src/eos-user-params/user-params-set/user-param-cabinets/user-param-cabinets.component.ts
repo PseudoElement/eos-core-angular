@@ -17,6 +17,7 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer.component';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -28,7 +29,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() openingTab: number = 0;
-    @Input() appMode?: string;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     @ViewChild('informerTabEl') informerTabRef: CabinetsInformerComponent;

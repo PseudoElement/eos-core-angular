@@ -6,6 +6,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { RemasterService } from '../shared-user-param/services/remaster-service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { FormHelperService } from '../../shared/services/form-helper.services';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-registration-remaster',
     styleUrls: ['user-param-registration-remaster.component.scss'],
@@ -18,7 +19,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() openingTab: number = 0;
-    @Input() appMode?: string;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];

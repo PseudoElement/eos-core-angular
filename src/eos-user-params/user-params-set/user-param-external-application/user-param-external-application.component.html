@@ -63,7 +63,7 @@
             <eos-dynamic-input class="inline-block call-options" [input]="inputs['rec.START_APP_0_PARMS']" [form]="form" [readonly]="inputs['rec.START_APP_0_PARMS'].readonly"></eos-dynamic-input>
         </div>
     </div>
-    <div *ngIf="currTab === 1" class="input-user-directories-wrapper input-user-search-wrapper">
+    <div *ngIf="currTab === 1 && !appMode.arm" class="input-user-directories-wrapper input-user-search-wrapper">
         <div class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title max-notices-title">Отображать в результатах поиска в приложении Документы максимальное количество записей:</span>

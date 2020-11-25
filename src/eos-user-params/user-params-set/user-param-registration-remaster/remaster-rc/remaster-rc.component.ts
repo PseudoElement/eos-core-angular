@@ -9,6 +9,7 @@ import {InputControlService} from 'eos-common/services/input-control.service';
 import {EosDataConvertService} from 'eos-dictionaries/services/eos-data-convert.service';
 import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-rc',
     styleUrls: ['remaster-rc.component.scss'],
@@ -18,6 +19,8 @@ import {RemasterService} from '../../shared-user-param/services/remaster-service
 export class RemasterRcComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
+    @Input() appMode: IUserSettingsModes;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public inputs;
     public form: FormGroup;

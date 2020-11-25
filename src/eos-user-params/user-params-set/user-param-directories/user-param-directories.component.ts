@@ -8,6 +8,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-directories',
     templateUrl: 'user-param-directories.component.html',
@@ -18,7 +19,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Input() mainUser?;
-    @Input() appMode?: string;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;

@@ -9,19 +9,23 @@
     </div>
     <div class="user-param-registration-content-wrapper scrollWrapper" *ngIf="isLoading">
         <div [hidden]="currTab !== 0" class="clearfix">
-            <eos-dop-operation [userData]='hash' [defaultValues]='defaultValues' (pushChange)="emitChanges($event)"></eos-dop-operation>
+            <eos-dop-operation [userData]='hash' [appMode]="appMode" [defaultValues]='defaultValues'
+                (pushChange)="emitChanges($event)"></eos-dop-operation>
         </div>
         <div [hidden]="currTab !== 1" class="clearfix">
-            <eos-remaster-addresses [userData]='hash' [defaultValues]='defaultValues' (pushChange)="emitChangesAddresses($event)"></eos-remaster-addresses>
+            <eos-remaster-addresses [userData]='hash' [appMode]="appMode" [defaultValues]='defaultValues'
+                (pushChange)="emitChangesAddresses($event)"></eos-remaster-addresses>
         </div>
         <div [hidden]="currTab !==2" class="clearfix">
             <eos-remaster-scan (pushChenge)='emitChangesScan($event)' (errorSave)='errorSave($event)' [accessSustem]="accessSustem" [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-scan>
         </div>
         <div [hidden]="currTab !== 3" class="clearfix">
-            <eos-auto-search (pushChange)='emitChangesAutoSearch($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-auto-search>
+            <eos-auto-search (pushChange)='emitChangesAutoSearch($event)' [userData]='hash' [appMode]="appMode"
+                [defaultValues]='defaultValues'></eos-auto-search>
         </div>
         <div [hidden]="currTab !== 4" class="clearfix">
-            <eos-remaster-rc (pushChange)='emitChangesRc($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-rc>
+            <eos-remaster-rc (pushChange)='emitChangesRc($event)' [userData]='hash' [appMode]="appMode"
+                [defaultValues]='defaultValues'></eos-remaster-rc>
         </div>
     </div>
     <div class="sp" *ngIf="!isLoading">

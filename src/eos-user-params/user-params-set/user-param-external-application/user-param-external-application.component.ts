@@ -7,7 +7,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers, IUserSettingsModes } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
@@ -23,7 +23,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() openingTab: number = 0;
-    @Input() appMode?: string;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public btnDisabled: boolean = true;

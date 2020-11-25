@@ -6,6 +6,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RemasterService } from 'eos-user-params/user-params-set/shared-user-param/services/remaster-service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 
 @Component({
     selector: 'eos-ext-exch',
@@ -19,7 +20,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() openingTab: number = 0;
-    @Input() appMode?: string;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];

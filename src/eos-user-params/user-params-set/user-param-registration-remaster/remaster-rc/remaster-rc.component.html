@@ -5,6 +5,7 @@
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        [hidden]="!appMode.cbr"
         [input]="inputs['rec.DONT_SHOW_PRJ_HIDDEN_FILES']"
         [form]="form"
         [readonly]="false"

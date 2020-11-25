@@ -22,7 +22,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Input() mainUser?;
-    @Input() appMode?: string;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public control: AbstractControl;

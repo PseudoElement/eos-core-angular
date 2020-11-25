@@ -6,14 +6,14 @@
     <div class="user-input-group">
         <eos-dynamic-input [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div><br>
     <div class="user-group-form">
         <span>Получать по:</span>
         <eos-dynamic-input [input]="inputs[ 'rec.ORIG_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div><br>
-    <div class="user-group-form" [ngStyle]="{'display': 'flex'}">
+    <div [hidden]="appMode.arm" class="user-group-form" [ngStyle]="{'display': 'flex'}">
         <div>
             <span>Форма печати реестра:</span>
             <div>
@@ -27,7 +27,7 @@
             </div>
         </div>
     </div>
-    <div class="user-group-form">
+    <div [hidden]="appMode.arm" class="user-group-form">
         <span>Вид реестра:</span>
         <div>
             <eos-dynamic-input [input]="inputs[ 'rec.REESTR_CB_KIND'] " [form]="form " [readonly]="false "></eos-dynamic-input>
@@ -40,12 +40,13 @@
             <eos-dynamic-input [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div><br>
         <div class="inputs-inline">
-            <span class="input-title">Количество копий:</span>
-            <eos-dynamic-input [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+            <span [hidden]="appMode.arm" class="input-title">Количество копий:</span>
+            <eos-dynamic-input [hidden]="appMode.arm" [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
-        <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_TO_PRINTER'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [hidden]="appMode.arm" class="inline-block " [input]="inputs[ 'rec.REESTR_TO_PRINTER'] "
+            [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
-    <div class="user-content-wr ">
+    <div [hidden]="appMode.arm" class="user-content-wr ">
         <span class="title-user-content ">Подразделения адресаты</span>
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">
@@ -66,7 +67,7 @@
         </div>
     </div>
     
-    <div class="user-content-wr ">
+    <div [hidden]="appMode.arm" class="user-content-wr ">
         <span class="title-user-content ">Ограничить грифами доступа:</span>
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">
@@ -87,7 +88,7 @@
         </div>
     </div>
 
-    <div class="user-content-wr ">
+    <div *ngIf="!appMode.arm" class="user-content-wr ">
         <span class="title-user-content ">Ограничить группами документов:</span>
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">

@@ -10,6 +10,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
 import {LINK_CL} from 'eos-rest/interfaces/structures';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 
  @Component({
     selector: 'eos-auto-search',
@@ -20,6 +21,8 @@ import {LINK_CL} from 'eos-rest/interfaces/structures';
 export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
     @Input() userData;
     @Input() defaultValues;
+    @Input() appMode: IUserSettingsModes;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
     public inputs;
     public form: FormGroup;

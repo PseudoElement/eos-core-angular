@@ -21,7 +21,6 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Input() mainUser?;
-    @Input() appMode?: string;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public initShablony: Array<any>;

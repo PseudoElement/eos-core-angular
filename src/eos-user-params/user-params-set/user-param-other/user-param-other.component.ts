@@ -7,6 +7,7 @@ import { PARM_SUCCESS_SAVE } from '../../../eos-user-params/user-params-set/shar
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-other',
     templateUrl: 'user-param-other.component.html',
@@ -18,7 +19,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() openingTab: number = 0;
-    @Input() appMode?: string;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public userId: string;

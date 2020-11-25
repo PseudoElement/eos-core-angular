@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
-import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
+import { IParamAccordionList, IUserSettingsModes } from './shared/intrfaces/user-params.interfaces';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 // import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
@@ -35,6 +35,12 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     closeRight: boolean = false;
     flagEdit: boolean;
     hideIcon: boolean;
+    public appMode: IUserSettingsModes = {
+        tk: true,
+    };
+    public openingOptionalTab: number = 0;
+    public editingUserIsn;
+
     private ngUnsubscribe: Subject<any> = new Subject();
     private _isChanged: boolean;
     //   private _disableSave: boolean;
@@ -68,10 +74,43 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(qParam => {
+            .subscribe(qParams => {
                 // this.isLoading = true;
-                if (qParam['isn_cl']) {
-                    this._storageSrv.setItem('userEditableId', qParam['isn_cl'], true);
+                if (qParams['isn_cl']) {
+                    this._storageSrv.setItem('userEditableId', qParams['isn_cl'], true);
+                }
+                this.editingUserIsn = qParams.isn && Number(qParams.isn) ? Number(qParams.isn) : this.editingUserIsn;
+                if (!this.appMode.hasMode && qParams.mode) {
+                    this.appMode = {};
+                    switch (qParams.mode) {
+                        case 'ARM': {
+                            this.appMode.arm = true;
+                            break;
+                        }
+                        case 'TK': {
+                            this.appMode.tk = true;
+                            break;
+                        }
+                        case 'TK_DOC': {
+                            this.appMode.tkDoc = true;
+                            break;
+                        }
+                        case 'ARMCBR': {
+                            this.appMode.cbr = true;
+                            break;
+                        }
+                        default:
+                            this.appMode.tk = true;
+                            break;
+                    }
+                    this.appMode.hasMode = true;
+                }
+                this.openingOptionalTab = 0;
+                if (qParams.tab) {
+                    const tabString = String(qParams.tab);
+                    if (tabString.length >= 2) {
+                        this.openingOptionalTab = tabString.length > 2 ? Number(tabString.substring(2)) : Number(tabString.substring(1));
+                    }
                 }
                 this.isShowAccordion = true;
             });

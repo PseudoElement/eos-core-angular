@@ -7,6 +7,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 // import { PipRX } from 'eos-rest';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import {ErrorHelperServices} from '../../../shared/services/helper-error.services';
@@ -19,6 +20,8 @@ import { RemasterService } from '../../shared-user-param/services/remaster-servi
 export class UserParamTransferComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
     @Input() defaultUser: any;
+    @Input() appMode: IUserSettingsModes;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
     public inputs: any;

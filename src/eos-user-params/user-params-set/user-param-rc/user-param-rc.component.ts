@@ -11,6 +11,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-rc',
     templateUrl: 'user-param-rc.component.html',
@@ -20,7 +21,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Input() mainUser?;
-    @Input() appMode?;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;

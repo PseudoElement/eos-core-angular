@@ -12,7 +12,7 @@
             <eos-remaster-email (pushChenge)='getChanges($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-email>
         </div>
         <div [hidden]="currTab !== 1" class="clearfix">
-            <eos-remaster-seb (pushChange)='emitChangesSab($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-seb>
+            <eos-remaster-seb (pushChange)='emitChangesSab($event)' [userData]='hash' [appMode]="appMode" [defaultValues]='defaultValues'></eos-remaster-seb>
         </div>
         <div [hidden]="currTab !== 2" class="clearfix">
             <eos-remaster-mado (pushChange)='emitChangesMado($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-mado>
