@@ -1,6 +1,4 @@
-import {
-    IDictionaryDescriptor, ISearchSettings, ITreeDictionaryDescriptor,
-} from 'eos-dictionaries/interfaces';
+import { IDictionaryDescriptor, ISearchSettings, ITreeDictionaryDescriptor, } from 'eos-dictionaries/interfaces';
 
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { FieldDescriptor } from './field-descriptor';
@@ -31,22 +29,28 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
 
     filterBy(filters: any, data: any): boolean {
         if (filters && filters.hasOwnProperty('YEAR')) {
-            const y: number = parseInt(filters['YEAR'], 10);
-            this.dictionary.filtYear = y;
-            const y1: number = data.rec['YEAR_NUMBER'];
-            const y2: number = data.rec['END_YEAR'];
-            const p: boolean = filters['CB1'];
-            if (y) {
-                if (!p && !y2) {
+            const now: number = parseInt(filters['YEAR'], 10);
+            this.dictionary.filtYear = now;
+            const start: number = data.rec['YEAR_NUMBER'];
+            const end: number = data.rec['END_YEAR'];
+            const redirected: boolean = filters['CB1'];
+            const closed: boolean = filters['closed'];
+            const closedNode: boolean = data.rec['CLOSED'];
+
+            if (now) {
+                if (!redirected && !end) {
                     return false;
                 }
-                if (y1 && (y1 > y)) {
+                if (start && (start > now)) {
                     return false;
                 }
-                if (y2 && (y2 < y)) {
+                if (end && (end < now)) {
                     return false;
                 }
-                if (!p && (y2) && (y !== y2)) {
+                if (!redirected && (end) && (now !== end)) {
+                    return false;
+                }
+                if (!closed && closedNode) {
                     return false;
                 }
             }

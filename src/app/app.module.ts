@@ -55,6 +55,7 @@ import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { StaticHelper } from './app.static';
+import { CarmaHttp2Service } from './services/camaHttp2.service';
 /* end guards */
 
 @NgModule({
@@ -112,6 +113,7 @@ import { StaticHelper } from './app.static';
         EosStorageService,
         EosUserProfileService,
         CarmaHttpService,
+        CarmaHttp2Service,
         NavParamService,
         WaitClassifService,
         CertificateService,

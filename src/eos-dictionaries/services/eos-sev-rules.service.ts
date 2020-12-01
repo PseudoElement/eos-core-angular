@@ -465,7 +465,7 @@ export class EosSevRulesService {
                         this._data['VisaFile'] = Project['Visa'][0]['Content'][0]['File'][0].$['Use'] === 'true'; // файл визы VisaFile
                         this._data['visaForward'] = Project['Visa'][0]['SendOptions'][0].$['Send'] === 'true'; // направить на визирование visaForward
                         this._data['visaDays'] = Project['Visa'][0]['SendOptions'][0].$['TermFlag'] === '1'; // чекбокс за визой visaDays
-                        this._data['visaDate'] = Project['Visa'][0]['SendOptions'][0].$['Term']; // срок визы visaDate
+                        this._data['visaDate'] = Project['Visa'][0]['SendOptions'][0].$['Term'] === '0' ? '' : Project['Visa'][0]['SendOptions'][0].$['Term']; // срок визы visaDate
                         // Подписи signatures
                         this._data['signatures'] = Project['Sign'][0].$['Use'] !== 'None'; // visa Визы
                         this._data['signatureKindTake'] = Project['Sign'][0].$['Use'] === 'Extraction' ? 1 : 0;
@@ -473,7 +473,7 @@ export class EosSevRulesService {
                         this._data['signaturesFile'] = Project['Sign'][0]['Content'][0]['File'][0].$['Use'] === 'true'; // файл визы VisaFile
                         this._data['signatureForward'] = Project['Sign'][0]['SendOptions'][0].$['Send'] === 'true'; // направить на визирование visaForward
                         this._data['signatureDays'] = Project['Sign'][0]['SendOptions'][0].$['TermFlag'] === '1'; // чекбокс за визой visaDays
-                        this._data['signatureDate'] = Project['Sign'][0]['SendOptions'][0].$['Term']; // срок визы visaDate
+                        this._data['signatureDate'] = Project['Sign'][0]['SendOptions'][0].$['Term'] === '0' ? '' : Project['Sign'][0]['SendOptions'][0].$['Term']; // срок визы visaDate
                     } catch (e) {
                         console.dir(e);
                         const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
@@ -837,7 +837,7 @@ export class EosSevRulesService {
         const signatures = !this._data['signatures'] ? 'None' : this._data['signaturesKind'] === 0 ? 'All' : 'Addressee';
         const linkTypeList = linkRk === 'List' ? this.data['linkTypeList'] : '';
         const eccessList = this._data['fileAccessListRk'] ? this._data['fileAccessListRk'] : '';
-        const taskFileExt = this._data['taskFileExtensions'] !== 'null' ? this._data['taskFileExtensions'] : '';
+        const taskFileExt = !this._data['taskFileExtensions'] || this._data['taskFileExtensions'] === 'null' ? '' : this._data['taskFileExtensions'];
         const taskFileMaxLength = !this._data['taskFileMaxLength'] || this._data['taskFileMaxLength'] === 'null' ? '' : this._data['taskFileMaxLength'];
         return `<?xml version="1.0"?>
         <SendProjectRule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -876,15 +876,16 @@ export class EosSevRulesService {
     }
 
     private receiveProjectRule(): string {
+
+        const Address = !this._data['address'] ? 'DoNotUse' : this._data['adrReplace'] === 2 ? 'IfEmpty' : 'Always';
         const Link = !this._data['LinkPD'] ? 'None' : this._data['linkKind'] === 1 ? 'List' : 'All'; // Связки РКПД LinkPD
         const Executor = !this._data['executorsProject'] ? 'None' : this._data['kindExecutorProject'] === 1 ? 'First' : 'All';
         const Visa = !this._data['visa'] ? 'None' : this._data['VisaKindTake'] === 1 ? 'Extraction' : 'All';
         const Sign = !this._data['signatures'] ? 'None' : this._data['signatureKindTake'] === 1 ? 'Extraction' : 'All';
-        return `<?xml version="1.0"?>
-        <ReceiveProjectRule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        return `<?xml version="1.0"?><ReceiveProjectRule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
             <ScriptConfig>
                 <Contact>
-                    <Address Use="${Boolean(this._data['address'])}"><Region Use="${Boolean(this._data['region'])}"/></Address>
+                    <Address Use="${Address}"><Region Use="${Boolean(this._data['region'])}"/></Address>
                     <OrganizationFolder>${this._data['OrganizationFolderInput'] || ''}</OrganizationFolder>
                 </Contact>
                 <Project>
@@ -897,11 +898,11 @@ export class EosSevRulesService {
                     <File Use="${Boolean(this._data['FileRKPD'])}"/>
                     <Visa Use="${Visa}">
                         <Content Use="${Boolean(this._data['VisaInfo'])}"><File Use="${Boolean(this._data['VisaFile'])}"/></Content>
-                        <SendOptions Send="${Boolean(this._data['visaForward'])}" TermFlag="${this._data['visaDays'] || ''}" Term="${this._data['visaDate'] || ''}"/>
+                        <SendOptions Send="${Boolean(this._data['visaForward'])}" TermFlag="${this._data['visaDays'] || 0}" Term="${this._data['visaDate'] || 0}"/>
                     </Visa>
                     <Sign Use="${Sign}">
                         <Content Use="${Boolean(this._data['signaturesInfo'])}"><File Use="${Boolean(this._data['signaturesFile'])}"/></Content>
-                        <SendOptions Send="${Boolean(this._data['signatureForward'])}" TermFlag="${this._data['signatureDays'] || ''}" Term="${this._data['signatureDate'] || ''}"/>
+                        <SendOptions Send="${Boolean(this._data['signatureForward'])}" TermFlag="${this._data['signatureDays'] || 0}" Term="${this._data['signatureDate'] || 0}"/>
                     </Sign>
                 </Project>
                 <RegistrationParams>

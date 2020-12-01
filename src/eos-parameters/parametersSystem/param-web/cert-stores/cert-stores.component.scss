@@ -72,10 +72,12 @@
     }
 
     .modal-dialog {
-        margin-top: 300px;
+        margin-top: 20px;
 
         .modal-body {
             min-height: 100px;
+            max-height: 700px;
+            overflow: auto;
 
             ul {
                 list-style: none;

@@ -100,7 +100,13 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         return config;
     }
     public getFullSearchCriteries(data) {
-        return super.getFullSearchCriteries(data);
+        const filteredField = {};
+        Object.keys(data).forEach(_key => {
+            if (String([data[_key]]).trim().length) {
+                filteredField[_key] = data[_key];
+            }
+        });
+        return super.getFullSearchCriteries(filteredField);
     }
     public updateUncheckCitizen(nodes: EosDictionaryNode[]): Promise<any> {
         const change = [];

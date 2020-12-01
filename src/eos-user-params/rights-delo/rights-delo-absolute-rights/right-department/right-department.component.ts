@@ -90,6 +90,7 @@ export class RightDepertmentComponent implements OnInit {
                                 dep: dep,
                                 userDep: userDep,
                             },
+                            weight: userDep.WEIGHT,
                         };
                         let flag;
                         this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
@@ -108,6 +109,7 @@ export class RightDepertmentComponent implements OnInit {
                             this.checkFlag = true;
                         }
                     });
+                    this._sortWeight();
                     this.isLoading = false;
                 })
                 .catch(e => {
@@ -255,7 +257,8 @@ export class RightDepertmentComponent implements OnInit {
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: (this.funcNum === 3 /* && this._appContext.cbBase */) ? null : this._getMaxWeight(),
+                        // WEIGHT: (this.funcNum === 3 /* && this._appContext.cbBase */) ? null : this._getMaxWeight(),
+                        WEIGHT: this.funcNum === 3 ? null : -1,
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -267,6 +270,7 @@ export class RightDepertmentComponent implements OnInit {
                             dep: dep,
                             userDep: newUserDep,
                         },
+                        weight: this._getNewWeight(),
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     let flag;
@@ -287,6 +291,7 @@ export class RightDepertmentComponent implements OnInit {
                 });
                 this.confirmPkpd();
                 this.listUserDep = this.listUserDep.concat(newNodes);
+                this._changeWeight();
                 this.selectedNode.isCreate = false;
                 this.isShell = false;
                 this.Changed.emit();
@@ -370,6 +375,7 @@ export class RightDepertmentComponent implements OnInit {
         }
         this.emitDeleteRcpd();
         this.selectedDep = null;
+        this._changeWeight();
         this.Changed.emit('del');
     }
     emitDeleteRcpd() {
@@ -580,14 +586,56 @@ export class RightDepertmentComponent implements OnInit {
         this.independetRight.emit('PROJECT');
     }
 
-    private _getMaxWeight(): number {
-        let w = 0;
-        this.userDep.forEach(i => {
-            if (i.WEIGHT > w) {
-                w = i.WEIGHT;
-            }
-        });
-        return w;
+    setMain() {
+        if (this.selectedDep.weight !== 1) {
+            this.selectedDep.weight = 0;
+            this._changeWeight();
+            this.Changed.emit('setMain');
+        }
+    }
+
+    // private _getMaxWeight(): number {
+    //     let w = 0;
+    //     this.userDep.forEach(i => {
+    //         if (i.WEIGHT > w) {
+    //             w = i.WEIGHT;
+    //         }
+    //     });
+    //     return w;
+    // }
+    private _getNewWeight(): number {
+        if (this.userDepFuncNumber && this.userDepFuncNumber.length) {
+            return this.userDepFuncNumber.length + 1;
+        } else {
+            return 1;
+        }
+    }
+
+    private _sortWeight(): void {
+        if (this.funcNum !== 3) {
+            this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
+        }
+    }
+
+    private _changeWeight(): void {
+        if (this.funcNum !== 3) {
+            this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
+            this.listUserDep.forEach((node: NodeDocsTree, index: number) => {
+                if (node.weight !== (index + 1) || node.data.userDep['WEIGHT'] < 1) {
+                    node.weight = index + 1;
+                    if (node.weight !== node.data.userDep['WEIGHT']) {
+                        this.selectedNode.addWeightChanges(node);
+                        this.curentUser['USERDEP_List'].forEach(li => {
+                            if (li.FUNC_NUM === this.funcNum && li.DUE === node.DUE) {
+                                li.WEIGHT = node.weight;
+                            }
+                        });
+                        return;
+                    }
+                }
+                this.selectedNode.checkWeightChanges(node);
+            });
+        }
     }
     private _checkRepeat(arrDep: DEPARTMENT[]) {
         this.listUserDep.forEach((node: NodeDocsTree) => {

@@ -101,10 +101,16 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
                 if (typeof singd === 'object' && singd.hasOwnProperty('certInfo')) {
                     this.stateSerts.sing_mail = singd['certInfo']['Description'];
                     this.stateSerts.sing_mail_origin = singd['certInfo']['Description'];
+                }   else {
+                    this.stateSerts.sing_mail = this.userSerts.SIGN_MAIL_CERT;
+                    this.stateSerts.sing_mail_origin = this.userSerts.SIGN_MAIL_CERT;
                 }
                 if (typeof encs === 'object' && encs.hasOwnProperty('certInfo')) {
                     this.stateSerts.enc_mail = encs['certInfo']['Description'];
                     this.stateSerts.enc_mail_origin = encs['certInfo']['Description'];
+                }   else {
+                    this.stateSerts.enc_mail = this.userSerts.ENC_MAIL_CERT;
+                    this.stateSerts.enc_mail_origin = this.userSerts.ENC_MAIL_CERT;
                 }
             });
         }

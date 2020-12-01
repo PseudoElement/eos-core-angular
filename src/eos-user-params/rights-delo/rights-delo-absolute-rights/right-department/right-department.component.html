@@ -34,6 +34,18 @@
             >
                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>
             </button>
+            <button *ngIf="editMode && !selectedNode.control.disabled && funcNum !== 3"
+                class="btn"
+                tooltip="Главный"
+                #setMainTooltip= 'bs-tooltip'
+                placement="bottom"
+                triggers="hover:click"
+                containerClass="tooltip-info"
+                [disabled]="!selectedDep || selectedDep.weight === 1 || listUserDep?.length <= 1"
+                (click)="setMainTooltip.hide(); setMain()"
+            >
+                <span class="eos-icon eos-icon-keyfile-blue small"></span>
+            </button>
         </div>
 
         <div *ngIf="selectedNode && selectedNode.contentProp === 8">
@@ -62,6 +74,7 @@
         <div *ngIf="!checkFlag" class="list-tree-dep">
             <eos-list-doc-tree
                 class="tree-classif-node"
+                [hideExpand]="funcNum !== 3"
                 [listNode]="listUserDep"
                 [editMode]="editMode"
                 (select)="selectNode($event)"

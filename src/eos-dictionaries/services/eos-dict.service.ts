@@ -51,7 +51,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 import { isArray } from 'util';
 
 export const SORT_USE_WEIGHT = true;
-export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
+export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\'!]', 'g');
 
 export class MarkedInformation {
     get anyMarked(): boolean { return (this.nodes && this.nodes.length > 0); }
@@ -984,7 +984,7 @@ export class EosDictService {
                     return this._reloadList()
                         .then(() => {
                             const deletedList = results.filter(r => !r.error)
-                            .map(r => r.record[title] || r.record['CLASSIF_NAME']);
+                                .map(r => r.record[title] || r.record['CLASSIF_NAME']);
                             this.deleteCutedNodes(title, deletedList);
                             this.updateViewParameters({ updatingList: false });
                             return results;
@@ -995,14 +995,16 @@ export class EosDictService {
             return Promise.resolve(null);
         }
     }
-     deleteCutedNodes(title: string, deletedList: any[]) {
+    deleteCutedNodes(title: string, deletedList: any[]) {
         let cuted: Array<EosDictionaryNode> = this._storageSrv.getItem('markedNodes');
-        this._storageSrv.removeItem('markedNodes');
-        cuted = cuted.filter((_n) => {
-            const titlei = _n.data.rec[title] || _n.data.rec['CLASSIF_NAME'];
-            return !deletedList.some((dt) => dt === titlei);
-        });
-        this._storageSrv.setItem('markedNodes', cuted);
+        if (cuted) {
+            this._storageSrv.removeItem('markedNodes');
+            cuted = cuted.filter((_n) => {
+                const titlei = _n.data.rec[title] || _n.data.rec['CLASSIF_NAME'];
+                return !deletedList.some((dt) => dt === titlei);
+            });
+            this._storageSrv.setItem('markedNodes', cuted);
+        }
     }
 
     emitResetSearch() {
@@ -1026,7 +1028,7 @@ export class EosDictService {
 
     quickSearch(settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = JSON.stringify(settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, ''));
+        const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
             this._srchParams = settings.opts;

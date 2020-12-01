@@ -43,8 +43,15 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
         }, {
             controlType: 'boolean',
             key: 'filter.CB1',
-            value: 0,
+            value: 1,
             label: 'переходящие',
+            hideLabel: true,
+            readonly: false
+        }, {
+            controlType: 'boolean',
+            key: 'filter.closed',
+            value: 0,
+            label: 'закрытые',
             hideLabel: true,
             readonly: false
         }
@@ -95,6 +102,9 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
         const cb1Filter = this.searchForm.controls['filter.CB1'];
         this._storageSrv.setItem('filter.CB1', cb1Filter.value);
 
+        const cb2Filter = this.searchForm.controls['filter.closed'];
+        this._storageSrv.setItem('filter.closed', cb1Filter.value);
+
         this._dictSrv.setMarkAllNone();
         if (this.dictId === NOMENKL_DICT.id) {
             const nomenklFilt = {};
@@ -103,6 +113,9 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
             }
             if (cb1Filter) {
                 nomenklFilt['CB1'] = cb1Filter.value;
+            }
+            if (cb2Filter) {
+                nomenklFilt['closed'] = cb2Filter.value;
             }
             this.setFilterNomenkl.emit(nomenklFilt);
             this._dictSrv.setFilter(nomenklFilt);
@@ -155,8 +168,10 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
             if (this.dictId === DID_NOMENKL_CL) {
                 const yearFilter = this.searchForm.controls['filter.stateYear'];
                 const cb1 = this.searchForm.controls['filter.CB1'];
+                const cb2 = this.searchForm.controls['filter.closed'];
                 const yv = this._dictSrv.getFilterValue('YEAR') === undefined ? yearFilter.value : this._dictSrv.getFilterValue('YEAR');
                 const cv = this._dictSrv.getFilterValue('CB1');
+                const cv2 = this._dictSrv.getFilterValue('closed');
                 this.hasYear = true;
                 if (yv || yv === '') {
                     yearFilter.setValue(yv, {emit: false});
@@ -164,6 +179,9 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
 
                 if (cv) {
                     cb1.setValue(cv, {emit: false});
+                }
+                if (cv2) {
+                    cb2.setValue(cv2, {emit: false});
                 }
 
             }

@@ -5,7 +5,7 @@ import { SEARCH_TYPES } from '../search-types';
 import { REGION_DICT } from './region.consts';
 import { ADDR_CATEGORY_DICT } from './addr-category.consts';
 import { MAIL_FORMATS } from './contact.consts';
-import { GENDERS } from './department.consts';
+import {GENDERS_CITIZEN } from './department.consts';
 
 
 
@@ -164,7 +164,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         key: 'SEX',
         title: 'Пол',
         type: 'select',
-        options: GENDERS,
+        options: GENDERS_CITIZEN,
     }, {
         key: 'SNILS',
         title: 'СНИЛС',
