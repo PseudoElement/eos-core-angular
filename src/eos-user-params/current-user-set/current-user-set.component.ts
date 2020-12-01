@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { takeUntil } from 'rxjs/operators';
 import { IUserSetChanges } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
@@ -26,7 +26,8 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     private _isChanged: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
-        private router: ActivatedRoute,
+        private _router: Router,
+        private _route: ActivatedRoute,
         private _userParamService: UserParamsService,
         private _apContext: AppContext,
     ) {}
@@ -34,10 +35,10 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         this._apContext.setHeader.next(false);
         this.checkCB = this._apContext.cbBase;
         this.mainUser = this._apContext.CurrentUser.ISN_LCLASSIF;
-        this.router.params.subscribe(params => {
+        this._route.params.subscribe(params => {
             this.paramId = params['field-id'];
         });
-        this.router.queryParams.subscribe((qParams) => {
+        this._route.queryParams.subscribe((qParams: Params) => {
             this.mainUser = qParams.isn && Number(qParams.isn) ? Number(qParams.isn) : this.mainUser;
             if (!this.appMode.hasMode && qParams.mode) {
                 this.appMode = {};
@@ -64,6 +65,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                 }
                 this.appMode.hasMode = true;
             }
+            this._checkTabExistance(qParams);
             this.openingOptionalTab = 0;
             if (qParams.tab) {
                 const tabString = String(qParams.tab);
@@ -110,6 +112,19 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     toggleTheme() {
         if (this.checkCB) {
             return { 'current-settings-CB': true };
+        }
+    }
+    private _checkTabExistance(qParams: Params) {
+        if (this.appMode && this.appMode.arm) {
+            if (this.listSettings) {
+                this.listSettings = this.listSettings.filter((subItem) => subItem.url !== 'external-application' && subItem.url !== 'patterns');
+            }
+
+            if (this.paramId === 'external-application') {
+                this._router.navigate(['/user_param', 'current-settings', 'visualization'], { queryParams: { ...qParams } });
+            } else if (this.paramId === 'patterns') {
+                this._router.navigate(['/user_param', 'current-settings', 'other'], { queryParams: { ...qParams } });
+            }
         }
     }
 }

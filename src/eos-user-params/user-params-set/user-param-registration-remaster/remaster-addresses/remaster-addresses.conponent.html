@@ -1,4 +1,4 @@
-<div [hidden]="!appMode.cbr" class="user-group-form">
+<div class="user-group-form">
     <span>Заполнять из справочника поле:</span>
     <eos-dynamic-input
         [input]="inputs['rec.CORR_SIGN']"
@@ -11,7 +11,7 @@
         [readonly]="false"
     ></eos-dynamic-input>
 </div>
-<div [hidden]="!appMode.cbr" class="user-input-group readonlyInput">
+<div class="user-input-group readonlyInput">
     <span>Помещать новые организации
         в вершину справочника "Организации":</span>
     <span class="get-new-org">

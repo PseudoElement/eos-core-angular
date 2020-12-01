@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, HostListener, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRoute, RouterStateSnapshot, Router, Params } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -59,7 +59,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(param => {
+            .subscribe((param: Params) => {
                 this.checkAdmin();
                 this.pageId = param['field-id'];
                 this.codeList = undefined;
@@ -74,12 +74,14 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(qParams => {
+            .subscribe((qParams: Params) => {
                 // this.isLoading = true;
+                if (!this._checkUserIsn(qParams)) {
+                    return;
+                }
                 if (qParams['isn_cl']) {
                     this._storageSrv.setItem('userEditableId', qParams['isn_cl'], true);
                 }
-                this.editingUserIsn = qParams.isn && Number(qParams.isn) ? Number(qParams.isn) : this.editingUserIsn;
                 if (!this.appMode.hasMode && qParams.mode) {
                     this.appMode = {};
                     switch (qParams.mode) {
@@ -105,6 +107,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     }
                     this.appMode.hasMode = true;
                 }
+                this._checkTabExistance(qParams);
                 this.openingOptionalTab = 0;
                 if (qParams.tab) {
                     const tabString = String(qParams.tab);
@@ -307,6 +310,28 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     private checkAdmin() {
         if (this._appContext.CurrentUser.IS_SECUR_ADM) {
             this._router.navigate(['user_param']);
+        }
+    }
+    private _checkUserIsn(qParams: Params) {
+        this.editingUserIsn = qParams.isn && Number(qParams.isn) ? Number(qParams.isn) : this.editingUserIsn;
+        if (this.editingUserIsn && String(this.editingUserIsn) === '-99') {
+            this._router.navigate(['/user_param', 'default-settings', `${this.pageId}`], { queryParams: { ...qParams } });
+            return false;
+        }
+        return true;
+    }
+    private _checkTabExistance(qParams: Params) {
+        if (this.appMode && this.appMode.arm) {
+            const subLists = this.accordionList.find(list => list.url === 'param-set');
+            if (subLists && subLists.subList) {
+                subLists.subList = subLists.subList.filter((subItem) => subItem.url !== 'external-application' && subItem.url !== 'patterns');
+            }
+
+            if (this.pageId === 'external-application') {
+                this._router.navigate(['/user-params-set', 'visualization'], { queryParams: { ...qParams } });
+            } else if (this.pageId === 'patterns') {
+                this._router.navigate(['/user-params-set', 'other'], { queryParams: { ...qParams } });
+            }
         }
     }
 }

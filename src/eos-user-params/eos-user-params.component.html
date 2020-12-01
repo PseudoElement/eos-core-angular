@@ -90,6 +90,7 @@
             </ng-container>
             <ng-container *ngSwitchCase="'external-application'">
                 <eos-user-param-external-application
+                    [hidden]="appMode.arm"
                     [mainUser]="editingUserIsn"
                     [openingTab]="openingOptionalTab"
                     [appMode]="appMode">
@@ -104,6 +105,7 @@
             </ng-container>
             <ng-container *ngSwitchCase="'patterns'">
                 <eos-user-param-shablony
+                    [hidden]="appMode.arm"
                     [mainUser]="mainUser">
                 </eos-user-param-shablony>
             </ng-container>
