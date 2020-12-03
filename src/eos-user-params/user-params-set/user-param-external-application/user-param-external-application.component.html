@@ -1,5 +1,15 @@
 <div class="input-user-wrapper input-user-external-application-wrapper" *ngIf="inputs">
-    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancellation($event)' (editEmit)='edit($event)' (defaultEmit)='defaults($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="editFlag"
+        [title]='titleHeader'
+        [disableBtn]="btnDisabled"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancellation($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='defaults($event)'
+    ></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of fieldGroupsForDeskApl; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">

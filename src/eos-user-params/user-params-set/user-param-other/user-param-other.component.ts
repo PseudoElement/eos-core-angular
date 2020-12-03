@@ -20,6 +20,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     @Input() mainUser?;
     @Input() openingTab: number = 0;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public userId: string;

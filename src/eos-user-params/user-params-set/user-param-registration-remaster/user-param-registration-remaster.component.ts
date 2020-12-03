@@ -20,6 +20,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Input() mainUser?;
     @Input() openingTab: number = 0;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];
@@ -37,6 +38,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public currentUser;
     public isSave: boolean;
     public errorS: boolean = false;
+
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {

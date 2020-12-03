@@ -43,6 +43,7 @@ interface SertInfo {
 
 export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     @Input() mainUser?;
+    @Input() isCurrentSettings?: boolean;
 
     public stateSerts: SertsBase = {
         sing_mail: null,

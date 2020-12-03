@@ -1,5 +1,15 @@
 <div class="input-user-wrapper input-user-rc-wrapper " *ngIf="inputs">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="flagEdit"
+        [title]='titleHeader'
+        [disableBtn]="btnDisabled"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancel($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event)'
+    ></eos-user-params-header>
     <div class="container-rk">
         <div class="user-group-form">
             <eos-dynamic-input [input]="inputs['rec.SHOW_RAC_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>

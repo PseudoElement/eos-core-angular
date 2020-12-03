@@ -20,6 +20,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;

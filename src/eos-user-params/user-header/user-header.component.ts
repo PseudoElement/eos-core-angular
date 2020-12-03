@@ -15,10 +15,20 @@ export class UserHeaderComponent implements OnInit {
     @Input() disableBtn: boolean;
     @Input() defaultBtn?: boolean = false;
     @Input() errorSave: boolean = false;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() defaultEmit = new EventEmitter<any>();
     @Output() submitEmit = new EventEmitter<any>();
     @Output() cancelEmit = new EventEmitter<boolean>();
     @Output() editEmit = new EventEmitter<boolean>();
+
+    public btnTitles = {
+        default: 'По умолчанию',
+        save: 'Сохранить',
+        cancel: 'Отменить',
+        saveFile: 'Сохранить настройки в файл',
+    };
+
     get checkSegment() {
         const segmentsUrl = this._router.parseUrl(this._router.url).root.children.primary.segments;
         if (segmentsUrl.length && segmentsUrl.length > 2 && segmentsUrl[1].path === 'current-settings') {
@@ -38,6 +48,14 @@ export class UserHeaderComponent implements OnInit {
             setTimeout(() => {
                 this.editMode  = true;
                 this.editEmit.emit(this.editMode);
+            });
+        }
+        if (!this.isCurrentSettings) {
+            Object.keys(this.btnTitles).forEach((btnKey) => {
+                const value = this.btnTitles[btnKey];
+                if (value && value.length) {
+                    this.btnTitles[btnKey] = value.toUpperCase();
+                }
             });
         }
     }

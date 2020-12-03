@@ -21,6 +21,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() mainUser?;
     @Input() openingTab: number = 0;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];

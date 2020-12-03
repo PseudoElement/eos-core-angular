@@ -1,5 +1,16 @@
 <div class="input-user-wrapper">
-    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled" [errorSave]="!flagIncrementError" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event) '></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="editFlag"
+        [title]='titleHeader'
+        [disableBtn]="btnDisabled"
+        [errorSave]="!flagIncrementError"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancel($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event) '
+    ></eos-user-params-header>
 </div>
 <div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
     <div class="tabs-wrapper usual-border border-bottom">
