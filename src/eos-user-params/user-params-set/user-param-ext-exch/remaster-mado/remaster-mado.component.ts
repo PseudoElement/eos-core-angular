@@ -17,6 +17,8 @@ import { REMASTER_MADO } from 'eos-user-params/user-params-set/shared-user-param
 export class RemasterMadoComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public inputs;
     public form: FormGroup;
@@ -72,7 +74,11 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
-        this.form.disable({emitEvent: false});
+        if (this.isCurrentSettings) {
+            this.form.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+        }
         this.subscribeChange();
     }
     setNewValInputs() {

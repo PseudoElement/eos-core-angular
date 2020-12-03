@@ -54,6 +54,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     public OpenParamsReg: boolean;
     @Input() userData;
     @Input() defaultValues;
+    @Input() isCurrentSettings?: boolean;
     @Output() pushChenge = new EventEmitter<any>();
     public mapDefault: any = {};
     private hashKeyDBString = new Map();
@@ -144,7 +145,11 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.prepareData = this.formHelp.convData(this.preparedItemForInputs);
         this.inputs = this.dataSrv.getInputs(this.prepareInputs, { rec: this.preparedItemForInputs });
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-        this.form.disable({ emitEvent: false });
+        if (this.isCurrentSettings) {
+            this.form.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+        }
         this.templRender = this.createTree(this.fieldsConst.fields);
         this.sliceArrayForTemplate();
         this.subscriberFormRcSend();
@@ -155,7 +160,11 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.prepareDataMailResive = this.formHelp.convData(this.preparedItemForInputsMailREsive);
         this.inputsMailResive = this.dataSrv.getInputs(this.prepareInputsMailREsive, { rec: this.preparedItemForInputsMailREsive });
         this.formMailResuve = this.inputCtrlSrv.toFormGroup(this.inputsMailResive);
-        this.formMailResuve.disable({ emitEvent: false });
+        if (this.isCurrentSettings) {
+            this.formMailResuve.enable({emitEvent: false});
+        } else {
+            this.formMailResuve.disable({emitEvent: false});
+        }
         this.templRenderMailResive = this.createTree(this.fieldsConstMailResive.fields);
         this.subscriberFormMailResive();
     }

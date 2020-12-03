@@ -21,6 +21,7 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
     @Input() defaultUser: any;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
@@ -119,7 +120,7 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
         });
     }
     editMode() {
-        if (this.flagEdit) {
+        if (this.flagEdit || this.isCurrentSettings) {
             this.form.enable({ emitEvent: false });
         } else {
             this.form.disable({ emitEvent: false });

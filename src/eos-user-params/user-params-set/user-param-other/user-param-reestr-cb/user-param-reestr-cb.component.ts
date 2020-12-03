@@ -29,6 +29,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Input() errorHidden: boolean;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() pushIncrementError: EventEmitter<any> = new EventEmitter<any>();
@@ -209,7 +210,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         });
     }
     editMode() {
-        if (this.flagEdit) {
+        if (this.flagEdit || this.isCurrentSettings) {
             this.form.enable({ emitEvent: false });
         } else {
             this.form.disable({ emitEvent: false });

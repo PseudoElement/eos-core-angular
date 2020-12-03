@@ -25,6 +25,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
     public inputs;
@@ -87,7 +88,11 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
-        this.form.disable({emitEvent: false});
+        if (this.isCurrentSettings) {
+            this.form.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+        }
         const orgISN = this.form.controls['rec.ORGGROUP'].value;
         this.getOrgGroupValue(orgISN);
         this.subscribeChange();

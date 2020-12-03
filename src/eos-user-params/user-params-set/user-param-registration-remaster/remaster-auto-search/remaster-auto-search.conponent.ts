@@ -21,6 +21,7 @@ import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params
 export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
     @Input() userData;
     @Input() defaultValues;
+    @Input() isCurrentSettings?: boolean;
     @Input() appMode: IUserSettingsModes;
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
@@ -87,7 +88,11 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
             this.inputs['rec.LINKS_SORT_ORDER1'].value = `${this.userData['LINKS_SORT_ORDER']}`;
             this.inputs['rec.LINKS_SORT_ORDER2'].value = `${this.userData['LINKS_SORT_ORDER']}`;
             this.form = this.inpSrv.toFormGroup(this.inputs);
-            this.form.disable({emitEvent: false});
+            if (this.isCurrentSettings) {
+                this.form.enable({emitEvent: false});
+            } else {
+                this.form.disable({emitEvent: false});
+            }
             this.subscribeChange();
         });
     }

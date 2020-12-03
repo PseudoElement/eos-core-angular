@@ -19,6 +19,7 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
     @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public inputs;
@@ -73,7 +74,11 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
-        this.form.disable({emitEvent: false});
+        if (this.isCurrentSettings) {
+            this.form.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+        }
         this.subscribeChange();
     }
     setNewValInputs() {
