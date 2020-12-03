@@ -3,7 +3,7 @@
         [editMode]="editFlag"
         [title]='titleHeader'
         [disableBtn]="!btnDisabled"
-        [defaultBtn]='false'
+        [defaultBtn]='isCurrentSettings'
         [isCurrentSettings]="isCurrentSettings"
         (submitEmit)='submit($event)'
         (cancelEmit)='cancellation($event)'
