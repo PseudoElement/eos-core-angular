@@ -267,16 +267,18 @@ export class UserParamApiSrv {
                 if (!this.users_pagination.totalPages) {
                     let hasUsers = false;
                     const conf = this._storageSrv.getItem('users');
-                    if (conf.showMore && conf.start > 1) {
-                        conf.start = 1;
-                        hasUsers = true;
-                    } else if (conf.current > 1) {
-                        conf.current = 1;
-                        hasUsers = true;
-                    }
-                    if (hasUsers) {
-                        this._storageSrv.setItem('users', conf, true);
-                        return this.getUsers(dueDep);
+                    if (conf) {
+                        if (conf.showMore && conf.start > 1) {
+                            conf.start = 1;
+                            hasUsers = true;
+                        } else if (conf.current > 1) {
+                            conf.current = 1;
+                            hasUsers = true;
+                        }
+                        if (hasUsers) {
+                            this._storageSrv.setItem('users', conf, true);
+                            return this.getUsers(dueDep);
+                        }
                     }
                 }
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
