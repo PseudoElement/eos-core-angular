@@ -15,8 +15,8 @@
 <div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
-            <li class="tab-item" *ngFor="let tab of fieldGroups; let i = index" [ngClass]="{'active ': i === currTab}" (click)="setTab(i)">
-                <span class="tab-title">{{tab}}</span>
+            <li class="tab-item" *ngFor="let tab of fieldGroups | keyvalue" [ngClass]="{'active ': tab.key === currTab}" (click)="setTab(tab.key)">
+                <span class="tab-title">{{tab.value}}</span>
             </li>
         </ul>
     </div>

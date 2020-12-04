@@ -10,10 +10,10 @@
         (editEmit)='edit($event)'
         (defaultEmit)='default($event)'
     ></eos-user-params-header>
-    <div class="container-rk">
+    <div [hidden]="appMode.cbr" class="container-rk">
         <div class="user-group-form">
             <eos-dynamic-input [input]="inputs['rec.SHOW_RAC_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [hidden]="!appMode.cbr" [input]="inputs['rec.DONT_SHOW_DOC_HIDDEN_FILES']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="!appMode.cbr" [input]="inputs['rec.DONT_SHOW_DOC_HIDDEN_FILES']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [hidden]="appMode.tkDoc" [input]="inputs['rec.CLOSE_RC_AFTER_SAVE_RESOLUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <div [hidden]="appMode.arm" class="user-group-form">
@@ -50,6 +50,17 @@
             </div>
         </div>  
         <eos-dynamic-input [hidden]="appMode.arm" [input]="inputs['rec.RES_LIST_ALL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+    </div>
+
+    <!-- Для режима "mode=ARMCBR" необходим только 1 чекбокс на данной вкладке -->
+    <div *ngIf="appMode.cbr" class="container-rk">
+        <div class="user-group-form">
+            <eos-dynamic-input
+                [input]="inputs['rec.DONT_SHOW_DOC_HIDDEN_FILES']"
+                [form]="form"
+                [readonly]="false">
+            </eos-dynamic-input>
+        </div>
     </div>
     <div class="bcgFixed" *ngIf='flagBacground'>
     </div>

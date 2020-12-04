@@ -1,16 +1,17 @@
 <div class="user-group-form">
     <eos-dynamic-input
+        *ngIf="!appMode.cbr"
         [input]="inputs['rec.FIRST_PRJEXEC_FROM_PREV']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
-        [hidden]="!appMode.cbr"
         [input]="inputs['rec.DONT_SHOW_PRJ_HIDDEN_FILES']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        *ngIf="!appMode.cbr"
         [input]="inputs['rec.CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA']"
         [form]="form"
         [readonly]="false"

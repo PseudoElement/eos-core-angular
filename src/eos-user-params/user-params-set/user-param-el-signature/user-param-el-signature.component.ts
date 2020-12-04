@@ -11,6 +11,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -23,6 +24,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     @Input() defaultUser: any;
     @Input() mainUser?;
     @Input() isCurrentSettings?: boolean;
+    @Input() appMode: IUserSettingsModes;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public control: AbstractControl;

@@ -115,16 +115,39 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         }
     }
     private _checkTabExistance(qParams: Params) {
-        if (this.appMode && this.appMode.arm) {
-            if (this.listSettings) {
-                this.listSettings = this.listSettings.filter((subItem) => subItem.url !== 'external-application' && subItem.url !== 'patterns');
+        if (!this.appMode) {
+            return;
+        }
+        const redirectToRegistration = (hiddenUrls: Map<string, boolean>) => {
+            if (hiddenUrls && hiddenUrls.size) {
+                if (this.listSettings) {
+                    this.listSettings = this.listSettings.filter((subItem) => !hiddenUrls.has(subItem.url));
+                }
+                if (hiddenUrls.has(this.paramId)) {
+                    this._router.navigate([
+                        '/user_param',
+                        'current-settings',
+                        'registration'
+                    ], { queryParams: { ...qParams } });
+                }
             }
-
-            if (this.paramId === 'external-application') {
-                this._router.navigate(['/user_param', 'current-settings', 'visualization'], { queryParams: { ...qParams } });
-            } else if (this.paramId === 'patterns') {
-                this._router.navigate(['/user_param', 'current-settings', 'other'], { queryParams: { ...qParams } });
-            }
+        };
+        if (this.appMode.arm) {
+            const hiddenUrls = new Map<string, boolean>([
+                ['external-application', true],
+                ['patterns', true],
+            ]);
+            redirectToRegistration(hiddenUrls);
+        } else if (this.appMode.cbr) {
+            const hiddenUrls = new Map<string, boolean>([
+                ['dictionary', true],
+                ['ext-exch', true],
+                ['prof-sert', true],
+                ['visualization', true],
+                ['external-application', true],
+                ['patterns', true],
+            ]);
+            redirectToRegistration(hiddenUrls);
         }
     }
 }

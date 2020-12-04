@@ -636,7 +636,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.checkTouch(emptyObj);
     }
     private defineLastTab() {
-        if (this.appMode.arm) {
+        if (!this.appMode || this.appMode.arm || this.appMode.cbr) {
             return;
         }
         if (this.defaultTitle) {

@@ -75,17 +75,18 @@
             </ng-container>
             <ng-container *ngSwitchCase="'el-signature'">
                 <eos-user-param-el-signature
-                    [mainUser]="mainUser">
+                    [mainUser]="editingUserIsn"
+                    [appMode]="appMode">
                 </eos-user-param-el-signature>
             </ng-container>
             <ng-container *ngSwitchCase="'prof-sert'">
                 <eos-prof-sert
-                    [mainUser]="mainUser">
+                    [mainUser]="editingUserIsn">
                 </eos-prof-sert>
             </ng-container>
             <ng-container *ngSwitchCase="'visualization'">
                 <eos-user-param-visualization
-                    [mainUser]="mainUser">
+                    [mainUser]="editingUserIsn">
                 </eos-user-param-visualization>
             </ng-container>
             <ng-container *ngSwitchCase="'external-application'">
@@ -106,7 +107,7 @@
             <ng-container *ngSwitchCase="'patterns'">
                 <eos-user-param-shablony
                     [hidden]="appMode.arm"
-                    [mainUser]="mainUser">
+                    [mainUser]="editingUserIsn">
                 </eos-user-param-shablony>
             </ng-container>
         </div>

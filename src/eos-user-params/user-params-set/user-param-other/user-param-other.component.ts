@@ -33,6 +33,11 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     public flagIncrementError: boolean = true;
     public currentUser;
     public cbBase: boolean = false;
+    public fieldGroups: Map<number, string> = new Map([
+        [0, 'Пересылка документа'],
+        [1, 'Адресаты документа'],
+        [2, 'Реестр передачи документов'],
+    ]);
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -42,7 +47,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка документа', 'Адресаты документа', 'Реестр передачи документов'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
@@ -63,7 +67,11 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _appContext: AppContext,
     ) {}
     ngOnInit() {
-        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroups.length) {
+        if (this.appMode && this.appMode.cbr) {
+            // Скрываем вкладку "Пересылка документа" если mode=ARMCBR
+            this.fieldGroups.delete(0);
+        }
+        if (this.openingTab && this.fieldGroups.has(this.openingTab - 1)) {
             this.currTab = Number(this.openingTab) - 1;
         }
         if (this._appContext.cbBase) {

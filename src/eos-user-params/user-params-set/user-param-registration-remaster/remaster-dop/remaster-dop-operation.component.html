@@ -1,7 +1,7 @@
 <div class="set-header">
     <span>При регистрации автоматически:</span>
 </div>
-<div [hidden]="appMode.arm" class="user-group-form">
+<div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
     <eos-dynamic-input
         class="registration-boolean-automatically-call-function-forwarded-RC"
         [input]="inputs['rec.AUTOSEND']"
@@ -9,7 +9,7 @@
         [readonly]="false"
     ></eos-dynamic-input>
 </div>
-<div [hidden]="!appMode.cbr" class="user-group-form">
+<div class="user-group-form">
     <span>Записывать документ в папку текущего кабинета:</span>
     <div class="inputs-inline">
         <eos-dynamic-input
@@ -26,7 +26,7 @@
         ></eos-dynamic-input>
     </div>
 </div>
-<div [hidden]="appMode.arm" class="user-group-form">
+<div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
     <span>Печатать регистрационный штамп в приложении Документы:</span>  
     <div class="inputs-inline">
         <eos-dynamic-input
@@ -43,17 +43,17 @@
         ></eos-dynamic-input>
     </div>
 </div>
-<div class="user-group-form">
+<div [hidden]="appMode.cbr" class="user-group-form">
     <span>Присваивать гриф доступа:</span>
-<eos-dynamic-input
-    class="input-right"
-    [input]="inputs['rec.SECURLEVEL']"
-    [form]="form"
-    [readonly]="false"
-></eos-dynamic-input>
+    <eos-dynamic-input
+        class="input-right"
+        [input]="inputs['rec.SECURLEVEL']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
 </div>
 
-<div [hidden]="!appMode.cbr" class="user-group-form">
+<div class="user-group-form">
     <span>Присваивать вид доставки:</span>
     <eos-dynamic-input
         class="input-right"
@@ -62,19 +62,19 @@
         [readonly]="false"
     ></eos-dynamic-input>
 </div>
-<div class="user-group-form">
+<div [hidden]="appMode.cbr" class="user-group-form">
     <eos-dynamic-input
-    [input]="inputs['rec.TESTRAPID_ONSAVE']"
-    [form]="form"
-    [readonly]="false"
-></eos-dynamic-input>
-<eos-dynamic-input
-    [input]="inputs['rec.TESTRAPID_USECORRESP']"
-    [form]="form"
-    [readonly]="false"
-></eos-dynamic-input>
+        [input]="inputs['rec.TESTRAPID_ONSAVE']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.TESTRAPID_USECORRESP']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
 </div>
-<div class="user-group-form">
+<div [hidden]="appMode.cbr" class="user-group-form">
     <span>Регистрировать РК из РКПД:</span><br>
     <eos-dynamic-input
         class="input-right"
@@ -83,7 +83,7 @@
         [readonly]="false"
     ></eos-dynamic-input>
 </div>
-<div [hidden]="!appMode.cbr" class="user-group-form">
+<div class="user-group-form">
     <span>Установить запрет:</span>
     <eos-dynamic-input
     class="input-right"

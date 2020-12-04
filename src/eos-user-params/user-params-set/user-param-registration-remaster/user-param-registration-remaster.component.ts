@@ -23,7 +23,13 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];
+    public fieldGroupsForRegistration: Map<number, string> = new Map([
+        [0, 'Документ (РК)'],
+        [1, 'Корр./адресаты'],
+        [2, 'Сканирование и печать штрих-кода'],
+        [3, 'Связки и автопоиск'],
+        [4, 'Проект документа (РКПД)'],
+    ]);
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
@@ -68,7 +74,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _formHelper: FormHelperService,
     ) {}
     ngOnInit() {
-        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForRegistration.length) {
+        if (this.appMode && this.appMode.cbr) {
+            // Скрываем вкладки "Сканирование и печать штрих-кода" и "Связки и автопоиск" для mode=ARMCBR
+            this.fieldGroupsForRegistration.delete(2);
+            this.fieldGroupsForRegistration.delete(3);
+        }
+        if (
+            this.openingTab &&
+            this.fieldGroupsForRegistration.has(this.openingTab - 1)
+        ) {
             this.currTab = Number(this.openingTab) - 1;
         }
         if (this.defaultTitle) {

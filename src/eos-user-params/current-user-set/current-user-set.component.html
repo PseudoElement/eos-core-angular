@@ -63,6 +63,7 @@
                 </ng-container>
                 <ng-container *ngSwitchCase="'el-signature'">
                     <eos-user-param-el-signature
+                        [appMode]="appMode"
                         [mainUser]="mainUser"
                         [isCurrentSettings]="true"
                     ></eos-user-param-el-signature>
