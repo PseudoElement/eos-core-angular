@@ -72,8 +72,10 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                     if (this.node.parent.id === '0.') {
                         this.department = '...';
                     } else {
-                        this.department = this.node.parent.getParentData('FULLNAME', 'rec') ||
-                            this.node.parent.getParentData('CLASSIF_NAME', 'rec');
+                        // this.department = this.node.parent.getParentData('FULLNAME', 'rec') ||
+                        //     this.node.parent.getParentData('CLASSIF_NAME', 'rec');
+                        this.department = this.node.parent.getParentData('FULLNAME', 'rec', 'CLASSIF_NAME');
+                        // this.node.parent.getParentData('CLASSIF_NAME', 'rec');
                     }
                     if (this.node.data.photo && this.node.data.photo.url) {
                         this.photo = this.node.data.photo.url;

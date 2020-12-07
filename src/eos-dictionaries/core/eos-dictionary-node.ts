@@ -301,8 +301,11 @@ export class EosDictionaryNode {
         return _data;
     }
 
-    getParentData(fieldName: string, recName = 'rec'): any {
+    getParentData(fieldName: string, recName = 'rec', additionalName?: string): any {
         let res = this.data[recName][fieldName];
+        if (!res && additionalName) {
+            res = this.data[recName][additionalName];
+        }
         if (res === undefined || res === null) {
             if (this.parent) {
                 res = this.parent.getParentData(fieldName, recName);
