@@ -17,6 +17,7 @@ $header-form-bg: #f1eee8;
 $active-field-color-main-theme: #646464;
 
 //цвета для CB
+$title-color-CB: #373737;
 $header-bg-CB: #6f6f6f;
 $sidebar-bg-CB: #eeeeee;
 $active-element-CB: #999999;
@@ -34,16 +35,17 @@ $horizontal-line-color-CB: #c4c4c4;
 @mixin style-title-bookmarks($isCB: false) {
     display: inline-block;
     width: 100%;
-    padding: 2px 10px;
+    padding: 6px 10px;
 
     @if $isCB {
         font-size: 18px;
-        line-height: 22px;
+        //line-height: 22px;
+        color: $title-color-CB;
         font-weight: normal;
         background: none;
         border-bottom: 1px solid $horizontal-line-color-CB;
     } @else {
-        line-height: 16px;
+        line-height: 90%;
         font-size: 14px;
         font-weight: bold;
         background-color: $header-form-bg;
@@ -63,19 +65,19 @@ $horizontal-line-color-CB: #c4c4c4;
 }
 
 @mixin style-other-button($isCB: false) {
-    padding: 4px;
+    padding: 0 0 0 5px;
     margin: 0;
 
     span.eos-icon {
-        width: 22px;
-        height: 20px;
-        margin-bottom: 0;
         background-size: contain;
+        background-position: right;
         background-repeat: no-repeat;
     }
 
     span.eos-icon-plus-blue,
     span.eos-icon-folder-blue {
+        width: 24px;
+
         @if $isCB {
             background-image: url("assets/icons/Icon-Add-UserSettings-CB.svg");
         } @else {
@@ -87,6 +89,8 @@ $horizontal-line-color-CB: #c4c4c4;
     span.eos-icon-close-blue,
     span.eos-icon-close-grey,
     span.eos-icon-bin-forever-grey {
+        width: 18px;
+
         @if $isCB {
             background-image: url("assets/icons/Icon-Delete-UserSettings-CB.svg");
         } @else {
@@ -96,6 +100,8 @@ $horizontal-line-color-CB: #c4c4c4;
 
     span.eos-icon-info-grey,
     span.eos-icon-info-blue {
+        width: 18px;
+
         @if $isCB {
             background-image: url("assets/icons/Icon-Info-UserSettings-CB.svg");
         } @else {
@@ -122,7 +128,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
 @mixin set-margin-for-dynamic-ipnputs {
     & > eos-dynamic-input {
-        margin-left: 20px;
+        margin-left: 15px;
 
         &:first-of-type {
             margin-top: 15px;
@@ -130,6 +136,22 @@ $horizontal-line-color-CB: #c4c4c4;
 
         &:last-of-type {
             margin-bottom: 15px;
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .main {
+        eos-user-param-cabinets {
+            .input-user-cabinets-rk-forwarding-wrapper {
+                div.user-group-form {
+                    &:first-child {
+                        .user-input-increment-cabinets {
+                            width: 25% !important;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -198,10 +220,16 @@ $horizontal-line-color-CB: #c4c4c4;
                     align-items: center;
                     justify-content: center;
                     height: 45px;
+                    padding: 0 5px;
                     background: inherit;
 
                     &:hover {
                         cursor: pointer;
+                    }
+
+                    &:last-child {
+                        border-bottom-right-radius: 0;
+                        border-bottom-left-radius: 0;
                     }
                 }
             }
@@ -254,13 +282,14 @@ $horizontal-line-color-CB: #c4c4c4;
                     & > div > button.btn.btn-primary {
                         position: absolute;
                         bottom: 20px;
-                        left: 25%;
+                        left: 275px;
                         min-width: 100px;
-                        padding: 10px 4px;
+                        padding: 10px 18px;
                         color: $text-color;
                         border: 1px solid $button-border;
                         background-color: $button-bg;
                         z-index: 100;
+                        font-size: 14px;
 
                         &:hover {
                             background-color: $active-element;
@@ -277,30 +306,21 @@ $horizontal-line-color-CB: #c4c4c4;
                         & > div {
                             flex-direction: row-reverse;
                             justify-content: flex-start;
-                            margin-right: 20px;
 
                             button:first-child {
                                 position: absolute;
-                                top: 22px;
-                                left: 138px;
+                                top: 0;
+                                left: 140px;
                             }
-                        }
-
-                        &::before {
-                            content: "";
-                            display: inline-block;
-                            width: calc(100% - 130px);
-                            height: 1px;
-                            margin-bottom: 15px;
-                            border: 1px solid $light-yellow;
                         }
 
                         .btn {
                             min-width: 100px;
-                            padding: 10px 4px;
+                            padding: 10px 18px;
                             color: $text-color;
                             border: 1px solid $button-border;
                             background-color: $button-bg;
+                            font-size: 14px;
 
                             &.btn-primary-full {
                                 background-color: $button-save-bg;
@@ -319,6 +339,7 @@ $horizontal-line-color-CB: #c4c4c4;
                 justify-content: flex-start;
                 padding-right: 0;
                 border: none;
+                background: none;
 
                 ul.tabs {
                     display: flex;
@@ -331,11 +352,16 @@ $horizontal-line-color-CB: #c4c4c4;
                         align-items: center;
                         justify-content: center;
                         width: 170px;
-                        height: inherit;
+                        height: 100%;
                         padding: 0;
                         margin-right: 0px;
-                        border: 1px solid $button-border;
                         background-color: $sidebar-bg;
+                        border: 1px solid $button-border;
+                        border-bottom-width: 1px;
+
+                        &:not(:last-child) {
+                            border-right-style: none;
+                        }
 
                         & > span {
                             text-align: center;
@@ -343,7 +369,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         }
 
                         &.active {
-                            border: 1px solid $tab-active;
+                            border-color: $tab-active;
                             background-color: $active-element;
                             color: $text-color !important;
                         }
@@ -423,15 +449,15 @@ $horizontal-line-color-CB: #c4c4c4;
                                     margin: 0 !important;
 
                                     input[type="radio"] + span {
-                                        margin: 0 5px 0 0;
-                                        line-height: initial;
+                                        margin: 0;
+                                        line-height: 0;
                                         background-image: url("assets/icons/Radio-UserSettings-Black.svg");
                                         @include settings-icon;
                                     }
 
                                     input[type="radio"]:checked + span {
-                                        margin: 0 5px 0 0;
-                                        line-height: initial;
+                                        margin: 0;
+                                        line-height: 0;
                                         background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
                                         @include settings-icon;
                                     }
@@ -444,7 +470,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         input.text-input-select2.form-control {
                             height: 24px;
                             min-height: 24px;
-                            padding: 2px 8px;
+                            padding: 0 8px;
                             background: $white;
                             border: 1px solid #676869;
                         }
@@ -476,9 +502,11 @@ $horizontal-line-color-CB: #c4c4c4;
                                 }
 
                                 span {
+                                    width: 18px;
+
                                     &.decrease {
                                         top: 0px;
-                                        right: -7px;
+                                        right: -1px;
 
                                         &:before {
                                             @include style-arrow-button;
@@ -488,7 +516,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                     &.increase {
                                         top: -7px;
-                                        right: -7px;
+                                        right: -1px;
 
                                         &:before {
                                             @include style-arrow-button;
@@ -513,21 +541,26 @@ $horizontal-line-color-CB: #c4c4c4;
                 }
             }
 
-            div.input_wrapper {
-                span.list-triangle {
-                    top: 7px;
-                    left: -10px;
-                }
+            div.accord-wr {
+                div.input_wrapper {
+                    span.list-triangle {
+                        top: 7px;
+                        left: -10px;
+                    }
 
-                span.eos-icon-close-folder-grey,
-                span.eos-icon-open-folder-grey {
-                    background-image: url("assets/icons/Icon-Open-Close-UserSettings.svg");
-                    background-repeat: no-repeat;
-                    background-size: 8px 10px;
-                }
+                    span.eos-icon-close-folder-grey,
+                    span.eos-icon-close-folder-blue,
+                    span.eos-icon-open-folder-grey,
+                    span.eos-icon-open-folder-blue {
+                        background-image: url("assets/icons/Icon-Open-Close-UserSettings.svg") !important;
+                        background-repeat: no-repeat;
+                        background-size: 8px 10px;
+                    }
 
-                span.eos-icon-open-folder-grey {
-                    left: -30px !important;
+                    span.eos-icon-open-folder-grey,
+                    span.eos-icon-open-folder-blue {
+                        left: -30px !important;
+                    }
                 }
             }
 
@@ -579,16 +612,16 @@ $horizontal-line-color-CB: #c4c4c4;
                     div.user-input-group {
                         position: relative;
                         margin-top: 25px;
+                        padding-top: 10px;
 
                         span:first-child {
-                            flex-basis: 280px;
-                            line-height: initial;
+                            flex-basis: 290px;
+                            line-height: 90%;
                             text-align: right;
                         }
 
                         span.get-new-org {
                             flex: 1 1 auto;
-                            padding-right: 10px;
 
                             input {
                                 width: 100%;
@@ -618,11 +651,13 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                 & > span {
                                     @include style-title-bookmarks;
+                                    margin-bottom: 5px;
                                 }
 
-                                eos-dynamic-input-radio div {
+                                eos-dynamic-input eos-dynamic-input-radio div {
                                     display: flex;
                                     flex-direction: column;
+                                    //margin-top: 15px;
 
                                     div.elem-input-radio {
                                         height: 25px;
@@ -631,15 +666,19 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                 eos-dynamic-input.incr-scan {
                                     position: absolute;
-                                    top: 75px;
+                                    top: 73px;
                                     left: 140px;
                                 }
 
                                 div.incr-scan {
                                     position: absolute;
-                                    top: 85px;
-                                    left: 215px;
+                                    top: 83px;
+                                    left: 210px;
                                 }
+                            }
+
+                            & > eos-dynamic-input {
+                                margin-top: 5px;
                             }
                         }
 
@@ -655,7 +694,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             /* выпадающий список */
                             div.radio-form-list {
                                 flex-direction: column;
-                                margin: -10px 0 0px 20px;
+                                margin: -7px 0 0px 20px;
 
                                 > div {
                                     display: flex;
@@ -725,7 +764,7 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
 
                     div > eos-dynamic-input {
-                        margin: 10px 20px;
+                        margin: 10px 0 0 15px;
                     }
                 }
 
@@ -733,17 +772,33 @@ $horizontal-line-color-CB: #c4c4c4;
                     div.user-group-form {
                         &:nth-child(2) {
                             & > div {
-                                margin-top: 20px;
+                                margin-top: 15px;
                                 margin-left: 20px;
+                            }
+
+                            & > eos-dynamic-input {
+                                &:nth-child(2) {
+                                    margin-top: 10px !important;
+                                }
+
+                                &:last-child {
+                                    margin-bottom: 10px;
+                                }
                             }
                         }
 
                         &:nth-child(3) {
-                            margin-bottom: 20px;
+                            margin-bottom: 15px;
 
                             div.sort-link {
                                 .sort-sp {
                                     margin: 0 0 10px 20px;
+                                }
+
+                                eos-dynamic-input {
+                                    div.elem-input-radio > label {
+                                        left: -4px;
+                                    }
                                 }
 
                                 &:first-child {
@@ -765,14 +820,14 @@ $horizontal-line-color-CB: #c4c4c4;
                                             &:first-child {
                                                 position: absolute;
                                                 top: 30px;
-                                                left: 115px;
+                                                left: 105px;
                                                 width: 140px;
                                             }
 
                                             &:last-child {
                                                 position: absolute;
                                                 bottom: 0px;
-                                                left: 310px;
+                                                left: 300px;
                                                 width: 170px;
                                             }
                                         }
@@ -781,7 +836,8 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                 &:last-child {
                                     eos-dynamic-input {
-                                        margin-left: 20px;
+                                        width: 133px !important;
+                                        margin-left: 10px;
                                     }
                                 }
                             }
@@ -800,20 +856,25 @@ $horizontal-line-color-CB: #c4c4c4;
 
                             div.right-input-pos {
                                 justify-content: flex-start;
+                                margin-right: 0;
 
                                 &:nth-child(3) {
-                                    margin-left: calc(50% - 35px);
+                                    margin-left: calc(50% - 33px);
                                 }
 
                                 &:nth-child(4) {
                                     & > eos-dynamic-input {
-                                        width: calc(100% - 188px) !important;
+                                        width: calc(50% + 91px) !important;
                                     }
                                 }
                             }
 
                             & > eos-dynamic-input {
                                 margin: 0;
+
+                                label.checkbox {
+                                    left: -4px;
+                                }
                             }
                         }
 
@@ -825,11 +886,21 @@ $horizontal-line-color-CB: #c4c4c4;
                             }
 
                             li {
-                                margin-top: 15px;
+                                margin-top: 10px;
+
+                                &:first-child {
+                                    margin-top: 15px;
+                                }
+
+                                & ~ eos-dynamic-input {
+                                    label.checkbox {
+                                        left: -4px;
+                                    }
+                                }
 
                                 &:nth-child(5) {
                                     div.def_search_citizen {
-                                        margin-left: 104px;
+                                        margin-left: 98px;
 
                                         div.elem-input-radio:first-child {
                                             margin-right: 40px;
@@ -874,32 +945,45 @@ $horizontal-line-color-CB: #c4c4c4;
 
             .input-user-cabinets-rk-forwarding-wrapper {
                 div.user-group-form {
+                    span.input-title {
+                        line-height: 90%;
+                        text-align: left;
+                    }
+
                     &:first-child {
-                        eos-dynamic-input {
-                            width: calc(50% + 8px);
-                            margin-bottom: 15px;
+                        & > eos-dynamic-input {
+                            width: 415px;
+                            margin-bottom: 15px;                            
                         }
 
-                        .user-input-increment-cabinets > span {
-                            width: 100%;
-                            padding-top: 0;
-                        }
+                        .user-input-increment-cabinets {
+                            width: 60%;
+
+                            & > eos-dynamic-input {
+                                width: 75px;
+                            }
+                            
+                            & > span {
+                                width: 100%;
+                                padding-top: 0;
+                            }
+                        } 
                     }
 
                     &:nth-child(3) {
                         div.inputs-inline {
-                            margin: -10px 20px 20px;
+                            margin: -10px 5px 20px 15px;
 
                             & > .reply-input {
                                 margin-top: 10px;
-                                margin-left: 0;
+                                margin-left: 5px;
                             }
                         }
                     }
 
                     &:nth-child(4) {
                         .cabinets-highlight-new-enntries-in-the-folder {
-                            margin: 20px 20px;
+                            margin: 15px;
                         }
                     }
 
@@ -913,18 +997,17 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
 
                     &:nth-child(5) {
-                        margin-bottom: 10px;
+                        margin-bottom: 20px;
 
                         span.input-title {
-                            width: 330px;
+                            width: 540px;
+                            margin-right: 40px;
                         }
                     }
 
                     &:nth-child(6) {
-                        margin-bottom: 0 !important;
-
                         span.input-title {
-                            width: 915px;
+                            width: 610px;
                         }
                     }
                 }
@@ -936,6 +1019,8 @@ $horizontal-line-color-CB: #c4c4c4;
                 }
 
                 div.user-group-form {
+                    position: relative;
+
                     div.inputs-inline > span {
                         @include style-title-bookmarks;
                     }
@@ -961,6 +1046,10 @@ $horizontal-line-color-CB: #c4c4c4;
                             padding: 15px 0 15px 20px !important;
                             @include style-other-button;
 
+                            & > span:not(:last-child) {
+                                margin-left: 4px;
+                            }
+
                             .wr-input {
                                 width: 90%;
                             }
@@ -969,7 +1058,9 @@ $horizontal-line-color-CB: #c4c4c4;
 
                     &:nth-child(4) {
                         div.control-state {
-                            @include set-margin-for-dynamic-ipnputs;
+                            & > eos-dynamic-input {
+                                margin: 15px 0 5px 15px;
+                            }
 
                             div.elem-input-radio {
                                 display: block;
@@ -983,6 +1074,37 @@ $horizontal-line-color-CB: #c4c4c4;
 
                     &:nth-child(5) {
                         margin-left: 0;
+
+                         & > div {
+                            eos-dynamic-input {
+                                margin-left: 15px;
+                            }
+                         }
+
+                        eos-dynamic-input {
+                            &:first-child {
+                                margin-top: 20px;
+                            }
+
+                            &:last-child {
+                                margin-bottom: 20px;
+                            }
+
+                            label.checkbox {
+                                padding-left: 30px;
+                                margin-bottom: 10px !important;
+
+                                & > input {
+                                    width: 95%;
+                                }
+
+                                & > span {
+                                    position: absolute;
+                                    top: -4px;
+                                    left: 0;
+                                }
+                            }
+                        }
                     }
 
                     &:nth-child(8) {
@@ -1008,7 +1130,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                     &:nth-child(11) {
                         position: relative;
-                        margin: 0 0 20px 15px;
+                        margin: 0 0 20px 10px;
 
                         & > span {
                             @include reset-style-title-bookmarks;
@@ -1033,10 +1155,24 @@ $horizontal-line-color-CB: #c4c4c4;
                             @include set-margin-for-dynamic-ipnputs;
                         }
                     }
+
+                    &:nth-child(13) {
+                        div.inputs-inline {
+                            eos-dynamic-input:last-child {
+                                margin-bottom: 0;
+                            }
+                        }
+                    }
                 }
 
                 .send-res {
-                    @include set-margin-for-dynamic-ipnputs;
+                    & > eos-dynamic-input {
+                        margin: 15px 0 0 15px;
+
+                        div.form-group {
+                            margin-bottom: 0;
+                        }
+                    }
 
                     & > span {
                         @include style-title-bookmarks;
@@ -1046,17 +1182,22 @@ $horizontal-line-color-CB: #c4c4c4;
                         display: block;
                     }
 
-                    & > div {
-                        @include set-margin-for-dynamic-ipnputs;
+                    & > div > eos-dynamic-input {
+                        margin-top: 5px;
+                        margin-left: 15px;
+
+                        div.form-group {
+                            margin-bottom: 15px;
+                        }
                     }
                 }
 
                 div:nth-child(9) {
-                    margin-left: 20px;
+                    margin-left: 15px;
                 }
 
                 & > eos-dynamic-input {
-                    margin-left: 20px;
+                    margin-left: 15px;
 
                     div.form-group {
                         margin: 0 !important;
@@ -1100,7 +1241,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         &:nth-child(2) {
                             div.informer-flex {
                                 & > eos-dynamic-input {
-                                    width: 25%;
+                                    width: 210px;
                                 }
 
                                 .informer-radio-inline {
@@ -1116,13 +1257,13 @@ $horizontal-line-color-CB: #c4c4c4;
 
                             div.informer-flex.informer-end {
                                 position: relative;
-                                margin-top: 20px;
+                                margin-top: 30px;
                                 justify-content: flex-start;
 
                                 &:before {
                                     @include style-horizontal-line;
                                     width: calc(100% + 20px);
-                                    top: -5px;
+                                    top: -15px;
                                     left: -20px;
                                 }
                             }
@@ -1139,15 +1280,16 @@ $horizontal-line-color-CB: #c4c4c4;
 
                             div.informer-big-top-margin {
                                 position: relative;
+                                margin-top: 30px;
 
                                 & > eos-dynamic-input {
-                                    width: 27%;
+                                    width: 210px;
                                 }
 
                                 &:before {
                                     @include style-horizontal-line;
                                     width: calc(100% + 20px);
-                                    top: -13px;
+                                    top: -16px;
                                     left: -20px;
                                 }
                             }
@@ -1165,11 +1307,11 @@ $horizontal-line-color-CB: #c4c4c4;
                                 margin-top: 15px;
 
                                 & > eos-dynamic-input {
-                                    width: 30%;
+                                    width: 237px;
                                 }
 
                                 .user-input-increment-cabinets {
-                                    width: 25%;
+                                    width: 170px;
 
                                     & > eos-dynamic-input {
                                         width: 65px;
@@ -1216,9 +1358,11 @@ $horizontal-line-color-CB: #c4c4c4;
                             }
 
                             div.informer-flex {
+                                margin-top: 15px;
+                                
                                 & > eos-dynamic-input {
                                     display: inline-block;
-                                    width: calc(30% - 4px);
+                                    width: 230px;
                                 }
 
                                 div.user-input-increment-cabinets {
@@ -1230,7 +1374,7 @@ $horizontal-line-color-CB: #c4c4c4;
                                 }
 
                                 div.informer-rl-padding {
-                                    padding-left: 90px;
+                                    padding-left: 98px;
                                 }
 
                                 & > span {
@@ -1241,6 +1385,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             div.informer-small-top-margin:last-child {
                                 & > span {
                                     margin-right: 25px;
+                                    padding-left: 5px;
                                 }
 
                                 & > eos-dynamic-input {
@@ -1276,6 +1421,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         div.btn-controll {
                             justify-content: flex-end;
                             margin: 0;
+                            padding: 5px 0 3px 0;
 
                             button {
                                 @include style-other-button;
@@ -1290,14 +1436,13 @@ $horizontal-line-color-CB: #c4c4c4;
 
                         div.user-input-group-flex {
                             height: 100px;
-                            flex-direction: row;
-                            flex-wrap: wrap;
                             margin: 0 0 15px 20px;
                             padding-top: 0;
                             overflow-y: auto;
 
                             & > span.rc-doc {
                                 padding: 2px 5px;
+                                overflow: initial;
 
                                 &.current {
                                     background: $active-element;
@@ -1310,14 +1455,14 @@ $horizontal-line-color-CB: #c4c4c4;
                     div.inputs-inline.input-right {
                         margin: 15px 20px 15px;
 
-                        & > span {
-                            padding-left: 5px;
+                        & > eos-dynamic-input {
+                            margin-left: -4px !important;
                         }
                     }
                 }
 
                 & > eos-dynamic-input {
-                    margin-left: 20px;
+                    margin-left: 15px;
                 }
             }
         }
@@ -1325,6 +1470,8 @@ $horizontal-line-color-CB: #c4c4c4;
         //вкладка Справочники
         eos-user-param-directories {
             .wr-scroll-dict {
+                margin-right: 0 !important;
+
                 div.elem-input-radio {
                     display: block;
 
@@ -1337,17 +1484,20 @@ $horizontal-line-color-CB: #c4c4c4;
                     &:first-child {
                         div.inputs-inline {
                             @include set-margin-for-dynamic-ipnputs;
-                            margin-bottom: 5px;
 
                             & > span {
                                 @include style-title-bookmarks;
-                                padding-top: 0 !important;
+                                padding-top: 6px !important;
+                            }
+
+                            & > eos-dynamic-input.input-mar-right {
+                                margin-bottom: 5px;
                             }
                         }
                     }
 
                     &:nth-child(2) {
-                        margin: 0 0 15px 25px;
+                        margin: 0 0 15px 20px;
 
                         & > span {
                             @include reset-style-title-bookmarks;
@@ -1401,6 +1551,7 @@ $horizontal-line-color-CB: #c4c4c4;
                                 &:first-child {
                                     .accord-wr > div:last-child {
                                         margin-top: 15px;
+                                        padding-left: 5px;
 
                                         div.receipe-email {
                                             width: 500px;
@@ -1412,7 +1563,7 @@ $horizontal-line-color-CB: #c4c4c4;
                                     .accord-wr > div {
                                         div.user-group-form {
                                             padding-left: 7px;
-                                            margin-bottom: 15px;
+                                            margin-bottom: 10px;
 
                                             span.set-header {
                                                 @include reset-style-title-bookmarks;
@@ -1424,7 +1575,7 @@ $horizontal-line-color-CB: #c4c4c4;
                                         &:first-child {
                                             div.input_wrapper {
                                                 & > eos-dynamic-input {
-                                                    margin-bottom: 15px;
+                                                    margin-bottom: 10px;
 
                                                     div.elem-input-radio {
                                                         display: block;
@@ -1453,7 +1604,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                         &:nth-child(2),
                                         &:nth-child(3) {
-                                            margin-bottom: 15px;
+                                            margin-bottom: 10px;
                                         }
                                     }
                                 }
@@ -1528,7 +1679,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                         div.accord-wr {
                                             padding: 0;
-                                            margin: 15px 20px;
+                                            margin: 15px 15px;
 
                                             div.form-group {
                                                 margin: 0;
@@ -1548,12 +1699,20 @@ $horizontal-line-color-CB: #c4c4c4;
                 }
 
                 div.user-group-form {
+                    position: relative;
+
                     div.elem-input-radio {
                         display: block;
                     }
 
                     eos-dynamic-input:nth-child(2) {
                         margin-bottom: 15px;
+
+                        &:after {
+                            @include style-horizontal-line;
+                            left: 0;
+                            bottom: 55px;
+                        }
                     }
                 }
             }
@@ -1563,26 +1722,20 @@ $horizontal-line-color-CB: #c4c4c4;
                     height: calc(100vh - 220px);
 
                     eos-dynamic-input {
-                        &:nth-child(1),
-                        &:nth-child(2),
-                        &:nth-child(3) {
-                            margin-bottom: 0;
-                        }
+                        margin-bottom: 0;
 
                         &:nth-child(1) {
                             margin-top: 0 !important;
                         }
 
-                        &:nth-child(4) {
-                            margin-top: 15px;
-
-                            div.elem-input-radio {
-                                display: block;
+                        &:nth-child(5) {
+                            eos-dynamic-input-radio > div {
+                                padding-left: 25px;
                             }
                         }
 
                         &:last-child {
-                            margin-left: 20px !important;
+                            margin-left: 15px !important;
                         }
                     }
                 }
@@ -1663,7 +1816,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                         .sert-table-nav {
                             position: absolute;
-                            right: -8px;
+                            right: -2px;
                             @include style-other-button;
 
                             button.btn {
@@ -1675,6 +1828,10 @@ $horizontal-line-color-CB: #c4c4c4;
                             height: 35px;
                             border: none;
                             font-weight: bolder;
+
+                            & > span {
+                                background: none;
+                            }
                         }
 
                         .sert-table-body {
@@ -1690,6 +1847,8 @@ $horizontal-line-color-CB: #c4c4c4;
 
         //вкладка Визуализация
         .input-user-visualization-wrapper {
+            margin-right: 0 !important;
+
             span.l-font {
                 @include style-title-bookmarks;
                 margin-bottom: 20px;
@@ -1720,7 +1879,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         font-weight: bold;
 
                         &:last-child {
-                            padding-left: 42%;
+                            padding-left: calc(42% - 4px);
                         }
                     }
                 }
@@ -1765,11 +1924,17 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
 
                     eos-dynamic-input {
-                        padding-left: 20px;
+                        padding-left: 15px;
 
                         &-radio > div {
                             display: flex;
                             flex-direction: column;
+
+                            div.elem-input-radio:not(:first-child) {
+                                label {
+                                    padding-top: 0;
+                                }
+                            }
                         }
                     }
                 }
@@ -1807,8 +1972,13 @@ $horizontal-line-color-CB: #c4c4c4;
                     & > div {
                         position: relative;
 
+                        br {
+                            display: none;
+                        }
+
                         & > div:first-child > span {
                             @include style-title-bookmarks;
+                            margin-bottom: 15px;
                         }
 
                         & > div:nth-child(2) {
@@ -1817,15 +1987,12 @@ $horizontal-line-color-CB: #c4c4c4;
                             & > span {
                                 @include reset-style-title-bookmarks;
                                 margin-bottom: 20px;
-                            }
-
-                            br {
-                                display: none;
+                                padding-left: 20px !important;
                             }
 
                             div.inputs-inline {
                                 display: flex;
-                                padding-left: 10px;
+                                padding-left: 20px;
 
                                 & > span {
                                     margin-right: 10px;
@@ -1841,15 +2008,36 @@ $horizontal-line-color-CB: #c4c4c4;
                             & > span {
                                 @include reset-style-title-bookmarks;
                                 margin-bottom: 0 !important;
+                                padding-left: 20px !important;
+                            }
+
+                            eos-dynamic-input {
+                                margin-left: 15px;
                             }
                         }
 
                         div.user-input-group {
-                            padding-left: 10px;
+                            position: relative;
+                            padding-left: 15px;
 
                             eos-dynamic-input {
-                                &:last-child {
-                                    padding-left: 10px;
+                                label.checkbox {
+                                    padding-left: 30px;
+                                    margin-bottom: 10px !important;
+
+                                    & > input {
+                                        width: 95%;
+                                    }
+
+                                    & > span {
+                                        position: absolute;
+                                        top: -4px;
+                                        left: 0;
+                                    }
+                                }
+
+                                &:nth-child(3) {
+                                    margin-bottom: 15px;
                                 }
                             }
 
@@ -1859,7 +2047,8 @@ $horizontal-line-color-CB: #c4c4c4;
 
                             &::after {
                                 @include style-horizontal-line;
-                                bottom: 250px;
+                                left: 0;
+                                bottom: 217px;
                             }
                         }
 
@@ -1885,8 +2074,8 @@ $horizontal-line-color-CB: #c4c4c4;
                         div.user-input-group:not(.fl) {
                             &:nth-child(2) {
                                 position: relative;
-                                padding-left: 10px;
-                                margin-bottom: 20px;
+                                padding-left: 15px;
+                                margin-bottom: 15px;
 
                                 div.form-group {
                                     margin-bottom: 0;
@@ -1894,20 +2083,22 @@ $horizontal-line-color-CB: #c4c4c4;
 
                                 &::before {
                                     @include style-horizontal-line;
-                                    bottom: 75px;
+                                    left: 0;
+                                    bottom: 77px;
                                 }
                             }
 
                             &:nth-child(4) {
                                 eos-dynamic-input {
+                                    margin-bottom: 5px;
                                     padding-left: 10px;
 
                                     &:first-of-type {
                                         padding-top: 15px;
+                                    }
 
-                                        div.form-group {
-                                            margin-bottom: 5px;
-                                        }
+                                    .form-group {
+                                        margin: 0 5px;
                                     }
                                 }
 
@@ -1919,6 +2110,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                         div.user-group-form:nth-child(6) {
                             margin-bottom: 20px;
+                            margin-left: 10px;
 
                             div.inputs-inline {
                                 display: flex;
@@ -1943,10 +2135,11 @@ $horizontal-line-color-CB: #c4c4c4;
                             div.user-input-group {
                                 position: relative;
                                 justify-content: flex-end;
+                                padding-top: 5px;
 
                                 &-wr {
                                     position: absolute;
-                                    top: 30px;
+                                    top: 32px;
                                     left: 0;
                                     background-color: $white;
                                     border: 1px solid $button-border;
@@ -1967,6 +2160,7 @@ $horizontal-line-color-CB: #c4c4c4;
         eos-user-param-shablony {
             div.table-wrapper {
                 width: inherit !important;
+                margin-right: 0 !important;
                 border-style: none;
 
                 .table-header {
@@ -1974,6 +2168,7 @@ $horizontal-line-color-CB: #c4c4c4;
                     min-height: 24px;
                     line-height: initial;
                     margin-bottom: 20px;
+                    border-style: none;
                     background-color: #f1eee8;
 
                     .header-cust-other {
@@ -1991,6 +2186,10 @@ $horizontal-line-color-CB: #c4c4c4;
 
                             &:first-child {
                                 padding-left: 10px;
+                            }
+
+                            &:nth-child(2) {
+                                padding-left: 5px;
                             }
 
                             &:last-of-type {
@@ -2036,12 +2235,19 @@ $horizontal-line-color-CB: #c4c4c4;
     font-family: Tahoma, Geneva, Verdana, sans-serif;
 
     div.left > .params-nav-list {
+        width: 200px;
+        min-width: 200px;
         background: $sidebar-bg-CB;
 
+        li.list-group-item {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
         li.active-element-param {
-            background: $active-element-CB;
-            border: 1px solid $nobel;
             color: $white;
+            border: 1px solid $nobel;
+            background: $active-element-CB;
         }
     }
 
@@ -2051,6 +2257,11 @@ $horizontal-line-color-CB: #c4c4c4;
         /* общие стили */
         .input-user-wrapper,
         .input-user-shablony-wrapper {
+            /* расположение блока с основной информацией*/
+            & > div:not(.pad-other-set) {
+                margin-left: 200px;
+            }
+
             /* шапка */
             header {
                 .header-wr {
@@ -2063,6 +2274,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                     /* btn на время тестирования */
                     & > div > button.btn.btn-primary {
+                        left: 362px;
                         color: $white;
                         border: 1px solid $nobel;
                         background-color: $nobel;
@@ -2087,6 +2299,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             color: $white;
                             border: 1px solid $nobel;
                             background-color: $nobel;
+                            border-radius: 4px !important;
 
                             &.btn-primary-full {
                                 background-color: $button-save-bg-CB;
@@ -2094,6 +2307,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             }
 
                             &.default-btn {
+                                left: 230px;
                                 color: $nobel;
                                 background-color: $white;
                                 border: 1px solid $nobel;
@@ -2124,9 +2338,17 @@ $horizontal-line-color-CB: #c4c4c4;
                     font-weight: normal;
 
                     li.tab-item {
-                        width: 150px;
+                        width: 152px;
                         border: 1px solid $tab-CB;
                         background-color: $sidebar-bg-CB;
+
+                        &:first-child {
+                            border-radius: 4px 0 0 4px;
+                        }
+
+                        &:last-child {
+                            border-radius: 0 4px 4px 0;
+                        }
 
                         &.active {
                             background-color: $tab-CB;
@@ -2162,10 +2384,23 @@ $horizontal-line-color-CB: #c4c4c4;
                 eos-remaster-scan {
                     div > div.user-group-form {
                         &:first-child {
-                            .inputs-inline > span {
-                                @include style-title-bookmarks($isCB: true);
+                            .inputs-inline {
+                                & > span {
+                                    @include style-title-bookmarks($isCB: true);
+                                }
+
+                                eos-dynamic-input.incr-scan {
+                                    top: 85px;
+                                    left: 130px;
+                                }
+
+                                div.incr-scan {
+                                    top: 95px;
+                                    left: 200px;
+                                }
                             }
                         }
+
                         &:nth-child(2) {
                             > div:first-child > span {
                                 @include style-title-bookmarks($isCB: true);
@@ -2178,6 +2413,25 @@ $horizontal-line-color-CB: #c4c4c4;
 
         //вкладка Кабинеты
         eos-user-param-cabinets {
+            .input-user-cabinets-rk-forwarding-wrapper {
+                div.user-group-form {                   
+                    &:nth-child(5) {
+                        margin-bottom: 10px;
+
+                        span.input-title {
+                            width: 615px;
+                            margin-right: 30px;
+                        }
+                    }
+
+                    &:nth-child(6) {
+                        span.input-title {
+                            width: 670px;
+                        }
+                    }
+                }
+            }
+
             .instructions {
                 div.user-group-form {
                     div.inputs-inline > span {
@@ -2204,6 +2458,18 @@ $horizontal-line-color-CB: #c4c4c4;
                         }
                     }
                 }
+
+                .informer {
+                    & > div.user-group-form {
+                        &:nth-child(8) {
+                            div.informer-flex {
+                                & > eos-dynamic-input {
+                                    width: calc(34% - 4px);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -2214,6 +2480,16 @@ $horizontal-line-color-CB: #c4c4c4;
                     &:nth-child(2) {
                         div.btn-controll button {
                             @include style-other-button($isCB: true);
+                        }
+
+                        div.user-input-group-flex {
+                            & > span.rc-doc {
+                                &.current {
+                                    color: $white;
+                                    background: $tab-CB;
+                                    border: 1px solid $header-bg-CB;
+                                }
+                            }
                         }
                     }
                 }
@@ -2270,6 +2546,8 @@ $horizontal-line-color-CB: #c4c4c4;
         //вкладка профиль сертификатов
         eos-prof-sert {
             div.input-user-wrapper.input-user-other-rk-forwarding-wrapper {
+                margin-left: 200px;
+
                 & > div {
                     span.sert-title {
                         @include style-title-bookmarks($isCB: true);
@@ -2344,7 +2622,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         }
 
                         div.user-input-group::after {
-                            bottom: 260px;
+                            bottom: 228px;
                         }
                     }
                 }
@@ -2359,6 +2637,12 @@ $horizontal-line-color-CB: #c4c4c4;
                         div.user-content-wr div.user-input-group {
                             button {
                                 @include style-other-button($isCB: true);
+                            }
+                        }
+
+                        div.user-group-form:nth-child(6) {
+                            div.inputs-inline span {
+                                width: 585px;
                             }
                         }
                     }
