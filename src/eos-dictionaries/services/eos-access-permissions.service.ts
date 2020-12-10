@@ -136,7 +136,7 @@ export class EosAccessPermissionsService {
     isAccessGrantedForDictionary (dictId: string, due: string): APS_DICT_GRANT {
         const dt = dictsTechs.find(d => dictId === d.id);
         if (dt) {
-            const grant = this._checkAccessTech(dt.tech);
+            const grant = this.checkAccessTech(dt.tech);
 
             // Если к кабинетам есть доступ, а подразделениям - нет, то подразделения отдаем в readonly
             if (dt.id === DEPARTMENTS_DICT.id && !grant) {
@@ -158,12 +158,12 @@ export class EosAccessPermissionsService {
 
         dict =  NADZOR_DICTIONARIES.find (n => n.id === dictId);
         if (dict) {
-            return this._checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            return this.checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
 
         dict = SEV_DICTIONARIES.find (n => n.id === dictId);
         if (dict) {
-            return this._checkAccessTech(E_TECH_RIGHT.SevCL) && this.isAssessSev('SEV') ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.read;
+            return this.checkAccessTech(E_TECH_RIGHT.SevCL) && this.isAssessSev('SEV') ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.read;
         }
 
 
@@ -187,11 +187,11 @@ export class EosAccessPermissionsService {
     // --------------------------------------------------------------
     public isAccessGrantedForUsers() {
         const access = this.appCtx.CurrentUser.USER_TECH_List.some(tech => tech.FUNC_NUM === 1);
-        return this._checkAccessTech(E_TECH_RIGHT.Users) && !access;
+        return this.checkAccessTech(E_TECH_RIGHT.Users) && !access;
     }
 
     // --------------------------------------------------------------
-    private _checkAccessTech(tr: E_TECH_RIGHT): boolean {
+    public checkAccessTech(tr: E_TECH_RIGHT): boolean {
         const r: string = this.appCtx.CurrentUser.TECH_RIGHTS;
         if (!r) {
             return false;

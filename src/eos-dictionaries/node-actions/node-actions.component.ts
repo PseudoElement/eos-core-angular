@@ -27,6 +27,7 @@ import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
 
 @Component({
     selector: 'eos-node-actions',
@@ -440,6 +441,11 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.printNomenc:
                     _isWriteAction = false;
+                    break;
+                case E_RECORD_ACTIONS.dopRequisites:
+                    if (this.dictionary.id === 'organization' && _enabled) {
+                        _enabled = this._eaps.checkAccessTech(E_TECH_RIGHT.ArrDescripts);
+                    }
                     break;
             }
 
