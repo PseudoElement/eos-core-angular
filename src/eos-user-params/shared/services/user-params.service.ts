@@ -177,21 +177,23 @@ export class UserParamsService {
     }
     ProtocolService(isn: number, kind: number): Promise<any> {
         const url = `../UserInfo/UserOperations.asmx/WriteUserAudit?uisn=${isn}&event_kind=${kind}`;
-        return this._pipRx.read({
-            [url]: ALL_ROWS
-            // http://localhost/x1807/UserInfo/UserOperations.asmx/WriteUserAudit?uisn=73337&event_kind=1
-        })
-            .catch((e) => {
-                if (e.code !== 200) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Ошибка протоколирования пользователя',
-                        dismissOnTimeout: 6000,
-                    });
-                }
-            });
-
+        const protocolParam = this._userContext.USER_PARMS_List.find((parm) => parm.PARM_NAME === 'USER_EDIT_AUDIT');
+        if (protocolParam && protocolParam.PARM_VALUE === 'YES') {
+            return this._pipRx.read({
+                [url]: ALL_ROWS
+                // http://localhost/x1807/UserInfo/UserOperations.asmx/WriteUserAudit?uisn=73337&event_kind=1
+            })
+                .catch((e) => {
+                    if (e.code !== 200) {
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Ошибка протоколирования пользователя',
+                            dismissOnTimeout: 6000,
+                        });
+                    }
+                });
+        }
     }
 
     addRightsForCBRole(isn: number): Promise<any> {
