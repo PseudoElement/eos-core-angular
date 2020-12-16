@@ -34,15 +34,21 @@
         padding: 20px;
     }
     .pos-icon{
-        display: flex;
-        justify-content: flex-end;
+        display: inline-block;
+        // justify-content: flex-end;
         bottom: 50px;
-        // right: 10px;
+        // right: 30px;
         position: relative;
-        padding-right: 10px;
-        height: 35px;
-        padding-top: 4px;
-        margin-top: -4px;
+        padding-right: 5px;
+        // height: 35px;
+        // padding-top: 4px;
+        // margin-top: -4px;
+    }
+    .pos-two-icon {
+        left: calc(100% - 60px);
+    }
+    .pos-one-icon {
+        left: calc(100% - 30px);
     }
     .del-mar{
         height: 72px;

@@ -33,6 +33,13 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   searchModel = {};
   @Output() filterProtocol: EventEmitter<any> = new EventEmitter();
 
+  get userWhoValue() {
+    return this.filterForm && this.filterForm.controls['rec.USERWHO'] && this.filterForm.controls['rec.USERWHO'].value;
+  }
+  get userEditValue() {
+    return this.filterForm && this.filterForm.controls['rec.USEREDIT'] && this.filterForm.controls['rec.USEREDIT'].value;
+  }
+
   constructor(
     private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService,
     private _pipeSrv: PipRX, public _apiSrv: UserParamApiSrv, private inpSrv: InputControlService,
@@ -163,6 +170,16 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   FilterUsers() {
     this.filterProtocol.emit(this.filterForm.value);
     this.full.isOpen = false;
+  }
+
+  /**
+   * clearInput
+   * добавить очистку поля формы по ключу input-а
+   */
+  public clearInput(controlKey: string) {
+    if (controlKey && this.filterForm.controls[controlKey]) {
+      this.filterForm.controls[controlKey].patchValue('');
+    }
   }
 
   private _getUserCl(isn) {
