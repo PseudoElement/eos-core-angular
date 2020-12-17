@@ -510,7 +510,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       inlinecount: 'allpages'
     })
       .then((data: any) => {
-        this.usersAudit = data;
+        this.usersAudit = data || [];
         this.initPage = false;
         if (this.usersAudit.length === 0) {
           this._msgSrv.addNewMessage({
@@ -520,7 +520,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           });
           this.frontData = [];
           this._user_pagination.totalPages = 0;
-          this.isLoading = true;
+          this.isLoading = false;
         } else {
           const parsePosts = data.TotalRecords;
           if (parsePosts !== undefined) {
