@@ -134,6 +134,7 @@ export class CreateNodeComponent {
                     this._windowInvalidSave ([err.message]);
                     // return this._errHandler(err);
                 }
+                this.cardEditRef.resetData();
                 this.upadating = false;
             });
     }
