@@ -13,7 +13,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 @Component({
   selector: 'eos-filter-protocol',
   templateUrl: './filter-protocol.component.html',
-  styleUrls: ['./filter-protocol.component.scss'],
+  // styleUrls: ['./filter-protocol.component.scss'],
   providers: [FormHelperService]
 })
 
