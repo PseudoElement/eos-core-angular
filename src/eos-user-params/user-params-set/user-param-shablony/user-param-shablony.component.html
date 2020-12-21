@@ -1,5 +1,15 @@
 <div class="input-user-shablony-wrapper" *ngIf="initShablony">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="flagEdit"
+        [title]='titleHeader'
+        [disableBtn]="btnDisabled"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancel($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event)'
+    ></eos-user-params-header>
     <div class="table-wrapper usual-border">
         <div class="table-header">
             <div class="table-header-content">

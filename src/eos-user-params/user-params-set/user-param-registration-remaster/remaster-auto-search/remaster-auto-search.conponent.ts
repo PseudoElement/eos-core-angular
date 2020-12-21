@@ -10,6 +10,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
 import {LINK_CL} from 'eos-rest/interfaces/structures';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 
  @Component({
     selector: 'eos-auto-search',
@@ -20,6 +21,9 @@ import {LINK_CL} from 'eos-rest/interfaces/structures';
 export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
     @Input() userData;
     @Input() defaultValues;
+    @Input() isCurrentSettings?: boolean;
+    @Input() appMode: IUserSettingsModes;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
     public inputs;
     public form: FormGroup;
@@ -84,7 +88,11 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
             this.inputs['rec.LINKS_SORT_ORDER1'].value = `${this.userData['LINKS_SORT_ORDER']}`;
             this.inputs['rec.LINKS_SORT_ORDER2'].value = `${this.userData['LINKS_SORT_ORDER']}`;
             this.form = this.inpSrv.toFormGroup(this.inputs);
-            this.form.disable({emitEvent: false});
+            if (this.isCurrentSettings) {
+                this.form.enable({emitEvent: false});
+            } else {
+                this.form.disable({emitEvent: false});
+            }
             this.subscribeChange();
         });
     }

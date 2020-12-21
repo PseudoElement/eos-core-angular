@@ -91,10 +91,10 @@
         </div>
         <eos-dynamic-input [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
-    <div class="set-header bold">
+    <div [hidden]="appMode.arm" class="set-header bold">
         <span >Поиск граждан в справочнике по полям</span>
     </div>
-    <div class="user-group-form">
+    <div [hidden]="appMode.arm" class="user-group-form">
         <ul class="search-citizens-in-the-directory-by-fields-radio">
             <li>
                 <eos-dynamic-input [ngStyle]="{'width': '160px'}" [input]="inputs['rec.DEF_SEARCH_CITIZEN_SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>

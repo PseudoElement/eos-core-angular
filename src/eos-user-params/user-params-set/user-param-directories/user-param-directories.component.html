@@ -1,5 +1,15 @@
 <div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="flagEdit"
+        [title]='titleHeader'
+        [disableBtn]="btnDisable"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancel($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event)'
+    ></eos-user-params-header>
     <div class="wr-scroll-dict">
         <div class="user-group-form">
             <div class="inputs-inline">
@@ -10,21 +20,23 @@
         <div class="user-group-form">
             <span [ngStyle]="{'margin-right': '10px'}">Вызов окна списков:</span><span>{{getValueWindowList()}}</span>
         </div>
-        <div class="user-group-form">
-            <span>Поиск представителей организаций в приложении Документы по полю:</span>
-            <div class="user-input-group-section">
-                <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_CONTACT_FIELDS_SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input class="inline-block input-right" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DUTY']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input class="inline-block input-right" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DEPARTMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <div [hidden]="appMode.arm">
+            <div class="user-group-form">
+                <span>Поиск представителей организаций в приложении Документы по полю:</span>
+                <div class="user-input-group-section">
+                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_CONTACT_FIELDS_SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block input-right" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DUTY']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block input-right" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DEPARTMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
             </div>
-        </div>
-        <div>
-            <span>Окна справочников приложения Документы</span>
-            <eos-dynamic-input [input]="inputs['rec.WINPOS']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-        <div>
-            <span>Сортировка результатов поиска по справочникам в приложении Документы</span>
-            <eos-dynamic-input [input]="inputs['rec.SORT']" class="input-mar-right" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div>
+                <span>Окна справочников приложения Документы</span>
+                <eos-dynamic-input [input]="inputs['rec.WINPOS']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div>
+                <span>Сортировка результатов поиска по справочникам в приложении Документы</span>
+                <eos-dynamic-input [input]="inputs['rec.SORT']" class="input-mar-right" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
         </div>
     </div>
 </div>

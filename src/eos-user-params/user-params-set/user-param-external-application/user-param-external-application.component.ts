@@ -7,7 +7,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers, IUserSettingsModes } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
@@ -21,6 +21,11 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 export class UserParamEAComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public btnDisabled: boolean = true;
     public _fieldsType = {};
@@ -46,14 +51,19 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices
     ) {}
     ngOnInit() {
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForDeskApl.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this.defaultTitle) {
             this.titleHeader = this.defaultTitle;
             this.allData = this.defaultUser;
             this.init();
         } else {
-            this._userParamsSetSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userParamsSetSrv.getUserIsn(config)
             .then(() => {
                 this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Приложение Документы';
                 this.init();

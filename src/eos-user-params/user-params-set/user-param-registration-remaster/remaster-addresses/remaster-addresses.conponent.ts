@@ -13,6 +13,7 @@ import {IOpenClassifParams} from '../../../../eos-common/interfaces/interfaces';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-addresses',
     styleUrls: ['remaster-addresses.conponent.scss'],
@@ -23,6 +24,9 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 export class RemasterAddressesComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
     public inputs;
     public form: FormGroup;
@@ -84,7 +88,11 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
-        this.form.disable({emitEvent: false});
+        if (this.isCurrentSettings) {
+            this.form.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+        }
         const orgISN = this.form.controls['rec.ORGGROUP'].value;
         this.getOrgGroupValue(orgISN);
         this.subscribeChange();

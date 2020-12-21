@@ -1,0 +1,108 @@
+<div class="current-settings" [ngClass]="toggleTheme()">
+    <div class="left">
+        <div  class="params-nav-list">
+            <ul class="list-group">
+                <ng-container *ngFor="let param of listSettings">
+                    <li *ngIf="param.url" class="list-group-item"
+                        [routerLink]="['/user_param/current-settings/', param.url]"
+                        routerLinkActive="active-element-param">{{param.title}}</li>
+                </ng-container>
+            </ul>
+        </div>
+
+        <!-- <li *ngIf="defaultUser === undefined"
+            class="li-spiner">
+            <div class="spinner-wrapper">
+                <div class="spinner-holder">
+                    <eos-spinner size="md"></eos-spinner>
+                </div>
+            </div>
+        </li> -->
+
+    </div>
+    <div class="main">
+        <div class="">
+            <ng-container [ngSwitch]="paramId">
+                <ng-container *ngSwitchCase="'registration'">
+                    <eos-registration-remaster
+                        [mainUser]="mainUser"
+                        [openingTab]="openingOptionalTab"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-registration-remaster>
+                </ng-container>
+                <ng-container *ngSwitchCase="'cabinets'">
+                    <eos-user-param-cabinets
+                        [mainUser]="mainUser"
+                        [openingTab]="openingOptionalTab"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-cabinets>
+                </ng-container>
+                <ng-container *ngSwitchCase="'rc'">
+                    <eos-user-param-rc
+                        [mainUser]="mainUser"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-rc>
+                </ng-container>
+                <ng-container *ngSwitchCase="'dictionary'">
+                    <eos-user-param-directories
+                        [mainUser]="mainUser"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-directories>
+                </ng-container>
+                <ng-container *ngSwitchCase="'ext-exch'">
+                    <eos-ext-exch
+                        [mainUser]="mainUser"
+                        [openingTab]="openingOptionalTab"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-ext-exch>
+                </ng-container>
+                <ng-container *ngSwitchCase="'el-signature'">
+                    <eos-user-param-el-signature
+                        [appMode]="appMode"
+                        [mainUser]="mainUser"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-el-signature>
+                </ng-container>
+                <ng-container *ngSwitchCase="'prof-sert'">
+                    <eos-prof-sert
+                        [mainUser]="mainUser"
+                        [isCurrentSettings]="true"
+                    ></eos-prof-sert>
+                </ng-container>
+                <ng-container *ngSwitchCase="'visualization'">
+                    <eos-user-param-visualization
+                        [mainUser]="mainUser"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-visualization>
+                </ng-container>
+                <ng-container *ngSwitchCase="'external-application'">
+                    <eos-user-param-external-application
+                        [mainUser]="mainUser"
+                        [openingTab]="openingOptionalTab"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-external-application>
+                </ng-container>
+                <ng-container *ngSwitchCase="'other'">
+                    <eos-user-param-other
+                        [mainUser]="mainUser"
+                        [openingTab]="openingOptionalTab"
+                        [appMode]="appMode"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-other>
+                </ng-container>
+                <ng-container *ngSwitchCase="'patterns'">
+                    <eos-user-param-shablony
+                        [mainUser]="mainUser"
+                        [isCurrentSettings]="true"
+                    ></eos-user-param-shablony>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>

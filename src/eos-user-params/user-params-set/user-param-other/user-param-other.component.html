@@ -1,29 +1,72 @@
 <div class="input-user-wrapper">
-    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled" [errorSave]="!flagIncrementError" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event) '></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="editFlag"
+        [title]='titleHeader'
+        [disableBtn]="btnDisabled"
+        [errorSave]="!flagIncrementError"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancel($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event) '
+    ></eos-user-params-header>
 </div>
 <div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
-            <li class="tab-item" *ngFor="let tab of fieldGroups; let i = index" [ngClass]="{'active ': i === currTab}" (click)="setTab(i)">
-                <span class="tab-title">{{tab}}</span>
+            <li class="tab-item" *ngFor="let tab of fieldGroups | keyvalue" [ngClass]="{'active ': tab.key === currTab}" (click)="setTab(tab.key)">
+                <span class="tab-title">{{tab.value}}</span>
             </li>
         </ul>
     </div>
     <div class="user-param-other-content-wrapper scrollWrapper">
         <div [hidden]="currTab !==0" class="clearfix">
             <!--------------------------0--------------------------------------------->
-            <eos-user-param-transfer (pushChange)="emitChangesTransfer($event)" [defaultValues]=" defaultValues " [defaultUser]="defaultUser"></eos-user-param-transfer>
+            <eos-user-param-transfer
+                (pushChange)="emitChangesTransfer($event)"
+                [defaultValues]=" defaultValues "
+                [defaultUser]="defaultUser"
+                [appMode]="appMode"
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-user-param-transfer>
         </div>
         <!--------------------------0--------------------------------------------->
         <!--------------------------1--------------------------------------------->
         <div [hidden]="currTab !==1" class="clearfix ">
-            <eos-user-param-addresses (pushChange)="emitChangesAddresses($event)" [defaultValues]=" defaultValues" [defaultUser]="defaultUser"></eos-user-param-addresses>
+            <eos-user-param-addresses
+                (pushChange)="emitChangesAddresses($event)"
+                [defaultValues]=" defaultValues"
+                [defaultUser]="defaultUser"
+                [appMode]="appMode"
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-user-param-addresses>
         </div>
         <!--------------------------1--------------------------------------------->
         <!--------------------------2--------------------------------------------->
         <div [hidden]="currTab !==2" class="clearfix ">
-            <eos-user-param-reestr-cb *ngIf='cbBase' (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr-cb>
-            <eos-user-param-reestr *ngIf='!cbBase' (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
+            <eos-user-param-reestr-cb
+                *ngIf='cbBase'
+                [appMode]="appMode"
+                (pushChange)="emitChangesReestr($event)"
+                (pushIncrementError)="emitIncrementError($event)"
+                [defaultUser]="defaultUser"
+                [errorHidden]='currTab===2'
+                [defaultValues]=" defaultValues "
+                [isCurrentSettings]="isCurrentSettings"
+                #paramReestrErr
+            ></eos-user-param-reestr-cb>
+            <eos-user-param-reestr
+                *ngIf='!cbBase'
+                [appMode]="appMode"
+                (pushChange)="emitChangesReestr($event)"
+                (pushIncrementError)="emitIncrementError($event)"
+                [defaultUser]="defaultUser"
+                [errorHidden]='currTab===2'
+                [defaultValues]=" defaultValues "
+                [isCurrentSettings]="isCurrentSettings"
+                #paramReestrErr
+            ></eos-user-param-reestr>
         </div>
         <!--------------------------2--------------------------------------------->
     </div>

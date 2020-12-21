@@ -16,6 +16,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { AddGrifComponent } from './addGrif/addGrif.component';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-user-param-reestr-cb',
@@ -27,6 +28,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
     @Input() defaultUser: any;
     @Input() errorHidden: boolean;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() pushIncrementError: EventEmitter<any> = new EventEmitter<any>();
     public createUserModal: BsModalRef;
@@ -206,7 +210,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         });
     }
     editMode() {
-        if (this.flagEdit) {
+        if (this.flagEdit || this.isCurrentSettings) {
             this.form.enable({ emitEvent: false });
         } else {
             this.form.disable({ emitEvent: false });

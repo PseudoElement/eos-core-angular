@@ -6,7 +6,7 @@
     <div class="user-input-group ">
         <eos-dynamic-input [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div><br>
     <div class="user-input-group ">
         <span>Получать по:</span>
@@ -19,11 +19,11 @@
             <eos-dynamic-input  [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div><br>
         <div class="inputs-inline">
-            <span class="input-title">Количество копий:</span>
-            <eos-dynamic-input [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+            <span [hidden]="appMode.arm" class="input-title">Количество копий:</span>
+            <eos-dynamic-input [hidden]="appMode.arm" [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
     </div>
-    <div class="user-content-wr ">
+    <div *ngIf="!appMode.arm" class="user-content-wr ">
         <span class="title-user-content ">Ограничить группами документов:</span>
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">

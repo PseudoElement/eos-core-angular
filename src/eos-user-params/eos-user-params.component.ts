@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, HostListener, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRoute, RouterStateSnapshot, Router, Params } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
-import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
+import { IParamAccordionList, IUserSettingsModes } from './shared/intrfaces/user-params.interfaces';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 // import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
@@ -35,6 +35,12 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     closeRight: boolean = false;
     flagEdit: boolean;
     hideIcon: boolean;
+    public appMode: IUserSettingsModes = {
+        tk: true,
+    };
+    public openingOptionalTab: number = 0;
+    public editingUserIsn;
+
     private ngUnsubscribe: Subject<any> = new Subject();
     private _isChanged: boolean;
     //   private _disableSave: boolean;
@@ -53,7 +59,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(param => {
+            .subscribe((param: Params) => {
                 this.checkAdmin();
                 this.pageId = param['field-id'];
                 this.codeList = undefined;
@@ -68,10 +74,46 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(qParam => {
+            .subscribe((qParams: Params) => {
                 // this.isLoading = true;
-                if (qParam['isn_cl']) {
-                    this._storageSrv.setItem('userEditableId', qParam['isn_cl'], true);
+                if (!this._checkUserIsn(qParams)) {
+                    return;
+                }
+                if (qParams['isn_cl']) {
+                    this._storageSrv.setItem('userEditableId', qParams['isn_cl'], true);
+                }
+                if (!this.appMode.hasMode && qParams.mode) {
+                    this.appMode = {};
+                    switch (qParams.mode) {
+                        case 'ARM': {
+                            this.appMode.arm = true;
+                            break;
+                        }
+                        case 'TK': {
+                            this.appMode.tk = true;
+                            break;
+                        }
+                        case 'TK_DOC': {
+                            this.appMode.tkDoc = true;
+                            break;
+                        }
+                        case 'ARMCBR': {
+                            this.appMode.cbr = true;
+                            break;
+                        }
+                        default:
+                            this.appMode.tk = true;
+                            break;
+                    }
+                    this.appMode.hasMode = true;
+                }
+                this._checkTabExistance(qParams);
+                this.openingOptionalTab = 0;
+                if (qParams.tab) {
+                    const tabString = String(qParams.tab);
+                    if (tabString.length >= 2) {
+                        this.openingOptionalTab = tabString.length > 2 ? Number(tabString.substring(2)) : Number(tabString.substring(1));
+                    }
                 }
                 this.isShowAccordion = true;
             });
@@ -268,6 +310,28 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     private checkAdmin() {
         if (this._appContext.CurrentUser.IS_SECUR_ADM) {
             this._router.navigate(['user_param']);
+        }
+    }
+    private _checkUserIsn(qParams: Params) {
+        this.editingUserIsn = qParams.isn && Number(qParams.isn) ? Number(qParams.isn) : this.editingUserIsn;
+        if (this.editingUserIsn && String(this.editingUserIsn) === '-99') {
+            this._router.navigate(['/user_param', 'default-settings', `${this.pageId}`], { queryParams: { ...qParams } });
+            return false;
+        }
+        return true;
+    }
+    private _checkTabExistance(qParams: Params) {
+        if (this.appMode && this.appMode.arm) {
+            const subLists = this.accordionList.find(list => list.url === 'param-set');
+            if (subLists && subLists.subList) {
+                subLists.subList = subLists.subList.filter((subItem) => subItem.url !== 'external-application' && subItem.url !== 'patterns');
+            }
+
+            if (this.pageId === 'external-application') {
+                this._router.navigate(['/user-params-set', 'visualization'], { queryParams: { ...qParams } });
+            } else if (this.pageId === 'patterns') {
+                this._router.navigate(['/user-params-set', 'other'], { queryParams: { ...qParams } });
+            }
         }
     }
 }

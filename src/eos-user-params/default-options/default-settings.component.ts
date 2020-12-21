@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { NavParamService } from 'app/services/nav-param.service';
-import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { SUB_PARAMS_LIST_NAV } from 'eos-user-params/shared/consts/user-param.consts';
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
@@ -10,6 +10,7 @@ import { IUserSetChanges } from 'eos-user-params/shared/intrfaces/user-parm.intt
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 
 @Component({
     selector: 'eos-default-settings',
@@ -23,11 +24,17 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
     disableSave: boolean;
     paramId: string;
     isWide: boolean = true;
+    public appMode: IUserSettingsModes = {
+        tk: true,
+    };
+    public openingOptionalTab: number = 0;
+
     private _isChanged: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private _navSrv: NavParamService,
+        private _router: Router,
         private _route: ActivatedRoute,
         private formHelp: FormHelperService,
         private _pipRx: PipRX,
@@ -35,6 +42,45 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this._route.params.subscribe(params => (this.paramId = params['id']));
+        this._route.queryParams
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((qParams: Params) => {
+            if (!this.appMode.hasMode && qParams.mode) {
+                this.appMode = {};
+                switch (qParams.mode) {
+                    case 'ARM': {
+                        this.appMode.arm = true;
+                        break;
+                    }
+                    case 'TK': {
+                        this.appMode.tk = true;
+                        break;
+                    }
+                    case 'TK_DOC': {
+                        this.appMode.tkDoc = true;
+                        break;
+                    }
+                    case 'ARMCBR': {
+                        this.appMode.cbr = true;
+                        break;
+                    }
+                    default:
+                        this.appMode.tk = true;
+                        break;
+                }
+                this.appMode.hasMode = true;
+            }
+            this._checkTabExistance(qParams);
+            this.openingOptionalTab = 0;
+            if (qParams.tab) {
+                const tabString = String(qParams.tab);
+                if (tabString.length >= 2) {
+                    this.openingOptionalTab = tabString.length > 2 ? Number(tabString.substring(2)) : Number(tabString.substring(1));
+                }
+            }
+        });
         this._navSrv.StateSandwich$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -131,5 +177,18 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
             });
         }
         return this.defaultUser;
+    }
+    private _checkTabExistance(qParams: Params) {
+        if (this.appMode && this.appMode.arm) {
+            if (this.listSettings) {
+                this.listSettings = this.listSettings.filter((subItem) => subItem.url !== 'external-application' && subItem.url !== 'patterns');
+            }
+
+            if (this.paramId === 'external-application') {
+                this._router.navigate(['/user-params-set', 'visualization'], { queryParams: { ...qParams } });
+            } else if (this.paramId === 'patterns') {
+                this._router.navigate(['/user-params-set', 'other'], { queryParams: { ...qParams } });
+            }
+        }
     }
 }

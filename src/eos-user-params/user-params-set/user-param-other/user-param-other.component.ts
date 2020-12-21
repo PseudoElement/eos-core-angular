@@ -7,6 +7,7 @@ import { PARM_SUCCESS_SAVE } from '../../../eos-user-params/user-params-set/shar
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-other',
     templateUrl: 'user-param-other.component.html',
@@ -16,6 +17,11 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public userId: string;
     public disableSave: boolean;
@@ -27,6 +33,11 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     public flagIncrementError: boolean = true;
     public currentUser;
     public cbBase: boolean = false;
+    public fieldGroups: Map<number, string> = new Map([
+        [0, 'Пересылка документа'],
+        [1, 'Адресаты документа'],
+        [2, 'Реестр передачи документов'],
+    ]);
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -36,7 +47,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         return '';
     }
-    readonly fieldGroups: string[] = ['Пересылка документа', 'Адресаты документа', 'Реестр передачи документов'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
@@ -57,15 +67,24 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _appContext: AppContext,
     ) {}
     ngOnInit() {
+        if (this.appMode && this.appMode.cbr) {
+            // Скрываем вкладку "Пересылка документа" если mode=ARMCBR
+            this.fieldGroups.delete(0);
+        }
+        if (this.openingTab && this.fieldGroups.has(this.openingTab - 1)) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this._appContext.cbBase) {
             this.cbBase = true;
         }
         if (this.defaultUser) {
             this.currentUser = this.defaultTitle;
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
                 .then(() => {
                     this.currentUser = this._userSrv.curentUser;
                     const prep = this._formHelper.getObjQueryInputsField();

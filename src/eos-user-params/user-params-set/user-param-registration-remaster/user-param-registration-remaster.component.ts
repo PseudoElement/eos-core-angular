@@ -6,6 +6,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { RemasterService } from '../shared-user-param/services/remaster-service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { FormHelperService } from '../../shared/services/form-helper.services';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-registration-remaster',
     styleUrls: ['user-param-registration-remaster.component.scss'],
@@ -16,8 +17,19 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForRegistration: string[] = ['Документ (РК)', 'Корр./адресаты', 'Сканирование и печать штрих-кода', 'Связки и автопоиск', 'Проект документа (РКПД)'];
+    public fieldGroupsForRegistration: Map<number, string> = new Map([
+        [0, 'Документ (РК)'],
+        [1, 'Корр./адресаты'],
+        [2, 'Сканирование и печать штрих-кода'],
+        [3, 'Связки и автопоиск'],
+        [4, 'Проект документа (РКПД)'],
+    ]);
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
@@ -32,6 +44,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public currentUser;
     public isSave: boolean;
     public errorS: boolean = false;
+
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -61,6 +74,17 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _formHelper: FormHelperService,
     ) {}
     ngOnInit() {
+        if (this.appMode && this.appMode.cbr) {
+            // Скрываем вкладки "Сканирование и печать штрих-кода" и "Связки и автопоиск" для mode=ARMCBR
+            this.fieldGroupsForRegistration.delete(2);
+            this.fieldGroupsForRegistration.delete(3);
+        }
+        if (
+            this.openingTab &&
+            this.fieldGroupsForRegistration.has(this.openingTab - 1)
+        ) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.defaultValues = this.defaultUser;
@@ -68,9 +92,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.accessSustem = `1111111111111111111111111111111111111111`.split('');
             this.isLoading = true;
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
             .then(() => {
                 this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
                 this.hash = this._userSrv.hashUserContext;

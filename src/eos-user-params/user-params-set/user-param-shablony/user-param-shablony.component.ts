@@ -20,6 +20,9 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 export class UserParamShablonyComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public initShablony: Array<any>;
     public form: FormGroup;
@@ -63,9 +66,11 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             this.inint();
             this.initShablony = this.getInitShablony(this.defaultUser);
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
                 .then((d) => {
                     this.allData = this._userSrv.hashUserContext;
                     this.currentUser = this._userSrv.curentUser;

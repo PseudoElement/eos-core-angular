@@ -23,6 +23,8 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
     @Input() accessSustem;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChenge = new EventEmitter<any>();
     @Output() errorSave = new EventEmitter<boolean>();
     public inputs;
@@ -85,7 +87,11 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             this.fillFormatCl(data[2]);
             this.pretInputs();
             this.form = this.inpSrv.toFormGroup(this.inputs);
-            this.form.disable({ emitEvent: false });
+            if (this.isCurrentSettings) {
+                this.form.enable({emitEvent: false});
+            } else {
+                this.form.disable({emitEvent: false});
+            }
             this.subscribeChange();
         }).catch((error => {
             console.log(error);

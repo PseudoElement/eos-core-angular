@@ -78,6 +78,7 @@ import { RemasterSebComponent } from './user-params-set/user-param-ext-exch/rema
 import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/remaster-email/remaster-email.component';
 import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/remaster-mado/remaster-mado.component';
 
+import { CurrentUserSetComponent } from './current-user-set/current-user-set.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -139,6 +140,7 @@ import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/rem
         RightOrganizDepertComponent,
         CbUserRoleComponent,
         AutenteficationComponent,
+        CurrentUserSetComponent,
     ],
     entryComponents: [
         AddGrifComponent
