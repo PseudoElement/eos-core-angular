@@ -179,6 +179,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   public clearInput(controlKey: string) {
     if (controlKey && this.filterForm.controls[controlKey]) {
       this.filterForm.controls[controlKey].patchValue('');
+
+      const isnKey = controlKey + 'ISN';
+      if (this.filterForm.controls[isnKey]) {
+        this.filterForm.controls[isnKey].patchValue('');
+      }
     }
   }
 
