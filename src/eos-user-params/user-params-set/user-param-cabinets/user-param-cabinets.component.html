@@ -1,5 +1,16 @@
 <div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper" *ngIf="inputs">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable" [errorSave] = "MaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="flagEdit"
+        [title]='titleHeader'
+        [disableBtn]="btnDisable"
+        [errorSave] = "MaxIncrement"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancel($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event)'
+    ></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of fieldGroupsForCabinets; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
@@ -9,7 +20,7 @@
     </div>
 
     <div *ngIf="currTab === 0" class="clearfix scrollWrapper">
-        <div class="user-group-form">
+        <div [hidden]="appMode.cbr" class="user-group-form">
             <div class="cab-mar-span">
                 <span >Подсвечивать записи:</span>
             </div>
@@ -32,7 +43,7 @@
             <eos-dynamic-input [input]="inputs['rec.INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.SCRATCH_RESOL']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.tkDoc" class="user-group-form">
             <div class="cab-mar-span">
                 <span>При вводе отметки ознакомления с документом:</span>
             </div>
@@ -42,7 +53,7 @@
                 <eos-dynamic-input class="reply-input" [input]="inputs['rec.OZN_FILL_REPLY_TEXT']" [form]="form" [readonly]="false" [disabled]="!form.controls['rec.OZN_FILL_REPLY'].value"></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="cab-mar-span">
                 <span>Подсвечивать новые записи в папке приложения Документы:</span>
             </div>
@@ -62,13 +73,13 @@
                 <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title">Сортировать записи в кабинете приложения Документы по:</span>
                 <eos-dynamic-input class="cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
             <div class="inputs-inline">
                 <span class="input-title">Максимальное количество записей для отображения в кабинете в приложении Документы:</span>
                 <eos-dynamic-input [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -76,7 +87,7 @@
         </div>
     </div>
     <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
-        <div class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title">Дата поручения в приложении Документы:</span>
                 <div class="date-resolution">
@@ -84,7 +95,7 @@
                 </div>
             </div>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="author-res-title input-title">Автор резолюции в приложении Документы:</span>
                 <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.RESOLUTION_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -104,30 +115,34 @@
         </div>
         <div class="user-group-form">
             <span>Поручение при создании:</span>
-            <div class="control-state">
+            <div [hidden]="appMode.cbr" class="control-state">
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CONTROL_STATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div><br>
-            <eos-dynamic-input [input]="inputs['rec.PLAN_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [hidden]="!appMode.cbr" [input]="inputs['rec.PLAN_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <div class="user-group-form">
-            <span>При вводе подчиненного поручения копировать из вышестоящего:</span>
-            <eos-dynamic-input [input]="inputs['rec.PARENT_RESOLUTION_TEXT']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.INTERIM_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.STATUS_EXEC_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
-
-            <eos-dynamic-input [input]="inputs['rec.CORRECT_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div>
+                <span>При вводе подчиненного поручения копировать из вышестоящего:</span>
+                <eos-dynamic-input [input]="inputs['rec.PARENT_RESOLUTION_TEXT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs['rec.INTERIM_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs['rec.STATUS_EXEC_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
+            </div>
+            <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs['rec.CORRECT_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.INFORM_DIFFERENCE_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_PLAN_DATE_ASK']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.CASCADE_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.RESOLUTION_PLAN_DATE_ASK']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.CASCADE_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <div class="send-res">
-            <span>Рассылать поручения в приложении Документы:</span>
-            <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
+        <div [hidden]="appMode.cbr" class="send-res">
+            <div [hidden]="appMode.arm">
+                <span>Рассылать поручения в приложении Документы:</span>
+                <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <br>
             <div>
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div><br>
-        <div class="user-group-form">
+        <div [hidden]="appMode.cbr" class="user-group-form">
             <span>Добавлять в журнал передачи документа для:</span>
             <div class="add-to-juornal-radio">
                 <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_4DOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -141,28 +156,28 @@
         <div>
             <eos-dynamic-input [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div><br>
-        <div class="user-group-form resolution">
+        <div *ngIf="!appMode.cbr" class="user-group-form resolution">
             <span>Приоритет резолюции:</span>
             <div>
                 <eos-dynamic-input [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title" [ngStyle]="{'padding-bottom': '5px'}">При снятии с контроля:</span>
                 <eos-dynamic-input [input]="inputs['rec.CHECK_RESOL_REPORT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title">Показывать в окне поручения в приложении Документы:</span>
                 <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <eos-dynamic-input [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
+        <eos-dynamic-input [hidden]="appMode.arm || appMode.cbr" [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
     </div>
-    <div class="informer-container clearfix" [hidden]="currTab !== 2">
+    <div class="informer-container clearfix" [hidden]="currTab !== 2 || appMode.arm">
         <eos-cabinets-informer
             #informerTabEl
             [userData]="allData"
@@ -172,7 +187,7 @@
             (pushState)="emitInformerChanges($event)"
         ></eos-cabinets-informer>
     </div>
-    <div class="informer-container clearfix" [hidden]="currTab !== 3" *ngIf="defaultTitle">
+    <div class="informer-container clearfix" [hidden]="currTab !== 3 || appMode.arm" *ngIf="defaultTitle">
         <eos-cabinets-informer
             #defaultNotificatorEl
             [userData]="allData"

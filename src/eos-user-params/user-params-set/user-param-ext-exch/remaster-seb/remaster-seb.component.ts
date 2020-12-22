@@ -9,6 +9,7 @@ import {InputControlService} from 'eos-common/services/input-control.service';
 import {EosDataConvertService} from 'eos-dictionaries/services/eos-data-convert.service';
 import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-seb',
     templateUrl: 'remaster-seb.component.html',
@@ -17,6 +18,9 @@ import {RemasterService} from '../../shared-user-param/services/remaster-service
 export class RemasterSebComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public inputs;
     public form: FormGroup;
@@ -70,7 +74,11 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
-        this.form.disable({emitEvent: false});
+        if (this.isCurrentSettings) {
+            this.form.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+        }
         this.subscribeChange();
     }
     setNewValInputs() {

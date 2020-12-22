@@ -1,46 +1,99 @@
 <div class=" default-settings">
     <ng-container [ngSwitch]="paramId">
         <ng-container *ngSwitchCase="'registration'">
-            <eos-registration-remaster *ngIf="defaultUser !== undefined" [defaultUser]="defaultUser" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-             [defaultTitle]="'Регистрация по умолчанию'"></eos-registration-remaster>
+            <eos-registration-remaster
+                *ngIf="defaultUser !== undefined"
+                [defaultUser]="defaultUser"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Регистрация по умолчанию'"
+                [openingTab]="openingOptionalTab"
+                [appMode]="appMode">
+            </eos-registration-remaster>
         </ng-container>
         <ng-container *ngSwitchCase="'cabinets'">
-            <eos-user-param-cabinets *ngIf="defaultUser !== undefined" [defaultUser]="defaultUser" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-              [defaultTitle]="'Кабинеты по умолчанию'"></eos-user-param-cabinets>
+            <eos-user-param-cabinets
+                *ngIf="defaultUser !== undefined"
+                [defaultUser]="defaultUser"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Кабинеты по умолчанию'"
+                [openingTab]="openingOptionalTab"
+                [appMode]="appMode">
+            </eos-user-param-cabinets>
         </ng-container>
         <ng-container *ngSwitchCase="'rc'">
-            <eos-user-param-rc *ngIf="defaultUser !== undefined" [defaultUser]="defaultUser" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-              [defaultTitle]="'РК по умолчанию'"></eos-user-param-rc>
+            <eos-user-param-rc
+                *ngIf="defaultUser !== undefined"
+                [defaultUser]="defaultUser"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'РК по умолчанию'"
+                [appMode]="appMode">
+            </eos-user-param-rc>
         </ng-container>
         <ng-container *ngSwitchCase="'dictionary'">
-            <eos-user-param-directories *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-              [defaultTitle]="'Справочники по умолчанию'" [defaultUser]="defaultUser"></eos-user-param-directories>
+            <eos-user-param-directories
+                *ngIf="defaultUser !== undefined"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Справочники по умолчанию'"
+                [defaultUser]="defaultUser"
+                [appMode]="appMode">
+            </eos-user-param-directories>
         </ng-container>
         <ng-container *ngSwitchCase="'ext-exch'">
-            <eos-ext-exch *ngIf="defaultUser !== undefined" [defaultUser]="defaultUser" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-             [defaultTitle]="'Внешний обмен по умолчанию'"></eos-ext-exch>
+            <eos-ext-exch
+                *ngIf="defaultUser !== undefined"
+                [defaultUser]="defaultUser"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Внешний обмен по умолчанию'"
+                [openingTab]="openingOptionalTab"
+                [appMode]="appMode">
+            </eos-ext-exch>
         </ng-container>
         <ng-container *ngSwitchCase="'el-signature'">
-            <eos-user-param-el-signature  *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-              [defaultTitle]="'Электронная подпись по умолчанию'"  [defaultUser]="defaultUser"></eos-user-param-el-signature>
+            <eos-user-param-el-signature 
+                *ngIf="defaultUser !== undefined"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Электронная подпись по умолчанию'" 
+                [defaultUser]="defaultUser">
+            </eos-user-param-el-signature>
         </ng-container>
         <ng-container *ngSwitchCase="'visualization'">
-            <eos-user-param-visualization *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-            [defaultTitle]="'Визуализация по умолчанию'" [defaultUser]="defaultUser"></eos-user-param-visualization>
+            <eos-user-param-visualization
+                *ngIf="defaultUser !== undefined"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Визуализация по умолчанию'"
+                [defaultUser]="defaultUser">
+            </eos-user-param-visualization>
         </ng-container>
         <ng-container *ngSwitchCase="'external-application'">
-            <eos-user-param-external-application *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
-              [defaultTitle]="'Приложение Документы по умолчанию'" [defaultUser]="defaultUser"></eos-user-param-external-application>
+            <eos-user-param-external-application
+                *ngIf="defaultUser !== undefined"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Приложение Документы по умолчанию'"
+                [defaultUser]="defaultUser"
+                [hidden]="appMode.arm"
+                [openingTab]="openingOptionalTab"
+                [appMode]="appMode">
+            </eos-user-param-external-application>
         </ng-container>
         <ng-container *ngSwitchCase="'other'">
-            <eos-user-param-other *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)" [defaultTitle]="'Передача по умолчанию'" 
-            [defaultUser]="defaultUser"></eos-user-param-other>
+            <eos-user-param-other
+                *ngIf="defaultUser !== undefined"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Передача по умолчанию'" 
+                [defaultUser]="defaultUser"
+                [openingTab]="openingOptionalTab"
+                [appMode]="appMode">
+            </eos-user-param-other>
         </ng-container>
         <ng-container *ngSwitchCase="'patterns'">
-            <eos-user-param-shablony *ngIf="defaultUser !== undefined" (DefaultSubmitEmit)="DefaultSubmitEmit($event)" [defaultTitle]="'Шаблоны по умолчанию'" 
-            [defaultUser]="defaultUser"></eos-user-param-shablony>
+            <eos-user-param-shablony
+                *ngIf="defaultUser !== undefined"
+                (DefaultSubmitEmit)="DefaultSubmitEmit($event)"
+                [defaultTitle]="'Шаблоны по умолчанию'" 
+                [defaultUser]="defaultUser"
+                [hidden]="appMode.arm">
+            </eos-user-param-shablony>
         </ng-container>
-        
     </ng-container>
 </div>
 <div [ngClass]="{'list-show' : isWide}" class="params-nav-list">

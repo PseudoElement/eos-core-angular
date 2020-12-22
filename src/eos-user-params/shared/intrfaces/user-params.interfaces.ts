@@ -26,3 +26,11 @@ export interface IParamAccordionList {
     isOpen?: boolean;
     disabled?: boolean;
 }
+
+export interface IUserSettingsModes {
+    arm?: boolean;
+    tk?: boolean;
+    tkDoc?: boolean;
+    cbr?: boolean;
+    hasMode?: boolean;
+}

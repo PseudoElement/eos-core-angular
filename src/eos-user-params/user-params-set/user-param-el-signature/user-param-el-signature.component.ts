@@ -11,6 +11,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -21,6 +22,10 @@ import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() isCurrentSettings?: boolean;
+    @Input() appMode: IUserSettingsModes;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public control: AbstractControl;
     public form: FormGroup;
@@ -77,9 +82,11 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             const stores: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
             this.carmaHttp2Srv.connect(null, stores);
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            }).then(() => {
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config).then(() => {
                 this.currentUser = this._userSrv.curentUser;
                 this.init();
             })

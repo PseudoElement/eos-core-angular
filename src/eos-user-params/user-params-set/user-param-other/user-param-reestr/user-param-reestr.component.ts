@@ -14,6 +14,7 @@ import { INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.int
 import { IOpenClassifParams } from '../../../../eos-common/interfaces';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-user-param-reestr',
@@ -25,6 +26,9 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
     @Input() defaultUser: any;
     @Input() errorHidden: boolean;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() pushIncrementError: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
@@ -161,7 +165,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         });
     }
     editMode() {
-        if (this.flagEdit) {
+        if (this.flagEdit || this.isCurrentSettings) {
             this.form.enable({ emitEvent: false });
         } else {
             this.form.disable({ emitEvent: false });

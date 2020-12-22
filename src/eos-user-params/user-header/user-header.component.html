@@ -4,13 +4,13 @@
             <span class="edit-title primary-text">{{title}}</span>
         </div>
         <div>
-            <button class="btn btn-primary" (click)="saveFile()">СОХРАНИТЬ НАСТРОЙКИ В ФАЙЛ</button>
+            <button class="btn btn-primary" (click)="saveFile()">{{btnTitles.saveFile}}</button>
         </div>
         <div class="buttons-wrapper" *ngIf="editMode">
             <div>
-                <button *ngIf='defaultBtn' class="btn btn-primary default-btn" (click)="default()">ПО УМОЛЧАНИЮ</button>
-                <button class="btn btn-primary" (click)="cancel()">ОТМЕНИТЬ</button>
-                <button class="btn btn-primary-full" [disabled]="errorSave"  (click)="submit()">СОХРАНИТЬ</button><!---->
+                <button *ngIf='defaultBtn' class="btn btn-primary default-btn" (click)="default()">{{btnTitles.default}}</button>
+                <button class="btn btn-primary" (click)="cancel()">{{btnTitles.cancel}}</button>
+                <button class="btn btn-primary-full" [disabled]="errorSave"  (click)="submit()">{{btnTitles.save}}</button><!---->
             </div>
         </div>
         <div class="action-wrapper" *ngIf="!editMode">

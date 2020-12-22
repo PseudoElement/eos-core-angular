@@ -14,6 +14,7 @@ import {WaitClassifService} from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-addresses',
     templateUrl: 'user-param-addresses.component.html',
@@ -23,6 +24,9 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 export class UserParamAddressesComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
     @Input() defaultUser: any;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
     public inputs: any;
@@ -173,7 +177,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         });
     }
     editMode() {
-        if (this.flagEdit) {
+        if (this.flagEdit || this.isCurrentSettings) {
             this.form.enable({ emitEvent: false });
         } else {
             this.form.disable({ emitEvent: false });

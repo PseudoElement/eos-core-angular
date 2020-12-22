@@ -20,6 +20,7 @@ export class EosHeaderComponent implements OnDestroy {
     width = 0;
     openProtocols: Array<any> = [];
     openWindows: Array<any> = [];
+    headerShow = true;
 
     private ngUnsubscribe: Subject<any> = new Subject();
     private windowRemove: Window;
@@ -47,6 +48,11 @@ export class EosHeaderComponent implements OnDestroy {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(() => this.update());
+            this._appcontext.setHeader.subscribe((data: boolean) => {
+                setTimeout(() => {
+                    this.headerShow = data;
+                });
+            });
     }
     @HostListener('window:resize')
     resize($event) {

@@ -1,74 +1,94 @@
 <div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
-    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="!btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancellation($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]="editFlag"
+        [title]='titleHeader'
+        [disableBtn]="!btnDisabled"
+        [defaultBtn]='true'
+        [isCurrentSettings]="isCurrentSettings"
+        (submitEmit)='submit($event)'
+        (cancelEmit)='cancellation($event)'
+        (editEmit)='edit($event)'
+        (defaultEmit)='default($event)'
+    ></eos-user-params-header>
 </div>
 <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper scrollWrapper signature" *ngIf="inputs">
-    <div class="user-input-group">
-        <div class="signature-wr">
+    <div [hidden]="appMode.cbr">
+        <div class="user-input-group">
+            <div class="signature-wr">
+                <span class="l-font">Объект поддержки ЭП и шифрования</span>
+                <div class="input-flex">
+                    <eos-dynamic-input class="inline-block cust-input" [input]="inputs['CRYPTO_ACTIVEX']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block" [input]="inputs['CRYPTO_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
+                <hr>
+            </div>
+            <div class="signature-wr">
+                <eos-dynamic-input class="inline-block" [input]="inputs['SIGN_BASE64']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        </div>
+        <div class="user-input-group">
+            <div class="signature-wr">
+                <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
+                <div class="input-flex">
+                    <eos-dynamic-input class="inline-block" [input]="inputs['PKI_ACTIVEX']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block" [input]="inputs['PKI_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div class="user-input-group btn-hov">
+            <div class="input-flex">
+                <button [disabled]="!editFlag || disablebtnCarma" (click)="openPopup(template, 'CERT_USER_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" container="body" trigger="hover">Хранилища сертификатов пользователя</button>
+                <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
+            </div>
+        </div>
+        <div class="user-input-group">
+            <div class="signature-wr">
+                <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_EDS']" [form]="form" [readonly]="false" (change)='disableOrEnabel()'></eos-dynamic-input>
+                <hr>
+            </div>
+        </div>
+        <div class="user-input-group">
             <span class="l-font">Объект поддержки ЭП и шифрования</span>
-            <div class="input-flex">
-                <eos-dynamic-input class="inline-block cust-input" [input]="inputs['CRYPTO_ACTIVEX']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input class="inline-block" [input]="inputs['CRYPTO_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div>
+                <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_CRYPTO_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <hr>
         </div>
-        <div class="signature-wr">
-            <eos-dynamic-input class="inline-block" [input]="inputs['SIGN_BASE64']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-    </div>
-    <div class="user-input-group">
-        <div class="signature-wr">
+        <div class="user-input-group">
             <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
-            <div class="input-flex">
-                <eos-dynamic-input class="inline-block" [input]="inputs['PKI_ACTIVEX']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input class="inline-block" [input]="inputs['PKI_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div>
+                <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_PKI_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <hr>
         </div>
-    </div>
-    <div class="user-input-group btn-hov">
-        <div class="input-flex">
-            <button [disabled]="!editFlag || disablebtnCarma" (click)="openPopup(template, 'CERT_USER_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" container="body" trigger="hover">Хранилища сертификатов пользователя</button>
-            <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
+        <div class="user-input-group btn-hov">
+            <button
+                [disabled]="!editFlag || !disablebtnCarma"
+                (click)="openPopup(template, 'CERT_DIFF_CHECK_STORES')"
+                tooltip="Открыть"
+                #itemTooltip="bs-tooltip"
+                placement="bottom"
+                containerClass="tooltip-info"
+                trigger="hover"
+            >
+                Хранилища сертификатов для проверки
+            </button>
         </div>
-    </div>
-    <div class="user-input-group">
-        <div class="signature-wr">
-            <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_EDS']" [form]="form" [readonly]="false" (change)='disableOrEnabel()'></eos-dynamic-input>
-            <hr>
-        </div>
-    </div>
-    <div class="user-input-group">
-        <span class="l-font">Объект поддержки ЭП и шифрования</span>
-        <div>
-            <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_CRYPTO_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-        <hr>
-    </div>
-    <div class="user-input-group">
-        <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
-        <div>
-            <eos-dynamic-input class="inline-block" [input]="inputs['DIFF_CHECK_PKI_INITSTR']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
-        <hr>
-    </div>
-    <div class="user-input-group btn-hov">
-        <button
-            [disabled]="!editFlag || !disablebtnCarma"
-            (click)="openPopup(template, 'CERT_DIFF_CHECK_STORES')"
-            tooltip="Открыть"
-            #itemTooltip="bs-tooltip"
-            placement="bottom"
-            containerClass="tooltip-info"
-            trigger="hover"
-        >
-            Хранилища сертификатов для проверки
-        </button>
     </div>
 
     <!--<div class="user-input-group">
         <eos-dynamic-input class="inline-block" [input]="inputs['WEB_EDS_VERIFY_ON_SERVER']" [form]="form" [readonly]="false"></eos-dynamic-input>
         <hr>
     </div>-->
+    <div *ngIf="appMode.cbr" class="user-input-group">
+        <eos-dynamic-input
+            class="inline-block"
+            [input]="inputs['WEB_EDS_VERIFY_ON_SERVER']"
+            [form]="form"
+            [readonly]="false">
+        </eos-dynamic-input>
+    </div>
 </div>
 <ng-template #template>
     <div class="modal-header">

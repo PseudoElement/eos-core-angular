@@ -17,6 +17,7 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer.component';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -26,6 +27,11 @@ import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer
 export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     @ViewChild('informerTabEl') informerTabRef: CabinetsInformerComponent;
     @ViewChild('defaultNotificatorEl') defaultNotificatorRef: CabinetsInformerComponent;
@@ -96,6 +102,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         });
     }
     ngOnInit() {
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this.defaultTitle) {
             this.currentUser = this.defaultUser;
             this.allData = this.defaultUser;
@@ -116,9 +125,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
             return this.initForm();
         }
-        return this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
+        const config = {expand: 'USER_PARMS_List'};
+        if (this.mainUser) {
+            config['isn_cl'] = this.mainUser;
+        }
+        return this._userParamsSetSrv.getUserIsn(config)
         .then(() => {
             this.currentUser = this._userParamsSetSrv.curentUser;
             this.allData = this._userParamsSetSrv.hashUserContext;
@@ -127,6 +138,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     initForm(): Promise<any> {
         this.defineLastTab();
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         this.pretInputs();
         this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
         this.patchInputValue();
@@ -622,6 +636,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.checkTouch(emptyObj);
     }
     private defineLastTab() {
+        if (!this.appMode || this.appMode.arm || this.appMode.cbr) {
+            return;
+        }
         if (this.defaultTitle) {
             this.isInformer = true;
             if (this.fieldGroupsForCabinets.length < 4) {

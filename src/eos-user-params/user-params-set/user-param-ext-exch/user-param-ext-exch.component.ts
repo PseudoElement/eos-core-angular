@@ -6,6 +6,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RemasterService } from 'eos-user-params/user-params-set/shared-user-param/services/remaster-service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
+import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 
 @Component({
     selector: 'eos-ext-exch',
@@ -17,6 +18,11 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parameters
 export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
+    @Input() mainUser?;
+    @Input() openingTab: number = 0;
+    @Input() appMode: IUserSettingsModes;
+    @Input() isCurrentSettings?: boolean;
+
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
     public currTab = 0;
@@ -53,15 +59,20 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _formHelper: FormHelperService,
     ) {}
     ngOnInit() {
+        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
+            this.currTab = Number(this.openingTab) - 1;
+        }
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.defaultValues = this.defaultUser;
             this.hash = this.defaultUser;
             this.isLoading = true;
         } else {
-            this._userSrv.getUserIsn({
-                expand: 'USER_PARMS_List'
-            })
+            const config = {expand: 'USER_PARMS_List'};
+            if (this.mainUser) {
+                config['isn_cl'] = this.mainUser;
+            }
+            this._userSrv.getUserIsn(config)
             .then(() => {
                 this.hash = this._userSrv.hashUserContext;
                 this.currentUser = this._userSrv.curentUser;

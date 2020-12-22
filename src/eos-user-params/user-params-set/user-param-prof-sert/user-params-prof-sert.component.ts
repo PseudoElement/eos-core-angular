@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 /* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
 
@@ -42,6 +42,8 @@ interface SertInfo {
 
 
 export class UserParamsProfSertComponent implements OnInit, OnDestroy {
+    @Input() mainUser?;
+    @Input() isCurrentSettings?: boolean;
 
     public stateSerts: SertsBase = {
         sing_mail: null,
@@ -90,9 +92,11 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
     ngOnInit() {
-        this._userSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
+        const config = {expand: 'USER_PARMS_List'};
+        if (this.mainUser) {
+            config['isn_cl'] = this.mainUser;
+        }
+        this._userSrv.getUserIsn(config)
             .then(() => {
                 this.currentUser = this._userSrv.curentUser;
                 this.selectedSertificatePopup = null;
