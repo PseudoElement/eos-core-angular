@@ -28,6 +28,13 @@
                 [readonly]="false"></eos-dynamic-input>
             <div class="del-mar">
                 <eos-dynamic-input
+                    [tooltip]="userWhoValue"
+                    #itemTooltip="bs-tooltip"
+                    triggers="hover:click"
+                    [delay]="tooltipDelay"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info"
                     class="s-font"
                     [input]="inputs['rec.USERWHO']"
                     [form]="filterForm"
@@ -42,6 +49,13 @@
             </div>
             <div>
                 <eos-dynamic-input
+                    [tooltip]="userEditValue"
+                    #itemTooltip="bs-tooltip"
+                    triggers="hover:click"
+                    [delay]="tooltipDelay"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info"
                     class="s-font"
                     [input]="inputs['rec.USEREDIT']"
                     class="s-font"

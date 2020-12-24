@@ -9,6 +9,7 @@ import { FormHelperService } from 'eos-user-params/shared/services/form-helper.s
 import { FILTER_PROTOCOL } from 'eos-user-params/user-params-set/shared-user-param/consts/filter-users.const';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
   selector: 'eos-filter-protocol',
@@ -31,6 +32,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   filterForm: FormGroup;
   inputs;
   searchModel = {};
+  public tooltipDelay = TOOLTIP_DELAY_VALUE;
+
   @Output() filterProtocol: EventEmitter<any> = new EventEmitter();
 
   get userWhoValue() {
