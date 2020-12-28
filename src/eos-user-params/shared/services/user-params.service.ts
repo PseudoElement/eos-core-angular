@@ -201,7 +201,17 @@ export class UserParamsService {
         }
         return this.getUserIsn({
             expand: 'USER_PARMS_List',
-        }).then(() => protocol());
+            isn_cl: isn,
+        })
+        .then(() => protocol())
+        .catch((e) => {
+            const errMessage = e.message ? e.message : e;
+            this._msgSrv.addNewMessage({
+                type: 'danger',
+                title: 'Ошибка протоколирования пользователя',
+                msg: errMessage,
+            });
+        });
     }
 
     addRightsForCBRole(isn: number): Promise<any> {
