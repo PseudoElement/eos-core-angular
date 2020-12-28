@@ -116,12 +116,12 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, S
         }, {
             key: 'OUT_FOLDER',
             type: 'string',
-            title: 'Папка исходящих сообщений',
+            title: 'Папка входящих сообщений',
             required: true,
         }, {
             key: 'IN_FOLDER',
             type: 'string',
-            title: 'Папка входящих сообщений',
+            title: 'Папка исходящих сообщений',
             required: true,
         }]),
     editFields: ['CLASSIF_NAME', 'NOTE', 'CHANNEL_TYPE',
