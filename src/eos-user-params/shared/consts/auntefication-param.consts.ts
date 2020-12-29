@@ -21,7 +21,7 @@ export const AUNTEFICATION_CONTROL_INPUT: IInputParamControl[] = [
         key: 'CLASSIF_NAME',
         label: 'ЛОГИН',
         required: true,
-        pattern: /^\S+$/,
+        pattern: /^\s*\S+$/,
     },
     {
         controlType: E_FIELD_TYPE.boolean,
