@@ -3,7 +3,6 @@ import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { ALL_ROWS } from 'eos-rest/core/consts';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 @Component({
@@ -41,12 +40,17 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         this.formServer = new FormGroup({
             server: new FormControl({ value: this.context.SysParms._more_json.ParamsDic['СЕРВЕР ПРИЛОЖЕНИЙ'], disabled: true })
         });
-        this.getData({DELIVERY_CL: ALL_ROWS})
+        this.getData({DELIVERY_CL: {
+            criteries: {
+                orderby: 'WEIGHT',
+            },
+        }})
             .then(data => {
                 return data.map(i => {
                     return {
                         value: i['ISN_LCLASSIF'],
-                        title: i['CLASSIF_NAME']
+                        title: i['CLASSIF_NAME'],
+                        disabled: Boolean(i['DELETED']),
                     };
                 });
             })
