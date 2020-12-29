@@ -190,7 +190,12 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
 
     defaultTreePath(data: CustomTreeNode[]): any {
         if (data && data[0].id === NP_NOM_ROOT_DUE && this._filterDUE === NP_NOM_ROOT_DUE) {
-            return data[0].children && data[0].children.length ? data[0].children[0].path : null;
+            const [deps] = data;
+            if (deps.children && deps.children.length) {
+                const firstDep = deps.children.find((dep) => !dep.isDeleted);
+                return firstDep.path;
+            }
+            // return data[0].children && data[0].children.length ? data[0].children[0].path : null;
         }
 
         return null;
@@ -294,7 +299,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isNode: true,
                 isDeleted: dd.DELETED === 0 ? false : true,
                 isActive: dd.DUE === this._filterDUE,
-                isClickable: (dd.DUE !== NP_NOM_ROOT_DUE),
+                isClickable: true,
                 expandable: false,
                 isExpanded: false,
                 updating: false,
