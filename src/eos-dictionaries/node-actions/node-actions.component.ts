@@ -250,6 +250,11 @@ export class NodeActionsComponent implements OnDestroy {
             switch (button.type) {
                 case E_RECORD_ACTIONS.add:
                     _enabled = !_isLDSubTree && !this._viewParams.updatingList;
+                    if (this.dictionary.id === 'nomenkl' && _enabled) {
+                        const activeNode = this.dictionary.descriptor.getActive();
+                        const isHighestNode = activeNode && activeNode.id === '0.';
+                        _enabled = !isHighestNode;
+                    }
                     break;
                 case E_RECORD_ACTIONS.moveUp:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
@@ -323,6 +328,11 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.userOrder:
                     _enabled = _enabled && !this._viewParams.searchResults;
+                    if (this.dictionary.id === 'nomenkl' && _enabled) {
+                        const activeNode = this.dictionary.descriptor.getActive();
+                        const isHighestNode = activeNode && activeNode.id === '0.';
+                        _enabled = !isHighestNode;
+                    }
                     _active = this._viewParams.userOrdered;
                     _isWriteAction = false;
                     break;
