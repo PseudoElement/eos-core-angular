@@ -154,7 +154,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         users.map((user) => {
           valueWho.push({name: user.SURNAME_PATRON, isn: user.ISN_LCLASSIF});
         });
-        this.allData.USERWHO = valueWho.map((obj) => obj.name).toString();
+        // this.allData.USERWHO = valueWho.map((obj) => obj.name).toString();
+        this.allData.USERWHO = valueWho.map((obj) => obj.name).join(', ');
         this.allData.USERWHOISN = valueWho.map((obj) => obj.isn).toString();
         this.filterForm.controls['rec.USERWHOISN'].patchValue(this.allData.USERWHOISN);
         this.filterForm.controls['rec.USERWHO'].patchValue(this.allData.USERWHO);
