@@ -134,7 +134,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     }
     getGocGroupForTemplates() {
         this.showDocGrList = false;
-        if (this.inputs && this.inputs['rec.CATEGORY'].value === 'Файлы документов') {
+        if (this.inputs && (this.inputs['rec.CATEGORY'].value === 'Файлы документов' || this.inputs['rec.CATEGORY'].value === 'Основной файл документа')) {
             const crit1 = this._pipRx.read({
                 DOCGROUP_CL: {
                     criteries: {
