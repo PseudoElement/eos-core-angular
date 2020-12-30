@@ -13,7 +13,7 @@ export const VISUALIZATION_USER: IBaseUsers = {
                 {value: '-1', title: 'Ассоциированное приложение'},
                 {value: '0', title: 'Оригинальный файл'},
                 {value: 'collage', title: 'Образ документа'},
-                {value: 'ses', title: 'Простые ЭП'}
+                // {value: 'ses', title: 'Простые ЭП'}
             ]
         }
     ]
