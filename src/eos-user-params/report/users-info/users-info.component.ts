@@ -10,7 +10,6 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
-import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 
 @Component({
     selector: 'eos-users-info',
@@ -47,7 +46,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
     }
 
     init() {
-        this.users = this._userParamSrv.checkedUsers.filter((user: UserSelectNode) => user.isEditable);
+        this.users = this._userParamSrv.checkedUsers;
         if (this.users.length > 0) {
             this.selectUser = this.users[0];
             this.src = this.getHtmlStr(this.selectUser.id);
