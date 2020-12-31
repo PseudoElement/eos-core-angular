@@ -241,6 +241,9 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
             ) {
                 errors.push(`Тип связки должен быть выбран`);
             }
+            if (data && Number(data['RULE_KIND']) === 2 && Number(data['RC_TYPE']) === 2 && Number(data['korRuleSend']) === 2) {
+                errors.push(`Для выбранной группы документа измените значение параметра \n\'Корр. РК сформировать\'`);
+            }
         // }
         return errors;
     }

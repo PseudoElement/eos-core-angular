@@ -25,7 +25,17 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 export class SevRulesCardEditComponent extends BaseCardEditComponent implements OnInit, OnDestroy {
     public linkTypeListNames = [];
     public fileAccessNames = [];
-    public fieldNotUpdate = ['rec.CLASSIF_NAME', 'rec.NOTE', 'rec.type', 'rec.RULE_KIND', 'rec.kind', 'rec.DUE_DEP', 'rec.organizationNow', 'rec.fileAccessListRk'];
+    public fieldNotUpdate = [
+        'rec.CLASSIF_NAME',
+        'rec.NOTE',
+        'rec.type',
+        'rec.RULE_KIND',
+        'rec.kind',
+        'rec.DUE_DEP',
+        'rec.organizationNow',
+        'rec.fileAccessListRk',
+        'rec.RC_TYPE',
+    ];
     public securityLink = [];
     public organizationNow = '';
     public organization = '';

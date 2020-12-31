@@ -61,6 +61,10 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             type: 'number',
             default: 1,
         }, {
+            key: 'RC_TYPE',
+            type: 'number',
+            default: 0,
+        }, {
             key: 'DUE_DOCGROUP',
             type: 'string',
             title: 'Группа документов',
@@ -680,7 +684,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             default: ''
         }
     ],
-    editFields: ['CLASSIF_NAME', 'RULE_KIND', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DOCGROUP_NAME', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
+    editFields: ['CLASSIF_NAME', 'RULE_KIND', 'RC_TYPE', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DOCGROUP_NAME', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
         'linkKind', 'linkTypeList', 'access', 'rubric', 'address', 'region', 'visa', 'addressee', 'addresseeKind', 'additionalField',
         'userGrantedOnly', 'file', 'fileExtensions', 'fileAccessList', 'fileMaxLength', 'item', 'itemKind', 'resolution',
         'resolutionKind', 'taskCategory', 'taskController', 'taskNote', 'taskFile', 'taskFileExtensions', 'taskFileMaxLength', 'reception',
