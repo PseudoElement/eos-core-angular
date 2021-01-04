@@ -31,6 +31,25 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         ) {
         super(injector, context.cbBase ? OTHER_PARAM_CB : OTHER_PARAM);
     }
+    /**
+     * init
+     * переписываем метод, чтобы скрывать удаленные Виды доставок в dropdown's
+     */
+    public init() {
+        this.prepareDataParam();
+        return this.getData(this.queryObj)
+            .then(data => {
+                this.prepareData = this.convData(data);
+                this._updateDeliveryOptions();
+                this.prepareDataParam();
+                this.inputs = this.getInputs();
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.subscribeChangeForm();
+            })
+            .catch(err => {
+                throw err;
+            });
+    }
     ngOnInit() {
         this.context.SysParms._more_json.licensed.forEach(elem => {
             if (elem === 35) {
@@ -54,20 +73,8 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                     };
                 });
             })
-            .then(opsh => {
-                this.constParam.fields.forEach(field => {
-                    if (
-                        field.key === 'EMAIL_ISN_DELIVERY' ||
-                        field.key === 'SEV_ISN_DELIVERY' ||
-                        field.key === 'ASPSD_ISN_DELIVERY' ||
-                        field.key === 'SDS_ISN_DELIVERY' ||
-                        field.key === 'LK_ISN_DELIVERY' ||
-                        field.key === 'EPVV_ISN_DELIVERY' ||
-                        field.key === 'MEDO_ISN_DELIVERY'
-                    ) {
-                        field.options = opsh;
-                    }
-                });
+            .then(opts => {
+                this._updateDeliveryOptions(opts);
                 return this.init()
                 .then(() => {
                     this.cancelEdit();
@@ -94,5 +101,25 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
             }
         });
         setTimeout(() => this.form.disable({ emitEvent: false }), 100);
+    }
+    private _updateDeliveryOptions(opts?: any) {
+        this.constParam.fields.forEach(field => {
+            if (
+                field.key === 'EMAIL_ISN_DELIVERY' ||
+                field.key === 'SEV_ISN_DELIVERY' ||
+                field.key === 'ASPSD_ISN_DELIVERY' ||
+                field.key === 'SDS_ISN_DELIVERY' ||
+                field.key === 'LK_ISN_DELIVERY' ||
+                field.key === 'EPVV_ISN_DELIVERY' ||
+                field.key === 'MEDO_ISN_DELIVERY'
+            ) {
+                if (opts) {
+                    field.options = opts;
+                } else {
+                    const fieldValue = this.prepareData.rec[field.key] || '';
+                    field.options = field.options.filter((opt) => !opt.disabled || String(opt.value) === String(fieldValue));
+                }
+            }
+        });
     }
 }
