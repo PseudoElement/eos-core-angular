@@ -454,6 +454,9 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             let idsOrganiz: string[] = [];
             const options = new Map();
             if (d && d.length) {
+                if (this.dictSrv.currentDictionary.descriptor) {
+                    this.dictSrv.currentDictionary.descriptor.setDepOrganiz(d);
+                }
                 idsOrganiz = d.map(i => {
                     options.set(i.DUE_LINK_ORGANIZ, { value: i.DUE, title: '' });
                     return i.DUE_LINK_ORGANIZ;

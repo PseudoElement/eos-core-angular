@@ -15,7 +15,7 @@ import {ALL_ROWS, _ES, _T} from 'eos-rest/core/consts';
 import {ITypeDef, IEnt, DELO_BLOB} from 'eos-rest';
 import {SevIndexHelper} from 'eos-rest/services/sevIndex-helper';
 import {PrintInfoHelper} from 'eos-rest/services/printInfo-helper';
-import {SEV_ASSOCIATION} from 'eos-rest/interfaces/structures';
+import {DEPARTMENT, SEV_ASSOCIATION} from 'eos-rest/interfaces/structures';
 import {IAppCfg, IMessage} from 'eos-common/interfaces';
 import {EosUtils} from 'eos-common/core/utils';
 import {ContactHelper} from '../../eos-rest/services/contact-helper';
@@ -547,6 +547,11 @@ export abstract class AbstractDictionaryDescriptor {
     readCabinetLists(query): Promise<any> {
         return null;
     }
+    /**
+     * @method: setDepOrganiz
+     * Необходим для СЭВ
+     */
+    setDepOrganiz(departments: DEPARTMENT[]): void {}
 
     presaveSevRoutine(sevData: SEV_ASSOCIATION, record: any, changeData: any[], results: IRecordOperationResult[]): Promise<boolean> {
         if (!Features.cfg.SEV.isIndexesEnable) {
