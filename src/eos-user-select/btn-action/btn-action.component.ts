@@ -205,13 +205,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     checkBtnUserInfo() {
         this.checkWittAllUsers(UsersInfo);
-        // const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected));
-        // if (usersEdit.length) {
-        //     UsersInfo.disabled = false;
-        // } else {
-        //     UsersInfo.disabled = true;
-        //     UsersInfo.isActive = false;
-        // }
         this._rtSrv.usersInfo = UsersInfo;
     }
     checkBtnSettingsManagement() {
@@ -286,16 +279,10 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
 
     checkWittAllUsers(button: BtnActionFields): void {
-        const usersEdit = this.checkedUsers.filter(user => user.isEditable);
+        // const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected) && user.isEditable);
+        const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected));
         if (usersEdit.length) {
-            if (this.limitCards.length) {
-                button.disabled = false;
-                if (button.name === 'DeliteUser') { // запретить огран. тех. удалять пользователей
-                    button.disabled = true;
-                }
-            } else {
-                button.disabled = false;
-            }
+            button.disabled = false;
         } else {
             button.disabled = true;
             button.isActive = false;
