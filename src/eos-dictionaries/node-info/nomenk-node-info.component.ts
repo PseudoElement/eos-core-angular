@@ -24,7 +24,7 @@ export class NomenkNodeInfoComponent extends NodeInfoComponent implements OnChan
                     }
 
                     ptr = this.node.dictionary.descriptor.getParentFor(ptr.parent);
-                } while (ptr.parent);
+                } while (ptr && ptr.parent);
             }
         }
 
