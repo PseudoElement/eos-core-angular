@@ -24,8 +24,8 @@ import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-wi
 import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
-import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT } from 'eos-dictionaries/consts/confirm.consts';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT, CONFIRM_UNAVAILABLE_SYSTEMS } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -104,18 +104,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }).then((data) => {
             if (data) {
                 this.selfLink = this._router.url.split('?')[0];
-                this.apiSrvRx.read<any>({
-                    LicenseInfo: ALL_ROWS
-                  })
-                .then(ans => {
-                    if (typeof(ans) === 'string') {
-                        this.LicenzeInfo = JSON.parse(ans);
-                    } else {
-                        this.LicenzeInfo = data;
-                    }
-                    if (this.LicenzeInfo.length > 0) {
-                        this.createActualLicenze();
-                    }
+                this._getLicenseInfo()
+                .then(() => {
                     this.afterInit();
                 })
                 .catch(err => {
@@ -216,8 +206,28 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     createActualLicenze() {
         const masEl = [];
+        /**
+         * Сравниваем текущее количество пользователей
+         * с максимальным
+         */
+        const _compareUserCount = (elem) => {
+            const isLimitedUsers = Number(elem.Users) !== 0;
+            const hasTooManyUsers = Number(elem.Users) < Number(elem.ActualUsers);
+            const hasMaxUsers = Number(elem.Users) === Number(elem.ActualUsers);
+            if (isLimitedUsers) {
+                if (hasTooManyUsers) {
+                    return false;
+                } else if (hasMaxUsers) {
+                    return this._userParamSrv.curentUser &&
+                        this._userParamSrv.curentUser.ACCESS_SYSTEMS &&
+                        Boolean(Number(this._userParamSrv.curentUser.ACCESS_SYSTEMS[elem.Id - 1]));
+                }
+            }
+            return true;
+        };
         this.LicenzeInfo.forEach(elem => {
-            if (this.checkDateLicense(elem.Expired) && (+elem.Users === 0 || +elem.Users >= +elem.ActualUsers)) {
+            // if (this.checkDateLicense(elem.Expired) && (+elem.Users === 0 || +elem.Users > +elem.ActualUsers)) {
+            if (this.checkDateLicense(elem.Expired) && _compareUserCount(elem)) {
                 masEl.push('' + (elem.Id - 1));
             }
         });
@@ -473,28 +483,33 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (this.cheackCtech() || this.checkRole()) {
             return;
         }
-        const id = this._userParamSrv.userContextId;
-        const newD = {};
-        const query = [];
-        const accessStr = '';
-        this.checkDLSurname(query)
-            .then(() => {
-                this.setQueryNewData(accessStr, newD, query);
-                this.setNewDataFormControl(query, id);
-                if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
-                    return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                        if (res) {
-                            return this.ConfirmAvSystems(accessStr, id, query).then(() => {
-                                this._router.navigate(['/user-params-set/auntefication']);
+        return this._checkLicenseInfo()
+        .then((checkResult) => {
+            if (checkResult) {
+                const id = this._userParamSrv.userContextId;
+                const newD = {};
+                const query = [];
+                const accessStr = '';
+                this.checkDLSurname(query)
+                    .then(() => {
+                        this.setQueryNewData(accessStr, newD, query);
+                        this.setNewDataFormControl(query, id);
+                        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
+                            return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                                if (res) {
+                                    return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                        this._router.navigate(['/user-params-set/auntefication']);
+                                    });
+                                } else {
+                                    return this.ConfirmAvSystems(accessStr, id, query);
+                                }
                             });
                         } else {
                             return this.ConfirmAvSystems(accessStr, id, query);
                         }
                     });
-                } else {
-                    return this.ConfirmAvSystems(accessStr, id, query);
-                }
-            });
+            }
+        });
     }
 
     checkDLSurname(mas: any[]): Promise<any> {
@@ -972,5 +987,43 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         url += `users=${userId}`;
         url += `&rights=11`;
         return url;
+    }
+    private _getLicenseInfo() {
+        return this.apiSrvRx.read<any>({
+            LicenseInfo: ALL_ROWS
+        })
+        .then((ans) => {
+            if (typeof(ans) === 'string') {
+                this.LicenzeInfo = JSON.parse(ans);
+            } else {
+                this.LicenzeInfo = (ans && ans.length && [...ans]) || [];
+            }
+            if (this.LicenzeInfo.length > 0) {
+                this.createActualLicenze();
+            }
+        });
+    }
+    private _checkLicenseInfo() {
+        if (this._newDataformAccess.size) {
+            let hasUnavailableSystem = false;
+            this.actualLicenz = [];
+            return this._getLicenseInfo()
+            .then(() => {
+                if (this.LicenzeInfo.length) {
+                    this._newDataformAccess.forEach((value, key) => {
+                        if (value && this.actualLicenz.indexOf(key) === -1) {
+                            hasUnavailableSystem = true;
+                        }
+                    });
+                    if (hasUnavailableSystem) {
+                        return this._confirmSrv.confirm2(CONFIRM_UNAVAILABLE_SYSTEMS).then(() => {
+                            return false;
+                        });
+                    }
+                }
+                return Promise.resolve(true);
+            });
+        }
+        return Promise.resolve(true);
     }
 }

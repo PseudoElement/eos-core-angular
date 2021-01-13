@@ -92,3 +92,11 @@ export const WARN_ELEMENTS_ARE_RELATED: IConfirmWindow2 = {
         { title: 'Ок', result: 1, isDefault: true, },
     ],
 };
+export const CONFIRM_UNAVAILABLE_SYSTEMS: IConfirmWindow2 = {
+    title: 'Невозможно предоставить доступ к выбранным системам',
+    body: 'Превышено максимальное число пользователей.',
+    buttons: [
+            {title: 'Ok', result: 1, isDefault: true, },
+    ],
+    manualCR: true,
+};
