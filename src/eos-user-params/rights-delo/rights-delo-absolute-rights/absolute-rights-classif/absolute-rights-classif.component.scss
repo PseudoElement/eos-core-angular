@@ -43,11 +43,14 @@
         z-index: -1;
     }
 }
-.list-right-abs {
-    list-style-type: none;
-    .add-card-abs {
-        color: black;
-        line-height: 32px;
+.modal-body.new-card-body {
+    min-height: 110px;
+
+    .list-right-abs {
+        list-style-type: none;
+        .add-card-abs {
+            color: black;
+            line-height: 32px;
+        }
     }
 }
-
