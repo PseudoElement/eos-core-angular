@@ -64,10 +64,8 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         listedUT: false
     },
     // Группы документов
-    {
-        id: DOCGROUP_DICT.id, tech: E_TECH_RIGHT.Docgroups,
-        listedUT: false
-    },
+    { id: DOCGROUP_DICT.id,         tech: E_TECH_RIGHT.Docgroups,
+        listedUT: true },
     // Категории ЭП
     {
         id: EDS_CATEGORY_CL.id, tech: E_TECH_RIGHT.EdsCategory,
