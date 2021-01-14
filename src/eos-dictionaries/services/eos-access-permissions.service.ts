@@ -199,6 +199,14 @@ export class EosAccessPermissionsService {
         return (r[tr - 1] === '1');
     }
 
+    public checkShowDeleted(dictId: string): boolean {
+        const dt = dictsTechs.find(d => dictId === d.id);
+        if (dt) {
+            return this.checkAccessTech(dt.tech);
+        }
+        return false;
+    }
+
     // --------------------------------------------------------------
     private _userTechListGranted(tech: E_TECH_RIGHT, due: string): APS_DICT_GRANT {
         // сначала ищем явное правило

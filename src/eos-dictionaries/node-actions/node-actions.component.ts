@@ -448,7 +448,7 @@ export class NodeActionsComponent implements OnDestroy {
             }
         }
 
-        const is_granted = (button.accessNeed <= opts.dictGrant);
+        const is_granted = (button.accessNeed <= opts.dictGrant) || this._checkShowDeleted(button);
 
         button.show = _show;
         button.enabled = _enabled && (!_isWriteAction || is_granted);
@@ -480,5 +480,10 @@ export class NodeActionsComponent implements OnDestroy {
             }
         }
         return enabled;
+    }
+    private _checkShowDeleted(button: IActionButton): boolean {
+        if (button.type === E_RECORD_ACTIONS.showDeleted) {
+            return this._eaps.checkShowDeleted(this.dictionary.id);
+        }
     }
 }
