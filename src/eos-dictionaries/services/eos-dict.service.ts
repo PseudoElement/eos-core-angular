@@ -338,30 +338,37 @@ export class EosDictService {
     }
 
     getDueForNode(node: EosDictionaryNode): string {
-        if (!node || !node.dictionary.isTreeType()) {
-            return null;
+        if (node && node.dictionary) {
+            const id = node.dictionary.id;
+            switch (id) {
+                case CABINET_DICT.id:
+                    return node.data && node.data.department && node.data.department['DUE'];
+                case DEPARTMENTS_DICT.id:
+                    return node.parentId;
+                case NOMENKL_DICT.id:
+                    return node.data && node.data.rec['DUE'];
+                default:
+                    if (node.dictionary.isTreeType()) {
+                        return node.parentId;
+                    }
+            }
         }
-        const id = node.dictionary.id;
-        if (id === CABINET_DICT.id) {
-            return node.data.department['DUE'];
-        } else if (id === DEPARTMENTS_DICT.id) {
-            return node.parentId;
-        } else if (id === NOMENKL_DICT.id) {
-            return node.data.rec['DUE'];
-        } else {
-            return node.parentId;
-        }
+        return null;
 
-        // Variation for node grant is included
+
+        // if (!node || !node.dictionary.isTreeType()) {
+        //     return null;
+        // }
+        // const id = node.dictionary.id;
         // if (id === CABINET_DICT.id) {
         //     return node.data.department['DUE'];
         // } else if (id === DEPARTMENTS_DICT.id) {
-        //     return node.id;
+        //     return node.parentId;
         // } else if (id === NOMENKL_DICT.id) {
         //     return node.data.rec['DUE'];
+        // } else {
+        //     return node.parentId;
         // }
-        // return null;
-
     }
 
     getDueForTree(dictid: string) {
