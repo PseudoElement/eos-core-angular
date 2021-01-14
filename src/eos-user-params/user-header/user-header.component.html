@@ -1,7 +1,15 @@
 <header>
     <div class="header-wr">
         <div class="title-wrapper">
-            <span class="edit-title primary-text">{{title}}</span>
+            <span
+            class="edit-title primary-text"
+            [tooltip]="patchTitleTooltip()"
+            placement="bottom"
+            containerClass="tooltip-info"
+            container="body"
+            >
+                {{title}}
+            </span>
         </div>
         <div>
             <button class="btn btn-primary" (click)="saveFile()">{{btnTitles.saveFile}}</button>
