@@ -37,6 +37,7 @@ export class RightDepertmentComponent implements OnInit {
     isShell: Boolean = false;
     selectedDep: NodeDocsTree;
     checkFlag: boolean = false;
+    userTechDep: any[];
     constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
@@ -92,6 +93,13 @@ export class RightDepertmentComponent implements OnInit {
                     if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                         data.sort((a, b) => this.desc(a, b));
                     }
+                    if (this._appContext.CurrentUser.DELO_RIGHTS &&
+                        this._appContext.CurrentUser.DELO_RIGHTS[0] === '1' &&
+                        this._appContext.CurrentUser.USER_TECH_List &&
+                        this._appContext.CurrentUser.USER_TECH_List.length
+                    ) {
+                        this.userTechDep = this._appContext.CurrentUser.USER_TECH_List.filter((tech) => tech.FUNC_NUM === 10);
+                    }
                     data.forEach((dep: DEPARTMENT) => {
                         const userDep: USERDEP = this.userDepFuncNumber.find((ud: USERDEP) => dep.DUE === ud.DUE);
                         const cfg: INodeDocsTreeCfg = {
@@ -114,8 +122,9 @@ export class RightDepertmentComponent implements OnInit {
                             }
                             flag = true;
                         }
+                        const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
                         if (!(this.getAllDep && cfg.due === '0.')) {
-                            const elem = new NodeDocsTree(cfg, flag);
+                            const elem = new NodeDocsTree(cfg, flag, ownDep);
                             this.listUserDep.push(elem);
                         } else {
                             this.checkFlag = true;
@@ -205,7 +214,8 @@ export class RightDepertmentComponent implements OnInit {
                     cfg.allowed = this._appContext.limitCardsUser.length > 0 ? false : true;
                     cfg.viewAllowed = true;
                 }
-                const newNode = new NodeDocsTree(cfg, true);
+                const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
+                const newNode = new NodeDocsTree(cfg, true, ownDep);
                 this.curentUser.USERDEP_List.push(newUserDep);
                     this.selectedNode.pushChange({
                         method: 'POST',
@@ -314,7 +324,8 @@ export class RightDepertmentComponent implements OnInit {
                         cfg.viewAllowed = true;
                         flag = true;
                     }
-                    const newNode = new NodeDocsTree(cfg, flag);
+                    const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
+                    const newNode = new NodeDocsTree(cfg, flag, ownDep);
                     this.curentUser.USERDEP_List.push(newUserDep);
                         this.selectedNode.pushChange({
                             method: 'POST',
@@ -599,7 +610,8 @@ export class RightDepertmentComponent implements OnInit {
                     /* userDep: userDep, */
                 },
             };
-            this.listUserDep.push(new NodeDocsTree(cfg));
+            const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
+            this.listUserDep.push(new NodeDocsTree(cfg, false, ownDep));
         });
         this.massMy.forEach(dat => {
             if (!dat['CompositePrimaryKey']) {

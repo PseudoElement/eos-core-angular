@@ -12,6 +12,7 @@ export class NodeDocsTree implements IListDocsTree {
     isExpanded: boolean = true;
     isAllowed: boolean;
     isviewAllowed: boolean;
+    isOwnDepartment: boolean = true;
     flagCheckNode: any;
     redFlag: boolean;
     weight: number;
@@ -20,13 +21,14 @@ export class NodeDocsTree implements IListDocsTree {
             'redUnchecked': !this.isAllowed && this.redFlag,
         };
     }
-    constructor({due, label, allowed, data, viewAllowed, flagCheckNode, weight}: INodeDocsTreeCfg, redFlag?) {
+    constructor({due, label, allowed, data, viewAllowed, flagCheckNode, weight}: INodeDocsTreeCfg, redFlag?, isOwnDepartment = true) {
         this.DUE = due;
         this.label = label;
         this.isAllowed = allowed;
         this.isviewAllowed = viewAllowed === undefined ? true : viewAllowed;
         this.flagCheckNode = flagCheckNode ? flagCheckNode : undefined;
         this.redFlag = redFlag ? redFlag : undefined;
+        this.isOwnDepartment = isOwnDepartment;
         this.data = data;
         this.weight = weight;
         this.link = due.split('.');

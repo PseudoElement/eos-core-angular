@@ -25,6 +25,9 @@ export class ListDocsTreeComponent implements OnChanges {
     clickLable(event, item: NodeDocsTree) {
         event.preventDefault();
         event.stopPropagation();
+        if (!item.isOwnDepartment) {
+            return;
+        }
         if (event.target.tagName === 'LABEL') { // click to label
             this._selectNode(item);
         }
