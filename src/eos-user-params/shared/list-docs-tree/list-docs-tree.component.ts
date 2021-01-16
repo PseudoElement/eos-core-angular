@@ -77,6 +77,7 @@ export class ListDocsTreeComponent implements OnChanges {
         if (parent) {
             parent.isExpanded = this.hideExpand ? this.hideExpand : parent.isExpanded;
             parent.addChildren(node);
+            parent.sortChildren();
             node.parent = parent;
         } else {
             this.list.push(node);

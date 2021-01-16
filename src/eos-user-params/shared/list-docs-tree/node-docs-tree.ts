@@ -37,6 +37,16 @@ export class NodeDocsTree implements IListDocsTree {
     addChildren(node: NodeDocsTree) {
         this.children.push(node);
     }
+    sortChildren() {
+        if (this.children.length > 1) {
+            this.children = this.children.sort((a, b) => {
+                if (a.data.instance && b.data.instance && a.data.instance['CARD_NAME'] && b.data.instance['CARD_NAME']) {
+                    return a.data.instance['CARD_NAME'].localeCompare(b.data.instance['CARD_NAME']);
+                }
+                return 0;
+            });
+        }
+    }
     deleteChild(node: NodeDocsTree) {
         if (this.children.length) {
             this.children = this.children.filter((chld) => chld !== node);
