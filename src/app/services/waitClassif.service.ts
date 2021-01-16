@@ -8,7 +8,7 @@ const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
     'ORGANIZ_CL',
-    'CONTACT',
+    // 'CONTACT',
     'LINK_CL',
     'SECURITY_CL',
 ];
