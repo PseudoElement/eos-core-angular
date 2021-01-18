@@ -151,6 +151,9 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 return Promise.resolve([]);
             }
         }
+        if (query.criteries) {
+            query.criteries.ISN_LCLASSIF = '1:null';
+        }
 
         const req = { [this.apiInstance]: query };
 
