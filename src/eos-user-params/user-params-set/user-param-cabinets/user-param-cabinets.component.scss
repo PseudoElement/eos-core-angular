@@ -55,6 +55,9 @@
         select {
             cursor: pointer;
         }
+        .input-button-container {
+            min-width: 300px;
+        }
     }
     .incr-cabinet {
         .eos-select {
