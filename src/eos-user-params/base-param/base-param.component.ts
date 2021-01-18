@@ -1011,7 +1011,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .then(() => {
                 if (this.LicenzeInfo.length) {
                     this._newDataformAccess.forEach((value, key) => {
-                        if (value && this.actualLicenz.indexOf(key) === -1) {
+                        if (value && (Number(key) || key === 'delo_web') && this.actualLicenz.indexOf(key) === -1) {
                             hasUnavailableSystem = true;
                         }
                     });
