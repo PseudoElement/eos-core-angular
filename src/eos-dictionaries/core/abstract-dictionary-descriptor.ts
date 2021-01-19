@@ -589,9 +589,14 @@ export abstract class AbstractDictionaryDescriptor {
                     success: true
                 };
                 if (SevIndexHelper.PrepareForSave(sevData, record)) {
-                    const exist = sevs.find((existSev) =>
-                        (sevData.OBJECT_ID !== existSev.OBJECT_ID) && (sevData.GLOBAL_ID === existSev.GLOBAL_ID));
+                    const exist = sevs.find((existSev) => {
+                        const existGlobSevId = existSev.GLOBAL_ID && existSev.GLOBAL_ID.trim();
+                        const newGlobSevId = sevData.GLOBAL_ID && sevData.GLOBAL_ID.trim();
+                        const existObjSevId = existSev.OBJECT_ID && existSev.OBJECT_ID.trim();
+                        const newObjSevId = sevData.OBJECT_ID && sevData.OBJECT_ID.trim();
 
+                        return existObjSevId !== newObjSevId && newGlobSevId === existGlobSevId;
+                    });
                     if (exist) {
                         result.success = false;
                         result.error = new RestError({
