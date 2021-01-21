@@ -3,8 +3,12 @@ import { FormGroup, /* AsyncValidatorFn, AbstractControl, ValidationErrors */ } 
 import { Subscription } from 'rxjs';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { REF_FILE, PipRX, DOCGROUP_CL } from 'eos-rest';
-import { CONFIRM_REPLACE_SAME_FILE } from '../../../app/consts/confirms.const';
+import {
+    CONFIRM_REPLACE_SAME_FILE,
+    CONFIRM_SAVE_WITHOUT_FILE
+} from '../../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
+import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
@@ -181,6 +185,17 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         });
     }
     public confirmSave(): Promise<boolean> {
+        if (this.isNewRecord && !this.newFile) {
+                const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_WITHOUT_FILE);
+            return this._confirmSrv.confirm2(confirmParams, )
+                .then((doSave) => {
+                    return  doSave.result === 1 ? Promise.resolve(true) : Promise.resolve(false);
+                })
+                .catch(() => {
+                    return Promise.resolve(false);
+                });
+
+        }
         return Promise.resolve(true);
     }
     private initFiles() {
