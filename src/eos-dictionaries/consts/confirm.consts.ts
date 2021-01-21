@@ -100,3 +100,12 @@ export const CONFIRM_UNAVAILABLE_SYSTEMS: IConfirmWindow2 = {
     ],
     manualCR: true,
 };
+
+export const CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK: IConfirmWindow2 = {
+    title: 'Ограничение лицензии',
+    body: '',
+    buttons: [
+            {title: 'Ok', result: 1, isDefault: true, },
+    ],
+    manualCR: true,
+};

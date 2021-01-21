@@ -12,6 +12,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ErrorHelperServices } from './helper-error.services';
 import { KIND_ROLES_CB } from '../consts/user-param.consts';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK } from 'eos-dictionaries/consts/confirm.consts';
 import { saveAs } from 'file-saver';
 import { HttpHeaders } from '@angular/common/http';
 import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
@@ -84,6 +86,7 @@ export class UserParamsService {
         private _router: Router,
         private _modalSrv: BsModalService,
         private _appContext: AppContext,
+        private _confirmSrv: ConfirmWindowService,
         private _errorSrv: ErrorHelperServices,
         private _userProfiler: EosUserProfileService
 
@@ -653,6 +656,87 @@ export class UserParamsService {
                 const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
                 saveAs(blobHtml, `${title}.html`);
             });
+    }
+
+    /**
+     * @method getLicenseInfo получает список лицензий
+     */
+    getLicenseInfo(): Promise<any[]> {
+        return this._pipRx.read<any>({
+            LicenseInfo: ALL_ROWS
+        })
+            .then((ans) => {
+                let licenseInfo = [];
+                if (typeof (ans) === 'string') {
+                    licenseInfo = JSON.parse(ans);
+                } else {
+                    licenseInfo = (ans && ans.length && [...ans]) || [];
+                }
+
+                return licenseInfo;
+            });
+    }
+
+    /**
+     * @method checkLicenseCount проверяет хватит ли лицензий
+     * выбранным пользователям
+     */
+    checkLicenseCount(users = [], systems = {}): Promise<boolean> {
+        if (!users.length) {
+            return Promise.resolve(true);
+        }
+        const selectedUsers = users.filter((user) => user.isChecked);
+        const licenseMap: Map<number, any> = new Map();
+        let hasCrowded = false;
+
+        return this.getLicenseInfo().then((licenseInfo) => {
+            if (licenseInfo && licenseInfo.length) {
+                licenseInfo.forEach((lic) => {
+                    if (lic.Users) {
+                        licenseMap.set(lic.Id, {
+                            max: lic.Users,
+                            cur: lic.ActualUsers,
+                        });
+                    }
+                });
+                selectedUsers.forEach((user) => {
+                    if (user.data && user.data.AV_SYSTEMS && user.data.AV_SYSTEMS.length) {
+                        user.data.AV_SYSTEMS.split('').forEach((system, index) => {
+                            const id = index + 1;
+                            const lic = licenseMap.get(id);
+
+                            if (lic && Number(system)) {
+                                let { cur } = lic;
+                                cur += user.blockedUser ? 1 : -1;
+                                licenseMap.set(id, {
+                                    ...lic,
+                                    cur
+                                });
+                            }
+                        });
+                    }
+                });
+                CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK.bodyList = [];
+
+                Object.keys(systems).forEach((key) => {
+                    const system = systems[key];
+                    const lic = licenseMap.get(system.id);
+                    if (lic && (lic.max - lic.cur) < 0) {
+                        hasCrowded = true;
+                        CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK.bodyList.push(
+                            `Количество пользователей подсистемы '${system.label}' не может превышать ${lic.max}`
+                        );
+                    }
+                });
+
+                if (hasCrowded) {
+                    return this._confirmSrv.confirm2(CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK).then(() => {
+                        return false;
+                    });
+                }
+            }
+            return true;
+        });
     }
 
     private _createHash() {

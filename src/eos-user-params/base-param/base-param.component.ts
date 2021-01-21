@@ -989,15 +989,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return url;
     }
     private _getLicenseInfo() {
-        return this.apiSrvRx.read<any>({
-            LicenseInfo: ALL_ROWS
-        })
-        .then((ans) => {
-            if (typeof(ans) === 'string') {
-                this.LicenzeInfo = JSON.parse(ans);
-            } else {
-                this.LicenzeInfo = (ans && ans.length && [...ans]) || [];
-            }
+        return this._userParamSrv.getLicenseInfo()
+        .then((licenses) => {
+            this.LicenzeInfo = licenses;
             if (this.LicenzeInfo.length > 0) {
                 this.createActualLicenze();
             }
