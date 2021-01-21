@@ -119,22 +119,40 @@ export class EosReportUsersInfoComponent implements OnChanges {
         this.download(info, sourceHTML);
     }
 
-    getHrefPrint(): string {
+    // getHrefPrint(): string {
+    //     if (this.CheckAllUsers) {
+    //         let strId = '';
+    //         this.users.forEach(user => {
+    //             strId += user.id + ';';
+    //         });
+    //         this.titleDownload = 'Полные сведения по всем пользователям';
+    //         return `../UserInfo/UserRights.ashx?uisn=${strId}`;
+    //     } else {
+    //         this.titleDownload = `Полные сведения ${this.selectUser.login}`;
+    //         return `../UserInfo/UserRights.ashx?uisn=${this.selectUser.id}`;
+    //     }
+    // }
+
+    close() {
+        this.closeModal.emit(true);
+    }
+
+    printFullReport() {
+        let url = '';
+        let title = '';
+
         if (this.CheckAllUsers) {
             let strId = '';
             this.users.forEach(user => {
                 strId += user.id + ';';
             });
-            this.titleDownload = 'Полные сведения по всем пользователям';
-            return `../UserInfo/UserRights.ashx?uisn=${strId}`;
+            title = 'Полные сведения по всем пользователям';
+            url = `../UserInfo/UserRights.ashx?uisn=${strId}`;
         } else {
-            this.titleDownload = `Полные сведения ${this.selectUser.login}`;
-            return `../UserInfo/UserRights.ashx?uisn=${this.selectUser.id}`;
+            title = `Полные сведения ${this.selectUser.login}`;
+            url = `../UserInfo/UserRights.ashx?uisn=${this.selectUser.id}`;
         }
-    }
-
-    close() {
-        this.closeModal.emit(true);
+        this._userParamSrv.createFullReportHtml(url, title);
     }
 
     private _updateBorders() {

@@ -12,6 +12,9 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ErrorHelperServices } from './helper-error.services';
 import { KIND_ROLES_CB } from '../consts/user-param.consts';
+import { saveAs } from 'file-saver';
+import { HttpHeaders } from '@angular/common/http';
+
 
 @Injectable()
 export class UserParamsService {
@@ -611,6 +614,28 @@ export class UserParamsService {
             }
         }
         return null;
+    }
+
+    /**
+     * @method createFullReportHtml создает html файл
+     * сведений о выбранных пользователях
+     */
+    public createFullReportHtml(url: string, title: string): Promise<any> {
+        const options = {
+            withCredentials: true,
+            headers: new HttpHeaders({
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'Content-Type': 'text/plain; charset=utf-8'
+            }),
+            responseType: 'text' as 'text',
+        };
+
+        return this._pipRx.getHttp_client().get(url, options)
+            .toPromise()
+            .then((html) => {
+                const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
+                saveAs(blobHtml, `${title}.html`);
+            });
     }
 
     private _createHash() {

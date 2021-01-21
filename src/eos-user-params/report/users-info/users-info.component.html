@@ -3,9 +3,9 @@
             <span class="pull-left title xl-font">Данные по пользователю {{selectUser?.name}}</span>
             <div class="pull-right srch-btns">
                 <button class="btn btn-primary s-font upper" (click)="close()">Закрыть</button>
-                <a target="_blank" *ngIf="shortRep === false; else fullReport" [href]="getHrefPrint()" download="{{titleDownload}}">
-                    <button class="btn btn-primary-full s-font upper">Печать</button>
-                </a>
+                <ng-container *ngIf="shortRep === false; else fullReport">
+                    <button class="btn btn-primary-full s-font upper" (click)="printFullReport()">Печать</button>
+                </ng-container>
                 <ng-template #fullReport>
                     <button class="btn btn-primary-full s-font upper" (click)="PrintData()">Печать</button>
                 </ng-template>
