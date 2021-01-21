@@ -252,6 +252,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.accordionList[1].subList[3].disabled = false;
                 this.accordionList[2].disabled = false;
                 this.accordionList[3].disabled = false;
+                this.accordionList[6].disabled = false;
                 this.hideIcon = false;
                 if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
                     this.accordionList[4].disabled = false;
