@@ -283,15 +283,6 @@ export class NodeActionsComponent implements OnDestroy {
                         _show = false;
                     } else {
                         _enabled = true;
-                        if (this.dictionary.id === 'rubricator' || this.dictionary.id === 'docgroup' || this.dictionary.id === 'departments' ||
-                            this.dictionary.id === 'nomenkl' || this.dictionary.id === 'cabinet'
-                        ) {
-                            const hash = location.hash.split('/');
-                            _enabled = !!this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
-                            opts.dictGrant = _enabled ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-                        }   else {
-                            _enabled = true;
-                        }
                     }
                     break;
                 case E_RECORD_ACTIONS.remove: {
@@ -516,8 +507,41 @@ export class NodeActionsComponent implements OnDestroy {
             const due = this._dictSrv.getDueForTree(this.dictionary.id);
             const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
                 APS_DICT_GRANT.denied;
+
             return button.accessNeed <= grant;
+        } else if (button.type === E_RECORD_ACTIONS.import && this.dictionary && this.dictionary.id) {
+            const forDicts = [
+                'rubricator',
+                'docgroup',
+                'departments',
+                'nomenkl',
+                'cabinet',
+            ];
+            if (forDicts.indexOf(this.dictionary.id) !== -1) {
+                const hash = location.hash.split('/');
+                let grant = this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
+                grant = grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+
+                return button.accessNeed <= grant;
+            }
+        } else if (
+            button.type === E_RECORD_ACTIONS.copyPropertiesFromParent &&
+            this.dictionary.id === 'docgroup' &&
+            this._markedNodes && this._markedNodes.length
+        ) {
+            let commonGrant = APS_DICT_GRANT.readwrite;
+            this._markedNodes.every((node) => {
+                const due = node.id;
+                const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) : APS_DICT_GRANT.denied;
+                if (grant < commonGrant) {
+                    commonGrant = grant;
+                }
+
+                return commonGrant !== APS_DICT_GRANT.denied;
+            });
+            return button.accessNeed <= commonGrant;
         }
+
         return button.accessNeed <= opts.dictGrant;
     }
 }
