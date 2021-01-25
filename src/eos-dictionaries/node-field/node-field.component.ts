@@ -55,7 +55,7 @@ export class NodeFieldComponent implements OnInit {
             }
             if (this.node.data.rec['POST_H'] === 1) {
                 this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-user-ceo-grey' : 'eos-icon-user-ceo-blue',
+                    class: this.node.isDeleted ? 'eos-icon-user-ceo-grey' : 'eos-icon-user-ceo-black',
                     tooltip: 'Начальник',
                 });
             }
