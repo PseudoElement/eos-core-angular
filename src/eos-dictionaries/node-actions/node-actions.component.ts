@@ -454,7 +454,7 @@ export class NodeActionsComponent implements OnDestroy {
             }
         }
 
-        const is_granted = (button.accessNeed <= opts.dictGrant) || this._checkShowDeleted(button);
+        const is_granted = this._checkGranted(button, opts);
 
         button.show = _show;
         button.enabled = _enabled && (!_isWriteAction || is_granted);
@@ -487,9 +487,15 @@ export class NodeActionsComponent implements OnDestroy {
         }
         return enabled;
     }
-    private _checkShowDeleted(button: IActionButton): boolean {
+    private _checkGranted(button: IActionButton, opts: IActionUpdateOptions): boolean {
         if (button.type === E_RECORD_ACTIONS.showDeleted) {
             return this._eaps.checkShowDeleted(this.dictionary.id);
+        } else if (button.type === E_RECORD_ACTIONS.add && (this.dictionary.id === 'rubricator' || this.dictionary.id === 'nomenkl')) {
+            const due = this._dictSrv.getDueForTree(this.dictionary.id);
+            const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
+                APS_DICT_GRANT.denied;
+            return button.accessNeed <= grant;
         }
+        return button.accessNeed <= opts.dictGrant;
     }
 }
