@@ -71,7 +71,7 @@
     </div>
     <button class="btn btn-primary-light"
         aria-hidden="true"
-        [disabled]="getSelectElem()"
+        [disabled]="getSelectElem() || checkButtonsAccess()"
         (click)="edit()"
         tooltip="Редактировать"
         placement="bottom"
@@ -79,7 +79,7 @@
         <span class="eos-icon eos-icon-edit-blue small"></span></button>
     <button class="btn btn-primary-light"
         aria-hidden="true"
-        [disabled]="getSelectElem()"
+        [disabled]="getSelectElem() || checkButtonsAccess()"
         (click)="delet()"
         tooltip="Удалить"
         placement="bottom"
