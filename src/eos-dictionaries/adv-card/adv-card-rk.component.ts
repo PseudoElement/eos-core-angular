@@ -11,7 +11,7 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_VALUE_INCORRECT, RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
+import { RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST, RK_SELECTED_VALUE_INCORRECT, RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -282,7 +282,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
             let confirmationsChain = Promise.resolve(false);
             if (listLDText || listHasDeletedText || listIsEmptyText || listBeenDeletedText) {
-                const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
+                let confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
 
                 confirmLD.bodyList = [];
                 if (listLDText) {
@@ -292,7 +292,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     confirmLD.bodyList.push('Выбран список, который был удален. Значение очищено. Реквизиты: ' + listBeenDeletedText);
                 }
                 if (listIsEmptyText) {
-                    confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+                    // confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+                    confirmLD = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST);
                 }
                 if (listHasDeletedText) {
                     confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
