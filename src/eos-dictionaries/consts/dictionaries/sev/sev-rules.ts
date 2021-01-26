@@ -670,7 +670,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             type: 'string',
         }, {
             key: 'fileDocument',
-            title: 'Файл документа:',
+            title: 'Файл документа',
             type: 'boolean',
             default: false, // по умолчанию
         }, {
