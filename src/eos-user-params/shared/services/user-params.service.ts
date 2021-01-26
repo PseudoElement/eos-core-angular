@@ -598,6 +598,21 @@ export class UserParamsService {
         return availble;
     }
 
+    /**
+     * @method getParmValueByParmName возвращает значение <PARM_VALUE> параметра
+     * <PARM_NAME> из массива параметров,
+     * при отсутствии возвращает : null
+     */
+    public getParmValueByParmName(paramsArr: any[], parmName: string) {
+        if (paramsArr && paramsArr.length && parmName) {
+            const value = paramsArr.find((parm) => parm.PARM_NAME === parmName);
+            if (value) {
+                return value.PARM_VALUE;
+            }
+        }
+        return null;
+    }
+
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
         this._userContext['USER_PARMS_List'].forEach(item => {
