@@ -302,7 +302,7 @@ const routes: Routes = [{
                 showBreadcrumb: true,
                 showInBreadcrumb: true,
                 showSandwichInBreadcrumb: true,
-                showPushpin: true
+                showPushpin: false
             },
         },
         {
