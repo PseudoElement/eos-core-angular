@@ -1,4 +1,4 @@
-import { Component, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnDestroy, HostListener, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { APP_MODULES, APP_MODULES_DROPDOWN } from '../consts/app-modules.const';
 import { Subject } from 'rxjs';
@@ -11,7 +11,7 @@ import { AppContext } from 'eos-rest/services/appContext.service';
     selector: 'eos-header',
     templateUrl: './eos-header.component.html'
 })
-export class EosHeaderComponent implements OnDestroy {
+export class EosHeaderComponent implements OnDestroy, OnInit {
     modules = APP_MODULES;
     modulesDropdown = APP_MODULES_DROPDOWN;
     breadcrumbView = true;
@@ -21,6 +21,7 @@ export class EosHeaderComponent implements OnDestroy {
     openProtocols: Array<any> = [];
     openWindows: Array<any> = [];
     headerShow = true;
+    public disabled: boolean = false;
 
     private ngUnsubscribe: Subject<any> = new Subject();
     private windowRemove: Window;
@@ -58,6 +59,17 @@ export class EosHeaderComponent implements OnDestroy {
     resize($event) {
         this.width = window.innerWidth;
         // console.log(window.innerWidth);
+    }
+    ngOnInit() {
+        if (this._appcontext.CurrentUser.DELO_RIGHTS && this._appcontext.CurrentUser.DELO_RIGHTS.length) {
+            if (+this._appcontext.CurrentUser.DELO_RIGHTS[0]) {
+                this.disabled = false;
+            } else {
+                this.disabled = true;
+            }
+        }   else {
+            this.disabled = true;
+        }
     }
 
     ngOnDestroy() {
