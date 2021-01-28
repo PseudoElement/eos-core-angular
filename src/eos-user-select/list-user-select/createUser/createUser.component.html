@@ -22,7 +22,7 @@
                 <a [ngClass]="{'hide': !form.value['DUE_DEP_NAME']}" (click)="cleanDue()"><span class="eos-icon eos-icon-close-blue small"></span></a>
             </div>
         </div>
-        <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']" [form]="form" [readonly]="form.get('SELECT_ROLE').disabled"></eos-dynamic-input>
+        <!-- <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']" [form]="form" [readonly]="form.get('SELECT_ROLE').disabled"></eos-dynamic-input> -->
     </div>
     <div *ngIf="!cbBase" [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
         <label [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
