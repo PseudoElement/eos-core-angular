@@ -681,6 +681,11 @@ export class EosDictionary {
     // }
 
     private _extendCritery(critery: any, params: ISearchSettings, selectedNode?: EosDictionaryNode) {
+        // Добавить критерий, чтобы не вытягивать "системных" ДЛ
+        // у которых DUE "3..."
+        if (this.id === 'departments') {
+            critery.LAYER = '1:null';
+        }
         switch (this.descriptor.type) {
             case E_DICT_TYPE.department:
             case E_DICT_TYPE.organiz:
