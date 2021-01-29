@@ -344,7 +344,8 @@ formatSurname(fam: string, name: string, patron: string): string {
 
 
     public confirmSave(): Promise<boolean> {
-        const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
+        // const parent = this.dictSrv.treeNode || this.dictSrv.currentNode.parent;
+        const parent = this.dictSrv.currentNode && this.dictSrv.currentNode.parent || this.dictSrv.treeNode;
         let isNeedCorrectStart = false;
         let isNeedCorrectEnd = false;
         if (!this.data.replace['DUE']) {
