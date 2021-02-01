@@ -16,6 +16,7 @@ export class EosReportUsersStatsComponent implements OnInit {
     serverSystem: any;
     items: [];
     users: USER_CL[];
+    usersBlockedAuth: USER_CL[] = [];
     blockByTech: number = 0;
     blockAuthUsers: number = 0;
     usersNumber: number = 0;
@@ -100,9 +101,9 @@ export class EosReportUsersStatsComponent implements OnInit {
                 /* this._errorSrv.errorHandler(er); */
             });
         Promise.all([a, b, c, d]).then(() => {
-            this.getSubSystems(this.items);
             this.usersNumber = this.usersNumber + this.users.length;
             this.getProtectedUsers(this.deletedUsers, this.usersNumber);
+            this.getSubSystems(this.items);
         }
         )
             .catch((error) => {
@@ -115,12 +116,14 @@ export class EosReportUsersStatsComponent implements OnInit {
     }
 
     getProtectedUsers(data: any, usNum: number) {
+        this.usersBlockedAuth = [];
         for (const i of data) {
             if (i.DELETED === 1 && i.LOGIN_ATTEMPTS < this.paramValue && String(i.ORACLE_ID) !== 'null') {
                 this.blockByTech++;
             }
             if (i.DELETED === 1 && i.LOGIN_ATTEMPTS === this.paramValue && String(i.ORACLE_ID) !== 'null') {
                 this.blockAuthUsers++;
+                this.usersBlockedAuth.push(i);
             }
         }
         this.usersNumber = usNum + this.blockByTech + this.blockAuthUsers;
@@ -129,7 +132,8 @@ export class EosReportUsersStatsComponent implements OnInit {
 
     getSubSystems(items: any[]) {
         const masFull = '0000000000000000000000000000'.split('').map(elem => Number(elem));
-        this.users.forEach((user, index) => {
+        const licenseUsers = [...this.users, ...this.usersBlockedAuth];
+        licenseUsers.forEach((user, index) => {
             const nUser = user['AV_SYSTEMS'].trim().split('').map(elem => Number(elem));
             masFull.forEach((element, numb) => {
                 if (numb === 1) {
