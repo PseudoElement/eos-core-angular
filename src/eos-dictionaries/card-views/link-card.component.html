@@ -42,7 +42,7 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
         <div *ngIf="editMode && ((!isLinkTypeNull) && (linkType != 0))" class="pull-right">
-            <label [ngStyle]="{'margin-top.px': 14}">Направления связок: </label>
+            <label [ngStyle]="{'margin': '14px 20px 0 20px'}">Направления связок: </label>
             <a class="btn btn-primary"
                (click)="changeDir()">Изменить</a>
         </div>
