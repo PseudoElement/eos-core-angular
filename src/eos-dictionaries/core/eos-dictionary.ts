@@ -681,17 +681,20 @@ export class EosDictionary {
     // }
 
     private _extendCritery(critery: any, params: ISearchSettings, selectedNode?: EosDictionaryNode) {
-        // Добавить критерий, чтобы не вытягивать "системных" ДЛ
-        // у которых DUE "3..."
-        if (this.id === 'departments') {
-            critery.LAYER = '1:null';
-        }
         switch (this.descriptor.type) {
             case E_DICT_TYPE.department:
             case E_DICT_TYPE.organiz:
             case E_DICT_TYPE.tree: {
                 if (params.mode === SEARCH_MODES.totalDictionary) {
                     // critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId.toString().split('.')[0] + '.%';
+                    // Добавить критерий, чтобы не вытягивать "системных" ДЛ
+                    // у которых DUE не "0."
+                    if (this.id === 'departments') {
+                        critery.LAYER = '1:null';
+                        if (!critery.DUE) {
+                            critery.DUE = '0.%';
+                        }
+                    }
                 } else if (params.mode === SEARCH_MODES.onlyCurrentBranch) {
                     critery['ISN_HIGH_NODE'] = selectedNode.data.rec['ISN_NODE'] + '';
                 } else if (params.mode === SEARCH_MODES.currentAndSubbranch) {
