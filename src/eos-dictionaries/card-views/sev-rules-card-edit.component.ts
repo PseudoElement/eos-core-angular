@@ -686,7 +686,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 // }
                 const [docGroup] = data;
                 const rcType = (docGroup && docGroup.RC_TYPE) || 0;
-                if (this.form.controls['rec.type'].value === '2' && (rcType !== 3 || !docGroup.PRJ_NUM_FLAG)) {
+                if (Number(this.form.controls['rec.type'].value) === 2 && (rcType !== 3 || !docGroup.PRJ_NUM_FLAG)) {
                     const cancelMessage = 'Для работы с проектами необходимо выбрать группу типа «Исходящие» с возможностью регистрации проектов документов';
                     return this.cancelSelectedDocgroup(cancelMessage);
                 }
