@@ -503,7 +503,10 @@ export class NodeActionsComponent implements OnDestroy {
     private _checkGranted(button: IActionButton, opts: IActionUpdateOptions): boolean {
         if (button.type === E_RECORD_ACTIONS.showDeleted) {
             return this._eaps.checkShowDeleted(this.dictionary.id);
-        } else if (button.type === E_RECORD_ACTIONS.add && (this.dictionary.id === 'rubricator' || this.dictionary.id === 'nomenkl')) {
+        } else if (
+            (this.dictionary.id === 'rubricator' || this.dictionary.id === 'nomenkl') &&
+            [E_RECORD_ACTIONS.add, E_RECORD_ACTIONS.paste, E_RECORD_ACTIONS.pasteNodes].indexOf(button.type) !== -1
+        ) {
             const due = this._dictSrv.getDueForTree(this.dictionary.id);
             const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
                 APS_DICT_GRANT.denied;
