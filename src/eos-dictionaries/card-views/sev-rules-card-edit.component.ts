@@ -686,10 +686,19 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 // }
                 const [docGroup] = data;
                 const rcType = (docGroup && docGroup.RC_TYPE) || 0;
+
                 if (Number(this.form.controls['rec.type'].value) === 2 && (rcType !== 3 || !docGroup.PRJ_NUM_FLAG)) {
                     const cancelMessage = 'Для работы с проектами необходимо выбрать группу типа «Исходящие» с возможностью регистрации проектов документов';
                     return this.cancelSelectedDocgroup(cancelMessage);
+                } else if (
+                    Number(this.form.controls['rec.type'].value) === 1 &&
+                    Number(this.form.controls['rec.kind'].value) === 2 &&
+                    (rcType !== 1 && rcType !== 2)
+                ) {
+                    const cancelMessage = 'Для приема документов нельзя использовать группу типа «Исходящие»';
+                    return this.cancelSelectedDocgroup(cancelMessage);
                 }
+
                 this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(docGroup ? docGroup.CLASSIF_NAME : '');
                 this.form.controls['rec.RC_TYPE'].patchValue(rcType, { eventEmit: false });
             }).catch(e => {
