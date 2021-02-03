@@ -503,16 +503,7 @@ export class NodeActionsComponent implements OnDestroy {
     private _checkGranted(button: IActionButton, opts: IActionUpdateOptions): boolean {
         if (button.type === E_RECORD_ACTIONS.showDeleted) {
             return this._eaps.checkShowDeleted(this.dictionary.id);
-        } else if (
-            (this.dictionary.id === 'rubricator' || this.dictionary.id === 'nomenkl') &&
-            [E_RECORD_ACTIONS.add, E_RECORD_ACTIONS.paste, E_RECORD_ACTIONS.pasteNodes].indexOf(button.type) !== -1
-        ) {
-            const due = this._dictSrv.getDueForTree(this.dictionary.id);
-            const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
-                APS_DICT_GRANT.denied;
-
-            return button.accessNeed <= grant;
-        } else if (button.type === E_RECORD_ACTIONS.import && this.dictionary && this.dictionary.id) {
+        } else if (this.dictionary && this.dictionary.id) {
             const forDicts = [
                 'rubricator',
                 'docgroup',
@@ -520,10 +511,20 @@ export class NodeActionsComponent implements OnDestroy {
                 'nomenkl',
                 'cabinet',
             ];
-            if (forDicts.indexOf(this.dictionary.id) !== -1) {
-                const hash = location.hash.split('/');
-                let grant = this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
-                grant = grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            const forButtons = [
+                E_RECORD_ACTIONS.add,
+                E_RECORD_ACTIONS.paste,
+                E_RECORD_ACTIONS.pasteNodes,
+                E_RECORD_ACTIONS.import,
+            ];
+            if (forDicts.indexOf(this.dictionary.id) !== -1 && forButtons.indexOf(button.type) !== -1) {
+                // const hash = location.hash.split('/');
+                // let grant = this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
+                // grant = grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+                // return button.accessNeed <= grant;
+                const due = this._dictSrv.getDueForTree(this.dictionary.id);
+                const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
+                    APS_DICT_GRANT.denied;
 
                 return button.accessNeed <= grant;
             }
