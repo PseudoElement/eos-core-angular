@@ -364,6 +364,13 @@ export class EosDictionary {
         return this.descriptor.deleteRecords(records).then(r => {
             this._nodes.forEach((node) => {
                 if (node.isMarked) {
+                    if (node.children && node.children.length) {
+                        const children = node.getAllChildren();
+                        children.forEach((chNode) => {
+                            chNode.delete();
+                            this._nodes.delete(chNode.id);
+                        });
+                    }
                     node.delete();
                     this._nodes.delete(node.id);
                 }
