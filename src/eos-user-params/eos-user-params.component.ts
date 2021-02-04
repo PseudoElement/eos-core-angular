@@ -242,7 +242,6 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.accordionList[2].disabled = true;
                 this.accordionList[3].disabled = true;
                 this.accordionList[4].disabled = true;
-                this.accordionList[5].disabled = true;
                 this.accordionList[6].disabled = true;
             //    this.accordionList[1].isOpen = false;
                 this.accordionList[2].isOpen = false;
