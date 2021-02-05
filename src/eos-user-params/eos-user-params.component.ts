@@ -263,7 +263,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             } else {
                 this.accordionList[4].disabled = true;
             }
-            if (this._userParamService.curentUser['ORACLE_ID'] === null) {
+            if (this._userParamService.curentUser['ORACLE_ID'] === null && this._userParamService.curentUser['DELETED'] === 1) {
                 this.accordionList[0].disabled = true;
                 this.accordionList[1].disabled = true;
                 this.accordionList[2].disabled = true;

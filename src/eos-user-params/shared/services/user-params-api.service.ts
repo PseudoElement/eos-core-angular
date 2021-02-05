@@ -136,10 +136,11 @@ export class UserParamApiSrv {
                 }
                 if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
                     ob1['ORACLE_ID'] = 'isnull';
+                    ob1['DELETED'] = '1';
                 }
                 if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
                     ob1['DUE_DEP'] = 'isnull';
-                    ob1['ORACLE_ID'] = 'isnotnull';
+                    ob1['CLASSIF_NAME'] = '_';
                 }
                 if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
                     ob1['CLASSIF_NAME'] = '_';
