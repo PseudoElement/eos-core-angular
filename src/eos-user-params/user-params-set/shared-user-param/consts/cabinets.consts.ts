@@ -6,6 +6,11 @@ const REG_ONE_THOUSAND_SIZE = /(^\d$)|(^[1-9]\d{1,2}$)/; // 0-999
 const REG_TEN_THOUSAND_SIZE = /(^\d$)|(^[1-9]\d{1,3}$)/; // 0-9999
 const REG_SOUND_FILE_WAV = /^[A-Z]\:\\.+\.wav$/; // system path for .wav file
  const REG_MIN_VAL: RegExp = /^[1-9][0-9]{0,4}$/;
+export const SEND_ORDER_TO_FOR_ARM = {
+    key: 'SEND_ORDER_TO',
+    type: 'boolean',
+    title: 'Направлять резолюции в папку «На контроле» кабинета автора в АРМ «ДелоWeb»',
+};
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',

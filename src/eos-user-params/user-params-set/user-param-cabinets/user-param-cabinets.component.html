@@ -133,8 +133,11 @@
             <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.CASCADE_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <div [hidden]="appMode.cbr" class="send-res">
-            <div [hidden]="appMode.arm">
+            <div *ngIf="!appMode.arm">
                 <span>Рассылать поручения в приложении Документы:</span>
+                <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div *ngIf="appMode.arm">
                 <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <br>
