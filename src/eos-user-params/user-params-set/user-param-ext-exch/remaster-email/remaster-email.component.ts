@@ -121,6 +121,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initEmail();
         this.initMailResive();
+        this.itCurrentSettingsCheck();
         this.stringRCSEND = this.userData['RCSEND'];
         this.stringMailResive = this.userData['MAILRECEIVE'];
         this.mapDefault = {
@@ -128,6 +129,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             MAILRECEIVE: this.defaultValues['MAILRECEIVE'],
             RECEIP_EMAIL: this.defaultValues['RECEIP_EMAIL'],
         };
+    }
+
+    itCurrentSettingsCheck() {
+        if (this.isCurrentSettings) {
+            this.disableFormMailResive();
+            this.disableForm();
+        }
     }
 
     ngOnDestroy() {

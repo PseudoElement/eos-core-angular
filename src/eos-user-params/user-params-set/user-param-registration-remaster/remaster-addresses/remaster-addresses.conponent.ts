@@ -93,6 +93,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         } else {
             this.form.disable({emitEvent: false});
         }
+        this.flagEdit = !!this.isCurrentSettings;
         const orgISN = this.form.controls['rec.ORGGROUP'].value;
         this.getOrgGroupValue(orgISN);
         this.subscribeChange();

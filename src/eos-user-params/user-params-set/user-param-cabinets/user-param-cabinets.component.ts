@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CABINETS_USER, CABINETS_USER_INFORMER, CABINETS_USER_NOTIFICATOR } from '../shared-user-param/consts/cabinets.consts';
+import { CABINETS_USER, CABINETS_USER_INFORMER, CABINETS_USER_NOTIFICATOR, SEND_ORDER_TO_FOR_ARM } from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -166,6 +166,17 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
 
     pretInputs(): void {
+        if (this.appMode.arm) {
+            const index = CABINETS_USER.fields.findIndex(field => {
+                if (field.key === 'SEND_ORDER_TO') {
+                    this.allData.SEND_ORDER_TO = this.allData.SEND_ORDER_TO === '2' ? 'YES' : 'NO';
+                    return true;
+                }
+            });
+            if (index !== -1) {
+                CABINETS_USER.fields[index] = {...SEND_ORDER_TO_FOR_ARM};
+            }
+        }
         this.FOLDERCOLORSTATUS = this.allData['FOLDERCOLORSTATUS'];
         this.newFolderString = this.FOLDERCOLORSTATUS;
         this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.allData);
@@ -453,6 +464,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else if (key === 'ADD_ADRESS_REPORGANIZ') {
                 const val = value ? 0 : 1;
+                this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
+            } else if (key === 'SEND_ORDER_TO') {
+                const val = value ? '2' : '1';
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else {
                 if (key !== 'CONTROLL_AUTHOR') {
