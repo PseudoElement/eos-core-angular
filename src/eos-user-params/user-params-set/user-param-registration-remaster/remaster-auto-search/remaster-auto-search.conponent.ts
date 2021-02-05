@@ -85,8 +85,9 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         this._RemasterService.getLink_Type().then((data: LINK_CL[]) => {
            this.fillConstLinkType(data);
             this.pretInputs();
-            this.inputs['rec.LINKS_SORT_ORDER1'].value = `${this.userData['LINKS_SORT_ORDER']}`;
-            this.inputs['rec.LINKS_SORT_ORDER2'].value = `${this.userData['LINKS_SORT_ORDER']}`;
+            const orderDefaultValue = this.userData['LINKS_SORT_ORDER'] || '0';
+            this.inputs['rec.LINKS_SORT_ORDER1'].value = `${orderDefaultValue}`;
+            this.inputs['rec.LINKS_SORT_ORDER2'].value = `${orderDefaultValue}`;
             this.form = this.inpSrv.toFormGroup(this.inputs);
             if (this.isCurrentSettings) {
                 this.form.enable({emitEvent: false});
