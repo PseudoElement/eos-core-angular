@@ -62,6 +62,9 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
     get disableGroup() {
         return !this.flagEdit || !this.form.controls['rec.INFORMER_FOLDER_ITEM_CHECK'].value;
     }
+    get itDefaultSettingsPage() {
+        return !this.isnClassif;
+    }
     get isFoldersGroupDisabled() {
         const isDisabled = this.disableGroup;
         if (isDisabled) {
