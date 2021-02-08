@@ -106,6 +106,8 @@ export interface LINK_CL extends ILinearCL {
      * Есть доступ к связанному объекту
      */
     TRANSPARENT: number;
+    // идентификатор медо
+    MEDO_ID: string;
 }
 
 export interface FORMAT_CL extends ILinearCL {

@@ -76,17 +76,25 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         key: 'sev',
         title: 'Индекс СЭВ',
         type: 'dictionary',
-    }],
+    },
+    {
+        key: 'MEDO_ID',
+        title: 'ID MEDO связки',
+        type: 'string',
+        length: 64,
+        default: 'LT00000000'
+    }
+],
 
     defaultOrder: 'LINK',
     keyField: 'ISN_LCLASSIF',
     editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'NOTE',
-        'PARE_LINK_Ref', 'ISN_PARE_LINK',
+        'PARE_LINK_Ref', 'ISN_PARE_LINK', 'MEDO_ID',
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
         ],
     listFields: [
         ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
-        'LINK', 'PAIR_LINK', 'TYPE', ],
+        'LINK', 'PAIR_LINK', 'TYPE', 'MEDO_ID'],
     quickViewFields: ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE', 'TYPE',
         ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],

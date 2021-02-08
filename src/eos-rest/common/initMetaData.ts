@@ -735,7 +735,8 @@ const commonMeta = {
             LINK_INDEX: _t.s,
             ISN_PARE_LINK: _t.i,
             NOTE: _t.s,
-            TRANSPARENT: _t.i
+            TRANSPARENT: _t.i,
+            MEDO_ID: _t.s,
         },
         readonly: [
 
