@@ -56,7 +56,7 @@
         <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_FILL_SEND_DATE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input><br>
-        <div >
+        <div [hidden]="appMode.arm">
             <span>При добавлении учитывать экземпляр документа в приложении Документы:</span>
             <br>
             <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
