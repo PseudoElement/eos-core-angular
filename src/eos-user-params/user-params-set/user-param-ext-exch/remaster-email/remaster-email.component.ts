@@ -135,6 +135,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         if (this.isCurrentSettings) {
             this.disableFormMailResive();
             this.disableForm();
+            this.alwaysDisabledMethod();
         }
     }
 
