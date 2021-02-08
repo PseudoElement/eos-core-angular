@@ -1,8 +1,8 @@
 <div *ngIf="inputs">
-    <div [hidden]="!appMode.cbr">
+    <div>
         <span class="set-header bold">Внешние адресаты</span><br><br>
     </div>
-    <div [hidden]="!appMode.cbr" class="user-group-form">
+    <div class="user-group-form">
         <span>При добавлении указывать</span><br><br>
         <div class="inputs-inline">
             <span class="input-title">Вид отправки:</span>
@@ -47,16 +47,16 @@
             </span> -->
         <!-- </div>
     </div> -->
-    <div [hidden]="!appMode.cbr" class="user-group-form">
+    <div class="user-group-form">
         <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
         <span>При добавлении указывать экземпляр документа в АРМ «ДелоWeb»:</span>
         <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_DEFAULT_ORIG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
     <div class="user-input-group ">
-        <eos-dynamic-input [hidden]="!appMode.cbr" [input]="inputs[ 'rec.RS_INNER_FILL_SEND_DATE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input> 
+        <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_FILL_SEND_DATE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input><br>
-        <div [hidden]="appMode.arm">
+        <div >
             <span>При добавлении учитывать экземпляр документа в приложении Документы:</span>
             <br>
             <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
