@@ -54,6 +54,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         return '';
     }
+    get isDefaultSettingsPage() {
+        return !!this.defaultUser;
+    }
+
     private DopOperationChangeValue: any;
     private AddressesChengeValue: any;
     private ScanChengeValue: any;
@@ -124,7 +128,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         return false;
     }
+
+    isRegTabAndDefaultSettings(key: number) {
+        return key === 2 && this.isDefaultSettingsPage;
+    }
+
     setTab(i: number) {
+        if (this.isRegTabAndDefaultSettings(i)) {
+             return;
+        }
         this.currTab = i;
     }
 
