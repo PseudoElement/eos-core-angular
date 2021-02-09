@@ -123,12 +123,12 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
             type: 'boolean',
-            title: 'удалять документы без поручений из кабинета в АРМ «ДелоWeb»'
+            title: 'удалять документы без поручений из кабинета '
         },
         {
             key: 'OZN_FILL_REPLY',
             type: 'boolean',
-            title: 'вводить отчет об исполнении поручения в АРМ «ДелоWeb» с текстом:'
+            title: 'вводить отчет об исполнении поручения с текстом:'
         },
         {
             key: 'OZN_FILL_REPLY_TEXT',
