@@ -676,11 +676,11 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[]) => {
                 const [documents, projects] = [`Для приема документов нельзя использовать группу документов типа "Исходящие"`,
                     `Для приема проектов нельзя использовать группу документов типа "Входящие"`];
-                if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE !== 1 && this.form.controls['rec.type'].value !== '2') {
+                if (Number(this.form.controls['rec.kind'].value) === 2 && data[0].RC_TYPE !== 1 && Number(this.form.controls['rec.type'].value) !== 2) {
                     this.cancelSelectedDocgroup(documents);
                     return;
                 }
-                if (this.form.controls['rec.type'].value === '2'  && !data[0].PRJ_NUM_FLAG && data[0].RC_TYPE !== 3) {
+                if (Number(this.form.controls['rec.type'].value) === 2  && !data[0].PRJ_NUM_FLAG && data[0].RC_TYPE !== 3) {
                     this.cancelSelectedDocgroup(projects);
                     return;
                 }
