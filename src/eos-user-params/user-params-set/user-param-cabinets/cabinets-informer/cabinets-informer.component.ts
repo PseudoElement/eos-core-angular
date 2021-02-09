@@ -200,7 +200,8 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
     private patchInputs(inputs): void {
         if (this.isInformer) {
             this.informerIncrementCheckboxKeys.forEach((relatedKeys, checkboxKey) => {
-                inputs[checkboxKey].value = inputs[relatedKeys[0]].value.trim() !== '';
+                const actualCheckBoxValue = inputs[relatedKeys[0]].value.trim();
+                inputs[checkboxKey].value = actualCheckBoxValue !== '0' && actualCheckBoxValue !== '';
             });
             if (
                 this.userData[this.cabinetsSelect.selectKey] === this.cabinetsSelect.allCabinets ||
