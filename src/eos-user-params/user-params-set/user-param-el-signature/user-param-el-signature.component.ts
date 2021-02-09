@@ -59,7 +59,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         ['CERT_USER_STORES', 'Хранилища сертификатов пользователя']
     ]);
 
-    private readonly first = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
+    // private readonly first = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
     private readonly second = ['DIFF_CHECK_CRYPTO_INITSTR', 'DIFF_CHECK_PKI_INITSTR'];
     private listForQuery: Array<string> = [];
     constructor(
