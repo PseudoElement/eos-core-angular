@@ -1838,6 +1838,17 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
                 }
             }
+
+            div.header-wr {
+                & > div > button.btn.btn-primary {                    
+                    left: 150px !important;                    
+                }
+                
+                button.default-btn {
+                    display: none;
+                }
+            }
+
         }
 
         //вкладка Визуализация
