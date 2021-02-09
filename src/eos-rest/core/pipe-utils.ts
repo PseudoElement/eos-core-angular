@@ -124,7 +124,9 @@ export class PipeUtils {
     }
 
     private parseMoreJson(item: any/*, tn: string*/) {
-        item._more_json = JSON.parse(item._more_json);
+        if (typeof(item._more_json) === 'string') {
+            item._more_json = JSON.parse(item._more_json);
+        }
         const exp = item._more_json.expand;
         if (exp) {
             for (const ln in exp) {
