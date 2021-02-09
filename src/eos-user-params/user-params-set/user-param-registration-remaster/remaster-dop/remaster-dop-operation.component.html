@@ -1,13 +1,15 @@
-<div class="set-header">
-    <span>При регистрации автоматически:</span>
-</div>
-<div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
-    <eos-dynamic-input
-        class="registration-boolean-automatically-call-function-forwarded-RC"
-        [input]="inputs['rec.AUTOSEND']"
-        [form]="form"
-        [readonly]="false"
-    ></eos-dynamic-input>
+<div [hidden]="appMode.arm || appMode.cbr">
+    <div class="set-header">
+        <span>При регистрации автоматически:</span>
+    </div>
+    <div  class="user-group-form">
+        <eos-dynamic-input
+            class="registration-boolean-automatically-call-function-forwarded-RC"
+            [input]="inputs['rec.AUTOSEND']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
 </div>
 <div class="user-group-form">
     <span>Записывать документ в папку текущего кабинета:</span>
