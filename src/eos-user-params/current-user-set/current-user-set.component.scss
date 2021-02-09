@@ -528,7 +528,7 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
 
                     &-string {
-                        label {
+                        label:not([for="rec.RECEIP_EMAIL"]) {
                             display: none;
                         }
 
@@ -1551,7 +1551,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             accordion-group.panel {
                                 &:first-child {
                                     .accord-wr > div:last-child {
-                                        margin-top: 15px;
+                                        margin-top: 10px;
                                         padding-left: 5px;
 
                                         div.receipe-email {
@@ -1625,7 +1625,7 @@ $horizontal-line-color-CB: #c4c4c4;
                                         }
 
                                         & > div {
-                                            margin-top: 0 !important;
+                                            margin-top: 0 !important;                                            
                                         }
                                     }
                                 }
