@@ -417,6 +417,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         & > div {
                             label {
                                 line-height: 14px;
+                                color: $text-color;
 
                                 &.checkbox {
                                     margin: 0 !important;
@@ -443,6 +444,7 @@ $horizontal-line-color-CB: #c4c4c4;
                         & > div {
                             label {
                                 line-height: 14px;
+                                color: $text-color;
 
                                 &.radio {
                                     height: 22px;
