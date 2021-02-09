@@ -275,16 +275,16 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             this.second.forEach(el => {
                 this.form.controls[el].enable({ emitEvent: false });
             });
-            this.first.forEach(el => {
-                this.form.controls[el].disable({ emitEvent: false });
-            });
+            // this.first.forEach(el => {
+            //     this.form.controls[el].disable({ emitEvent: false });
+            // });
         } else {
             this.second.forEach(el => {
                 this.form.controls[el].disable({ emitEvent: false });
             });
-            this.first.forEach(el => {
-                this.form.controls[el].enable({ emitEvent: false });
-            });
+            // this.first.forEach(el => {
+            //     this.form.controls[el].enable({ emitEvent: false });
+            // });
         }
     }
     private _pushState() {
