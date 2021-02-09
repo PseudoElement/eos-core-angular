@@ -222,7 +222,12 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
     default() {
         this.prepareDefaultForm = this.formHelp.parse_Create_Auto_Search(REGISTRATION_AUTO_SEARCH.fields, this.defaultValues);
         Object.keys(this.prepareDefaultForm).forEach((item: string) => {
-            this.form.controls['rec.' + item].patchValue(this.prepareDefaultForm[item]);
+            if (item.indexOf('LINKS_SORT_ORDER') !== -1) {
+                const newValue = this.defaultValues['LINKS_SORT_ORDER'] || '0';
+                this.form.controls['rec.' + item].patchValue(newValue);
+            } else {
+                this.form.controls['rec.' + item].patchValue(this.prepareDefaultForm[item]);
+            }
         });
     }
     ngOnDestroy() {
