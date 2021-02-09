@@ -72,6 +72,15 @@ export class RemasterRcComponent implements OnInit, OnDestroy {
             this.form.enable({emitEvent: false});
         });
     }
+    get checkItArmOrWeb() {
+        if (this.appMode.hasOwnProperty('arm')) {
+            return true;
+        }
+        if (!this.isCurrentSettings) {
+            return true;
+        }
+        return false;
+    }
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);

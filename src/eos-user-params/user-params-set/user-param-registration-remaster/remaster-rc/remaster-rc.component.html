@@ -11,7 +11,7 @@
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
-        *ngIf="!appMode.cbr"
+        *ngIf="checkItArmOrWeb"
         [input]="inputs['rec.CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA']"
         [form]="form"
         [readonly]="false"
