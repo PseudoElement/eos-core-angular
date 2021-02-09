@@ -1745,7 +1745,7 @@ export const REGISTRATION_RC: IBaseUsers =  {
     {
         key: 'CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA',
         type: 'boolean',
-        title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы'
+        title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы в АРМ «ДелоWeb»'
     },
     ]
 };
