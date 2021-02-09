@@ -38,8 +38,8 @@
         </div>
         <div class="user-input-group btn-hov">
             <div class="input-flex">
-                <button [disabled]="!editFlag || disablebtnCarma" (click)="openPopup(template, 'CERT_USER_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" container="body" trigger="hover">Хранилища сертификатов пользователя</button>
-                <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
+                <button [disabled]="!editFlag" (click)="openPopup(template, 'CERT_USER_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" container="body" trigger="hover">Хранилища сертификатов пользователя</button>
+                <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag">Хранилища прочих сертификатов</button>
             </div>
         </div>
         <div class="user-input-group">
