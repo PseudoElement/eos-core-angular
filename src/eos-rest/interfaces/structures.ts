@@ -3884,3 +3884,9 @@ export interface USER_EDIT_ORG_TYPE extends IEnt {
     ISN_ORG_TYPE: number;
 }
 
+export interface MEDO_PARTICIPANT {
+    ISN_ORGANI: number;
+    GATE: string;
+    GATE_ID: string;
+    MSGFORMAT: string;
+}

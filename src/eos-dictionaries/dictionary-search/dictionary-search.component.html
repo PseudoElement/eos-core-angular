@@ -839,62 +839,135 @@
     </form>
 </div>
 
-<div class="row full-search-form" [hidden]="dictId !== 'organization'">
-    <form id="organization">
-        <button [disabled]="noSearchData"
-            type="submit"
-            (click)="fullSearch()"
-            class="hidden-submit">Найти</button>
-        <div class="form-group unimportant-text">
-            <label class="s-font"
-                for="organization-name">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
-            <div class="search-fld">
-                <input id="organization-name"
-                    name="organization-name"
-                    type="text"
-                    class="form-control light"
-                    [(ngModel)]="searchModel['CLASSIF_NAME']"
-                    placeholder="..."
-                    maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
-                <a class="clear-btn"
-                    [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                    (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-            </div>
+<div class="full-search-form" [hidden]="dictId !== 'organization'">
+    <div
+            class="tabs-wrapper usual-border">
+            <ul class="tabs">
+                <li class="tab-item"
+                    *ngFor="let tab of modes"
+                    role="presentation"
+                    [ngClass]="{'active secondary-text': tab.key === currTab}"
+                    (click)="setTab(tab.key)">
+                    <span class="tab-title">{{tab.title}}</span>
+                </li>
+            </ul>
         </div>
-        <div class="form-group unimportant-text">
-            <label class="s-font"
-                for="organization-email">{{fieldsDescription.rec['EMAIL']?.title}}</label>
-            <div class="search-fld">
-                <input id="organization-email"
-                    name="organization-email"
-                    type="text"
-                    class="form-control light"
-                    [(ngModel)]="searchModel['EMAIL']"
-                    placeholder="..."
-                    maxlength="{{fieldsDescription.rec['EMAIL']?.length}}">
-                <a class="clear-btn"
-                    [ngClass]="{'hide': !searchModel['EMAIL']}"
-                    (click)="searchModel['EMAIL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-            </div>
+        <div class="row" *ngIf="currTab === 'common'"
+            class="row">
+            <form id="organization">
+                <button [disabled]="noSearchData"
+                    type="submit"
+                    (click)="fullSearch()"
+                    class="hidden-submit">Найти</button>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="organization-name">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="organization-name"
+                            name="organization-name"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['CLASSIF_NAME']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="organization-email">{{fieldsDescription.rec['EMAIL']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="organization-email"
+                            name="organization-email"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['EMAIL']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['EMAIL']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['EMAIL']}"
+                            (click)="searchModel['EMAIL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="organization-inn">{{fieldsDescription.rec['INN']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="organization-inn"
+                            name="organization-inn"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['INN']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['INN']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['INN']}"
+                            (click)="searchModel['INN'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <ng-content *ngTemplateOutlet="doprec"></ng-content>
+            </form>
         </div>
-        <div class="form-group unimportant-text">
-            <label class="s-font"
-                for="organization-inn">{{fieldsDescription.rec['INN']?.title}}</label>
-            <div class="search-fld">
-                <input id="organization-inn"
-                    name="organization-inn"
-                    type="text"
-                    class="form-control light"
-                    [(ngModel)]="searchModel['INN']"
-                    placeholder="..."
-                    maxlength="{{fieldsDescription.rec['INN']?.length}}">
-                <a class="clear-btn"
-                    [ngClass]="{'hide': !searchModel['INN']}"
-                    (click)="searchModel['INN'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+        <div *ngIf="currTab === 'medo'"
+        class="row">
+        <form id="organization">
+            <button [disabled]="noSearchData"
+                type="submit"
+                (click)="fullSearch()"
+                class="hidden-submit">Найти</button>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="organization-name">{{fieldsDescription.rec['GATE']?.title}}</label>
+                <div class="search-fld">
+                    <input id="organization-name"
+                        name="organization-name"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['GATE']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['GATE']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['GATE']}"
+                        (click)="searchModel['GATE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
             </div>
-        </div>
-        <ng-content *ngTemplateOutlet="doprec"></ng-content>
-    </form>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="organization-email">{{fieldsDescription.rec['GATE_ID']?.title}}</label>
+                <div class="search-fld">
+                    <input id="organization-email"
+                        name="organization-email"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['GATE_ID']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['GATE_ID']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['GATE_ID']}"
+                        (click)="searchModel['GATE_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="organization-inn">{{fieldsDescription.rec['CONTACT.MEDO_ID']?.title}}</label>
+                <div class="search-fld">
+                    <input id="organization-inn"
+                        name="organization-inn"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['CONTACT.MEDO_ID']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['CONTACT.MEDO_ID']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['CONTACT.MEDO_ID']}"
+                        (click)="searchModel['CONTACT.MEDO_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 </ng-template>
