@@ -62,6 +62,9 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
     get disableGroup() {
         return !this.flagEdit || !this.form.controls['rec.INFORMER_FOLDER_ITEM_CHECK'].value;
     }
+    get itDefaultSettingsPage() {
+        return !this.isnClassif;
+    }
     get isFoldersGroupDisabled() {
         const isDisabled = this.disableGroup;
         if (isDisabled) {
@@ -197,7 +200,8 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
     private patchInputs(inputs): void {
         if (this.isInformer) {
             this.informerIncrementCheckboxKeys.forEach((relatedKeys, checkboxKey) => {
-                inputs[checkboxKey].value = inputs[relatedKeys[0]].value.trim() !== '';
+                const actualCheckBoxValue = inputs[relatedKeys[0]].value.trim();
+                inputs[checkboxKey].value = actualCheckBoxValue !== '0' && actualCheckBoxValue !== '';
             });
             if (
                 this.userData[this.cabinetsSelect.selectKey] === this.cabinetsSelect.allCabinets ||

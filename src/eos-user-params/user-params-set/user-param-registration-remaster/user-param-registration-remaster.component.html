@@ -13,8 +13,8 @@
     ></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs container-tabs">
-            <li class="tab-item item-tab-vh" *ngFor="let tab of fieldGroupsForRegistration | keyvalue" [ngClass]="{'active': tab.key === currTab}" (click)="setTab(tab.key)">
-                <span class="tab-title">{{tab.value}}</span>
+            <li class="tab-item item-tab-vh" *ngFor="let tab of fieldGroupsForRegistration | keyvalue" [ngClass]="{'active': tab.key === currTab, 'tab-item-disabled': isRegTabAndDefaultSettings(tab.key)}" (click)="setTab(tab.key)">
+                <span  class="tab-title">{{tab.value}}</span>
             </li>
         </ul>
     </div>

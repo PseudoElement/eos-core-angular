@@ -20,6 +20,11 @@
     .item-tab-vh {
         height: 65px;
     }
+    .tab-item-disabled{
+        color: (rgba(16, 16, 16, 0.3), white);
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
     // .inline-block {
     //     display: inline-block;
     //     padding-top: 10px;

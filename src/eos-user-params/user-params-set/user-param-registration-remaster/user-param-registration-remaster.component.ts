@@ -54,6 +54,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         return '';
     }
+    get isDefaultSettingsPage() {
+        return !!this.defaultUser;
+    }
+
     private DopOperationChangeValue: any;
     private AddressesChengeValue: any;
     private ScanChengeValue: any;
@@ -74,6 +78,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _formHelper: FormHelperService,
     ) {}
     ngOnInit() {
+        if (this.isCurrentSettings) {
+            this.fieldGroupsForRegistration.set(3, 'Связки и переписка');
+        }
         if (this.appMode && this.appMode.cbr) {
             // Скрываем вкладки "Сканирование и печать штрих-кода" и "Связки и автопоиск" для mode=ARMCBR
             this.fieldGroupsForRegistration.delete(2);
@@ -124,7 +131,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         return false;
     }
+
+    isRegTabAndDefaultSettings(key: number) {
+        return key === 2 && this.isDefaultSettingsPage;
+    }
+
     setTab(i: number) {
+        if (this.isRegTabAndDefaultSettings(i)) {
+             return;
+        }
         this.currTab = i;
     }
 

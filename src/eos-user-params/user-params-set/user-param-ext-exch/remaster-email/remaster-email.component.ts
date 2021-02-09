@@ -135,6 +135,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         if (this.isCurrentSettings) {
             this.disableFormMailResive();
             this.disableForm();
+            this.alwaysDisabledMethod();
         }
     }
 
@@ -319,7 +320,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         if (!val) {
             val = this.form.controls['rec.' + node.key].value;
         }
-        if (node.parent) {
+        if (node.parent && val) {
             const key = node.parent.key;
             this.form.controls['rec.' + key].patchValue(val);
             this.setParent(node.parent, val);

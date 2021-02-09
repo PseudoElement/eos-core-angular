@@ -7,20 +7,20 @@
             <eos-dynamic-input
                 [input]="inputs['rec.INFORMER_FOLDER_ITEM_CHECK']"
                 [form]="form"
-                [readonly]="!flagEdit"
+                [readonly]="!flagEdit || itDefaultSettingsPage"
             ></eos-dynamic-input>
             <div class="informer-radio-inline">
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_CABINET_RADIO']"
                     [form]="form"
-                    [readonly]="isFoldersGroupDisabled"
+                    [readonly]="isFoldersGroupDisabled || itDefaultSettingsPage"
                 ></eos-dynamic-input>
             </div>
             <div class="informer-select">
                 <eos-dynamic-input
                     [input]="inputs['rec.INFORMER_CABINET']"
                     [form]="form"
-                    [readonly]="isCabinetsSelectDisabled"
+                    [readonly]="isCabinetsSelectDisabled || itDefaultSettingsPage"
                 ></eos-dynamic-input>
             </div>
         </div>

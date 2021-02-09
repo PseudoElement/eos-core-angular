@@ -89,7 +89,7 @@
             <span>Создавать связку с типом:</span>
             <eos-dynamic-input [ngStyle]="{'width': '452px'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <eos-dynamic-input [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <eos-dynamic-input [hidden]="!appMode.tk" [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
     <div [hidden]="appMode.arm" class="set-header bold">
         <span >Поиск граждан в справочнике по полям</span>

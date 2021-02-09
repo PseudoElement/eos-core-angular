@@ -18,7 +18,7 @@
         display: inline-block;
         margin-right: 40px;
     }
-    
+
     .input-mar-right .elem-input-radio{
         margin-right: 42px;
     }
@@ -28,6 +28,28 @@
         .span-or {
             padding-left: 33px;
             padding-right: 33px;
+        }
+    }
+    .show_deep {
+        width: 100%;
+
+        .show-deep_title {
+            display: inline-block;
+            width: 425px;
+        }
+        .show-deep_input {
+            display: inline-block;
+            width: 195px;
+        }
+        // display: flex;
+        // align-items: baseline;
+        // justify-content: flex-end;
+        .show_deep-marg {
+            display: inline-block;
+            width: calc(100% - 425px);
+        }
+        .show_deep_span {
+            margin-left: 5px;
         }
     }
 }

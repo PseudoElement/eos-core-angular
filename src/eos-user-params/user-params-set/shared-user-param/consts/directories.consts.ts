@@ -54,6 +54,24 @@ export const DIRECTORIES_USER: IBaseUsers = {
             key: 'SRCH_CONTACT_FIELDS_DEPARTMENT',
             type: 'boolean',
             title: 'Подразделение'
+        },
+        {
+            key: 'CL_SHOW_DEP_REPLACE_BEFORE',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '0', title: '0'},
+                {value: '1', title: '1'},
+                {value: '2', title: '2'},
+                {value: '3', title: '3'},
+                {value: '4', title: '4'},
+                {value: '5', title: '5'},
+                {value: '6', title: '6'},
+                {value: '7', title: '7'},
+                {value: '8', title: '8'},
+                {value: '9', title: '9'},
+                {value: '10', title: '10'},
+            ]
         }
     ],
     fieldsDefaultValue: [

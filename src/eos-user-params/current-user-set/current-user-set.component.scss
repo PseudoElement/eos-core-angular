@@ -618,6 +618,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             flex-basis: 290px;
                             line-height: 90%;
                             text-align: right;
+                            font-weight: 500;
                         }
 
                         span.get-new-org {
@@ -1706,13 +1707,7 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
 
                     eos-dynamic-input:nth-child(2) {
-                        margin-bottom: 15px;
-
-                        &:after {
-                            @include style-horizontal-line;
-                            left: 0;
-                            bottom: 55px;
-                        }
+                        margin-bottom: 15px;                        
                     }
                 }
             }
