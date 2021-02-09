@@ -29,6 +29,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { NADZOR_FOLDER } from './dictionaries/nadzor/nadzor.consts';
 import { SEV_FOLDER } from './dictionaries/sev/folder-sev.consts';
+import { TYPE_DOCUM_DICT } from './dictionaries/type-docum.const';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -57,6 +58,7 @@ export const DICTIONARIES = [
     EDS_CATEGORY_CL,
     LINK_DICT,
     Templates,
+    TYPE_DOCUM_DICT,
 
     ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR_FOLDER, ] : [CITIZENS_DICT, ],
 

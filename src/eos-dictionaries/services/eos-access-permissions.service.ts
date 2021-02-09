@@ -29,91 +29,152 @@ import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.const';
 import { SEV_FOLDER, SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
+import { TYPE_DOCUM_DICT } from 'eos-dictionaries/consts/dictionaries/type-docum.const';
 
-const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean /* проверить дерево USER_TECH */, } [] = [
+const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
     // Рубрикатор
-    {   id: RUBRICATOR_DICT.id,       tech: E_TECH_RIGHT.Rubrics,
-        listedUT: true },
+    {
+        id: RUBRICATOR_DICT.id, tech: E_TECH_RIGHT.Rubrics,
+        listedUT: true
+    },
     // Подразделения
-    {   id: DEPARTMENTS_DICT.id,      tech: E_TECH_RIGHT.Departments,
-        listedUT: true },
+    {
+        id: DEPARTMENTS_DICT.id, tech: E_TECH_RIGHT.Departments,
+        listedUT: true
+    },
     // Кабинеты
-    { id: CABINET_DICT.id,          tech: E_TECH_RIGHT.Cabinets,
-        listedUT: true },
+    {
+        id: CABINET_DICT.id, tech: E_TECH_RIGHT.Cabinets,
+        listedUT: true
+    },
     // Виды доставки
-    { id: DELIVERY_DICT.id,         tech: E_TECH_RIGHT.DeliveryTypes,
-        listedUT: false },
+    {
+        id: DELIVERY_DICT.id, tech: E_TECH_RIGHT.DeliveryTypes,
+        listedUT: false
+    },
     // Виды подписей
-    { id: SIGN_KIND_DICT.id,        tech: E_TECH_RIGHT.SignTypes,
-        listedUT: false },
+    {
+        id: SIGN_KIND_DICT.id, tech: E_TECH_RIGHT.SignTypes,
+        listedUT: false
+    },
     // Грифы доступа
-    { id: SECURITY_DICT.id,         tech: E_TECH_RIGHT.SecurGrifs,
-        listedUT: false },
+    {
+        id: SECURITY_DICT.id, tech: E_TECH_RIGHT.SecurGrifs,
+        listedUT: false
+    },
     // Группы документов
-    { id: DOCGROUP_DICT.id,         tech: E_TECH_RIGHT.Docgroups,
-        listedUT: false },
+    {
+        id: DOCGROUP_DICT.id, tech: E_TECH_RIGHT.Docgroups,
+        listedUT: false
+    },
     // Категории ЭП
-    { id: EDS_CATEGORY_CL.id,       tech: E_TECH_RIGHT.EdsCategory,
-        listedUT: false },
+    {
+        id: EDS_CATEGORY_CL.id, tech: E_TECH_RIGHT.EdsCategory,
+        listedUT: false
+    },
     // Управление сертификатами
-    { id: CA_CATEGORY_CL.id,       tech: E_TECH_RIGHT.EdsCategory, // ManageCertificate,
-        listedUT: false },
+    {
+        id: CA_CATEGORY_CL.id, tech: E_TECH_RIGHT.EdsCategory, // ManageCertificate,
+        listedUT: false
+    },
     // Категории адресатов
-    { id: ADDR_CATEGORY_DICT.id,    tech: E_TECH_RIGHT.AdresatCategories,
-        listedUT: false },
+    {
+        id: ADDR_CATEGORY_DICT.id, tech: E_TECH_RIGHT.AdresatCategories,
+        listedUT: false
+    },
     // Номенклатура дел
-    {   id: NOMENKL_DICT.id,          tech: E_TECH_RIGHT.DeloNomenkl,
-        listedUT: true },
+    {
+        id: NOMENKL_DICT.id, tech: E_TECH_RIGHT.DeloNomenkl,
+        listedUT: true
+    },
     // Приоритеты проектов резолюций
-    { id: RESPRJ_PRIORITY_DICT.id,  tech: E_TECH_RIGHT.ResPriority,
-        listedUT: false },
+    {
+        id: RESPRJ_PRIORITY_DICT.id, tech: E_TECH_RIGHT.ResPriority,
+        listedUT: false
+    },
     // Регионы
-    { id: REGION_DICT.id,           tech: E_TECH_RIGHT.Regions,
-        listedUT: false },
+    {
+        id: REGION_DICT.id, tech: E_TECH_RIGHT.Regions,
+        listedUT: false
+    },
     // Состояние исполнения (исполнитель)
-    { id: STATUS_REPLY_DICT.id,     tech: E_TECH_RIGHT.ReplyStatuses,
-        listedUT: false },
+    {
+        id: STATUS_REPLY_DICT.id, tech: E_TECH_RIGHT.ReplyStatuses,
+        listedUT: false
+    },
     // Состояние исполнения (поручение)
-    { id: STATUS_EXEC_DICT.id,      tech: E_TECH_RIGHT.ExecStatuses,
-        listedUT: false },
+    {
+        id: STATUS_EXEC_DICT.id, tech: E_TECH_RIGHT.ExecStatuses,
+        listedUT: false
+    },
     // Статус заявителя
-    { id: CITSTATUS_DICT.id,        tech: E_TECH_RIGHT.Citstatuses,
-        listedUT: false },
+    {
+        id: CITSTATUS_DICT.id, tech: E_TECH_RIGHT.Citstatuses,
+        listedUT: false
+    },
     // Список организаций
-    { id: ORGANIZ_DICT.id,          tech: E_TECH_RIGHT.OrganizList,
-        listedUT: false },
+    {
+        id: ORGANIZ_DICT.id, tech: E_TECH_RIGHT.OrganizList,
+        listedUT: false
+    },
     // Типы виз
-    { id: VISA_TYPE_DICT.id,        tech: E_TECH_RIGHT.VisaTypes,
-        listedUT: false },
+    {
+        id: VISA_TYPE_DICT.id, tech: E_TECH_RIGHT.VisaTypes,
+        listedUT: false
+    },
     // Типы организаций
-    { id: ORG_TYPE_DICT.id,         tech: E_TECH_RIGHT.OrganizTypes,
-        listedUT: false },
+    {
+        id: ORG_TYPE_DICT.id, tech: E_TECH_RIGHT.OrganizTypes,
+        listedUT: false
+    },
     // Типы реестров
-    { id: REESTRTYPE_DICT.id,       tech: E_TECH_RIGHT.ReestrTypes,
-        listedUT: false },
+    {
+        id: REESTRTYPE_DICT.id, tech: E_TECH_RIGHT.ReestrTypes,
+        listedUT: false
+    },
     // Типы связок
-    { id: LINK_DICT.id,             tech: E_TECH_RIGHT.LinkTypes,
-        listedUT: false },
+    {
+        id: LINK_DICT.id, tech: E_TECH_RIGHT.LinkTypes,
+        listedUT: false
+    },
     // Группа справочников Надзора
-    { id: NADZOR_FOLDER.id,                tech: E_TECH_RIGHT.NadzorCL,
-        listedUT: false },
+    {
+        id: NADZOR_FOLDER.id, tech: E_TECH_RIGHT.NadzorCL,
+        listedUT: false
+    },
     // Категории поручений
-    { id: RESOL_CATEGORY_DICT.id,   tech: E_TECH_RIGHT.ResCategories,
-        listedUT: false },
+    {
+        id: RESOL_CATEGORY_DICT.id, tech: E_TECH_RIGHT.ResCategories,
+        listedUT: false
+    },
     // Статусы проекта поручения
-    { id: RESPRJ_STATUS_DICT.id,    tech: E_TECH_RIGHT.StatPrjPor,
-        listedUT: false },
+    {
+        id: RESPRJ_STATUS_DICT.id, tech: E_TECH_RIGHT.StatPrjPor,
+        listedUT: false
+    },
     // Ведение календаря
-    { id: CALENDAR_DICT.id,         tech: E_TECH_RIGHT.CalendarSettings,
-        listedUT: false},
+    {
+        id: CALENDAR_DICT.id, tech: E_TECH_RIGHT.CalendarSettings,
+        listedUT: false
+    },
     // Справочники СЭВ
-    { id: SEV_FOLDER.id,         tech: E_TECH_RIGHT.SevCL,
-        listedUT: false},
+    {
+        id: SEV_FOLDER.id, tech: E_TECH_RIGHT.SevCL,
+        listedUT: false
+    },
     // Шаблоны
-    { id: Templates.id,    tech: E_TECH_RIGHT.Templates,
-        listedUT: false },
-    { id: CITIZENS_DICT.id,    tech: E_TECH_RIGHT.Citizens,
-        listedUT: false },
+    {
+        id: Templates.id, tech: E_TECH_RIGHT.Templates,
+        listedUT: false
+    },
+    {
+        id: CITIZENS_DICT.id, tech: E_TECH_RIGHT.Citizens,
+        listedUT: false
+    },
+    {
+        id: TYPE_DOCUM_DICT.id, tech: E_TECH_RIGHT.Templates,
+        listedUT: false
+    },
 ];
 
 const LicenseTech = {
@@ -128,12 +189,12 @@ export enum APS_DICT_GRANT {
 
 @Injectable()
 export class EosAccessPermissionsService {
-    constructor (
+    constructor(
         private appCtx: AppContext,
-    ) {}
+    ) { }
 
     // --------------------------------------------------------------
-    isAccessGrantedForDictionary (dictId: string, due: string): APS_DICT_GRANT {
+    isAccessGrantedForDictionary(dictId: string, due: string): APS_DICT_GRANT {
         const dt = dictsTechs.find(d => dictId === d.id);
         if (dt) {
             const grant = this.checkAccessTech(dt.tech);
@@ -156,12 +217,12 @@ export class EosAccessPermissionsService {
 
         let dict;
 
-        dict =  NADZOR_DICTIONARIES.find (n => n.id === dictId);
+        dict = NADZOR_DICTIONARIES.find(n => n.id === dictId);
         if (dict) {
             return this.checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
 
-        dict = SEV_DICTIONARIES.find (n => n.id === dictId);
+        dict = SEV_DICTIONARIES.find(n => n.id === dictId);
         if (dict) {
             return this.checkAccessTech(E_TECH_RIGHT.SevCL) && this.isAssessSev('SEV') ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.read;
         }
@@ -229,7 +290,7 @@ export class EosAccessPermissionsService {
                     return 1;
                 }
             }
-        );
+            );
 
         if (list && list.length) {
             const rec = list[0];

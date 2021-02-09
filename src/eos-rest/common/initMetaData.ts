@@ -2492,6 +2492,22 @@ const commonMeta = {
         },
         readonly: [],
         relations: []
+    },
+    DOCVID_CL: {
+        pk: ['ISN_LCLASSIF'],
+        properties: {
+            ISN_CLASSIF: _t.i,
+            CLASSIF_NAME: _t.s,
+            FULLNAME: _t.s,
+            DOCVID_INDEX: _t.s,
+            AP_FLAG: _t.i,
+            WEIGHT: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
     }
 };
 
