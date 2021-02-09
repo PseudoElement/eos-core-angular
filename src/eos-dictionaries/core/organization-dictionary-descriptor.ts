@@ -1,20 +1,76 @@
-import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
+import { IRecordModeDescription, IRecordOperationResult, ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
-import { CONTACT, ORGANIZ_CL, SEV_ASSOCIATION, ADDR_CATEGORY_CL } from 'eos-rest';
+import { CONTACT, ORGANIZ_CL, SEV_ASSOCIATION, ADDR_CATEGORY_CL, MEDO_PARTICIPANT } from 'eos-rest';
 import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { TreeDictionaryDescriptor } from './tree-dictionary-descriptor';
+import { TreeDictionaryDescriptor, TreeRecordDescriptor } from './tree-dictionary-descriptor';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosDictionaryNode } from './eos-dictionary-node';
 import { EosUtils } from 'eos-common/core/utils';
+import { DepartmentDictionaryDescriptor } from './department-dictionary-descriptor';
+import { FieldDescriptor } from './field-descriptor';
+import { ModeFieldSet } from './record-mode';
 
 const inheritFiields = [
     'ISN_ADDR_CATEGORY',
 ];
 
+class OrganizRecord extends TreeRecordDescriptor {
+    dictionary: DepartmentDictionaryDescriptor;
+    parentField: FieldDescriptor;
+    modeField: FieldDescriptor;
+    modeList: IRecordModeDescription[];
+    fullSearchFields: ModeFieldSet | any;
+    constructor(dictionary: OrganizationDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor) {
+        super(dictionary, descriptor);
+        this.modeList = descriptor.modeList;
+        this._initModeSets(['fullSearchFields'], descriptor);
+    }
+    private _initModeSets(setNames: string[], descriptor: ITreeDictionaryDescriptor) {
+        setNames.forEach((setName) => {
+            if (!this[setName]) {
+                this[setName] = new ModeFieldSet(this, descriptor[setName]);
+            }
+        });
+    }
+}
+
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     dopRec = [];
-    getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
+    modeList: IRecordModeDescription[];
+
+    public getFullSearchCriteries(data: any) {
+        const srchMode = data['srchMode'];
+        const criteries = super.getFullSearchCriteries(data[srchMode]);
+        const queries = { contact: null, medo: null, organiz: null, branch: null };
+
+        if (srchMode === 'medo') {
+            if (criteries.hasOwnProperty('CONTACT.MEDO_ID')) {
+                queries.contact = {
+                    'CONTACT.MEDO_ID': criteries['CONTACT.MEDO_ID'],
+                    'CONTACT.ORDERNUM': 0
+                };
+            }
+            if (criteries.hasOwnProperty('GATE') || criteries.hasOwnProperty('GATE_ID')) {
+                queries.medo = {};
+                if (criteries.hasOwnProperty('GATE')) {
+                    queries.medo.GATE = criteries['GATE'];
+                }
+                if (criteries.hasOwnProperty('GATE_ID')) {
+                    queries.medo.GATE_ID = criteries['GATE_ID'];
+                }
+            }
+        } else {
+            if (criteries.hasOwnProperty('EMAIL')) {
+                const email = criteries.EMAIL;
+                delete criteries.EMAIL;
+                criteries['CONTACT.E_MAIL'] = email;
+            }
+            queries.organiz = criteries;
+        }
+        return queries;
+    }
+    public getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
         const newPreset = {};
         EosUtils.deepUpdate(newPreset, preSetData);
         if (parentNode) {
@@ -26,22 +82,108 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         return super.getNewRecord(newPreset, parentNode);
     }
 
-    getRoot(): Promise<any[]> {
+    public getRoot(): Promise<any[]> {
         return this.getData({ criteries: { IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
     }
-    search(criteries: any[]): Promise<any> {
-        if (criteries[0].hasOwnProperty('EMAIL')) {
-            const email = criteries[0].EMAIL;
-            delete criteries[0].EMAIL;
-            criteries[0]['CONTACT.E_MAIL'] = email;
+    public search(criteries: any[]): Promise<any> {
+        const queries = criteries[0];
+        if (queries.medo || queries.contact) {
+            return this.searchMedo(queries);
         }
-        if (criteries[0].hasOwnProperty('DOP_REC')) {
-            return this.searchDopRec(criteries);
-        } else {
-            return super.search(criteries);
+        if (queries.organiz) {
+            const extQuery = this.getCriteriesBranch(queries);
+            if (extQuery) {
+                Object.assign(queries.organiz, extQuery);
+            }
+
+            if (queries.organiz.hasOwnProperty('DOP_REC')) {
+                return this.searchDopRec([queries.organiz]);
+            } else {
+                return super.search([queries.organiz]);
+            }
         }
+        // для быстрого поиска
+        return super.search(criteries);
     }
-    searchDopRec(criteries: any[]): Promise<any> {
+
+    public getCriteriesBranch(criteries: any): any {
+        const obj = {};
+        if (criteries.hasOwnProperty('DUE') || criteries.hasOwnProperty('LAYER') || criteries.hasOwnProperty('ISN_HIGH_NODE')) {
+            if (criteries.hasOwnProperty('DUE')) {
+                obj['DUE'] = criteries['DUE'];
+            }
+            if (criteries.hasOwnProperty('LAYER')) {
+                obj['LAYER'] = criteries['LAYER'];
+            }
+            if (criteries.hasOwnProperty('ISN_HIGH_NODE')) {
+                obj['ISN_HIGH_NODE'] = criteries['ISN_HIGH_NODE'];
+            }
+            return obj;
+        }
+        return null;
+    }
+    public searchMedo(queries: { medo: any, contact: any }): Promise<any> {
+        let queryMedo = null;
+        let queryContact = null;
+        let flagmedo = false;
+        let flagorganiz = false;
+        if (queries.medo) {
+            flagmedo = true;
+            queryMedo = this.apiSrv.read({
+                MEDO_PARTICIPANT: {
+                    criteries: queries.medo
+                }
+            });
+        } else {
+            queryMedo = Promise.resolve(null);
+        }
+
+        if (queries.contact) {
+            const extQuery = this.getCriteriesBranch(queries);
+            if (extQuery) {
+                Object.assign(queries.contact, extQuery);
+            }
+            flagorganiz = true;
+            queryContact = this.apiSrv.read({
+                ORGANIZ_CL: {
+                    criteries: queries.contact
+                }
+            });
+        } else {
+            queryContact = Promise.resolve(null);
+        }
+        return Promise.all([queryMedo, queryContact]).then((data: [MEDO_PARTICIPANT[], ORGANIZ_CL[]]) => {
+            if (flagmedo && flagorganiz) {
+                const ids = [];
+                data[0].forEach(value => {
+                    data[1].forEach(val => {
+                        if (+value.ISN_ORGANI === +val.ISN_NODE) {
+                            ids.push(val);
+                        }
+                    });
+                });
+                return ids;
+            }
+            if (!flagmedo && flagorganiz) {
+                return data[1];
+            }
+            if (flagmedo && !flagorganiz) {
+                const ids = [];
+                data[0].forEach(value => {
+                    ids.push(value.ISN_ORGANI);
+                });
+                if (ids.length) {
+                    return this.apiSrv.read({
+                        ORGANIZ_CL: ids
+                    });
+                }
+                return [];
+
+            }
+            return [];
+        });
+    }
+    public searchDopRec(criteries: any[]): Promise<any> {
         const vaslues = JSON.parse(criteries[0].DOP_REC);
         const newCriteries = {};
         const critName = 'AR_ORGANIZ_VALUE.' + vaslues.API_NAME;
@@ -57,7 +199,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 values = `${vaslues.SEARCH_VALUE}`;
                 break;
         }
-        Object.assign(newCriteries, criteries[0], {[critName]: values});
+        Object.assign(newCriteries, criteries[0], { [critName]: values });
         delete newCriteries['DOP_REC'];
         return this.apiSrv.read({
             ORGANIZ_CL: {
@@ -201,6 +343,10 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             return this.apiSrv.batch(change, '');
         }
         return Promise.resolve();
+    }
+
+    protected _initRecord(data: ITreeDictionaryDescriptor) {
+        this.record = new OrganizRecord(this, data);
     }
 
     /**

@@ -22,6 +22,13 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick , SEARCH_TYPES.full],
+    modeList: [{
+        key: 'common',
+        title: 'Основные',
+    }, {
+        key: 'medo',
+        title: 'Реквизиты МЭДО',
+    }],
     fields: COMMON_FIELDS.concat([{
         key: 'DUE',
         type: 'string',
@@ -100,6 +107,24 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         title: 'Нов.',
         type: 'new',
         length: 1,
+    },
+    {
+        key: 'CONTACT.MEDO_ID',
+        title: 'ID организации',
+        type: 'string',
+        length: 255
+    },
+    {
+        key: 'GATE',
+        title: 'АДРЕС МЭДО',
+        type: 'string',
+        length: 255
+    },
+    {
+        key: 'GATE_ID',
+        title: 'ID шлюза',
+        type: 'string',
+        length: 255
     },
     // COMMON_FIELD_ICONS_SEV,
     Object.assign({}, COMMON_FIELD_NAME, {
@@ -258,7 +283,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         // ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
-    fullSearchFields: ['CLASSIF_NAME', 'EMAIL', 'INN', 'DOP_REC'],
+    fullSearchFields: ['CLASSIF_NAME', 'EMAIL', 'INN', 'DOP_REC', 'CONTACT.MEDO_ID', 'GATE', 'GATE_ID'],
     // quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',
     //     'ISN_ORGANIZ_TYPE', 'SERTIFICAT',  'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'sev'],
     quickViewFields: ['FULLNAME',

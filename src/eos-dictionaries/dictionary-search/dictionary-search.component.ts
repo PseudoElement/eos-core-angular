@@ -111,7 +111,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.settings.entity_dict = this.dictId;
         this.settings.lastSearch = SEARCHTYPE.full;
         this.settings.opts.mode = this.mode;
-        const model = (this.dictId === 'departments') ? this.searchData : this.getSearchModel();
+        const model = (this.dictId === 'departments' || this.dictId === 'organization') ? this.searchData : this.getSearchModel();
         this.settings.full.data = model;
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
@@ -217,7 +217,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         }
     }
     private getModelName(): string {
-        return (this.dictId === 'departments') ? this.currTab || 'department' : this.dictId;
+        return (this.dictId === 'departments' || this.dictId === 'organization') ? this.currTab || 'department' : this.dictId;
     }
     private getSearchModel() {
         const prop = this.getModelName();
@@ -241,7 +241,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
 
                     this.mode = this.settings.opts.mode;
                 } else {
-                    ['department', 'data', 'person', 'cabinet'].forEach((model) => this.clearModel(model));
+                    ['department', 'data', 'person', 'cabinet', 'common', 'medo'].forEach((model) => this.clearModel(model));
                 }
             }
 
