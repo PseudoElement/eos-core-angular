@@ -12,7 +12,8 @@
             display: inline-block;
         }
         .create-user-login-input {
-            width: 280px;
+            width: 675px;
+            height: 81px;
         }
         .base-department-input {
             input {
@@ -56,4 +57,52 @@
     padding-top: 120px;
     height: 293px;
     text-align: center;
+}
+.type-user {
+    display: flex;
+    align-items: self-start;
+    justify-content: space-between;
+    .type-input {
+        margin-left: 27px;
+        width: 340px;
+        top: -37px;
+        position: relative;
+    }
+}
+
+.passModal {
+    top: 20%;
+    .btn {
+        width: 92px;
+        position: relative;
+        top: 5px;
+    }
+
+    .passInput{
+        border-color: #e6e6e6;
+        outline: none;
+        color: #000000;
+        border-radius: 0;
+        padding: 6px 8px;
+        border-width: 1px;
+        box-shadow: none;
+        height: 32px;
+        &:focus {
+            border-color: #2196f3;
+        }
+    .error {
+            border-color: red;
+        }
+    }
+
+}
+.preview {
+    position: fixed;
+    z-index: 1050;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: black;
+    opacity: .3;
 }

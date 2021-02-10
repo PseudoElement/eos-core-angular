@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { TooltipModule, ModalModule, AccordionModule, BsDropdownModule, PopoverModule } from 'ngx-bootstrap';
+import { TooltipModule, ModalModule, AccordionModule, BsDropdownModule, PopoverModule, AlertModule } from 'ngx-bootstrap';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EosCommonModule } from 'eos-common/eos-common.module';
@@ -44,6 +44,7 @@ import { SettingManagementComponent } from './list-user-select/setting-managemen
         TooltipModule.forRoot(),
         BsDropdownModule.forRoot(),
         PopoverModule.forRoot(),
+        AlertModule.forRoot(),
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,

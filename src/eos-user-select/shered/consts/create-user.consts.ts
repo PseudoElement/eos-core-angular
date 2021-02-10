@@ -25,6 +25,13 @@ export const CREATE_USER_INPUTS = [
     },
     {
         controlType: E_FIELD_TYPE.select,
+        key: 'USER_TYPE',
+        label: 'Тип пользователя:',
+        options: [],
+        required: true,
+    },
+    {
+        controlType: E_FIELD_TYPE.select,
         key: 'SELECT_ROLE',
         label: 'РОЛЬ',
         options: [],
@@ -34,6 +41,13 @@ export const CREATE_USER_INPUTS = [
         key: 'USER_COPY',
         label: 'Скопировать настройки от:',
         value: '',
+    },
+    {
+        controlType: E_FIELD_TYPE.select,
+        key: 'USER_TEMPLATES',
+        label: 'Шаблон:',
+        options: [],
+        default: '...'
     },
 ];
 

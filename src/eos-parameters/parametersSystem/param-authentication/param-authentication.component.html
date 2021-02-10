@@ -121,4 +121,19 @@
             <span class="m-font">ошибочных вводов пароля</span>
         </div>
     </div>
+    <hr>
+    <div class="param-input-group">
+        <span class="l-font">Разрешенные внешние системы аутентификации:</span>
+        <hr>
+        <eos-dynamic-input
+        [form]="form"
+        [input]="inputs['rec.ALLOWED_EXTERNAL_AUTH_ESIA']"
+        [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+        [form]="form"
+        [input]="inputs['rec.EXTERNAL_AUTH_ADD']"
+        [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
 </div>

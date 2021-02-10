@@ -1,6 +1,6 @@
 import { Component, Injector, Input } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
-import { AUTH_PARAM } from '../shared/consts/auth-consts';
+import { AUTH_PARAM, ESIA_AUTH_FIELD_KEY, ESIA_AUTH_PARM_VALUE, EXTERNAL_AUTH_COMMON_KEY } from '../shared/consts/auth-consts';
 import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AuthenticationCollectionComponent } from './collection/collection.component';
@@ -17,6 +17,20 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     collectionVisible = true;
     public masDisable: any[] = [];
     editMode: boolean;
+
+    private externalAuth = {
+        commonKey: EXTERNAL_AUTH_COMMON_KEY,
+        auths: [
+            {
+                parmValue: ESIA_AUTH_PARM_VALUE,
+                inputKey: `rec.${ESIA_AUTH_FIELD_KEY}`,
+                key: ESIA_AUTH_FIELD_KEY,
+                originValue: false,
+                currentValue: false,
+            }
+        ]
+    };
+
     constructor(
         private _modalSrv: BsModalService,
         injector: Injector
@@ -25,6 +39,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         this.init()
             .then(() => {
                 this.afterInitRC();
+                this._handleExternalAuth();
             }).catch(err => {
                 if (err.code !== 434) {
                     console.log(err);
@@ -106,6 +121,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 this.newData.rec[VALUE] = '0';
             }
         });
+        this._checkExternalAuthChanges();
         super.submit();
     }
     edit() {
@@ -134,5 +150,51 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         this.modalCollection.content.closeCollection.subscribe(() => {
             this.modalCollection.hide();
         });
+    }
+    changeByPath(path: string, value: any) {
+        const extAuthKeys = [`rec.${EXTERNAL_AUTH_COMMON_KEY}`, 'rec.EXTERNAL_AUTH_ADD', ...this.externalAuth.auths.map((_eauth) => _eauth.inputKey)];
+        if (extAuthKeys.indexOf(path) !== -1) {
+            this._checkExternalAuthChanges();
+            return !!this.newData.rec[this.externalAuth.commonKey];
+        } else {
+            return super.changeByPath(path, value);
+        }
+    }
+    private _handleExternalAuth() {
+        const extAuthValue: string = this.prepareData.rec[this.externalAuth.commonKey];
+
+        const extAuthValues: string[] = (extAuthValue && extAuthValue.split(',')) || [];
+        this.externalAuth.auths.forEach((extAuth) => {
+            const hasAuth = extAuthValues.indexOf(extAuth.parmValue) !== -1;
+            extAuth.originValue = hasAuth;
+            extAuth.currentValue = hasAuth;
+            if (this.form.controls[extAuth.inputKey]) {
+                this.form.controls[extAuth.inputKey].patchValue(hasAuth, { emitEvent: false });
+                this.subscriptions.push(
+                    this.form.controls[extAuth.inputKey].valueChanges
+                        .subscribe(newValue => extAuth.currentValue = newValue)
+                );
+            }
+        });
+    }
+    private _checkExternalAuthChanges() {
+        if (this.newData && this.newData.rec) {
+            const newExtAuth = [];
+            let hasAuthChanges = false;
+            this.externalAuth.auths.forEach((extAuth) => {
+                delete this.newData.rec[extAuth.key];
+                if (extAuth.currentValue) {
+                    newExtAuth.push(extAuth.parmValue);
+                }
+                if (extAuth.originValue !== extAuth.currentValue) {
+                    hasAuthChanges = true;
+                }
+            });
+            if (hasAuthChanges) {
+                this.newData.rec[this.externalAuth.commonKey] = newExtAuth.join(',');
+            } else {
+                delete this.newData.rec[this.externalAuth.commonKey];
+            }
+        }
     }
 }

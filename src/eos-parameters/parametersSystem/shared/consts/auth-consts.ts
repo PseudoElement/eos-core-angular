@@ -1,6 +1,10 @@
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 import { REG_RANGE_0_10, REG_RANGE_0_30 } from './eos-parameters.const';
 
+export const ESIA_AUTH_PARM_VALUE = 'ЕСИА';
+export const ESIA_AUTH_FIELD_KEY = 'ALLOWED_EXTERNAL_AUTH_ESIA';
+export const EXTERNAL_AUTH_COMMON_KEY = 'ALLOWED_EXTERNAL_AUTH';
+
 export const AUTH_PARAM: IBaseParameters = {
     id: 'authentication',
     apiInstance: 'USER_PARMS',
@@ -82,6 +86,21 @@ export const AUTH_PARAM: IBaseParameters = {
             type: 'numberIncrement',
             title: 'Блокировать пользователя после',
             pattern: /^\d{1,4}$/
+        },
+        {
+            key: 'EXTERNAL_AUTH_ADD',
+            type: 'boolean',
+            title: 'Разрешить пользователям добавление идентификатора внешних систем аутентификации'
+        },
+        {
+            key: EXTERNAL_AUTH_COMMON_KEY,
+            type: 'string',
+        },
+        {
+            key: ESIA_AUTH_FIELD_KEY,
+            type: 'boolean',
+            title: 'ЕСИА',
+            value: false,
         },
     ]
 };

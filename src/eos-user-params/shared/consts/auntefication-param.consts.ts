@@ -44,6 +44,13 @@ export const AUNTEFICATION_CONTROL_INPUT: IInputParamControl[] = [
         value: '',
     },
     {
+        controlType: E_FIELD_TYPE.string,
+        key: 'ID_ESIA',
+        label: 'ИДЕНТИФИКАТОР ЕСИА',
+        pattern: /^\S+$/,
+        value: '',
+    },
+    {
         controlType: E_FIELD_TYPE.select,
         key: 'SELECT_AUTENT',
         label: 'Система аутентификации',
@@ -51,21 +58,29 @@ export const AUNTEFICATION_CONTROL_INPUT: IInputParamControl[] = [
         readonly: false,
         options: [
             {
-                title: 'СУБД-аутентификация',
+                title: 'Без права входа в систему',
+                value: '-1'
+            },
+            {
+                title: 'Имя/пароль в БД',
                 value: '0'
             },
             {
                 title: 'ОС-аутентификация',
                 value: '1'
             },
-            /* {
-                title: 'Системная аутентификация',
+            {
+                title: 'Пользователь в БД',
                 value: '2'
             },
             {
-                title: 'Веб-аутентификация',
+                title: 'Имя/пароль',
                 value: '3'
-            } */
+            },
+            {
+                title: 'ОС-аутентификация на сервере',
+                value: '4'
+            },
         ],
     },
 ];
