@@ -607,6 +607,10 @@ $horizontal-line-color-CB: #c4c4c4;
                                 @include set-margin-for-dynamic-ipnputs;
                             }
                         }
+
+                        & > div.inputs-inline {
+                            @include set-margin-for-dynamic-ipnputs;
+                        }
                     }
                 }
 
@@ -1079,6 +1083,11 @@ $horizontal-line-color-CB: #c4c4c4;
                         margin-left: 0;
 
                          & > div {
+                            & > span {
+                                @include style-title-bookmarks;
+                                margin-bottom: 20px;
+                            }
+
                             eos-dynamic-input {
                                 margin-left: 15px;
                             }
@@ -1169,6 +1178,8 @@ $horizontal-line-color-CB: #c4c4c4;
                 }
 
                 .send-res {
+                    position: relative;
+
                     & > eos-dynamic-input {
                         margin: 15px 0 0 15px;
 
@@ -1185,13 +1196,28 @@ $horizontal-line-color-CB: #c4c4c4;
                         display: block;
                     }
 
-                    & > div > eos-dynamic-input {
-                        margin-top: 5px;
-                        margin-left: 15px;
-
-                        div.form-group {
-                            margin-bottom: 15px;
+                    & > div {
+                        & > span {
+                            @include style-title-bookmarks;
                         }
+
+                        & > eos-dynamic-input {
+                            margin-top: 5px;
+                            margin-left: 15px;
+    
+                            div.form-group {
+                                margin-bottom: 15px;
+                            }
+                        }
+                    } 
+
+                    & > div.send-oreder-with-arm {
+                        margin-top: 25px;
+
+                        &::before {
+                            @include style-horizontal-line;
+                            top: -10px;
+                        }            
                     }
                 }
 
