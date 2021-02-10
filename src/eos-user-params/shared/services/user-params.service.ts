@@ -552,6 +552,12 @@ export class UserParamsService {
         });
     }
 
+    closeWindowForCurrentSettings(isCurrentSettings: boolean) {
+        if (isCurrentSettings) {
+            window.close();
+        }
+    }
+
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
         this._userContext['USER_PARMS_List'].forEach(item => {

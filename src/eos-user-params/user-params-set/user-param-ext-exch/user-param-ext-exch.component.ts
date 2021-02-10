@@ -174,6 +174,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.defaultSetFlagBtn();
             this.hash = this._userSrv.hashUserContext;
+            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.editFlag = false;
             this._RemasterService.submitEmit.next();
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
@@ -224,6 +225,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this.emitChangesMado(false);
             this._pushState();
         }
+        this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();
     }

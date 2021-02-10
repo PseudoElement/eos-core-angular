@@ -198,6 +198,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
                 this.btnDisable = true;
                 this.flagEdit = false;
                 this._pushState();
+                this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit(this.form.value);
@@ -238,6 +239,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
     }
 
     cancel($event?) {
+        this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.flagEdit = false;
         this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();

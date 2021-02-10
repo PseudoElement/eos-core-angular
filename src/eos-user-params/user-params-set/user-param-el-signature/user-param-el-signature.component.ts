@@ -193,6 +193,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this.editFlag = false;
                 this.disableForEditAllForm(event);
                 this._pushState();
+                this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit([this.form.controls, true]);
                 }
@@ -237,6 +238,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
         }
         this.fillFormDefaultValues(this.inputs);
+        this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.editFlag = event;
         this.disableForEditAllForm(event);
     }

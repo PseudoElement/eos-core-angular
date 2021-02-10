@@ -204,6 +204,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             this.disableForEditAllForm(false);
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this._pushState();
+            this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             if (this.defaultTitle) {
                 this.DefaultSubmitEmit.emit(this.form.value);
             }
@@ -265,6 +266,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
         }
         this.fillFormDefaultValues(this.inputs);
+        this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.editFlag = event;
         this.disableForEditAllForm(event);
     }

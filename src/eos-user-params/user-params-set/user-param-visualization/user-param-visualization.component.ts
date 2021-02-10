@@ -137,6 +137,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
                 this.btnDisable = true;
                 this.flagEdit = false;
                 this._pushState();
+                this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
                 if (this.defaultTitle) {
@@ -228,6 +229,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
+        this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.btnDisable = true;
         this.flagEdit = false;
         this._pushState();
