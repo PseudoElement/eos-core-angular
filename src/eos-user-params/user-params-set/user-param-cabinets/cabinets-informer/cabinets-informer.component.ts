@@ -202,6 +202,9 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
             this.informerIncrementCheckboxKeys.forEach((relatedKeys, checkboxKey) => {
                 const actualCheckBoxValue = inputs[relatedKeys[0]].value.trim();
                 inputs[checkboxKey].value = actualCheckBoxValue !== '0' && actualCheckBoxValue !== '';
+                if (actualCheckBoxValue === '0' || actualCheckBoxValue === '') {
+                    inputs[relatedKeys[0]].value = '5';
+                }
             });
             if (
                 this.userData[this.cabinetsSelect.selectKey] === this.cabinetsSelect.allCabinets ||
@@ -368,6 +371,9 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
                 }
                 if (this.form.controls[incrementKey].invalid && this.newDataMap.has(getKey(incrementKey))) {
                     this.newDataMap.delete(getKey(incrementKey));
+                }
+                if (this.form.controls[checkboxKey].value) {
+                    this.newDataMap.set(getKey(incrementKey), this.form.controls[incrementKey].value);
                 }
             });
         }
