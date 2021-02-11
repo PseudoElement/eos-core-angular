@@ -25,7 +25,17 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 export class SevRulesCardEditComponent extends BaseCardEditComponent implements OnInit, OnDestroy {
     public linkTypeListNames = [];
     public fileAccessNames = [];
-    public fieldNotUpdate = ['rec.CLASSIF_NAME', 'rec.NOTE', 'rec.type', 'rec.RULE_KIND', 'rec.kind', 'rec.DUE_DEP', 'rec.organizationNow', 'rec.fileAccessListRk'];
+    public fieldNotUpdate = [
+        'rec.CLASSIF_NAME',
+        'rec.NOTE',
+        'rec.type',
+        'rec.RULE_KIND',
+        'rec.kind',
+        'rec.DUE_DEP',
+        'rec.organizationNow',
+        'rec.fileAccessListRk',
+        'rec.RC_TYPE',
+    ];
     public securityLink = [];
     public organizationNow = '';
     public organization = '';
@@ -673,18 +683,34 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     private updateInputDue_doc() {
         const due = this.form.controls['rec.DUE_DOCGROUP'].value;
         if (due) {
-            this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[]) => {
-                const [documents, projects] = [`Для приема документов нельзя использовать группу документов типа "Исходящие"`,
-                    `Для приема проектов нельзя использовать группу документов типа "Входящие"`];
-                if (Number(this.form.controls['rec.kind'].value) === 2 && data[0].RC_TYPE !== 1 && Number(this.form.controls['rec.type'].value) !== 2) {
-                    this.cancelSelectedDocgroup(documents);
-                    return;
+            this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[] = []) => {
+                // const [documents, projects] = [`Для приема документов нельзя использовать группу документов типа "Исходящие"`,
+                //     `Для приема проектов нельзя использовать группу документов типа "Входящие"`];
+                // if (this.form.controls['rec.kind'].value === '2' && data[0].RC_TYPE !== 1 && data[0].RC_TYPE !== 2 && this.form.controls['rec.type'].value !== '2') {
+                //     this.cancelSelectedDocgroup(documents);
+                //     return;
+                // }
+                // if (this.form.controls['rec.type'].value === '2'  && !data[0].PRJ_NUM_FLAG && data[0].RC_TYPE !== 3) {
+                //     this.cancelSelectedDocgroup(projects);
+                //     return;
+                // }
+                const [docGroup] = data;
+                const rcType = (docGroup && docGroup.RC_TYPE) || 0;
+
+                if (Number(this.form.controls['rec.type'].value) === 2 && (rcType !== 3 || !docGroup.PRJ_NUM_FLAG)) {
+                    const cancelMessage = 'Для работы с проектами необходимо выбрать группу типа «Исходящие» с возможностью регистрации проектов документов';
+                    return this.cancelSelectedDocgroup(cancelMessage);
+                } else if (
+                    Number(this.form.controls['rec.type'].value) === 1 &&
+                    Number(this.form.controls['rec.kind'].value) === 2 &&
+                    (rcType !== 1 && rcType !== 2)
+                ) {
+                    const cancelMessage = 'Для приема документов нельзя использовать группу типа «Исходящие»';
+                    return this.cancelSelectedDocgroup(cancelMessage);
                 }
-                if (Number(this.form.controls['rec.type'].value) === 2  && !data[0].PRJ_NUM_FLAG && data[0].RC_TYPE !== 3) {
-                    this.cancelSelectedDocgroup(projects);
-                    return;
-                }
-                this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(data.length ? data[0].CLASSIF_NAME : '');
+
+                this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(docGroup ? docGroup.CLASSIF_NAME : '');
+                this.form.controls['rec.RC_TYPE'].patchValue(rcType, { eventEmit: false });
             }).catch(e => {
                 this._errorHelper.errorHandler(e);
             });

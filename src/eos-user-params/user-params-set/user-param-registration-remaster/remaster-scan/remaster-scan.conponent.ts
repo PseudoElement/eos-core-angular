@@ -165,7 +165,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             data.forEach((el: FORMAT_CL) => {
                 options.push({
                     value: el.ISN_LCLASSIF,
-                    title: `${el.NOTE}, ${el.FORMAT_TNAME}`
+                    title: `${el.NOTE}, ${el.CLASSIF_NAME}`
                 });
             });
         }
