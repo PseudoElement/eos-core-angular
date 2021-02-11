@@ -12,7 +12,7 @@
     ></eos-user-params-header>
 </div>
 <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper scrollWrapper signature" *ngIf="inputs">
-    <div [hidden]="appMode.cbr">
+    <div [hidden]="appMode && appMode.cbr">
         <div class="user-input-group">
             <div class="signature-wr">
                 <span class="l-font">Объект поддержки ЭП и шифрования</span>
