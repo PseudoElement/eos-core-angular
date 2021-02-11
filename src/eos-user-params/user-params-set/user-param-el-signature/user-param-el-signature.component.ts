@@ -73,6 +73,19 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         public carmaHttp2Srv: CarmaHttp2Service,
         public certStoresService: CarmaHttpService,
     ) { }
+    get isWebAndArm() {
+        if (!this.isCurrentSettings) {
+            return true;
+        }
+        const rules = ['arm', 'cbr'];
+        let hasRule = false;
+        rules.forEach((rule) => {
+            if (this.appMode.hasOwnProperty(rule)) {
+                hasRule = true;
+            }
+        });
+        return hasRule;
+    }
     ngOnDestroy() { }
     ngOnInit() {
         if (this.defaultTitle) {
