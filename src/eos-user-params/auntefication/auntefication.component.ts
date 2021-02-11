@@ -13,6 +13,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_PARMS } from 'eos-rest';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { ESIA_AUTH_PARM_VALUE } from 'eos-parameters/parametersSystem/shared/consts/auth-consts';
 
 // Input, Output, EventEmitter
 @Component({
@@ -49,6 +50,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public queryAll: any = {};
     public newLogin: boolean = false;
     public maxLoginLength: string;
+    public esiaExternalAuth: number = 0;
     inputFields: IInputParamControl[];
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     get checkCurrentUser() {
@@ -98,6 +100,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
         return null;
     }
+    viewOptions(value: number): boolean {
+        return this.curentUser.USERTYPE === value || !this.optionDisable(value);
+    }
     init() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
@@ -123,6 +128,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                         if (elem.PARM_NAME === 'PASS_DATE') {
                             this.passDate = Number(elem.PARM_VALUE);
                         }
+                        if ((elem.PARM_NAME === 'EXTERNAL_AUTH_ADD' && elem.PARM_VALUE === 'YES') ||
+                            (elem.PARM_NAME === 'ALLOWED_EXTERNAL_AUTH' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf(ESIA_AUTH_PARM_VALUE) !== -1)) {
+                            this.esiaExternalAuth++;
+                        }
                         const d = new Date();
                     let check_date;
                     if (this.paramsChengePass) {
@@ -143,17 +152,17 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     console.log('ER', er);
                 });
                 this.originAutent = '' + this.curentUser.USERTYPE;
-                if ('' + this.curentUser.USERTYPE === '0' || '' + this.curentUser.USERTYPE === '3') {
-                    this.form.controls['SELECT_AUTENT'].setValue( '0', { emitEvent: false });
+                if (this.originAutent) {
+                    this.form.controls['SELECT_AUTENT'].setValue( this.originAutent, { emitEvent: false });
                 } else {
-                    this.form.controls['SELECT_AUTENT'].setValue( '1', { emitEvent: false });
+                    this.form.controls['SELECT_AUTENT'].setValue( '-1', { emitEvent: false });
                 }
                 this.form.controls['pass'].setValue('', { emitEvent: false });
                 this.form.controls['passRepeated'].setValue('', { emitEvent: false });
                 // this.form.controls['SELECT_AUTENT'].setValue('' + this.curentUser.USERTYPE, { emitEvent: false });
                 this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME'], { emitEvent: false });
                 const autent = this.form.get('SELECT_AUTENT').value;
-                this.maxLoginLength = autent === 1 || autent === 3 ? '64' : '12';
+                this.maxLoginLength = autent === 0 ? '12' : '64';
                 this.getTitle();
                 this.editMode = false;
                 this.formUpdate(!this.editMode);
@@ -236,21 +245,11 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     onChangeAuntef($event) {
         this.form.get('SELECT_AUTENT').patchValue(this.autentif.nativeElement.value);
         const autent = this.form.get('SELECT_AUTENT').value;
-        this.maxLoginLength = autent === 1 || autent === 3 ? '64' : '12';
-        if (this.form.get('SELECT_AUTENT').value === '0' || this.form.get('SELECT_AUTENT').value === '3') {
-            // пока не понял при каких случаях оно нужно
-            /* if (!this.paramsChengePass) {
-                this.updateDataSysParam();
-            } */
-        }
-        if (this.originAutent === '1' && autent === '1') {
+        this.maxLoginLength = autent === 0 ? '12' : '64';
+
+        if (this.originAutent === autent) {
             this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
-        } else if (this.originAutent === '1' && autent !== '1') {
-            this.form.controls['CLASSIF_NAME'].setValue('');
-        }
-        if (this.originAutent !== '1' && autent === '0') {
-            this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
-        } else if (this.originAutent !== '1' && autent !== '0') {
+        } else {
             this.form.controls['CLASSIF_NAME'].setValue('');
         }
     }
@@ -306,10 +305,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.isLoading = false;
         this.cancelValues(this.inputs, this.form);
         this.autentif.nativeElement.disabled = true;
-        if (this.originAutent === '0' || this.originAutent === '3') {
-            this.form.controls['SELECT_AUTENT'].setValue( '0', { emitEvent: false });
+        if (this.originAutent) {
+            this.form.controls['SELECT_AUTENT'].setValue( this.originAutent, { emitEvent: false });
         } else {
-            this.form.controls['SELECT_AUTENT'].setValue( '1', { emitEvent: false });
+            this.form.controls['SELECT_AUTENT'].setValue( '-1', { emitEvent: false });
         }
         this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
         // this.form.get('SELECT_AUTENT').patchValue(this.originAutent);
@@ -363,47 +362,92 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                 });
                 return ;
             }
-            if (this.form.controls['SELECT_AUTENT'].value === '1') {
-                this.chengeForElemUser()
-                .then(() => {
-                    this.apiSrvRx.batch([{
-                        method: 'MERGE',
-                        requestUri: `USER_CL(${this._userParamSrv.userContextId})`,
-                        data: {
-                            IS_PASSWORD: '1',
-                            PASSWORD_DATE: null,
-                            CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value,
-                            ORACLE_ID: this.form.controls['CLASSIF_NAME'].value,
-                            USERTYPE: '1',
-                        }
-                    }], '')
-                    .then(() => {
-                        this.curentUser.CLASSIF_NAME = this.form.controls['CLASSIF_NAME'].value;
-                        this.curentUser.IS_PASSWORD = 1;
-                        this.getTitle();
-                        this.postSubmit(1);
-                    });
-                });
-            } else {
-                if (this.form.controls['CLASSIF_NAME'].value === this.curentUser.CLASSIF_NAME && this.originAutent !== '1') {
-                    this.submit($event);
-                } else {
-                    this.dropLogin()
-                    .then(() => {
-                        this.apiSrvRx.batch([{
-                            method: 'MERGE',
-                            requestUri: `USER_CL(${this._userParamSrv.userContextId})`,
-                            data: {
-                                USERTYPE: 0,
-                                IS_PASSWORD: 0,
-                                CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value,
+            const userType = this.form.get('SELECT_AUTENT') &&
+                String(this.form.get('SELECT_AUTENT').value || '-1') || '-1';
+            const userPassword = this.form.get('pass') &&
+                String(this.form.get('pass').value || '');
+            const userLogin = this.form.get('CLASSIF_NAME') &&
+                String(this.form.get('CLASSIF_NAME').value || '');
+            if (this._newDataCheck(userType, userPassword, userLogin)) {
+                if (userType === '0') {
+                    if (!userPassword) {
+                        this._alertMessage('Необходимо ввести пароль');
+                        return;
+                    }
+                    if (this.provUpdateDate()) {
+                        this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
+                        return;
+                    }
+                    this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
+                        if (this.checkUpdateDate()) {
+                            // сохранить дату
+                            let date = this.getNewDate();
+                            if (date instanceof Date) {
+                                date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
                             }
-                        }], '')
-                        .then(() => {
-                            this.curentUser.IS_PASSWORD = 0;
-                            this.submit($event);
-                        });
-                    });
+                            this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                                this._alertMessage('Изменения сохранены', true);
+                                this.ngOnDestroy();
+                                this.ngOnInit();
+                            });
+                        } else {
+                            this.ngOnDestroy();
+                            this.ngOnInit();
+                            this._alertMessage('Изменения сохранены', true);
+                        }
+                    }).catch(() => { });
+                } else if (userType === '1') {
+                    if (userLogin.indexOf('\\') >= 0) {
+                        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+                            this._alertMessage('Изменения сохранены', true);
+                            this.ngOnDestroy();
+                            this.ngOnInit();
+                        }).catch(() => { });
+                    } else {
+                        this._alertMessage('Имя пользователя не соответствует шаблону для ОС-авторизации.');
+                    }
+                } else if (userType === '2') {
+                    this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+                        this._alertMessage('Изменения сохранены', true);
+                        this.ngOnDestroy();
+                        this.ngOnInit();
+                    }).catch(() => { });
+                } else if (userType === '3') {
+                    if (this.provUpdateDate()) {
+                        this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
+                        return;
+                    }
+                    if (!userPassword) {
+                        this._alertMessage('Необходимо ввести пароль');
+                        return;
+                    }
+                    this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
+                        if (this.checkUpdateDate()) {
+                            // сохранить дату
+                            let date = this.getNewDate();
+                            if (date instanceof Date) {
+                                date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
+                            }
+                            this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                                this._alertMessage('Изменения сохранены', true);
+                                this.ngOnDestroy();
+                                this.ngOnInit();
+                            }).catch(e => {
+                                this.cancel(null);
+                                this._errorSrv.errorHandler(e);
+                            });
+                        } else {
+                            this._alertMessage('Изменения сохранены', true);
+                            this.ngOnDestroy();
+                            this.ngOnInit();
+                        }
+                    }).catch(() => { });
+                } else if (userType === '4') {
+                    this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+                        this._alertMessage('Изменения сохранены', true);
+                        this.ngOnDestroy();
+                        this.ngOnInit();
+                    }).catch(() => { });
                 }
             }
         })
@@ -558,17 +602,16 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     getNewDate() {
         // параметр который говорит о возможности изменения пароля пользователем this.paramsChengePass
         if (!this.paramsChengePass || this.checkUpdateDate()) {
-            const n_d = String(this.form.controls['PASSWORD_DATE'].value).trim() ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
-            if (!n_d || this.paramsChengePass && !this.form.controls['PASSWORD_DATE'].value) {
+            const n_d = this.form.controls['PASSWORD_DATE'].value ? new Date(this.form.controls['PASSWORD_DATE'].value) : null;
+            if (!n_d) {
                 return null;
             }
-            let month: string = String(n_d.getMonth() + 1);
-            month = month.length === 1 ? '0' + month : month;
-            return `${n_d.getFullYear()}-${month}-${n_d.getDate()}T00:00:00`;
+
+            return n_d;
         } else {
             const d = new Date();
-            if (this.passDate !== 0 ) {
-                this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
+            if (this.passDate !== 0) {
+                this.form.controls['PASSWORD_DATE'].setValue(new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
             } else {
                 this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
             }
@@ -696,5 +739,42 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     private _pushState(date) {
         this._userParamSrv.setChangeState({ isChange: date });
+    }
+    private _newDataCheck(userType: string, userPassword: string, userLogin: string) {
+        return userPassword ||
+            (this.curentUser.CLASSIF_NAME !== userLogin) ||
+            this.checkUpdateDate() ||
+            (`${this.curentUser.USERTYPE}` !== userType);
+    }
+    private _alertMessage(msg: string, types?: boolean) {
+        const type = types ? 'success' : 'warning';
+        this._msgSrv.addNewMessage({
+            type,
+            title: 'Предупреждение:',
+            msg: `${msg}`,
+            dismissOnTimeout: 6000,
+        });
+    }
+    private _createUrlChangeLOgin(userData: any): Promise<any> {
+        const {userType = '', userPassword = '', userLogin = ''} = userData;
+        const id = +this._userParamSrv.userContextId;
+
+        let url = 'ChangeLogin?';
+        url += `isn_user=${id}`;
+        url += `&userType=${userType}`;
+        url += `&classifName='${encodeURIComponent(userLogin)}'`;
+        url += `&pass='${userPassword}'`;
+
+        const request = {
+            method: 'POST',
+            requestUri: url,
+        };
+        return this.apiSrvRx.batch([request], '').then(() => {
+            this._userParamSrv.ProtocolService(this.curentUser['ISN_LCLASSIF'], 4);
+        }).catch(e => {
+            this.cancel(null);
+            this._errorSrv.errorHandler(e);
+            return Promise.reject();
+        });
     }
 }

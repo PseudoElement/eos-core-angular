@@ -17,18 +17,24 @@
             #autentif
             [disabled]="returnEdit()"
             (change)="onChangeAuntef()">
-                    <option value="0" [disabled]="optionDisable(0)" [selected]="optionSelected(0)">
-                        СУБД-аутентификация
+                    <option value="-1"  *ngIf='viewOptions(-1)'  [disabled]="optionDisable(-1)" [selected]="optionSelected(-1)">
+                        Без права входа в систему
                     </option>
-                    <option value="1" [disabled]="optionDisable(1)" [selected]="optionSelected(1)">
+                    <option value="0" *ngIf='viewOptions(0)' [disabled]="optionDisable(0)" [selected]="optionSelected(0)">
+                        Имя/пароль в БД
+                    </option>
+                    <option value="1" *ngIf='viewOptions(1)' [disabled]="optionDisable(1)" [selected]="optionSelected(1)">
                         ОС-аутентификация
                     </option>
-                    <!-- <option value="2" [disabled]="optionDisable(2)" [selected]="optionSelected(2)">
-                        Системная аутентификация
-                    </option> -->
-                    <!-- <option value="3" [disabled]="optionDisable(3)" [selected]="optionSelected(3)">
-                        Веб-аутентификация
-                    </option> -->
+                    <option value="2" *ngIf='viewOptions(2)' [disabled]="optionDisable(2)" [selected]="optionSelected(2)">
+                        Пользователь в БД
+                    </option>
+                    <option value="3" *ngIf='viewOptions(3)' [disabled]="optionDisable(3)" [selected]="optionSelected(3)">
+                        Имя/пароль
+                    </option>
+                    <option value="4" *ngIf='viewOptions(4)' [disabled]="optionDisable(4)" [selected]="optionSelected(4)">
+                        ОС-аутентификация на сервере
+                    </option>
             </select>
         </div>
         <!-- <eos-dynamic-input class="base-text-input pos" [form]="form" [input]="inputs['SELECT_AUTENT']" container="body"></eos-dynamic-input> -->
@@ -95,7 +101,20 @@
                 </div>
             </div>
         </div>
+        <hr>
     </div>
+    <!-- <div class="autentification-control-type">
+        <eos-dynamic-input class="inline-block" [form]="form" [input]="inputs['ID_ESIA']" [readonly]="esiaExternalAuth < 2"></eos-dynamic-input>
+        <label [attr.for]="inputs['ID_ESIA'].key">
+            {{inputs['ID_ESIA'].label}}
+        </label >
+        <input
+            class="form-control m-font"
+            [formControlName]="inputs['ID_ESIA'].key"
+            [readonly]="esiaExternalAuth < 2"
+            autocomplete="off"
+        >
+    </div> -->
     <!-- <div *ngIf="form.get('SELECT_AUTENT').value === '2'" class="autentification-control-type">
         <eos-dynamic-input class="inline-block" [form]="form" [input]="inputs['ID_USER']" [readonly]="inputs['ID_USER'].readonly"></eos-dynamic-input>
     </div> -->

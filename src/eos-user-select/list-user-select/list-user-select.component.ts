@@ -358,7 +358,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.createUserModal = this._modalSrv.show(CreateUserComponent, {
             class: 'param-create-user',
             ignoreBackdropClick: true,
-            animated: false,
+            keyboard: false,
+            animated: true,
             show: false,
         });
         this.createUserModal.content.titleNow = this.titleCurrentDue;

@@ -998,6 +998,8 @@ export interface DEPARTMENT extends IHierCL, IStamp {
     EXPEDITION_FLAG: number;
     MEDO_ID: string;
 
+    // Запись не проверенна
+    UNREAD_FLAG: number;
 }
 
 /**
