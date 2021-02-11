@@ -73,6 +73,14 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         }
         return '';
     }
+    get isUnselected() {
+        return (
+            !this.editFlag ||
+            this.flagHideBtn ||
+            !this.listsSertInfo.length ||
+            (!this.selectedFromAllList && !this.selectList)
+        );
+    }
     public flagHideBtn: boolean = false;
     public isCarma: boolean = true;
     private DBserts: USER_CERT_PROFILE[] = [];
