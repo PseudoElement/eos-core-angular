@@ -255,6 +255,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.hash = this._userSrv.hashUserContext;
             this.editFlag = false;
             this._RemasterService.submitEmit.next();
+            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.isSave = false;
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });
@@ -321,6 +322,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.emitChangesRc(false);
             this._pushState();
         }
+        this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();
     }

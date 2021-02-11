@@ -142,6 +142,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.btnDisable = true;
                 this.flagEdit = false;
                 this._pushState();
+                this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit(this.form.value);
@@ -291,6 +292,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
+        this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.btnDisable = true;
         this.flagEdit = false;
         this._pushState();

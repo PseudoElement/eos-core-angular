@@ -465,6 +465,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             }
         });
         return Promise.all([requestCreate, requestDelete]).then(data => {
+            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.editFlag = false;
             this.listsSertInfo.splice(0, this.listsSertInfo.length);
             if (this.isCarma) {
@@ -481,6 +482,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         });
     }
     cancellation(event) {
+        this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.editFlag = event;
         this.listsSertInfo = this.listsSertInfo.filter((sert: SertInfo, index) => {
             if (!sert.create && sert.delete) {

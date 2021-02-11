@@ -282,6 +282,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             this.flagEdit = false;
             this.btnDisabled = true;
             this._pushState();
+            this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.editMode();
             this._msg.addNewMessage(PARM_SUCCESS_SAVE);
             if (this.defaultTitle) {
@@ -337,6 +338,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             this._msg.addNewMessage(PARM_CANCEL_CHANGE);
         }
         this.mapChanges.clear();
+        this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.flagEdit = false;
         this.dopRec = this.originDocRc ? this.originDocRc.slice() : null;
         this.dopRec ? this.disabledFlagDelite = false : this.disabledFlagDelite = true;

@@ -170,6 +170,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             this.editFlag = false;
             this.remaster.submitEmit.next();
             this._pushState();
+            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             // this._userSrv.getUserIsn().then(() => {
             // });
         }).catch(error => {
@@ -228,6 +229,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
 
     cancel($event) {
         this.resetFlagsBtn();
+        this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
         this.editFlag = $event;
         this.remaster.cancelEmit.next();
     }
