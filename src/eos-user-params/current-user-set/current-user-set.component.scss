@@ -2077,13 +2077,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                             div.form-group {
                                 margin-bottom: 0;
-                            }
-
-                            &::after {
-                                @include style-horizontal-line;
-                                left: 0;
-                                bottom: 217px;
-                            }
+                            }                           
                         }
 
                         & > div:nth-child(n + 3) > span {
@@ -2653,11 +2647,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                         & > div:nth-child(n + 3) > span {
                             @include style-title-bookmarks($isCB: true);
-                        }
-
-                        div.user-input-group::after {
-                            bottom: 228px;
-                        }
+                        }                        
                     }
                 }
 
