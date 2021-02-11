@@ -358,12 +358,30 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].enable({ emitEvent: false });
         }
     }
+
+    getDefaultValue(key: string, type: 'rcSend' | 'mailReceive') {
+        if (type === 'rcSend') {
+            if (!this.prepareDefaultForm) {
+                this.prepareDefaultForm = this.parse_Create(this.fieldsConst.fields, 'mapDefault', 'RCSEND');
+            }
+            return this.prepareDefaultForm[key].toString();
+        }
+        if (type === 'mailReceive') {
+            if (!this.prepareDefaultFormMailREceive) {
+                this.prepareDefaultFormMailREceive = this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', 'MAILRECEIVE');
+            }
+            return this.prepareDefaultFormMailREceive[key].toString();
+        }
+    }
+
     enabelDisabelRcSend(tree: TreeItem) {
         const value = this.form.controls['rec.' + tree.key].value;
+
         if (tree.key === 'RCSEND_ADDRESSEES') {
             if (value) {
+                const defaultValue = this.getDefaultValue('RCSEND_ADDRESSEES_RADIO', 'rcSend');
                 this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].enable();
-                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].patchValue('0');
+                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].patchValue(defaultValue);
             } else {
                 this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].patchValue('');
                 this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].disable();
@@ -371,8 +389,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         }
         if (tree.key === 'RCSEND_RESOLUTIONS') {
             if (value) {
+                const defaultValue = this.getDefaultValue('RCSEND_RESOLUTIONS_RADIO', 'rcSend');
                 this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].enable();
-                this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].patchValue('0');
+                this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].patchValue(defaultValue);
             } else {
                 this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].patchValue('');
                 this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].disable();
@@ -384,8 +403,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         const value = this.formMailResuve.controls['rec.' + tree.key].value;
         if (tree.key === 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT') {
             if (value) {
+                const defaultValue = this.getDefaultValue('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO', 'mailReceive');
                 this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].enable();
-                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue('0');
+                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue(defaultValue);
             } else {
                 this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue('');
                 this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].disable();
@@ -393,8 +413,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         }
         if (tree.key === 'MAILRECEIVE_TAKE_RUBRICS_RK') {
             if (value) {
+                const defaultValue = this.getDefaultValue('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO', 'mailReceive');
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].enable();
-                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue('0');
+                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue(defaultValue);
             } else {
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue('');
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].disable();
@@ -594,8 +615,8 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     }
 
     default() {
-        this.prepareDefaultForm = this.parse_Create(this.fieldsConst.fields, 'mapDefault', 'RCSEND');
-        this.prepareDefaultFormMailREceive = this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', 'MAILRECEIVE');
+        this.prepareDefaultForm = this.prepareDefaultForm ? this.prepareDefaultForm : this.parse_Create(this.fieldsConst.fields, 'mapDefault', 'RCSEND');
+        this.prepareDefaultFormMailREceive = this.prepareDefaultFormMailREceive ? this.prepareDefaultFormMailREceive : this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', 'MAILRECEIVE');
         this.fillFormDefaultValues();
         this.fillFormMailReceive();
         setTimeout(() => {
