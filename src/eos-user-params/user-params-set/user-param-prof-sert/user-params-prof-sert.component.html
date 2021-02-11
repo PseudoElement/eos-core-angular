@@ -38,7 +38,7 @@
                     containerClass="tooltip-info"
                     container="body"
                 >
-                    <button class="btn btn-primary-light" [disabled]="!listsSertInfo.length || flagHideBtn || !editFlag" (click)='deleteSertificate()'>
+                    <button class="btn btn-primary-light" [disabled]="isUnselected" (click)='deleteSertificate()'>
                         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                     </button>
                 </div>
@@ -49,7 +49,7 @@
                     containerClass="tooltip-info"
                     container="body"
                 >
-                    <button class="btn btn-primary-light" [disabled]="!editFlag || (!selectedFromAllList && !selectList)" (click)='showSert()'>
+                    <button class="btn btn-primary-light" [disabled]="isUnselected" (click)='showSert()'>
                         <span class="eos-icon eos-icon-info-blue small"></span>
                     </button>
                 </div>
