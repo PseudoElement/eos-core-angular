@@ -248,11 +248,19 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         } else {
             _value = value;
         }
+        if (path === 'rec.PRJ_AUTO_REG' && _value === 1) {
+            _value = 2;
+        }
 
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         let oldValue = EosUtils.getValueByPath(this.data, path, false);
         if (oldValue === '') { // fix empty strings in IE
             oldValue = null;
+        }
+
+
+        if (typeof value === 'boolean' && !oldValue ) {
+            oldValue = 0;
         }
         if (oldValue !== _value) {
             // console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
