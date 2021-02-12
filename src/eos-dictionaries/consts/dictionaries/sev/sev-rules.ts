@@ -99,7 +99,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'departmentReceive', // TODO справочник организаций и подразделений
             type: 'select',
             options: RESEVER_SELECT,
-            title: 'Получатель',
+            title: 'Тип получателя',
             default: 1,
         }, {
             key: 'kindDepartment',
