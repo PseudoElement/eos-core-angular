@@ -341,6 +341,14 @@ export abstract class AbstractDictionaryDescriptor {
                             }
                         }
                         break;
+                    case 'replace':
+                        if (data && data['DUE']) {
+                            if (!data._orig || !data._orig['DUE'] || data._State === _ES.Stub) {
+                                data._State = _ES.Added;
+                            }
+                            changeData.push(data);
+                        }
+                        break;
                     case 'rec':
                         // if (data['CONTACT_List']) {
                         //     delete data['CONTACT_List'];
@@ -357,7 +365,6 @@ export abstract class AbstractDictionaryDescriptor {
                 }
             }
         });
-
         const record = EosUtils.deepUpdate(originalData.rec, updates.rec);
         return pSev.then((continueSave) => {
                 let changes = this.apiSrv.changeList(changeData);

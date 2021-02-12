@@ -6,7 +6,7 @@ import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { CheckboxInput } from 'eos-common/core/inputs/checkbox-input';
 import { DateInput } from 'eos-common/core/inputs/date-input';
 import { E_FIELD_TYPE } from '../interfaces';
-import { GENDERS } from '../consts/dictionaries/department.consts';
+import { GENDERS, REPLACE_FIELDS } from '../consts/dictionaries/department.consts';
 import { EMAIL, NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
@@ -672,10 +672,49 @@ export class EosDataConvertService {
 
                         });
                         break;
+                    case 'replace':
+                        REPLACE_FIELDS.forEach(field => {
+                            const val = data[_dict] && data[_dict][field.key];
+                            switch (field.type) {
+                                case 'string':
+                                    inputs[`${_dict}.${field.key}`] = new StringInput({
+                                        key: `${_dict}.${field.key}`,
+                                        label: field.title,
+                                        // pattern: field.pattern,
+                                        value: val ? val : '',
+                                        // length: descr[_key].length,
+                                        disabled: field.disabled,
+                                    });
+                                    break;
+                                case 'date':
+                                    inputs[`${_dict}.${field.key}`] = new DateInput({
+                                        key: `${_dict}.${field.key}`,
+                                        label: field.title,
+                                        value: val ? val : null,
+                                    });
+                                    break;
+                                case 'select':
+                                    inputs[`${_dict}.${field.key}`] = new DropdownInput({
+                                        key: `${_dict}.${field.key}`,
+                                        label: field.title,
+                                        value: val ? val : field.default,
+                                        options: field.options || [],
+                                    });
+                                    break;
+                                case 'text':
+                                    inputs[`${_dict}.${field.key}`] = new TextInput({
+                                        key: `${_dict}.${field.key}`,
+                                        label: field.title,
+                                        disabled: field.disabled,
+                                        length: field.length,
+                                        value: val ? val : '',
+                                    });
+                                    break;
+                            }
+                        });
+                        break;
                 }
-
             });
-
         }
         // console.warn('generated inputs', inputs);
         return inputs;
