@@ -176,22 +176,42 @@ export class UserParamsService {
         return this._pipSrv.getData<ORGANIZ_CL>({ ORGANIZ_CL: due });
     }
     ProtocolService(isn: number, kind: number): Promise<any> {
-        const url = `../UserInfo/UserOperations.asmx/WriteUserAudit?uisn=${isn}&event_kind=${kind}`;
-        return this._pipRx.read({
-            [url]: ALL_ROWS
-            // http://localhost/x1807/UserInfo/UserOperations.asmx/WriteUserAudit?uisn=73337&event_kind=1
-        })
-            .catch((e) => {
-                if (e.code !== 200) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Ошибка протоколирования пользователя',
-                        dismissOnTimeout: 6000,
+        const protocol = () => {
+            const url = `../UserInfo/UserOperations.asmx/WriteUserAudit?uisn=${isn}&event_kind=${kind}`;
+            const protocolParam = this._userContext.USER_PARMS_List.find((parm) => parm.PARM_NAME === 'USER_EDIT_AUDIT');
+            if (protocolParam && protocolParam.PARM_VALUE === 'YES') {
+                return this._pipRx.read({
+                    [url]: ALL_ROWS
+                    // http://localhost/x1807/UserInfo/UserOperations.asmx/WriteUserAudit?uisn=73337&event_kind=1
+                })
+                    .catch((e) => {
+                        if (e.code !== 200) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: 'Ошибка протоколирования пользователя',
+                                dismissOnTimeout: 6000,
+                            });
+                        }
                     });
-                }
+            }
+        };
+        if (this._userContext && this._userContext.USER_PARMS_List) {
+            return protocol();
+        }
+        return this.getUserIsn({
+            expand: 'USER_PARMS_List',
+            isn_cl: isn,
+        })
+        .then(() => protocol())
+        .catch((e) => {
+            const errMessage = e.message ? e.message : e;
+            this._msgSrv.addNewMessage({
+                type: 'danger',
+                title: 'Ошибка протоколирования пользователя',
+                msg: errMessage,
             });
-
+        });
     }
 
     addRightsForCBRole(isn: number): Promise<any> {

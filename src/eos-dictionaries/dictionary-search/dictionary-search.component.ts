@@ -157,7 +157,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this._dictSrv.updateViewParameters({ showDeleted: this.settings.opts.deleted });
     }
     public openDict() {
-        this.openRubricCL('REGION_CL').then((params: any) => {
+        this.openRubricCL('REGION_CL', false).then((params: any) => {
             if (params.data && params.data.length) {
                 this.searchModel['REGION_NAME'] = params.data[0].CLASSIF_NAME;
                 this.searchModel['ISN_REGION'] = params.isnNode;
@@ -267,10 +267,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             }
         }
     }
-    private openRubricCL(classif: string): Promise<any> {
+    private openRubricCL(classif: string, skipDeleted?: boolean): Promise<any> {
         const params: IOpenClassifParams = {
             classif: classif,
             selectMulty: false,
+            skipDeleted: skipDeleted,
         };
         return this._classif.openClassif(params, true).then(isnNode => {
             if (isnNode) {

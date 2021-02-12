@@ -49,6 +49,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     isChanged: boolean;
 
     private _currentFormStatus;
+    private _initialData: any = {};
     private subscriptions: Subscription[];
 
     constructor(
@@ -66,6 +67,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
      * return new data, used by parent component
      */
     getNewData(): any {
+        this._setInitialData();
         const newData = EosUtils.deepUpdate(Object.assign({}, this.data), this.newData);
         if (this.dictionaryId === 'broadcast-channel') {
             this._channelSrv.data = newData.rec;
@@ -97,6 +99,9 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             Object.keys(this.data).forEach((key) => {
                 if (this.data[key] && this.data[key]._orig) {
                     Object.assign(this.data[key], this.data[key]._orig);
+                } else if (this.data[key] && this._initialData[key]) {
+                    this.data[key] = {};
+                    Object.assign(this.data[key], this._initialData[key]);
                 }
             });
         } else {
@@ -262,5 +267,14 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             }
         });
         this.subscriptions = [];
+    }
+    private _setInitialData() {
+        if (this.dictionaryId === 'departments' && this.data.rec && !this.data.rec._orig) {
+            Object.keys(this.data).forEach((key) => {
+                if (this.data[key] && !this.data[key]._orig) {
+                    this._initialData[key] = {...this.data[key]};
+                }
+            });
+        }
     }
 }

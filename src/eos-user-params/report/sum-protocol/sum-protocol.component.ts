@@ -57,6 +57,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   ];
   isLoading: boolean = false;
   public config: IPaginationConfig;
+  public markedNodes = [];
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _storageSrv: EosStorageService,
@@ -287,7 +288,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   checkNotAllUsers(user?) {
-    const usersCheck = this.frontData.filter(item => item.checked === true);
+    const usersCheck = this._getMarkedNodes();
     if (user) {
       this.lastUser = user;
     } else {
@@ -345,6 +346,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         });
       }
     }
+    this._getMarkedNodes();
   }
 
   SingleUserCheck(user) {
@@ -508,7 +510,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       inlinecount: 'allpages'
     })
       .then((data: any) => {
-        this.usersAudit = data;
+        this.usersAudit = data || [];
         this.initPage = false;
         if (this.usersAudit.length === 0) {
           this._msgSrv.addNewMessage({
@@ -518,7 +520,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           });
           this.frontData = [];
           this._user_pagination.totalPages = 0;
-          this.isLoading = true;
+          this.isLoading = false;
         } else {
           const parsePosts = data.TotalRecords;
           if (parsePosts !== undefined) {
@@ -635,5 +637,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this._user_pagination.paginationConfig.current = 1;
     this.PaginateData(this.config.length, this.orderByStr, '0');
     this.clearResult = false;
+  }
+  private _getMarkedNodes() {
+    if (this.frontData.length) {
+      this.markedNodes = this.frontData.filter(item => item.checked === true);
+    } else {
+      this.markedNodes = [];
+    }
+    return this.markedNodes;
   }
 }

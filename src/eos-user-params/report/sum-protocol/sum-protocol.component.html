@@ -25,8 +25,16 @@
                 <div class="table-header header-pos-sum">
                     <div class="btn-group-sum">
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button [disabled]="isnRefFile === undefined || _user_pagination.totalPages === 0" class="btn btn-primary-light bth-size-sum" triggers="hover" [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
-                             (click)="GetRefFile()" placement="bottom" container="body" containerClass="tooltip-info">
+                            <button
+                                [disabled]="isnRefFile === undefined || _user_pagination.totalPages === 0 || markedNodes.length > 1"
+                                class="btn btn-primary-light bth-size-sum"
+                                triggers="hover"
+                                [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
+                                (click)="GetRefFile()"
+                                placement="bottom"
+                                container="body"
+                                containerClass="tooltip-info"
+                            >
                                 <span class="eos-icon eos-icon-review-blue small"></span>
                             </button>
                         </div>

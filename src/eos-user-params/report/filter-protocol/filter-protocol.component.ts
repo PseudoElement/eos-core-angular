@@ -9,11 +9,12 @@ import { FormHelperService } from 'eos-user-params/shared/services/form-helper.s
 import { FILTER_PROTOCOL } from 'eos-user-params/user-params-set/shared-user-param/consts/filter-users.const';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
   selector: 'eos-filter-protocol',
   templateUrl: './filter-protocol.component.html',
-  styleUrls: ['./filter-protocol.component.scss'],
+  // styleUrls: ['./filter-protocol.component.scss'],
   providers: [FormHelperService]
 })
 
@@ -31,7 +32,16 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   filterForm: FormGroup;
   inputs;
   searchModel = {};
+  public tooltipDelay = TOOLTIP_DELAY_VALUE;
+
   @Output() filterProtocol: EventEmitter<any> = new EventEmitter();
+
+  get userWhoValue() {
+    return this.filterForm && this.filterForm.controls['rec.USERWHO'] && this.filterForm.controls['rec.USERWHO'].value;
+  }
+  get userEditValue() {
+    return this.filterForm && this.filterForm.controls['rec.USEREDIT'] && this.filterForm.controls['rec.USEREDIT'].value;
+  }
 
   constructor(
     private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService,
@@ -144,7 +154,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         users.map((user) => {
           valueWho.push({name: user.SURNAME_PATRON, isn: user.ISN_LCLASSIF});
         });
-        this.allData.USERWHO = valueWho.map((obj) => obj.name).toString();
+        // this.allData.USERWHO = valueWho.map((obj) => obj.name).toString();
+        this.allData.USERWHO = valueWho.map((obj) => obj.name).join(', ');
         this.allData.USERWHOISN = valueWho.map((obj) => obj.isn).toString();
         this.filterForm.controls['rec.USERWHOISN'].patchValue(this.allData.USERWHOISN);
         this.filterForm.controls['rec.USERWHO'].patchValue(this.allData.USERWHO);
@@ -163,6 +174,21 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   FilterUsers() {
     this.filterProtocol.emit(this.filterForm.value);
     this.full.isOpen = false;
+  }
+
+  /**
+   * clearInput
+   * добавить очистку поля формы по ключу input-а
+   */
+  public clearInput(controlKey: string) {
+    if (controlKey && this.filterForm.controls[controlKey]) {
+      this.filterForm.controls[controlKey].patchValue('');
+
+      const isnKey = controlKey + 'ISN';
+      if (this.filterForm.controls[isnKey]) {
+        this.filterForm.controls[isnKey].patchValue('');
+      }
+    }
   }
 
   private _getUserCl(isn) {

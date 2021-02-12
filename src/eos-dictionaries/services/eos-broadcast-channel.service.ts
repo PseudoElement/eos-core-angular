@@ -59,8 +59,8 @@ export class EosBroadcastChannelService {
 
                         } else {
                             const fsParams = transport['FileSystemParams'][0].$;
-                            this._data['OUT_FOLDER'] = fsParams['DestDir'];
-                            this._data['IN_FOLDER'] = fsParams['SourceDir'];
+                            this._data['OUT_FOLDER'] = fsParams['SourceDir'];
+                            this._data['IN_FOLDER'] = fsParams['DestDir'];
                         }
                     }
                     resolve(this._data);
