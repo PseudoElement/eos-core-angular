@@ -358,4 +358,54 @@
             [form]="form"
             [readonly]="!editMode"></eos-dynamic-input>
     </div>
+    <div *ngIf="currTab === 2 && hasLicenses" class="clearfix tab" id="tab2">
+        <div class="person-replace">
+            <div class="flex-box add-margin-bottom">
+                <span class="left-title">Отсутствие с:</span>
+                <div class="input-box">
+                    <eos-dynamic-input class="input-box_field" [input]="inputs['replace.START_DATE']" [form]="form"
+                        [readonly]="!editMode">
+                    </eos-dynamic-input>
+                    <span class="input-box_subscription">по:</span>
+                    <eos-dynamic-input class="input-box_field" [input]="inputs['replace.END_DATE']" [form]="form"
+                        [readonly]="!editMode">
+                    </eos-dynamic-input>
+                </div>
+            </div>
+            <div class="flex-box align-items-end add-margin-bottom">
+                <span class="left-title title-reason">Причина:</span>
+                <div class="input-box">
+                    <eos-dynamic-input class="full-width" [input]="inputs['replace.REASON']" [form]="form"
+                        [readonly]="!editMode">
+                    </eos-dynamic-input>
+                </div>
+            </div>
+            <div class="flex-box align-items-end add-margin-bottom">
+                <span class="left-title title-replace">Замещает:</span>
+                <div class="input-box more-width">
+                    <eos-dynamic-input class="full-width due-field" [input]="inputs['replace.DUE_REPLACE_NAME']" [form]="form"
+                        [disabled]="true" [readonly]="!editMode">
+                    </eos-dynamic-input>
+                    <span class="icon eos-icon small icon-add-department"
+                        [ngClass]="{'eos-icon-avatar-blue': editMode, 'eos-icon-avatar-grey': !editMode, 'add-right-margin': editMode && form.value['replace.DUE_REPLACE_NAME']}"
+                        (click)="selectDL(editMode)"></span>
+                    <span *ngIf="editMode && form.value['replace.DUE_REPLACE_NAME']"
+                        class="icon eos-icon eos-icon-close-blue small" (click)="deleteDL()"></span>
+                </div>
+            </div>
+            <div class="clear-fields-btn">
+                <button type="button" (click)="clearReplaceFields()" [disabled]="!editMode || isHistoryUpdated">Очистить поля (вышел на работу)</button>
+            </div>
+            <div class="add-margin-bottom">
+                <span>История замещений:</span>
+                <div class="input-box history-input">
+                    <eos-dynamic-input class="full-width" [input]="inputs['replace.HISTORY']" [form]="form"
+                        [disabled]="true" [readonly]="false">
+                    </eos-dynamic-input>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div *ngIf="isShell" class="shell"></div>

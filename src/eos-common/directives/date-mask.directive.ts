@@ -163,13 +163,11 @@ export class EosDateMaskDirective implements ControlValueAccessor {
     }
 
     writeValue(value) {
-        if (value) {
-            if (value instanceof Date) {
-                value.setHours(0, 0, 0, 0);
-            }
-            this.value = value;
-            this.ref.nativeElement.value = EosUtils.dateToStringValue(value);
+        if (value && value instanceof Date) {
+            value.setHours(0, 0, 0, 0);
         }
+        this.value = value;
+        this.ref.nativeElement.value = EosUtils.dateToStringValue(value);
     }
 
     private removeSymbolAt(source: string, pos: number): string {

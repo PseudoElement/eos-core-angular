@@ -226,6 +226,21 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         const pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
         const pCabinet = (rec['ISN_CABINET']) ? this.getCachedRecord({ 'CABINET': rec['ISN_CABINET'] }) : Promise.resolve(null);
         const pCabinets = this.getCachedRecord({ 'CABINET': { 'criteries': { DUE: rec.DUE } } });
+        const pReplace = this.apiSrv
+            .read({ 'DEP_REPLACE': PipRX.criteries({ DUE: rec.DUE }) })
+            .then(items => {
+                const replace = items[0];
+                if (replace && replace['DUE_REPLACE']) {
+                    return this.apiSrv.read({ 'DEPARTMENT': PipRX.criteries({ DUE: replace['DUE_REPLACE'] }) })
+                        .then(dep => {
+                            if (dep.length && dep[0]['CLASSIF_NAME']) {
+                                replace['DUE_REPLACE_NAME'] = dep[0]['CLASSIF_NAME'];
+                            }
+                            return this.apiSrv.entityHelper.prepareForEdit(replace, 'DEP_REPLACE');
+                        });
+                }
+                return this.apiSrv.entityHelper.prepareForEdit(replace, 'DEP_REPLACE');
+            });
 
         let owner = rec['ISN_NODE'].toString();
         if (!rec['IS_NODE'] && rec['ISN_HIGH_NODE'] !== undefined && rec['ISN_HIGH_NODE'] !== null) {
@@ -246,8 +261,8 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
 
         const pPhotoImg = (rec['ISN_PHOTO']) ? this.apiSrv.read({ DELO_BLOB: rec['ISN_PHOTO'] }) : Promise.resolve([]);
 
-        return Promise.all([pUser, pOrganization, pCabinet, pPrintInfo, pCabinets, pPhotoImg])
-            .then(([user, org, cabinet, printInfo, cabinets, photoImgs]) => {
+        return Promise.all([pUser, pOrganization, pCabinet, pPrintInfo, pCabinets, pPhotoImg, pReplace])
+            .then(([user, org, cabinet, printInfo, cabinets, photoImgs, replace]) => {
                 const img = (photoImgs[0]) ? <IImage>{
                     data: photoImgs[0]['CONTENTS'],
                     extension: photoImgs[0]['EXTENSION'],
@@ -259,7 +274,8 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                     cabinet: cabinet,
                     cabinets: cabinets,
                     printInfo: printInfo,
-                    photo: img
+                    photo: img,
+                    replace: replace,
                 };
             });
     }

@@ -142,6 +142,102 @@
     }
     .card-content-wrapper {
         max-height: calc(100vh - 280px);
+
+        .person-replace {
+            .flex-box {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+
+                &.align-items-end {
+                    align-items: flex-end;
+
+                    .title-replace {
+                        margin-bottom: 7px;
+                    }
+                    .title-reason {
+                        margin-bottom: 6px;
+                    }
+                }
+            }
+            .clear-fields-btn {
+                display: flex;
+                justify-content: center;
+
+                button{
+                    padding: 5px 20px;
+                    background-color: #fff;
+                    /* border: none; */
+                    color: #2196f3;
+                    border-color: #2196f3;
+                    border: 1px solid;
+                    &:hover{
+                        color: #fff;
+                        background-color: #2196f3;
+                        border-color: #2196f3;
+                    }
+                }
+                button[disabled], button[disabled]:hover{
+                    border: 1px solid #999999;
+                    background-color: #cccccc;
+                    color: #666666;
+                }
+            }
+            .left-title {
+                width: 15%;
+            }
+            .input-box {
+                position: relative;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                width: 50%;
+
+                &_subscription {
+                    width: 14%;
+                    text-align: right;
+                    padding-right: 10px;
+                }
+                &_field {
+                    display: inline-block;
+                    width: 43%;
+                    margin-bottom: 5px;
+                }
+                &.more-width {
+                    width: 70%;
+                }
+                &.history-input {
+                    width: 85%;
+                }
+                .form-group {
+                    margin-bottom: 0;
+                }
+                .form-control-static {
+                    padding-left: 8px;
+                }
+                .icon.eos-icon {
+                    position: absolute;
+                    top: 10px;
+                    right: 5px;
+                    cursor: pointer;
+
+                    &.add-right-margin {
+                        margin-right: 28px;
+                    }
+                }
+                .due-field {
+                    input {
+                        padding-right: 60px;
+                    }
+                }
+            }
+            .full-width {
+                width: 100%;
+            }
+            .add-margin-bottom {
+                margin-bottom: 20px;
+            }
+        }
     }
     .photo-uploader {
         .input-file-label {

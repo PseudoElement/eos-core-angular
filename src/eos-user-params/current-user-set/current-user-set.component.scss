@@ -39,7 +39,6 @@ $horizontal-line-color-CB: #c4c4c4;
 
     @if $isCB {
         font-size: 18px;
-        //line-height: 22px;
         color: $title-color-CB;
         font-weight: normal;
         background: none;
@@ -182,6 +181,14 @@ $horizontal-line-color-CB: #c4c4c4;
 .content-wrapper,
 .content-outlet {
     margin: 0px;
+}
+
+//выпадака реализованная в виде портала
+bs-dropdown-container {
+    span.eos-icon.eos-icon-checkbox-blue {
+        background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+        transform: rotate(270deg);
+    }
 }
 
 .current-settings {
@@ -487,7 +494,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
                         span.eos-icon-arrow-v-blue-bottom {
                             background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
-                        }
+                        }                        
                     }
 
                     &-increment-number {
@@ -1499,7 +1506,9 @@ $horizontal-line-color-CB: #c4c4c4;
         //вкладка Справочники
         eos-user-param-directories {
             .wr-scroll-dict {
-                margin-right: 0 !important;
+                max-height: calc(100vh - 150px) !important;
+                margin-right: 0 !important;               
+                overflow-y: auto;
 
                 div.elem-input-radio {
                     display: block;
@@ -1509,7 +1518,7 @@ $horizontal-line-color-CB: #c4c4c4;
                     }
                 }
 
-                div.user-group-form {
+                & > div {
                     &:first-child {
                         div.inputs-inline {
                             @include set-margin-for-dynamic-ipnputs;
@@ -1536,27 +1545,24 @@ $horizontal-line-color-CB: #c4c4c4;
                         }
                     }
 
-                    &:nth-child(3) {
+                    &:nth-child(3) {                       
                         div.user-input-group-section {
                             eos-dynamic-input.inline-block {
                                 padding-top: 0;
                             }
 
                             @include set-margin-for-dynamic-ipnputs;
+                        }                                             
+                    }
+
+                    &.show_deep {
+                        & > span.show-deep_title.l-font {
+                            width: 390px;
+                            padding-left: 20px;
+                            font-size: 14px;
+                            line-height: initial;
                         }
                     }
-                }
-
-                & > div:not(.user-group-form) {
-                    & > span {
-                        @include style-title-bookmarks;
-                    }
-
-                    div.form-group {
-                        margin: 0;
-                    }
-
-                    @include set-margin-for-dynamic-ipnputs;
                 }
             }
         }
@@ -2535,13 +2541,7 @@ $horizontal-line-color-CB: #c4c4c4;
                             }
                         }
                     }
-                }
-
-                & > div:not(.user-group-form) {
-                    & > span {
-                        @include style-title-bookmarks($isCB: true);
-                    }
-                }
+                }                
             }
         }
 

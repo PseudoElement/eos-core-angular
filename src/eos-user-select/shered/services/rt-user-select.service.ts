@@ -221,6 +221,12 @@ export class RtUserSelectService {
             Trial: '-',
             Expired: '-',
         },
+        DEPREPL: {
+            label: 'Замещение должностей',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        },
     };
     scrollPosition: number = 0;
     private _ChangeSelectUser: UserSelectNode;
