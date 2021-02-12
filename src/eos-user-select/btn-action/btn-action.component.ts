@@ -207,13 +207,14 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWittAllUsers(Protocol);
     }
     checkBtnUserInfo() {
-        const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected));
-        if (usersEdit.length) {
-            UsersInfo.disabled = false;
-        } else {
-            UsersInfo.disabled = true;
-            UsersInfo.isActive = false;
-        }
+        this.checkWittAllUsers(UsersInfo);
+        // const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected));
+        // if (usersEdit.length) {
+        //     UsersInfo.disabled = false;
+        // } else {
+        //     UsersInfo.disabled = true;
+        //     UsersInfo.isActive = false;
+        // }
         this._rtSrv.usersInfo = UsersInfo;
     }
     checkBtnSettingsManagement() {
