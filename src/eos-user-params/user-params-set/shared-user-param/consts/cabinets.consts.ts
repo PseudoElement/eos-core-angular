@@ -268,7 +268,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'RESOLUTION_CICLE',
             type: 'boolean',
-            title: 'Направлять резолюцию исполнителям, если они работают в том же кабинете, что и автор',
+            title: 'Направлять резолюцию исполнителям из кабинета автора',
         },
         {
             key: 'CONTROLL_AUTHOR',
