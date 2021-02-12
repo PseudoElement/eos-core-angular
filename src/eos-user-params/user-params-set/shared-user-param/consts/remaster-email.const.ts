@@ -1424,6 +1424,11 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             type: 'boolean',
             title: 'С пояснительной строкой'
         },
+        {
+            key: 'FORM_BARCODE_FOR_SEARCH',
+            type: 'boolean',
+            title: 'Формировать штрих-код только для поиска'
+        },
     ]
 };
 export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {

@@ -20,7 +20,7 @@
                *ngIf="form.controls['rec.TYPE_PRINT_BARCODE'].value === '1'"
                >
                     <span>&nbsp;шт.</span>
-               </div> 
+               </div>
           </div>
           <eos-dynamic-input
                [input]="inputs['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE']"
@@ -41,7 +41,7 @@
                          [input]="inputs['rec.SHABLONBARCODE']"
                          [form]="form"
                          [readonly]="false"
-                    ></eos-dynamic-input>  
+                    ></eos-dynamic-input>
                </div>
                <div [ngStyle]="{'width': '45%'}">
                     <div class="type-scan-sp">
@@ -51,10 +51,17 @@
                          [input]="inputs['rec.SHABLONBARCODEL']"
                          [form]="form"
                          [readonly]="false"
-                    ></eos-dynamic-input>  
+                    ></eos-dynamic-input>
                </div>
           </div>
      </div>
+    <div class="user-group-form">
+        <eos-dynamic-input
+            [input]="inputs['rec.FORM_BARCODE_FOR_SEARCH']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input><br>
+    </div>
      <div class="user-group-form">
           <span>Формат сохранения документа:</span>
           <eos-dynamic-input
