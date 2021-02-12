@@ -466,7 +466,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             } else if (key === 'ADD_ADRESS_REPORGANIZ') {
                 const val = value ? 0 : 1;
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
-            } else if (key === 'SEND_ORDER_TO') {
+            } else if (key === 'SEND_ORDER_TO' && this.appMode.arm) {
                 const val = value ? '2' : '1';
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else {
