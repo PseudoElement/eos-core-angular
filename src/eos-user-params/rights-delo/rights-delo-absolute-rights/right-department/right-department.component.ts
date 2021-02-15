@@ -279,7 +279,7 @@ export class RightDepertmentComponent implements OnInit {
                         data.forEach(_d => {
                             if (this._appContext.limitCardsUser.some(_l => _d.DUE.indexOf(_l) !== -1)) {
                                 filterData.push(_d);
-                            }   else {
+                            } else {
                                 aliensCards = true;
                             }
                         });
@@ -394,6 +394,7 @@ export class RightDepertmentComponent implements OnInit {
                 return true;
             });
         }
+        this._changeWeight();
         this.listUserDep = this.listUserDep.filter(n => n !== this.selectedDep);
         if (!this.listUserDep.length && !this.getAllDep) {
             this.selectedNode.value = 0;
@@ -420,7 +421,6 @@ export class RightDepertmentComponent implements OnInit {
         }
         this.emitDeleteRcpd();
         this.selectedDep = null;
-        this._changeWeight();
         this.Changed.emit('del');
     }
     emitDeleteRcpd() {
@@ -490,6 +490,8 @@ export class RightDepertmentComponent implements OnInit {
         this.checkFlag = !this.checkFlag;
         if (this.checkFlag) {
             this.selectedNode.deleteChange();
+            this.selectedNode.saveChangesWeight(this._storageSrv);
+            this.selectedNode.deleteChangesWeigth();
             this.deleteAllDep();
         } else {
             this.selectedNode.deleteChange();
@@ -500,6 +502,7 @@ export class RightDepertmentComponent implements OnInit {
                 this.addDep()
                     .then(() => {
                         // this.selectedNode.value = 1;
+                        this.selectedNode.restoreChangesWeight(this._storageSrv);
                         this.delDepMy();
                         this.ngOnInit();
                     }).catch((error) => {

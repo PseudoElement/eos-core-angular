@@ -2,6 +2,7 @@ import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfac
 import { AbstractControl } from '@angular/forms';
 import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from './right-delo.intefaces';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 export class NodeAbsoluteRight {
     isSelected: boolean;
@@ -143,6 +144,22 @@ export class NodeAbsoluteRight {
         this._change = [];
         this._valueDb = this._value;
     }
+
+    deleteChangesWeigth() {
+        this._weightChanges = [];
+    }
+    saveChangesWeight(_storageSrv: EosStorageService) {
+        if (this._weightChanges.length) {
+            _storageSrv.setItem('ch_weight', this._weightChanges);
+        }
+    }
+
+    restoreChangesWeight(_storageSrv: EosStorageService) {
+        if ( _storageSrv.getItem('ch_weight')) {
+            this._weightChanges = _storageSrv.getItem('ch_weight');
+        }
+    }
+
     private _checkTouched() {
         if (!this._change.length) {
             this.touched = false;
@@ -166,7 +183,7 @@ export class NodeAbsoluteRight {
                 this._change.splice(index, 1);
                 this._checkTouched();
                 return;
-            }   else {
+            } else {
                 node.method = 'MERGE';
                 this._change.splice(index, 1, node);
             }
