@@ -103,6 +103,11 @@ export const RC_USER: IBaseUsers = {
             key: 'DONT_SHOW_DOC_HIDDEN_FILES',
             type: 'boolean',
             title: 'Не показывать скрытые файлы',
+        },
+        {
+            key: 'CLOSE_RC_AFTER_SAVE_RESOLUTION',
+            type: 'boolean',
+            title: 'Закрывать окно документа при вводе резолюции, проекта резолюции или отчета в АРМ «ДелоWeb»',
         }
     ]
 };
