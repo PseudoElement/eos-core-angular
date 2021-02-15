@@ -1,10 +1,12 @@
-<div class="card-content-wrapper">
+<div #root class="card-content-wrapper">
   <div style="position: relative;">
     <eos-dynamic-input
         [input]="inputs['rec.CLASSIF_NAME']"
         [form]="form"
         [readonly]="!editMode"
         [hideLabel]="true"
+        eosTooltipErrorFix
+        [scrollableParent]="root"
         ></eos-dynamic-input></div>
     <eos-dynamic-input [input]="inputs['rec.NOTE']"
                        [form]="form"
@@ -300,7 +302,9 @@
                 <eos-dynamic-input class="pull-left"
                     [input]="inputs['rec.stopDayCount']"
                     [form]="form"
-                    [readonly]="!editMode">
+                    [readonly]="!editMode"
+                    eosTooltipErrorFix
+                    [scrollableParent]="root">
                 </eos-dynamic-input>
                 <span>&nbsp;суток</span>
               </div>

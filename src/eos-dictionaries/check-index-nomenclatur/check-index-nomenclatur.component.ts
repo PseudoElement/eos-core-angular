@@ -13,6 +13,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { CONFIRM_OPERATION_NOMENKL_CLOSED, CONFIRM_OPERATION_HARDDELETE } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { APS_DICT_GRANT, EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 interface SORTCONFIG {
     CLASSIF_NAME: SORTITEM;
     NOM_NUMBER: SORTITEM;
@@ -43,7 +44,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     public modalRef: BsModalRef;
     public modalRefRedact: BsModalRef;
     public notUniqueElem = [];
-    public selectedItem = {};
+    public selectedItem: any = {};
     public selectedItemLinc = {};
     public sortConfig: SORTCONFIG = {
         CLASSIF_NAME: {
@@ -101,6 +102,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
         private _confirmSrv: ConfirmWindowService,
         private _modalSrv: BsModalService,
         private _msgSrv: EosMessageService,
+        private _eaps: EosAccessPermissionsService,
     ) {
         this.inputs = this.inputCtrlSrv.generateInputs(this.filterInputs);
         this.searchForm = this.inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -340,5 +342,12 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
         .catch(er => {
             this._errorSrv.errorHandler(er);
         });
+    }
+    checkButtonsAccess(): boolean {
+        if (this.selectedItem) {
+            const grant = this.selectedItem.DUE ? this._eaps.isAccessGrantedForDictionary('nomenkl', this.selectedItem.DUE) : APS_DICT_GRANT.denied;
+            return APS_DICT_GRANT.readwrite > grant;
+        }
+        return true;
     }
 }

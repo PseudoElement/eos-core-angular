@@ -364,6 +364,13 @@ export class EosDictionary {
         return this.descriptor.deleteRecords(records).then(r => {
             this._nodes.forEach((node) => {
                 if (node.isMarked) {
+                    if (node.children && node.children.length) {
+                        const children = node.getAllChildren();
+                        children.forEach((chNode) => {
+                            chNode.delete();
+                            this._nodes.delete(chNode.id);
+                        });
+                    }
                     node.delete();
                     this._nodes.delete(node.id);
                 }
@@ -687,6 +694,14 @@ export class EosDictionary {
             case E_DICT_TYPE.tree: {
                 if (params.mode === SEARCH_MODES.totalDictionary) {
                     // critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId.toString().split('.')[0] + '.%';
+                    // Добавить критерий, чтобы не вытягивать "системных" ДЛ
+                    // у которых DUE не "0."
+                    if (this.id === 'departments') {
+                        critery.LAYER = '1:null';
+                        if (!critery.DUE) {
+                            critery.DUE = '0.%';
+                        }
+                    }
                 } else if (params.mode === SEARCH_MODES.onlyCurrentBranch) {
                     critery['ISN_HIGH_NODE'] = selectedNode.data.rec['ISN_NODE'] + '';
                 } else if (params.mode === SEARCH_MODES.currentAndSubbranch) {

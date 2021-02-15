@@ -296,6 +296,14 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         return super.getNewRecord(newPreset, parentNode);
     }
 
+    markBooleanData(records: any[], fieldName: string, boolValue, cascade = false): Promise<any[]> {
+        if (fieldName === 'DELETED' && boolValue) {
+            records.forEach((record) => record.POST_H = 0);
+        }
+
+        return super.markBooleanData(records, fieldName, boolValue, cascade);
+    }
+
     public onPreparePrintInfo(dec: FieldsDecline): Promise<any[]> {
         return this.apiSrv.read({ PreparePrintInfo: PipRX.args(dec) });
     }

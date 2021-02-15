@@ -129,6 +129,35 @@ export const RK_SELECTED_VALUE_INCORRECT: IConfirmWindow2 = {
     ],
 };
 
+export const RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Выбранный список пуст. Заполните его или смените значение параметра "Доступ"',
+    buttons: [
+        { title: 'Ок', result: 2, isDefault: true, },
+    ],
+};
+
+export const RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Итоговый список ДЛ прикрепляемого файла оказался пустым. Заполните его другими элементами или смените значение параметра "Доступ"',
+    buttons: [
+        { title: 'Ок', result: 2, isDefault: true, },
+    ],
+};
+
+export const CONFIRM_SAVE_WITHOUT_FILE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Не выбран файл шаблона.',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, isDefault: true, },
+        {title: 'Нет', result: 2, },
+    ],
+};
+
 export const CONFIRM_SAVE_INVALID: IConfirmWindow2 = {
     title: 'Не удалось сохранить',
     body: '{{errors}}',

@@ -70,6 +70,9 @@ export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
         if (changes.hasOwnProperty('filters')) {
             this.updateTreeForFilters(this.data);
         }
+        if (changes.hasOwnProperty('showDeleted')) {
+            this._checkTreePath(false, changes);
+        }
     }
     ngOnInit() {
         this.onResize();
@@ -79,13 +82,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
                 // this.setActiveNode(this.data, n.data.rec.DUE);
                 // }
             });
-
-        const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
-        if (defaultRoot) {
-            setTimeout(() => {
-                this._router.navigate(defaultRoot);
-            }, 100);
-        }
+        this._checkTreePath(true);
     }
     updateTreeForFilters(data: CustomTreeNode[]) {
         if (data && data.length) {
@@ -196,4 +193,22 @@ export class CustomTreeComponent implements OnInit, OnDestroy, OnChanges {
         return r;
     }
 
+    private _checkTreePath(init: boolean, changes?: SimpleChanges) {
+        let changePath;
+        if (changes && !changes.showDeleted.currentValue) {
+            const activeNode = this._dictSrv.currentDictionary.descriptor.getActive();
+            changePath = activeNode && activeNode.isDeleted;
+            if (changePath) {
+                this._dictSrv.currentDictionary.descriptor.setRootNode('0.');
+            }
+        }
+        if (changePath || init) {
+            const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
+            if (defaultRoot) {
+                setTimeout(() => {
+                    this._router.navigate(defaultRoot);
+                }, 100);
+            }
+        }
+    }
 }

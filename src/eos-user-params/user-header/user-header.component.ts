@@ -226,4 +226,20 @@ export class UserHeaderComponent implements OnInit {
         const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
         saveAs(blobHtml, 'Настройки пользователя.html');
     }
+
+    patchTitleTooltip(): string | null {
+        if (this.title && this.title.length > 35) {
+            const firstLine = this.title.substring(0, 25);
+            let secondLine = '';
+            let thirdLine = '';
+            if (this.title.length > 50) {
+                secondLine = this.title.substring(25, 50);
+                thirdLine = this.title.substring(50);
+            } else {
+                secondLine = this.title.substring(25);
+            }
+            return `${firstLine}\n${secondLine}\n${thirdLine}`;
+        }
+        return null;
+    }
 }

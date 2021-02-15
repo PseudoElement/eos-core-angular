@@ -6,8 +6,10 @@ import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 /* import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component'; */
 import { /*BUTTON_RESULT_CANCEL,*/ CONFIRM_NOT_CONSLITE, CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
+import { DEPARTMENT } from 'eos-rest';
 
 export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
+    private depOrganiz: DEPARTMENT[];
 
     constructor(
         descriptor: IDictionaryDescriptor,
@@ -268,10 +270,7 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
     }
     confirmSave(data: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
         const errorOK = this.checkErrorSEV(data.rec);
-        const errors = [];
-        if (data.rec['RULE_KIND'] === 2 && data.rec.DUE_DEP && data.rec.DUE_DEP !== '0.' && String(data.rec.cardFile).indexOf(data.rec.DUE_DEP) !== 0) {
-           errors.push('Подразделение, образующее \"Картотеку автомата\", не входит в состав организации \"Получателя\".\n');
-        }
+        const errors = this._checkCardInOrganiz(data.rec);
         if (errorOK.length > 0) {
             const newMes = Object.assign({}, CONFIRM_SAVE_INVALID);
             newMes.body = errorOK.join('\n');
@@ -294,5 +293,37 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
     }
     readCabinetLists(query): Promise<any> {
         return this.apiSrv.read(query);
+    }
+    setDepOrganiz(departments: DEPARTMENT[]): void {
+        if (departments) {
+            this.depOrganiz = departments;
+        }
+    }
+    private _checkCardInOrganiz(data) {
+        const errors = [];
+        if (data.RULE_KIND === 2 && data.DUE_DEP) {
+            const errMessage = 'Подразделение, образующее \"Картотеку автомата\", не входит в состав организации \"Получателя\".\n';
+            switch (String(data.departmentReceive)) {
+                case '1':
+                    if (data.DUE_DEP !== '0.' && String(data.cardFile).indexOf(data.DUE_DEP) !== 0) {
+                        errors.push(errMessage);
+                    }
+                    break;
+                case '2':
+                    let depCard;
+                    if (this.depOrganiz && this.depOrganiz.length) {
+                        this.depOrganiz.forEach((dep) => {
+                            if (data.DUE_DEP.indexOf(dep.DUE) !== -1 && (!depCard || depCard.length < dep.DUE.length)) {
+                                depCard = dep.DUE;
+                            }
+                        });
+                    }
+                    if (depCard && depCard !== '0.' && String(data.cardFile).indexOf(depCard) !== 0) {
+                        errors.push(errMessage);
+                    }
+                    break;
+            }
+        }
+        return errors;
     }
 }

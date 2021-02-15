@@ -578,6 +578,41 @@ export class UserParamsService {
         }
     }
 
+    /**
+     * @method checkAvailableDep проверяет доступность конкретного подразделения
+     * пользователю соответственно USER_TECH_List
+     * @param depDue - DUE Подразделения
+     * @param techList - Список доступности подразделений
+     */
+    checkAvailableDep(depDue: string, techList: any[]): boolean {
+        let availble = false;
+        let currentDep = '';
+        if (techList && techList.length) {
+            techList.forEach((tech) => {
+                if (depDue.indexOf(tech.DUE) !== -1 && currentDep.length < tech.DUE.length) {
+                    availble = Boolean(tech.ALLOWED);
+                    currentDep = tech.DUE;
+                }
+            });
+        }
+        return availble;
+    }
+
+    /**
+     * @method getParmValueByParmName возвращает значение <PARM_VALUE> параметра
+     * <PARM_NAME> из массива параметров,
+     * при отсутствии возвращает : null
+     */
+    public getParmValueByParmName(paramsArr: any[], parmName: string) {
+        if (paramsArr && paramsArr.length && parmName) {
+            const value = paramsArr.find((parm) => parm.PARM_NAME === parmName);
+            if (value) {
+                return value.PARM_VALUE;
+            }
+        }
+        return null;
+    }
+
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
         this._userContext['USER_PARMS_List'].forEach(item => {

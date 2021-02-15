@@ -12,6 +12,7 @@ export class NodeDocsTree implements IListDocsTree {
     isExpanded: boolean = true;
     isAllowed: boolean;
     isviewAllowed: boolean;
+    isOwnDepartment: boolean = true;
     flagCheckNode: any;
     redFlag: boolean;
     weight: number;
@@ -20,13 +21,14 @@ export class NodeDocsTree implements IListDocsTree {
             'redUnchecked': !this.isAllowed && this.redFlag,
         };
     }
-    constructor({due, label, allowed, data, viewAllowed, flagCheckNode, weight}: INodeDocsTreeCfg, redFlag?) {
+    constructor({due, label, allowed, data, viewAllowed, flagCheckNode, weight}: INodeDocsTreeCfg, redFlag?, isOwnDepartment = true) {
         this.DUE = due;
         this.label = label;
         this.isAllowed = allowed;
         this.isviewAllowed = viewAllowed === undefined ? true : viewAllowed;
         this.flagCheckNode = flagCheckNode ? flagCheckNode : undefined;
         this.redFlag = redFlag ? redFlag : undefined;
+        this.isOwnDepartment = isOwnDepartment;
         this.data = data;
         this.weight = weight;
         this.link = due.split('.');
@@ -34,6 +36,16 @@ export class NodeDocsTree implements IListDocsTree {
     }
     addChildren(node: NodeDocsTree) {
         this.children.push(node);
+    }
+    sortChildren() {
+        if (this.children.length > 1) {
+            this.children = this.children.sort((a, b) => {
+                if (a.data.instance && b.data.instance && a.data.instance['CARD_NAME'] && b.data.instance['CARD_NAME']) {
+                    return a.data.instance['CARD_NAME'].localeCompare(b.data.instance['CARD_NAME']);
+                }
+                return 0;
+            });
+        }
     }
     deleteChild(node: NodeDocsTree) {
         if (this.children.length) {

@@ -195,12 +195,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     patchInputValue(Defaultdata?: any, Defaultinp?: any) {
         if (Defaultinp !== undefined && Defaultdata !== undefined) {
-            if (Defaultdata[10].PARM_VALUE === null) {
+            if (this._userParamsSetSrv.getParmValueByParmName(Defaultdata, 'HILITE_PRJ_RC') === null) {
                 Defaultinp['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
             } else {
                 Defaultinp['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
             }
-            if (Defaultdata[11].PARM_VALUE === null) {
+            if (this._userParamsSetSrv.getParmValueByParmName(Defaultdata, 'HILITE_RESOLUTION') === null) {
                 Defaultinp['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
             } else {
                 Defaultinp['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;

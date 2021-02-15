@@ -29,6 +29,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
 
+
 @Component({
     selector: 'eos-node-actions',
     templateUrl: 'node-actions.component.html',
@@ -246,6 +247,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _show = false;
         let _isWriteAction = true;
         const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
+        const dueTo = this._selectedTreeNode && this._selectedTreeNode.id;
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
 
@@ -281,15 +283,6 @@ export class NodeActionsComponent implements OnDestroy {
                         _show = false;
                     } else {
                         _enabled = true;
-                        if (this.dictionary.id === 'rubricator' || this.dictionary.id === 'docgroup' || this.dictionary.id === 'departments' ||
-                            this.dictionary.id === 'nomenkl' || this.dictionary.id === 'cabinet'
-                        ) {
-                            const hash = location.hash.split('/');
-                            _enabled = !!this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
-                            opts.dictGrant = _enabled ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-                        }   else {
-                            _enabled = true;
-                        }
                     }
                     break;
                 case E_RECORD_ACTIONS.remove: {
@@ -426,6 +419,9 @@ export class NodeActionsComponent implements OnDestroy {
                     /* _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && this.slicedInfo.length > 0; */
                     _enabled = _enabled && (marketN && marketN.length > 0);
+                    if (_enabled && dueTo) {
+                        _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
+                    }
                     break;
                 case E_RECORD_ACTIONS.uncheckNewEntry:
                     _enabled = _enabled && opts.listHasItems;
@@ -449,6 +445,9 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.paste:
                     _enabled = _enabled && (marketN && marketN.length > 0);
+                    if (_enabled && dueTo) {
+                        _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
+                    }
                     break;
                 case E_RECORD_ACTIONS.copy:
                     _enabled = _enabled && opts.listHasItems;
@@ -504,12 +503,49 @@ export class NodeActionsComponent implements OnDestroy {
     private _checkGranted(button: IActionButton, opts: IActionUpdateOptions): boolean {
         if (button.type === E_RECORD_ACTIONS.showDeleted) {
             return this._eaps.checkShowDeleted(this.dictionary.id);
-        } else if (button.type === E_RECORD_ACTIONS.add && (this.dictionary.id === 'rubricator' || this.dictionary.id === 'nomenkl')) {
-            const due = this._dictSrv.getDueForTree(this.dictionary.id);
-            const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
-                APS_DICT_GRANT.denied;
-            return button.accessNeed <= grant;
+        } else if (this.dictionary && this.dictionary.id) {
+            const forDicts = [
+                'rubricator',
+                'docgroup',
+                'departments',
+                'nomenkl',
+                'cabinet',
+            ];
+            const forButtons = [
+                E_RECORD_ACTIONS.add,
+                E_RECORD_ACTIONS.paste,
+                E_RECORD_ACTIONS.pasteNodes,
+                E_RECORD_ACTIONS.import,
+            ];
+            if (forDicts.indexOf(this.dictionary.id) !== -1 && forButtons.indexOf(button.type) !== -1) {
+                // const hash = location.hash.split('/');
+                // let grant = this._eaps.isAccessGrantedForDictionary(this.dictionary.id, hash[hash.length - 1]);
+                // grant = grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+                // return button.accessNeed <= grant;
+                const due = this._dictSrv.getDueForTree(this.dictionary.id);
+                const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
+                    APS_DICT_GRANT.denied;
+
+                return button.accessNeed <= grant;
+            }
+        } else if (
+            button.type === E_RECORD_ACTIONS.copyPropertiesFromParent &&
+            this.dictionary.id === 'docgroup' &&
+            this._markedNodes && this._markedNodes.length
+        ) {
+            let commonGrant = APS_DICT_GRANT.readwrite;
+            this._markedNodes.every((node) => {
+                const due = node.id;
+                const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) : APS_DICT_GRANT.denied;
+                if (grant < commonGrant) {
+                    commonGrant = grant;
+                }
+
+                return commonGrant !== APS_DICT_GRANT.denied;
+            });
+            return button.accessNeed <= commonGrant;
         }
+
         return button.accessNeed <= opts.dictGrant;
     }
 }

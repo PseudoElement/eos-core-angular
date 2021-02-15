@@ -27,17 +27,22 @@
         <span class="title-user-content ">Ограничить группами документов:</span>
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">
-                <div class="user-input-group-hi " *ngIf='list && list.length > 0'>
+                <div class="user-input-group-hi " *ngIf="list && list.length">
                     <span *ngFor="let node of list ">{{node.label}}</span>
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">
-                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheDirectory() " placement="left">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover:click" containerClass="tooltip-info" container="body" (click)="selectfromTheDirectory() " placement="left">
                     <span class="eos-icon eos-icon-folder-blue small "></span>
                 </button>
             </div>
-            <div style="display: inline " class=" " *ngIf="list">
-                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
+            <div style="display: inline " class=" " *ngIf="list && list.length">
+                <button [disabled]="!flagEdit" tooltip="Очистить " triggers="hover:click" containerClass="tooltip-info" container="body" class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
+                    <span class="eos-icon eos-icon-close-blue small "></span>
+                </button>
+            </div>
+            <div style="display: inline " class=" " *ngIf="!list || !list.length">
+                <button [disabled]="true" tooltip="Очистить " triggers="hover:click" containerClass="tooltip-info" container="body" class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>

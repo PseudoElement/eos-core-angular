@@ -16,7 +16,7 @@ import { VALIDATOR_TYPE, ValidatorsControl } from '../validators/validators-cont
 import { Subscription } from 'rxjs';
 import { IDynamicInputOptions } from '../../eos-common/dynamic-form-input/dynamic-input.component';
 import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
-import { RK_SELECTED_VALUE_INCORRECT, RK_ERROR_SAVE_SECUR } from '../../app/consts/confirms.const';
+import { RK_SELECTED_VALUE_INCORRECT, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST, RK_ERROR_SAVE_SECUR } from '../../app/consts/confirms.const';
 import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { WaitClassifService } from '../../app/services/waitClassif.service';
@@ -857,7 +857,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
 
         let confirmationsChain = Promise.resolve(false);
         if (listLDText || listHasDeletedText || listIsEmptyText || listBeenDeletedText) {
-            const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
+            let confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
 
             confirmLD.bodyList = [];
             if (listLDText) {
@@ -867,7 +867,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                 confirmLD.bodyList.push('Выбран список, который был удален. Значение очищено. Реквизиты: ' + listBeenDeletedText);
             }
             if (listIsEmptyText) {
-                confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+                // confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+                confirmLD = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST);
             }
             if (listHasDeletedText) {
                 confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);

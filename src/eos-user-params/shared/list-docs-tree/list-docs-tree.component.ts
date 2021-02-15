@@ -25,6 +25,9 @@ export class ListDocsTreeComponent implements OnChanges {
     clickLable(event, item: NodeDocsTree) {
         event.preventDefault();
         event.stopPropagation();
+        if (!item.isOwnDepartment) {
+            return;
+        }
         if (event.target.tagName === 'LABEL') { // click to label
             this._selectNode(item);
         }
@@ -74,6 +77,7 @@ export class ListDocsTreeComponent implements OnChanges {
         if (parent) {
             parent.isExpanded = this.hideExpand ? this.hideExpand : parent.isExpanded;
             parent.addChildren(node);
+            parent.sortChildren();
             node.parent = parent;
         } else {
             this.list.push(node);

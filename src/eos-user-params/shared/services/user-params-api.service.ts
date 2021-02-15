@@ -258,7 +258,7 @@ export class UserParamApiSrv {
         }
         return this.getData(q)
             .then(data => {
-                if (data.hasOwnProperty('TotalRecords')) {
+                if (data.hasOwnProperty('TotalRecords') && data.length) {
                     this.users_pagination.totalPages = data['TotalRecords'];
                 } else {
                     this.users_pagination.totalPages = data.length;
