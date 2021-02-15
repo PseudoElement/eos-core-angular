@@ -10,7 +10,7 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
          url: 'cabinets'
     },
     {
-         title: 'РК',
+         title: 'Отображение РК',
          url: 'rc'
     },
     {
