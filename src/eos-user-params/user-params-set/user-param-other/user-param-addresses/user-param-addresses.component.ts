@@ -8,7 +8,6 @@ import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { PipRX, DEPARTMENT, DELIVERY_CL } from 'eos-rest';
-import { ALL_ROWS } from 'eos-rest/core/consts';
 import {IOpenClassifParams} from '../../../../eos-common/interfaces';
 import {WaitClassifService} from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
