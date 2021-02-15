@@ -90,5 +90,15 @@ export const DIRECTORIES_USER: IBaseUsers = {
             type: 'boolean',
             title: ''
         },
+        {
+            key: 'CL_SHOW_DEP_REPLACE_BEFORE',
+            type: 'select',
+            title: '',
+        },
+        {
+            key: 'CLASSIF_WEB_SUGGESTION',
+            type: 'radio',
+            title: '',
+        },
     ]
 };
