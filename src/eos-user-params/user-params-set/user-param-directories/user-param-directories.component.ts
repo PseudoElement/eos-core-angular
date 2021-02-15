@@ -81,9 +81,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         this.prepareData = this.formHelp.parse_Create(DIRECTORIES_USER.fields, this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields(DIRECTORIES_USER.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-        if (this.defaultUser === undefined) {
-            this.parseInputs(this.allData['SRCH_CONTACT_FIELDS'], this.inputs);
-        }
+        this.parseInputs(this.allData['SRCH_CONTACT_FIELDS'], this.inputs);
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
         this.formSubscriber();
