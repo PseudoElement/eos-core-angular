@@ -187,7 +187,8 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             } else if (field.type === 'string') {
                 obj[field.key] = this[nameProperty]['RECEIP_EMAIL'] ? this[nameProperty]['RECEIP_EMAIL'] : '';
             } else {
-                obj[field.key] = this[nameProperty][nameFieldDB].charAt(field.keyPosition) === '0' ? false : true;
+                const keyValue = this[nameProperty][nameFieldDB].charAt(field.keyPosition);
+                obj[field.key] = keyValue === '0' || keyValue === '' ? false : true;
             }
         });
         return obj;
