@@ -252,8 +252,12 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     }
     private getList(): Promise<any> {
         const query = {
-            DELIVERY_CL: ALL_ROWS,
-            orderby: 'WEIGHT asc'
+            DELIVERY_CL: {
+                criteries: {
+                    DELETED: '0',
+                },
+            },
+            orderby: 'WEIGHT asc',
         };
         return this._pipRx.read(query);
     }
