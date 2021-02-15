@@ -11,6 +11,8 @@ import { FormHelperService } from '../../../shared/services/form-helper.services
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { FORMAT_CL, DOC_TEMPLATES } from 'eos-rest/interfaces/structures';
 import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
+import { AppContext } from '../../../../eos-rest/services/appContext.service';
+import { IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-scan',
     templateUrl: 'remaster-scan.conponent.html',
@@ -24,11 +26,12 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     @Input() defaultValues;
     @Input() accessSustem;
     @Input() isCurrentSettings?: boolean;
-
+    @Input() appMode: IUserSettingsModes;
     @Output() pushChenge = new EventEmitter<any>();
     @Output() errorSave = new EventEmitter<boolean>();
     public inputs;
     public form: FormGroup;
+    public isCbBase: boolean = false;
     private prepareInputs;
     private prapareData;
     private countError: number = 0;
@@ -41,6 +44,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         private inpSrv: InputControlService,
         private dataConv: EosDataConvertService,
         private _RemasterService: RemasterService,
+        private appCtx: AppContext,
     ) {
         this._RemasterService.cancelEmit
             .pipe(
@@ -78,6 +82,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isCbBase = this.appCtx.cbBase;
         Promise.all([
             this._RemasterService.getScanShablonBarCode(),
             this._RemasterService.getScanShablonBarCodeL(),
