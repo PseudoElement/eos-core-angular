@@ -245,6 +245,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             });
             return Promise.resolve(null);
         }
+        if (this.newValuesScan.size && this.checkSelectBarcode()) {
+            return Promise.resolve(null);
+        }
         this.isSave = true;
         if (this.defaultUser) {
             this.defaultUserSubmit();
@@ -266,6 +269,19 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.isSave = false;
         });
     }
+    checkSelectBarcode() {
+        let error = false;
+        if (this.newValuesScan.has('SHABLONBARCODE') || this.newValuesScan.has('SHABLONBARCODEL')) {
+            const bookSizeValue = this.newValuesScan.has('SHABLONBARCODE') ? this.newValuesScan.get('SHABLONBARCODE') : this.hash['SHABLONBARCODE'] ;
+            const albumSizeValue = this.newValuesScan.has('SHABLONBARCODEL') ? this.newValuesScan.get('SHABLONBARCODEL') : this.hash['SHABLONBARCODEL'];
+            if (bookSizeValue === 'barcode5.dot' && albumSizeValue !== 'barcodeL5.dot' || albumSizeValue === 'barcodeL5.dot' && bookSizeValue !== 'barcode5.dot') {
+                alert('Штрихкод на наклейке рекомендуется использовать и для книжной, и для альбомной ориентации.');
+                error = true;
+            }
+        }
+        return error;
+    }
+
     defaultSetFlagBtn() {
         this.emitChanges(false);
         this.emitChangesAddresses(false);
