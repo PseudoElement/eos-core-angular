@@ -18,6 +18,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     @ViewChild('infoAttachFilesModal') infoAttachFilesModal: ModalDirective;
     @Input() btnError;
     validChengeValueStr = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзиклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ';
+    defaultValidCharsFileDesc = ' !$()’,-.;=_';
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
     dataAttachDb;
@@ -172,12 +173,12 @@ export class ParamFielsComponent extends BaseParamComponent {
     }
     buttonDefault() {
         const strFile: string = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
-        if (!strFile || strFile === ' !#$%&()’+,-.;=_') {
-            this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(' !#$%&()’+,-.;=_');
+        if (!strFile || strFile === this.defaultValidCharsFileDesc) {
+            this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(this.defaultValidCharsFileDesc);
         } else {
             const result = confirm('В параметре есть не пустое значение. Заменить его значением по умолчанию?');
             if (result) {
-                this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(' !#$%&()’+,-.;=_');
+                this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].setValue(this.defaultValidCharsFileDesc);
             }
         }
     }
