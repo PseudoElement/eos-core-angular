@@ -55,6 +55,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public creatchesheDefault;
     public currentUser;
     public isInformer: boolean = false;
+    placementForTooltip: string = 'bottom';
     public lastTabs: string[] = ['Информер', 'Оповещатель'];
     public fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
     readonly fieldsKeys: Map<string, number> = new Map([['FOLDERCOLORSTATUS_RECEIVED', 0],
@@ -102,6 +103,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         });
     }
     ngOnInit() {
+        this.onResize();
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
             this.currTab = Number(this.openingTab) - 1;
         }
@@ -650,6 +652,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
         const emptyObj = {};
         this.checkTouch(emptyObj);
+    }
+    onResize(event?) {
+        if (this.isCurrentSettings) {
+            if (event) {
+                this.placementForTooltip = event.currentTarget.innerWidth > 1250 ? 'bottom' : 'left';
+            } else {
+                this.placementForTooltip = window.innerWidth > 1250 ? 'bottom' : 'left';
+            }
+        }
+
     }
     private defineLastTab() {
         if (!this.appMode || this.appMode.arm || this.appMode.cbr) {
