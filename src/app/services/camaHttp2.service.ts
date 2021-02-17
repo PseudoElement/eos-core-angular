@@ -1,7 +1,8 @@
 
 import { Injectable } from '@angular/core';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
-declare function CarmaHttp(initStr: string, stores: any): void;
+
+declare function CarmaHttp(initStr: string, stores: any, async: boolean): void;
 @Injectable()
 export class CarmaHttp2Service {
     clientCarma: any;
@@ -12,7 +13,7 @@ export class CarmaHttp2Service {
     }
     public connect(connectStirng: string, stores: any) {
         try {
-            this.clientCarma = new CarmaHttp(connectStirng, stores);
+            this.clientCarma = new CarmaHttp(connectStirng, stores, true);
         } catch (e) {
             this.clientCarma = null;
             this.errHalper.errorHandler(e);
