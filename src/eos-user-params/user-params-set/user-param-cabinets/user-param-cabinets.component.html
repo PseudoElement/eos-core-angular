@@ -76,7 +76,7 @@
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title">Сортировать записи в кабинете приложения Документы по:</span>
-                <eos-dynamic-input class="cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input class="cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="this.defaultTitle"></eos-dynamic-input>
             </div>
         </div>
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
