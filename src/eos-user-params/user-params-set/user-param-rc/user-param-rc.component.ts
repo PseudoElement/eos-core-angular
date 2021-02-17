@@ -39,9 +39,9 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
-                return this.defaultTitle ? 'РК по умолчанию' : this.currentUser.CLASSIF_NAME + '- РК';
+                return this.defaultTitle ? 'Отображение РК по умолчанию' : this.currentUser.CLASSIF_NAME + '- Отображение РК';
             }
-            return this.defaultTitle ? 'РК по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - РК`;
+            return this.defaultTitle ? 'Отображение РК по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Отображение РК`;
         }
         return '';
     }
