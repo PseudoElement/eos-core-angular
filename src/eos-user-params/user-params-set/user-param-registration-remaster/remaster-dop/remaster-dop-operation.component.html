@@ -29,7 +29,7 @@
     </div>
 </div>
 <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
-    <span>Печатать регистрационный штамп в приложении Документы:</span>  
+    <span>Печатать регистрационный штамп в приложении Документы:</span>
     <div class="inputs-inline">
         <eos-dynamic-input
             class="input-right"
@@ -64,7 +64,9 @@
         [readonly]="false"
     ></eos-dynamic-input>
 </div>
+
 <div [hidden]="appMode.cbr" class="user-group-form">
+    <span>Проверять повторность документа:</span>
     <eos-dynamic-input
         [input]="inputs['rec.TESTRAPID_ONSAVE']"
         [form]="form"

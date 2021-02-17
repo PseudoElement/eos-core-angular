@@ -1318,12 +1318,12 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'TESTRAPID_ONSAVE',
             type: 'boolean',
-            title: 'Проверять повторность документа по номеру и дате регистрации'
+            title: 'по номеру и дате регистрации'
         },
         {
             key: 'TESTRAPID_USECORRESP',
             type: 'boolean',
-            title: 'Проверять повторность документа по полю "Корреспондент"'
+            title: 'по полю "Корреспондент"'
         },
         {
             key: 'PRJ2RC_DIALOG',
