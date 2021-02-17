@@ -319,6 +319,36 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
         },
         {
+            key: 'CASCADE_CONTROL',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'RESOLUTION_PLAN_DATE_ASK',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INFORM_DIFFERENCE_CTRL_DATE',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'STATUS_EXEC_PARENT',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'INTERIM_DATE_PARENT',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'PARENT_RESOLUTION_TEXT',
+            type: '',
+            title: ''
+        },
+        {
             key: 'CABSORT_ISN_DOCGROUP_LIST',
             type: '',
             title: '',
@@ -355,11 +385,6 @@ export const CABINETS_USER: IBaseUsers = {
         },
         {
             key: 'RESOLUTION_SELECT_AUTHOR',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'PARENT_RESOLUTION_TEXT',
             type: '',
             title: '',
         },
