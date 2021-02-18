@@ -105,7 +105,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 10
         key: '14',
-        label: 'Установка на контроль',
+        label: 'Постановка на контроль',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
