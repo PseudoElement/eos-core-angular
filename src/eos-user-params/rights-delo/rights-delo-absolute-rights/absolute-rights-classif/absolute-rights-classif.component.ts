@@ -13,6 +13,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { PipRX } from 'eos-rest';
+import { AppContext } from '../../../../eos-rest/services/appContext.service';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -39,7 +40,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         public _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
         private pipRx: PipRX,
-        /* private _appContext: AppContext, */
+        private _appContext: AppContext,
     ) {
         this.userTechList = this._userParmSrv.userTechList;
     }
@@ -312,8 +313,8 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             if (item.key === 1 && techListLim.length !== 0) {
                 item.label = 'Пользователи (доступ ограничен)';
             }
-            if (item.key === 35 /* && this._appContext.cbBase */) {
-                item.label = 'Концентратор';
+            if (item.key === 35) {
+                item.label = this._appContext.cbBase ? 'Концентратор' : 'Буфер электронных сообщений';
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
