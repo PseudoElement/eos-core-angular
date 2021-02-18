@@ -1035,7 +1035,13 @@ export class EosDictService {
 
     quickSearch(settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
+        let fixedString;
+        // для полнотекстового поиска кавычки не убираем, экранируем
+        if (['departments', 'rubricator'].indexOf(this.currentDictionary.id) !== -1) {
+            fixedString = settings.quick.data;
+        }   else {
+            fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
+        }
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
             this._srchParams = settings.opts;
@@ -1333,7 +1339,7 @@ export class EosDictService {
                     const parIsn = data.map((el) => el.ISN_PARTICIPANT);
                     return this._apiSrv
                         .read({
-                            SEV_PARTICIPANT: PipRX.criteries({'ISN_LCLASSIF': parIsn.join('|')}),
+                            SEV_PARTICIPANT: PipRX.criteries({ 'ISN_LCLASSIF': parIsn.join('|') }),
                         })
                         .then((participant: any) => {
                             const result = selectedNodes.map((node): any[] => {
