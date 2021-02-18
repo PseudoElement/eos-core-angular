@@ -50,7 +50,7 @@
                     class="tree-classif-node"
                     [listNode]="node.listContent"
                     [systemTech]="node.key"
-                    [editMode]="editMode"
+                    [editMode]="editMode && !selectedNode.control.disabled"
                     (select)="node.select($event)"
                     (checkedNode)="node.checkedNode($event)"
                 ></eos-list-doc-tree>
@@ -73,10 +73,10 @@
             </ul>
         </div>
         <div class="modal-footer">
-            <div class="pull-right srch-btns"> 
+            <div class="pull-right srch-btns">
                 <button class="btn btn-primary s-font upper" (click)="closeCardTech()">Нет</button>
                 <button class="btn btn-primary-full s-font upper" (click)="saveCardTech()">Да</button>
-            </div> 
+            </div>
         </div>
 </ng-template>
 
