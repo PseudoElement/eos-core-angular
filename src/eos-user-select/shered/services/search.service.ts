@@ -187,6 +187,7 @@ export class SearchServices {
             case 1:
                 query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
                 query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
+                query.USER_CL.criteries['DELETED'] = `1`;
                 break;
             case 2:
                 query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
