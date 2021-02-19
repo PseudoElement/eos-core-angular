@@ -1384,6 +1384,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     // weight = пока не знаю чему он должен быть равен
     //
     private pasteNode(slicedNode: any[], dueTo, whenCopy?) {
+        this._dictSrv.updateViewParameters({ updatingList: true });
         this._dictSrv.paste(slicedNode, dueTo, whenCopy)
             .then(elem => {
                 if (this.dictionaryId === 'departments') {
@@ -1394,12 +1395,57 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                         node.isMarked = true;
                     });
                     this._physicallyDelete(slicedNode);
-                } else {
-                    slicedNode.forEach(node => {
-                        node.parent.deleteChild(node);
-                        this.dictionary.nodes.delete(node.id);
-                    });
                 }
+                // else {
+                //     slicedNode.forEach(node => {
+
+                //         const children: EosDictionaryNode[] = node.getAllChildren();
+                //         children.forEach(_n => {
+                //             this.dictionary.nodes.delete(_n.id);
+                //         });
+                //         this.dictionary.nodes.delete(_)
+                //         node.parent.deleteChild(node);
+
+                //     });
+                // }
+                // обновляем полностью справочник после операции вставки
+                const id = this.dictionaryId;
+                if (this._dictSrv['_srchCriteries']) {
+                    this._storageSrv.setItem('searchCriteries', this._dictSrv['_srchCriteries']);
+                }
+                this._dictSrv.closeDictionary();
+                this._dictSrv.openDictionary(id).then(() => {
+                    if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                        if (this.dictionary.id === 'templates') {
+                            this.dictionary.descriptor['top'] = this._nodeId;
+                        }
+                        this.dictionary.root.children = null;
+                        const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                        if (n) {
+                            this.title = n.title;
+                        }
+                        this._dictSrv.setCustomNodeId(this._nodeId);
+                        this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
+                            this._dictSrv.reload();
+                            this._storageSrv.removeItem('searchCriteries');
+                        });
+                    } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
+                        if (this._nodeId === '0.') {
+                            this._nodeId = '';
+                        }
+                        this._dictSrv.selectTreeNode(this._nodeId).then(() => {
+                            this._dictSrv.reload();
+                            this._storageSrv.removeItem('searchCriteries');
+                        });
+                    } else {
+                        this._dictSrv.selectTreeNode(this._nodeId).then(() => {
+                            this._dictSrv.reload();
+                            this._storageSrv.removeItem('searchCriteries');
+
+                        });
+                    }
+                });
+              //  this._ch.detectChanges();
             })
             .catch(er => {
                 console.log('er', er);

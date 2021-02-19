@@ -1820,7 +1820,10 @@ export class EosDictService {
     private _selectTreeNode(node: EosDictionaryNode) {
         if (this._treeNode !== node) {
             this._srchCriteries = null;
-
+            // костыль, после операции вставки paste в режиме поиска нужно запомнить поиск, т.к обновляется весь справочник и поиск сбрасывается.
+            if ( this._storageSrv.getItem('searchCriteries')) {
+                this._srchCriteries =  this._storageSrv.getItem('searchCriteries');
+            }
             if (this._treeNode) {
                 if (this._treeNode.children) {
                     this._treeNode.children.forEach((child) => child.isMarked = false);
