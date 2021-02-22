@@ -51,8 +51,10 @@ export class RemasterRcComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.ngUnsub)
         )
-        .subscribe(() => {
-            this.default();
+        .subscribe((tab) => {
+            if ( tab === 4) {
+                this.default();
+            }
         });
         this._RemasterService.submitEmit
         .pipe(
