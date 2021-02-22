@@ -14,6 +14,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 @Component({
     selector: 'eos-user-param-shablony',
     templateUrl: 'user-param-shablony.component.html',
+    styleUrls: ['user-param-shablony.component.scss'],
     providers: [FormHelperService],
 })
 

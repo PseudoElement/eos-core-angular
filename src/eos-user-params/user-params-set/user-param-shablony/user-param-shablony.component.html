@@ -13,24 +13,24 @@
     <div class="table-wrapper usual-border">
         <div class="table-header">
             <div class="table-header-content">
-                <div class="header-cust-other">
+                <div class="header-cust-other" [ngStyle]= "{'justify-content': defaultTitle ? 'flex-start' : 'space-between' }">
                     <div class="item l-font">
-                        <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="Имя шаблона" placement="bottom " containerClass="tooltip-info ">Имя шаблона</span>
+                        <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} ">Имя шаблона</span>
                     </div>
-                    <div class="item l-font item-width">
-                        <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="Значение по умолчанию" placement="bottom " containerClass="tooltip-info ">Значение по умолчанию</span>
+                    <div class="item l-font item-width" *ngIf="!defaultTitle">
+                        <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} ">Значение по умолчанию</span>
                     </div>
                     <div class="item l-font">
-                        <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="Текущее значение" placement="bottom " containerClass="tooltip-info ">Текущее значение</span>
+                        <span class="text " [ngStyle]= "{'padding-left': '20%' }" [ngClass]="{ 'selected-text': '#2196f3'}"> {{defaultTitle ? 'Значение по умолчанию': 'Текущее значение'}}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="eos-template-list ">
-            <div class="template-list-wrapper " *ngFor="let template of initShablony ">
+            <div class="template-list-wrapper" [ngStyle]= "{'justify-content': defaultTitle ? 'flex-start' : 'space-between' }"*ngFor="let template of initShablony ">
                 <span class="temlate_list_item tmp-title ">{{template.PARM_NAME}}</span>
-                <span class="temlate_list_item tmp-default ">{{template.PARM_VALUE}}</span>
-                <eos-dynamic-input class="temlate_list_item inline-block table-templates " [input]="inputs[template.keyForm] " [form]="form " [readonly]="false "></eos-dynamic-input>
+                <span *ngIf="!defaultTitle" class="temlate_list_item tmp-default ">{{template.PARM_VALUE}}</span>
+                <eos-dynamic-input class="temlate_list_item inline-block table-templates" [ngStyle]= "{'flex-basis':  defaultTitle ? '50%' : '30%' }" [input]="inputs[template.keyForm] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
         </div>
     </div>
