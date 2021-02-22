@@ -1,4 +1,4 @@
-<div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper" *ngIf="inputs">
+<div  class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper" *ngIf="inputs">
     <eos-user-params-header
         [editMode]="flagEdit"
         [title]='titleHeader'
@@ -19,7 +19,7 @@
         </ul>
     </div>
 
-    <div *ngIf="currTab === 0" class="clearfix scrollWrapper">
+    <div #root *ngIf="currTab === 0" class="clearfix scrollWrapper">
         <div [hidden]="appMode.cbr" class="user-group-form">
             <div class="cab-mar-span">
                 <span >Подсвечивать записи:</span>
@@ -79,10 +79,10 @@
                 <eos-dynamic-input class="cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="this.defaultTitle"></eos-dynamic-input>
             </div>
         </div>
-        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
+        <div  [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
             <div class="inputs-inline">
                 <span class="input-title">Максимальное количество записей для отображения в кабинете в приложении Документы:</span>
-                <eos-dynamic-input [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"  eosTooltipErrorFix [scrollableParent]="root"></eos-dynamic-input>
             </div>
         </div>
     </div>

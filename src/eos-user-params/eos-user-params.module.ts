@@ -79,6 +79,7 @@ import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/re
 import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/remaster-mado/remaster-mado.component';
 
 import { CurrentUserSetComponent } from './current-user-set/current-user-set.component';
+import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.module';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -157,7 +158,8 @@ import { CurrentUserSetComponent } from './current-user-set/current-user-set.com
         PopoverModule,
         BsDropdownModule,
         BsDatepickerModule.forRoot(),
-        DragulaModule
+        DragulaModule,
+        EosDictionariesModule
     ],
     providers: [
         UserParamApiSrv,
