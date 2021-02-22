@@ -343,7 +343,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         this._RemasterService.cancelEmit.next();
     }
     default(event) {
-        this._RemasterService.defaultEmit.next();
+        this._RemasterService.defaultEmit.next(this.currTab);
     }
     private _pushState() {
         this._userSrv.setChangeState({ isChange: this.btnDisabled });

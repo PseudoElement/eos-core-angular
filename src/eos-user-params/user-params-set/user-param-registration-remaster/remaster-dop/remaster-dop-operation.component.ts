@@ -54,8 +54,10 @@ export class RemasterDopOperationComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.ngUnsub)
         )
-        .subscribe(() => {
-            this.default();
+        .subscribe((tab) => {
+            if (tab === 0) {
+                this.default();
+            }
         });
         this._RemasterService.submitEmit
         .pipe(
