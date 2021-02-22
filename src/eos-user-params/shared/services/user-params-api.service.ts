@@ -256,6 +256,8 @@ export class UserParamApiSrv {
         } else {
             q = this.getQueryforDB(dueDep);
         }
+
+        q._moreJSON = { CanTech: null };
         return this.getData(q)
             .then(data => {
                 if (data.hasOwnProperty('TotalRecords') && data.length) {

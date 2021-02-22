@@ -66,11 +66,14 @@ export class UserSelectNode {
     }
 
     get isEditable() {
-        if (this.limitCards.length) {
-            if (this.dataDeep) {
-                return this.limitCards.indexOf(this.dataDeep.DEPARTMENT_DUE) !== -1;
-            }
-          return false;
+        // if (this.limitCards.length) {
+        //     if (this.dataDeep) {
+        //         return this.limitCards.indexOf(this.dataDeep.DEPARTMENT_DUE) !== -1;
+        //     }
+        //   return false;
+        // }
+        if (this.data && this.data._more_json && this.data._more_json.hasOwnProperty('CanTech')) {
+            return !!this.data._more_json['CanTech'];
         }
         return true;
     }
