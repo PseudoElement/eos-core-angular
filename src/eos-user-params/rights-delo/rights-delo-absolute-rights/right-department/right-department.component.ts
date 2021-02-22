@@ -294,14 +294,6 @@ export class RightDepertmentComponent implements OnInit {
                     }
                 }
 
-
-                if (this.chooseOnlyDl(data)) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Нельзя выбрать подразделение'
-                    });
-                }
                 const newNodes: NodeDocsTree[] = [];
                 data.forEach((dep: DEPARTMENT) => {
                     const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
@@ -385,18 +377,6 @@ export class RightDepertmentComponent implements OnInit {
                 }
             });
         }
-    }
-    chooseOnlyDl(data): boolean {
-        const rules = [36];
-        let find = false;
-        if (rules.indexOf(this.funcNum) !== -1) {
-            data.forEach((dl) => {
-                if (dl.IS_NODE === 0) {
-                    find = true;
-                }
-            });
-        }
-        return find;
     }
     DeleteDep() {
         this.curentUser['USERDEP_List'] = this.curentUser['USERDEP_List'].filter(i => {
