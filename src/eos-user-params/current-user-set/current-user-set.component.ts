@@ -136,7 +136,6 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         if (!this._apContext.CurrentUser || !this._apContext.CurrentUser.DELO_RIGHTS || !(+this._apContext.CurrentUser.DELO_RIGHTS[0])) {
             const hiddenUrls = new Map<string, boolean>([
                 ['prof-sert', true],
-                ['el-signature', true],
             ]);
             redirectToRegistration(hiddenUrls);
         }
