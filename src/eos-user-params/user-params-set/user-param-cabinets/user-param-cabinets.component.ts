@@ -152,7 +152,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         return Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
             CABINETS_USER.fields.map(fields => {
                 if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
-                    // fields.options.splice(0, fields.options.length);
+                    fields.options.splice(1, fields.options.length);
                     sort.forEach(element => {
                         fields.options.push({
                             value: element.ISN_LIST,
