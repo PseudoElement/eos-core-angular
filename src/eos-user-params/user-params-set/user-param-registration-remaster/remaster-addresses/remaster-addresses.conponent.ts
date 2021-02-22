@@ -62,8 +62,10 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.ngUnsub)
         )
-        .subscribe(() => {
-            this.default();
+        .subscribe((tab) => {
+            if (tab === 1) {
+                this.default();
+            }
         });
         this._RemasterService.submitEmit
         .pipe(

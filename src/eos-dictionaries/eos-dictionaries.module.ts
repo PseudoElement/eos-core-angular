@@ -231,6 +231,7 @@ import { PrintTemplateComponent } from './print-template/print-template.componen
         RulesSelectComponent,
         CalendarFormComponent,
         EosDatepickerInlineComponent,
+        TooltipErrorFixDirective,
     ],
     providers: [
         DictionaryDescriptorService,
