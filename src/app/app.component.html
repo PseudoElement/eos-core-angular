@@ -7,7 +7,7 @@
         <div class="messages-wrapper">
             <eos-messages></eos-messages>
         </div>
-        <div class="navbar-fixed-bottom row-fluid selected-text text-center" *ngIf="version">
+        <div class="navbar-fixed-bottom row-fluid selected-text text-center" *ngIf="version" [ngClass]="checkQueryParams()">
             <span>ДЕЛО. Сборка: {{version}}. Все права защищены. ЭОС</span>
         </div>
     </div>
