@@ -68,52 +68,40 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         this.newFile = data;
         this.setNameFile(this.newFile.DESCRIPTION, $event);
     }
-    sameFileCheck() {
-        const frame = document.getElementsByTagName('iframe')[0];
-        const frameDoc = frame.contentWindow.document;
-        const fileDiv = frameDoc.getElementById('UpFile');
+
+    sameFileCheck($event) {
         const replace = Object.assign({}, CONFIRM_REPLACE_SAME_FILE);
+        this.upload = true;
+        this._ref.detectChanges();
+        this.frDatas.askFiles(false, [], false, false, false, true, '', -10000, 701, 1, 1).always((data: REF_FILE[]) => {
+            try {
+                if (data.length) {
+                    if (this.form.controls['rec.NAME_TEMPLATE'].value) {
+                        replace.body = `Заменить "${this.form.controls['rec.NAME_TEMPLATE'].value}" на "${data[0].DESCRIPTION}"? `;
+                        setTimeout(() => {
+                            this.dom.nativeElement.lastElementChild.click();
+                        }, 0);
+                        this._confirmSrv.confirm2(replace).then(ans => {
+                            if (ans && ans.result === 2) {
+                                this.addFileDocTemplates(data[0], $event);
+                            }
+                        });
 
-        try {
-            frame.contentWindow['fire'].apply(null, [false, [], false, false, false, true, '',
-                -10000, 701, 1, 1]);
-        } catch (e) {
-            document.location.assign('../login.aspx');
-        }
-
-        fileDiv.addEventListener('input', ($event) => {
-            this.upload = true;
-            this._ref.detectChanges();
-            this.frDatas.promise.always((data: REF_FILE[]) => {
-                try {
-                    if (data.length) {
-                        if (this.form.controls['rec.NAME_TEMPLATE'].value) {
-                            replace.body = `Заменить "${this.form.controls['rec.NAME_TEMPLATE'].value}" на "${data[0].DESCRIPTION}"? `;
-                            setTimeout(() => {
-                                this.dom.nativeElement.lastElementChild.click();
-                            }, 0);
-                            this._confirmSrv.confirm2(replace).then(ans => {
-                                if (ans && ans.result === 2) {
-                                    this.addFileDocTemplates(data[0], $event);
-                                }
-                            });
-
-                        } else {
-                            this.addFileDocTemplates(data[0], $event);
-                        }
                     } else {
-                        delete this._dictSrv.currentDictionary.descriptor['dataNewFile'];
-                        this.newFile = null;
+                        this.addFileDocTemplates(data[0], $event);
                     }
-                    this.frDatas.promise = new window['$']['Deferred']();
-                    this.upload = false;
-                    this._ref.detectChanges();
-                } catch (e) {
-                    this._dictSrv.errHandler(e);
+                } else {
+                    delete this._dictSrv.currentDictionary.descriptor['dataNewFile'];
+                    this.newFile = null;
                 }
+                this.frDatas.promise = new window['$']['Deferred']();
+                this.upload = false;
+                this._ref.detectChanges();
+            } catch (e) {
+                this._dictSrv.errHandler(e);
+            }
 
             });
-        });
     }
 
     setNameFile(name, $event?) {
@@ -221,7 +209,6 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         });
         this.frDatas = window['Uploader'].Current();
         this.frDatas.promise = new window['$']['Deferred']();
-        this.frDatas.getF();
         const ds = new window['D']['DataSource']();
         ds.pipe = new window['D']['Pipe']('../OData.svc/');
         window['ds'] = ds;
