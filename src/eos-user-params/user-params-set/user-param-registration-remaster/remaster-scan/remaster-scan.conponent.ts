@@ -170,10 +170,15 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             data.forEach((el: FORMAT_CL) => {
                 options.push({
                     value: el.ISN_LCLASSIF,
-                    title: `${el.NOTE}, ${el.CLASSIF_NAME}`
+                    title: `${el.NOTE}, ${this.formatText(el)}`
                 });
             });
         }
+    }
+    formatText(data: FORMAT_CL): string {
+        const fTName = data.FORMAT_TNAME === 'doc' || data.FORMAT_TNAME === 'xls' ? `${data.FORMAT_TNAME}(x)` : data.FORMAT_TNAME;
+        const Gname = data.FORMAT_GNAME !== 'no' ? `, ${data.FORMAT_GNAME}` : '';
+        return fTName + Gname;
     }
     setNewValInputs(): void {
         Object.keys(this.form.controls).forEach(inp => {
