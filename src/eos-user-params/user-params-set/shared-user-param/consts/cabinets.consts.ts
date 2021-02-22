@@ -686,6 +686,21 @@ export const CABINETS_USER_INFORMER: IBaseUsers = {
     ],
     fieldsDefaultValue: [
         {
+            key: 'OZN_FILL_REPLY_TEXT',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'OZN_FILL_REPLY',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: '',
+            title: ''
+        },
+        {
             key: 'INFORMER_FOLDER_ITEM_CHECK',
             type: '',
             title: '',
