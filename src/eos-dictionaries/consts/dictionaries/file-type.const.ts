@@ -69,7 +69,7 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
             length: 255,
         },
     ],
-    treeFields: [],
+    treeFields: ['ISN_LCLASSIF'],
     editFields: ['CLASSIF_NAME', 'TAG', 'UNIQUE_FLAG', 'NOTE'],
     searchFields: ['CLASSIF_NAME'/*, 'NOTE'*/],
     fullSearchFields: ['CLASSIF_NAME', 'TAG', 'NOTE'],
