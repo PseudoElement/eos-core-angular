@@ -195,11 +195,11 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this.subsystem.EOS.ActualUsers = elem.ActualUsers;
                 this.subsystem.EOS.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
             }
-            if (elem.Id === 24) {
-                this.subsystem.MobNet.Users = elem.Users;
-                this.subsystem.MobNet.ActualUsers = elem.ActualUsers;
-                this.subsystem.MobNet.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
-            }
+            // if (elem.Id === 24) {
+            //     this.subsystem.MobNet.Users = elem.Users;
+            //     this.subsystem.MobNet.ActualUsers = elem.ActualUsers;
+            //     this.subsystem.MobNet.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
+            // }
             if (elem.Id === 26) {
                 this.subsystem.APM.Users = elem.Users;
                 this.subsystem.APM.ActualUsers = elem.ActualUsers;

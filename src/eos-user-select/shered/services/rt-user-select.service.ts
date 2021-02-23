@@ -119,14 +119,10 @@ export class RtUserSelectService {
             ActualUsers: 0,
             Expired: '-',
         },
-        MobNet: {
-            id: 24,
-            label: 'Мобильный кабинет',
-            checked: false,
-            Users: 0,
-            ActualUsers: 0,
-            Expired: '-',
-        },
+        // MobNet: {
+        //     label: 'Мобильный кабинет',
+        //     checked: false
+        // },
         Informer: {
             id: 27,
             label: 'Информер',

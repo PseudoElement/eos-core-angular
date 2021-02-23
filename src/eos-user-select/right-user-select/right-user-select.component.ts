@@ -223,7 +223,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         split[15] === '1' ? this._selectedUser.ArraySystemHelper.Scan_code.checked = true : this._selectedUser.ArraySystemHelper.Scan_code.checked = false;
         split[16] === '1' ? this._selectedUser.ArraySystemHelper.Notifer.checked = true : this._selectedUser.ArraySystemHelper.Notifer.checked = false;
         split[17] === '1' ? this._selectedUser.ArraySystemHelper.Search_code.checked = true : this._selectedUser.ArraySystemHelper.Search_code.checked = false;
-        split[23] === '1' ? this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
+        // split[23] === '1' ? this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
         split[26] === '1' ? this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
         this.flagSustem = true;
     }

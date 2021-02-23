@@ -1,4 +1,5 @@
 const pattrenSearch = /^.{0,}$/;
+
 export const USER_SEARCH = {
     id: '',
     title: '',
@@ -70,12 +71,12 @@ export const USER_SEARCH = {
             title: 'Информер',
             value: '0'
         },
-        {
-            type: 'boolean',
-            key: '23',
-            title: 'Мобильный кабинет',
-            value: '0'
-        },
+        // {
+        //     type: 'boolean',
+        //     key: '23',
+        //     title: 'Мобильный кабинет',
+        //     value: '0'
+        // },
         {
             type: 'boolean',
             key: '25',
