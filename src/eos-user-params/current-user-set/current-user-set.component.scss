@@ -431,16 +431,24 @@ bs-dropdown-container {
 
                                     input[type="checkbox"] + span {
                                         margin: 0 8px 0 0;
-                                        line-height: initial;
-                                        background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
+                                        line-height: initial;                                        
                                         @include settings-icon;
                                     }
 
-                                    input[type="checkbox"]:checked + span {
-                                        margin: 0 8px 0 0;
-                                        line-height: initial;
-                                        background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
-                                        @include settings-icon;
+                                    input[type="checkbox"] + span {                                       
+                                        background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");                                        
+                                    }
+
+                                    input[type="checkbox"]:checked + span {                                      
+                                        background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");                                        
+                                    }
+
+                                    input[type="checkbox"][disabled] + span {                                      
+                                        background-image: url("assets/icons/Checkbox-UserSettings-Square-Grey.svg");                                        
+                                    }
+
+                                    input[type="checkbox"][disabled]:checked + span {                                      
+                                        background-image: url("assets/icons/Checkbox-Grey.svg");                                        
                                     }
                                 }
                             }
@@ -459,16 +467,20 @@ bs-dropdown-container {
 
                                     input[type="radio"] + span {
                                         margin: 0;
-                                        line-height: 0;
-                                        background-image: url("assets/icons/Radio-UserSettings-Black.svg");
+                                        line-height: 0;                                       
                                         @include settings-icon;
                                     }
 
-                                    input[type="radio"]:checked + span {
-                                        margin: 0;
-                                        line-height: 0;
+                                    input[type="radio"] + span {                                       
+                                        background-image: url("assets/icons/Radio-UserSettings-Black.svg");
+                                    }
+
+                                    input[type="radio"]:checked + span {                                       
                                         background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
-                                        @include settings-icon;
+                                    }
+
+                                    input[type="radio"][disabled] + span {                                       
+                                        background-image: url("assets/icons/Radio-UserSettings-Grey.svg");
                                     }
                                 }
                             }
