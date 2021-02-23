@@ -91,7 +91,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     canWndUnload(evt: BeforeUnloadEvent): any {
         if (this._isChanged) {
             evt.returnValue = '';
-            return false;
+            return 'Изменения не сохранены и будут потеряны.';
         }
     }
 
