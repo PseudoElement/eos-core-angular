@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, /* HostListener, */ OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { takeUntil } from 'rxjs/operators';
@@ -87,13 +87,13 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
         this._apContext.setHeader.next(true);
     }
-    @HostListener('window:beforeunload', ['$event'])
-    canWndUnload(evt: BeforeUnloadEvent): any {
-        if (this._isChanged) {
-            evt.returnValue = '';
-            return 'Изменения не сохранены и будут потеряны.';
-        }
-    }
+    // @HostListener('window:beforeunload', ['$event'])
+    // canWndUnload(evt: BeforeUnloadEvent): any {
+    //     if (this._isChanged) {
+    //         evt.returnValue = '';
+    //         return false;
+    //     }
+    // }
 
     canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
         if (this._isChanged) {
