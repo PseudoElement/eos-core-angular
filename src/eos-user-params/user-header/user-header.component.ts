@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { UserParamsService } from '../shared/services/user-params.service';
 import { Router } from '@angular/router';
 import { saveAs } from 'file-saver';
@@ -44,6 +44,14 @@ export class UserHeaderComponent implements OnInit {
         this.selfLink = this._router.url.split('?')[0];
         this.link = this._userServices.userContextId;
     }
+    @HostListener('document:keydown', ['$event'])
+    /** Сохранение настроек пользователя в файл */
+    onKeydownHandler(key: KeyboardEvent) {
+        if (key.ctrlKey && key.altKey && key.keyCode === 83) {
+            this.saveFile();
+        }
+    }
+
     ngOnInit() {
         if (this.checkSegment) {
             setTimeout(() => {
