@@ -178,7 +178,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         if (this._appContext.limitCardsUser.length > 0) {
             let arr;
             /* if (this._appContext.cbBase) { */
-                arr = ['0', '1', '3', '18', '23', '29'];
+                arr = ['0', '1', '2', '3', '18', '23', '29'];
             /* } else {
                 arr = ['0', '1', '2', '3', '18', '23', '29'];
             } */
