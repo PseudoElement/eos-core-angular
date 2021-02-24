@@ -145,10 +145,20 @@ export class EosReportUsersStatsComponent implements OnInit {
                 }
             });
         });
+        const dateNow = new Date(Date.now());
+
         let enablelLicenze = 0;
         items.forEach(elem => {
-            if (elem.Expired && elem.Expired !== null && elem.Expired !== '') {
+            // бессрочная лицензия
+            if (elem.Enabled && !elem.Expired) {
                 enablelLicenze++;
+            }
+            // проверяем истекла ли лицензия
+            if (elem.Enabled && elem.Expired) {
+                const expiredDate = new Date(elem.Expired);
+                if (dateNow < expiredDate) {
+                    enablelLicenze++;
+                }
             }
             if (elem.Id === 1) {
                 this.subsystem.delo.Users = elem.Users;
