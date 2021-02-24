@@ -336,6 +336,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this.groupDelRK.forEach(Rk => {
                         this.queryForSave.push(Rk);
                     });
+                    this.groupDelRK = [];
                 }
                 this.apiSrv.setData(this.queryForSave)
                     .then(() => {
