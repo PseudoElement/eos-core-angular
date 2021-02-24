@@ -72,7 +72,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     sameFileCheck($event) {
         const replace = Object.assign({}, CONFIRM_REPLACE_SAME_FILE);
         this.upload = true;
-        // this._ref.detectChanges();
+        this._ref.detectChanges();
         this.frDatas.askFiles(false, [], false, false, false, true, '', -10000, 701, 1, 1).always((data: REF_FILE[]) => {
             try {
                 if (data.length) {
@@ -96,7 +96,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
                 }
                 this.frDatas.promise = new window['$']['Deferred']();
                 this.upload = false;
-                // this._ref.detectChanges();
+                this._ref.detectChanges();
             } catch (e) {
                 this._dictSrv.errHandler(e);
             }
