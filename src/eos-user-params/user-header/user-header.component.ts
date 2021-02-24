@@ -26,6 +26,7 @@ export class UserHeaderComponent implements OnInit {
         default: 'По умолчанию',
         save: 'Сохранить',
         cancel: 'Отменить',
+        close: 'Закрыть',
         saveFile: 'Сохранить настройки в файл',
     };
 

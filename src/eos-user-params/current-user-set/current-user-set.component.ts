@@ -98,7 +98,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
         if (this._isChanged) {
             return new Promise((res, rej) => {
-                if (confirm('Возможно, внесенные изменения не сохранятся.')) {
+                if (confirm('Изменения не сохранены и будут потеряны.')) {
                     this._isChanged = false;
                     return res(true);
                 } else {
