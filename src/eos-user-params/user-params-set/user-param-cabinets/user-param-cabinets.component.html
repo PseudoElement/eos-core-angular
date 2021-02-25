@@ -73,13 +73,13 @@
                 <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
+        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{paddingBottom: '10px'}">
             <div class="inputs-inline">
                 <span class="input-title">Сортировать записи в кабинете приложения Документы по:</span>
                 <eos-dynamic-input class="cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="this.defaultTitle"></eos-dynamic-input>
             </div>
         </div>
-        <div  [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{'margin-bottom': '35px'}">
+        <div  [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{paddingBottom: '35px'}">
             <div class="inputs-inline">
                 <span class="input-title">Максимальное количество записей для отображения в кабинете в приложении Документы:</span>
                 <eos-dynamic-input [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"  eosTooltipErrorFix [scrollableParent]="root"></eos-dynamic-input>
