@@ -30,13 +30,14 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
     public inputs: any;
     public btnDisable;
     public currentUser;
+    public defaultValues;
     private allData: any;
     private prepareData: any;
     private prepareInputs: any;
     private mapChanges = new Map();
     private defoltInputs: any;
     private flagEdit: boolean = false;
-    private defaultValues;
+
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
