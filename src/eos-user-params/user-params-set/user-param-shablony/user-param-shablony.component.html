@@ -1,4 +1,4 @@
-<div class="input-user-shablony-wrapper" *ngIf="initShablony">
+<div class="input-user-shablony-wrapper" *ngIf="initShablony && defaultValues">
     <eos-user-params-header
         [editMode]="flagEdit"
         [title]='titleHeader'
@@ -29,7 +29,7 @@
         <div class="eos-template-list ">
             <div class="template-list-wrapper" [ngStyle]= "{'justify-content': defaultTitle ? 'flex-start' : 'space-between' }"*ngFor="let template of initShablony ">
                 <span class="temlate_list_item tmp-title ">{{template.PARM_NAME}}</span>
-                <span *ngIf="!defaultTitle" class="temlate_list_item tmp-default ">{{template.PARM_VALUE}}</span>
+                <span *ngIf="!defaultTitle" class="temlate_list_item tmp-default ">{{defaultValues[template.PARM_NAME]}}</span>
                 <eos-dynamic-input class="temlate_list_item inline-block table-templates" [ngStyle]= "{'flex-basis':  defaultTitle ? '50%' : '30%' }" [input]="inputs[template.keyForm] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
         </div>

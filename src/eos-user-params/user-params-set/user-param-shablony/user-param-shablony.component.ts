@@ -66,6 +66,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             this.allData = this.defaultUser;
             this.inint();
             this.initShablony = this.getInitShablony(this.defaultUser);
+            this.defaultValues = [];
         } else {
             const config = {expand: 'USER_PARMS_List'};
             if (this.mainUser) {
