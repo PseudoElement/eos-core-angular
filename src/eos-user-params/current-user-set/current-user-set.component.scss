@@ -1111,6 +1111,9 @@ bs-dropdown-container {
                         margin-left: 0;
 
                          & > div {
+                            position: relative;
+                            margin-bottom: 25px;
+
                             & > span {
                                 @include style-title-bookmarks;
                                 margin-bottom: 20px;
@@ -1118,6 +1121,11 @@ bs-dropdown-container {
 
                             eos-dynamic-input {
                                 margin-left: 15px;
+                            }
+
+                            &:after {
+                                @include style-horizontal-line;
+                                bottom: -15px;
                             }
                          }
 
