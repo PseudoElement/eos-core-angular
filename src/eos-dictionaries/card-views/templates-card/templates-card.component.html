@@ -3,7 +3,7 @@
         <div class="">
             <p>Выберите файл</p>
             <button class="btn btn-primary-full" [disabled]="newFile || !editMode"
-                    (click)="sameFileCheck()">файл</button>
+                    (click)="sameFileCheck($event)">файл</button>
         </div>
         <div class="upload-file" *ngIf="newFile">
             <span><span class="eos-icon small eos-icon-checkbox-blue "></span>Файл успешно загружен</span>
