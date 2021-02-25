@@ -150,11 +150,9 @@ export const RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED: IConfirmWindow2 = {
 export const CONFIRM_SAVE_WITHOUT_FILE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
-    body: 'Не выбран файл шаблона.',
-    bodyAfterList: 'Продолжить?',
+    body: 'Файл шаблона отсутствует, сохранение невозможно',
     buttons: [
-        {title: 'Да', result: 1, isDefault: true, },
-        {title: 'Нет', result: 2, },
+        {title: 'Ок', result: 1},
     ],
 };
 
