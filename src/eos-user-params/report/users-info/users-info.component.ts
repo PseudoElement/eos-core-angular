@@ -89,7 +89,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
     }
 
     download(filename, data) {
-        const blob = new Blob([data], { type: 'text/csv' });
+        const blob = new Blob([data], { type: 'text/html' });
         if (window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveBlob(blob, filename);
         } else {
@@ -115,7 +115,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
             })
             : informationContent = `${NumberLine}; ${selectUser.department === '...' ? '' : selectUser.department}; ${selectUser.name}; ${selectUser.oracle_id === null ? 'УДАЛЕН' : selectUser.login};`;
         const sourceHTML = encoding + header + informationContent;
-        const info = this.CheckAllUsers ? `Краткие сведения по всем пользователям.csv` : `Краткие сведения ${selectUser.login}.csv`;
+        const info = this.CheckAllUsers ? `Краткие сведения по всем пользователям.html` : `Краткие сведения ${selectUser.login}.html`;
         this.download(info, sourceHTML);
     }
 
