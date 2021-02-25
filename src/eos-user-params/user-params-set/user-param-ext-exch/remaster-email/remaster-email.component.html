@@ -46,7 +46,7 @@
                         <accordion-group [heading]="'Параметры регистрации'"  [isOpen]="OpenParamsReg" (isOpenChange)="isOpenChangeReciveAc($event)">
                             <span class="panel-icon eos-icon eos-icon-arrow-v-blue-bottom small" accordion-heading></span>
                             <div class="accord-wr" *ngFor="let item of templRenderMailResive">
-                                <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: item, margin: 0}"></ng-container>
+                                <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: item, m: 0}"></ng-container>
                             </div>
                         </accordion-group>
                     </accordion>
@@ -59,7 +59,8 @@
 
                     <ng-template #treeNodeTmpl2 let-node="items" let-mar="m">
                     <div>
-                        <div class="input_wrapper" [ngStyle]="{'margin-left.px': mar}">
+
+                        <div class="input_wrapper" [ngStyle]="{'margin-left.px': mar, 'width': '500px'}">
                             <span *ngIf="node.children.length"
                                 class="eos-icon icon list-triangle"
                                 (click)="triggerNode(node)"
