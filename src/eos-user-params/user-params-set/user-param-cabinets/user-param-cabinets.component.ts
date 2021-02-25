@@ -471,6 +471,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             } else if (key === 'SEND_ORDER_TO' && this.appMode.arm) {
                 const val = value ? '2' : '1';
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
+            } else if (key === 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION') {
+                const val = value ? '1' : '0';
+                this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else {
                 if (key !== 'CONTROLL_AUTHOR') {
                     const val = this.checkTypeValue(value);

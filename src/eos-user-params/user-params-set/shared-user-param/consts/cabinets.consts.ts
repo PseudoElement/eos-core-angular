@@ -301,6 +301,11 @@ export const CABINETS_USER: IBaseUsers = {
                 {value: '4', title: 'Без приоритета'},
             ]
         },
+        {
+            key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
+            type: 'boolean',
+            title: 'Применять ЭП резолюций и проектов резолюций',
+        }
     ],
     fieldsDefaultValue: [
         {
@@ -468,6 +473,11 @@ export const CABINETS_USER: IBaseUsers = {
             type: '',
             title: '',
         },
+        {
+            key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
+            type: '',
+            title: '',
+        }
     ]
 };
 
