@@ -71,9 +71,8 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
 
     sameFileCheck($event) {
         const replace = Object.assign({}, CONFIRM_REPLACE_SAME_FILE);
-        this.upload = true;
         this._ref.detectChanges();
-        this.frDatas.askFiles(false, [], false, false, false, true, '', -10000, 701, 1, 1).always((data: REF_FILE[]) => {
+        this.frDatas.askFiles(false, [], false, false, false, true, '', -10000, 701, 1, 1).progress(() => {this.upload = true; }).always((data: REF_FILE[]) => {
             try {
                 if (data.length) {
                     if (this.form.controls['rec.NAME_TEMPLATE'].value) {
@@ -121,7 +120,11 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         this._dictSrv.currentDictionary.descriptor.deleteTempRc();
         this.upload = false;
         this.newFile = null;
-        this.setNameFile(null, { stopPropagation: () => { } });
+        const prevValue = this.inputs['rec.NAME_TEMPLATE'].value ? this.inputs['rec.NAME_TEMPLATE'].value : null;
+        if (prevValue) {
+            this.data.rec.CHANGED_FILE = false;
+        }
+        this.setNameFile(prevValue, { stopPropagation: () => { } });
         this._ref.detectChanges();
     }
     getGocGroupForTemplates() {
@@ -177,7 +180,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
                 const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_WITHOUT_FILE);
             return this._confirmSrv.confirm2(confirmParams, )
                 .then((doSave) => {
-                    return  doSave.result === 1 ? Promise.resolve(true) : Promise.resolve(false);
+                    return Promise.resolve(false);
                 })
                 .catch(() => {
                     return Promise.resolve(false);
