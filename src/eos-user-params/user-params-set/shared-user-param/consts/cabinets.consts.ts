@@ -477,6 +477,21 @@ export const CABINETS_USER: IBaseUsers = {
             key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
             type: '',
             title: '',
+        },
+        {
+            key: 'OZN_FILL_REPLY_TEXT',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'OZN_FILL_REPLY',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: '',
+            title: ''
         }
     ]
 };
