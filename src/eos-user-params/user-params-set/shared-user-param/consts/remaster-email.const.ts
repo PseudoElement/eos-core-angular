@@ -1730,7 +1730,18 @@ export const REMASTER_MADO: IBaseUsers =  {
         key: 'MEDO_ADD_CITIZEN_TO_ORGANIZ',
         type: 'boolean',
         title: 'Автоматически добавлять организации представителей в справочник "Организации"'
-    }]
+    },
+    {
+        key: 'ARM_MEDO_HIDE',
+        type: 'boolean',
+        title: 'Скрыть команду отправки'
+    },
+    {
+        key: 'ARM_MEDO_DLG',
+        type: 'boolean',
+        title: 'Всегда показывать диалог с параметрами при отправке сообщений'
+    }
+    ]
 };
 
 export const REGISTRATION_RC: IBaseUsers =  {
