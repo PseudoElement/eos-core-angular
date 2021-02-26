@@ -284,7 +284,7 @@ export class RightOrganizDepertComponent implements OnInit {
         });
     }
     get getAllDep() {
-        return this.selectedNode && (this.selectedNode.key === '4' || this.selectedNode.key === '24' || this.selectedNode.key === '25');
+        return this.selectedNode && (this.selectedNode.key === '4' || this.selectedNode.key === '24' || this.selectedNode.key === '25' || this.selectedNode.key === '33');
     }
     checkAllDep() {
         return this.getAllDep && this.selectedNode.value === 2 ? true : false;

@@ -239,9 +239,19 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         }
     },
     {
-        controlType: E_FIELD_TYPE.boolean, // 23
+        controlType: E_FIELD_TYPE.boolean, // 26
         key: '25',
         label: 'Чтение файлов персонифицированного доступа',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
+            flagcheck: true,
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean, // 34
+        key: '33',
+        label: 'Чтение файлов строгого доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,

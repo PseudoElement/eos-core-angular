@@ -480,7 +480,7 @@ export class RightDepertmentComponent implements OnInit {
         });
     }
     get getAllDep() {
-        const rightsAllDep = ['4', '24', '25', '34', '35'];
+        const rightsAllDep = ['4', '24', '25', '33', '34', '35'];
         return this.selectedNode && (rightsAllDep.indexOf(this.selectedNode.key) !== -1);
     }
     checkAllDep() {

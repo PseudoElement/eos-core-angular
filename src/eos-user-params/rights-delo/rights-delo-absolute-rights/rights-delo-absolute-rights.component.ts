@@ -966,7 +966,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return allowed;
     }
     private _checkKey(node): boolean {
-        const impMsgRights = ['24', '25', '34', '35']; /* node.key === '4' || */
+        const impMsgRights = ['24', '25', '33', '34', '35']; /* node.key === '4' || */
         return impMsgRights.indexOf(node.key) !== -1;
     }
     private _checkCreateNotEmpty(): boolean {
