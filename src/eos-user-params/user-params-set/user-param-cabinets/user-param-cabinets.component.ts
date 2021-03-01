@@ -104,6 +104,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {
         this.onResize();
+        this.flagEdit = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
             this.currTab = Number(this.openingTab) - 1;
         }

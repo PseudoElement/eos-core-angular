@@ -56,6 +56,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
         this.btnDisable = true;
     }
     ngOnInit() {
+        this.flagEdit = !!this.isCurrentSettings;
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;

@@ -88,6 +88,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() { }
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
