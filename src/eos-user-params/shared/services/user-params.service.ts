@@ -562,7 +562,7 @@ export class UserParamsService {
                     },
                 },
                 skip: 0,
-                top: 5,
+                top: 2,
                 orderby: 'ISN_LCLASSIF',
                 loadmode: 'Table'
             }).then((data: USER_CL[]) => {
