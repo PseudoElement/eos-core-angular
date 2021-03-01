@@ -236,9 +236,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
             });
         }
-        if (this.arrNEWDeloRight[0] === '0') {
-            sysTechBol = true;
-        }
         return sysTechBol;
     }
 
@@ -262,8 +259,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 return Promise.resolve(true);
             }
         }
-        return this._userParamsSetSrv.getSysTechUser(true).then((limited: boolean) => {
-            this.limitUserTech = limited ? false : this.checkChangeToLimitUser();
+        return this._userParamsSetSrv.getSysTechUser({oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser}).then((limited: boolean) => {
+            this.limitUserTech = limited;
+// ? false : this.checkChangeToLimitUser();
             if (this.limitUserTech === false) {
                 if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
                     if (this._checkCreatePRJNotEmptyAllowed()) {
