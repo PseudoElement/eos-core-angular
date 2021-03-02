@@ -1112,7 +1112,7 @@ bs-dropdown-container {
 
                          & > div {
                             position: relative;
-                            margin-bottom: 25px;
+                            margin-bottom: 30px;
 
                             & > span {
                                 @include style-title-bookmarks;
@@ -1121,12 +1121,7 @@ bs-dropdown-container {
 
                             eos-dynamic-input {
                                 margin-left: 15px;
-                            }
-
-                            &:after {
-                                @include style-horizontal-line;
-                                bottom: -15px;
-                            }
+                            }                           
                          }
 
                         eos-dynamic-input {
@@ -1249,11 +1244,7 @@ bs-dropdown-container {
 
                     & > div.send-oreder-with-arm {
                         margin-top: 25px;
-
-                        &::before {
-                            @include style-horizontal-line;
-                            top: -10px;
-                        }            
+                        margin-bottom: -15px;                         
                     }
                 }
 
