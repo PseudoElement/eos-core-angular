@@ -7,6 +7,8 @@ import { Subject } from 'rxjs';
 import { SUB_PARAMS_LIST_NAV } from 'eos-user-params/shared/consts/user-param.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
+import { PipRX, USER_PARMS } from 'eos-rest';
 
 @Component({
     selector: 'eos-current-user-set',
@@ -15,12 +17,15 @@ import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params
 })
 export class CurrentUserSetComponent implements OnInit, OnDestroy {
     listSettings = SUB_PARAMS_LIST_NAV;
+    defaultUser: any;
+    disableSave: boolean;
     paramId: string = 'rc';
     public mainUser;
     public appMode: IUserSettingsModes = {
         tk: true,
     };
     public openingOptionalTab: number = 0;
+    public isLoading: boolean = true;
 
     private checkCB: boolean;
     private _isChanged: boolean;
@@ -30,6 +35,8 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute,
         private _userParamService: UserParamsService,
         private _apContext: AppContext,
+        private formHelp: FormHelperService,
+        private _pipRx: PipRX,
     ) {}
     ngOnInit() {
         this._apContext.setHeader.next(false);
@@ -39,7 +46,18 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
             this.paramId = params['field-id'];
         });
         this._route.queryParams.subscribe((qParams: Params) => {
-            this.mainUser = qParams.isn && Number(qParams.isn) ? Number(qParams.isn) : this.mainUser;
+            const isDefault = `${qParams.isn}` === '-99';
+            this.mainUser = qParams.isn && Number(qParams.isn) && !isDefault ? Number(qParams.isn) : this.mainUser;
+            this.isLoading = isDefault;
+            if (isDefault && !this.defaultUser) {
+                const prep = this.formHelp.getObjQueryInputsField();
+                this._pipRx.read(prep)
+                    .then((data) => {
+                        this.defaultUser = this.formHelp.createhash(data);
+                        this.isLoading = false;
+                    })
+                    .catch(() => this.isLoading = false);
+            }
             if (!this.appMode.hasMode && qParams.mode) {
                 this.appMode = {};
                 switch (qParams.mode) {
@@ -113,6 +131,41 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         if (this.checkCB) {
             return { 'current-settings-CB': true };
         }
+    }
+    DefaultSubmitEmit(updateUser: USER_PARMS[]): any {
+        if (updateUser[1] !== undefined) {
+            const dataUsers = updateUser[0];
+            Object.keys(dataUsers).forEach((key) => {
+                let value = dataUsers[key].value;
+                if (value !== undefined) {
+                    if (value === true) {
+                        value = 'YES';
+                    }
+                    if (value === false) {
+                        value = 'NO';
+                    }
+                    this.defaultUser[key] = value;
+                }
+            });
+        } else {
+            Object.keys(updateUser).forEach((key) => {
+                const dot = key.charAt(3);
+                let value = updateUser[key];
+                if (value !== undefined) {
+                    if (value === true) {
+                        value = 'YES';
+                    }
+                    if (value === false) {
+                        value = 'NO';
+                    }
+                    if (dot === '.') {
+                        key = key.substr(4);
+                    }
+                    this.defaultUser[key] = value;
+                }
+            });
+        }
+        return this.defaultUser;
     }
     private _checkTabExistance(qParams: Params) {
         if (!this.appMode) {
