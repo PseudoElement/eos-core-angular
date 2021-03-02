@@ -705,7 +705,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     BlockUser() {
         const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
         this._userParamSrv.getSysTechUser().then((allSysTech: boolean) => {
-            if (!allSysTech) {
+            if (allSysTech) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
                     title: 'Предупреждение:',
@@ -764,21 +764,23 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         });
     }
-    getLoginDeleted(): string {
+    getLoginDeleted(): { names: string; delIsns: string } {
         let names = '';
+        let delIsns = 'isnotnull|';
         this.listUsers.forEach((list: UserSelectNode) => {
             if (list.isChecked || list.isSelected || list.selectedMark) {
                 if (list.id === this._appContext.CurrentUser.ISN_LCLASSIF) {
                     this.deleteOwnUser = list.name;
                 } else {
                     names += `${list.name}, `;
+                    delIsns += `^${list.id}|`;
                 }
             }
         });
-        return names.substr(0, names.length - 2);
+        return {names: names.substr(0, names.length - 2), delIsns  };
     }
     DeliteUser() {
-        const names = this.getLoginDeleted();
+        const {names, delIsns} = this.getLoginDeleted();
         if (this.checkedOwnDelete(names)) {
             this._msgSrv.addNewMessage({
                 title: 'Предупреждение',
@@ -797,19 +799,21 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                             criteries: {
                                 DELO_RIGHTS: '1%',
                                 DELETED: '0',
-                                ISN_LCLASSIF: '1:null'
+                                ISN_LCLASSIF: delIsns,
+                                AV_SYSTEMS: '_1%',
+                                ORACLE_ID: 'isnotnull',
+                                'USER_TECH.FUNC_NUM': '^1'
                             },
                         },
-                        expand: 'USER_TECH_List'
+                        skip: 0,
+                        top: 2,
+                        orderby: 'ISN_LCLASSIF',
+                        loadmode: 'Table'
                     }).then((data: any) => {
-                        const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
-                        let count = 0;
-                        for (const user of usersUnlimit) {
-                            if (names.indexOf(user.SURNAME_PATRON) !== -1) {
-                                count++;
-                            }
-                        }
-                        if (usersUnlimit.length === count) {
+                        // > 1 включая владельца схемы (ins_lclassif = 0 )
+                        if (data.length > 1) {
+                            this.deleteConfirm(names);
+                        } else {
                             this._msgSrv.addNewMessage({
                                 title: 'Предупреждение',
                                 msg: `Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.`,
@@ -817,7 +821,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                             });
                             return;
                         }
-                        this.deleteConfirm(names);
                     });
                 } else {
                     this.deleteConfirm(names);

@@ -543,36 +543,42 @@ export class UserParamsService {
         }
     }
 
-    getSysTechUser(forCurrentUser: boolean = false): Promise<any> {
-        return this._pipRx.read({
-            USER_CL: {
-                criteries: {
-                    DELO_RIGHTS: '1%',
-                    DELETED: '0',
-                    ISN_LCLASSIF: '1:null'
+    getSysTechUser(curUser: {oldRights: string[], newRights: string[], editUser: IParamUserCl} = null): Promise<any> {
+        let limitTechUser = false;
+        let checkedUsersIsn = '';
+        if (!curUser) {
+            checkedUsersIsn = this.checkedUsers.map((user) => `^${user.data.ISN_LCLASSIF}|`).join('');
+        } else {
+            limitTechUser = curUser.oldRights[0] === '1' && curUser.newRights[0] === '0' && curUser.editUser.ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF ? this.CheckLimitTech(this.curentUser.USER_TECH_List) : true;
+            checkedUsersIsn = `^${this.curentUser.ISN_LCLASSIF}`;
+        }
+        if (!limitTechUser) {
+            return this._pipRx.read({
+                USER_CL: {
+                    criteries: {
+                        DELO_RIGHTS: '1%',
+                        DELETED: '0',
+                        ISN_LCLASSIF: checkedUsersIsn,
+                        AV_SYSTEMS: '_1%',
+                        ORACLE_ID: 'isnotnull',
+                        'USER_TECH.FUNC_NUM': '^1'
+                    },
                 },
-            },
-            loadmode: 'Table',
-            expand: 'USER_TECH_List'
-        }).then((data: USER_CL[]) => {
-            const countNotLim = [];
-            let checkedUsers = [];
-            if (forCurrentUser) {
-                checkedUsers = data.filter(user => this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && !this.CheckLimitTech(user.USER_TECH_List));
-            } else {
-                const checkedUsersIsn = this.checkedUsers.map((user) => user.data.ISN_LCLASSIF);
-                checkedUsers = data.filter(user => checkedUsersIsn.indexOf(user.ISN_LCLASSIF) !== -1 && !this.CheckLimitTech(user.USER_TECH_List));
-            }
-            for (const user of data) {
-                if (!this.CheckLimitTech(user.USER_TECH_List) && user.TECH_RIGHTS.charAt(0) === '1') {
-                    countNotLim.push(user);
+                skip: 0,
+                top: 2,
+                orderby: 'ISN_LCLASSIF',
+                loadmode: 'Table'
+            }).then((data: USER_CL[]) => {
+                if (data.length > 1) {
+                   return false;
+                } else {
+                   return true;
                 }
-            }
-            return countNotLim.length > checkedUsers.length ||
-                (countNotLim.length === checkedUsers.length &&
-                countNotLim.length && checkedUsers.length &&
-                !countNotLim.some((user) => user.ISN_LCLASSIF === checkedUsers[0].ISN_LCLASSIF));
-        });
+            });
+        } else {
+            return Promise.resolve(false);
+        }
+
     }
 
     closeWindowForCurrentSettings(isCurrentSettings: boolean) {
