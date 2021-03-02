@@ -414,7 +414,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         }
         if (tree.key === 'MAILRECEIVE_TAKE_RUBRICS_RK') {
             if (value) {
-                const defaultValue = this.getDefaultValue('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO', 'mailReceive');
+                const defaultValue = this.getDefaultValue('MAILRECEIVE_TAKE_RUBRICS_RK_RADIO', 'mailReceive');
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].enable();
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue(defaultValue);
             } else {
