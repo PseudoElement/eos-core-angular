@@ -67,6 +67,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _appContext: AppContext,
     ) {}
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.appMode && this.appMode.cbr) {
             // Скрываем вкладку "Пересылка документа" если mode=ARMCBR
             this.fieldGroups.delete(0);
@@ -165,10 +166,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             if (this.defaultTitle) {
                 this.defaultUserSubmit();
             }
-           this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            if (!this.isCurrentSettings) {
+                this.editFlag = false;
+                this.remaster.submitEmit.next();
+            }
             this.resetFlagsBtn();
-            this.editFlag = false;
-            this.remaster.submitEmit.next();
             this._pushState();
             this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             // this._userSrv.getUserIsn().then(() => {

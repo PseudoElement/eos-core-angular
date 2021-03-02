@@ -59,6 +59,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _formHelper: FormHelperService,
     ) {}
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
             this.currTab = Number(this.openingTab) - 1;
         }
@@ -175,8 +176,10 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this.defaultSetFlagBtn();
             this.hash = this._userSrv.hashUserContext;
             this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
-            this.editFlag = false;
-            this._RemasterService.submitEmit.next();
+            if (!this.isCurrentSettings) {
+                this.editFlag = false;
+                this._RemasterService.submitEmit.next();
+            }
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });
         }).catch(error => {

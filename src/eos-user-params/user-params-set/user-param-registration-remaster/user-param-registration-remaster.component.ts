@@ -80,6 +80,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     ngOnInit() {
         if (this.isCurrentSettings) {
             this.fieldGroupsForRegistration.set(3, 'Связки и переписка');
+            this.editFlag = true;
         }
         if (this.appMode && this.appMode.cbr) {
             // Скрываем вкладки "Сканирование и печать штрих-кода" и "Связки и автопоиск" для mode=ARMCBR
@@ -256,8 +257,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.defaultSetFlagBtn();
             this.hash = this._userSrv.hashUserContext;
-            this.editFlag = false;
-            this._RemasterService.submitEmit.next();
+            if (!this.isCurrentSettings) {
+                this.editFlag = false;
+                this._RemasterService.submitEmit.next();
+            }
             this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.isSave = false;
             // return this._userSrv.getUserIsn(String(userId)).then(res => {

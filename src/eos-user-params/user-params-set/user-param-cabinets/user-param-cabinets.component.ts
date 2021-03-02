@@ -104,6 +104,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {
         this.onResize();
+        this.flagEdit = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
             this.currTab = Number(this.openingTab) - 1;
         }
@@ -420,8 +421,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.routeSubscriber();
                 this.init(true)
                 .then(() => {
-                    this.btnDisable = true;
-                    this.flagEdit = false;
+                    if (!this.isCurrentSettings) {
+                        this.btnDisable = true;
+                        this.flagEdit = false;
+                    }
                     this.informerTabRef.submit(this.flagEdit);
                     if (this.defaultTitle) {
                         this.defaultNotificatorRef.submit(this.flagEdit);

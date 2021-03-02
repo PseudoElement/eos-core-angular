@@ -100,6 +100,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         const config = {expand: 'USER_PARMS_List'};
         if (this.mainUser) {
             config['isn_cl'] = this.mainUser;
@@ -474,15 +475,17 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         });
         return Promise.all([requestCreate, requestDelete]).then(data => {
             this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
-            this.editFlag = false;
             this.listsSertInfo.splice(0, this.listsSertInfo.length);
+            if (!this.isCurrentSettings) {
+                this.editFlag = false;
+                this.checkchanges();
+            }
             if (this.isCarma) {
                 this.getSerts();
             } else {
                 this.getSertNotCarma();
             }
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-            this.checkchanges();
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancellation(false);

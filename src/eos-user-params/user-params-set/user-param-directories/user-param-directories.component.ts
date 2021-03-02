@@ -58,6 +58,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.flagEdit = !!this.isCurrentSettings;
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
@@ -138,8 +139,12 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             return this._pipRx.batch(query, '').then(() => {
                 this.prepFormForSave();
                 this.btnDisable = true;
-                this.flagEdit = false;
                 this._pushState();
+                if (!this.isCurrentSettings) {
+                    this.flagEdit = false;
+                } else {
+                    this.btnDisable = false;
+                }
                 this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 if (this.defaultTitle) {

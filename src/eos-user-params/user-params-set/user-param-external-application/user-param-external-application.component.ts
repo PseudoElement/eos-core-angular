@@ -51,6 +51,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices
     ) {}
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForDeskApl.length) {
             this.currTab = Number(this.openingTab) - 1;
         }
@@ -198,12 +199,16 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             query = this.createObjRequest();
         }
         return this.apiSrv.batch(query, '').then(response => {
-            this.btnDisabled = true;
             this.upStateInputs();
-            this.editFlag = false;
-            this.disableForEditAllForm(false);
-            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this.btnDisabled = true;
             this._pushState();
+            if (!this.isCurrentSettings) {
+                this.editFlag = false;
+                this.disableForEditAllForm(false);
+            } else {
+                this.btnDisabled = false;
+            }
+            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             if (this.defaultTitle) {
                 this.DefaultSubmitEmit.emit(this.form.value);
