@@ -7,7 +7,12 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CABINETS_USER, CABINETS_USER_INFORMER, CABINETS_USER_NOTIFICATOR, SEND_ORDER_TO_FOR_ARM } from '../shared-user-param/consts/cabinets.consts';
+import {
+    CABINETS_USER_INFORMER,
+    CABINETS_USER_NOTIFICATOR,
+    SEND_ORDER_TO_FOR_ARM,
+    CABINETS_USER_FOLDERS, CABINETS_USER_ASSIGMENTS
+} from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -150,7 +155,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.editMode();
         this.formSubscriber();
         return Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
-            CABINETS_USER.fields.map(fields => {
+            [...CABINETS_USER_FOLDERS.fields, ...CABINETS_USER_ASSIGMENTS.fields].map(fields => {
                 if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
                     fields.options.splice(1, fields.options.length);
                     sort.forEach(element => {
@@ -169,20 +174,20 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
 
     pretInputs(): void {
         if (this.appMode.arm) {
-            const index = CABINETS_USER.fields.findIndex(field => {
+            const index = CABINETS_USER_ASSIGMENTS.fields.findIndex(field => {
                 if (field.key === 'SEND_ORDER_TO') {
                     this.allData.SEND_ORDER_TO = this.allData.SEND_ORDER_TO === '2' ? 'YES' : 'NO';
                     return true;
                 }
             });
             if (index !== -1) {
-                CABINETS_USER.fields[index] = {...SEND_ORDER_TO_FOR_ARM};
+                CABINETS_USER_ASSIGMENTS.fields[index] = {...SEND_ORDER_TO_FOR_ARM};
             }
         }
         this.FOLDERCOLORSTATUS = this.allData['FOLDERCOLORSTATUS'];
         this.newFolderString = this.FOLDERCOLORSTATUS;
-        this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.allData);
-        this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
+        this.prepareData = this.formHelp.parse_Create([...CABINETS_USER_FOLDERS.fields, ...CABINETS_USER_ASSIGMENTS.fields], this.allData);
+        this.prepareInputs = this.formHelp.getObjectInputFields([...CABINETS_USER_FOLDERS.fields, ...CABINETS_USER_ASSIGMENTS.fields]);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
         this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value;
     }
@@ -598,37 +603,75 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
+
+    getCurentTabDefaultFields(tab: number) {
+        switch (tab) {
+            case 0: {
+                return CABINETS_USER_FOLDERS;
+            }
+            case 1: {
+                return CABINETS_USER_ASSIGMENTS;
+            }
+            case 2: {
+                return  this.isInformer && CABINETS_USER_INFORMER;
+            }
+            case 3: {
+                return CABINETS_USER_NOTIFICATOR;
+            }
+        }
+    }
+
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const mainParams = this.formHelp.queryparams(CABINETS_USER, 'fieldsDefaultValue');
-        const lastTabFields = this.isInformer ? CABINETS_USER_INFORMER : CABINETS_USER_NOTIFICATOR ;
-        const lastTabParams = this.formHelp.queryparams(lastTabFields, 'fieldsDefaultValue');
-        const prep = this.formHelp.getObjQueryInputsFieldForDefault([...mainParams, ...lastTabParams]);
+        const curTabParams = this.formHelp.queryparams(this.getCurentTabDefaultFields(this.currTab), 'fieldsDefaultValue');
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(curTabParams);
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;
                 this.creatchesheDefault = this.formHelp.createhash(data);
-                this.informerTabRef.default(this.creatchesheDefault);
-                this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
-                this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
-                this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-                this.defoltInputs = this.patchInputValue(data, this.defoltInputs);
-                this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
-                this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
-                this.prepFormCancel(this.defoltInputs, true);
-                this.checkDataToDisabled();
-                this.getControlAuthor().then((author) => {
-                    if (author === false) {
-                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('', { emitEvent: false });
-                    } else {
-                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                switch (this.currTab) {
+                    case 0: {
+                        this.parseDefaultFields(CABINETS_USER_FOLDERS.fields, data);
+                        this.defoltInputs = this.patchInputValue(data, this.defoltInputs);
+                        this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
+                        this.checkDataToDisabled();
+                        this.prepFormCancel(this.defoltInputs, true);
+                        this.getControlAuthor().then((author) => {
+                            if (author === false) {
+                                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('', { emitEvent: false });
+                            } else {
+                                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                            }
+                        });
+                        return;
                     }
-                });
+                    case 1: {
+                        this.parseDefaultFields(CABINETS_USER_ASSIGMENTS.fields, data);
+                        this.prepFormCancel(this.defoltInputs, true);
+                        this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
+                        return;
+                    }
+                    case 2: {
+                        this.informerTabRef.default(this.creatchesheDefault);
+                        return;
+                    }
+                    case 3: {
+                        this.parseDefaultFields(CABINETS_USER_NOTIFICATOR.fields, data);
+                        this.prepFormCancel(this.defoltInputs, true);
+                        return;
+                    }
+                }
             })
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    parseDefaultFields(fields, data) {
+        this.prepareData = this.formHelp.parse_Create(fields, this.creatchesheDefault);
+        this.prepareInputs = this.formHelp.getObjectInputFields(fields);
+        this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
     }
     createMessage(type, title, msg) {
         return {
