@@ -23,6 +23,8 @@ export class UserParamsService {
     userEditOrgType: any[] = [];
     checkedUsers: any[] = [];
     cardModal: BsModalRef;
+    // используется только в настройках пользователей при сохранении настроек
+    public mainUser;
     public SubEmail: Subject<any> = new Subject();
     public SubmitCards: Subject<any> = new Subject();
     public submitSave;

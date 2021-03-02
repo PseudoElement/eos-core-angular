@@ -55,7 +55,7 @@ export class UserHeaderComponent implements OnInit {
     ngOnInit() {
         if (this.checkSegment) {
             setTimeout(() => {
-                this.editMode  = true;
+                this.editMode = true;
                 this.editEmit.emit(this.editMode);
             });
         }
@@ -103,6 +103,7 @@ export class UserHeaderComponent implements OnInit {
     }
     async saveFile() {
         const data = await this._userServices.getUserIsn({
+            isn_cl: this._userServices.mainUser || null,
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
         });
@@ -137,37 +138,38 @@ export class UserHeaderComponent implements OnInit {
         const getSettingsData = () => {
             let t = '';
 
-            this._userServices.curentUser.USER_PARMS_List.forEach((param) => {
-                let parmValue = param.PARM_VALUE || '';
-                let parmName = param.PARM_NAME || '';
+            this._userServices.curentUser.USER_PARMS_List.filter(node => node.PARM_GROUP !== -99)
+                .forEach((param) => {
+                    let parmValue = param.PARM_VALUE || '';
+                    let parmName = param.PARM_NAME || '';
 
-                // условия для переноса слов в строках
-                // для нормального отображения в Microsoft Word
-                if (parmValue.indexOf(';') !== -1) {
-                    parmValue = parmValue.replace(/\;/gi, ';\r');
-                } else if (parmValue.indexOf(',') !== -1) {
-                    parmValue = parmValue.replace(/\,/gi, ',\r');
-                } else if (parmValue.length > 35) {
-                    const values = parmValue.split('');
-                    parmValue = '';
-                    values.forEach((v, i) => {
-                        const val = (i % 35 === 0 && i >= 35) ? v + '\r' : v;
-                        parmValue += val;
-                    });
-                }
-                if (parmName.length > 10) {
-                    const names = parmName.split('_');
-                    parmName = '';
-                    names.forEach((n, i) => {
-                        let updatedN = (i + 1 === names.length) ? n : n + '_';
-                        if (i % 2 === 0) {
-                            updatedN += '\n';
-                        }
-                        parmName += updatedN;
-                    });
-                }
+                    // условия для переноса слов в строках
+                    // для нормального отображения в Microsoft Word
+                    if (parmValue.indexOf(';') !== -1) {
+                        parmValue = parmValue.replace(/\;/gi, ';\r');
+                    } else if (parmValue.indexOf(',') !== -1) {
+                        parmValue = parmValue.replace(/\,/gi, ',\r');
+                    } else if (parmValue.length > 35) {
+                        const values = parmValue.split('');
+                        parmValue = '';
+                        values.forEach((v, i) => {
+                            const val = (i % 35 === 0 && i >= 35) ? v + '\r' : v;
+                            parmValue += val;
+                        });
+                    }
+                    if (parmName.length > 10) {
+                        const names = parmName.split('_');
+                        parmName = '';
+                        names.forEach((n, i) => {
+                            let updatedN = (i + 1 === names.length) ? n : n + '_';
+                            if (i % 2 === 0) {
+                                updatedN += '\n';
+                            }
+                            parmName += updatedN;
+                        });
+                    }
 
-                const textData = `
+                    const textData = `
                 <tr>
                     <td>${parmName}</td>
                     <td>${param.PARM_GROUP}</td>
@@ -175,8 +177,8 @@ export class UserHeaderComponent implements OnInit {
                 </tr>
                 `;
 
-                t = t + textData;
-            });
+                    t = t + textData;
+                });
 
             return t;
         };
@@ -232,8 +234,12 @@ export class UserHeaderComponent implements OnInit {
         </body>
         </html>
         `;
-        const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
-        saveAs(blobHtml, 'Настройки пользователя.html');
+        const blobHtml = new Blob([html], { type: 'text/html;charset=utf-8' });
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveBlob(blobHtml, 'Настройки пользователя.html');
+        } else {
+            saveAs(blobHtml, 'Настройки пользователя.html');
+        }
     }
 
     patchTitleTooltip(): string | null {
