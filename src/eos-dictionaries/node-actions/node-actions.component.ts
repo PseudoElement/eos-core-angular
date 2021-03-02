@@ -452,7 +452,9 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.paste:
                     _enabled = _enabled && (marketN && marketN.length > 0);
-                    _enabled = _enabled && this.mercedNodesWithoutSliced.length > 0;
+                    if (_enabled && dueTo) {
+                        _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
+                    }
                     break;
                 case E_RECORD_ACTIONS.copy:
                     _enabled = _enabled && opts.listHasItems;
