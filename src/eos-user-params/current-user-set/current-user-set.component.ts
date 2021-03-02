@@ -20,6 +20,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     defaultUser: any;
     disableSave: boolean;
     paramId: string = 'rc';
+    queryParams = {};
     public mainUser;
     public appMode: IUserSettingsModes = {
         tk: true,
@@ -58,6 +59,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                     })
                     .catch(() => this.isLoading = false);
             }
+            this.queryParams = qParams ? {...qParams} : {};
             if (!this.appMode.hasMode && qParams.mode) {
                 this.appMode = {};
                 switch (qParams.mode) {

@@ -5,6 +5,7 @@
                 <ng-container *ngFor="let param of listSettings">
                     <li *ngIf="param.url" class="list-group-item"
                         [routerLink]="['/user_param/current-settings/', param.url]"
+                        [queryParams]="queryParams"
                         routerLinkActive="active-element-param">{{param.title}}</li>
                 </ng-container>
             </ul>
