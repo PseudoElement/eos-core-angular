@@ -280,9 +280,13 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             this.mapChanges.clear();
             this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
             this.botInputs();
-            this.flagEdit = false;
             this.btnDisabled = true;
             this._pushState();
+            if (!this.isCurrentSettings) {
+                this.flagEdit = false;
+            } else {
+                this.btnDisabled = false;
+            }
             this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.editMode();
             this._msg.addNewMessage(PARM_SUCCESS_SAVE);
