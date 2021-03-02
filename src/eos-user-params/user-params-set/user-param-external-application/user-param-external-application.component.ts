@@ -51,6 +51,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices
     ) {}
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForDeskApl.length) {
             this.currTab = Number(this.openingTab) - 1;
         }

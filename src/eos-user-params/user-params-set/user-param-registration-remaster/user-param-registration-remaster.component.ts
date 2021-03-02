@@ -80,6 +80,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     ngOnInit() {
         if (this.isCurrentSettings) {
             this.fieldGroupsForRegistration.set(3, 'Связки и переписка');
+            this.editFlag = true;
         }
         if (this.appMode && this.appMode.cbr) {
             // Скрываем вкладки "Сканирование и печать штрих-кода" и "Связки и автопоиск" для mode=ARMCBR

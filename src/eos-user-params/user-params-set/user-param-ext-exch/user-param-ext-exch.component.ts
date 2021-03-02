@@ -59,6 +59,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _formHelper: FormHelperService,
     ) {}
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
             this.currTab = Number(this.openingTab) - 1;
         }

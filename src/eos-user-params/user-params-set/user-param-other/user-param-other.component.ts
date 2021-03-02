@@ -67,6 +67,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _appContext: AppContext,
     ) {}
     ngOnInit() {
+        this.editFlag = !!this.isCurrentSettings;
         if (this.appMode && this.appMode.cbr) {
             // Скрываем вкладку "Пересылка документа" если mode=ARMCBR
             this.fieldGroups.delete(0);
