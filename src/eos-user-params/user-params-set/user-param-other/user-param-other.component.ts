@@ -165,10 +165,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             if (this.defaultTitle) {
                 this.defaultUserSubmit();
             }
-           this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            if (!this.isCurrentSettings) {
+                this.editFlag = false;
+                this.remaster.submitEmit.next();
+            }
             this.resetFlagsBtn();
-            this.editFlag = false;
-            this.remaster.submitEmit.next();
             this._pushState();
             this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             // this._userSrv.getUserIsn().then(() => {

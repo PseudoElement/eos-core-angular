@@ -135,8 +135,12 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             return this._userParamsSetSr.BatchData(arrayQuery[0].method, arrayQuery[0].requestUri, arrayQuery[0].data).then(() => {
                 this.prepFormForSave();
                 this.btnDisable = true;
-                this.flagEdit = false;
                 this._pushState();
+                if (!this.isCurrentSettings) {
+                    this.flagEdit = false;
+                } else {
+                    this.btnDisable = false;
+                }
                 this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));

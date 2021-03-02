@@ -200,12 +200,16 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             .batch(query, '')
             .then(data => {
                 this.upStateInputs();
-                this.btnDisabled = false;
                 this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 // this._userSrv.getUserIsn(String(userId));
-                this.editFlag = false;
-                this.disableForEditAllForm(event);
+                this.btnDisabled = false;
                 this._pushState();
+                if (!this.isCurrentSettings) {
+                    this.editFlag = false;
+                    this.disableForEditAllForm(event);
+                } else {
+                    this.btnDisabled = true;
+                }
                 this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit([this.form.controls, true]);
