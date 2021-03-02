@@ -176,10 +176,12 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         });
     }
     editMode() {
-        if (this.flagEdit || this.isCurrentSettings) {
-            this.form.enable({ emitEvent: false });
-        } else {
-            this.form.disable({ emitEvent: false });
+        if (this.form) {
+            if ((this.flagEdit || this.isCurrentSettings)) {
+                this.form.enable({ emitEvent: false });
+            } else {
+                this.form.disable({ emitEvent: false });
+            }
         }
     }
     submit() {
