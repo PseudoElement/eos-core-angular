@@ -766,7 +766,7 @@ bs-dropdown-container {
                             }
 
                             eos-dynamic-input {
-                                margin: 0;
+                                margin: -5px 15px 15px;
 
                                 div.form-group {
                                     width: 315px;
@@ -1151,8 +1151,7 @@ bs-dropdown-container {
                     }
 
                     &:nth-child(8) {
-                        .add-to-juornal-radio,
-                        .add-to-juornal {
+                        .add-to-juornal-radio {
                             @include set-margin-for-dynamic-ipnputs;
                         }
 
@@ -1163,11 +1162,11 @@ bs-dropdown-container {
                         }
 
                         .add-to-juornal {
-                            display: block;
+                           margin: -10px 0 15px 15px;
 
-                            & > eos-dynamic-input:first-of-type {
-                                margin-top: 0;
-                            }
+                           & > eos-dynamic-input {
+                               flex-basis: 200px;
+                           }
                         }
                     }
 
@@ -1736,6 +1735,10 @@ bs-dropdown-container {
                                             padding: 0;
                                             margin: 15px 15px;
 
+                                            & > div > div.input_wrapper {
+                                                width: 100% !important;                                                
+                                            }
+
                                             div.form-group {
                                                 margin: 0;
                                             }
@@ -1772,20 +1775,11 @@ bs-dropdown-container {
 
                     eos-dynamic-input {
                         margin-bottom: 0;
+                        margin-left: 15px !important;
 
                         &:nth-child(1) {
                             margin-top: 0 !important;
-                        }
-
-                        &:nth-child(5) {
-                            eos-dynamic-input-radio > div {
-                                padding-left: 25px;
-                            }
-                        }
-
-                        &:last-child {
-                            margin-left: 15px !important;
-                        }
+                        }                        
                     }
                 }
             }
@@ -2133,13 +2127,7 @@ bs-dropdown-container {
 
                                 div.form-group {
                                     margin-bottom: 0;
-                                }
-
-                                &::before {
-                                    @include style-horizontal-line;
-                                    left: 0;
-                                    bottom: 77px;
-                                }
+                                }                               
                             }
 
                             &:nth-child(4) {
@@ -2163,8 +2151,8 @@ bs-dropdown-container {
                         }
 
                         div.user-group-form:nth-child(6) {
-                            margin-bottom: 20px;
-                            margin-left: 10px;
+                            position: relative;
+                            margin: 25px 0 20px 10px;                           
 
                             div.inputs-inline {
                                 display: flex;
@@ -2182,6 +2170,11 @@ bs-dropdown-container {
                                         margin-left: 10px;
                                     }
                                 }
+                            }
+
+                            &::before {
+                                @include style-horizontal-line;
+                                top: -13px;
                             }
                         }
 
@@ -2495,6 +2488,12 @@ bs-dropdown-container {
                     &:nth-child(3) {
                         div.classifDep {
                             @include style-other-button($isCB: true);
+                        }
+                    }
+
+                    &:nth-child(5) {
+                        & > div > span {
+                            @include style-title-bookmarks($isCB: true);                            
                         }
                     }
                 }
