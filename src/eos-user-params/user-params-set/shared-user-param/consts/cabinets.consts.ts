@@ -133,6 +133,7 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
             type: 'numberIncrement',
             title: 'Максимальное количество записи',
             pattern: REG_MIN_VAL,
+            minValue: 1,
         },
         {
             key: 'CONTROLL_AUTHOR',
