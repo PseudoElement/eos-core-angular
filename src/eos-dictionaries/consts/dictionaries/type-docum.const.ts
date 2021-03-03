@@ -11,13 +11,13 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
     dictType: E_DICT_TYPE.linear,
     actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
     visible: true,
-    keyField: 'ISN_CLASSIF',
-    treeFields: ['ISN_CLASSIF'],
+    keyField: 'ISN_LCLASSIF',
+    treeFields: ['ISN_LCLASSIF'],
     defaultOrder: 'CLASSIF_NAME',
     iconName: 'eos-icon-template-blue',
     fields: [
         {
-            key: 'ISN_CLASSIF',
+            key: 'ISN_LCLASSIF',
             title: '',
             type: 'number',
         },
