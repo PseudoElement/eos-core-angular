@@ -138,10 +138,14 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     }
 
     setTab(i: number) {
+        // отмена выбора вкладки "Сканирование и печать штрих-кода" в настройках по умолчанию
         if (this.isRegTabAndDefaultSettings(i)) {
              return;
         }
-        this.currTab = i;
+        // проверка валидности ориентации печати штрихкода
+        if (!this.checkSelectBarcode()) {
+            this.currTab = i;
+        }
     }
 
     emitChanges($event) {
