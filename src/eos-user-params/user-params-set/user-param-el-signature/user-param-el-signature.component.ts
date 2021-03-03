@@ -12,6 +12,7 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { AppContext } from '../../../eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -59,11 +60,12 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         ['CERT_USER_STORES', 'Хранилища сертификатов пользователя']
     ]);
 
-    // private readonly first = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
+    private readonly disableForNotTech = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'PKI_ACTIVEX', 'PKI_INITSTR', 'DIFF_CHECK_EDS', 'WEB_EDS_VERIFY_ON_SERVER'];
     private readonly second = ['DIFF_CHECK_CRYPTO_INITSTR', 'DIFF_CHECK_PKI_INITSTR'];
     private listForQuery: Array<string> = [];
     constructor(
         private _userSrv: UserParamsService,
+        private _appCtx: AppContext,
         private _inputCtrlSrv: InputParamControlService,
         private _formHelper: FormHelperService,
         private _modalService: BsModalService,
@@ -305,6 +307,11 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             // this.first.forEach(el => {
             //     this.form.controls[el].enable({ emitEvent: false });
             // });
+        }
+        if (this._appCtx.CurrentUser.DELO_RIGHTS[0] !== '0' && this.isCurrentSettings) {
+            [...this.disableForNotTech, ...this.second].forEach(el => {
+                this.form.controls[el].disable({ emitEvent: false });
+            });
         }
     }
     private _pushState() {
