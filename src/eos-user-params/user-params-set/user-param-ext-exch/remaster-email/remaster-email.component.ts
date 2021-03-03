@@ -406,7 +406,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             if (value) {
                 const defaultValue = this.getDefaultValue('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO', 'mailReceive');
                 this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].enable();
-                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue(defaultValue);
+                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue(defaultValue === '' ? '0' : defaultValue);
             } else {
                 this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue('');
                 this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].disable();
@@ -416,7 +416,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             if (value) {
                 const defaultValue = this.getDefaultValue('MAILRECEIVE_TAKE_RUBRICS_RK_RADIO', 'mailReceive');
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].enable();
-                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue(defaultValue);
+                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue(defaultValue === '' ? '0' : defaultValue);
             } else {
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue('');
                 this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].disable();

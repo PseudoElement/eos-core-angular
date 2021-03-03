@@ -11,13 +11,65 @@ export const SEND_ORDER_TO_FOR_ARM = {
     type: 'boolean',
     title: 'Направлять резолюции в папку «На контроле» кабинета автора в АРМ «ДелоWeb»',
 };
-export const CABINETS_USER: IBaseUsers = {
+export const CABINETS_USER_FOLDERS: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
     apiInstance: 'USER_PARMS',
     disabledFields: [
     ],
     fields: [
+        {
+            key: 'HILITE_RESOLUTION',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_MAX_SIZE1
+        },
+        {
+            key: 'HILITE_RESOLUTION_BOOLEAN',
+            type: 'boolean',
+            title: 'с поручениями, срок исполнения которых истекает через'
+        },
+        {
+            key: 'HILITE_PRJ_RC',
+            type: 'numberIncrement',
+            title: '',
+            pattern: REG_MAX_SIZE1
+        },
+        {
+            key: 'HILITE_PRJ_RC_BOOLEAN',
+            type: 'boolean',
+            title: 'с проектами документов, срок которых истекает через '
+        },
+        {
+            key: 'SCRATCH_RC',
+            type: 'boolean',
+            title: 'при вводе резолюции по документу без поручений'
+        },
+        {
+            key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: 'boolean',
+            title: 'при вводе отчета'
+        },
+        {
+            key: 'SCRATCH_RESOL',
+            type: 'boolean',
+            title: 'при вводе резолюции по неконтрольному документу с проставлением даты отчета'
+        },
+        {
+            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: 'boolean',
+            title: 'удалять документы без поручений из кабинета '
+        },
+        {
+            key: 'OZN_FILL_REPLY',
+            type: 'boolean',
+            title: 'вводить отчет об исполнении поручения с текстом:'
+        },
+        {
+            key: 'OZN_FILL_REPLY_TEXT',
+            type: 'string',
+            title: ''
+        },
         {
             key: 'FOLDERCOLORSTATUS',
             type: 'text',
@@ -69,40 +121,6 @@ export const CABINETS_USER: IBaseUsers = {
             title: 'На подписи'
         },
         {
-            key: 'HILITE_RESOLUTION',
-            type: 'numberIncrement',
-            title: '',
-            pattern: REG_MAX_SIZE1
-        },
-        {
-            key: 'HILITE_RESOLUTION_BOOLEAN',
-            type: 'boolean',
-            title: 'с поручениями, срок исполнения которых истекает через'
-        },
-        // {
-        //     key: 'HILITE_RESOLUTION_INCREMENT',
-        //     type: 'numberIncrement',
-        //     title: '',
-        //     pattern: REG_MAX_SIZE1
-        // },
-        {
-            key: 'HILITE_PRJ_RC',
-            type: 'numberIncrement',
-            title: '',
-            pattern: REG_MAX_SIZE1
-        },
-        {
-            key: 'HILITE_PRJ_RC_BOOLEAN',
-            type: 'boolean',
-            title: 'с проектами документов, срок которых истекает через '
-        },
-        // {
-        //     key: 'HILITE_PRJ_RC_INCREMENT',
-        //     type: 'numberIncrement',
-        //     title: '',
-        //     pattern: REG_MAX_SIZE1
-        // },
-        {
             key: 'CABSORT_ISN_DOCGROUP_LIST',
             type: 'select',
             title: '',
@@ -111,41 +129,152 @@ export const CABINETS_USER: IBaseUsers = {
             ]
         },
         {
-            key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
-            type: 'boolean',
-            title: 'при вводе отчета'
-        },
-        {
-            key: 'SCRATCH_RC',
-            type: 'boolean',
-            title: 'при вводе резолюции по документу без поручений'
-        },
-        {
-            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
-            type: 'boolean',
-            title: 'удалять документы без поручений из кабинета '
-        },
-        {
-            key: 'OZN_FILL_REPLY',
-            type: 'boolean',
-            title: 'вводить отчет об исполнении поручения с текстом:'
-        },
-        {
-            key: 'OZN_FILL_REPLY_TEXT',
-            type: 'string',
-            title: ''
-        },
-        {
-            key: 'SCRATCH_RESOL',
-            type: 'boolean',
-            title: 'при вводе резолюции по неконтрольному документу с проставлением даты отчета'
-        },
-        {
             key: 'FOLDER_ITEM_LIMIT_RESULT',
             type: 'numberIncrement',
             title: 'Максимальное количество записи',
             pattern: REG_MIN_VAL,
         },
+        {
+            key: 'CONTROLL_AUTHOR',
+            type: 'string',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_CONTROLLER',
+            type: 'text',
+            title: ''
+        },
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'RESOLUTION_CONTROLLER',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'HILITE_RESOLUTION_BOOLEAN',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'HILITE_RESOLUTION',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'HILITE_PRJ_RC_BOOLEAN',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'HILITE_PRJ_RC',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SCRATCH_RC',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SCRATCH_RESOL',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'OZN_FILL_REPLY',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'OZN_FILL_REPLY_TEXT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_RECEIVED',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_HAVE_LEADERSHIP',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_FOR_EXECUTION',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_FOR_CONSIDERATION',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_ON_SIGHT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_UNDER_CONTROL',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_INTO_THE_BUSINESS',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS_ON_THE_SIGNATURE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CABSORT_ISN_DOCGROUP_LIST',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDER_ITEM_LIMIT_RESULT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDERCOLORSTATUS',
+            type: '',
+            title: ''
+        },
+        {
+            key: 'CONTROLL_AUTHOR',
+            type: '',
+            title: '',
+        },
+    ]
+};
+export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
+    id: 'cabinets',
+    title: 'Кабинеты',
+    apiInstance: 'USER_PARMS',
+    disabledFields: [
+    ],
+    fields: [
         {
             key: 'RESOLUTION_DATE',
             type: 'radio',
@@ -162,9 +291,19 @@ export const CABINETS_USER: IBaseUsers = {
             title: 'от предыдущей резолюции'
         },
         {
-            key: 'RESOLUTION_SELECT_AUTHOR',
+            key: 'RESOLUTION_CONTROL_STATE',
+            type: 'radio',
+            title: 'Контроль поручения',
+            options: [
+                {value: 'YES', title: 'на контроле'},
+                {value: 'NO', title: 'не контрольное'},
+                {value: 'PARENT', title: 'от документа (родительского поручения)'}
+            ]
+        },
+        {
+            key: 'PLAN_DATE_PARENT',
             type: 'boolean',
-            title: 'вручную'
+            title: 'Копировать плановую дату из вышестоящего поручения или документа'
         },
         {
             key: 'PARENT_RESOLUTION_TEXT',
@@ -202,39 +341,24 @@ export const CABINETS_USER: IBaseUsers = {
             title: 'Снимать поручение с контроля, если снято вышестоящее поручение в АРМ «ДелоWeb»'
         },
         {
-            key: 'PLAN_DATE_PARENT',
+            key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
             type: 'boolean',
-            title: 'Копировать плановую дату из вышестоящего поручения или документа'
+            title: 'Применять ЭП резолюций и проектов резолюций',
         },
         {
-            key: 'CHECK_RESOL_REPORT',
-            type: 'boolean',
-            title: 'проверять наличие отчетов исполнителей'
-        },
-        {
-            key: 'SHOW_REPLY_NOTE',
-            type: 'boolean',
-            title: 'Примечание'
-        },
-        {
-            key: 'SHOW_REPLY_READED',
-            type: 'boolean',
-            title: 'Отметку о прочтении'
-        },
-        {
-            key: 'RESOLUTION_CONTROLLER',
-            type: 'text',
-            title: ''
-        },
-        {
-            key: 'RESOLUTION_CONTROL_STATE',
+            key: 'SEND_ORDER_TO',
             type: 'radio',
-            title: 'Контроль поручения',
+            title: '',
             options: [
-                {value: 'YES', title: 'на контроле'},
-                {value: 'NO', title: 'не контрольное'},
-                {value: 'PARENT', title: 'от документа (родительского поручения)'}
+                {value: '2', title: 'всем фигурантам'},
+                {value: '1', title: 'контролеру и исполнителям'},
+                {value: '0', title: 'не рассылать'},
             ]
+        },
+        {
+            key: 'RESOLUTION_CICLE',
+            type: 'boolean',
+            title: 'Направлять резолюцию исполнителям из кабинета автора',
         },
         {
             key: 'ADD_JOURNAL_4DOC',
@@ -266,31 +390,6 @@ export const CABINETS_USER: IBaseUsers = {
             title: 'Не добавлять внешних исполнителей поручений в Адресаты',
         },
         {
-            key: 'RESOLUTION_CICLE',
-            type: 'boolean',
-            title: 'Направлять резолюцию исполнителям из кабинета автора',
-        },
-        {
-            key: 'CONTROLL_AUTHOR',
-            type: 'string',
-            title: '',
-        },
-        {
-            key: 'RESOLUTION_PRINT',
-            type: 'boolean',
-            title: 'Доступна печать поручения в приложении Документы',
-        },
-        {
-            key: 'SEND_ORDER_TO',
-            type: 'radio',
-            title: '',
-            options: [
-                {value: '2', title: 'всем фигурантам'},
-                {value: '1', title: 'контролеру и исполнителям'},
-                {value: '0', title: 'не рассылать'},
-            ]
-        },
-        {
             key: 'RESPRJ_PRIORITY_DEFAULT',
             type: 'select',
             title: '',
@@ -302,82 +401,27 @@ export const CABINETS_USER: IBaseUsers = {
             ]
         },
         {
-            key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
+            key: 'CHECK_RESOL_REPORT',
             type: 'boolean',
-            title: 'Применять ЭП резолюций и проектов резолюций',
-        }
-    ],
+            title: 'проверять наличие отчетов исполнителей'
+        },
+        {
+            key: 'SHOW_REPLY_NOTE',
+            type: 'boolean',
+            title: 'Примечание'
+        },
+        {
+            key: 'SHOW_REPLY_READED',
+            type: 'boolean',
+            title: 'Отметку о прочтении'
+        },
+        {
+            key: 'RESOLUTION_PRINT',
+            type: 'boolean',
+            title: 'Доступна печать поручения в приложении Документы',
+        },
+        ],
     fieldsDefaultValue: [
-        {
-            key: 'FOLDERCOLORSTATUS',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'HILITE_RESOLUTION',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'HILITE_PRJ_RC',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'CASCADE_CONTROL',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'RESOLUTION_PLAN_DATE_ASK',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'INFORM_DIFFERENCE_CTRL_DATE',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'STATUS_EXEC_PARENT',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'INTERIM_DATE_PARENT',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'PARENT_RESOLUTION_TEXT',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'CABSORT_ISN_DOCGROUP_LIST',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'SCRATCH_RC',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'SCRATCH_RESOL',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'FOLDER_ITEM_LIMIT_RESULT',
-            type: '',
-            title: '',
-        },
         {
             key: 'RESOLUTION_DATE',
             type: '',
@@ -389,22 +433,7 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
         },
         {
-            key: 'RESOLUTION_SELECT_AUTHOR',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'RESOLUTION_CONTROLLER',
-            type: '',
-            title: '',
-        },
-        {
             key: 'RESOLUTION_CONTROL_STATE',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'CORRECT_CTRL_DATE',
             type: '',
             title: '',
         },
@@ -414,17 +443,52 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
         },
         {
-            key: 'CHECK_RESOL_REPORT',
+            key: 'PARENT_RESOLUTION_TEXT',
             type: '',
             title: '',
         },
         {
-            key: 'SHOW_REPLY_NOTE',
+            key: 'INTERIM_DATE_PARENT',
             type: '',
             title: '',
         },
         {
-            key: 'SHOW_REPLY_READED',
+            key: 'STATUS_EXEC_PARENT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CORRECT_CTRL_DATE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INFORM_DIFFERENCE_CTRL_DATE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_PLAN_DATE_ASK',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CASCADE_CONTROL',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SEND_ORDER_TO',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_CICLE',
             type: '',
             title: '',
         },
@@ -454,17 +518,22 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
         },
         {
-            key: 'SEND_ORDER_TO',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'RESOLUTION_CICLE',
-            type: '',
-            title: '',
-        },
-        {
             key: 'RESPRJ_PRIORITY_DEFAULT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CHECK_RESOL_REPORT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SHOW_REPLY_NOTE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SHOW_REPLY_READED',
             type: '',
             title: '',
         },
@@ -473,29 +542,8 @@ export const CABINETS_USER: IBaseUsers = {
             type: '',
             title: '',
         },
-        {
-            key: 'APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'OZN_FILL_REPLY_TEXT',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'OZN_FILL_REPLY',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
-            type: '',
-            title: ''
-        }
     ]
 };
-
 export const CABINETS_USER_INFORMER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
@@ -710,21 +758,6 @@ export const CABINETS_USER_INFORMER: IBaseUsers = {
         },
     ],
     fieldsDefaultValue: [
-        {
-            key: 'OZN_FILL_REPLY_TEXT',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'OZN_FILL_REPLY',
-            type: '',
-            title: ''
-        },
-        {
-            key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
-            type: '',
-            title: ''
-        },
         {
             key: 'INFORMER_FOLDER_ITEM_CHECK',
             type: '',
