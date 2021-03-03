@@ -142,21 +142,22 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
 
   ParseInitData(data) {
     this.SelectUsers(data);
-    this._pipeSrv.read({
+    const getUsersPromise = this.critUsers && this.critUsers.length ? this._pipeSrv.read({
       USER_CL: this.critUsers,
       loadmode: 'Table'
-    })
-      .then((users: any) => {
-        for (const user of users) {
-          if (this.findUsers === undefined) {
-            this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
-          } else {
-            this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
-          }
+    }) : Promise.resolve([]);
+
+    getUsersPromise.then((users: any) => {
+      for (const user of users) {
+        if (this.findUsers === undefined) {
+          this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
+        } else {
+          this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
         }
-        this.ShowData();
-        this.isLoading = false;
-      });
+      }
+      this.ShowData();
+      this.isLoading = false;
+    });
   }
 
 //   GetCountPosts(posts: string): number {
