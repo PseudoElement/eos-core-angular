@@ -47,7 +47,7 @@ export class UserHeaderComponent implements OnInit {
     @HostListener('document:keydown', ['$event'])
     /** Сохранение настроек пользователя в файл */
     onKeydownHandler(key: KeyboardEvent) {
-        if (key.ctrlKey && key.altKey && key.keyCode === 83) {
+        if (key.ctrlKey && key.altKey && key.keyCode === 83 && this._router.url.indexOf('default-settings') === -1) {
             this.saveFile();
         }
     }
