@@ -50,6 +50,7 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
             key: 'NOTE',
             title: 'Примечание',
             type: 'string',
+            length: 255
         },
     ],
 
