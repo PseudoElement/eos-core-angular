@@ -180,8 +180,16 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         }
     }
     formatText(data: FORMAT_CL): string {
-        const fTName = data.FORMAT_TNAME === 'doc' || data.FORMAT_TNAME === 'xls' ? `${data.FORMAT_TNAME}(x)` : data.FORMAT_TNAME;
-        const Gname = data.FORMAT_GNAME !== 'no' ? `, ${data.FORMAT_GNAME}` : '';
+        let fTName = '';
+        let Gname = '';
+        // text format
+        if (data.FORMAT_TNAME !== 'no') {
+            fTName = data.FORMAT_TNAME === 'doc' || data.FORMAT_TNAME === 'xls' ? `${data.FORMAT_TNAME}(x)` : data.FORMAT_TNAME;
+        }
+        // img format
+        if (data.FORMAT_GNAME !== 'no') {
+            Gname = fTName ? `, ${data.FORMAT_GNAME}` : data.FORMAT_GNAME;
+        }
         return fTName + Gname;
     }
     setNewValInputs(): void {
