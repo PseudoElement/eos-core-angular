@@ -193,8 +193,6 @@ export class NodeActionsComponent implements OnDestroy {
         if (!this.dictionary) {
             return null;
         }
-        // если в режиме поиска в Номенклатуре, то смотреть на вершину дерева
-        let nomenklListSearch = null;
 
         const marklist = this._markedNodes;
         let listHasDeleted = null;
@@ -202,13 +200,11 @@ export class NodeActionsComponent implements OnDestroy {
         if (this.dictionary && this._viewParams && this._dictSrv) {
             listHasDeleted = marklist.filter(n => n.isDeleted).length !== 0;
             listHasSelected = marklist.length !== 0;
-            nomenklListSearch = listHasSelected && this.dictionary.id === 'nomenkl' &&
-                this._viewParams.searchResults;
         }
 
         let grant = APS_DICT_GRANT.denied;
 
-        if (marklist && marklist.length > 0 && !nomenklListSearch /* && (this._dictSrv.isSearchFullDictionary() || this._viewParams.showAllSubnodes) */) {
+        if (marklist && marklist.length > 0 /* && (this._dictSrv.isSearchFullDictionary() || this._viewParams.showAllSubnodes) */) {
             let due = null;
             let all_grant = APS_DICT_GRANT.readwrite;
             for (let i = 0; i < marklist.length; i++) {
