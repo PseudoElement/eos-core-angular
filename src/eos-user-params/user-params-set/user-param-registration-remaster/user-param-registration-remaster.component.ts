@@ -282,7 +282,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             const bookSizeValue = this.newValuesScan.has('SHABLONBARCODE') ? this.newValuesScan.get('SHABLONBARCODE') : this.hash['SHABLONBARCODE'] ;
             const albumSizeValue = this.newValuesScan.has('SHABLONBARCODEL') ? this.newValuesScan.get('SHABLONBARCODEL') : this.hash['SHABLONBARCODEL'];
             if (bookSizeValue === 'barcode5.dot' && albumSizeValue !== 'barcodeL5.dot' || albumSizeValue === 'barcodeL5.dot' && bookSizeValue !== 'barcode5.dot') {
-                alert('Штрихкод на наклейке рекомендуется использовать и для книжной, и для альбомной ориентации.');
+                alert('Штрих-код на наклейке рекомендуется использовать и для книжной, и для альбомной ориентации.');
                 error = true;
             }
         }
