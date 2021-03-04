@@ -448,7 +448,13 @@ export class CopyPropertiesComponent implements OnDestroy {
                 key: 'a_shablon',
                 label: 'Шаблон рег.№ РК',
                 disabled: !(this._dgFrom.SHABLON && this._dgFrom.SHABLON !== ''),
-            }, {
+            },
+            {
+                key: 'a_docvid',
+                label: 'Вид Документа',
+                disabled: !(this._dgFrom[DEFAULTS_LIST_NAME] && this._dgFrom[DEFAULTS_LIST_NAME].length),
+            },
+            {
                 key: 'a_default_rek',
                 label: 'Правила заполнения реквизитов РК по умолчанию',
                 disabled: !(this._dgFrom[DEFAULTS_LIST_NAME] && this._dgFrom[DEFAULTS_LIST_NAME].length),
@@ -490,7 +496,7 @@ export class CopyPropertiesComponent implements OnDestroy {
                 disabled: !(this._dgFrom[AR_DOCGROUP_LIST_NAME] && this._dgFrom[AR_DOCGROUP_LIST_NAME].length),
             }];
         this.properties_for_request = ['a_shablon', 'a_default_rek', 'a_mand_rek', 'a_write_rek', 'a_prj_shablon',
-            'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek', 'a_add_rub', 'a_fc_rc', 'a_fc_prj'];
+            'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek', 'a_add_rub', 'a_fc_rc', 'a_fc_prj', 'a_docvid'];
     }
 
     private _initPropertiesRenewChilds() {
@@ -498,7 +504,13 @@ export class CopyPropertiesComponent implements OnDestroy {
             {
                 key: 'a_shablon',
                 label: 'Шаблон номерообразования',
-            }, {
+            },
+            // todo: Ждем обновления ключникова
+            // {
+            //     key: 'a_docvid',
+            //     label: 'Вид Документа',
+            // },
+            {
                 key: 'a_add_rek',
                 label: 'Дополнительные реквизиты',
             }, {
@@ -522,7 +534,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
 
         this.properties_for_request = ['a_shablon', 'a_add_rek', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
-            'a_prj_rek', 'a_fc'];
+            'a_prj_rek', 'a_fc', /*'a_docvid'*/ ];
     }
 
     private _initInputs() {
