@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute, /* Router */ } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     constructor(
         private _navSrv: NavParamService,
         private _route: ActivatedRoute,
-        // private _rout: Router,
+        private _rout: Router,
         private _appContext: AppContext,
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
@@ -38,10 +38,11 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     ) {
         this._route.params.subscribe(params => {
             this.paramId = params['id'];
-            // const access = this.disabledAutent({ url: this.paramId });
-            // if (!access) {
-            //     this._rout.navigate(['user_param']);
-            // }
+            // проверяем право доступа "Текущая организация"
+            const access = this.disabledAutent({ url: this.paramId });
+            if (!access) {
+                this._rout.navigate(['parameters']);
+            }
         });
         this._navSrv.StateSandwich$
             .pipe(
@@ -110,11 +111,12 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
                 }
             }
         }
-        // пока убираем проверку на эти параметры
-        /* if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS[1] === '0')) {
+        // проверяем право доступа "Текущая организация"
+        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS.charAt(1) === '0')) {
             return false;
         }
-        if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
+        // пока убираем проверку на эти параметры
+        /* if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
             return false;
         } */
         return true;
