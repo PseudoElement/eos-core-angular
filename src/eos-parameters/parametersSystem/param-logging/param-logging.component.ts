@@ -39,11 +39,23 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
     }
 
     edit() {
-        Object.keys(this.form.controls).forEach(key => {
-            if (this.masDisable.indexOf(key) >= 0) {
-                this.form.controls[key].enable({ emitEvent: false });
-            }
-        });
+        // проверяем право доступа "Текущая организация"
+        // дизейблим блок Настройка протокола просмотра
+        if (this._appContext.CurrentUser.TECH_RIGHTS.charAt(29) === '0') {
+            this.masDisable = this.masDisable.filter((field) => field === 'rec.USER_EDIT_AUDIT');
+        }
+        // проверяем ограниченность технолога
+        // дизейблим Протоколирование работы со справочником пользователи
+        if (this._appContext.limitCardsUser.length) {
+            this.masDisable = this.masDisable.filter((field) => field !== 'rec.USER_EDIT_AUDIT');
+        }
+        if (this.masDisable.length) {
+            Object.keys(this.form.controls).forEach(key => {
+                if (this.masDisable.indexOf(key) >= 0) {
+                    this.form.controls[key].enable({ emitEvent: false });
+                }
+            });
+        }
     }
     parseDataInit(data: any) {
         const dataInput = {rec: {}};
