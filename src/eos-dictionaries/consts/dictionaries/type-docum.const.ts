@@ -12,7 +12,7 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
     actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
     visible: true,
     keyField: 'ISN_LCLASSIF',
-    treeFields: ['ISN_LCLASSIF'],
+    treeFields: ['CLASSIF_NAME'],
     defaultOrder: 'CLASSIF_NAME',
     iconName: 'eos-icon-template-blue',
     fields: [
