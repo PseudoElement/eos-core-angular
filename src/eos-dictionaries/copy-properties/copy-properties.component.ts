@@ -505,11 +505,10 @@ export class CopyPropertiesComponent implements OnDestroy {
                 key: 'a_shablon',
                 label: 'Шаблон номерообразования',
             },
-            // todo: Ждем обновления ключникова
-            // {
-            //     key: 'a_docvid',
-            //     label: 'Вид Документа',
-            // },
+            {
+                key: 'a_docvid',
+                label: 'Вид Документа',
+            },
             {
                 key: 'a_add_rek',
                 label: 'Дополнительные реквизиты',
@@ -534,7 +533,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
 
         this.properties_for_request = ['a_shablon', 'a_add_rek', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
-            'a_prj_rek', 'a_fc', /*'a_docvid'*/ ];
+            'a_prj_rek', 'a_fc', 'a_docvid' ];
     }
 
     private _initInputs() {
