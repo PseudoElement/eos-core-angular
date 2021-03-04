@@ -23,7 +23,7 @@
         padding-top: 16px;
         height: calc(100vh - 96px);
         overflow-x: auto;
-        overflow-y: auto;
+        overflow-y: hidden;
         border-right: 1px solid $border-color-main-theme;
         &.has-spinner {
             display: flex;
