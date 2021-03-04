@@ -490,7 +490,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     updateFuncList(funcList: string, flag: boolean): string {
         const func = [];
         if (flag) {
-            if (funcList[3] === '1') {
+            if (funcList[3] === '1' || funcList[3] === '2') {
                 funcList.split('').forEach((Num, index) => {
                     if (index === 3) {
                         func.push('0');
