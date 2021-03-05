@@ -58,9 +58,10 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         options: [
             {
                 title: '',
-                value: ''
+                value: '',
             }
         ],
+        required: true,
     },
 ];
 

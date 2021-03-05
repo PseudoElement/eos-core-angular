@@ -35,6 +35,7 @@ export const CREATE_USER_INPUTS = [
         key: 'SELECT_ROLE',
         label: 'РОЛЬ',
         options: [],
+        required: true,
     },
     {
         controlType: E_FIELD_TYPE.string,

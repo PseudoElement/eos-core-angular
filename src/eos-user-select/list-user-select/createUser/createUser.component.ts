@@ -337,7 +337,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.form.controls['DUE_DEP_NAME'].patchValue('');
         this.departmentData = null;
         delete this.data['dueDL'];
-        delete this.data['SELECT_ROLE'];
+        // delete this.data['SELECT_ROLE'];
     }
 
     selectDepartment(status) {
@@ -469,7 +469,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         let url = 'CreateUserCl?';
         url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
-        url += `&role='${d['SELECT_ROLE'] && !this.techUser ? encodeURI(d['SELECT_ROLE']) : ''}'`;
+        url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
         url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : -1}`;
         //   url += `&delo_rights=0`;
@@ -498,18 +498,16 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 if (data) {
                     f.get('DUE_DEP_NAME').patchValue('');
                     f.get('DUE_DEP_NAME').disable();
-                    f.get('SELECT_ROLE').patchValue('');
+                    // f.get('SELECT_ROLE').patchValue('');
                     // f.get('SELECT_ROLE').disable();
                     delete this.data['dueDL'];
-                    delete this.data['SELECT_ROLE'];
+                    // delete this.data['SELECT_ROLE'];
                     this.departmentData = null;
                 } else {
                     f.get('DUE_DEP_NAME').enable();
                     // f.get('SELECT_ROLE').enable();
                 }
             });
-
-
 
         f.valueChanges
             .pipe(
