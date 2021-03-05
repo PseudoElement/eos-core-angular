@@ -31,4 +31,13 @@
         display: table-cell;
         min-width: 405px;
     }
+    .form-control:focus{
+        box-shadow: none;
+        border-color: #ccc;
+    }
+    .form-control.readonly{
+        box-shadow: none;
+        border-color: transparent;
+    }
+
 }

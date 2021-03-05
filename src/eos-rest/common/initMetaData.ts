@@ -585,6 +585,7 @@ const commonMeta = {
             DUE: _t.s,
             ISN_NODE: _t.i,
             ISN_HIGH_NODE: _t.i,
+            ISN_DOCVID: _t.i,
             LAYER: _t.i,
             IS_NODE: _t.i,
             IS_COPYCOUNT: _t.i,
