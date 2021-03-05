@@ -46,7 +46,7 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
         }
         // проверяем ограниченность технолога
         // дизейблим Протоколирование работы со справочником пользователи
-        if (this._appContext.limitCardsUser.length) {
+        if (this._appContext.CurrentUser.TECH_RIGHTS.charAt(0) === '0' || this._appContext.limitCardsUser.length) {
             this.masDisable = this.masDisable.filter((field) => field !== 'rec.USER_EDIT_AUDIT');
         }
         if (this.masDisable.length) {

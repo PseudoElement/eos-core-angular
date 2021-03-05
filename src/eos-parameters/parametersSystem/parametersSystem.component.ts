@@ -90,6 +90,14 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     }
 
     disabledAutent(param): boolean {
+        // проверяем право доступа "Текущая организация"
+        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS.charAt(1) === '0')) {
+            return false;
+        }
+        // пока убираем проверку на эти параметры
+        /* if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
+            return false;
+        } */
         if (this._appContext.cbBase) {
             const limit = this._appContext.limitCardsUser.length;
             const urlName = param.url === 'authentication';
@@ -111,14 +119,7 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
                 }
             }
         }
-        // проверяем право доступа "Текущая организация"
-        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS.charAt(1) === '0')) {
-            return false;
-        }
-        // пока убираем проверку на эти параметры
-        /* if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
-            return false;
-        } */
+
         return true;
     }
     private _askForSaving(): Promise<boolean> {
