@@ -872,6 +872,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 deletedUsers.forEach(el => {
                     arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
                 });
+                this.rtUserService.clearHash();
                 return Promise.all([...arrayProtocol]).then(() => {
                     this.isLoading = false;
                 });
