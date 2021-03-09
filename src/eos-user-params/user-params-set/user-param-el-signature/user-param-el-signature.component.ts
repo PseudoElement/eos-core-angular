@@ -308,7 +308,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             //     this.form.controls[el].enable({ emitEvent: false });
             // });
         }
-        if (this._appCtx.CurrentUser.DELO_RIGHTS[0] !== '0' && this.isCurrentSettings) {
+        if (this._appCtx.CurrentUser.DELO_RIGHTS[0] === '0' && this.isCurrentSettings) {
             [...this.disableForNotTech, ...this.second].forEach(el => {
                 this.form.controls[el].disable({ emitEvent: false });
             });
