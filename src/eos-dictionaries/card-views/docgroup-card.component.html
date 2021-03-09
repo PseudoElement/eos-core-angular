@@ -16,6 +16,42 @@
         ></eos-dynamic-input>
     </div>
     <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+
+    <div style="height: 69px; display: flex; align-items: flex-start; font-size: 12px">
+        <div [ngClass]="{'disabled': !editMode}" class="dynamic-input-wrapper" >
+            <div>{{ 'Вид документов' | uppercase }}</div>
+            <input #inputChoice
+                   placeholder="..."
+                   [readonly]="!editMode"
+                   [ngClass]="{'readonly': !editMode}"
+                   class="form-control m-font pull-left"
+                   style="width: 300px; padding: 6px 8px;">
+        </div>
+        <div style="display: flex; align-items: center; height: 100%;">
+            <span *ngIf="editMode"
+                  class="action eos-icon"
+                  style="margin-left: 10px"
+                  [ngClass]="editMode ? 'eos-icon-folder-blue' : 'eos-icon-folder-grey'"
+                  container="body"
+                  placement="bottom"
+                  containerClass="tooltip-info"
+                  tooltip="Выбрать"
+                  triggers="hover"
+                  (click)="openDict()"
+            ></span>
+            <span *ngIf="editMode"
+                  class="action eos-icon"
+                  style="margin-left: 10px"
+                  [ngClass]="inputChoice.value ? 'eos-icon-close-blue' : 'eos-icon-close-grey'"
+                  container="body"
+                  placement="bottom"
+                  containerClass="tooltip-info"
+                  triggers="hover"
+                  tooltip="Удалить"
+                  (click)="inputChoice.value && deleteSel()"
+            ></span>
+        </div>
+    </div>
     <eos-dynamic-input [input]="inputs['rec.FULLNAME']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
     <div class="clearfix">
         <eos-dynamic-input *ngIf="!isCBBase || (!isNode)"

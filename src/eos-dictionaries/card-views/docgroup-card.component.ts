@@ -1,4 +1,4 @@
-import { Component, Injector, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Injector, OnChanges, OnInit, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
@@ -13,6 +13,7 @@ import { SHABLON_DETAIL, PipRX, DOCGROUP_CL, DOC_DEFAULT_VALUE, SECURITY_CL } fr
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { WaitClassifService } from '../../app/services/waitClassif.service';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -22,10 +23,6 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
     templateUrl: 'docgroup-card.component.html',
 })
 export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
-    isSignatura: boolean;
-    isUsed = true;
-    private _prev = {};
-
 
     get isPrjFlag(): boolean {
         return this.getValue('rec.PRJ_NUM_FLAG');
@@ -46,6 +43,10 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     get accessMode() {
         return this.getValue('rec.ACCESS_MODE');
     }
+    isSignatura: boolean;
+    isUsed = true;
+    @ViewChild('inputChoice') inputChoice: ElementRef;
+    private _prev = {};
 
     private modalSrv: BsModalService;
     private templateModal: BsModalRef;
@@ -55,6 +56,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         injector: Injector,
         private _errorSrv: ErrorHelperServices,
         private _apiSrv: PipRX,
+        private _waitClassifSrv: WaitClassifService
     ) {
         super(injector);
         this.modalSrv = injector.get(BsModalService);
@@ -120,10 +122,41 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         return this._apiSrv.read<T>(query);
     }
 
+    openDict() {
+        return this._waitClassifSrv.openClassif({
+            classif: 'DOCVID_CL',
+            return_due: true,
+            selectLeafs: true,
+            selectNodes: true,
+            skipDeleted: true,
+            selectMulty: false,
+        }, true)
+            .then((data: string) => {
+                    this.getDate<any>({
+                        DOCVID_CL: {
+                            criteries: {
+                                ISN_LCLASSIF: data
+                            }
+                        }
+                    }).then((docvid) => {
+                        if (docvid.length) {
+                            this.setValue('rec.ISN_DOCVID', data);
+                            this.inputChoice.nativeElement.value = docvid[0].CLASSIF_NAME;
+                        }
+                    });
+            }).catch(() => {
+                return null;
+            });
+    }
+
+    deleteSel() {
+        this.setValue('rec.ISN_DOCVID', null);
+        this.inputChoice.nativeElement.value = '';
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
             this._setRcTypeOptions();
-
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
@@ -284,7 +317,6 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                 this._restorePrevious('rec.PRJ_SHABLON');
             }
         }
-
         this._setRequired('rec.PRJ_SHABLON', !this.isNode && this.isPrjFlag);
 
         // toggle auto register flag
