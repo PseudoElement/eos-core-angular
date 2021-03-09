@@ -41,12 +41,13 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
     edit() {
         // проверяем право доступа "Текущая организация"
         // дизейблим блок Настройка протокола просмотра
-        if (this._appContext.CurrentUser.TECH_RIGHTS.charAt(29) === '0') {
+        const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
+        if (!techRights || techRights.charAt(29) === '0') {
             this.masDisable = this.masDisable.filter((field) => field === 'rec.USER_EDIT_AUDIT');
         }
         // проверяем ограниченность технолога
         // дизейблим Протоколирование работы со справочником пользователи
-        if (this._appContext.limitCardsUser.length) {
+        if (!techRights || techRights.charAt(0) === '0' || this._appContext.limitCardsUser.length) {
             this.masDisable = this.masDisable.filter((field) => field !== 'rec.USER_EDIT_AUDIT');
         }
         if (this.masDisable.length) {
