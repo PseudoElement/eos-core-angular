@@ -44,6 +44,10 @@ export class PermissionsGuard implements CanActivate {
                     ) {
                         return false;
                     } else {
+                        // если это пользовательские настройки с шестеренки, то ок
+                        if (state.url.indexOf('/user_param/current-settings') !== -1) {
+                            return true;
+                        }
                         if (!access) {
                             this._msgSrv.addNewMessage({
                                 type: 'warning',
@@ -55,6 +59,10 @@ export class PermissionsGuard implements CanActivate {
                     }
 
                 } else {
+                    // если это пользовательские настройки с шестеренки, то ок
+                    if (state.url.indexOf('/user_param/current-settings') !== -1) {
+                        return true;
+                    }
                     if (!access) {
                         this._msgSrv.addNewMessage({
                             type: 'warning',
