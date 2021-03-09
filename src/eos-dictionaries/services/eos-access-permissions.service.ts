@@ -200,7 +200,10 @@ export class EosAccessPermissionsService {
         const dt = dictsTechs.find(d => dictId === d.id);
         if (dt) {
             const grant = this.checkAccessTech(dt.tech);
-
+            // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
+            if (dt.id === TYPE_DOCUM_DICT.id) {
+                return  this.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            }
             // Если к кабинетам есть доступ, а подразделениям - нет, то подразделения отдаем в readonly
             if (dt.id === DEPARTMENTS_DICT.id && !grant) {
                 const cab_grant = this.isAccessGrantedForDictionary(CABINET_DICT.id, due);
