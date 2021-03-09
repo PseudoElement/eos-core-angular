@@ -369,7 +369,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     submit(meta?: string): Promise<any> {
-        if (this.cheackCtech()) {
+        if (this.cheackCtech() || this.checkRole()) {
             return;
         }
         const id = this._userParamSrv.userContextId;
@@ -420,35 +420,39 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (this.uncheckedAvSystems()) {
             return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
                 if (res) {
-                    return this.saveAfterSystems(accessStr, id, query);
+                    // меняем метод saveAfterSystems на saveData
+                    // так как согласно таску 139328:
+                    // "Разрешаем назначать роль пользователю без АДЛ"
+                    // не имеет смысла проверка кабинета
+                    return this.saveData(accessStr, id, query);
                 } else {
                     return;
                 }
             });
         }
-        return this.saveAfterSystems(accessStr, id, query);
+        return this.saveData(accessStr, id, query);
     }
 
-    saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
-        if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
-            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
-                if (cab) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }).then(data => {
-                if (!data) {
-                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
-                    return;
-                } else {
-                    return this.saveData(accessStr, id, query);
-                }
-            });
-        } else {
-            return this.saveData(accessStr, id, query);
-        }
-    }
+    // saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
+    //     if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+    //         return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
+    //             if (cab) {
+    //                 return true;
+    //             } else {
+    //                 return false;
+    //             }
+    //         }).then(data => {
+    //             if (!data) {
+    //                 this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
+    //                 return;
+    //             } else {
+    //                 return this.saveData(accessStr, id, query);
+    //             }
+    //         });
+    //     } else {
+    //         return this.saveData(accessStr, id, query);
+    //     }
+    // }
 
     saveData(accessStr: string, id: number, query: any): Promise<any> {
         this.isLoading = true;
@@ -770,8 +774,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
-                                this.formControls.controls['SELECT_ROLE'].patchValue('');
-                                this.formControls.controls['SELECT_ROLE'].disable();
+                                // this.formControls.controls['SELECT_ROLE'].patchValue('');
+                                // this.formControls.controls['SELECT_ROLE'].disable();
                             } else {
                                 this.curentUser.isTechUser = data;
                                 f.get('teсhUser').setValue(false);
@@ -780,13 +784,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                             console.log('Ошибка', error);
                         });
                     }
-                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
-                    this.formControls.controls['SELECT_ROLE'].disable();
+                    // this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    // this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
-                    this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
-                    this.formControls.controls['SELECT_ROLE'].enable();
+                    // this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
+                    // this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
                 }
             });
@@ -832,5 +836,22 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         });
     }
-
+    /**
+     * метод checkRole
+     * проверяет перед сохранением, что у пользователя
+     * задана роль (поле SELECT_ROLE не пустое)
+     */
+    private checkRole(): boolean {
+        const role = this.formControls.get('SELECT_ROLE');
+        if (!role.value && !role.disabled) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение:',
+                msg: 'Укажите пользователю роль',
+                dismissOnTimeout: 6000,
+            });
+            return true;
+        }
+        return false;
+    }
 }
