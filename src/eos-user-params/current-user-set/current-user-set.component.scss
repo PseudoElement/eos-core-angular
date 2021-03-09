@@ -1786,7 +1786,13 @@ bs-dropdown-container {
 
                         &:nth-child(1) {
                             margin-top: 0 !important;
-                        }                        
+                        }     
+                        
+                        &:last-child {
+                            & > div.form-group {
+                                margin-left: 30px;
+                            }
+                        }
                     }
                 }
             }
