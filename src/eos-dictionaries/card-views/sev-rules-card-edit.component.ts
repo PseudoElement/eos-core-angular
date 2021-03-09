@@ -675,8 +675,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         const classif = +this.ruleKind === 2 ? Object.assign({}, OPEN_CLASSIF_DOCGR_LEAFS) : Object.assign({}, OPEN_CLASSIF_DOCGR_SEV);
         this._waitClassif.openClassif(classif, true)
         .then(data => {
-            this.form.controls['rec.DUE_DOCGROUP'].patchValue(data);
-            this.updateInputDue_doc();
+            this.updateInputDue_doc(data);
             // this.loadOrganizatiomNames(data);
         }).catch(e => {
             if (e) {
@@ -684,8 +683,8 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             }
         });
     }
-    private updateInputDue_doc() {
-        const due = this.form.controls['rec.DUE_DOCGROUP'].value;
+    private updateInputDue_doc(newDue?) {
+        const due = newDue || this.form.controls['rec.DUE_DOCGROUP'].value;
         if (due) {
             this.dictSrv.currentDictionary.descriptor.loadNames('DOCGROUP_CL', due).then((data: DOCGROUP_CL[] = []) => {
                 // const [documents, projects] = [`Для приема документов нельзя использовать группу документов типа "Исходящие"`,
@@ -711,6 +710,9 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 ) {
                     const cancelMessage = 'Для приема документов нельзя использовать группу типа «Исходящие»';
                     return this.cancelSelectedDocgroup(cancelMessage);
+                }
+                if (newDue) {
+                    this.form.controls['rec.DUE_DOCGROUP'].patchValue(newDue);
                 }
                 this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(docGroup ? docGroup.CLASSIF_NAME : '');
                 this.form.controls['rec.RC_TYPE'].patchValue(rcType, { eventEmit: false });
