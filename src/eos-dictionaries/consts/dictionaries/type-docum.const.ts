@@ -54,11 +54,11 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
         },
     ],
 
-    quickViewFields: ['DOCVID_INDEX', 'AP_FLAG', 'CLASSIF_NAME'],
+    quickViewFields: ['DOCVID_INDEX', 'AP_FLAG', 'CLASSIF_NAME', 'FULLNAME', 'NOTE'],
     allVisibleFields: [ 'FULLNAME', 'NOTE',
     ],
     fullSearchFields: [],
-    shortQuickViewFields: [ 'FULLNAME', 'NOTE'],
+    shortQuickViewFields: [ 'FULLNAME'],
     searchFields: ['CLASSIF_NAME'],
     searchConfig: [SEARCH_TYPES.quick],
     listFields: ['DOCVID_INDEX', 'AP_FLAG', 'CLASSIF_NAME'],
