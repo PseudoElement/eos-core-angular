@@ -91,7 +91,8 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
 
     disabledAutent(param): boolean {
         // проверяем право доступа "Текущая организация"
-        if (param.url === 'now-organiz' && (this._appContext.CurrentUser.TECH_RIGHTS.charAt(1) === '0')) {
+        const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
+        if (param.url === 'now-organiz' && (!techRights || techRights.charAt(1) === '0' )) {
             return false;
         }
         // пока убираем проверку на эти параметры
