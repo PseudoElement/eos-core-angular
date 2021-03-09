@@ -1111,14 +1111,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             const node = selectedNodes[i];
 
             if (node.isProtected) {
-                node.isMarked = false;
+                this._dictSrv.setMarkForNode(node , false, true);
+                // node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
+
                 return;
             }
         }
-
         this._dictSrv.checkPreDelete(selectedNodes).then(({ continueDelete, selectdNodeWitwoutDate }) => {
             if (!continueDelete) {
                 return;
