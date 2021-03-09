@@ -398,7 +398,8 @@ bs-dropdown-container {
             .set-header,
             .user-group-form,
             .inputs-inline,
-            .cab-mar-span {
+            .cab-mar-span,
+            .section-title {
                 margin: 0;
 
                 > span:not(.input-title):first-child {
@@ -1757,14 +1758,14 @@ bs-dropdown-container {
                 }
 
                 div.user-group-form {
-                    position: relative;
-
+                    position: relative;                   
+                   
                     div.elem-input-radio {
                         display: block;
                     }
 
                     eos-dynamic-input:nth-child(2) {
-                        margin-bottom: 15px;                        
+                        margin-bottom: 10px;                        
                     }
                 }
             }
@@ -1772,6 +1773,12 @@ bs-dropdown-container {
             eos-remaster-mado {
                 div.mado-inputs {
                     height: calc(100vh - 220px);
+
+                    div.section-title {                        
+                        &:last-of-type {
+                            margin: 15px 0;
+                        }
+                    } 
 
                     eos-dynamic-input {
                         margin-bottom: 0;
@@ -2410,7 +2417,8 @@ bs-dropdown-container {
             .set-header,
             .user-group-form,
             .inputs-inline,
-            .cab-mar-span {
+            .cab-mar-span,
+            .section-title {
                 > span:not(.input-title):first-child {
                     @include style-title-bookmarks($isCB: true);
                 }
