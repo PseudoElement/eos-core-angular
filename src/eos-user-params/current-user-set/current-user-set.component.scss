@@ -797,10 +797,10 @@ bs-dropdown-container {
 
                 eos-auto-search {
                     div.user-group-form {
-                        &:nth-child(2) {
-                            & > div {
-                                margin-top: 15px;
-                                margin-left: 20px;
+                        &:not(.search-link-wrapper):nth-child(2) {
+                            & > div > span {
+                                display: inline-block;
+                                margin: 15px 20px 0;
                             }
 
                             & > eos-dynamic-input {
@@ -879,14 +879,22 @@ bs-dropdown-container {
                             }
                         }
 
-                        &:nth-child(5) {
+                        &.search-link-wrapper {
                             padding: 15px 20px;
+
+                            br {
+                                display: none;
+                            }
 
                             div.inputs-inline {
                                 display: flex;
 
                                 & > span {
                                     margin-right: 10px;
+                                }
+
+                                &:first-of-type {
+                                    margin-bottom: 20px;
                                 }
                             }
 
