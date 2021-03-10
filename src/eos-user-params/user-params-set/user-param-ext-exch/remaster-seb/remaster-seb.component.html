@@ -1,13 +1,14 @@
 <div class="user-group-form">
-    <div class="section-title">
-        <span>Отправлять сообщения в АРМ "ДелоWeb":</span>
-    </div>
-    <eos-dynamic-input
-        [hidden]="appMode.tkDoc"
-        [input]="inputs['rec.ARM_SEV_DLG']"
-        [form]="form"
-        [readonly]="false"
-    ></eos-dynamic-input><br>
+    <ng-container *ngIf="appMode.arm || !isCurrentSettings">
+        <div class="section-title">
+            <span>Отправлять сообщения в АРМ "ДелоWeb":</span>
+        </div>
+        <eos-dynamic-input
+            [input]="inputs['rec.ARM_SEV_DLG']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input><br>
+    </ng-container>
     <eos-dynamic-input
         [hidden]="appMode.arm"
         [input]="inputs['rec.SEV_HIDE_SENDING']"
