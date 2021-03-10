@@ -52,6 +52,11 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
             type: 'string',
             length: 255
         },
+        {
+            key: 'WEIGHT',
+            title: 'Вес',
+            type: 'number'
+        }
     ],
 
     quickViewFields: ['DOCVID_INDEX', 'AP_FLAG', 'CLASSIF_NAME', 'FULLNAME', 'NOTE'],
