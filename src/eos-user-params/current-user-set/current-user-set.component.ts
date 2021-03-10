@@ -46,7 +46,10 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         this._route.params.subscribe(params => {
             this.paramId = params['field-id'];
         });
-        this._route.queryParams.subscribe((qParams: Params) => {
+        this._route.queryParams.subscribe((queryParams: Params) => {
+            const qParams: Params = {};
+            const keys = Object.keys(queryParams);
+            keys.forEach((k) => { qParams[k.toLowerCase()] = queryParams[k]; });
             const isDefault = `${qParams.isn}` === '-99';
             this.mainUser = qParams.isn && Number(qParams.isn) && !isDefault ? Number(qParams.isn) : this.mainUser;
             // используется только в настройках пользователей, при сохранении настроек в файл
