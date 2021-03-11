@@ -469,7 +469,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         let url = 'CreateUserCl?';
         url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
-        // url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
+        url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
         url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : -1}`;
         //   url += `&delo_rights=0`;
