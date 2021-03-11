@@ -99,13 +99,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.cbBase = this._appContext.cbBase;
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
-        this.inputs['SELECT_ROLE'].options = [];
+        // this.inputs['SELECT_ROLE'].options = [];
         this.isLoading = true;
         const query1 = this._pipeSrv.read({
             USER_PARMS: {
                 criteries: {
                     ISN_USER_OWNER: '-99',
-                    PARM_NAME: 'CATEGORIES_FOR_USER|SUPPORTED_USER_TYPES'
+                    PARM_NAME: 'SUPPORTED_USER_TYPES'
                 }
             }
         });
@@ -121,8 +121,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         });
         Promise.all([query1, query2])
             .then(([data, list]) => {
-                const roles = data[0] ? data[0]['PARM_VALUE'].split(';') : [];
-                const types = data[1] ? data[1]['PARM_VALUE'].split(',') : [];
+                // const roles = data[0] ? data[0]['PARM_VALUE'].split(';') : [];
+                const types = data[0] ? data[0]['PARM_VALUE'].split(',') : [];
                 const defaultTypes = types[0] ? types[0] : '-1';
                 let isnDepartments,
                     listI: LIST_ITEMS[],
@@ -141,9 +141,9 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     });
                 }
 
-                roles.forEach(i => {
+                /* roles.forEach(i => {
                     this.inputs['SELECT_ROLE'].options.push({ title: i, value: i });
-                });
+                }); */
                 this.inputs['USER_TYPE'].options = [{ title: '...', value: '' }];
                 types.forEach(i => {
                     this.inputs['USER_TYPE'].options.push({ title: this.typesUsers.get(+i), value: this.typesUsersValues2.get(+i) });
@@ -469,7 +469,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         let url = 'CreateUserCl?';
         url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
-        url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
+        // url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
         url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : -1}`;
         //   url += `&delo_rights=0`;

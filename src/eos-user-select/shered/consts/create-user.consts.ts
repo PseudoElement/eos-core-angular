@@ -30,13 +30,13 @@ export const CREATE_USER_INPUTS = [
         options: [],
         required: true,
     },
-    {
+    /* {
         controlType: E_FIELD_TYPE.select,
         key: 'SELECT_ROLE',
         label: 'РОЛЬ',
         options: [],
         required: true,
-    },
+    }, */
     {
         controlType: E_FIELD_TYPE.string,
         key: 'USER_COPY',
