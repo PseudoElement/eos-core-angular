@@ -152,7 +152,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         });
     }
     changeByPath(path: string, value: any) {
-        const extAuthKeys = [`rec.${EXTERNAL_AUTH_COMMON_KEY}`, 'rec.EXTERNAL_AUTH_ADD', ...this.externalAuth.auths.map((_eauth) => _eauth.inputKey)];
+        const extAuthKeys = [`rec.${EXTERNAL_AUTH_COMMON_KEY}`, ...this.externalAuth.auths.map((_eauth) => _eauth.inputKey)];
         if (extAuthKeys.indexOf(path) !== -1) {
             this._checkExternalAuthChanges();
             return !!this.newData.rec[this.externalAuth.commonKey];
