@@ -446,6 +446,7 @@ export class RightDepertmentComponent implements OnInit {
                 user_cl: true,
                 data: a
             });
+            this.selectedNode.checkUpdDeepWeightChanges($event);
             this.Changed.emit();
         } else {
             $event.flagCheckNode.deepValue = Number($event.isAllowed);
@@ -457,6 +458,7 @@ export class RightDepertmentComponent implements OnInit {
                 user_cl: true,
                 data: a
             });
+            this.selectedNode.checkUpdDeepWeightChanges($event);
             this.Changed.emit();
         }
     }
