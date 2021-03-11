@@ -133,6 +133,12 @@ export class NodeAbsoluteRight {
             });
         }
     }
+    checkUpdDeepWeightChanges(node: NodeDocsTree) {
+        const nodeChange = this._weightChanges.find(ch => ch.due === node.DUE);
+        if (nodeChange) {
+            nodeChange.data['DEEP'] = node.data.userDep['DEEP'];
+        }
+    }
     checkWeightChanges(node: NodeDocsTree) {
         this._weightChanges = this._weightChanges.filter(ch => ch.due !== node.DUE);
         if (!this._weightChanges.length) {
