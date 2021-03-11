@@ -302,6 +302,11 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             ]
         },
         {
+            key: 'RESOLUTION_CONTROLLER',
+            type: 'string',
+            title: '',
+        },
+        {
             key: 'PLAN_DATE_PARENT',
             type: 'boolean',
             title: 'Копировать плановую дату из вышестоящего поручения или документа'
@@ -423,6 +428,11 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         },
         ],
     fieldsDefaultValue: [
+        {
+            key: 'RESOLUTION_CONTROLLER',
+            type: 'string',
+            title: '',
+        },
         {
             key: 'RESOLUTION_DATE',
             type: '',

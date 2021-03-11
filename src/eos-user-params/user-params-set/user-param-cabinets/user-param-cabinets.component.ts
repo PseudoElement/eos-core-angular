@@ -640,6 +640,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                         this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                         this.checkDataToDisabled();
                         this.prepFormCancel(this.defoltInputs, true);
+                        return;
+                    }
+                    case 1: {
+                        this.parseDefaultFields(CABINETS_USER_ASSIGMENTS.fields, data);
+                        this.prepFormCancel(this.defoltInputs, true);
+                        this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                         this.getControlAuthor().then((author) => {
                             if (author === false) {
                                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('', { emitEvent: false });
@@ -647,12 +653,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
                             }
                         });
-                        return;
-                    }
-                    case 1: {
-                        this.parseDefaultFields(CABINETS_USER_ASSIGMENTS.fields, data);
-                        this.prepFormCancel(this.defoltInputs, true);
-                        this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                         return;
                     }
                     case 2: {
