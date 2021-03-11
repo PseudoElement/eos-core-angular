@@ -24,7 +24,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    readonly fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
+    public fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
     public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
@@ -62,6 +62,11 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
             this.currTab = Number(this.openingTab) - 1;
+        }
+        if (this.appMode.tkDoc) {
+            this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
+                return item !== 'МЭДО';
+            });
         }
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
