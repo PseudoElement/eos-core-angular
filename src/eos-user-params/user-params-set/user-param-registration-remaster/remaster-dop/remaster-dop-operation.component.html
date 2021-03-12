@@ -21,6 +21,7 @@
             [readonly]="false"
         ></eos-dynamic-input>
         <eos-dynamic-input
+            *ngIf="!appMode.arm && !appMode.cbr"
             class="input-right"
             [input]="inputs['rec.AUTOLOAD_TO_DELO_CURR_CAB']"
             [form]="form"
