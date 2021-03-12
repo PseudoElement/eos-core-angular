@@ -45,10 +45,24 @@ export const AUNTEFICATION_CONTROL_INPUT: IInputParamControl[] = [
     },
     {
         controlType: E_FIELD_TYPE.string,
-        key: 'ID_ESIA',
+        key: 'EXTERNAL_ID',
         label: 'ИДЕНТИФИКАТОР ЕСИА',
         pattern: /^\S+$/,
         value: '',
+    },
+    {
+        key: 'EXTERNAL_TYPE',
+        controlType: E_FIELD_TYPE.select,
+        label: 'ТИП ИДЕНТИФИКАТОРА',
+        disabled: false,
+        readonly: false,
+        options: [
+            {value: '0', title: '...'},
+            {value: 'ESIA_EMAIL', title: 'Эл. почта'},
+            {value: 'ESIA_PHONE', title: 'Телефон'},
+            {value: 'ESIA_SNILS', title: 'СНИЛС'},
+            {value: 'ESIA_ID', title: 'Код ЕСИА', disabled: true},
+        ]
     },
     {
         controlType: E_FIELD_TYPE.select,
