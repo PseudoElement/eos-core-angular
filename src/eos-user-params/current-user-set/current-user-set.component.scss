@@ -1261,10 +1261,16 @@ bs-dropdown-container {
                 }
 
                 & > eos-dynamic-input {
-                    margin-left: 15px;
+                    position: relative;
+                    margin: 20px 15px;
 
                     div.form-group {
                         margin: 0 !important;
+                    }
+
+                    &::before {
+                        @include style-horizontal-line;
+                        top: -10px;
                     }
                 }
             }
