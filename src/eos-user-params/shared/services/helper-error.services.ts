@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { Router } from '@angular/router';
 // import { Router } from '@angular/router';
 @Injectable()
 export class ErrorHelperServices {
     constructor(
         private _msgSrv: EosMessageService,
-        // private _router: Router,
+        private _router: Router,
     ) {
 
     }
@@ -42,7 +43,11 @@ export class ErrorHelperServices {
     }
 
  private   razLogin() {
-        document.location.assign('../login.aspx');
+    if (this._router.url.indexOf('/user_param/current-settings/') !== -1) {
+         document.location.assign('../terminate.aspx');
+     } else {
+         document.location.assign('../login.aspx');
+     }
         /*
         this._router.navigate(['login'], {
             queryParams: {
