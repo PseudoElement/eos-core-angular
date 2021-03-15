@@ -292,6 +292,11 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             title: 'от предыдущей резолюции'
         },
         {
+            key: 'RESOLUTION_SELECT_AUTHOR',
+            type: 'boolean',
+            title: 'вручную'
+        },
+        {
             key: 'RESOLUTION_CONTROL_STATE',
             type: 'radio',
             title: 'Контроль поручения',
@@ -440,6 +445,11 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         },
         {
             key: 'RESOLUTION_AUTHOR',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_SELECT_AUTHOR',
             type: '',
             title: '',
         },
