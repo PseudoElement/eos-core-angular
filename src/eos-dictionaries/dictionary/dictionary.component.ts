@@ -1580,9 +1580,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const node = this.nodeList;
         if (this.protocolWindow && !this.protocolWindow.closed) {
             this.protocolWindow.close();
-            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
+            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?ref_isn=${node.markedInfo.nodes[0].id}&tableName=SECURITY_CL&pkName=SECURLEVEL`, '_blank', 'width=900,height=700');
         } else {
-            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?kind=120&ref_isn=${node.markedInfo.nodes[0].id}`, '_blank', 'width=900,height=700');
+            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?ref_isn=${node.markedInfo.nodes[0].id}&tableName=SECURITY_CL&pkName=SECURLEVEL`, '_blank', 'width=900,height=700');
         }
     }
     /* проверка есть ли вложенные подразделения */
