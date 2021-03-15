@@ -98,6 +98,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         }
     }
     inint() {
+        this.flagEdit = !!this.isCurrentSettings;
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_REESTR.fields, this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields(OTHER_USER_REESTR.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
