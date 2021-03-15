@@ -54,13 +54,12 @@ export class RestError {
             this.message = message;
         }
         try {
-            let odataerr = e.error && e.error['odata.error'] && e.error['odata.error'].innererror && e.error['odata.error'].innererror.message;
-            const str = JSON.parse(e.error);
-            if (!odataerr) {
-                odataerr = str && str['odata.error'] && str['odata.error'].innererror && str['odata.error'].innererror.message;
-            }
-            if (!odataerr) {
-                odataerr = str && str['odata.error'] && str['odata.error'].innererror && str['odata.error'].innererror.Message;
+            let odataerr;
+            try {
+                odataerr = e.error['odata.error'].innererror.message || e.error['odata.error'].innererror.Message;
+            } catch {
+                const str = JSON.parse(e.error);
+                odataerr = str['odata.error'].innererror.message || str['odata.error'].innererror.Message;
             }
 
             this.message = odataerr;

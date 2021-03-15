@@ -18,7 +18,6 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { DOCUMENT } from '@angular/common';
-import { ALL_ROWS } from 'eos-rest/core/consts';
 // import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
 @Component({
@@ -228,17 +227,21 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             const addUser = async (addUrl: string, withLogin: boolean = false) => {
                 try {
                     const createRequest = {
-                        [addUrl]: ALL_ROWS,
+                        method: 'POST',
+                        requestUri: addUrl,
                     };
-                    const id: any = await this._pipeSrv.read(createRequest);
+                    const id: any = await this._pipeSrv.batch([createRequest], '');
                     const isn = Number(id) || id[0].value || id[0].value[0];
+
                     if (withLogin) {
                         const changeLoginUrl = this._createUrlChangeLOgin(isn);
                         const changeLoginRequest = {
-                            [changeLoginUrl]: ALL_ROWS,
+                            method: 'POST',
+                            requestUri: changeLoginUrl,
                         };
-                        await this._pipeSrv.read(changeLoginRequest);
+                        await this._pipeSrv.batch([changeLoginRequest], '');
                     }
+
                     this.afterCreate(isn);
                 } catch (e) {
                     this.checkError(e);
@@ -293,8 +296,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     checkError(e) {
         const m: IMessage = {
-            type: 'warning',
-            title: 'Предупреждение',
+            type: 'danger',
+            title: 'Ошибка создания пользователя',
             msg: '',
         };
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
