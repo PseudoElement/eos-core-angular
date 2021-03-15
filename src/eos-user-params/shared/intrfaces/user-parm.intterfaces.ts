@@ -45,6 +45,7 @@ export interface IInputParamControlForIndexRight {
 export interface ISelectOptionControl {
     value: string | number;
     title: string;
+    disabled?: boolean;
 }
 
 export interface IParamUserCl extends USER_CL {

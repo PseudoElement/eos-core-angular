@@ -52,6 +52,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public maxLoginLength: string;
     public esiaExternalAuth: number = 0;
     inputFields: IInputParamControl[];
+    public externalOrig: any;
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     get checkCurrentUser() {
         if (this.form) {
@@ -73,13 +74,6 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
 
     }
     ngOnInit() {
-        /* this.apiSrvRx.read({REGION_CL: {
-            criteries: {
-                CODE: 1,
-                CLASSIF_NAME: '1',
-                COD_OKATO: '01',
-            }
-        }}) */
         this.isLoading = true;
         this.inputFields = AUNTEFICATION_CONTROL_INPUT;
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
@@ -103,6 +97,28 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     viewOptions(value: number): boolean {
         return this.curentUser.USERTYPE === value || !this.optionDisable(value);
     }
+
+    getUserExternal(): Promise<any> {
+        return Promise.resolve([]);
+        // return  this.apiSrvRx.read<any>({
+        //     USER_AUTH_EXTERNAL_ID: {
+        //         criteries: {
+        //             ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
+        //         }},
+        // });
+    }
+
+    getUserParams(): Promise<any>  {
+        const req = {
+            USER_PARMS: {
+                criteries: {
+                    ISN_USER_OWNER: '-99',
+                    PARM_NAME: 'SUPPORTED_USER_TYPES||CHANGE_PASS||PASS_DATE' /*||EXTERNAL_AUTH_ADD||ALLOWED_EXTERNAL_AUTH'*/
+                }}};
+
+        return this.apiSrvRx.read<USER_PARMS>(req);
+    }
+
     init() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
@@ -110,14 +126,8 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }).then((data) => {
             if (data) {
                 this.curentUser = this._userParamSrv.curentUser;
-                const req = {
-                    USER_PARMS: {
-                        criteries: {
-                            ISN_USER_OWNER: '-99',
-                            PARM_NAME: 'SUPPORTED_USER_TYPES||CHANGE_PASS||PASS_DATE'
-                        }}};
-                this.apiSrvRx.read<USER_PARMS>(req)
-                .then(param => {
+                this.getUserParams()
+                .then((param) => {
                     param.forEach(elem => {
                         if (elem.PARM_NAME === 'SUPPORTED_USER_TYPES') {
                             this.masDisabled = elem.PARM_VALUE.split(',');
@@ -147,6 +157,17 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                         this.curentUser.IS_PASSWORD === 0 ? check_date : '';
                     this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
                     });
+                    if (this.esiaExternalAuth > 1) {
+                        this.getUserExternal()
+                            .then((external) => {
+                                if (external.length) {
+                                    this.externalOrig = external[0];
+                                    this.form.controls['EXTERNAL_ID'].setValue(this.externalOrig['EXTERNAL_ID'], {emitEvent: false});
+                                    this.form.controls['EXTERNAL_TYPE'].setValue(this.externalOrig['EXTERNAL_TYPE'], {emitEvent: false});
+                                }
+                            });
+                    }
+
                 })
                 .catch(er => {
                     console.log('ER', er);
@@ -339,9 +360,70 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             }
         }
     }
+    /**Проверяем заполнены ли все поля*/
+    externalTypeIsEmpty(): boolean {
+        const type = this.form.controls['EXTERNAL_TYPE'].value;
+        const id = this.form.controls['EXTERNAL_ID'].value;
+        return id && (!type || type === '0') || !id && type && type !== '0';
+    }
+    /**проверяем изменения полей Esia*/
+    externalIsChanged(): boolean {
+        const curType = this.form.controls['EXTERNAL_TYPE'].value;
+        const curId = this.form.controls['EXTERNAL_ID'].value;
+        if (this.externalOrig) {
+            return this.externalOrig['EXTERNAL_ID'] !== curId || this.externalOrig['EXTERNAL_TYPE'] !== curType;
+        } else {
+            return  !!curId && !!curType;
+        }
+
+    }
+    /**Создаем запрос на удаление/добавления/редактирование*/
+    writeOrDeleteExternalId(isn: number): Promise<any> {
+        if (this.form.controls['EXTERNAL_TYPE'].value !== '0') {
+            const type = this.form.controls['EXTERNAL_TYPE'].value;
+            const id = this.form.controls['EXTERNAL_ID'].value;
+            const method = !this.externalOrig ? 'POST' : 'MERGE';
+            const methodUri = method === 'POST' ? `USER_AUTH_EXTERNAL_ID_List` : `USER_AUTH_EXTERNAL_ID_List(${this.externalOrig['ISN_EXTERNAL_ID']})`;
+            return this.apiSrvRx.batch([{
+                method,
+                requestUri: `USER_CL(${isn})/${methodUri}`,
+                data: {
+                    'ISN_LCLASSIF': isn, 'EXTERNAL_TYPE': type, 'EXTERNAL_ID': id
+                }
+            }], '');
+        } else {
+            return this.apiSrvRx.batch([{
+                method: 'DELETE',
+                requestUri: `USER_CL(${isn})/USER_AUTH_EXTERNAL_ID_List(${this.externalOrig['ISN_EXTERNAL_ID']})`,
+            }], '');
+        }
+    }
+
+    afterSuccessSubmit() {
+        this._alertMessage('Изменения сохранены', true);
+        this.ngOnDestroy();
+        this.ngOnInit();
+    }
+    /**Сохранение полей ESIA*/
+    saveExternal() {
+        if (this.externalIsChanged()) {
+            this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
+                this.afterSuccessSubmit();
+            }).catch(er => {
+                this._errorSrv.errorHandler(er); });
+        } else {
+            this.afterSuccessSubmit();
+        }
+    }
+
     preSubmit($event?) {
         // const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
         // const url = `ChangePassword?isn_user=${this._userParamSrv.userContextId}&pass='${encodeURI('1234')}'`;
+        if (this.externalTypeIsEmpty()) {
+            const field = this.form.controls['EXTERNAL_ID'].value ? 'Тип идентификатора' : 'Идентификатор ЕСИА';
+            alert(`Поле "${field}" обязательно для заполнения`);
+            return;
+        }
         this.apiSrvRx.read({ USER_CL: {
             criteries: {
                 CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value // isnull(выборка по null), isnotnull(не null)
@@ -369,86 +451,40 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             const userLogin = this.form.get('CLASSIF_NAME') &&
                 String(this.form.get('CLASSIF_NAME').value || '');
             if (this._newDataCheck(userType, userPassword, userLogin)) {
-                if (userType === '0') {
-                    if (!userPassword) {
-                        this._alertMessage('Необходимо ввести пароль');
-                        return;
+                switch (userType) {
+                    case '0': {
+                        this.saveZeroType(userType, userPassword, userLogin);
+                        break;
                     }
-                    if (this.provUpdateDate()) {
-                        this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
-                        return;
+                    case '-1': {
+                        this.saveMinusFirstType(userType, userLogin);
+                        break;
                     }
-                    this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
-                        if (this.checkUpdateDate()) {
-                            // сохранить дату
-                            let date = this.getNewDate();
-                            if (date instanceof Date) {
-                                date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
-                            }
-                            this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
-                                this._alertMessage('Изменения сохранены', true);
-                                this.ngOnDestroy();
-                                this.ngOnInit();
-                            });
-                        } else {
-                            this.ngOnDestroy();
-                            this.ngOnInit();
-                            this._alertMessage('Изменения сохранены', true);
-                        }
-                    }).catch(() => { });
-                } else if (userType === '1') {
-                    if (userLogin.indexOf('\\') >= 0) {
-                        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
-                            this._alertMessage('Изменения сохранены', true);
-                            this.ngOnDestroy();
-                            this.ngOnInit();
-                        }).catch(() => { });
-                    } else {
-                        this._alertMessage('Имя пользователя не соответствует шаблону для ОС-авторизации.');
+                    case '1': {
+                        this.saveFirstType(userType, userLogin);
+                        break;
                     }
-                } else if (userType === '2') {
-                    this._createUrlChangeLOgin({userType, userLogin}).then(() => {
-                        this._alertMessage('Изменения сохранены', true);
-                        this.ngOnDestroy();
-                        this.ngOnInit();
-                    }).catch(() => { });
-                } else if (userType === '3') {
-                    if (this.provUpdateDate()) {
-                        this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
-                        return;
+                    case '2': {
+                        this.saveSecondType(userType, userLogin);
+                        break;
                     }
-                    if (!userPassword) {
-                        this._alertMessage('Необходимо ввести пароль');
-                        return;
+                    case '3': {
+                        this.saveThirdType(userType, userPassword, userLogin);
+                        break;
                     }
-                    this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
-                        if (this.checkUpdateDate()) {
-                            // сохранить дату
-                            let date = this.getNewDate();
-                            if (date instanceof Date) {
-                                date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
-                            }
-                            this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
-                                this._alertMessage('Изменения сохранены', true);
-                                this.ngOnDestroy();
-                                this.ngOnInit();
-                            }).catch(e => {
-                                this.cancel(null);
-                                this._errorSrv.errorHandler(e);
-                            });
-                        } else {
-                            this._alertMessage('Изменения сохранены', true);
-                            this.ngOnDestroy();
-                            this.ngOnInit();
-                        }
-                    }).catch(() => { });
-                } else if (userType === '4') {
-                    this._createUrlChangeLOgin({userType, userLogin}).then(() => {
-                        this._alertMessage('Изменения сохранены', true);
-                        this.ngOnDestroy();
-                        this.ngOnInit();
-                    }).catch(() => { });
+                    case '4': {
+                        this.saveFourthType(userType, userLogin);
+                        break;
+                    }
                 }
+            } else if (this.externalIsChanged()) {
+                this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
+                    this.afterSuccessSubmit();
+                }).catch(er => {
+                    this._errorSrv.errorHandler(er); });
+            } else {
+                this.editMode = false;
+                this.formUpdate(!this.editMode);
             }
         })
         .catch(er => {
@@ -456,118 +492,85 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         });
     }
 
-    getErrorSave() {
-        if (this.form.controls['CLASSIF_NAME'].value !== this.curentUser.CLASSIF_NAME &&
-            this.form.controls['SELECT_AUTENT'].value !== '1'
-        ) {
-            if (!this.form.get('pass').value) {
-                this.form.get('pass').setErrors({ repeat: true }, {emitEvent: false});
+    saveZeroType(userType, userPassword, userLogin) {
+        if (!userPassword) {
+            this._alertMessage('Необходимо ввести пароль');
+            return;
+        }
+        if (this.provUpdateDate()) {
+            this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
+            return;
+        }
+        this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
+            if (this.checkUpdateDate()) {
+                // сохранить дату
+                let date = this.getNewDate();
+                if (date instanceof Date) {
+                    date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
+                }
+                this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                    this.saveExternal();
+                });
             } else {
-                this.form.get('pass').setErrors(null, {emitEvent: false});
+                this.saveExternal();
             }
+        }).catch(() => { });
+    }
+
+    saveMinusFirstType(userType, userLogin) {
+        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+            this.saveExternal();
+        }).catch(() => {});
+    }
+
+    saveFirstType(userType, userLogin) {
+        if (userLogin.indexOf('\\') >= 0) {
+            this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+                this.saveExternal();
+            }).catch(() => { });
+        } else {
+            this._alertMessage('Имя пользователя не соответствует шаблону для ОС-авторизации.');
         }
     }
 
-    submit($event) {
-        const value = +this.form.get('SELECT_AUTENT').value;
-        if (this.errorPass && (value === 0 || value === 3)) {
-            this._msgSrv.addNewMessage({
-                type: 'warning',
-                title: 'Предупреждение:',
-                msg: 'Нельзя сохранить несовпадающие пароли',
-                dismissOnTimeout: 6000,
-            });
-            return ;
+    saveSecondType(userType, userLogin) {
+        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+            this.saveExternal();
+        }).catch(() => { });
+    }
+
+    saveThirdType(userType, userPassword, userLogin) {
+        if (this.provUpdateDate()) {
+            this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
+            return;
         }
-        if (this.provUpdateDate() && !this.form.get('pass').value ) {
-            this._msgSrv.addNewMessage({
-                type: 'warning',
-                title: 'Предупреждение:',
-                msg: 'Дату смены пароля, установленного пользователем, можно только уменьшить',
-                dismissOnTimeout: 6000,
-            });
-            return ;
+        if (!userPassword) {
+            this._alertMessage('Необходимо ввести пароль');
+            return;
         }
-        this.isLoading = true;
-        const promAll = [];
-        let flag = false;
-        // в случае если меняется или создаётся пароль, то тогда нужно изменять другие параметры только после смены пароля
-        if ((value === 0 || value === 3) && this.form.get('pass').value) {
-            promAll.push(this.createOrChengePass());
-            this.newLogin = false;
-            flag = true;
-            if (this.paramsChengePass && this.checkUpdateDate()) {
-                flag = false;
-                this.curentUser.IS_PASSWORD = 1;
-                this.getQueryDate(true);
-            }
-        }
-        Promise.all(promAll)
-        .then((arr) => {
-            if (flag) {
-                this.curentUser.IS_PASSWORD = 1;
-                this.updateDataSysParam();
-            }
-            // если был изменён пароль то мы не изменяем дату
-            const flag_d = flag ? false : this.checkUpdateDate();
-            const flag_t = this.checkUpdateUserType(value);
-            if (flag_d || flag_t) {
-                this.getQueryDate(flag_d);
-                this.getQueryUserType(value, flag_t);
-            }
-            if (Object.keys(this.queryAll).length > 0) {
-                this.updateUser(this._userParamSrv.userContextId, this.queryAll)
-                .then(() => {
-                    this.init();
-                })
-                .catch(er => {
-                    console.log('er', er);
+        this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
+            if (this.checkUpdateDate()) {
+                // сохранить дату
+                let date = this.getNewDate();
+                if (date instanceof Date) {
+                    date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
+                }
+                this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                    this.saveExternal();
+                }).catch(e => {
+                    this.cancel(null);
+                    this._errorSrv.errorHandler(e);
                 });
             } else {
-                this.init();
+                this.saveExternal();
             }
-            // this.postSubmit(value);
-            this._msgSrv.addNewMessage({
-                type: 'success',
-                title: 'Сохранение:',
-                msg: 'Изменения успешно сохранены',
-                dismissOnTimeout: 6000,
-            });
-        })
-        .catch((arr) => {
-            this._errorSrv.errorHandler(arr);
-            /* this.cancelValues(this.inputs, this.form); */
-            this.isLoading = false;
-        });
+        }).catch(() => { });
     }
-    postSubmit(value) {
-        this.isLoading = false;
-        this.originAutent = this.form.get('SELECT_AUTENT').value;
-        this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-        this.curentUser.USERTYPE = value;
-        this.formUpdate(true);
-        this.cancelValues(this.inputs, this.form);
-        this.editMode = false;
-        this._msgSrv.addNewMessage({
-            type: 'success',
-            title: 'Сохранение:',
-            msg: 'Изменения успешно сохранены',
-            dismissOnTimeout: 6000,
-        });
-        this._pushState(false);
-    }
-    getQueryUserType(value, flag) {
-        // возвращает запрос на изменение или же отсутсвие изменений
-        if (flag) {
-            if (value === 1) {
-                this.form.controls['PASSWORD_DATE'].setValue('', { emitEvent: false });
-                this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
-                // this.queryAll['USERTYPE'] = value;
-                this.queryAll['PASSWORD_DATE'] = null;
-            } else {
-                // this.queryAll['USERTYPE'] = value;
-            }
-        }
+
+    saveFourthType(userType, userLogin) {
+        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+            this.saveExternal();
+        }).catch(() => { });
     }
 
     provUpdateDate() {
@@ -581,23 +584,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
         return false;
     }
-
-    getQueryDate(flag): any {
-        // возвращает запрос на изменение или же отсутсвие изменений
-        const data = this.getNewDate();
-        if (flag && data !== '') {
-            this.queryAll['PASSWORD_DATE'] = data;
-        }
-        return null;
-    }
     checkUpdateDate() {
         // проверка была ли изменена дата
         const cur_date = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) : '';
         return (String(this.form.controls['PASSWORD_DATE'].value) !== String(cur_date));
-    }
-    checkUpdateUserType(value) {
-        // проверка был ли изменён тип пользователя
-        return this.curentUser.USERTYPE !== value;
     }
     getNewDate() {
         // параметр который говорит о возможности изменения пароля пользователем this.paramsChengePass
@@ -633,16 +623,6 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         if (!flag) {
             this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
         }
-    }
-    createOrChengePass(): Promise<any> {
-        if (this.form.get('pass').value) {
-            if (this.curentUser.IS_PASSWORD === 0) {
-                return this.createLogin(this.form.get('pass').value, this._userParamSrv.userContextId);
-            } else {
-                return this.changePassword(this.form.get('pass').value, this._userParamSrv.userContextId);
-            }
-        }
-        return Promise.resolve();
     }
     cancelDate() {
         if (this.form.controls['PASSWORD_DATE'].value !== new Date(this.curentUser.PASSWORD_DATE)) {
