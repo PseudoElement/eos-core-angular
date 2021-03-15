@@ -136,11 +136,6 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
             minValue: 1,
         },
         {
-            key: 'CONTROLL_AUTHOR',
-            type: 'string',
-            title: '',
-        },
-        {
             key: 'RESOLUTION_CONTROLLER',
             type: 'text',
             title: ''
@@ -262,11 +257,6 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
             type: '',
             title: ''
         },
-        {
-            key: 'CONTROLL_AUTHOR',
-            type: '',
-            title: '',
-        },
     ]
 };
 export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
@@ -295,6 +285,11 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             key: 'RESOLUTION_SELECT_AUTHOR',
             type: 'boolean',
             title: 'вручную'
+        },
+        {
+            key: 'CONTROLL_AUTHOR',
+            type: 'string',
+            title: '',
         },
         {
             key: 'RESOLUTION_CONTROL_STATE',
@@ -450,6 +445,11 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         },
         {
             key: 'RESOLUTION_SELECT_AUTHOR',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CONTROLL_AUTHOR',
             type: '',
             title: '',
         },
