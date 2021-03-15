@@ -122,13 +122,14 @@
         </div>
     </div>
     <hr>
-    <div class="param-input-group">
+    <div class="param-input-group" *ngIf="!externalAuthHide">
         <span class="l-font">Разрешенные внешние системы аутентификации:</span>
         <hr>
         <eos-dynamic-input
         [form]="form"
         [input]="inputs['rec.ALLOWED_EXTERNAL_AUTH_ESIA']"
         [readonly]="false"
+        [disabled]="true"
         ></eos-dynamic-input>
         <eos-dynamic-input
         [form]="form"
