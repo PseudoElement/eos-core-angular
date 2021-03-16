@@ -296,7 +296,15 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         });
     }
     defaults(event?) {
-        const defaultListName = this.getQueryDefaultList(this.listForQuery);
+        let queryList = [];
+        const tabTwoFields = ['SRCH_LIMIT_RESULT', 'SEARCH_CONTEXT_CARD_EMPTY'];
+        if (this.currTab === 0) {
+            queryList = this.listForQuery.filter(_fld => tabTwoFields.indexOf(_fld) === -1);
+        } else {
+            queryList = this.listForQuery.filter(_fld => tabTwoFields.indexOf(_fld) !== -1);
+        }
+
+        const defaultListName = this.getQueryDefaultList(queryList);
         this.apiSrv.read(defaultListName).then(result => {
             this.fillFormDefault(result);
         }).catch(error => {
