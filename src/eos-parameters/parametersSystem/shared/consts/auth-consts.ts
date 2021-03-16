@@ -1,7 +1,7 @@
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 import { REG_RANGE_0_10, REG_RANGE_0_30 } from './eos-parameters.const';
 
-export const ESIA_AUTH_PARM_VALUE = 'ЕСИА';
+export const ESIA_AUTH_PARM_VALUE = '1';
 export const ESIA_AUTH_FIELD_KEY = 'ALLOWED_EXTERNAL_AUTH_ESIA';
 export const EXTERNAL_AUTH_COMMON_KEY = 'ALLOWED_EXTERNAL_AUTH';
 

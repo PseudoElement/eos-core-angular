@@ -17,6 +17,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     collectionVisible = true;
     public masDisable: any[] = [];
     editMode: boolean;
+    externalAuthHide: boolean = true;
 
     private externalAuth = {
         commonKey: EXTERNAL_AUTH_COMMON_KEY,
@@ -162,8 +163,9 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     }
     private _handleExternalAuth() {
         const extAuthValue: string = this.prepareData.rec[this.externalAuth.commonKey];
-
         const extAuthValues: string[] = (extAuthValue && extAuthValue.split(',')) || [];
+        this.externalAuthHide = !extAuthValue;
+
         this.externalAuth.auths.forEach((extAuth) => {
             const hasAuth = extAuthValues.indexOf(extAuth.parmValue) !== -1;
             extAuth.originValue = hasAuth;
