@@ -45,9 +45,9 @@
                     [input]="controls['SELECT_ROLE']"
                     [form]="formControls"
                     container="body"
-                    [ngStyle]="{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
-                    [readonly]="curentUser.isTechUser || !editMode"
-                    [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
+                    [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
+                    [readonly]="!editMode"
+                    [disabled] = "formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
                 <button
                     class="btn btn-cb"
                     [disabled]="!getCbRole"
