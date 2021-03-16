@@ -335,6 +335,9 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.showAllSubnodes:
                     _isWriteAction = false;
                     _enabled = _enabled && !this._viewParams.searchResults;
+                    if (this.dictionary.id === 'organization' && this._dictSrv.treeNode.id === '0.') {
+                        _enabled = false;
+                    }
                     _active = this._viewParams.showAllSubnodes && !this._viewParams.searchResults;
                     break;
                 case E_RECORD_ACTIONS.createRepresentative:
