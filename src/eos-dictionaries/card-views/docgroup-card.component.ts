@@ -132,23 +132,28 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             selectMulty: false,
         }, true)
             .then((data: string) => {
-                    this.getDate<any>({
-                        DOCVID_CL: {
-                            criteries: {
-                                ISN_LCLASSIF: data
-                            }
-                        }
-                    }).then((docvid) => {
-                        if (docvid.length) {
-                            this.setValue('rec.ISN_DOCVID', data);
-                            this.inputChoice.nativeElement.value = docvid[0].CLASSIF_NAME;
-                        }
-                    });
+                this.fillDocvid(data);
             }).catch(() => {
                 return null;
             });
     }
 
+    fillDocvid(data, emitChange = true) {
+        this.getDate<any>({
+            DOCVID_CL: {
+                criteries: {
+                    ISN_LCLASSIF: data
+                }
+            }
+        }).then((docvid) => {
+            if (docvid.length) {
+                if (emitChange) {
+                    this.setValue('rec.ISN_DOCVID', data);
+                }
+                this.inputChoice.nativeElement.value = docvid[0].CLASSIF_NAME;
+            }
+        });
+    }
     deleteSel() {
         this.setValue('rec.ISN_DOCVID', null);
         this.inputChoice.nativeElement.value = '';
@@ -164,6 +169,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     ngOnInit(): void {
         super.ngOnInit();
+        if (typeof this.data.rec['ISN_DOCVID'] === 'number' ) {
+            this.fillDocvid(this.data.rec['ISN_DOCVID'].toString(), false);
+        }
         this.updateForm({});
         if (!this.isNewRecord && this.data.rec['DUE']) {
             this._apiSrv.read({
