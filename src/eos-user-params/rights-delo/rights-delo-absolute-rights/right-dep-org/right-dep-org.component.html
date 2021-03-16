@@ -19,7 +19,8 @@
                 [disabled]="checkFlag"
                 triggers="hover"
                 containerClass="tooltip-info"
-                (click)="addDep()">
+                (click)="addDep()"
+                eosClickMode>
                 <span class="eos-icon eos-icon-plus-blue small"></span>
             </button>
             <button *ngIf="editMode && !selectedNode.control.disabled"

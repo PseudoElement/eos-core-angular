@@ -687,7 +687,7 @@ if (opt.fio || opt.gender || opt.nomenative) {
     private _selectDL() {
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.skipDeleted = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((due: string) => {
                 if (!due) {
                     this.isShell = false;

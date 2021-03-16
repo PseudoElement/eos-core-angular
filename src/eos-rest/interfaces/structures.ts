@@ -637,6 +637,9 @@ export interface USER_CL extends ILinearCL {
      */
     USER_RIGHT_DOCGROUP_List: USER_RIGHT_DOCGROUP[];
 //    USER_EDIT_ORG_TYPE_List;
+
+    /** настрокки пользователя вызова справочников */
+    CLICK_MODE_SETTINGS: number;
 }
 
 /**

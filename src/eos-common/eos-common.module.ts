@@ -38,6 +38,8 @@ import { InputControlService } from './services/input-control.service';
 import { EosDateMaskDirective } from './directives/date-mask.directive';
 import { InputCleanerDirective } from './input-cleaner/input-cleaner.directive';
 import { UnicValidatorDirective } from './directives/unic-validator.directive';
+import { EosClickModeDirective } from './directives/click-mode.directive';
+
 
 /* pipes */
 import { EosDatePipe } from './pipes/eos-date.pipe';
@@ -73,6 +75,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         EosDateMaskDirective,
         EosDatePipe,
         UserSelectPaginationComponent,
+        EosClickModeDirective
     ],
     imports: [
         BrowserModule,
@@ -82,7 +85,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         AlertModule.forRoot(),
-        ModalModule.forRoot(),
+        ModalModule.forRoot()
     ],
     exports: [
         ConfirmWindowComponent,
@@ -96,6 +99,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         DynamicInputComponent,
         EosDatePipe,
         UserSelectPaginationComponent,
+        EosClickModeDirective
     ],
     entryComponents: [
         ConfirmWindowComponent,

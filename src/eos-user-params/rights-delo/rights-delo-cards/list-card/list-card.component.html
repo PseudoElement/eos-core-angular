@@ -30,6 +30,7 @@
                         placement="bottom"
                         containerClass="tooltip-info"
                         [disabled]="!editMode || !node?.allowed"
+                        eosClickMode
                         (click)="[node.addInstance()]"
                     >
                         <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode || !node?.allowed}">
