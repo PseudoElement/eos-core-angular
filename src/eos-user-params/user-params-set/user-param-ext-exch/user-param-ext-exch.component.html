@@ -21,6 +21,7 @@
         <div [hidden]="currTab !== 0" class="clearfix">
             <eos-remaster-email
                 (pushChenge)='getChanges($event)'
+                [appMode]="appMode"
                 [userData]='hash'
                 [defaultValues]='defaultValues'
                 [isCurrentSettings]="isCurrentSettings"

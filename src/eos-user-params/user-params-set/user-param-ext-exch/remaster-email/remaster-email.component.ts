@@ -10,6 +10,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
+import { IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
 
 
 
@@ -52,6 +53,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     public flagEdit: boolean = false;
     public templRender: TreeItem[] = [];
     public OpenParamsReg: boolean;
+    @Input() appMode: IUserSettingsModes;
     @Input() userData;
     @Input() defaultValues;
     @Input() isCurrentSettings?: boolean;
