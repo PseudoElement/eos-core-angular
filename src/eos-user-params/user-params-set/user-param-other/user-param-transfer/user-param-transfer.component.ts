@@ -48,8 +48,10 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
         this.remaster.cancelEmit.subscribe(() => {
             this.cancel();
         });
-        this.remaster.defaultEmit.subscribe(() => {
-            this.default();
+        this.remaster.defaultEmit.subscribe((tab) => {
+            if (tab === 0) {
+                this.default();
+            }
         });
         this.remaster.editEmit.subscribe(() => {
             this.flagEdit = true;

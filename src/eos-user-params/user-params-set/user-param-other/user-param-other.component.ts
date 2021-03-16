@@ -240,7 +240,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this.remaster.cancelEmit.next();
     }
     default($event?) {
-        this.remaster.defaultEmit.next();
+        this.remaster.defaultEmit.next(this.currTab);
     }
     private _pushState() {
         this._userSrv.setChangeState({ isChange: !this.btnDisabled, disableSave: !this.flagIncrementError });
