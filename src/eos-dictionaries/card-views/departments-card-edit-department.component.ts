@@ -1,4 +1,4 @@
-import { OPEN_CLASSIF_ORGANIZ_FULL } from 'app/consts/query-classif.consts';
+import { IOpenClassifParams } from 'eos-common/interfaces';
 import { WaitClassifService } from './../../app/services/waitClassif.service';
 
 import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@angular/core';
@@ -232,17 +232,25 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     chooseOrganiz() {
+        const OPEN_CLASSIF_ORGANIZ_DEP: IOpenClassifParams = {
+            classif: 'CONTACT',
+            skipDeleted: true,
+            selectMulty: false,
+            selectLeafs: true,
+            selectNodes: false,
+            return_due: true
+        };
+
         this._zone.runOutsideAngular(() => {
-            return this._waitClassifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_FULL)
+            return this._waitClassifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_DEP)
             .then((due: string) => {
                 if (!due || due === '') {
                     return;
                 }
                 this._zone.run(() => this.bindOrganization(due));
             })
-            .catch((error) => {
-                const msg = error && error.message ? error.message : 'Ошибка выбора Организации!';
-                console.error('error message: ', msg);
+            .catch(() => {
+                console.log('window closed');
             });
         });
         /* const config = this.dictSrv.getApiConfig();

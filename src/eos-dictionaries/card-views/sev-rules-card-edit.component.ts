@@ -548,7 +548,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     public openOrganizCl(value, flag) {
         if (!flag) {
             const control = this.form.controls[value];
-            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL, true)
+            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL)
             .then(data => {
                 control.patchValue(data);
                 this.loadOrganizatiomNames(data);

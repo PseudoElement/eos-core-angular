@@ -360,7 +360,8 @@
             containerClass="tooltip-info" 
             tooltip="Выбрать" 
             triggers="hover"
-            *ngIf="editMode" 
+            *ngIf="editMode"
+            eosClickMode
             class="action eos-icon eos-icon-download"  (click)="openOrganizCl('rec.OrganizationFolderInput')"></span>
             <span 
             container="body" 
@@ -715,7 +716,8 @@
                         triggers="hover"
                         class="action eos-icon "  
                         [ngClass]="{'eos-icon-download': reportExecution, 'eos-icon-download-grey': !reportExecution}"
-                        (click)="openOrganizCl('rec.OrganizationFolderInput', !reportExecution)"></span>
+                        (click)="openOrganizCl('rec.OrganizationFolderInput', !reportExecution)"
+                        eosClickMode></span>
                     <span *ngIf="editMode"  
                         container="body" 
                         placement="bottom" 
@@ -725,7 +727,7 @@
                         class="action eos-icon" 
                         [ngClass]="{'eos-icon-bin-forever-blue': reportExecution, 'eos-icon-bin-forever-grey': !reportExecution}"
                         (click)="deleteFieldsNames('rec.OrganizationFolderInput', !reportExecution)"></span>
-                </div>               
+                </div>
             <div class="clear-both">
                 <eos-dynamic-input class="pull-left"
                                    [input]="inputs['rec.address']"
@@ -1056,7 +1058,7 @@
                     containerClass="tooltip-info" 
                     tooltip="Выбрать" 
                     triggers="hover"
-                    *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openOrganizCl('rec.OrganizationFolderInput')"></span>
+                    *ngIf="editMode" class="action eos-icon eos-icon-download"  (click)="openOrganizCl('rec.OrganizationFolderInput')" eosClickMode></span>
                     <span 
                     container="body" 
                     placement="bottom" 
