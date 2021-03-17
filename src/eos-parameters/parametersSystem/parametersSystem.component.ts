@@ -90,8 +90,12 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     }
 
     disabledAutent(param): boolean {
-        // проверяем право доступа "Текущая организация"
+
         const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
+        if (!this._appContext.cbBase && techRights && techRights.charAt(25) === '0' && param.url !== 'now-organiz' && param.url !== 'logging') {
+            return false;
+        }
+        // проверяем право доступа "Текущая организация"
         if (param.url === 'now-organiz' && (!techRights || (techRights && techRights.charAt(1) === '0' ))) {
             return false;
         }
