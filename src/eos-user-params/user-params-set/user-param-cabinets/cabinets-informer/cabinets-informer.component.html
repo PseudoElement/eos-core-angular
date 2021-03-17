@@ -213,14 +213,6 @@
     </div>
 
     <div class="user-group-form">
-        <div class="inputs-inline">
-            <span class="input-title">Максимальное количество записей:</span>
-            <eos-dynamic-input
-                [input]="inputs['rec.INFORMER_LIMIT_RESULT']"
-                [form]="form"
-                [readonly]="!flagEdit"
-            ></eos-dynamic-input>
-        </div>
     </div>
 
     <div class="user-group-form">
@@ -264,6 +256,16 @@
             [form]="form"
             [readonly]="!flagEdit"
         ></eos-dynamic-input>
+    </div>
+    <div class="user-group-form">
+        <div class="inputs-inline">
+            <span class="input-title">Максимальное количество записей:</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.INFORMER_LIMIT_RESULT']"
+                [form]="form"
+                [readonly]="!flagEdit"
+            ></eos-dynamic-input>
+        </div>
     </div>
 </div>
 
