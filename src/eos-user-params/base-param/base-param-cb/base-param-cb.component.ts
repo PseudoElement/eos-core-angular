@@ -723,15 +723,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.tf();
     }
     tf() {
-        const val1 = this.formAccess.controls['0-1'].value;
-        const val2 = this.formAccess.controls['delo_web'].value;
-        if (val1 || val2) {
-            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
-        }
-        if (!val1 && !val2) {
-            this.formControls.controls['SELECT_ROLE'].patchValue(null);
-            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
-        } else {
+        // const val1 = this.formAccess.controls['0-1'].value;
+        // const val2 = this.formAccess.controls['delo_web'].value;
+        // if (val1 || val2) {
+        //     this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
+        // }
+        // if (!val1 && !val2) {
+        //     this.formControls.controls['SELECT_ROLE'].patchValue(null);
+        //     this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+        // } else {
             let str = '';
             if (this.currentCbFields.length > 1) {
                 str = this.currentCbFields[0].role + ' ...';
@@ -741,7 +741,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             if (str) {
                 this.formControls.controls['SELECT_ROLE'].patchValue(str);
             }
-        }
+        // }
     }
     checkMeinControlAccess($event, data) {
         if (data === '0') {
@@ -997,8 +997,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
-                                this.formControls.controls['SELECT_ROLE'].patchValue('');
-                                this.formControls.controls['SELECT_ROLE'].disable();
+                                // this.formControls.controls['SELECT_ROLE'].patchValue('');
+                                // this.formControls.controls['SELECT_ROLE'].disable();
                             } else {
                                 this.curentUser.isTechUser = data;
                                 f.get('teсhUser').setValue(false);
@@ -1008,8 +1008,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         });
                     }
                     // this.form.get('SURNAME_PATRON').patchValue(this.form.get('CLASSIF_NAME').value, { emitEvent: false });
-                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
-                    this.formControls.controls['SELECT_ROLE'].disable();
+                    // this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    // this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
