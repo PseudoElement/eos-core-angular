@@ -7,6 +7,7 @@
     align-items: center;
     z-index: 1020;
 }
+
 .eos-dictionary {
     overflow: hidden;
     .tree-wrapper,
@@ -23,7 +24,7 @@
         padding-top: 16px;
         height: calc(100vh - 96px);
         overflow-x: auto;
-        overflow-y: hidden;
+        overflow-y: auto;
         border-right: 1px solid $border-color-main-theme;
         &.has-spinner {
             display: flex;
