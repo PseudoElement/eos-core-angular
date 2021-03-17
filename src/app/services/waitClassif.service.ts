@@ -167,13 +167,13 @@ export class WaitClassifService {
         return url;
     }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
-       const clickMode = this._appContext.CurrentUser.CLICK_MODE_SETTINGS;
+       const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url = '../';
         if (flag) {
             url += OLD_VIEW_URL;
         } else {
             url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
-            if (clickMode) {
+            if (clickMode === '1') {
                 url = this.isCtrl ? '../' + OLD_VIEW_URL : '../' + NEW_VIEW_URL;
             } else {
                 url = this.isCtrl ? '../' + NEW_VIEW_URL : '../' + OLD_VIEW_URL;

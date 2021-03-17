@@ -76,14 +76,11 @@ export class AppContext {
         });
         const oCurrentUser = p.read<USER_CL>({
             CurrentUser: ALL_ROWS,
-            expand: 'USERDEP_List,USERSECUR_List,USER_VIEW_List,USER_TECH_List,USER_PARMS_List',
+            expand: 'USERDEP_List,USERSECUR_List,USER_VIEW_List,USER_TECH_List',
             _moreJSON: { ParamsDic: null }
         })
             .then(([d]) => {
                 const isnViews = d.USER_VIEW_List.map((view) => view.ISN_VIEW);
-                const clickModeSettings = d.USER_PARMS_List.find((item) => item.PARM_NAME === 'CLASSIF_WEB_SUGGESTION');
-                d['CLICK_MODE_SETTINGS'] = +clickModeSettings.PARM_VALUE;
-                delete d['USER_PARMS_List'];
                 this.limitCardsUser = d.USER_TECH_List.filter(card => card.FUNC_NUM === 1);
                 this.limitCardsUser = this.limitCardsUser.map(card => card.DUE);
                 let res = Promise.resolve({user: d, views: []});
@@ -112,13 +109,14 @@ export class AppContext {
     }
 
     getClickModeSettings() {
-        const currentUserIsn = this.CurrentUser.ISN_LCLASSIF;
+        const currentUserIsn: number = this.CurrentUser.ISN_LCLASSIF;
         return  this.pip.read<USER_PARMS>({
-            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'CLASSIF_WEB_SUGGESTION' })
+            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'CLASSIF_WEB_SUGGESTION', 'ISN_USER_OWNER': currentUserIsn }),
           })
             .then(data => {
-                const param = data.find((user) => user.ISN_USER_OWNER === currentUserIsn).PARM_VALUE;
-                this.CurrentUser.CLICK_MODE_SETTINGS = +param;
+                const param = data[0].PARM_VALUE;
+                let clickModeSettings = this.CurrentUser._more_json['ParamsDic']['CLASSIF_WEB_SUGGESTION'];
+                clickModeSettings = param;
             });
     }
 
