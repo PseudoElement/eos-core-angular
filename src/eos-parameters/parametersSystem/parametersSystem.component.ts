@@ -90,15 +90,21 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     }
 
     disabledAutent(param): boolean {
-        // проверяем право доступа "Текущая организация"
+
         const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
-        if (param.url === 'now-organiz' && (!techRights || techRights.charAt(1) === '0' )) {
+        if (!this._appContext.cbBase && techRights && techRights.charAt(25) === '0' && param.url !== 'now-organiz' && param.url !== 'logging') {
             return false;
         }
-        // пока убираем проверку на эти параметры
-        /* if (param.url === 'logging' && (this._appContext.CurrentUser.TECH_RIGHTS[29] === '0')) {
+        // проверяем право доступа "Текущая организация"
+        if (param.url === 'now-organiz' && (!techRights || (techRights && techRights.charAt(1) === '0' ))) {
             return false;
-        } */
+        }
+        // проверяем право доступа к Протоколированию и проверяем ограниченность технолога
+        const protocolAndUsers = techRights && techRights.charAt(29) === '0' && techRights.charAt(0) === '0';
+        const protocolAndLimitUsers = techRights && techRights.charAt(29) === '0' && this._appContext.limitCardsUser.length;
+        if (param.url === 'logging' && (!techRights || protocolAndUsers || protocolAndLimitUsers)) {
+            return false;
+        }
         if (this._appContext.cbBase) {
             const limit = this._appContext.limitCardsUser.length;
             const urlName = param.url === 'authentication';
