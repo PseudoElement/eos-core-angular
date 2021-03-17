@@ -1,9 +1,9 @@
-import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
-import {Subject} from 'rxjs';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Subject } from 'rxjs';
 
 
-import {EosDictService} from '../services/eos-dict.service';
-import {EosDictionary} from '../core/eos-dictionary';
+import { EosDictService } from '../services/eos-dict.service';
+import { EosDictionary } from '../core/eos-dictionary';
 import {
     COMMON_ADD_MENU,
     DEPARTMENT_ADD_MENU,
@@ -21,8 +21,8 @@ import {
     IDictionaryViewParameters,
     IActionUpdateOptions
 } from 'eos-dictionaries/interfaces';
-import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
-import {takeUntil} from 'rxjs/operators';
+import { APS_DICT_GRANT, EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { takeUntil } from 'rxjs/operators';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
@@ -335,7 +335,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.showAllSubnodes:
                     _isWriteAction = false;
                     _enabled = _enabled && !this._viewParams.searchResults;
-                    if (this.dictionary.id === 'organization' && this._dictSrv.treeNode.id === '0.') {
+                    if (this.dictionary.descriptor.type !== E_DICT_TYPE.linear && this._dictSrv.treeNode.id === '0.') {
                         _enabled = false;
                     }
                     _active = this._viewParams.showAllSubnodes && !this._viewParams.searchResults;
