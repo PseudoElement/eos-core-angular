@@ -16,7 +16,7 @@
                     </ng-template>
 
                     <ng-template #treeNodeTmpl let-node="node" let-mar="m">
-                        <div>
+                        <div [hidden]="node.key === 'RCSEND_HIDE_OPERATION_SEND_EMAIL' && appMode && (appMode.arm || appMode.cbr)">
                             <div [ngClass] = "node.key === 'RECEIP_EMAIL' ? 'receipe-email' : ''" class="input_wrapper" [ngStyle]="{'margin-left.px': mar}">
                                 <div  class="user-group-form" *ngIf="node.key === 'RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO'">
                                     <span class="set-header bold">Включать в паспорт:</span><br><br>
