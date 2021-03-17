@@ -1,20 +1,23 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import { Router } from '@angular/router';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { RECENT_URL } from 'app/consts/common.consts';
+import { TYPE_DOCUM_DICT } from '../consts/dictionaries/type-docum.const';
+import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
+import { AppContext } from '../../eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-dictionaries',
     templateUrl: 'dictionaries.component.html',
 })
-export class DictionariesComponent implements OnDestroy {
+export class DictionariesComponent implements OnInit, OnDestroy {
     dictionariesList: IDictionaryDescriptor[] = [];
     r: number = 0;
     modalWindow: Window;
-
+    curUserHasDocGroup: boolean;
     get path() {
         return this._router.url;
     }
@@ -22,6 +25,7 @@ export class DictionariesComponent implements OnDestroy {
     constructor(
         private _dictSrv: EosDictService,
         private _router: Router,
+        private _appCtx: AppContext,
         private _eaps: EosAccessPermissionsService,
         private _storageSrv: EosStorageService,
     ) {
@@ -43,7 +47,28 @@ export class DictionariesComponent implements OnDestroy {
         });
     }
 
+    ngOnInit() {
+        this.checkLimitedDocGroup();
+    }
+
+    checkLimitedDocGroup() {
+        const techList = this._appCtx.CurrentUser.USER_TECH_List;
+        techList.forEach((el) => {
+            if (el.FUNC_NUM === 9 && el.ALLOWED) {
+                this.curUserHasDocGroup = true;
+            }
+        });
+    }
+
     isAccessEnabled(dict: any) {
+        // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
+        if (dict.id === TYPE_DOCUM_DICT.id) {
+            if (!this.curUserHasDocGroup) {
+                return  APS_DICT_GRANT.denied;
+            } else {
+                return  this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            }
+        }
         return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
     }
     isAccessLicense(id) {

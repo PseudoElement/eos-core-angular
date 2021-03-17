@@ -552,15 +552,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.tf();
     }
     tf() {
-        const val1 = this.formAccess.controls['0-1'].value;
-        const val2 = this.formAccess.controls['delo_web'].value;
-        if (val1 || val2) {
-            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
-        }
-        if (!val1 && !val2) {
-            this.formControls.controls['SELECT_ROLE'].patchValue(null);
-            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
-        }
+        // const val1 = this.formAccess.controls['0-1'].value;
+        // const val2 = this.formAccess.controls['delo_web'].value;
+        // if (val1 || val2) {
+        //     this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
+        // }
+        // if (!val1 && !val2) {
+        //     this.formControls.controls['SELECT_ROLE'].patchValue(null);
+        //     this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+        // }
     }
     checkMeinControlAccess($event, data) {
         if (data === '0') {
