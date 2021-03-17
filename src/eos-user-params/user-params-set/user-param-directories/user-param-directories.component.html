@@ -11,13 +11,13 @@
         (defaultEmit)='default($event)'
     ></eos-user-params-header>
     <div class="wr-scroll-dict">
-        <div class="user-group-form">
+        <div [hidden]="appMode.tkDoc" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title" [ngStyle]="{'padding-top': '15px'}">Вызов справочника:</span>
                 <eos-dynamic-input [input]="inputs['rec.CLASSIF_WEB_SUGGESTION']" class="input-mar-right" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form">
+        <div [hidden]="appMode.tkDoc" class="user-group-form">
             <span [ngStyle]="{'margin-right': '10px'}">Вызов окна списков:</span><span>{{getValueWindowList()}}</span>
         </div>
         <div [hidden]="appMode.arm">
