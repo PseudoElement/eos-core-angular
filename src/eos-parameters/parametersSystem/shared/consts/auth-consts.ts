@@ -90,7 +90,8 @@ export const AUTH_PARAM: IBaseParameters = {
         {
             key: 'EXTERNAL_AUTH_ADD',
             type: 'boolean',
-            title: 'Разрешить пользователям добавление идентификатора внешних систем аутентификации'
+            title: 'Разрешить пользователям добавление идентификатора внешних систем аутентификации',
+            formatDbBinary: true,
         },
         {
             key: EXTERNAL_AUTH_COMMON_KEY,
