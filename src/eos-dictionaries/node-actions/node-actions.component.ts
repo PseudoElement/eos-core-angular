@@ -462,7 +462,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.dopRequisites:
-                    if (this.dictionary.id === 'organization' && _enabled) {
+                    if ((this.dictionary.id === 'organization' || this.dictionary.id === 'citizens') && _enabled) {
                         _enabled = this._eaps.checkAccessTech(E_TECH_RIGHT.ArrDescripts);
                     }
                     break;
