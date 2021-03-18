@@ -19,7 +19,7 @@
         <div [hidden]="appMode.arm" class="user-group-form">
             <span>Открывать РК в приложении Документы на закладке дополнительные реквизиты для групп документов:</span>
             <div class="btn-controll">
-                <button class="btn btn-primary-light" [disabled]="!flagEdit" tooltip="Добавить" containerClass="tooltip-info" placement="bottom" triggers="hover" (click)="addRcDoc()">
+                <button class="btn btn-primary-light" [disabled]="!flagEdit" tooltip="Добавить" containerClass="tooltip-info" placement="bottom" triggers="hover" (click)="addRcDoc()" eosClickMode>
                         <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
                     </button>
                 <button [disabled]="disabledFlagDelite || !flagEdit || disableDelet()" class="btn btn-primary-light" [tooltip]="!disabledFlagDelite && !disableDelet() ? 'Удалить' : null" containerClass="tooltip-info" placement="bottom" (click)="deleteRcDoc()">

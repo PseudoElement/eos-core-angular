@@ -9,6 +9,7 @@ import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-param-directories',
     templateUrl: 'user-param-directories.component.html',
@@ -52,6 +53,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        private _appContext: AppContext
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
@@ -149,6 +151,10 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.editMode();
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit(this.form.value);
+                }
+                if (this.currentUser.ISN_LCLASSIF === this._appContext.CurrentUser.ISN_LCLASSIF) {
+                    const clickModeValue: string = this.form.controls['rec.CLASSIF_WEB_SUGGESTION'].value;
+                    this._appContext.getClickModeSettings(clickModeValue);
                 }
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {

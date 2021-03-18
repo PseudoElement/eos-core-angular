@@ -10,7 +10,7 @@
     <div>
         <div *ngIf="currTab === 0">
             <div class="access-control">
-                <button [disabled]="!editFlag" type="button" class="btn btn-primary" (click)="OpenClassiv()" tooltip="Добавить" triggers="hover:click" containerClass="tooltip-info">
+                <button [disabled]="!editFlag" type="button" class="btn btn-primary" (click)="OpenClassiv()" tooltip="Добавить" eosClickMode triggers="hover:click" containerClass="tooltip-info">
                 <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
             </button>
                 <button [disabled]="!editFlag || currentIndex === 0" type="button" class="btn btn-primary" (click)='deliteEmailFild()' [tooltip]="!editFlag || currentIndex === 0 ? null : 'Удалить'" containerClass="tooltip-info">

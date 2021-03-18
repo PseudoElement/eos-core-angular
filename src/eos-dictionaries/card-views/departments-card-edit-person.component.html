@@ -388,7 +388,8 @@
                     </eos-dynamic-input>
                     <span class="icon eos-icon small icon-add-department"
                         [ngClass]="{'eos-icon-avatar-blue': editMode, 'eos-icon-avatar-grey': !editMode, 'add-right-margin': editMode && form.value['replace.DUE_REPLACE_NAME']}"
-                        (click)="selectDL(editMode)"></span>
+                        (click)="selectDL(editMode)"
+                        eosClickMode></span>
                     <span *ngIf="editMode && form.value['replace.DUE_REPLACE_NAME']"
                         class="icon eos-icon eos-icon-close-blue small" (click)="deleteDL()"></span>
                 </div>

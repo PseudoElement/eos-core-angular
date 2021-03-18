@@ -107,6 +107,11 @@ export class AppContext {
     reInit() {
         this.init();
     }
+    /** getClickModeSettings - метода обновления настроек вызова справочника */
+    getClickModeSettings(value: string) {
+        const moreJson = this.CurrentUser._more_json;
+        moreJson.ParamsDic['CLASSIF_WEB_SUGGESTION'] = value;
+    }
 
     // --------------------------------------------------------------
     public getParams(key: string): string {
