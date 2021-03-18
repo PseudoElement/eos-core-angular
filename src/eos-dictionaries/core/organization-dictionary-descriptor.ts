@@ -237,8 +237,8 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 return data;
             });
     }
-    ar_Descript(): void {
-        this.apiSrv.read({
+    ar_Descript(): Promise<any> {
+       return this.apiSrv.read({
             AR_DESCRIPT: {
                 criteries: {
                     OWNER: 'O',
@@ -246,6 +246,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             }, expand: 'AR_VALUE_LIST_List'
         }).then(_descript => {
             this.dopRec = _descript;
+            return this.dopRec;
         });
     }
 

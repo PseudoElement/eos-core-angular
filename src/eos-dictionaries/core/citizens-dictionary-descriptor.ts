@@ -158,7 +158,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
             }, expand: 'AR_VALUE_LIST_List'
         }).then((_descript: AR_DESCRIPT[]) => {
             this.dopRec = _descript;
-            return Promise.resolve([]);
+            return this.dopRec;
         });
     }
     searchDopRec(criteries: any[]): Promise<any> {

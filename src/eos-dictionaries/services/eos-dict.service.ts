@@ -3,7 +3,7 @@ import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
 import { Injectable, } from '@angular/core';
 // import {Router} from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { EosDictionary, CUSTOM_SORT_FIELD } from '../core/eos-dictionary';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
@@ -103,6 +103,7 @@ export class EosDictService {
     private _weightOrdered: boolean;
     private _currentMarkInfo: MarkedInformation = new MarkedInformation();
     private _treeNodeId: string;
+    private _reloadDopRecvizites$: Subject<any>;
 
 
     /* Observable dictionary for subscribing on updates in components */
@@ -154,6 +155,9 @@ export class EosDictService {
 
     get markInfo$(): Observable<MarkedInformation> {
         return this._markInfo$.asObservable();
+    }
+    get reloadDopRec$(): Observable<any> {
+        return this._reloadDopRecvizites$.asObservable();
     }
 
     get userOrdered(): boolean {
@@ -279,6 +283,7 @@ export class EosDictService {
         this._dictMode$ = new BehaviorSubject<number>(this._dictMode);
         this._initPaginationConfig();
         this._weightOrdered = !!this._storageSrv.getItem(STORAGE_WEIGHTORDER);
+        this._reloadDopRecvizites$ = new Subject();
     }
 
     getDescr(dictionaryId: string): IDictionaryDescriptor {
@@ -1455,6 +1460,9 @@ export class EosDictService {
             this._storageSrv.removeItem('newNode');
         }
         return nodeT;
+    }
+    public updateDopRec(): void {
+        this._reloadDopRecvizites$.next(null);
     }
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);

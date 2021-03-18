@@ -75,7 +75,7 @@ import { COLLISIONS_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev/se
 import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nomenclatur/check-index-nomenclatur.component';
 import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
 import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-template.component';
-import {Templates} from '../consts/dictionaries/templates.consts';
+import { Templates } from '../consts/dictionaries/templates.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -1535,7 +1535,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             classif: 'AR_EDITOR',
         };
         config.id = this.dictionary.id !== 'citizens' ? 'organiz_cl' : 'citizen';
-        this._waitClassif.openClassif(config).then(() => { }).catch(e => { console.log(e); });
+        this._waitClassif.openClassif(config).then(() => {
+            this._dictSrv.updateDopRec();
+        }).catch(e => {
+            this._dictSrv.updateDopRec();
+            console.warn(e);
+        });
     }
 
     private _copyNodesToBuffer() {

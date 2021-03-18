@@ -77,6 +77,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.subscriptions.push(this._dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.searchInfo$.subscribe((_d) => this.clearForm()));
+        this.subscriptions.push(this._dictSrv.reloadDopRec$.subscribe(() => this.updateDopRec()));
     }
     get dictId(): string {
         return this.dictionary.id;
@@ -166,7 +167,14 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             console.log(e);
         });
     }
-    initFormDopRec() {
+    public updateDopRec() {
+        this.dictionary.descriptor.ar_Descript().then(() => {
+            this.initFormDopRec();
+        }).catch(e => {
+            console.warn(e);
+        });
+    }
+   public initFormDopRec() {
         const options = [];
         this.arDescript.forEach(_d => {
             this.mapAr_Descr.set(_d.API_NAME, _d);
