@@ -8,7 +8,12 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
+import {
+    PARM_CANCEL_CHANGE,
+    PARM_SUCCESS_SAVE,
+    PARM_ERROR_DB,
+    PARM_ERROR_CARMA
+} from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
@@ -83,6 +88,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
     public flagHideBtn: boolean = false;
     public isCarma: boolean = true;
+    public loadSert: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -110,6 +116,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 this.currentUser = this._userSrv.curentUser;
                 this.selectedSertificatePopup = null;
                 const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
+                this.loadSert = true;
                 this.certStoresService.init(null, store)
                     .pipe(
                         takeUntil(this.ngUnsubscribe)
@@ -219,8 +226,10 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 if (this.listsSertInfo.length > 0) {
                     this.selectCurent(this.listsSertInfo[0]);
                 }
+                this.loadSert = false;
             });
         }).catch(error => {
+                this.loadSert = false;
             this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
     }
@@ -235,6 +244,16 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         };
         return this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
+            this.notDataSert();
+            if (this.listsSertInfo.length > 0) {
+                this.selectCurent(this.listsSertInfo[0]);
+            }
+            this.loadSert = false;
+        });
+    }
+
+    notDataSert() {
+        if (this.DBserts) {
             this.DBserts.forEach(sert => {
                 this.listsSertInfo.push({
                     who: 'нет данных',
@@ -249,10 +268,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                     valid: false,
                 });
             });
-            if (this.listsSertInfo.length > 0) {
-                this.selectCurent(this.listsSertInfo[0]);
-            }
-        });
+        }
     }
 
     getInfoForDBSerts(): Promise<any> {
@@ -269,18 +285,22 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         });
         return Promise.all(arrRequestSerts).then(data => {
             data.forEach((infoSert, index) => {
-                this.listsSertInfo.push({
-                    who: infoSert['certInfo']['Issuer'],
-                    sn: infoSert['certInfo']['Serial'],
-                    whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
-                    data: infoSert,
-                    selected: false,
-                    id: this.DBserts[index]['ID_CERTIFICATE'],
-                    key: this.DBserts[index]['ISN_CERT_PROFILE'],
-                    create: false,
-                    delete: false,
-                    valid: this.parceValid(infoSert['certInfo']['Validity']),
-                });
+                if (!infoSert.errorCode) {
+                    this.listsSertInfo.push({
+                        who: infoSert['certInfo']['Issuer'],
+                        sn: infoSert['certInfo']['Serial'],
+                        whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                        data: infoSert,
+                        selected: false,
+                        id: this.DBserts[index]['ID_CERTIFICATE'],
+                        key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                        create: false,
+                        delete: false,
+                        valid: this.parceValid(infoSert['certInfo']['Validity']),
+                    });
+                } else {
+                    this.notDataSert();
+                }
             });
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
@@ -294,32 +314,40 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         return this.certStoresService.GetCertInfo2(arrRequestSerts.join(';')).then(serts => {
             if (Array.isArray(serts['certInfos'])) {
                 serts['certInfos'].forEach((infoSert, index) => {
-                    this.listsSertInfo.push({
-                        whom: infoSert['Issuer'],
-                        sn: infoSert['Serial'],
-                        who: this.parseSertWhom(infoSert['X500Description']),
-                        data: infoSert,
-                        selected: false,
-                        id: this.DBserts[index]['ID_CERTIFICATE'],
-                        key: this.DBserts[index]['ISN_CERT_PROFILE'],
-                        create: false,
-                        delete: false,
-                        valid: this.parceValid(infoSert['Validity']),
-                    });
+                    if (!infoSert.errorCode) {
+                        this.listsSertInfo.push({
+                            whom: infoSert['Issuer'],
+                            sn: infoSert['Serial'],
+                            who: this.parseSertWhom(infoSert['X500Description']),
+                            data: infoSert,
+                            selected: false,
+                            id: this.DBserts[index]['ID_CERTIFICATE'],
+                            key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                            create: false,
+                            delete: false,
+                            valid: this.parceValid(infoSert['Validity']),
+                        });
+                    } else {
+                        this.notDataSert();
+                    }
                 });
             } else {
-                this.listsSertInfo.push({
-                    whom: serts['certInfo']['Issuer'],
-                    sn: serts['certInfo']['Serial'],
-                    who: this.parseSertWhom(serts['certInfo']['X500Description']),
-                    data: serts['certInfo'],
-                    selected: false,
-                    id: this.DBserts[0]['ID_CERTIFICATE'],
-                    key: this.DBserts[0]['ISN_CERT_PROFILE'],
-                    create: false,
-                    delete: false,
-                    valid: this.parceValid(serts['certInfo']['Validity']),
-                });
+                if (!serts.errorCode) {
+                    this.listsSertInfo.push({
+                        whom: serts['certInfo']['Issuer'],
+                        sn: serts['certInfo']['Serial'],
+                        who: this.parseSertWhom(serts['certInfo']['X500Description']),
+                        data: serts['certInfo'],
+                        selected: false,
+                        id: this.DBserts[0]['ID_CERTIFICATE'],
+                        key: this.DBserts[0]['ISN_CERT_PROFILE'],
+                        create: false,
+                        delete: false,
+                        valid: this.parceValid(serts['certInfo']['Validity']),
+                    });
+                } else {
+                    this.notDataSert();
+                }
             }
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_CARMA);

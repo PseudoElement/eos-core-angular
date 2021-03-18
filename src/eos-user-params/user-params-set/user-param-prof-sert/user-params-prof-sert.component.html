@@ -59,7 +59,7 @@
                 <span class="sert-table-serial">Серийный номер</span>
                 <span class="sert-table-who">Кем выдан</span>
             </div>
-            <div class="sert-table-body">
+            <div *ngIf="!loadSert; else spinner" class="sert-table-body">
                 <div class="sert-table-content" *ngFor='let listSert of listsSertInfo'>
                     <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
                         <span tooltip="{{listSert.whom}}" placement="bottom" containerClass="tooltip-info" class="whom">{{listSert.whom}}</span>
@@ -68,6 +68,12 @@
                     </div>
                 </div>
             </div>
+
+            <ng-template #spinner>
+                <div class="spiner-wrapper flex-wr-centered">
+                    <eos-spinner size="md"></eos-spinner>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>
