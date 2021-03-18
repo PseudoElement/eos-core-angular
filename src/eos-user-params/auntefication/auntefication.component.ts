@@ -100,6 +100,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
 
     getUserExternal(): Promise<any> {
         return Promise.resolve([]);
+        // todo: ждем когда обновят entity
         // return  this.apiSrvRx.read<any>({
         //     USER_AUTH_EXTERNAL_ID: {
         //         criteries: {
@@ -113,7 +114,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             USER_PARMS: {
                 criteries: {
                     ISN_USER_OWNER: '-99',
-                    PARM_NAME: 'SUPPORTED_USER_TYPES||CHANGE_PASS||PASS_DATE' /*||EXTERNAL_AUTH_ADD||ALLOWED_EXTERNAL_AUTH'*/
+                    PARM_NAME: 'SUPPORTED_USER_TYPES||CHANGE_PASS||PASS_DATE||EXTERNAL_AUTH_ADD||ALLOWED_EXTERNAL_AUTH'
                 }}};
 
         return this.apiSrvRx.read<USER_PARMS>(req);
