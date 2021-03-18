@@ -335,7 +335,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.showAllSubnodes:
                     _isWriteAction = false;
                     _enabled = _enabled && !this._viewParams.searchResults;
-                    if (this.dictionary.descriptor.type !== E_DICT_TYPE.linear && this._dictSrv.treeNode.id === '0.') {
+                    if (this.dictionary.descriptor.type !== E_DICT_TYPE.linear && dueTo === '0.') {
                         _enabled = false;
                     }
                     _active = this._viewParams.showAllSubnodes && !this._viewParams.searchResults;
