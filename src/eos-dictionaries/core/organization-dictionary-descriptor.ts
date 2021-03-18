@@ -238,12 +238,13 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             });
     }
     ar_Descript(): Promise<any> {
-       return this.apiSrv.read({
+        return this.apiSrv.read({
             AR_DESCRIPT: {
                 criteries: {
                     OWNER: 'O',
                 }
-            }, expand: 'AR_VALUE_LIST_List'
+            },
+            orderby: 'AR_CATEGORY.WEIGHT', expand: 'AR_VALUE_LIST_List'
         }).then(_descript => {
             this.dopRec = _descript;
             return this.dopRec;
