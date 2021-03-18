@@ -4,7 +4,8 @@
             <div class="organization-wrapper">
                 <label [ngClass]="{'unimportant-text': !editMode }">Организация <a
                     *ngIf="editMode"
-                    (click)="chooseOrganiz()">[выбрать]</a> <a
+                    (click)="chooseOrganiz()"
+                    eosClickMode>[выбрать]</a> <a
                     *ngIf="editMode && hasOrganization"
                     (click)="unbindOrganization()">[удалить]</a></label>
         <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"

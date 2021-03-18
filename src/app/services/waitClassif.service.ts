@@ -1,3 +1,4 @@
+import { AppContext } from './../../eos-rest/services/appContext.service';
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 import { PipRX } from 'eos-rest';
@@ -24,7 +25,9 @@ const COMMON_LIST: string = '../WebRC/Pages/CommonLists.html';
 
 @Injectable()
 export class WaitClassifService {
-    constructor(private _apiSrv: PipRX) {
+    private isCtrl = null;
+
+    constructor(private _apiSrv: PipRX, private _appContext: AppContext) {
         window['Rootpath'] = function () {
             return 'classif';
         };
@@ -37,6 +40,10 @@ export class WaitClassifService {
         const query = { args: qargs };
         const req = { CanChangeClassif: query };
         return this._apiSrv.read(req);
+    }
+
+    ctrlClickHandler(isCtrl: boolean) {
+        this.isCtrl = isCtrl;
     }
 
     chooseDocGroup(): Promise<string | void> {
@@ -160,12 +167,19 @@ export class WaitClassifService {
         return url;
     }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
+       const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url = '../';
         if (flag) {
             url += OLD_VIEW_URL;
         } else {
             url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
+            if (clickMode === '1') {
+                url = this.isCtrl ? '../' + OLD_VIEW_URL : '../' + NEW_VIEW_URL;
+            } else {
+                url = this.isCtrl ? '../' + NEW_VIEW_URL : '../' + OLD_VIEW_URL;
+            }
         }
+
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';

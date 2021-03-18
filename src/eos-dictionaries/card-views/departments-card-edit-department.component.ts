@@ -1,3 +1,5 @@
+import { IOpenClassifParams } from 'eos-common/interfaces';
+import { WaitClassifService } from './../../app/services/waitClassif.service';
 
 import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
@@ -32,6 +34,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         private msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
         private _apiSrv: PipRX,
+        private _waitClassifSrv: WaitClassifService
     ) {
         super(injector);
         this.previousValues = {};
@@ -229,10 +232,31 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     chooseOrganiz() {
-        const config = this.dictSrv.getApiConfig();
+        const OPEN_CLASSIF_ORGANIZ_DEP: IOpenClassifParams = {
+            classif: 'CONTACT',
+            skipDeleted: true,
+            selectMulty: false,
+            selectLeafs: true,
+            selectNodes: false,
+            return_due: true
+        };
+
+        this._zone.runOutsideAngular(() => {
+            return this._waitClassifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_DEP)
+            .then((due: string) => {
+                if (!due || due === '') {
+                    return;
+                }
+                this._zone.run(() => this.bindOrganization(due));
+            })
+            .catch(() => {
+                console.log('window closed');
+            });
+        });
+        /* const config = this.dictSrv.getApiConfig();
         if (config) {
             const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
-            const params = 'Classif=CONTACT&value_id=__ClassifIds&app=nadzor&skip_deleted=True&select_multy=False&select_nodes=False&select_leaf=True&return_due=True&search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"';
+            const params = 'Classif=CONTACT&ClassifIds&app=nadzor&skip_deleted=True&select_multy=False&select_nodes=False&select_leaf=True&return_due=True&search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"';
             // &search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"
             this._zone.runOutsideAngular(() => {
                 window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
@@ -240,7 +264,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
                     this._zone.run(() => this.bindOrganization(due));
                 };
             });
-        }
+        } */
     }
 
     bindOrganization(orgDue: string) {

@@ -164,7 +164,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             selectNodes: false,
             return_due: false,
         };
-        this._waitClassifSrv.openClassif(query, true).then(data => {
+        this._waitClassifSrv.openClassif(query).then(data => {
             this.addRcDocToInput(data);
             this.flagBacground = false;
         }).catch(error => {

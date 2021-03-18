@@ -548,7 +548,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     public openOrganizCl(value, flag) {
         if (!flag) {
             const control = this.form.controls[value];
-            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL, true)
+            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL)
             .then(data => {
                 control.patchValue(data);
                 this.loadOrganizatiomNames(data);
@@ -673,7 +673,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     }
     private openClassifDocGroup() {
         const classif = +this.ruleKind === 2 ? Object.assign({}, OPEN_CLASSIF_DOCGR_LEAFS) : Object.assign({}, OPEN_CLASSIF_DOCGR_SEV);
-        this._waitClassif.openClassif(classif, true)
+        this._waitClassif.openClassif(classif)
         .then(data => {
             this.updateInputDue_doc(data);
             // this.loadOrganizatiomNames(data);

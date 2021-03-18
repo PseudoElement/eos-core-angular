@@ -229,12 +229,14 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     }
     selectfromTheDirectory() {
         this.flagBacground = true;
+        const selected = this.list.length > 0 ? this.list.map((el) => el.DUE).join('|') : '';
         const params: IOpenClassifParams = {
             classif: 'DOCGROUP_CL',
             selectMulty: true,
             selectLeafs: false,
             selectNodes: true,
             return_due: true,
+            selected
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;

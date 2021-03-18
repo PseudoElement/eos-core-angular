@@ -104,7 +104,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             USER_PARMS: {
                 criteries: {
                     ISN_USER_OWNER: '-99',
-                    PARM_NAME: 'CATEGORIES_FOR_USER|SUPPORTED_USER_TYPES'
+                    PARM_NAME: /*CATEGORIES_FOR_USER |*/ 'SUPPORTED_USER_TYPES'
                 }
             }
         });

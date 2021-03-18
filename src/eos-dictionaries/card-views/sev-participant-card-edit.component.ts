@@ -80,7 +80,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     chooseOrganiz() {
         const config = this.dictSrv.getApiConfig();
         if (config) {
-            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL_PARTIC, true)
+            this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL_PARTIC)
             .then((due: string) => {
                 this.bindOrganization(due);
             }).catch(e => {
