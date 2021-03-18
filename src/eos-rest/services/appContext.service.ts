@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PipRX } from './pipRX.service';
-import { USER_CL, SYS_PARMS, SRCH_VIEW, USER_PARMS } from '../interfaces/structures';
+import { USER_CL, SYS_PARMS, SRCH_VIEW } from '../interfaces/structures';
 import { ALL_ROWS } from '../core/consts';
 import { Deferred } from '../core/pipe-utils';
 import { IUserParms } from 'eos-rest';
@@ -107,17 +107,10 @@ export class AppContext {
     reInit() {
         this.init();
     }
-
-    getClickModeSettings() {
-        const currentUserIsn: number = this.CurrentUser.ISN_LCLASSIF;
-        return  this.pip.read<USER_PARMS>({
-            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'CLASSIF_WEB_SUGGESTION', 'ISN_USER_OWNER': currentUserIsn }),
-          })
-            .then(data => {
-                const param = data[0].PARM_VALUE;
-                let clickModeSettings = this.CurrentUser._more_json['ParamsDic']['CLASSIF_WEB_SUGGESTION'];
-                clickModeSettings = param;
-            });
+    /** getClickModeSettings - метода обновления настроек вызова справочника */
+    getClickModeSettings(value: string) {
+        const moreJson = this.CurrentUser._more_json;
+        moreJson.ParamsDic['CLASSIF_WEB_SUGGESTION'] = value;
     }
 
     // --------------------------------------------------------------

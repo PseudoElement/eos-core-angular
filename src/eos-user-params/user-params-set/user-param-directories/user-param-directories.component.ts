@@ -153,7 +153,8 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                     this.DefaultSubmitEmit.emit(this.form.value);
                 }
                 if (this.currentUser.ISN_LCLASSIF === this._appContext.CurrentUser.ISN_LCLASSIF) {
-                    this._appContext.getClickModeSettings();
+                    const clickModeValue: string = this.form.controls['rec.CLASSIF_WEB_SUGGESTION'].value;
+                    this._appContext.getClickModeSettings(clickModeValue);
                 }
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {
