@@ -1287,7 +1287,7 @@ export class EosDictService {
         return this.currentDictionary.descriptor.paste(slicedNodes, dueTo, whenCopy)
             .then(() => {
                 this._storageSrv.removeItem('markedNodes');
-                this.reload();
+            //    this.reload();
             })
             .catch(er => {
                 if (er) {

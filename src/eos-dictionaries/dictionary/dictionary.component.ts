@@ -968,7 +968,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     /**
      * Physical delete marked elements on page
      */
-    private _physicallyDelete(slicedNode?): void {
+    private _physicallyDelete(slicedNode?): Promise<any> {
         let selectedNodes;
         if (slicedNode) {
             selectedNodes = slicedNode;
@@ -998,7 +998,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
 
         if (this.dictionaryId === 'sev-rules') {
-            this._dictSrv.readSevRule(selectedNodes).then(data => {
+            return this._dictSrv.readSevRule(selectedNodes).then(data => {
                 if (data.length) {
                     const part = data.filter((p) => p.PARTICIPANT.length > 0);
                     if (part.length) {
@@ -1022,16 +1022,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     }
                     return;
                 }
-                this._getConfirmMarkedItems(selectedNodes, confirmDelete);
+                return this._getConfirmMarkedItems(selectedNodes, confirmDelete);
             });
         } else {
-            this._getConfirmMarkedItems(selectedNodes, confirmDelete);
+            return this._getConfirmMarkedItems(selectedNodes, confirmDelete);
         }
     }
 
-    private _getConfirmMarkedItems(selectedNodes, confirmDelete): void {
+    private _getConfirmMarkedItems(selectedNodes, confirmDelete): Promise<any> {
         const titleId = selectedNodes[0].nodeTitleid;
-        this._confirmMarkedItems(selectedNodes, confirmDelete)
+        return this._confirmMarkedItems(selectedNodes, confirmDelete)
             .then((button: IConfirmButton) => {
                 if (button && button.result === 2) {
                     return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
@@ -1395,62 +1395,58 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     slicedNode.forEach(node => {
                         node.isMarked = true;
                     });
-                    this._physicallyDelete(slicedNode);
+                    this._physicallyDelete(slicedNode).then(() => {
+                        // обновляем полностью справочник после операции вставки
+                        this.updateAfterPaste();
+                    });
+                }   else {
+                    // обновляем полностью справочник после операции вставки
+                    this.updateAfterPaste();
                 }
-                // else {
-                //     slicedNode.forEach(node => {
 
-                //         const children: EosDictionaryNode[] = node.getAllChildren();
-                //         children.forEach(_n => {
-                //             this.dictionary.nodes.delete(_n.id);
-                //         });
-                //         this.dictionary.nodes.delete(_)
-                //         node.parent.deleteChild(node);
-
-                //     });
-                // }
-                // обновляем полностью справочник после операции вставки
-                const id = this.dictionaryId;
-                if (this._dictSrv['_srchCriteries']) {
-                    this._storageSrv.setItem('searchCriteries', this._dictSrv['_srchCriteries']);
-                }
-                this._dictSrv.closeDictionary();
-                this._dictSrv.openDictionary(id).then(() => {
-                    if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
-                        if (this.dictionary.id === 'templates') {
-                            this.dictionary.descriptor['top'] = this._nodeId;
-                        }
-                        this.dictionary.root.children = null;
-                        const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
-                        if (n) {
-                            this.title = n.title;
-                        }
-                        this._dictSrv.setCustomNodeId(this._nodeId);
-                        this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
-                            this._dictSrv.reload();
-                            this._storageSrv.removeItem('searchCriteries');
-                        });
-                    } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
-                        if (this._nodeId === '0.') {
-                            this._nodeId = '';
-                        }
-                        this._dictSrv.selectTreeNode(this._nodeId).then(() => {
-                            this._dictSrv.reload();
-                            this._storageSrv.removeItem('searchCriteries');
-                        });
-                    } else {
-                        this._dictSrv.selectTreeNode(this._nodeId).then(() => {
-                            this._dictSrv.reload();
-                            this._storageSrv.removeItem('searchCriteries');
-
-                        });
-                    }
-                });
-              //  this._ch.detectChanges();
+                //  this._ch.detectChanges();
             })
             .catch(er => {
                 console.log('er', er);
             });
+    }
+    private updateAfterPaste() {
+        const id = this.dictionaryId;
+        if (this._dictSrv['_srchCriteries']) {
+            this._storageSrv.setItem('searchCriteries', this._dictSrv['_srchCriteries']);
+        }
+        this._dictSrv.closeDictionary();
+        this._dictSrv.openDictionary(id).then(() => {
+            if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                if (this.dictionary.id === 'templates') {
+                    this.dictionary.descriptor['top'] = this._nodeId;
+                }
+                this.dictionary.root.children = null;
+                const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                if (n) {
+                    this.title = n.title;
+                }
+                this._dictSrv.setCustomNodeId(this._nodeId);
+                this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
+                    this._dictSrv.reload();
+                    this._storageSrv.removeItem('searchCriteries');
+                });
+            } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
+                if (this._nodeId === '0.') {
+                    this._nodeId = '';
+                }
+                this._dictSrv.selectTreeNode(this._nodeId).then(() => {
+                    this._dictSrv.reload();
+                    this._storageSrv.removeItem('searchCriteries');
+                });
+            } else {
+                this._dictSrv.selectTreeNode(this._nodeId).then(() => {
+                    this._dictSrv.reload();
+                    this._storageSrv.removeItem('searchCriteries');
+
+                });
+            }
+        });
     }
     private _copy(): void {
         // то что вырезано и записано
