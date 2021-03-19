@@ -104,7 +104,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             USER_PARMS: {
                 criteries: {
                     ISN_USER_OWNER: '-99',
-                    PARM_NAME: /*CATEGORIES_FOR_USER |*/ 'SUPPORTED_USER_TYPES'
+                    PARM_NAME: 'CATEGORIES_FOR_USER|SUPPORTED_USER_TYPES'
                 }
             }
         });
@@ -121,7 +121,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         Promise.all([query1, query2])
             .then(([data, list]) => {
                 const roles = data[0] ? data[0]['PARM_VALUE'].split(';') : [];
-                const types = data[0] ? data[0]['PARM_VALUE'].split(',') : [];
+                const types = data[0] ? data[1]['PARM_VALUE'].split(',') : [];
                 const defaultTypes = types[0] ? types[0] : '-1';
                 let isnDepartments,
                     listI: LIST_ITEMS[],
