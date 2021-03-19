@@ -753,7 +753,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         return this.apiSrvRx.batch([request], '').then(() => {
             this._userParamSrv.ProtocolService(this.curentUser['ISN_LCLASSIF'], 4);
         }).catch(e => {
-            this.cancel(null);
+        //    this.cancel(null);
             this._errorSrv.errorHandler(e);
             return Promise.reject();
         });
