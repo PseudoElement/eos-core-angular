@@ -95,10 +95,9 @@ export class RightDepertmentComponent implements OnInit {
                     }
                     if (this._appContext.CurrentUser.DELO_RIGHTS &&
                         this._appContext.CurrentUser.DELO_RIGHTS[0] === '1' &&
-                        this._appContext.CurrentUser.USER_TECH_List &&
-                        this._appContext.CurrentUser.USER_TECH_List.length
+                        this._appContext.limitCardsUser.length
                     ) {
-                        this.userTechDep = this._appContext.CurrentUser.USER_TECH_List.filter((tech) => tech.FUNC_NUM === 10);
+                        this.userTechDep = this._appContext.CurrentUser.USER_TECH_List.filter((tech) => tech.FUNC_NUM === 1);
                     }
                     data.forEach((dep: DEPARTMENT) => {
                         const userDep: USERDEP = this.userDepFuncNumber.find((ud: USERDEP) => dep.DUE === ud.DUE);
