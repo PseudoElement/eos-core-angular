@@ -269,11 +269,11 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         const autent = this.form.get('SELECT_AUTENT').value;
         this.maxLoginLength = autent === 0 ? '12' : '64';
 
-        if (this.originAutent === autent) {
-            this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
-        } else {
-            this.form.controls['CLASSIF_NAME'].setValue('');
-        }
+        // if (this.originAutent === autent) {
+        //     this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
+        // } else {
+        //     this.form.controls['CLASSIF_NAME'].setValue('');
+        // }
     }
     getTitle(): void {
         if (this.curentUser.isTechUser) {
