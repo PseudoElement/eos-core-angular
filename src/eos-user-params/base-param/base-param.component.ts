@@ -25,6 +25,7 @@ import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT } from 'eos-dictionaries/consts/confirm.consts';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -307,8 +308,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         F25 = true;
                     }
                 });
-                 // у нового пользователя тут может быть null -> записываем  строку '000000000000000000000000000000 000      '
-                 const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
+                // у нового пользователя тут может быть null -> записываем  строку '000000000000000000000000000000 000      '
+                const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
                 const arr = DELO_RIGHTS.split('');
                 const newDELO_RIGHTS = arr.map((v, i) => {
                     if (i === 24 || i === 25) {
@@ -424,6 +425,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     // так как согласно таску 139328:
                     // "Разрешаем назначать роль пользователю без АДЛ"
                     // не имеет смысла проверка кабинета
+
+                    this.apiSrvRx.read( {[this._createUrlForSop(`${id}`)]: ALL_ROWS});
                     return this.saveData(accessStr, id, query);
                 } else {
                     return;
@@ -853,5 +856,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             return true;
         }
         return false;
+    }
+    private _createUrlForSop(userId: string): string {
+        let url = 'UserRightsReset?';
+        url += `users=${userId}`;
+        url += `&rights=11`;
+        return url;
     }
 }
