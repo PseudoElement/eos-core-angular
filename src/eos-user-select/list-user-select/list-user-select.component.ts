@@ -567,7 +567,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             animated: false,
             show: false,
         });
-        this.settingsManagementModal.content.checkedUsers = this.getCheckedUsers().map(user => user.data.ISN_LCLASSIF);
+        this.settingsManagementModal.content.checkedUsers = this.getCheckedUsers();
         this.settingsManagementModal.content.closedModal.subscribe(() => {
             setTimeout(() => {
                 this.settingsManagementModal.hide();

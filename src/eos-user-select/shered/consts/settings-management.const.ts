@@ -61,8 +61,14 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
         label: 'Скопировать выбранным пользователям настройки от:',
         value: '',
     },
+    {
+        controlType: E_FIELD_TYPE.select,
+        key: 'USER_TEMPLATES',
+        label: 'Скопировать настройки по шаблону',
+        options: [],
+        default: '...'
+    },
 ];
-
 export const CUT_RIGHTS_INPUTS = [
     {
         controlType: E_FIELD_TYPE.boolean,

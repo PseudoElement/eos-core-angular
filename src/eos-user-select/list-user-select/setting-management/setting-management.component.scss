@@ -26,9 +26,10 @@
             display: inline-block;
         }
         .base-department-input {
-            input {
+            display: flex;
+            .input-w {
                 background: $light-grey-1;
-                width: 457px;
+                width: 405px;
                 cursor: default;
             }
             .icon-add-department {
@@ -36,14 +37,6 @@
                 display: inline-block;
                 margin-left: -34px;
                 margin-bottom: -7px;
-            }
-            .copy-user-wr {
-                position: relative;
-                span {
-                    position: absolute;
-                    right: 10px;
-                    top: 5px;
-                }
             }
         }
         .container-settings {
@@ -68,14 +61,22 @@
                 .pad-par-copy {
                     padding-right: 20px;
                 }
-            }
-            .btn-rights-cut {
-                margin-right: 200px;
+                .copy-user-wr {
+                    position: relative;
+                    span {
+                        position: absolute;
+                        right: 10px;
+                        top: 5px;
+                    }
+                }
             }
             .btn-copy {
                 padding: 8px 10px;
                 height: 35px;
                 margin-right: 81px;
+            }
+            .btn-rights-cut {
+                margin-right: 200px;
             }
         }
     }
