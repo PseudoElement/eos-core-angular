@@ -1,6 +1,6 @@
 <div class="base-param-wrapper" *ngIf="!isLoading">
     <eos-user-params-header [editMode]="editMode" [title]='title' [disableBtn]="!getValidDate || newInfo" [errorSave]="getErrorSave" (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'></eos-user-params-header>
-    <div class="base-param-main">
+    <div #root class="base-param-main" >
         <div class="top-base-align">
             <div class="avatar-base" *ngIf="(isPhoto && !formControls.controls['teсhUser'].value) || (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP); else tech">
                 <a class="av-link-b" [routerLink]="['/spravochniki','departments', !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP, 'view' ]">
@@ -44,7 +44,8 @@
         <eos-dynamic-input class="base-text-input base-input-role"
                 [input]="controls['SELECT_ROLE']"
                 [form]="formControls"
-                container="body"
+                eosTooltipErrorFix
+                [scrollableParent]="root"
                 [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
                 [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled"
         ></eos-dynamic-input><br>
