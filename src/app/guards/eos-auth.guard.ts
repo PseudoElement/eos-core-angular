@@ -19,6 +19,11 @@ export class AuthorizedGuard implements CanActivate {
         return this._profileSrv.checkAuth()
             .then((auth) => {
                 if (!auth) {
+                    // если нас открыли с настроек пользователя, то редиректим на завершение сессии
+                    if (this._profileSrv.openWithCurrentUserSettings) {
+                        document.location.assign('../terminate.aspx');
+                        return;
+                    }
                     if (!this._profileSrv.shortName) {
                         this._router.navigate(['login'], { queryParams: { returnUrl: state.url } });
                     } else {

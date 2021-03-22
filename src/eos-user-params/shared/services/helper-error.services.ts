@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Router } from '@angular/router';
-// import { Router } from '@angular/router';
+import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
 @Injectable()
 export class ErrorHelperServices {
     constructor(
         private _msgSrv: EosMessageService,
-        private _router: Router,
+        private _userProfiler: EosUserProfileService
     ) {
 
     }
@@ -43,7 +42,8 @@ export class ErrorHelperServices {
     }
 
  private   razLogin() {
-    if (this._router.url.indexOf('/user_param/current-settings/') !== -1) {
+     // если нас открыли с настроек пользователя, то редиректим на завершение сессии
+     if (this._userProfiler.openWithCurrentUserSettings) {
          document.location.assign('../terminate.aspx');
      } else {
          document.location.assign('../login.aspx');
