@@ -249,8 +249,13 @@ export class RightDepertmentComponent implements OnInit {
     }
     addDep(): Promise<any> {
         this.isShell = true;
-        const DEPART = (this.funcNum === 3 /* && this._appContext.cbBase */) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
+        let DEPART = (this.funcNum === 3 /* && this._appContext.cbBase */) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
+        DEPART = Object.assign({}, DEPART);
 
+        // работа с событиями ограничить выбор подразделений
+        if (this.funcNum === 36) {
+            DEPART.selectNodes = false;
+        }
         return this._waitClassifSrv.openClassif(DEPART)
             .then((data: string) => {
                 if (data === '') {
