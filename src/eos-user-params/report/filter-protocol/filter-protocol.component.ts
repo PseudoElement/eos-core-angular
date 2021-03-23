@@ -117,7 +117,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     OPEN_CLASSIF_USER_CL['selectMulty'] = true;
     OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
-    this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+    this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL, true)
       .then(data => {
         this.data['ISN_USER_COPY'] = data;
         return this._getUserCl(data.split('|').map(Number));
@@ -143,7 +143,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
    OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
-    this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+    this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL, true)
       .then(data => {
         this.data['ISN_USER_COPY'] = data;
         return this._getUserCl(data.split('|').map(Number));
