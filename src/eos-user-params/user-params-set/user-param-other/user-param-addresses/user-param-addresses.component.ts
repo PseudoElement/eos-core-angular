@@ -79,7 +79,6 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     ngOnInit() {
         if (this.defaultUser) {
             const ADDR_EXP = String(this.defaultUser['ADDR_EXPEDITION']);
-            console.log(this.form);
             Promise.all([this.getList(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
                 const dep = result[1] as DEPARTMENT[];
                 if (dep.length > 0) {
