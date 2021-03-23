@@ -43,7 +43,7 @@
         <!-- <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['pass']" container="body"></eos-dynamic-input>
         <eos-dynamic-input class="base-text-input" [form]="form" [input]="inputs['passRepeated']" container="body"></eos-dynamic-input> -->
     </div>
-    <div style="width: 200px; margin-bottom: 20px;"
+    <div style="width: 420px; margin-bottom: 20px;"
         class="base-text-input base-login-input autentification-control-type"
         [formGroup]="form"
         [tooltip]="errorPass && editMode ? 'Для смены логина задайте пароль' : validClassif"
@@ -66,8 +66,8 @@
         </div>
         <div class="wrapper-password">
             <!-- что бы не вставлялся логин в поле даты -->
-            <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none">
-            <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none">
+            <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
+            <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
             <div [formGroup]="form" class="dynamic-input-wrapper base-text-input">
                 <label [hidden]="inputs['pass'].hideLabel" [attr.for]="inputs['pass'].key">{{inputs['pass'].label}}</label>
                 <div class="vision" [ngClass]="{'disabled': inputs['pass'].disabled}">
