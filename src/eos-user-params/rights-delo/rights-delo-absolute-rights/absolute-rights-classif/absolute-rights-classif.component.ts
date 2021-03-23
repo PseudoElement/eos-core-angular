@@ -277,7 +277,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string = '1'.repeat(21) + '0' + '1'.repeat(15) + '0001';
+            const techRights: string = '11111111111111111111001111111111111110001';
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -290,7 +290,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         } else {  // строке в индексах с пробеломи присваиваем 0
             const arr = this.curentUser['TECH_RIGHTS'].split('');
             arr.forEach((i,  index) => {
-                if (i === ' ' || index === 21 || index === 39 || index === 38 || index === 37) {
+                if (i === ' ' || index === 20 || index === 21 || index === 39 || index === 38 || index === 37) {
                     arr[index] = '0';
                 }
             });

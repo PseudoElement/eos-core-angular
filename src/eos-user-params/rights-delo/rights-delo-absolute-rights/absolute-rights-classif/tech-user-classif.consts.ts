@@ -101,11 +101,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         label: 'Шаблоны',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
-    {
-        key: 21,
-        label: 'Протокол редактирования пользователей',
-        expandable: E_TECH_USER_CLASSIF_CONTENT.none
-    },
+    // {
+    //     key: 21,
+    //     label: 'Протокол редактирования пользователей',
+    //     expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    // },
     // {
     //     key: 22,
     //     label: 'Управление сертификатами',
