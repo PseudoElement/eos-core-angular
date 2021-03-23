@@ -243,6 +243,7 @@ export class RightOrganizDepertComponent implements OnInit {
             data: this.selectedDep.data.userDep
         });
         // this.emitDeleteRcpd();
+        this.selectedNode.deleteChangesWeigth();
         this.selectedDep = null;
         this._changeWeight();
         this.Changed.emit('del');
@@ -515,6 +516,15 @@ export class RightOrganizDepertComponent implements OnInit {
                     });
                     return;
                 }
+            }
+            if (node.weight === 1 || node.data.userDep['WEIGHT'] <= 1) {
+                if (this.selectedNode.checkWeightFirst()) {
+                    this.selectedNode.checkWeightChanges(node);
+                    this.selectedNode.addWeightChanges(node);
+                } else {
+                    this.selectedNode.addWeightChanges(node);
+                }
+                return;
             }
             this.selectedNode.checkWeightChanges(node);
         });

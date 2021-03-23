@@ -67,9 +67,14 @@ export class NodeAbsoluteRight {
                     this._transformChenge(node, index);
                     return;
                 } else {
-                    this._change.splice(index, 1);
-                    this._checkTouched();
+                    if (node.hasOwnProperty('user_cl')) {
+                        this._change.splice(index, 1);
+                        this._checkTouched();
+                        return;
+                    }
+                    this._transformChenge(node, index);
                     return;
+
                 }
             }
         }
@@ -145,6 +150,11 @@ export class NodeAbsoluteRight {
             this._checkTouched();
         }
     }
+
+    checkWeightFirst() {
+        return  !!this._weightChanges.filter(ch => ch.data['WEIGHT'] === 1);
+    }
+
     deleteChange() {
         this.touched = false;
         this._change = [];
