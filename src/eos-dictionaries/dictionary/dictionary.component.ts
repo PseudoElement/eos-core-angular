@@ -1045,6 +1045,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
                             this._msgSrv.addNewMessage(message);
                         }
+                        return results;
                     });
                 }
                 return Promise.resolve(null);
@@ -1395,11 +1396,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     slicedNode.forEach(node => {
                         node.isMarked = true;
                     });
-                    this._physicallyDelete(slicedNode).then(() => {
+                    this._physicallyDelete(slicedNode).then((records: IRecordOperationResult[]) => {
                         // обновляем полностью справочник после операции вставки
-                        this.updateAfterPaste();
+                        records = records.filter(_r => {
+                            delete _r.record._State;
+                            return _r.error;
+                        }).map(_r => _r.record);
+
+                        if (records && records.length) {
+                            this.dictionary.descriptor.markBooleanData(records, 'DELETED', true, true).then(() => {
+                                this.updateAfterPaste();
+                            });
+                        } else {
+                            this.updateAfterPaste();
+                        }
                     });
-                }   else {
+                } else {
                     // обновляем полностью справочник после операции вставки
                     this.updateAfterPaste();
                 }
