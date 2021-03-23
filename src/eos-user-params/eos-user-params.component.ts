@@ -235,36 +235,17 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     }
 
     private checkTabScan(): void {
-        if (this._appContext.limitCardsUser.length > 0) {
-            if (this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['DEPARTMENT_DUE']) === -1) {
-                this.accordionList[0].disabled = true;
-                this.accordionList[1].subList[3].disabled = true;
-                this.accordionList[2].disabled = true;
-                this.accordionList[3].disabled = true;
-                this.accordionList[4].disabled = true;
-                this.accordionList[6].disabled = true;
+        if (!this._userParamService.CanEdit) {
+            this.accordionList[0].disabled = true;
+            this.accordionList[1].subList[3].disabled = true;
+            this.accordionList[2].disabled = true;
+            this.accordionList[3].disabled = true;
+            this.accordionList[4].disabled = true;
+            this.accordionList[6].disabled = true;
             //    this.accordionList[1].isOpen = false;
-                this.accordionList[2].isOpen = false;
+            this.accordionList[2].isOpen = false;
             //    this.hideIcon = true;
-            } else {
-                this.accordionList[0].disabled = false;
-                this.accordionList[1].subList[3].disabled = false;
-                this.accordionList[2].disabled = false;
-                this.accordionList[3].disabled = false;
-                this.accordionList[6].disabled = false;
-                this.hideIcon = false;
-                if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
-                    this.accordionList[4].disabled = false;
-                } else {
-                    this.accordionList[4].disabled = true;
-                }
-            }
         } else {
-            if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
-                this.accordionList[4].disabled = false;
-            } else {
-                this.accordionList[4].disabled = true;
-            }
             if (this._userParamService.curentUser['ORACLE_ID'] === null && this._userParamService.curentUser['DELETED'] === 1) {
                 this.accordionList[0].disabled = true;
                 this.accordionList[1].disabled = true;
@@ -282,8 +263,13 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.accordionList[6].disabled = false;
                 this.hideIcon = false;
             }
+            if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
+                this.accordionList[4].disabled = false;
+            } else {
+                this.accordionList[4].disabled = true;
+            }
         }
-       if (this._userParamService.curentUser === undefined) {
+        if (this._userParamService.curentUser === undefined) {
             if (this.pageId !== 'protocol') {
                 this._router.navigateByUrl('user_param');
             }

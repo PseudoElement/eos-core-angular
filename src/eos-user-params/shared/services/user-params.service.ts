@@ -73,6 +73,9 @@ export class UserParamsService {
     get hasChanges$(): Observable<IUserSetChanges> {
         return this._hasChanges$.asObservable();
     }
+    get CanEdit() {
+        return !!this.curentUser._more_json['CanTech'];
+    }
     constructor(
         private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
@@ -101,6 +104,7 @@ export class UserParamsService {
         }
         const queryUser = {
             [`USER_CL(${isn})`]: ALL_ROWS,
+            _moreJSON : { CanTech: null },
             expand: expand
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
