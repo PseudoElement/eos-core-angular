@@ -133,7 +133,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
 
     selectUser(): Promise<any> {
         this.isShell = true;
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL, true)
             .then(data => {
                 if (this.checkedUsers.length === 1 && this.checkedUsers.indexOf(+data) !== -1) {
                     this._msgSrv.addNewMessage({
