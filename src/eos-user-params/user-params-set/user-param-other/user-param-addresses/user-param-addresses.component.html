@@ -47,7 +47,7 @@
             </span> -->
         <!-- </div>
     </div> -->
-    <div class="user-group-form">
+    <div class="user-group-form" *ngIf="flagInternalAdr">
         <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
         <span>При добавлении указывать экземпляр документа в АРМ «ДелоWeb»:</span>
         <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_DEFAULT_ORIG'] " [form]="form " [readonly]="false "></eos-dynamic-input>

@@ -32,6 +32,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     public flagBacground: boolean = false;
     public sendFrom: string = '';
     public cBase: boolean = false;
+    public flagInternalAdr: boolean = false;
     private sendFromOrigin: string = '';
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;
@@ -134,12 +135,14 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         this.prepareInputs = this.formHelp.getObjectInputFields(OTHER_USER_ADDRESSES.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
         this.form = this.inpSrv.toFormGroup(this.inputs);
+        this.flagInternalAdr = this.form.value['rec.RS_INNER_FILL_SEND_DATE'];
         this.editMode();
         this.formSubscriber();
     }
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);
+            this.flagInternalAdr = data['rec.RS_INNER_FILL_SEND_DATE'];
         });
     }
 
