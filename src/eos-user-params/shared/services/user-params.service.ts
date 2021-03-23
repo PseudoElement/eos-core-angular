@@ -14,6 +14,7 @@ import { ErrorHelperServices } from './helper-error.services';
 import { KIND_ROLES_CB } from '../consts/user-param.consts';
 import { saveAs } from 'file-saver';
 import { HttpHeaders } from '@angular/common/http';
+import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
 
 
 @Injectable()
@@ -81,6 +82,7 @@ export class UserParamsService {
         private _modalSrv: BsModalService,
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
+        private _userProfiler: EosUserProfileService
 
     ) { }
     getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
@@ -149,7 +151,10 @@ export class UserParamsService {
             })
             .catch(err => {
                 this._errorSrv.errorHandler(err);
-                this._router.navigate(['user_param']);
+                // если нас не открыли с настроек пользователя, то редиректим
+                if (!this._userProfiler.openWithCurrentUserSettings) {
+                    this._router.navigate(['user_param']);
+                }
                 return false;
             });
     }

@@ -19,12 +19,17 @@ export class EosUserProfileService implements IUserProfile {
     settings: ISettingsItem[];
     private _user: USER_CL;
     // private _params: SYS_PARMS;
-
+    /**Приложение открыто с настроек пользователя User Current-Settings */
+    private _openWithCurrentUserSettings = false;
     private _isAuthorized: boolean;
 
     private _settings$: BehaviorSubject<ISettingsItem[]>;
     private _authorized$: BehaviorSubject<boolean>;
     private _authPromise: Promise<boolean>;
+
+    get openWithCurrentUserSettings(): boolean {
+        return this._openWithCurrentUserSettings;
+    }
 
     get userId(): string {
         if (this._user) {
@@ -48,6 +53,10 @@ export class EosUserProfileService implements IUserProfile {
 
     get authorized$(): Observable<boolean> {
         return this._authorized$.asObservable();
+    }
+
+    set openWithCurrentUserSettings(value) {
+        this._openWithCurrentUserSettings = value;
     }
 
     constructor(

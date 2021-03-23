@@ -1,11 +1,17 @@
-import { ErrorHandler, Injectable } from '@angular/core';
+import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
+import { EosUserProfileService } from '../services/eos-user-profile.service';
 
 @Injectable()
 export class EosErrorHandler implements ErrorHandler {
 
-    constructor(private _msgSrv: EosMessageService) { }
+    constructor(private _msgSrv: EosMessageService,
+                private inject: Injector) { }
+
+    get _userParms() {
+        return this.inject.get(EosUserProfileService);
+    }
 
     handleError(error: Error) {
         /* tslint:disable:no-console */
@@ -13,7 +19,12 @@ export class EosErrorHandler implements ErrorHandler {
         try {
             if (error['rejection'] && error['rejection'] instanceof RestError) {
                 if (error['rejection']['code'] && +error['rejection']['code'] === 434) {
-                    document.location.assign('../login.aspx');
+                    // если нас открыли с настроек пользователя, то редиректим на завершение сессии
+                    if (this._userParms.openWithCurrentUserSettings) {
+                        document.location.assign('../terminate.aspx');
+                    } else {
+                        document.location.assign('../login.aspx');
+                    }
                 }
             }
 
