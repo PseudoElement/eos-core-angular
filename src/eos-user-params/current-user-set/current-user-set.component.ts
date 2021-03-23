@@ -9,6 +9,7 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
 import { PipRX, USER_PARMS } from 'eos-rest';
+import { EosUserProfileService } from '../../app/services/eos-user-profile.service';
 
 @Component({
     selector: 'eos-current-user-set',
@@ -38,6 +39,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         private _apContext: AppContext,
         private formHelp: FormHelperService,
         private _pipRx: PipRX,
+        private _userProfiler: EosUserProfileService
     ) {}
     ngOnInit() {
         this._apContext.setHeader.next(false);
@@ -89,6 +91,8 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                         break;
                 }
                 this.appMode.hasMode = true;
+                // нас открыли с настроек пользователя меняем флаг для редиректов
+                this._userProfiler.openWithCurrentUserSettings = true;
             }
             this._checkTabExistance(qParams);
             this.openingOptionalTab = 0;
