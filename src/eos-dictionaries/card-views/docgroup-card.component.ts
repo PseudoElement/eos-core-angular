@@ -138,7 +138,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             });
     }
 
-    fillDocvid(data, emitChange = true) {
+    fillDocvid(data, emitChange = true, emit = true) {
         this.getDate<any>({
             DOCVID_CL: {
                 criteries: {
@@ -148,7 +148,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }).then((docvid) => {
             if (docvid.length) {
                 if (emitChange) {
-                    this.setValue('rec.ISN_DOCVID', data);
+                    this.setValue('rec.ISN_DOCVID', data, emit);
                 }
                 this.inputChoice.nativeElement.value = docvid[0].CLASSIF_NAME;
             }
@@ -169,8 +169,14 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     ngOnInit(): void {
         super.ngOnInit();
-        if (typeof this.data.rec['ISN_DOCVID'] === 'number' ) {
-            this.fillDocvid(this.data.rec['ISN_DOCVID'].toString(), false);
+
+        if (this.dictSrv.treeNode && this.dictSrv.treeNode.data && this.dictSrv.treeNode.data.rec.ISN_DOCVID && this.isNewRecord) {
+            const parentDocVid = this.dictSrv.treeNode.data.rec.ISN_DOCVID;
+            this.fillDocvid(parentDocVid.toString(), true, false);
+        } else {
+            if (typeof this.data.rec['ISN_DOCVID'] === 'number') {
+                this.fillDocvid(this.data.rec['ISN_DOCVID'].toString(), false);
+            }
         }
         this.updateForm({});
         if (!this.isNewRecord && this.data.rec['DUE']) {
@@ -189,8 +195,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             }).catch(e => {
                 this._errorSrv.errorHandler(e);
             });
-        }   else {
-            this.isUsed  = false;
+        } else {
+            this.isUsed = false;
         }
         this._setRequired('rec.SHABLON', !this.isNode);
 
@@ -198,14 +204,14 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
     }
 
-    dataShablonDetail (): [] {
+    dataShablonDetail(): [] {
         if (!this.data['SHABLON_DETAIL_List']) {
             this.data['SHABLON_DETAIL_List'] = [];
         }
 
         return this.data['SHABLON_DETAIL_List']/*.filter( rec => rec['CONSTR_TYPE'] === 'L')*/.map(rec =>
-            <SelectorListItem>Object.assign({}, {key: rec['ISN_LCLASSIF'], CONSTR_TYPE: rec['CONSTR_TYPE'], element: rec['ELEMENT'].trim(), title: '', obj: null }
-        ));
+            <SelectorListItem>Object.assign({}, { key: rec['ISN_LCLASSIF'], CONSTR_TYPE: rec['CONSTR_TYPE'], element: rec['ELEMENT'].trim(), title: '', obj: null }
+            ));
     }
 
     editTemplate(forProject = false) {
@@ -213,9 +219,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         const path = forProject ? 'rec.PRJ_SHABLON' : 'rec.SHABLON';
         const modalObj = (<DocgroupTemplateConfigComponent>this.templateModal.content);
         modalObj.forProject = forProject;
-        const additionalData = Object.assign ({},
+        const additionalData = Object.assign({},
             { SHABLON_DETAIL_List: this.dataShablonDetail(), },
-               forProject ? { COPY_NUMBER_FLAG_PRJ: this.getValue('rec.COPY_NUMBER_FLAG_PRJ') || 0 } : { COPY_NUMBER_FLAG: this.getValue('rec.COPY_NUMBER_FLAG') || 0 }
+            forProject ? { COPY_NUMBER_FLAG_PRJ: this.getValue('rec.COPY_NUMBER_FLAG_PRJ') || 0 } : { COPY_NUMBER_FLAG: this.getValue('rec.COPY_NUMBER_FLAG') || 0 }
         );
         modalObj.additionalData = additionalData;
         modalObj.dgTemplate = this.getValue(path);
@@ -231,12 +237,12 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                                 this.data[key] = [];
                             }
                             // добавленные
-                            outdata[key].forEach( d => {
-                                const ex = this.data[key].find ( saved =>
+                            outdata[key].forEach(d => {
+                                const ex = this.data[key].find(saved =>
                                     saved['ELEMENT'].trim() === d.element &&
                                     saved['CONSTR_TYPE'] === d.CONSTR_TYPE &&
                                     saved['ISN_LCLASSIF'] === d.key
-                                    );
+                                );
                                 if (!ex) {
                                     this.data[key].push(<SHABLON_DETAIL>{
                                         CONSTR_TYPE: d.CONSTR_TYPE,
@@ -249,12 +255,12 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                                 }
                             });
                             // удаленные
-                            this.data[key].forEach (saved => {
-                                const ex = outdata[key].find ( d =>
+                            this.data[key].forEach(saved => {
+                                const ex = outdata[key].find(d =>
                                     saved['ELEMENT'].trim() === d.element &&
                                     saved['CONSTR_TYPE'] === d.CONSTR_TYPE &&
                                     saved['ISN_LCLASSIF'] === d.key
-                                    );
+                                );
                                 if (!ex) {
 
                                 }
@@ -293,7 +299,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     private _setRcTypeOptions() {
         const rkTypeInput = this.inputs['rec.RC_TYPE'];
         if (rkTypeInput && !this.isNode) {
-                rkTypeInput.options = RK_TYPE_OPTIONS;
+            rkTypeInput.options = RK_TYPE_OPTIONS;
         }
     }
 
