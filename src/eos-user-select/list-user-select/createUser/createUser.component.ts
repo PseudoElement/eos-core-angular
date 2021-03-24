@@ -366,7 +366,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 skipDeleted: null,
             };
             this.isShell = true;
-            this._waitClassifSrv.openClassif(openUserCl)
+            this._waitClassifSrv.openClassif(openUserCl, true)
                 .then(data => {
                     this.data['ISN_USER_COPY'] = data;
                     return this._getUserCl(data);
