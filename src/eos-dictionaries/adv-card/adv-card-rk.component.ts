@@ -227,7 +227,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._updateOptions(this.inputs);
         }).then(() => {
             this.form.updateValueAndValidity();
-
             // проверить списки на предмет наличия логически удаленных записей.
             const fields_ = this.descriptions[DEFAULTS_LIST_NAME];
 
@@ -296,6 +295,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 if (listIsEmptyText) {
                     // confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
                     confirmLD = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST);
+                    confirmLD.bodyList = [];
                 }
                 if (listHasDeletedText) {
                     confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
