@@ -14,7 +14,7 @@
             <button *ngIf="editMode && !selectedNode.control.disabled"
                 class="btn"
                 tooltip="Добавить должностное лицо/подразделение"
-                placement="bottom"
+                placement="right"
                 [disabled]="checkFlag"
                 triggers="hover"
                 containerClass="tooltip-info"
@@ -27,7 +27,7 @@
                 class="btn"
                 tooltip="Удалить должностное лицо/подразделение"
                 #itemTooltip= 'bs-tooltip'
-                placement="bottom"
+                placement="right"
                 triggers="hover"
                 containerClass="tooltip-info"
                 [disabled]="!selectedDep || !selectNoAllDep() || returnDelTech()"
@@ -39,7 +39,7 @@
                 class="btn"
                 tooltip="В начало списка"
                 #setMainTooltip= 'bs-tooltip'
-                placement="bottom"
+                placement="top"
                 triggers="hover:click"
                 containerClass="tooltip-info"
                 [disabled]="!selectedDep || selectedDep.weight === 1 || listUserDep?.length <= 1"

@@ -3,7 +3,7 @@
         class="btn"
         triggers="hover"
         tooltip="Добавить"
-        placement="bottom"
+        placement="right"
         containerClass="tooltip-info"
         (click)="addDoc()"
         eosClickMode
@@ -14,7 +14,7 @@
         class="btn"
         #del="bs-tooltip"
         tooltip="Удалить"
-        placement="bottom"
+        placement="right"
         containerClass="tooltip-info"
         [disabled]="!curentNode"
         (click)="DeleteDoc(); del.hide()"

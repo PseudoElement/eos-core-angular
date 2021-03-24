@@ -26,7 +26,7 @@
                         class="btn"
                         triggers="hover"
                         tooltip="Добавить"
-                        placement="bottom"
+                        placement="right"
                         container="body"
                         [disabled]="!editMode || selectedNode.control.disabled"
                         containerClass="tooltip-info"
@@ -37,7 +37,7 @@
                     <button
                         class="btn"
                         tooltip="Удалить"
-                        placement="bottom"
+                        placement="right"
                         containerClass="tooltip-info"
                         [disabled]="!node.curentSelectedNode || !editMode || selectedNode.control.disabled"
                         (click)="[node.DeleteInstance(), hideToolTip()]"
