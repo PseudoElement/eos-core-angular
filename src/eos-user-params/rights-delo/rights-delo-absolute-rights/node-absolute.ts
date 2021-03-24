@@ -153,10 +153,6 @@ export class NodeAbsoluteRight {
         }
     }
 
-    checkWeightFirst() {
-        return  !!this._weightChanges.filter(ch => ch.data['WEIGHT'] === 1);
-    }
-
     filterWeightChanges(due: string) {
         this._weightChanges = this._weightChanges.filter((_w) => _w.due !== due);
     }
