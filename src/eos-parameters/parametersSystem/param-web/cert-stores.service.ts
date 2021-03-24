@@ -180,7 +180,7 @@ export class CertStoresService {
         const location = arr[0];
         const AddressWithName = arr[1];
         if (location === 'sslm') {
-            const parse = AddressWithName.split('/');
+            const parse = AddressWithName.split('\\');
             if (parse.length > 1) {
                 return parse[1];
             }
@@ -193,7 +193,7 @@ export class CertStoresService {
         const location = arr[0];
         const AddressWithName = arr[1];
         if (location === 'sslm') {
-            const parse = AddressWithName.split('/');
+            const parse = AddressWithName.split('\\');
             if (parse.length > 1) {
                 return String(parse[0]).trim();
             }
@@ -220,7 +220,7 @@ export class CertStoresService {
         if (elem.Location === 'sslm') {
             const address = String(elem.Address).trim();
             if (address.length) {
-                return `${elem.Location}:${address}/${elem.Name}`;
+                return `${elem.Location}:${address}\\${elem.Name}`;
             }
             return `${elem.Location}:${elem.Name}`;
         } else {
@@ -279,7 +279,7 @@ export class CertStoresService {
     private createDbList(node: any): string {
         const standartName = `${node.Location}:${node.Name}`;
         if (node.Location === 'sslm') {
-            return node.Address ? `${node.Location}:${node.Address}/${node.Name}` : standartName;
+            return node.Address ? `${node.Location}:${node.Address}\\${node.Name}` : standartName;
         } else {
             return standartName;
         }
