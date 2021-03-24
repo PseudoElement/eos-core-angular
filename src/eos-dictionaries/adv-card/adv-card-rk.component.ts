@@ -298,7 +298,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     confirmLD.bodyList = [];
                 }
                 if (listHasDeletedText) {
-                    confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
+
+                    confirmLD.bodyList.push(`В выбранном списке ДЛ есть удаленные элементы справочника.
+                    Они не войдут в список ДЛ прикрепляемого файла. `);
+
+                 //   confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
                     confirmationsChain = this._checkListWithDeleted();
                 }
 
@@ -714,9 +718,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 .then((nodes: any) => {
                     if (nodes && nodes.length) {
                         const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
-                        return nodes.every((node) => node.DELETED === 1) &&
-                            this._confirmSrv.confirm2(warnMessage)
+                        const allDeleted = nodes.every((node) => node.DELETED === 1);
+                        const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
+                        if (allDeleted && access === '3' || access === '5') {
+                            return this._confirmSrv.confirm2(warnMessage)
                                 .then(() => true);
+                        }   else {
+                            return false;
+                        }
                     }
                     return false;
                 });
