@@ -397,7 +397,6 @@ export class RightDepertmentComponent implements OnInit {
                 return true;
             });
         }
-        this._changeWeight();
         this.listUserDep = this.listUserDep.filter(n => n !== this.selectedDep);
         if (!this.listUserDep.length && !this.getAllDep) {
             this.selectedNode.value = 0;
@@ -422,7 +421,10 @@ export class RightDepertmentComponent implements OnInit {
                 });
             }
         }
+        // удаляем weightChanges для удаленной записи
+        this.selectedNode.filterWeightChanges(this.selectedDep.DUE);
         this.emitDeleteRcpd();
+        this._changeWeight();
         this.selectedDep = null;
         this.Changed.emit('del');
     }
@@ -678,7 +680,10 @@ export class RightDepertmentComponent implements OnInit {
             this.listUserDep.forEach((node: NodeDocsTree, index: number) => {
                 if (node.weight !== (index + 1) || node.data.userDep['WEIGHT'] < 1) {
                     node.weight = index + 1;
-                    if (node.weight !== node.data.userDep['WEIGHT']) {
+                    if (node.weight !== node.data.userDep['WEIGHT'] ) {
+                        // удаляем предыдущие изменения веса
+                        this.selectedNode.checkWeightChanges(node);
+                        // добавляем новый вес
                         this.selectedNode.addWeightChanges(node);
                         this.curentUser['USERDEP_List'].forEach(li => {
                             if (li.FUNC_NUM === this.funcNum && li.DUE === node.DUE) {
@@ -688,7 +693,6 @@ export class RightDepertmentComponent implements OnInit {
                         return;
                     }
                 }
-                this.selectedNode.checkWeightChanges(node);
             });
         }
     }

@@ -67,9 +67,16 @@ export class NodeAbsoluteRight {
                     this._transformChenge(node, index);
                     return;
                 } else {
-                    this._change.splice(index, 1);
-                    this._checkTouched();
+                    // start repair bug 139748
+                    if (node.hasOwnProperty('user_cl')) {
+                        this._change.splice(index, 1);
+                        this._checkTouched();
+                        return;
+                    }
+                    this._transformChenge(node, index);
+                    // end repair bug 139748
                     return;
+
                 }
             }
         }
@@ -145,6 +152,11 @@ export class NodeAbsoluteRight {
             this._checkTouched();
         }
     }
+
+    filterWeightChanges(due: string) {
+        this._weightChanges = this._weightChanges.filter((_w) => _w.due !== due);
+    }
+
     deleteChange() {
         this.touched = false;
         this._change = [];
