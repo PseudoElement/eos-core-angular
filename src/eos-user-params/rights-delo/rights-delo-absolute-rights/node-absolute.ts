@@ -67,12 +67,14 @@ export class NodeAbsoluteRight {
                     this._transformChenge(node, index);
                     return;
                 } else {
+                    // start repair bug 139748
                     if (node.hasOwnProperty('user_cl')) {
                         this._change.splice(index, 1);
                         this._checkTouched();
                         return;
                     }
                     this._transformChenge(node, index);
+                    // end repair bug 139748
                     return;
 
                 }
@@ -153,6 +155,10 @@ export class NodeAbsoluteRight {
 
     checkWeightFirst() {
         return  !!this._weightChanges.filter(ch => ch.data['WEIGHT'] === 1);
+    }
+
+    filterWeightChanges(due: string) {
+        this._weightChanges = this._weightChanges.filter((_w) => _w.due !== due);
     }
 
     deleteChange() {
