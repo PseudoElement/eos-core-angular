@@ -244,7 +244,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         };
         return this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
-            this.notDataSert();
+            if (this.DBserts) {
+                this.DBserts.forEach((el) => { this.notDataSert(el); });
+            }
             if (this.listsSertInfo.length > 0) {
                 this.selectCurent(this.listsSertInfo[0]);
             }
@@ -252,23 +254,19 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         });
     }
 
-    notDataSert() {
-        if (this.DBserts) {
-            this.DBserts.forEach(sert => {
-                this.listsSertInfo.push({
-                    who: 'нет данных',
-                    sn: sert['ID_CERTIFICATE'],
-                    whom: 'нет данных',
-                    data: sert,
-                    selected: false,
-                    id: sert['ID_CERTIFICATE'],
-                    key: sert['ISN_CERT_PROFILE'],
-                    create: false,
-                    delete: false,
-                    valid: false,
-                });
-            });
-        }
+    notDataSert(sert) {
+        this.listsSertInfo.push({
+            who: 'нет данных',
+            sn: sert['ID_CERTIFICATE'],
+            whom: 'нет данных',
+            data: sert,
+            selected: false,
+            id: sert['ID_CERTIFICATE'],
+            key: sert['ISN_CERT_PROFILE'],
+            create: false,
+            delete: false,
+            valid: false,
+        });
     }
 
     getInfoForDBSerts(): Promise<any> {
@@ -299,7 +297,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                         valid: this.parceValid(infoSert['certInfo']['Validity']),
                     });
                 } else {
-                    this.notDataSert();
+                    this.notDataSert(this.DBserts[index]);
                 }
             });
         }).catch(error => {
@@ -328,7 +326,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                             valid: this.parceValid(infoSert['Validity']),
                         });
                     } else {
-                        this.notDataSert();
+                        this.notDataSert(this.DBserts[index]);
                     }
                 });
             } else {
@@ -346,7 +344,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                         valid: this.parceValid(serts['certInfo']['Validity']),
                     });
                 } else {
-                    this.notDataSert();
+                    this.notDataSert(this.DBserts[0]);
                 }
             }
         }).catch(error => {

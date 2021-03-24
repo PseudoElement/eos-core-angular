@@ -66,9 +66,7 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         .subscribe(data => {
             this.flagEdit = true;
             this.form.enable({emitEvent: false});
-            if (!this.inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK'].value) {
-                this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].disable();
-            }
+            this.medoRubricRadioGroup();
         });
     }
     ngOnInit() {
@@ -76,6 +74,7 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         this.form = this.inpSrv.toFormGroup(this.inputs);
         if (this.isCurrentSettings) {
             this.form.enable({emitEvent: false});
+            this.medoRubricRadioGroup();
         } else {
             this.form.disable({emitEvent: false});
         }
@@ -85,6 +84,11 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         Object.keys(this.form.controls).forEach(inp => {
             this.inputs[inp].value = this.form.controls[inp].value;
         });
+    }
+    medoRubricRadioGroup() {
+        if (!this.inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK'].value) {
+            this.form.controls['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'].disable();
+        }
     }
     pretInputs() {
         this.prapareData =  this.formHelp.parse_Create(REMASTER_MADO.fields, this.userData);

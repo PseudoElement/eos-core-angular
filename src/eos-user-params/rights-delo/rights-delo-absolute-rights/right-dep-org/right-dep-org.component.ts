@@ -243,6 +243,8 @@ export class RightOrganizDepertComponent implements OnInit {
             data: this.selectedDep.data.userDep
         });
         // this.emitDeleteRcpd();
+        // удаляем weightChanges для удаленной записи
+        this.selectedNode.filterWeightChanges(this.selectedDep.DUE);
         this.selectedDep = null;
         this._changeWeight();
         this.Changed.emit('del');
@@ -506,7 +508,10 @@ export class RightOrganizDepertComponent implements OnInit {
         this.listUserDep.forEach((node: NodeDocsTree, index: number) => {
             if (node.weight !== (index + 1) || node.data.userDep['WEIGHT'] < 1) {
                 node.weight = index + 1;
-                if (node.weight !== node.data.userDep['WEIGHT']) {
+                if (node.weight !== node.data.userDep['WEIGHT'] ) {
+                    // удаляем предыдущие изменения веса
+                    this.selectedNode.checkWeightChanges(node);
+                    // добавляем новый вес
                     this.selectedNode.addWeightChanges(node);
                     this.curentUser['USERDEP_List'].forEach(li => {
                         if (li.FUNC_NUM === this.funcNum && li.DUE === node.DUE) {
@@ -516,7 +521,6 @@ export class RightOrganizDepertComponent implements OnInit {
                     return;
                 }
             }
-            this.selectedNode.checkWeightChanges(node);
         });
     }
     private _checkRepeat(arrDep: DEPARTMENT[]) {
