@@ -77,7 +77,13 @@ export class PermissionsGuard implements CanActivate {
             })
             .catch((err) => {
                 if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
-                    document.location.assign('../');
+                    // если нас открыли с настроек пользователя, то редиректим на завершение сессии
+                    if (state.url.indexOf('/user_param/current-settings') !== -1) {
+                        document.location.assign('../terminate.aspx');
+                    } else {
+                        document.location.assign('../');
+                    }
+
                     return undefined;
                 }
                 return false;

@@ -16,13 +16,17 @@ export class AuthorizedGuard implements CanActivate {
     ) { }
 
     canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> {
+        // нас открыли с настроек пользователя меняем флаг для редиректов
+        if (state.url.indexOf('/user_param/current-settings') !== -1) {
+            this._profileSrv.openWithCurrentUserSettings = true;
+        }
         return this._profileSrv.checkAuth()
             .then((auth) => {
                 if (!auth) {
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии
                     if (this._profileSrv.openWithCurrentUserSettings) {
                         document.location.assign('../terminate.aspx');
-                        return;
+                        return auth;
                     }
                     if (!this._profileSrv.shortName) {
                         this._router.navigate(['login'], { queryParams: { returnUrl: state.url } });
