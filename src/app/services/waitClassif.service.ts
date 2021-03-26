@@ -172,11 +172,14 @@ export class WaitClassifService {
         if (flag) {
             url += OLD_VIEW_URL;
         } else {
-            url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
-            if (clickMode === '1') {
-                url = this.isCtrl ? '../' + OLD_VIEW_URL : '../' + NEW_VIEW_URL;
+            if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
+                url += OLD_VIEW_URL;
             } else {
-                url = this.isCtrl ? '../' + NEW_VIEW_URL : '../' + OLD_VIEW_URL;
+                if (clickMode === '1') {
+                    url += this.isCtrl ? OLD_VIEW_URL :  NEW_VIEW_URL;
+                } else {
+                    url += this.isCtrl ?  NEW_VIEW_URL : OLD_VIEW_URL;
+                }
             }
         }
 
