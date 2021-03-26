@@ -172,7 +172,7 @@ export class WaitClassifService {
         if (flag) {
             url += OLD_VIEW_URL;
         } else {
-            if (LIST_OLD_PAGES.includes(params.classif)) {
+            if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
                 url += OLD_VIEW_URL;
             } else {
                 if (clickMode === '1') {
