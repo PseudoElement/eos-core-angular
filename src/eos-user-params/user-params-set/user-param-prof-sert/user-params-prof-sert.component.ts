@@ -1,3 +1,4 @@
+import { AppContext } from './../../../eos-rest/services/appContext.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 /* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
@@ -66,6 +67,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public selectList: SertInfo;
     public selectedFromAllList: SertInfo;
     public editFlag = false;
+    public isEnableBtn = false;
     public btnDisabled: boolean = false;
     /* public modalRef: BsModalRef; */
     public currentUser;
@@ -86,6 +88,10 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             (!this.selectedFromAllList && !this.selectList)
         );
     }
+    get isCursetUnlimTech() {
+        const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
+        return (techRights && techRights[0] === '1' && this.isCurrentSettings);
+    }
     public flagHideBtn: boolean = false;
     public isCarma: boolean = true;
     public loadSert: boolean = false;
@@ -100,6 +106,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _certService: CertificateService,
         private carmaSrv: CarmaHttpService,
+        private _appContext: AppContext
     ) { }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
