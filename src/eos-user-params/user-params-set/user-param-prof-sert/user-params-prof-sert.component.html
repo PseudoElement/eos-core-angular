@@ -49,7 +49,7 @@
                     containerClass="tooltip-info"
                     container="body"
                 >
-                    <button class="btn btn-primary-light" [disabled]="isUnselected || (!isCursetUnlimTech && !isUnselected)" (click)='showSert()'>
+                    <button class="btn btn-primary-light" [disabled]="isUnselected || (!isCursetUnlimTech && !isUnselected) || isNotFoundSert" (click)='showSert()'>
                         <span class="eos-icon eos-icon-info-blue small"></span>
                     </button>
                 </div>

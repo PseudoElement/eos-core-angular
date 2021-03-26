@@ -37,6 +37,7 @@ interface SertInfo {
     create: boolean;
     delete: boolean;
     valid: boolean;
+    notFound?: boolean;
 }
 // import { CertStoresService, IListCertStotes } from '../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
 @Component({
@@ -87,6 +88,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             !this.listsSertInfo.length ||
             (!this.selectedFromAllList && !this.selectList)
         );
+    }
+    get isNotFoundSert() {
+        return this.selectedFromAllList && this.selectedFromAllList.notFound || this.selectList && this.selectList.notFound;
     }
     get isCursetUnlimTech() {
         const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
@@ -273,6 +277,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             create: false,
             delete: false,
             valid: false,
+            notFound: true,
         });
     }
 
