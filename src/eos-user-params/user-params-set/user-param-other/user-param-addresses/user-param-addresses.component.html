@@ -53,7 +53,7 @@
         <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_DEFAULT_ORIG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
     <div class="user-input-group ">
-        <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_FILL_SEND_DATE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.RS_INNER_FILL_SEND_DATE'] " *ngIf="flagInternalAdr" [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input><br>
         <div [hidden]="appMode.arm">
