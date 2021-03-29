@@ -47,18 +47,9 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             // если нет доступа к параметрам системы, но если есть доступ к "протоколированию" или к "Текущей организации"
             if (techRights && techRights.charAt(25) === '0') {
                 // проверка доступа к "протоколированию"
-                if (techRights.charAt(1) === '1') {
-                    this._rout.navigate(['parameters/now-organiz']);
-                    return;
-                }
-                // проверка доступа к "Текущей организации"
-                if (techRights.charAt(29) === '1') {
-                    this._rout.navigate(['parameters/logging']);
-                    return;
-                }
-                // если нет, то редиректим в параметры
-                if (techRights.charAt(1) === '0' && techRights.charAt(29) === '0') {
+                if ((techRights.charAt(1) === '1' || techRights.charAt(29) === '1') && (this.paramId !== 'now-organiz' && this.paramId !== 'logging')) {
                     this._rout.navigate(['parameters']);
+                    return;
                 }
 
             }
@@ -81,6 +72,20 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             });
     }
     ngOnInit() {
+        const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
+        if (techRights && techRights.charAt(25) === '0') {
+            const protocolAndUsers = techRights.charAt(29) === '1' && techRights.charAt(0) === '1';
+            const nowOrganiz = techRights.charAt(1) === '1';
+            if (protocolAndUsers) {
+                this._rout.navigate(['parameters/logging']);
+                return;
+            }
+            if (nowOrganiz) {
+                this._rout.navigate(['parameters/now-organiz']);
+                return;
+            }
+
+        }
         // console.log(!this.isChanged, this.disableSave);
     }
 
