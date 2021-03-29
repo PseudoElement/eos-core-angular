@@ -315,6 +315,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.enterPassword = false;
     }
     afterCreate(isn: number) {
+        const copyId = (this.data['ISN_USER_COPY'] || this.data['USER_TEMPLATES']);
+        if (copyId && isn) {
+            const  request = {
+                method: 'POST',
+                requestUri: this._createUrlForCopySop(isn, +copyId)
+            };
+            this._pipeSrv.batch([request], '');
+        }
         this.password = '';
         this.repitedPassword = '';
         this.isn_prot = isn;
@@ -468,16 +476,23 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     private _createUrlForSop() {
         const d = this.data;
-        const isn_user_copy_from = (d['ISN_USER_COPY'] || d['USER_TEMPLATES']) || '0';
+        // const isn_user_copy_from = (d['ISN_USER_COPY'] || d['USER_TEMPLATES']) || '0';
         let url = 'CreateUserCl?';
         url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
         url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
-        url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
+        // url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
+        url += `&isn_user_copy_from=0`; // если не выбран пользователь для копирования передаем '0'
         url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : -1}`;
         //   url += `&delo_rights=0`;
         return url;
     }
+
+    private _createUrlForCopySop(isn: number, copyId: number): string {
+        const url = `UserRightsCopy?users=${isn}&user=${copyId}&rights=1010111100`;
+        return url;
+    }
+
     private _createUrlChangeLOgin(id: number): string {
         const d = this.data;
         let url = 'ChangeLogin?';
