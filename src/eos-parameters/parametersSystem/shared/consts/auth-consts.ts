@@ -100,7 +100,7 @@ export const AUTH_PARAM: IBaseParameters = {
         {
             key: ESIA_AUTH_FIELD_KEY,
             type: 'boolean',
-            title: 'ЕСИА',
+            title: 'Единая система идентификации и аутентификации (ЕСИА)',
             value: false,
         },
     ]
