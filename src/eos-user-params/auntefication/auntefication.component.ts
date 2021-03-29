@@ -139,7 +139,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                         if (elem.PARM_NAME === 'PASS_DATE') {
                             this.passDate = Number(elem.PARM_VALUE);
                         }
-                        if ((elem.PARM_NAME === 'EXTERNAL_AUTH_ADD' && elem.PARM_VALUE === 'YES') ||
+                        if ((elem.PARM_NAME === 'EXTERNAL_AUTH_ADD' && elem.PARM_VALUE === '1') ||
                             (elem.PARM_NAME === 'ALLOWED_EXTERNAL_AUTH' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf(ESIA_AUTH_PARM_VALUE) !== -1)) {
                             this.esiaExternalAuth++;
                         }

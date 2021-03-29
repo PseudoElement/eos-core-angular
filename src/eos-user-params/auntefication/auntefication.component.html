@@ -105,11 +105,11 @@
     </div>
     <div *ngIf="esiaExternalAuth > 1" class="autentification-control-type">
         <div class="wrapper-password">
-            <div style="width: 450px">
-                <eos-dynamic-input style="width: 450px" class="inline-block" [form]="form" [input]="inputs['EXTERNAL_ID']" [readonly]="esiaExternalAuth < 2"></eos-dynamic-input>
+            <div style="width: 358px">
+                <eos-dynamic-input style="width: 100%" class="dynamic-input-wrapper base-text-input" [form]="form" [input]="inputs['EXTERNAL_ID']" [readonly]="esiaExternalAuth < 2"></eos-dynamic-input>
             </div>
-            <div class="dynamic-input-wrapper base-text-input text-pass-input">
-                <eos-dynamic-input class="inline-block" [form]="form" [input]="inputs['EXTERNAL_TYPE']" [readonly]="esiaExternalAuth < 2"></eos-dynamic-input>
+            <div style="width: 358px">
+                <eos-dynamic-input style="width: 100%" class="dynamic-input-wrapper base-text-input select-type-input" [form]="form" [input]="inputs['EXTERNAL_TYPE']" [readonly]="esiaExternalAuth < 2"></eos-dynamic-input>
             </div>
     <!--        <label [attr.for]="inputs['ID_ESIA'].key">-->
     <!--            {{inputs['ID_ESIA'].label}}-->
