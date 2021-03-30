@@ -403,7 +403,6 @@ export class CardRightSrv {
     }
     private _checkChenge() {
         let state: boolean = false;
-        console.log('this._userParamsSetSrv.curentUser.USERCARD_List: ', this._userParamsSetSrv.curentUser.USERCARD_List);
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             if (card.FUNCLIST !== card._orig.FUNCLIST) {
                 card._State = _ES.Modified;
