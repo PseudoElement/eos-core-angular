@@ -11,14 +11,14 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST, RK_SELECTED_VALUE_INCORRECT, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED, RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
+import { /* RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST ,*/ RK_SELECTED_VALUE_INCORRECT, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED, RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { PipRX, USER_LISTS } from 'eos-rest';
+/* import { PipRX, USER_LISTS } from 'eos-rest'; */
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -78,7 +78,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         private _confirmSrv: ConfirmWindowService,
         private _waitClassifSrv: WaitClassifService,
         private _appContext: AppContext,
-        private _apiSrv: PipRX,
+/*         private _apiSrv: PipRX, */
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -252,7 +252,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
                 if (val) {
                     const opt = el.options.find(o => Number(o.value) === Number(val));
-                    if (opt && opt.isEmpty) {
+                    if (opt && opt.isEmpty && el.key !== 'REF_FILE_ACCESS_LIST') {
                         listIsEmpty.push(el);
                         // confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
                     }
@@ -282,9 +282,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             const listBeenDeletedText = this._elListToText(listBeenDeleted);
 
             let confirmationsChain = Promise.resolve(false);
+            let confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
             if (listLDText || listHasDeletedText || listIsEmptyText || listBeenDeletedText) {
-                let confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
-
                 confirmLD.bodyList = [];
                 if (listLDText) {
                     confirmLD.bodyList.push('В настройках реквизитов используются логически удаленные элементы справочников: ' + listLDText);
@@ -293,30 +292,30 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     confirmLD.bodyList.push('Выбран список, который был удален. Значение очищено. Реквизиты: ' + listBeenDeletedText);
                 }
                 if (listIsEmptyText) {
-                    // confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
-                    confirmLD = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST);
-                    confirmLD.bodyList = [];
+                    confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+                   // confirmLD = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST);
                 }
                 if (listHasDeletedText) {
-
-                    confirmLD.bodyList.push(`В выбранном списке ДЛ есть удаленные элементы справочника.
-                    Они не войдут в список ДЛ прикрепляемого файла. `);
-
-                 //   confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
-                    confirmationsChain = this._checkListWithDeleted();
+                    // confirmLD.bodyList.push(`В выбранном списке ДЛ есть удаленные элементы справочника.
+                    // Они не войдут в список ДЛ прикрепляемого файла. `);
+                    confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
                 }
-
-                confirmationsChain = confirmationsChain.then((res) => {
-                    if (res) {
-                        return res;
-                    } else {
+            } else {
+                confirmLD = null;
+            }
+            confirmationsChain = this._checkListWithDeletedForRefFileAccess().then((res) => {
+                if (res) {
+                    return res;
+                } else {
+                    if (confirmLD) {
                         return this._confirmSrv.confirm2(confirmLD).then((button) => {
                             return (!button || button.result === 2);
                         });
                     }
-                });
-            }
+                    return Promise.resolve(false);
 
+                }
+            });
             return confirmationsChain;
         });
     }
@@ -689,47 +688,77 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
      * есть ли там элементы, кроме удаленных,
      * если нету, то запрещаем сохранение
      */
-    private _checkListWithDeleted() {
-        const listIsn = this.newData &&
-            this.newData.DOC_DEFAULT_VALUE_List &&
-            this.newData.DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST;
-        if (listIsn && Number(listIsn)) {
-            return this._apiSrv.read({
-                USER_LISTS: Number(listIsn),
-                expand: 'LIST_ITEMS_List'
-            })
-                .then((lists: USER_LISTS[]) => {
-                    if (lists && lists.length) {
-                        const [list] = lists;
-                        const items = list.LIST_ITEMS_List;
-
-                        if (items && items.length) {
-                            const refIsnArr = items.map((item) => item.REF_ISN);
-                            const refIsnString = refIsnArr.join('|');
-                            return this._apiSrv.read({
-                                'DEPARTMENT': PipRX.criteries({
-                                    ISN_NODE: refIsnString,
-                                })
-                            });
-                        }
-                    }
-                    return null;
-                })
-                .then((nodes: any) => {
-                    if (nodes && nodes.length) {
-                        const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
-                        const allDeleted = nodes.every((node) => node.DELETED === 1);
-                        const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
-                        if (allDeleted && access === '3' || access === '5') {
-                            return this._confirmSrv.confirm2(warnMessage)
-                                .then(() => true);
-                        }   else {
-                            return false;
-                        }
-                    }
-                    return false;
-                });
+    private _checkListWithDeletedForRefFileAccess(): Promise<boolean> {
+        // check ref file access
+        const fields_ = this.descriptions[DEFAULTS_LIST_NAME].filter(el => {
+            return el.key === 'REF_FILE_ACCESS_LIST';
+        });
+        const listIsEmpty = [];
+        for (let i = 0; i < fields_.length; i++) {
+            const el: TDefaultField = fields_[i];
+            if (!el.dict) { continue; }
+            const val = this.newData[DEFAULTS_LIST_NAME][el.key];
+            if (val) {
+                const opt = el.options.find(o => Number(o.value) === Number(val));
+                if (opt && opt.isEmpty) {
+                    listIsEmpty.push(el);
+                }
+            }
         }
+        if (listIsEmpty.length) {
+            const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
+            const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
+            if (listIsEmpty && access === '3' || access === '5') {
+                return this._confirmSrv.confirm2(warnMessage)
+                    .then(() => true);
+            } else {
+                return Promise.resolve(false);
+            }
+        }
+        // const listIsn = this.newData &&
+        //     this.newData.DOC_DEFAULT_VALUE_List &&
+        //     this.newData.DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST;
+        // if (listIsn && Number(listIsn)) {
+        //     return this._apiSrv.read({
+        //         USER_LISTS: Number(listIsn),
+        //         expand: 'LIST_ITEMS_List'
+        //     })
+        //         .then((lists: USER_LISTS[]) => {
+        //             if (lists && lists.length) {
+        //                 const [list] = lists;
+        //                 const items = list.LIST_ITEMS_List;
+
+        //                 if (items && items.length) {
+        //                     const refIsnArr = items.map((item) => item.REF_ISN);
+        //                     const refIsnString = refIsnArr.join('|');
+        //                     return this._apiSrv.read({
+        //                         'DEPARTMENT': PipRX.criteries({
+        //                             ISN_NODE: refIsnString,
+        //                         })
+        //                     });
+        //                 }   else {
+        //                   const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
+        //                  return this._confirmSrv.confirm2(warnMessage)
+        //                  .then(() => true);
+        //                 }
+        //             }
+        //             return null;
+        //         })
+        //         .then((nodes: any) => {
+        //             if (nodes && nodes.length) {
+        //                 const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
+        //                 const allDeleted = nodes.every((node) => node.DELETED === 1);
+        //                 const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
+        //                 if (allDeleted && access === '3' || access === '5') {
+        //                     return this._confirmSrv.confirm2(warnMessage)
+        //                         .then(() => true);
+        //                 }   else {
+        //                     return false;
+        //                 }
+        //             }
+        //             return false;
+        //         });
+        // }
         return Promise.resolve(false);
     }
 }
