@@ -369,22 +369,17 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 });
             });
 
-        this.form.controls['USER_TEMPLATES'].valueChanges.subscribe((data) => {
-            if (this.checkedUsers.some((u: UserSelectNode) => +u.data.ISN_LCLASSIF === +data)) {
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: 'Предупреждение',
-                    msg: 'Пользователь находится в перечне адресатов копирования. Выберите другого пользователя',
-                });
-                this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
-                return;
-            }
-            if (data) {
-                this._pathForm();
-            } else {
-                this._pathForm(true);
-            }
-        });
+            this.form.controls['USER_TEMPLATES'].valueChanges.subscribe((data) => {
+                if (this.checkedUsers.some((u: UserSelectNode) => +u.data.ISN_LCLASSIF === +data)) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Пользователь находится в перечне адресатов копирования. Выберите другого пользователя',
+                    });
+                    this.form.controls['USER_TEMPLATES'].patchValue('', {emitEvent: false});
+                    return;
+                }
+            });
     }
 
     private _getUserCl(isn) {
