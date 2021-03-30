@@ -119,7 +119,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
         const config = {expand: 'USER_PARMS_List'};
-        console.log(this._appContext.CurrentUser.TECH_RIGHTS[0]);
         if (this.mainUser) {
             config['isn_cl'] = this.mainUser;
         }
