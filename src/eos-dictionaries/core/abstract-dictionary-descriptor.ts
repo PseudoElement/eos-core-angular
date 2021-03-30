@@ -585,7 +585,7 @@ export abstract class AbstractDictionaryDescriptor {
                             selectedNodes.forEach((node, index) => {
                                 if (relatedDictionaries[index]) {
                                     list.push(`${node.title} используется в ${relatedDictionaries[index]}`);
-                                    logicalDeletion.push(node);
+                                    logicalDeletion.push(node.data.rec);
                                     node.isMarked = false;
                                 } else {
                                     deletingNodes.push(node);
