@@ -1396,19 +1396,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     slicedNode.forEach(node => {
                         node.isMarked = true;
                     });
-                    this._physicallyDelete(slicedNode).then((records: IRecordOperationResult[]) => {
-                        // обновляем полностью справочник после операции вставки
-                        records = records.filter(_r => {
-                            delete _r.record._State;
-                            return _r.error;
-                        }).map(_r => _r.record);
-
-                        if (records && records.length) {
-                            this.dictionary.descriptor.markBooleanData(records, 'DELETED', true, true).then(() => {
+                    this._dictSrv.currentDictionary.descriptor.checknodeAfterPaste(slicedNode, this._confirmSrv).then((deletedNodes: any[]) => {
+                        if (!deletedNodes || !deletedNodes.length) {
+                            this.updateAfterPaste();
+                        } else {
+                            this._physicallyDelete(deletedNodes).then((records: IRecordOperationResult[]) => {
+                                // обновляем полностью справочник после операции вставки
                                 this.updateAfterPaste();
                             });
-                        } else {
-                            this.updateAfterPaste();
                         }
                     });
                 } else {

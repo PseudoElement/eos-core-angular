@@ -24,6 +24,8 @@ import {EosDictionaryNode} from 'eos-dictionaries/core/eos-dictionary-node';
 import {DictionaryComponent} from 'eos-dictionaries/dictionary/dictionary.component';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import {IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import {WARN_ELEMENTS_ARE_RELATED } from 'eos-dictionaries/consts/confirm.consts';
 
 
 export interface IDictionaryDescriptorRelatedInfo {
@@ -196,7 +198,7 @@ export abstract class AbstractDictionaryDescriptor {
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
                 if (fld.foreignKey !== 'CODE' && fld.foreignKey !== 'DOP_REC') {
-                      _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
+                    _criteries[fld.foreignKey] = '"' + data[fld.foreignKey].trim() + '"';
                 }   else {
                     _criteries[fld.foreignKey] =  data[fld.foreignKey].trim();
                 }
@@ -367,20 +369,20 @@ export abstract class AbstractDictionaryDescriptor {
         });
         const record = EosUtils.deepUpdate(originalData.rec, updates.rec);
         return pSev.then((continueSave) => {
-                let changes = this.apiSrv.changeList(changeData);
-                if (appendToChanges) {
-                    changes = changes.concat(appendToChanges);
-                }
-                if (changes.length) {
-                    return this.apiSrv.batch(changes, '')
-                        .then(() => {
-                            results.push({success: true, record: record});
-                            return results;
-                        });
-                } else {
-                    return results;
-                }
-            });
+            let changes = this.apiSrv.changeList(changeData);
+            if (appendToChanges) {
+                changes = changes.concat(appendToChanges);
+            }
+            if (changes.length) {
+                return this.apiSrv.batch(changes, '')
+                    .then(() => {
+                        results.push({success: true, record: record});
+                        return results;
+                    });
+            } else {
+                return results;
+            }
+        });
     }
 
     confirmSave(nodeData: EosDictionaryNode, confirmSrv, isNewRecord: boolean): Promise<boolean> {
@@ -399,7 +401,7 @@ export abstract class AbstractDictionaryDescriptor {
     //         });
     // }
 
-    getRelatedFields2(tables: IDictionaryDescriptorRelatedInfo [], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+    getRelatedFields2(tables: IDictionaryDescriptorRelatedInfo[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const reqs = [];
         const tablesWReq = [];
         tables.forEach( trec => {
@@ -504,6 +506,114 @@ export abstract class AbstractDictionaryDescriptor {
 
     findTreeParent(data: CustomTreeNode[], id: any): any {
         return null;
+    }
+    checkNodesBeforeDeletion(selectedNodes, confirmSrv): Promise<any[]> {
+        const sopData = {
+            type: null,
+            id: null,
+        };
+        selectedNodes.forEach((node) => {
+            sopData.id = sopData.id ? `${sopData.id}|${node.id}` : node.id;
+            if (!sopData.type) {
+                try {
+                    sopData.type = node.data.rec.__metadata.__type || sopData.type;
+                } catch (e) {
+                    sopData.type = null;
+                }
+            }
+        });
+        if (sopData.id && sopData.type) {
+            const changes = [];
+            PipRX.invokeSop(changes, 'IsClassifUse', sopData, 'POST', false);
+            return this.apiSrv.batch(changes, '')
+                .then((response: any) => {
+                    if (response) {
+                        const responseValue = response.length ? response[0].value : response.value;
+                        const relatedDictionaries = responseValue && responseValue.length ? responseValue.split('|') : [];
+                        if (relatedDictionaries.length) {
+                            const deletingNodes = [];
+                            const list = [];
+                            selectedNodes.forEach((node, index) => {
+                                if (relatedDictionaries[index]) {
+                                    list.push(`${node.title} используется в ${relatedDictionaries[index]}`);
+                                    node.isMarked = false;
+                                } else {
+                                    deletingNodes.push(node);
+                                }
+                            });
+                            if (list.length) {
+                                const warnDeletion: IConfirmWindow2 = Object.assign({}, WARN_ELEMENTS_ARE_RELATED, { bodyList: list });
+                                return confirmSrv.confirm2(warnDeletion).then(() => {
+                                    return deletingNodes;
+                                });
+                            }
+                        }
+                    }
+                    return selectedNodes;
+                });
+        }
+        return Promise.resolve(selectedNodes);
+    }
+
+    checknodeAfterPaste(selectedNodes, confirmSrv): Promise<any> {
+        const sopData = {
+            type: null,
+            id: null,
+        };
+        selectedNodes.forEach((node) => {
+            sopData.id = sopData.id ? `${sopData.id}|${node.id}` : node.id;
+            if (!sopData.type) {
+                try {
+                    sopData.type = node.data.rec.__metadata.__type || sopData.type;
+                } catch (e) {
+                    sopData.type = null;
+                }
+            }
+        });
+        if (sopData.id && sopData.type) {
+            const changes = [];
+            PipRX.invokeSop(changes, 'IsClassifUse', sopData, 'POST', false);
+            return this.apiSrv.batch(changes, '')
+                .then((response: any) => {
+                    if (response) {
+                        const responseValue = response.length ? response[0].value : response.value;
+                        const relatedDictionaries = responseValue && responseValue.length ? responseValue.split('|') : [];
+                        if (relatedDictionaries.length) {
+                            const deletingNodes = [];
+                            const logicalDeletion = [];
+                            const list = [];
+                            selectedNodes.forEach((node, index) => {
+                                if (relatedDictionaries[index]) {
+                                    list.push(`${node.title} используется в ${relatedDictionaries[index]}`);
+                                    logicalDeletion.push(node.data.rec);
+                                    node.isMarked = false;
+                                } else {
+                                    deletingNodes.push(node);
+                                }
+                            });
+                            if (list.length) {
+                                const warnDeletion: IConfirmWindow2 = Object.assign({}, WARN_ELEMENTS_ARE_RELATED, { bodyList: list });
+                                return confirmSrv.confirm2(warnDeletion).then(() => {
+                                    if (logicalDeletion.length) {
+                                        this.markBooleanData(logicalDeletion, 'DELETED', true, true).then(() => {
+                                        });
+                                    }
+                                    return deletingNodes;
+                                });
+                            } else {
+                                return selectedNodes;
+                            }
+                        } else {
+                            return selectedNodes;
+                        }
+                    }
+                    return selectedNodes;
+                }).catch(e => {
+                    console.warn(e);
+                    return selectedNodes;
+                });
+        }
+        return Promise.resolve(selectedNodes);
     }
 
     hasCustomTree() {

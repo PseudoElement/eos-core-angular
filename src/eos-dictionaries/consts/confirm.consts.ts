@@ -82,3 +82,13 @@ export const CONFIRM_SURNAME_REDACT: IConfirmWindow2 = {
         {title: 'Нет', result: 2, isDefault: true, },
     ],
 };
+
+export const WARN_ELEMENTS_ARE_RELATED: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Записи:',
+    bodyAfterList: 'удалены логически.',
+    buttons: [
+        { title: 'Ок', result: 1, isDefault: true, },
+    ],
+};
