@@ -4,8 +4,17 @@
     overflow: auto;
 }
 
+.scrollWrapper {
+    min-height: calc(100vh - 325px);
+}
+
 .selected {
     background-color: #e3f2fd;
+}
+
+.sert-table {
+    overflow: visible;
+    position: relative;
 }
 
 .sert-table-nav {
@@ -14,10 +23,16 @@
     justify-content: flex-end;
 }
 
-.sert-table-body {
-    padding: 7px 0px;
-    max-height: 700px;
+.sert-list-wrapper {
+    overflow: visible;
+    width: 100%;
+    position: relative;
+}
+
+.sert-table-content {
     overflow: auto;
+    position: relative;
+    height: calc(100vh - 371px);
     .colorValid {
         color: #fdc309;
     }
@@ -25,6 +40,39 @@
         background-color: #e6e6e6;
         color: #a9a3a3;
     }
+}
+
+.item-container {
+    line-height: 30px;
+    width: 100%;
+}
+
+.block {
+    position: relative;
+}
+
+.sert-table-body {
+    padding: 7px 0px;
+    height: calc(100vh - 343px);
+    overflow: auto;
+    position: relative;
+    .colorValid {
+        color: #fdc309;
+    }
+    .grayItem {
+        background-color: #e6e6e6;
+        color: #a9a3a3;
+    }
+}
+
+.span-wrapper {
+    display: flex;
+}
+
+
+.sert-list-wrapper {
+    display: block;
+    height: 100%;
 }
 
 .sert-table-head {
@@ -65,6 +113,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        display: inline-block;
+        box-sizing: border-box;
+        height: 32px;
     }
 }
 
@@ -73,7 +124,6 @@
     height: 100%;
     display: flex;
     padding: 5px 10px;
-    display: flex;
     justify-content: space-between;
     cursor: pointer;
     span {

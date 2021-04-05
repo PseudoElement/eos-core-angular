@@ -12,8 +12,8 @@
     ></eos-user-params-header>
 </div>
 
-<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature scrollWrapper">
-    <!-- <div class="edit-bacground" *ngIf='!editFlag'></div> -->
+<!-- <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature scrollWrapper">
+    <div class="edit-bacground" *ngIf='!editFlag'></div>
     <div class=" ">
         <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
     </div>
@@ -74,6 +74,64 @@
                     <eos-spinner size="md"></eos-spinner>
                 </div>
             </ng-template>
+        </div>
+    </div>
+</div> -->
+<div class="sert-list-wrapper">
+    <div>
+        <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
+    </div>
+    <div class="sert-table-wrapper">
+        <div class="sert-table-nav">
+            <div
+                triggers="hover:click"
+                [tooltip]="!editFlag ? '' : 'Добавить сертификат'"
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+            >
+                <button class="btn btn-primary-light" [disabled]='!editFlag' (click)='chooseSertificate()'>
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+            </div>
+            <div
+                triggers="hover:click"
+                [tooltip]="!editFlag ? '' : 'Удалить сертификат' "
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+            >
+                <button class="btn btn-primary-light" [disabled]="!listsSertInfo.length || flagHideBtn || !editFlag" (click)='deleteSertificate()'>
+                    <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                </button>
+            </div>
+            <div
+                triggers="hover:click"
+                [tooltip]="!editFlag ? '' : 'Показать сертификат'"
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+            >
+                <button class="btn btn-primary-light" [disabled]="!editFlag || (!selectedFromAllList && !selectList)" (click)='showSert()'>
+                    <span class="eos-icon eos-icon-info-blue small"></span>
+                </button>
+            </div>
+        </div>
+        <div class="sert-table-head">
+            <span class="sert-table-whom">Кому выдан</span>
+            <span class="sert-table-serial">Серийный номер</span>
+            <span class="sert-table-who">Кем выдан</span>
+        </div>
+        <div class="sert-table-content">
+            <div>
+                <div class="item-container" *ngFor='let listSert of listsSertInfo'>
+                    <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
+                        <span tooltip="{{listSert.whom}}" placement="bottom" container="body" containerClass="tooltip-info" class="whom" boundary="scrollParent">{{listSert.whom}}</span>
+                        <span tooltip="{{listSert.sn}}" placement="bottom" container="body" containerClass="tooltip-info" class="serial" boundary="scrollParent">{{listSert.sn}}</span>
+                        <span tooltip="{{listSert.who}}" placement="bottom" container="body" containerClass="tooltip-info" boundary="scrollParent" class="who">{{listSert.who}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
