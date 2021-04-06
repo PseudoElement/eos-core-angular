@@ -1,3 +1,5 @@
+import { USER_CL } from './../../eos-rest/interfaces/structures';
+import { PipRX } from './../../eos-rest/services/pipRX.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
@@ -28,6 +30,7 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         private _appCtx: AppContext,
         private _eaps: EosAccessPermissionsService,
         private _storageSrv: EosStorageService,
+        private _apiSrv: PipRX
     ) {
         this._dictSrv.closeDictionary();
 
@@ -51,6 +54,34 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         this.checkLimitedDocGroup();
     }
 
+    /**
+     * @func hasAnyTech - фукция запроса на наличие в системе неограниченных в видах документах системных технологов,
+     * в случае остутствия таковых, по даем текущему ограниченному системному технологу доступ к видам документов
+     * */
+    hasAnyTech() {
+        const query: any = {
+            USER_CL:  PipRX.criteries({ 'USER_CL.HasNonUserTechForAll': 9 }),
+            top: '2',
+            skip: '0',
+            orderby: `CLASSIF_NAME`
+        };
+       /*  this._apiSrv.read<USER_CL>(query).then((data) => setTimeout(() => {
+            if (!data.length) {
+                this.curUserHasDocGroup = true;
+            }
+        }, 2000)); */
+
+        this._apiSrv.read<USER_CL>(query).then((data) => {
+            if (!data.length) {
+                this.curUserHasDocGroup = true;
+            }
+        });
+    }
+
+    /**
+     * @func checkLimitedDocGroup - функция проверки текущего пользователя (системного технолога) на ограниченность в видах документах,
+     * если у него есть права, то давать пускать в справочник виды документов.
+     * */
     checkLimitedDocGroup() {
         const techList = this._appCtx.CurrentUser.USER_TECH_List;
         techList.forEach((el) => {
@@ -58,6 +89,9 @@ export class DictionariesComponent implements OnInit, OnDestroy {
                 this.curUserHasDocGroup = true;
             }
         });
+        if (!this.curUserHasDocGroup) {
+            this.hasAnyTech();
+        }
     }
 
     isAccessEnabled(dict: any) {
