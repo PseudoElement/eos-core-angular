@@ -18,7 +18,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { AppContext } from 'eos-rest/services/appContext.service';
-/* import { PipRX, USER_LISTS } from 'eos-rest'; */
+import { PipRX, USER_LISTS } from 'eos-rest';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -78,7 +78,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         private _confirmSrv: ConfirmWindowService,
         private _waitClassifSrv: WaitClassifService,
         private _appContext: AppContext,
-/*         private _apiSrv: PipRX, */
+        private _pipRX: PipRX,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -156,6 +156,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
+                console.log('hi');
                 this.dataController.save(this.isn_node, this.inputs, this.newData).then(() => {
                     this.bsModalRef.hide();
                 }).catch(() => {
@@ -193,7 +194,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.dataController.markCacheForDirty('USER_LISTS');
         this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), 'USER_LISTS', null, () => {
         }).then(() => {
-
             for (const key in this.inputs) {
                 if (this.inputs.hasOwnProperty(key)) {
                     const input = this.inputs[key];
@@ -229,7 +229,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this.form.updateValueAndValidity();
             // проверить списки на предмет наличия логически удаленных записей.
             const fields_ = this.descriptions[DEFAULTS_LIST_NAME];
-
             // Выводить ошибки в заданном порядке.
             const sortable = fields_.sort((a, b) => a.order > b.order ? 1 : a.order < b.order ? -1 :
                 (a.order === undefined ? 1 :
@@ -280,7 +279,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             const listHasDeletedText = this._elListToText(listHasDeleted);
             const listIsEmptyText = this._elListToText(listIsEmpty);
             const listBeenDeletedText = this._elListToText(listBeenDeleted);
-
             let confirmationsChain = Promise.resolve(false);
             let confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
             if (listLDText || listHasDeletedText || listIsEmptyText || listBeenDeletedText) {
@@ -352,7 +350,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         this.activeTab = tabs[0];
 
-        this.dataController = new AdvCardRKDataCtrl(this.injector/*, this._zone, this._apiSrv, this._msgSrv, this._dictSrv*/);
+        this.dataController = new AdvCardRKDataCtrl(this.injector/*, this._zone, this._pipRX, this._msgSrv, this._dictSrv*/);
         this.descriptions = this.dataController.getDescriptionsRK();
 
         this.dataController.readDGValues(this.isn_node).then(values => {
@@ -705,9 +703,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 }
             }
         }
+        const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
         if (listIsEmpty.length) {
             const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
-            const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
             if (listIsEmpty && access === '3' || access === '5') {
                 return this._confirmSrv.confirm2(warnMessage)
                     .then(() => true);
@@ -715,50 +713,57 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 return Promise.resolve(false);
             }
         }
-        // const listIsn = this.newData &&
-        //     this.newData.DOC_DEFAULT_VALUE_List &&
-        //     this.newData.DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST;
-        // if (listIsn && Number(listIsn)) {
-        //     return this._apiSrv.read({
-        //         USER_LISTS: Number(listIsn),
-        //         expand: 'LIST_ITEMS_List'
-        //     })
-        //         .then((lists: USER_LISTS[]) => {
-        //             if (lists && lists.length) {
-        //                 const [list] = lists;
-        //                 const items = list.LIST_ITEMS_List;
+        const listIsn = this.newData &&
+            this.newData.DOC_DEFAULT_VALUE_List &&
+            this.newData.DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST;
+        if (listIsn && Number(listIsn)) {
+            return this._pipRX.read({
+                USER_LISTS: Number(listIsn),
+                expand: 'LIST_ITEMS_List'
+            })
+                .then((lists: USER_LISTS[]) => {
+                    if (lists && lists.length) {
+                        const [list] = lists;
+                        const items = list.LIST_ITEMS_List;
 
-        //                 if (items && items.length) {
-        //                     const refIsnArr = items.map((item) => item.REF_ISN);
-        //                     const refIsnString = refIsnArr.join('|');
-        //                     return this._apiSrv.read({
-        //                         'DEPARTMENT': PipRX.criteries({
-        //                             ISN_NODE: refIsnString,
-        //                         })
-        //                     });
-        //                 }   else {
-        //                   const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
-        //                  return this._confirmSrv.confirm2(warnMessage)
-        //                  .then(() => true);
-        //                 }
-        //             }
-        //             return null;
-        //         })
-        //         .then((nodes: any) => {
-        //             if (nodes && nodes.length) {
-        //                 const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
-        //                 const allDeleted = nodes.every((node) => node.DELETED === 1);
-        //                 const access = this.newData.DOC_DEFAULT_VALUE_List.ACCESS_MODE_FILE;
-        //                 if (allDeleted && access === '3' || access === '5') {
-        //                     return this._confirmSrv.confirm2(warnMessage)
-        //                         .then(() => true);
-        //                 }   else {
-        //                     return false;
-        //                 }
-        //             }
-        //             return false;
-        //         });
-        // }
+                        if (items && items.length) {
+                            const refIsnArr = items && items.map((item) => item.REF_ISN);
+                            const refIsnString = refIsnArr.join('|');
+                            return this._pipRX.read({
+                                'DEPARTMENT': PipRX.criteries({ ISN_NODE: refIsnString })
+                            }).then((nodes) => {
+                                if (nodes && nodes.length) {
+                                    const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
+                                    const allDeleted = nodes.every((node: any) => node.DELETED === 1);
+                                    if (allDeleted && access === '3' || allDeleted && access === '5') {
+                                        return this._confirmSrv.confirm2(warnMessage).then(() => true);
+                                    }
+                                    return false;
+                                }
+                                return false;
+                            });
+                        } else {
+                            const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
+                            return this._confirmSrv.confirm2(warnMessage).then(() => true);
+                        }
+                    }
+                });
+                /* .then((nodes: any) => {
+                    console.log(nodes);
+                    if (nodes && nodes.length) {
+                        const warnMessage = Object.assign({}, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED);
+                        console.log(warnMessage);
+                        const allDeleted = nodes.every((node) => node.DELETED === 1);
+                        if (allDeleted && access === '3' || access === '5') {
+                            return this._confirmSrv.confirm2(warnMessage)
+                                .then(() => true);
+                        }   else {
+                            return false;
+                        }
+                    }
+                    return false;
+                }); */
+        }
         return Promise.resolve(false);
     }
 }
