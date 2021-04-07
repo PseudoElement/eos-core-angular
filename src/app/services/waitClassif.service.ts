@@ -20,7 +20,7 @@ const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
 const StdText: string = '../WebRC/Pages/StdText.html';
 const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
-const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.aspx';
+const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const COMMON_LIST: string = '../WebRC/Pages/CommonLists.html';
 
 @Injectable()

@@ -253,7 +253,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     openAdditionalFields(node: EosDictionaryNode) {
-        let url = '../WebRC/AR_EDITOR/AR_EDITOR.aspx#docgrp={{DUE}}';
+        let url = '../WebRC/AR_EDITOR/AR_EDITOR.html#docgrp={{DUE}}';
         url = url.replace('{{DUE}}', node.data.rec['DUE']);
         this._zone.runOutsideAngular(() => {
             window.open(url, 'addFields', 'resizable=1,status=1,top=20,left=20,width=1220,height=900');
