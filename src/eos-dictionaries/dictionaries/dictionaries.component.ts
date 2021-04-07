@@ -75,6 +75,8 @@ export class DictionariesComponent implements OnInit, OnDestroy {
             if (!data.length) {
                 this.curUserHasDocGroup = true;
             }
+        }).catch((e) => {
+            console.error(e);
         });
     }
 
