@@ -156,7 +156,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
-                console.log('hi');
                 this.dataController.save(this.isn_node, this.inputs, this.newData).then(() => {
                     this.bsModalRef.hide();
                 }).catch(() => {
