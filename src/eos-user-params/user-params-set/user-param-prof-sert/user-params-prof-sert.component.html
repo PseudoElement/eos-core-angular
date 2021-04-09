@@ -112,7 +112,7 @@
                 containerClass="tooltip-info"
                 container="body"
             >
-                <button class="btn btn-primary-light" [disabled]="!editFlag || (!selectedFromAllList && !selectList)" (click)='showSert()'>
+                <button class="btn btn-primary-light" [disabled]="!editFlag || (!selectedFromAllList && !selectList ) || selectList.notFound" (click)='showSert()'>
                     <span class="eos-icon eos-icon-info-blue small"></span>
                 </button>
             </div>
