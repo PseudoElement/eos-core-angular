@@ -187,6 +187,7 @@ export class WaitClassifService {
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';
         url += params.selected ? `&selected=${params.selected}` : '';
+        url += params.Selected ? `&Selected=${params.Selected}` : '';
         if (params.selectMulty !== undefined && params.selectMulty !== null) {
             url += `&select_multy=${params.selectMulty}`;
         }
