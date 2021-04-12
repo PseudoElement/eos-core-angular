@@ -1868,7 +1868,7 @@ bs-dropdown-container {
         //вкладка Профиль сертификатов
         eos-prof-sert {
             div.sert-list-wrapper {
-                width: initial;
+                width: inherit;
                 max-height: calc(100vh - 100px) !important;
                 margin-left: 110px;
                 padding: 20px;
