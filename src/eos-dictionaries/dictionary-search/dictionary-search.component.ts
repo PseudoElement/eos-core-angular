@@ -141,13 +141,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         }
         return true;
     }
-    get hasSelectValue (): boolean {
-        if (this.formSelect) {
-            return !!this.formSelect.controls['rec.select'].value;
-        }   else {
-            return true;
-        }
-    }
     get arType(): AR_DESCRIPT {
         if (this.formSelect.controls['rec.select'].value) {
             return this.mapAr_Descr.get(this.formSelect.controls['rec.select'].value);
