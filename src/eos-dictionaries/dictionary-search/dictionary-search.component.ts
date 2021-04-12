@@ -62,6 +62,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     private searchData = {
         srchMode: ''
     };
+    private searchValueDopRec = null;
     constructor(
         private _dictSrv: EosDictService,
         private _classif: WaitClassifService,
@@ -114,6 +115,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.settings.opts.mode = this.mode;
         const model = (this.dictId === 'departments' || this.dictId === 'organization') ? this.searchData : this.getSearchModel();
         this.settings.full.data = model;
+        if (this.searchValueDopRec) {
+            this.searchModel['DOP_REC'] =  this.searchValueDopRec;
+        }  else {
+            delete this.searchModel['DOP_REC'];
+        }
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
     }
@@ -203,9 +209,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.formSearch.valueChanges.subscribe(_d => {
             if (this.arType) {
                 const value = _d[`${'rec.' + this.arType.AR_TYPE}`];
-                this.searchModel['DOP_REC'] = JSON.stringify({ API_NAME: String(this.arType.API_NAME), SEARCH_VALUE: String(value), type: String(this.arType.AR_TYPE) });
+                this.searchValueDopRec = value ? JSON.stringify({ API_NAME: String(this.arType.API_NAME), SEARCH_VALUE: String(value), type: String(this.arType.AR_TYPE) }) : null;
+                this.searchModel['DOP_REC'] = value ? String(value) : '';
             } else {
-                this.searchModel['DOP_REC'] = null;
+                this.searchModel['DOP_REC'] = '';
+                this.searchValueDopRec = null;
             }
         });
     }
