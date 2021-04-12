@@ -236,7 +236,8 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
             selectLeafs: false,
             selectNodes: true,
             return_due: true,
-            selected
+            selected,
+            Selected: selected
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
