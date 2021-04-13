@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import {DynamicInputBase} from './dynamic-input-base';
 import {BsDatepickerConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {EosUtils} from '../core/utils';
@@ -7,7 +7,7 @@ import {EosUtils} from '../core/utils';
     selector: 'eos-dynamic-input-date',
     templateUrl: 'dynamic-input-date.component.html'
 })
-export class DynamicInputDateComponent extends DynamicInputBase implements OnInit {
+export class DynamicInputDateComponent extends DynamicInputBase implements OnInit, OnChanges {
     bsConfig: Partial<BsDatepickerConfig>;
     placement = 'bottom';
     bsDate: Date;
@@ -44,6 +44,33 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     dpChanged(value: Date) {
         this.form.controls[this.input.key].setValue(value);
         this.onBlur();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        const control = this.control;
+        this.input.dib = this;
+        if (control) {
+            /*
+            данный код в иногда мог блокировать ввод даты с клавиатруы
+            (пример: расширенный поиск в спр. организации)
+
+            setTimeout(() => {
+                this.toggleTooltip();
+            }); */
+            this.ngOnDestroy();
+            this.subscriptions.push(control.statusChanges.subscribe(() => {
+                 this.inputTooltip.visible = false;
+                if (this.inputTooltip.force) {
+                    this.updateMessage();
+                    setTimeout(() => { // похоже тут рассинхрон, имя не успевает обновиться и если меняется с ошибки на ошибку, то имя ангулар не меняет
+                        this.inputTooltip.visible = true;
+                        this.inputTooltip.force = false;
+                    }, 0);
+                } else {
+                    this.inputTooltip.visible = (this.inputTooltip.visible && control.invalid && control.dirty);
+                }
+            }));
+        }
     }
 
     ngOnInit() {
