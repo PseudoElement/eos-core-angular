@@ -208,7 +208,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         if (this.defaultUser) {
             paramsDoc = this.paramDocDefault;
         } else {
-            paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+            paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         }
         if (this.saveReestrDocgroup !== undefined) {
             paramsDoc = this.saveReestrDocgroup.replace(/,/g, '||');
