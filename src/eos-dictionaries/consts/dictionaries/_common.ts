@@ -89,6 +89,8 @@ export const DOP_REC = {
             type: 14,
             title: '',
             maxValue: 99,
+            minValue: -99,
+            pattern: /^[^*!@#$%^&()/\\](-|)\d{0,99}(.\d{0,99}|)$/
         },
         date: {
             foreignKey: 'date',
