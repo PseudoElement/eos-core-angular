@@ -55,7 +55,7 @@ export class DictionariesComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * @func hasAnyTech - фукция запроса на наличие в системе неограниченных в видах документах системных технологов,
+     * @method hasAnyTech - фукция запроса на наличие в системе неограниченных в видах документах системных технологов,
      * в случае остутствия таковых, по даем текущему ограниченному системному технологу доступ к видам документов
      * */
     hasAnyTech() {
@@ -65,14 +65,9 @@ export class DictionariesComponent implements OnInit, OnDestroy {
             skip: '0',
             orderby: `CLASSIF_NAME`
         };
-       /*  this._apiSrv.read<USER_CL>(query).then((data) => setTimeout(() => {
-            if (!data.length) {
-                this.curUserHasDocGroup = true;
-            }
-        }, 2000)); */
 
         this._apiSrv.read<USER_CL>(query).then((data) => {
-            if (!data.length) {
+            if (data.length < 2) {
                 this.curUserHasDocGroup = true;
             }
         }).catch((e) => {
@@ -81,16 +76,15 @@ export class DictionariesComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * @func checkLimitedDocGroup - функция проверки текущего пользователя (системного технолога) на ограниченность в видах документах,
+     * @method checkLimitedDocGroup - функция проверки текущего пользователя (системного технолога) на ограниченность в видах документах,
      * если у него есть права, то давать пускать в справочник виды документов.
      * */
     checkLimitedDocGroup() {
         const techList = this._appCtx.CurrentUser.USER_TECH_List;
-        techList.forEach((el) => {
-            if (el.FUNC_NUM === 9 && el.ALLOWED) {
-                this.curUserHasDocGroup = true;
-            }
-        });
+        const limTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
+        if (!limTech) {
+            this.curUserHasDocGroup = true;
+        }
         if (!this.curUserHasDocGroup) {
             this.hasAnyTech();
         }

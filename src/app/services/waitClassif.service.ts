@@ -198,7 +198,7 @@ export class WaitClassifService {
             url += `&select_leafs=${params.selectLeafs}`;
         }
         if (params.skipDeleted !== undefined && params.skipDeleted !== null) {
-            url += `&skip_deleted=${params.skipDeleted}`;
+            url += `&Skip_deleted=${params.skipDeleted}`;
         }
         if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;

@@ -441,7 +441,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     }
     afterGetFrom() {
         this.loadLinksNames();
-        this.loadGrifsNames(this.typeDoc);
+        this.loadGrifsNames(this.typeDoc, true);
         this.loadOrganizatiomNames(this.typeOrganiz);
         this.loadDepartmentNames(this.executive);
         this.inputExecutorNames();
@@ -855,7 +855,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             }
         });
     }
-    private loadGrifsNames(value) {
+    private loadGrifsNames(value, init?: boolean) {
         this.fileAccessNames = [];
         let control;
         if (String(value) === '1') {
@@ -863,6 +863,11 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         }
         if (String(value) === '2') {
             control = this.fileAccesRK;
+        }
+        if (init && control) {
+            const accessList = this.data.rec && (this.data.rec['fileAccessList'] || this.data.rec['fileAccessList'] === '') ?
+                this.data.rec['fileAccessList'] : control.value;
+            control.patchValue(accessList);
         }
         if (control.value && control.value !== 'null') {
             this.dictSrv.currentDictionary.descriptor.loadNames('SECURITY_CL', control.value).then((names: SECURITY_CL[]) => {

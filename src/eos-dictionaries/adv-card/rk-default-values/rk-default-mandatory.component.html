@@ -20,7 +20,7 @@
             [form]="form"
             [readonly]="!editMode"> </eos-dynamic-input>
         <!-- Корреспондент -->
-        <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
+        <eos-dynamic-input *ngIf="rkType==1 || rkType===2 || rkType===0"
             [input]="inputs['DOC_DEFAULT_VALUE_List.CORRESP_M']"
             [form]="form"
             [disabled]="true"

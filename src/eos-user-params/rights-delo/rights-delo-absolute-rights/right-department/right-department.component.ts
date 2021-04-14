@@ -663,7 +663,9 @@ export class RightDepertmentComponent implements OnInit {
     // }
     private _getNewWeight(): number {
         if (this.userDepFuncNumber && this.userDepFuncNumber.length) {
-            return this.userDepFuncNumber.length + 1;
+            this.userDepFuncNumber.sort((nodeA, nodeB) => nodeA.WEIGHT - nodeB.WEIGHT);
+            return this.userDepFuncNumber[this.userDepFuncNumber.length - 1].WEIGHT + 1;
+            // return this.userDepFuncNumber.length + 1;
         } else {
             return 1;
         }
