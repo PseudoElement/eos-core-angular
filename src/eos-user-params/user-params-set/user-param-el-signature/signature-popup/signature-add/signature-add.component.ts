@@ -58,6 +58,8 @@ export class SignatureAddComponent implements OnInit {
                 if (this.listStores.length === 0) {
                     this.currentSelectNode = null;
                 }
+            }).catch(e => {
+                console.log(e);
             });
         }
         if (this.certSystemStore === 'sss') {
@@ -79,6 +81,8 @@ export class SignatureAddComponent implements OnInit {
                 if (this.listStores.length === 0) {
                     this.currentSelectNode = null;
                 }
+            }).catch(e => {
+                console.log(e);
             });
         }
     }

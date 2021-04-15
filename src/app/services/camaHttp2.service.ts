@@ -6,6 +6,7 @@ declare function CarmaHttp(initStr: string, stores: any, async: boolean): void;
 @Injectable()
 export class CarmaHttp2Service {
     clientCarma: any;
+    carmaInitialized = false;
     constructor(
         private errHalper: ErrorHelperServices,
     ) {
@@ -14,6 +15,11 @@ export class CarmaHttp2Service {
     public connect(connectStirng: string, stores: any) {
         try {
             this.clientCarma = new CarmaHttp(connectStirng, stores, true);
+            this.clientCarma.InitializeAsync(() => {
+                this.carmaInitialized = true;
+            }, () => {
+                this.carmaInitialized = false;
+            });
         } catch (e) {
             this.clientCarma = null;
             this.errHalper.errorHandler(e);
@@ -21,12 +27,13 @@ export class CarmaHttp2Service {
     }
     public getStores(store: any): Promise<any> {
         return new Promise((res, rej) => {
-            if (this.clientCarma) {
+            if (this.clientCarma && this.carmaInitialized) {
                 this.clientCarma.request(store, (data) => {
                     res(data);
                 }, null);
             } else {
-                this.errHalper.errorHandler({ code: 2000, message: 'Проверьте соединение с кармой' });
+                this.errHalper.errorHandler({ code: 2000, message: 'Сервис КАРМА недоступен' });
+                rej({ code: 2000, message: 'Проверьте соединение с кармой' });
             }
         });
     }
@@ -63,13 +70,10 @@ export class CarmaHttp2Service {
             if (data && data.stores) {
                 return data.stores;
             }
-        }).catch(e => {
-            console.log(e);
-            this.errHalper.errorHandler(e);
         });
     }
     public showCertInfo(certId: string): void {
-        if (this.clientCarma) {
+        if (this.clientCarma && this.carmaInitialized) {
             this.clientCarma.ShowCert(certId);
         } else {
             this.errHalper.errorHandler({ code: 2000, message: 'Проверьте соединение с кармой' });

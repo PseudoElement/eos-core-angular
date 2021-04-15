@@ -49,6 +49,8 @@ export class AddCertStoresComponent {
                     });
                 }
                 this.listStores = listStores;
+            }).catch(e => {
+                console.log(e);
             });
         }
         if (this.certSystemStore === 'sss') {
@@ -68,6 +70,8 @@ export class AddCertStoresComponent {
                 }
                 this.listStores = listStores;
                 return stores;
+            }).catch(e => {
+                console.log(e);
             });
         }
     }

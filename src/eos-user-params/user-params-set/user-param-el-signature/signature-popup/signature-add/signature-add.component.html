@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="list-stores">
-                <ul *ngIf="listStores">
+                <ul>
                     <li *ngFor="let list of listStores" [ngClass]="{highlighted: list.selected}"
                         (click)="selectNode(list)" (dblclick)="submit()">
                         {{list.title}}
