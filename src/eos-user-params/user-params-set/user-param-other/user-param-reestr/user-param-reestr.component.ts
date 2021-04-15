@@ -15,6 +15,7 @@ import { IOpenClassifParams } from '../../../../eos-common/interfaces';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-user-param-reestr',
@@ -54,7 +55,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _waitClassifSrv: WaitClassifService,
-        // private _errorSrv: ErrorHelperServices,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.remaster.submitEmit.subscribe(() => {
             this.submit();
@@ -249,7 +250,9 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
                 throw new Error();
             } else {
                 this.getDocGroupName(String(isn)).then((res: DOCGROUP_CL[]) => {
+                    this.listDocGroup = [];
                     res.forEach((doc: DOCGROUP_CL) => {
+
                         if (!this.checkAddedTree(doc.DUE)) {
                             const cfg: INodeDocsTreeCfg = {
                                 due: doc.DUE,
@@ -262,6 +265,9 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
                     });
                     this._createStructure(this.listDocGroup);
                     this.PatchValForm();
+                }).catch(e => {
+                    this._errorSrv.errorHandler(e);
+                    console.warn(e);
                 });
             }
         }).catch(error => {
