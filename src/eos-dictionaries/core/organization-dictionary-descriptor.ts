@@ -210,9 +210,9 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         });
     }
 
-    getData(query?: any, order?: string, limit?: number): Promise<any[]> {
+    async getData(query?: any, order?: string, limit?: number): Promise<any[]> {
         if (!this.dopRec.length) {
-            this.ar_Descript();
+            await this.ar_Descript();
         }
         if (!query) {
             query = ALL_ROWS;
