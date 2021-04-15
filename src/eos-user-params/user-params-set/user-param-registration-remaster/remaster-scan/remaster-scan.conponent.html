@@ -66,6 +66,12 @@
             ></eos-dynamic-input>
             <br>
         </div>
+    </ng-container>
+    <ng-template #notSettings>
+        <div class="not-settings-container">
+            <span [ngStyle]="{display: 'flex',  justifyContent: 'center'}">Настройки для печати штрих-кода отсутствуют</span>
+        </div>
+    </ng-template>
         <div class="user-group-form">
             <span>Формат сохранения документа:</span>
             <eos-dynamic-input
@@ -80,13 +86,7 @@
             [form]="form"
             [readonly]="false"
         ></eos-dynamic-input>
-    </ng-container>
-    <ng-template #notSettings>
-        <div [ngStyle]="{display: 'flex', flexDirection: 'column'}">
-            <span [ngStyle]="{display: 'flex',  justifyContent: 'center'}">Настройки отсутствуют</span>
-        </div>
 
-    </ng-template>
     <br>
 
 </div>
