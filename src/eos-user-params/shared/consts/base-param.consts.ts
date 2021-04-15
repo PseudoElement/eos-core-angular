@@ -6,7 +6,7 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.string,
         key: 'CLASSIF_NAME',
         label: 'ЛОГИН',
-        required: true,
+        readonly: true
     },
     {
         controlType: E_FIELD_TYPE.string,
