@@ -41,9 +41,7 @@
     <div class="full-search-top usual-border">
         <span class="pull-left title xl-font">Область поиска</span>
         <div class="pull-right srch-btns">
-            <button [disabled]="noSearchData"
-                class="btn btn-primary s-font upper"
-                (click)="clearForm()">Сбросить</button>
+            <button style="background: transparent;" class="btn btn-primary s-font upper" type="button"  (click)="clearForm()" [disabled]="noSearchData">Сбросить</button>
             <button [disabled]="regionForm?.invalid || noSearchData || !validFormSearch "
                 (click)="fullSearch()"
                 class="btn btn-primary-full s-font upper">Найти</button>
