@@ -266,7 +266,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     checkWithBlocketUSer(button: BtnActionFields) {
         const usersEdit = this.checkedUsers.filter(user => user.isEditable && !user.deleted);
-        if (usersEdit.length) {
+        const isNotOnlyNegativeUserType = usersEdit.some((user) => user.data.USERTYPE !== -1);
+        if (usersEdit.length && isNotOnlyNegativeUserType) {
             if (this.limitCards.length) {
                 button.disabled = false;
             } else {

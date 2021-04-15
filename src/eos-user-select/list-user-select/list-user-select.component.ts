@@ -732,6 +732,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     }
 
                     this._apiSrv.blokedUser(this.getUsersBlocked(lastAdmin), idMain).then(user => {
+                        let hasNegativeTypeUsers = false;
                         this.getUsersBlocked(lastAdmin).forEach(users => {
                             if (users.id === +idMain && (users.isChecked || users.selectedMark)) {
                                 this._msgSrv.addNewMessage({
@@ -739,6 +740,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                                     title: 'Предупреждение:',
                                     msg: `Нельзя заблокировать самого себя.`
                                 });
+                            }
+                            if ((users.isChecked || users.selectedMark) && users.data.USERTYPE === -1) {
+                                hasNegativeTypeUsers = true;
                             }
                             if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
                                 if (users.blockedUser) {
@@ -755,6 +759,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                             users.isChecked = false;
                             return users;
                         });
+                        if (hasNegativeTypeUsers) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: `Пользователей без права входа в систему нельзя заблокировать.`
+                            });
+                        }
                         this.initView(this.currentDue);
                     }).catch(error => {
                         this.isLoading = false;
