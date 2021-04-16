@@ -15,7 +15,7 @@ import { AR_DESCRIPT } from 'eos-rest';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { DOP_REC } from 'eos-dictionaries/consts/dictionaries/_common';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 // import { PipRX } from 'eos-rest';
 
 export interface IQuickSrchObj {
@@ -193,7 +193,13 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             }
         } as any, { rec: { select: '' } });
         this.formSelect = this._inputCtrlSrv.toFormGroup(this.inputsSelect);
-        this.formSelect.valueChanges.subscribe(() => {
+        this.formSelect.valueChanges.subscribe((_d) => {
+            const value = _d[`${'rec.select'}`];
+            const curAR_Type = value ? this.mapAr_Descr.get(value) : null;
+            if (curAR_Type && curAR_Type.AR_TYPE === 'decimal') {
+                this.inputs['rec.decimal'].length = curAR_Type.MAX_LEN;
+                this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(curAR_Type.MAX_LEN), Validators.pattern(/[0-9\s\-]|\./)]);
+            }
             this.formSearch.reset();
         });
 

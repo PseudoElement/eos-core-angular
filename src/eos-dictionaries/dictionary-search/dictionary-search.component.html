@@ -993,7 +993,7 @@
             <ng-container>
                 <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'text'" class="no-margin"
                     [input]="inputs['rec.text']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input style="position: relative; top: 4px;" *ngIf="arType?.AR_TYPE === 'decimal'" class="no-margin"
+                <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'decimal'" class="no-margin"
                     [input]="inputs['rec.decimal']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'date'" class="no-margin date"
                     [input]="inputs['rec.date']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
