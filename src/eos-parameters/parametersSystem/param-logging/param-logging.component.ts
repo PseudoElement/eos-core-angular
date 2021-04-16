@@ -79,6 +79,41 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
         });
         this.form.disable({ emitEvent: false });
     }
+
+    customRequest(strProt: string) {
+        const query: any[] = [];
+        let userEditAuditChange: boolean = false;
+        let viewprotChange: boolean = false;
+        const editUserAuditReq = {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 USER_EDIT_AUDIT')`,
+            data: {
+                PARM_VALUE: this.newData.rec['USER_EDIT_AUDIT']
+            }
+        };
+        const viewportReq = {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 VIEWPROT')`,
+            data: {
+                PARM_VALUE: strProt
+            }
+        };
+
+        userEditAuditChange = (this.newData.rec['USER_EDIT_AUDIT'] !== this.prepareData.rec['USER_EDIT_AUDIT']) ? true : false;
+
+        viewprotChange = (strProt !== this.prepareData.rec['VIEWPROT']) ? true : false;
+
+        if (userEditAuditChange) {
+            query.push(editUserAuditReq);
+        }
+
+        if (viewprotChange) {
+            query.push(viewportReq);
+        }
+
+        return query;
+    }
+
     submit() {
         let strProt = '';
         for (const key in this.newData.rec) {
@@ -86,22 +121,9 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
                 this.newData.rec[key] === 'YES' ?  strProt += '1' :  strProt += '0';
             }
         }
-        const query = [
-            {
-                method: 'MERGE',
-                requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 VIEWPROT')`,
-                data: {
-                    PARM_VALUE: strProt
-                }
-            },
-            {
-                method: 'MERGE',
-                requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 USER_EDIT_AUDIT')`,
-                data: {
-                    PARM_VALUE: this.newData.rec['USER_EDIT_AUDIT']
-                }
-            },
-        ];
+
+        const query = this.customRequest(strProt);
+
         this.paramApiSrv.setData(query)
             .then(() => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
