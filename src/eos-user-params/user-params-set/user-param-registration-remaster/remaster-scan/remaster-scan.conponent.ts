@@ -101,6 +101,11 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             this.form = this.inpSrv.toFormGroup(this.inputs);
             if (this.isCurrentSettings) {
                 this.form.enable({emitEvent: false});
+                const def = {};
+                Object.keys(this.prapareData).forEach((key) => {
+                    def['rec.' + key] = this.prapareData[key];
+                });
+                this.checkFlag(def);
             } else {
                 this.form.disable({emitEvent: false});
             }
