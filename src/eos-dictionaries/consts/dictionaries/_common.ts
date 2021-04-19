@@ -86,11 +86,9 @@ export const DOP_REC = {
         },
         decimal: {
             foreignKey: 'decimal',
-            type: 14,
+            type: 1,
             title: '',
-            maxValue: 99,
-            minValue: -99,
-            pattern: /^[^*!@#$%^&()/\\](-|)\d{0,99}(.\d{0,99}|)$/
+            length: 255,
         },
         date: {
             foreignKey: 'date',
