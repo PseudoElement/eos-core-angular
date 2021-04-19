@@ -103,9 +103,9 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
             userEditAuditChange = (this.newData.rec['USER_EDIT_AUDIT'] !== this.prepareData.rec['USER_EDIT_AUDIT']) ? true : false;
         }
 
-        if (this.prepareData.rec['VIEWPROT']) {
-            viewprotChange = (strProt !== this.prepareData.rec['VIEWPROT']) ? true : false;
-        }
+        const prevViewprot = this.prepareData.rec['VIEWPROT'] ? this.prepareData.rec['VIEWPROT'] : this.converseViewprot(this.prepareData.rec);
+
+        viewprotChange = (strProt !== prevViewprot) ? true : false;
 
         if (userEditAuditChange) {
             query.push(editUserAuditReq);
@@ -118,13 +118,19 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
         return query;
     }
 
-    submit() {
-        let strProt = '';
-        for (const key in this.newData.rec) {
+    converseViewprot(obj) {
+        let str: string = '';
+        for (const key in obj) {
             if (key !== 'USER_EDIT_AUDIT') {
-                this.newData.rec[key] === 'YES' ?  strProt += '1' :  strProt += '0';
+                str += obj[key] === 'YES' ? '1' : '0';
             }
         }
+        return str;
+    }
+
+    submit() {
+
+        const strProt = this.converseViewprot(this.newData.rec);
 
         const query = this.customRequest(strProt);
 
