@@ -15,11 +15,12 @@ import { UserRestComponent } from '../eos-rest/clman/user.component';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
+import { UsersPermissionGuard } from './guards/users-permission.guard';
+import { SystemParamsGuard } from './guards/system-params.guard';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
-import { PermissionsGuard } from './guards/permissions.guard';
 import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.component';
 
 import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
@@ -187,7 +188,7 @@ const routes: Routes = [{
     data: { title: 'user page' }
 }, {
     path: 'parameters',
-    canActivate: [AuthorizedGuard, PermissionsGuard],
+    canActivate: [AuthorizedGuard, SystemParamsGuard],
     data: {
         title: 'Параметры системы',
         showInBreadcrumb: false,
@@ -210,7 +211,7 @@ const routes: Routes = [{
     ]
 }, {
     path: 'user-params-set',
-    canActivate: [AuthorizedGuard, PermissionsGuard],
+    canActivate: [AuthorizedGuard, UsersPermissionGuard],
     children: [
         {
             path: '',
@@ -228,7 +229,7 @@ const routes: Routes = [{
     ]
 }, {
     path: 'user_param',
-    canActivate: [AuthorizedGuard, PermissionsGuard],
+    canActivate: [AuthorizedGuard, UsersPermissionGuard],
     data: {
         title: 'Пользователи',
         showInBreadcrumb: true
