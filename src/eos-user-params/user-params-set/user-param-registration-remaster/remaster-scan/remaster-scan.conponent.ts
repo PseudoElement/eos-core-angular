@@ -87,9 +87,6 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.isCbBase = this.appCtx.cbBase;
-        if (this.isCbBase) {
-            return;
-        }
         Promise.all([
             this._RemasterService.getScanShablonBarCode(),
             this._RemasterService.getScanShablonBarCodeL(),
