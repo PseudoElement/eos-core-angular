@@ -103,7 +103,9 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
             userEditAuditChange = (this.newData.rec['USER_EDIT_AUDIT'] !== this.prepareData.rec['USER_EDIT_AUDIT']) ? true : false;
         }
 
-        viewprotChange = (strProt !== this.prepareData.rec['VIEWPROT']) ? true : false;
+        if (this.prepareData.rec['VIEWPROT']) {
+            viewprotChange = (strProt !== this.prepareData.rec['VIEWPROT']) ? true : false;
+        }
 
         if (userEditAuditChange) {
             query.push(editUserAuditReq);
