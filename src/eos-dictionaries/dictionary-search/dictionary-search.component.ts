@@ -198,7 +198,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             const curAR_Type = value ? this.mapAr_Descr.get(value) : null;
             if (curAR_Type && curAR_Type.AR_TYPE === 'decimal') {
                 this.inputs['rec.decimal'].length = curAR_Type.MAX_LEN;
-                this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(curAR_Type.MAX_LEN), Validators.pattern(/[0-9\s\-]|\./)]);
+                this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(curAR_Type.MAX_LEN), Validators.pattern(/(^[\d\-\.]+$)/)]);
             }
             this.formSearch.reset();
         });
