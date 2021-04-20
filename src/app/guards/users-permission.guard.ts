@@ -45,7 +45,7 @@ export class UsersPermissionGuard implements CanActivate {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение:',
-                        msg: `У Вас нет права для входа на вкладку "${conf.name}"`,
+                        msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
                     });
                 }
                 return access;
