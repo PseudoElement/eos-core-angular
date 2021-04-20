@@ -22,12 +22,11 @@ export class SystemParamsGuard implements CanActivate {
         return this._getContext()
             .then((user: USER_CL[]) => {
                 this._userProfile = user[0];
-                const access: boolean = (this._userProfile.IS_SECUR_ADM === 1 && conf.name !== 'Параметры системы') ||
+                const access: boolean =
                     (this._userProfile.TECH_RIGHTS && (!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)] || !!+this._userProfile.TECH_RIGHTS[29] || !!+this._userProfile.TECH_RIGHTS[1]));
                 if (this._apCtx.cbBase) {
                     if (
-                        conf.name === 'Параметры системы'
-                        && this._userProfile.TECH_RIGHTS && !!+this._userProfile.TECH_RIGHTS[0]
+                        this._userProfile.TECH_RIGHTS && !!+this._userProfile.TECH_RIGHTS[0]
                         && this._apCtx.limitCardsUser.length <= 0
                         && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)]
                     ) {
@@ -37,8 +36,7 @@ export class SystemParamsGuard implements CanActivate {
                         this._route.navigate(['/parameters/authentication']);
                         return undefined;
                     } else if (
-                        conf.name === 'Параметры системы'
-                        && this._userProfile.TECH_RIGHTS && ((!!+this._userProfile.TECH_RIGHTS[0] && this._apCtx.limitCardsUser.length > 0 && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)])
+                        this._userProfile.TECH_RIGHTS && ((!!+this._userProfile.TECH_RIGHTS[0] && this._apCtx.limitCardsUser.length > 0 && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)])
                             || !!!+this._userProfile.TECH_RIGHTS[0] && !!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)]
                         )
                     ) {
@@ -53,6 +51,14 @@ export class SystemParamsGuard implements CanActivate {
                         }
                         return access;
                     }
+                }
+                if (!access) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение:',
+                        msg: `У Вас нет права изменять параметры модуля "${conf.name}"`
+                    });
+                    return access;
                 }
                 return access;
             })
