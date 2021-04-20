@@ -1,3 +1,5 @@
+import { SystemParamsGuard } from './guards/system-params.guard';
+import { UsersPermissionGuard } from './guards/users-permission.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler, LOCALE_ID, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -105,6 +107,8 @@ import { CarmaHttp2Service } from './services/camaHttp2.service';
         AuthorizedGuard,
         UnauthorizedGuard,
         CanDeactivateGuard,
+        UsersPermissionGuard,
+        SystemParamsGuard,
         PermissionsGuard,
         EosBreadcrumbsService,
         EosDeskService,
