@@ -3,13 +3,14 @@
     width: 800px;
     margin: auto;
     .autentification-window{
-        min-height: calc(100vh - 300px);
+        height: calc(100vh - 300px);
+        overflow-y: auto;
         .autentification-control{
             padding: 26px;
             padding-bottom: 0;
-            margin-bottom: 0px;      
+            margin-bottom: 0px;
         }
-        
+
     }
     select::-ms-expand {
         display: none;
@@ -36,7 +37,7 @@
                 color: #dedad6;
         }
     }
-    
+
     .autentification-control-type{
         padding: 0 26px;
         margin-bottom: 0px;
