@@ -103,7 +103,7 @@
         </div>
         <hr>
     </div>
-    <div *ngIf="esiaExternalAuth > 1" class="autentification-control-type">
+    <div *ngIf="esiaExternalAuth > 1 && hiddenWithoutEnter" class="autentification-control-type">
         <div class="wrapper-password">
             <div style="width: 358px">
                 <eos-dynamic-input style="width: 100%" class="dynamic-input-wrapper base-text-input" [form]="form" [input]="inputs['EXTERNAL_ID']" [readonly]="esiaExternalAuth < 2"></eos-dynamic-input>
