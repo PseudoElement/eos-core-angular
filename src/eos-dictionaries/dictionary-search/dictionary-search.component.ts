@@ -175,6 +175,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
    public initFormDopRec() {
         const options = [];
+        const validityReg = new RegExp(/(^[\d\-\.]+$)/);
         this.arDescript.forEach(_d => {
             this.mapAr_Descr.set(_d.API_NAME, _d);
             options.push({ title: _d.UI_NAME, value: _d.API_NAME });
@@ -198,16 +199,25 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             const curAR_Type = value ? this.mapAr_Descr.get(value) : null;
             if (curAR_Type && curAR_Type.AR_TYPE === 'decimal') {
                 this.inputs['rec.decimal'].length = curAR_Type.MAX_LEN;
-                this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(curAR_Type.MAX_LEN), Validators.pattern(/(^[\d\-\.]+$)/)]);
+                this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(curAR_Type.MAX_LEN), Validators.pattern(validityReg)]);
             }
             this.formSearch.reset();
         });
-
         this.inputs = this._dataSrv.getInputs(DOP_REC as any, { rec: { text: '', decimal: '', date: '', flag: '' } });
         this.formSearch = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.formSearch.valueChanges.subscribe(_d => {
             if (this.arType) {
                 const value = _d[`${'rec.' + this.arType.AR_TYPE}`];
+                const decimal = this.formSearch.controls['rec.decimal'].value;
+                // если есть минус,то расширяем допустимую длину строки
+                if (decimal && decimal.indexOf('-') === 0) {
+                    this.inputs['rec.decimal'].length = this.arType.MAX_LEN + 1;
+                    this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(this.arType.MAX_LEN + 1), Validators.pattern(validityReg)]);
+                } else {
+                    this.inputs['rec.decimal'].length = this.arType.MAX_LEN;
+                    this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(this.arType.MAX_LEN), Validators.pattern(validityReg)]);
+                }
+
                 this.searchValueDopRec = value ? JSON.stringify({ API_NAME: String(this.arType.API_NAME), SEARCH_VALUE: String(value), type: String(this.arType.AR_TYPE) }) : null;
                 this.searchModel['DOP_REC'] = value ? String(value) : '';
             } else {
