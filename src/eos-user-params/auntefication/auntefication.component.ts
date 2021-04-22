@@ -99,14 +99,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
 
     getUserExternal(): Promise<any> {
-        return Promise.resolve([]);
-        // todo: ждем когда обновят entity
-        // return  this.apiSrvRx.read<any>({
-        //     USER_AUTH_EXTERNAL_ID: {
-        //         criteries: {
-        //             ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
-        //         }},
-        // });
+        return  this.apiSrvRx.read<any>({
+            USER_AUTH_EXTERNAL_ID: {
+                criteries: {
+                    ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
+                }},
+        });
     }
 
     getUserParams(): Promise<any>  {
