@@ -81,6 +81,11 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.init();
         this.subscribeForms();
     }
+
+    get hiddenWithoutEnter() {
+        return this.form.get('SELECT_AUTENT').value !== '-1';
+    }
+
     get validClassif() {
         const val = this.form.controls['CLASSIF_NAME'].errors;
         if (val !== null) {
