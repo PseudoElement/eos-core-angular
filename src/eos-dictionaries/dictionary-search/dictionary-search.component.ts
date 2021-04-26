@@ -227,7 +227,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         });
     }
     private clearModel(modelName: string) {
-        if (this.formSearch && this.dictId === 'organization' && modelName !== 'medo') {
+        if (this.formSearch && (this.dictId === 'organization' || this.dictId === 'citizens') && modelName !== 'medo') {
             this.formSearch.reset();
             this.formSelect.reset();
         }
