@@ -248,7 +248,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             const date = new Date(valueDate);
             return new Date() < date;
         }   else {
-            return false;
+            return true;
         }
     }
     setRadioBt($event?) {
