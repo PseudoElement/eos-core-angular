@@ -119,12 +119,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         // }
     }
     afterInit() {
-        this.init();
+        this.init().then(() => {
         if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
             this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
         }
-        this.editModeF();
-        this._subscribe();
+        });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();

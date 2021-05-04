@@ -584,13 +584,13 @@ export class UserParamsService {
                 loadmode: 'Table'
             }).then((data: USER_CL[]) => {
                 if (data.length > 1) {
-                   return false;
-                } else {
                    return true;
+                } else {
+                   return false;
                 }
             });
         } else {
-            return Promise.resolve(false);
+            return Promise.resolve(true);
         }
 
     }
