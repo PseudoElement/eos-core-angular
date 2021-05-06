@@ -1186,6 +1186,9 @@ bs-dropdown-container {
                         & > span {
                             @include reset-style-title-bookmarks;
                             width: 170px !important;
+                            overflow: hidden;
+                            white-space: pre;
+                            text-overflow: ellipsis;
                         }
 
                         & > div {
