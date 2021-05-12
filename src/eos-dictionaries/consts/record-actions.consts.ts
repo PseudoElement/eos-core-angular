@@ -533,10 +533,10 @@ const RECORD_ACTIONS_PROTVIEW_SECURITY: IAction = {
     group: E_ACTION_GROUPS.item,
     title: 'Протокол изменений',
     hint: 'Протокол изменений',
-    iconClass: 'eos-icon eos-icon-new-doc-blue small',
-    disabledIconClass: 'eos-icon eos-icon-new-doc-grey small',
+    iconClass: 'eos-icon eos-icon-rules-blue small',
+    disabledIconClass: 'eos-icon eos-icon-rules-grey small',
     activeIconClass: '',
-    hoverIconClass: 'eos-icon eos-icon-new-doc-blue small',
+    hoverIconClass: 'eos-icon eos-icon-rules-blue small',
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.readwrite,
 };

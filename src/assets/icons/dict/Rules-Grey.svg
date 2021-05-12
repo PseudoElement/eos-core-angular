@@ -1,12 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
-<rect id="XMLID_80_" style="fill:none;" width="24" height="24"/>
-<g id="XMLID_2_">
-	<path id="XMLID_12_" style="fill:#BABABA;" d="M15,1V0H9v1H4v22h16V1H15z M18,21H6V3h3v1h6V3h3V21z"/>
-	<rect id="XMLID_16_" x="8" y="7" style="fill:#BABABA;" width="8" height="2"/>
-	<rect id="XMLID_17_" x="8" y="11" style="fill:#BABABA;" width="8" height="2"/>
-	<rect id="XMLID_18_" x="8" y="15" style="fill:#BABABA;" width="8" height="2"/>
-</g>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 1V0H9V1H4V23H20V1H15ZM18 21H6V3H9V4H15V3H18V21Z" fill="#BABABA"/>
+<path d="M16 7H8V9H16V7Z" fill="#BABABA"/>
+<path d="M16 11H8V13H16V11Z" fill="#BABABA"/>
+<path d="M16 15H8V17H16V15Z" fill="#BABABA"/>
 </svg>
