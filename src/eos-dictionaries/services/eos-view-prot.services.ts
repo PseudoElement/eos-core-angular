@@ -52,8 +52,12 @@ export class ViewProtocolServices {
     }
 
     private templateUrl(isn: number, tableName: string, pkName: string, tableId: string): string {
+        let postParams = `,"insDesc":"Создание","updDesc":"Редактирование"`;
+        if (tableName === 'SIGN_KIND_CL') {
+            postParams = '';
+        }
         const url: string = this.defaultPath +
-            `?params={"ref_isn":${isn},"tableName":"${tableName}","pkName":"${pkName}","tableId":"${tableId}","insDesc":"Создание","updDesc":"Редактирование"}`;
+            `?params={"ref_isn":${isn},"tableName":"${tableName}","pkName":"${pkName}","tableId":"${tableId}" ${postParams}}`;
         return url;
     }
 }
