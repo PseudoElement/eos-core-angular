@@ -10,7 +10,7 @@ export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'cut', 'combine',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import'],
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import', 'protViewSecurity'],
     title: 'Состояния исполнения (исполнитель)',
     visible: true,
     iconName: 'eos-icon-administrant-status-blue',

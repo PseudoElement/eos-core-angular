@@ -10,7 +10,7 @@ export const Templates: IDictionaryDescriptor = {
     title: 'Настройка шаблонов',
     visible: true,
     iconName: 'eos-icon-templates-settings',
-    actions: ['add', 'markRecords', 'edit', 'removeHard', 'downloadFile'],
+    actions: ['add', 'markRecords', 'edit', 'removeHard', 'downloadFile', 'protViewSecurity'],
     fields: [{
         key: 'NAME_TEMPLATE',
         title: 'Имя файла',

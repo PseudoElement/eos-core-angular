@@ -72,7 +72,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
         'showDeleted', 'tuneFields', ...
         Features.cfg.departments.numcreation ? ['counterDepartmentMain', 'counterDepartment', 'counterDepartmentRK', 'counterDepartmentRKPD', ] : [] ,
-        'export', 'import'],
+        'export', 'import', 'protViewSecurity'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     modeField: 'IS_NODE',

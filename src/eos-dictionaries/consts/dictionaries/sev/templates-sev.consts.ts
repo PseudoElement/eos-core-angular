@@ -4,7 +4,7 @@ const SEV_ACTIONS = [
     'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
     'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
     'removeHard',
-    'edit', 'view', 'remove', 'removeHard', 'userOrder'];
+    'edit', 'view', 'remove', 'removeHard', 'userOrder', 'protViewSecurity'];
 
 
 export const SEV_LINEAR_TEMPLATE = Object.assign({}, LINEAR_TEMPLATE, {

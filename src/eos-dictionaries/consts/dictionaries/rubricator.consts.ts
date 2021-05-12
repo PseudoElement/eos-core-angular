@@ -16,7 +16,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'paste', 'combine',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes',
-        'export', 'import'
+        'export', 'import', 'protViewSecurity'
     ],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',

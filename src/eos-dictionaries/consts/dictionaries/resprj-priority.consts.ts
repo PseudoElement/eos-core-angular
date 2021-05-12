@@ -10,7 +10,7 @@ export const RESPRJ_PRIORITY_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'cut', 'combine',
-        'edit', 'view', 'remove', 'removeHard', 'export', 'import'],
+        'edit', 'view', 'remove', 'removeHard', 'export', 'import', 'protViewSecurity'],
     visible: true,
     iconName: 'eos-icon-rating-blue',
     fields: [...LINEAR_TEMPLATE.fields,

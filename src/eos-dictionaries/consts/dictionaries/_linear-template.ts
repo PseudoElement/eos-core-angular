@@ -12,7 +12,7 @@ export const LINEAR_TEMPLATE: IDictionaryDescriptor = {
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         // 'removeHard',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import'],
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import', 'protViewSecurity'],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],
     fields: COMMON_FIELDS.concat([{

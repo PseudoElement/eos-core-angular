@@ -76,6 +76,8 @@ import { CheckIndexNomenclaturComponent } from 'eos-dictionaries/check-index-nom
 import { DictionaryPasteComponent } from 'eos-dictionaries/dictionary-paste/dictionary-paste.component';
 import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-template.component';
 import { Templates } from '../consts/dictionaries/templates.consts';
+import { ViewProtocolServices } from 'eos-dictionaries/services/eos-view-prot.services';
+import { DictionaryDescriptor } from 'eos-dictionaries/core/dictionary-descriptor';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -180,6 +182,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
         private _waitClassif: WaitClassifService,
+        private _viewPortSrv: ViewProtocolServices,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
     ) {
@@ -1584,14 +1587,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
-    private _openProtocolSecyrity() {
-        const node = this.nodeList;
-        if (this.protocolWindow && !this.protocolWindow.closed) {
-            this.protocolWindow.close();
-            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?ref_isn=${node.markedInfo.nodes[0].id}&tableName=SECURITY_CL&pkName=SECURLEVEL`, '_blank', 'width=900,height=700');
-        } else {
-            this.protocolWindow = window.open(`../Pages/Rc/ProtView.aspx?ref_isn=${node.markedInfo.nodes[0].id}&tableName=SECURITY_CL&pkName=SECURLEVEL`, '_blank', 'width=900,height=700');
-        }
+    private _openProtocolSecyrity(): void {
+        this._viewPortSrv.getUrlProtocol(this.dictionary.descriptor as DictionaryDescriptor, this.nodeList.markedInfo.nodes);
     }
     /* проверка есть ли вложенные подразделения */
     private _checkIncludeDepartment(dues: string): boolean {

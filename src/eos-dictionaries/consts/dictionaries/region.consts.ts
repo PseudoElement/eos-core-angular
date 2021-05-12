@@ -16,7 +16,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     iconName: 'eos-icon-pin-geo-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine', 'paste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization',
-        'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore', 'export', 'import'],
+        'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore', 'export', 'import', 'protViewSecurity'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],

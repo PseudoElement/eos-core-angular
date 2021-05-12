@@ -12,7 +12,7 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'quickSearch', 'fullSearch', 'userOrder', 'markRecords', 'moveUp', 'moveDown', 'showDeleted',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore',
-        'export', 'import'
+        'export', 'import', 'protViewSecurity'
     ],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],

@@ -53,7 +53,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     iconName: 'eos-icon-citizen-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'showDeleted', 'edit',
         'view', 'restore', 'remove', 'removeHard', 'tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry', 'dopRequisites',
-        'export', 'import'],
+        'export', 'import', 'protViewSecurity'],
     keyField: 'ISN_CITIZEN',
     searchConfig: [SEARCH_TYPES.full],
     fields: COMMON_FIELDS.concat([{
