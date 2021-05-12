@@ -153,6 +153,10 @@ export class PipRX extends PipeUtils {
             url += '&ForEdit=true';
         }
 
+        if (r.reload) {
+            url += '&reload=true';
+        }
+
         if (r.top) {
             url += '&$top=' + r.top.toString();
         }

@@ -244,7 +244,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                     OWNER: 'O',
                 }
             },
-            orderby: 'AR_CATEGORY.WEIGHT', expand: 'AR_VALUE_LIST_List'
+            orderby: 'AR_CATEGORY.WEIGHT', expand: 'AR_VALUE_LIST_List', foredit: true, reload: true
         }).then(_descript => {
             this.dopRec = _descript;
             return this.dopRec;

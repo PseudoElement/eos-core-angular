@@ -157,7 +157,9 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 }
             },
             orderby: 'AR_CATEGORY.WEIGHT',
-            expand: 'AR_VALUE_LIST_List'
+            expand: 'AR_VALUE_LIST_List',
+            foredit: true,
+            reload: true
         }).then((_descript: AR_DESCRIPT[]) => {
             this.dopRec = _descript;
             return this.dopRec;
