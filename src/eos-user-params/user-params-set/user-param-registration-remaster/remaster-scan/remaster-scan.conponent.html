@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="user-group-form">
+        <div class="user-group-form" *ngIf="!appMode.tkDoc">
             <eos-dynamic-input
                 [input]="inputs['rec.FORM_BARCODE_FOR_SEARCH']"
                 [form]="form"
