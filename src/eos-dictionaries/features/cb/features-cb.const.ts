@@ -1,8 +1,9 @@
 import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates, IEOSRKDefaults, EOSDICTS_VARIANT, IEOSSevConfig, IEOSTPLVariant, E_LIST_ENUM_TYPE } from '../features.interface';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { DOC_TEMPLATE_ELEMENTS_CB, PRJ_TEMPLATE_ELEMENTS_CB } from './docgroup-template-cb.consts';
+import ctxstore from 'eos-rest/core/cntxHepler';
 
-export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures> {
+export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures>{
     version: 'ЦБ',
     variant : EOSDICTS_VARIANT.CB,
     canEditLogicDeleted: true,
@@ -46,7 +47,7 @@ export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
         },
     },
     rkdefaults: <IEOSRKDefaults>{
-        appendFields: [
+        appendFields: ctxstore.cbBase ? [
             {
                 key: 'SEND_CB_SENDING_TYPE',
                 page: 'D',
@@ -63,7 +64,7 @@ export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
                 ],
                 default: '1',
             },
-        ],
+        ] : [],
         calendarControl: E_FIELD_TYPE.select,
         calendarValuesDefault: '3',
         calendarValues: [

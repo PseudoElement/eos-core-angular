@@ -5,6 +5,7 @@ import { ALL_ROWS } from '../core/consts';
 import { Deferred } from '../core/pipe-utils';
 import { IUserParms } from 'eos-rest';
 import { Subject } from 'rxjs';
+import ctxstore from 'eos-rest/core/cntxHepler';
 
 export const CB_FUNCTIONS = 'CB_FUNCTIONS';
 @Injectable()
@@ -96,6 +97,7 @@ export class AppContext {
                 this.SysParms = sysParms[0];
                 if (this.SysParms._more_json.ParamsDic['CB_FUNCTIONS'] === 'YES') {
                     this.cbBase = true;
+                    ctxstore.cbBase = true;
                 }
                 this.CurrentUser = userWithViews.user;
                 this.UserViews = userWithViews.views.map((userView) => this.pip.entityHelper.prepareForEdit(userView));
