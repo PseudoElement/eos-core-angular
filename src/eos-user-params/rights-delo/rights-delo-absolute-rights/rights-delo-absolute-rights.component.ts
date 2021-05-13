@@ -261,7 +261,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         return this._userParamsSetSrv.getSysTechUser({oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser}).then((limited: boolean) => {
             this.limitUserTech = limited;
-// ? false : this.checkChangeToLimitUser();
+            //  false : this.checkChangeToLimitUser();
             if (this.limitUserTech === false) {
                 if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
                     if (this._checkCreatePRJNotEmptyAllowed()) {

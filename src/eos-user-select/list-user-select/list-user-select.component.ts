@@ -707,7 +707,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             if (result) {
                 const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
                 this._userParamSrv.getSysTechUser().then((allSysTech: boolean) => {
-                    if (!allSysTech) {
+                    if (allSysTech) {
                         this._msgSrv.addNewMessage({
                             type: 'warning',
                             title: 'Предупреждение:',
