@@ -30,12 +30,24 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
                 this.prepareData = this.convData(data);
                 this.inputs = this.dataSrv.getInputs(this.prepInputs, this.parseDataInit(this.prepareData));
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.changePrepareData();
                 this.subscribeChangeForm();
                 this.cancelEdit();
             })
             .catch(err => {
                 throw err;
             });
+    }
+
+    changePrepareData() {
+        const prepeareData = this.prepareData.rec;
+        const newObj = {
+            USER_EDIT_AUDIT: prepeareData['USER_EDIT_AUDIT']
+        };
+        for (let i = 0; i < prepeareData['VIEWPROT'].length; i++) {
+            newObj[`VIEWPROT${i}`] = prepeareData['VIEWPROT'][i];
+        }
+        this.prepareData.rec = Object.assign({}, newObj);
     }
 
     edit() {
@@ -80,39 +92,38 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
         this.form.disable({ emitEvent: false });
     }
 
-    customRequest(strProt: string) {
+    customRequest() {
         const query: any[] = [];
-        let userEditAuditChange: boolean = false;
-        let viewprotChange: boolean = false;
-        const editUserAuditReq = {
-            method: 'MERGE',
-            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 USER_EDIT_AUDIT')`,
-            data: {
-                PARM_VALUE: this.newData.rec['USER_EDIT_AUDIT']
-            }
-        };
-        const viewportReq = {
-            method: 'MERGE',
-            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 VIEWPROT')`,
-            data: {
-                PARM_VALUE: strProt
-            }
-        };
+        const resObj = {};
+        let isViewprot = false;
+        const viewprotStr = this.converseViewprot(this.prepareData.rec).split('');
 
-        if (this.newData.rec['USER_EDIT_AUDIT']) {
-            userEditAuditChange = (this.newData.rec['USER_EDIT_AUDIT'] !== this.prepareData.rec['USER_EDIT_AUDIT']) ? true : false;
+        for (const key in this.updateData) {
+            if (key.match(/[\d]+/)) {
+                isViewprot = true;
+                const idx = key.match(/[\d]+/)[0];
+                viewprotStr[idx] = this.updateData[`VIEWPROT${idx}`];
+            }
         }
 
-        const prevViewprot = this.prepareData.rec['VIEWPROT'] ? this.prepareData.rec['VIEWPROT'] : this.converseViewprot(this.prepareData.rec);
-
-        viewprotChange = (strProt !== prevViewprot) ? true : false;
-
-        if (userEditAuditChange) {
-            query.push(editUserAuditReq);
+        if (this.updateData['USER_EDIT_AUDIT']) {
+            resObj['USER_EDIT_AUDIT'] = this.updateData['USER_EDIT_AUDIT'];
         }
 
-        if (viewprotChange) {
-            query.push(viewportReq);
+        if (isViewprot) {
+            resObj['VIEWPROT'] = viewprotStr.join('');
+        }
+
+        for (const key in resObj) {
+            if (key) {
+                query.push({
+                    method: 'MERGE',
+                    requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${key}')`,
+                    data: {
+                        PARM_VALUE: resObj[key]
+                    }
+                });
+            }
         }
 
         return query;
@@ -122,7 +133,7 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
         let str: string = '';
         for (const key in obj) {
             if (key !== 'USER_EDIT_AUDIT') {
-                str += obj[key] === 'YES' ? '1' : '0';
+                str += obj[key];
             }
         }
         return str;
@@ -130,9 +141,7 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
 
     submit() {
 
-        const strProt = this.converseViewprot(this.newData.rec);
-
-        const query = this.customRequest(strProt);
+        const query = this.customRequest();
 
         this.paramApiSrv.setData(query)
             .then(() => {

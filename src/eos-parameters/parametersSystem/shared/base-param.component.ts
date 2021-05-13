@@ -20,6 +20,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
+    updateData = {};
     _waitClassifSrv: WaitClassifService;
     constParam: IBaseParameters;
     paramApiSrv: ParamApiSrv;
@@ -123,7 +124,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return { rec: d };
     }
     submit() {
-        if (this.newData) {
+        if (this.updateData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv
@@ -166,13 +167,13 @@ export class BaseParamComponent implements OnDestroy, OnInit {
 
     createObjRequest(): any[] {
         const req = [];
-        for (const key in this.newData.rec) {
+        for (const key in this.updateData) {
             if (key) {
                 req.push({
                     method: 'MERGE',
                     requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${key}')`,
                     data: {
-                        PARM_VALUE: this.newData.rec[key]
+                        PARM_VALUE: this.updateData[key]
                     }
                 });
             }
@@ -214,7 +215,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
         if (oldValue !== _value) {
-            // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
+            this.updateData[key] = _value;
+        } else if (oldValue === _value && this.updateData[key] !== undefined) {
+            delete this.updateData[key];
         }
         return _value !== oldValue;
     }
