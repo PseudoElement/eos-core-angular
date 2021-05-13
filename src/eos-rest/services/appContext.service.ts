@@ -30,6 +30,8 @@ export class AppContext {
      */
     public workBanches: any[];
 
+    public hasUnlimTech: any;
+
     public cbBase: boolean;
     public setHeader = new Subject();
     public licenze: any;
@@ -47,6 +49,28 @@ export class AppContext {
 
     ready(): Promise<any> {
         return this._ready.promise;
+    }
+
+    /**
+     * @method hasAnyTech - фукция запроса на наличие в системе неограниченных в видах документах системных технологов,
+     * в случае остутствия таковых, по даем текущему ограниченному системному технологу доступ к видам документов
+     * */
+     hasAnyTech() {
+        const query: any = {
+            USER_CL: PipRX.criteries({ 'USER_CL.HasNonUserTechForAll': 9 }),
+            top: '2',
+            skip: '0',
+            orderby: `CLASSIF_NAME`,
+        };
+
+        return this.pip
+            .read<USER_CL>(query)
+            .then((data) => {
+                return data.length > 1;
+            })
+            .catch((e) => {
+                console.error(e);
+            });
     }
 
     init(): Promise<any> {
@@ -91,13 +115,14 @@ export class AppContext {
                 return res;
             });
 
-        return Promise.all([oSysParams, oCurrentUser, dlicens])
-            .then(([sysParms, userWithViews]) => {
+        return Promise.all([oSysParams, oCurrentUser, this.hasAnyTech(), dlicens])
+            .then(([sysParms, userWithViews, isUnlimTech]) => {
                 this.SysParms = sysParms[0];
                 if (this.SysParms._more_json.ParamsDic['CB_FUNCTIONS'] === 'YES') {
                     this.cbBase = true;
                 }
                 this.CurrentUser = userWithViews.user;
+                this.hasUnlimTech = isUnlimTech;
                 this.UserViews = userWithViews.views.map((userView) => this.pip.entityHelper.prepareForEdit(userView));
                 this._ready.resolve('ready');
                 return [this.CurrentUser, this.SysParms, this.UserViews];
