@@ -22,6 +22,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
     dataAttachDb;
+    updateDataAttach = {};
     prepDataAttach = { rec: {} };
     inputAttach;
     hiddenFieldAttach = false;
@@ -318,6 +319,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                 this._errorSrv.errorHandler(err);
             });
     }
+
     submit() {
         if (this.newData || this.newDataAttach) {
             if (this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr)) {
@@ -330,8 +332,11 @@ export class ParamFielsComponent extends BaseParamComponent {
             if (this.newData) {
                 dataRes = this.createObjRequest();
             }
-            if (this.newDataAttach) {
-                this.dataAttachDb.forEach((item) => {
+            if (this.updateDataAttach) {
+                const dataAttachReq = this.dataAttachObjectReq(this.updateDataAttach);
+                dataRes = [...dataRes, ...dataAttachReq];
+                /* this.dataAttachDb.forEach((item) => {
+                    console.log(item);
                     dataRes.push({
                         method: 'MERGE',
                         requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('${item.CompositePrimaryKey}')`,
@@ -341,7 +346,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                             EXTENSIONS: this.newDataAttach.rec[`${item.CATEGORY}_EXTENSIONS`]
                         }
                     });
-                });
+                }); */
             }
             this.paramApiSrv
                 .setData(dataRes)
@@ -376,6 +381,70 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.prepDataAttach.rec[field.CATEGORY + '_EXTENSIONS'] = field.EXTENSIONS;
         });
     }
+
+    createDataRequset(arr, data) {
+        const obj = {};
+        arr.map((item) => {
+            if (/MAX_SIZE/.test(item)) {
+                obj['MAX_SIZE'] = data[item];
+            } else if (/ONE_FILE/.test(item)) {
+                obj['ONE_FILE'] = data[item];
+            } else {
+                obj['EXTENSIONS'] = data[item];
+            }
+        });
+
+        return obj;
+
+    }
+
+    dataAttachObjectReq(data) {
+        const res = [];
+        const keys = Object.keys(data);
+        const DOC = keys.filter((item) => /DOC/.test(item));
+        const RESOLUTION = keys.filter((item) => /RESOLUTION/.test(item));
+        const REPLY = keys.filter((item) => /REPLY/.test(item));
+        const PRJ_RC = keys.filter((item) => /PRJ_RC/.test(item));
+        const PRJ_VISA_SIGN = keys.filter((item) => /PRJ_VISA_SIGN/.test(item));
+
+        if (DOC.length) {
+            res.push({
+                method: 'MERGE',
+                requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('0. DOC_RC')`,
+                data: this.createDataRequset(DOC, data)
+            });
+        }
+        if (RESOLUTION.length) {
+            res.push({
+                method: 'MERGE',
+                requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('0. RESOLUTION')`,
+                data: this.createDataRequset(RESOLUTION, data)
+            });
+        }
+        if (REPLY.length) {
+            res.push({
+                method: 'MERGE',
+                requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('0. REPLY')`,
+                data: this.createDataRequset(REPLY, data)
+            });
+        }
+        if (PRJ_RC.length) {
+            res.push({
+                method: 'MERGE',
+                requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('0. PRJ_RC')`,
+                data: this.createDataRequset(PRJ_RC, data)
+            });
+        }
+        if (PRJ_VISA_SIGN.length) {
+            res.push({
+                method: 'MERGE',
+                requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('0. PRJ_VISA_SIGN')`,
+                data: this.createDataRequset(PRJ_VISA_SIGN, data)
+            });
+        }
+        return res;
+    }
+
     prepareInputField(fields) {
         const inputs = { _list: [], rec: {} };
         fields.forEach(field => {
@@ -406,21 +475,23 @@ export class ParamFielsComponent extends BaseParamComponent {
     }
     changeByPathAttach(path: string, value: any) {
         const key = path.split('_').pop();
+        const fieldName = path.split('.')[1];
         let _value = null;
         if (key === 'FILE') {
             _value = +value;
         } else if (key === 'SIZE') {
-            _value = (!value || value === '0') ? null : value;
+            _value = (!value || value === '0') ? null : +value;
         } else if (key === 'EXTENSIONS') {
-            _value = value ? value : '';
+            _value = value ? value : null;
         } else {
             _value = value;
         }
         this.newDataAttach = EosUtils.setValueByPath(this.newDataAttach, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepDataAttach, path, false);
-
         if (oldValue !== _value) {
-            // console.log('changed', path, oldValue, 'to', _value, this.prepDataAttach.rec);
+            this.updateDataAttach[fieldName] = _value;
+        } else if (oldValue === _value && this.updateDataAttach[fieldName] !== undefined) {
+            delete this.updateDataAttach[fieldName];
         }
         return _value !== oldValue;
     }

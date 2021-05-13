@@ -208,6 +208,19 @@ export class EosAccessPermissionsService {
                 }
             }
 
+            // Проверка прав на "Виды документов"
+            if (dt.id === TYPE_DOCUM_DICT.id) {
+                const techList = this.appCtx.CurrentUser.USER_TECH_List;
+                const isLimTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
+                if (!isLimTech) {
+                    return APS_DICT_GRANT.readwrite;
+                }
+                if (!this.appCtx.hasUnlimTech) {
+                    return APS_DICT_GRANT.readwrite;
+                }
+                return APS_DICT_GRANT.denied;
+            }
+
             // проверить дерево USER_TECH
             if (grant && dt.listedUT && due) {
                 return this._userTechListGranted(dt.tech, due);

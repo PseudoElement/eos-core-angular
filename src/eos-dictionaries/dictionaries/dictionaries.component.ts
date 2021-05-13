@@ -1,5 +1,3 @@
-import { USER_CL } from './../../eos-rest/interfaces/structures';
-import { PipRX } from './../../eos-rest/services/pipRX.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
@@ -30,7 +28,6 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         private _appCtx: AppContext,
         private _eaps: EosAccessPermissionsService,
         private _storageSrv: EosStorageService,
-        private _apiSrv: PipRX
     ) {
         this._dictSrv.closeDictionary();
 
@@ -55,38 +52,17 @@ export class DictionariesComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * @method hasAnyTech - фукция запроса на наличие в системе неограниченных в видах документах системных технологов,
-     * в случае остутствия таковых, по даем текущему ограниченному системному технологу доступ к видам документов
-     * */
-    hasAnyTech() {
-        const query: any = {
-            USER_CL:  PipRX.criteries({ 'USER_CL.HasNonUserTechForAll': 9 }),
-            top: '2',
-            skip: '0',
-            orderby: `CLASSIF_NAME`
-        };
-
-        this._apiSrv.read<USER_CL>(query).then((data) => {
-            if (data.length < 2) {
-                this.curUserHasDocGroup = true;
-            }
-        }).catch((e) => {
-            console.error(e);
-        });
-    }
-
-    /**
      * @method checkLimitedDocGroup - функция проверки текущего пользователя (системного технолога) на ограниченность в видах документах,
      * если у него есть права, то давать пускать в справочник виды документов.
      * */
     checkLimitedDocGroup() {
         const techList = this._appCtx.CurrentUser.USER_TECH_List;
-        const limTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
-        if (!limTech) {
+        const isLimTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
+        if (!isLimTech) {
             this.curUserHasDocGroup = true;
         }
-        if (!this.curUserHasDocGroup) {
-            this.hasAnyTech();
+        if (!this.curUserHasDocGroup && !this._appCtx.hasUnlimTech) {
+            this.curUserHasDocGroup = true;
         }
     }
 

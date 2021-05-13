@@ -12,7 +12,7 @@ export const USER_SEARCH = {
             type: 'string',
             title: 'Логин',
             pattern: pattrenSearch,
-            length: 12
+            length: 64
         },
         {
             key: 'DEPARTMENT',
