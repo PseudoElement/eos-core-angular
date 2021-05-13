@@ -797,6 +797,12 @@ bs-dropdown-container {
 
                 eos-auto-search {
                     div.user-group-form {
+                        label {
+                            overflow: hidden;
+                            white-space: pre;
+                            text-overflow: ellipsis;
+                        }
+
                         &:not(.search-link-wrapper):nth-child(2) {
                             & > div > span {
                                 display: inline-block;
