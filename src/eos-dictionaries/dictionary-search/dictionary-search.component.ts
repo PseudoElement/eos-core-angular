@@ -142,7 +142,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         return true;
     }
     get arType(): AR_DESCRIPT {
-        if (this.formSelect.controls['rec.select'].value) {
+        if (this.formSelect && this.formSelect.controls['rec.select'].value) {
             return this.mapAr_Descr.get(this.formSelect.controls['rec.select'].value);
         }
         return null;
@@ -168,6 +168,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
     public updateDopRec() {
         this.dictionary.descriptor.ar_Descript().then(() => {
+            this.clearDopRecAfterChange();
             this.initFormDopRec();
         }).catch(e => {
             console.warn(e);
@@ -225,6 +226,15 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 this.searchValueDopRec = null;
             }
         });
+    }
+
+    // принудительное очищение поисковых критериев для доп реквизитов после работы в окне с допами.
+    private clearDopRecAfterChange(): void {
+        this.mapAr_Descr.clear();
+        if (!this.arType) {
+            this.searchModel['DOP_REC'] = '';
+            this.searchValueDopRec = null;
+        }
     }
     private clearModel(modelName: string) {
         if (this.formSearch && (this.dictId === 'organization' || this.dictId === 'citizens') && modelName !== 'medo') {
