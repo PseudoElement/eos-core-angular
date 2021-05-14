@@ -102,7 +102,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             }
             return button;
         });
-        console.log(this.buttons.moreButtons);
         this.buttons.moreButtons.map((button: BtnActionFields) => {
             if (button.name === name) {
                 button.isActive = !button.isActive;
