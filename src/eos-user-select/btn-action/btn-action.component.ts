@@ -14,7 +14,8 @@ import {
     Protocol,
     UsersInfo,
     DefaultSettings,
-    SettingsManagement
+    SettingsManagement,
+    UserLists
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
@@ -46,6 +47,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'UsersInfo',
         'DefaultSettings',
         'DeliteUser',
+        'UserLists',
         'SettingsManagement'];
     get techUser() {
         return this._appContext.CurrentUser.USER_TECH_List;
@@ -100,7 +102,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             }
             return button;
         });
-
         this.buttons.moreButtons.map((button: BtnActionFields) => {
             if (button.name === name) {
                 button.isActive = !button.isActive;
@@ -133,6 +134,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
                 break;
             case 'BlockUser':
                 this.checkBtnBlockUser();
+                break;
+            case 'UserLists':
+                this.checkBtnSharingLists();
                 break;
             case 'OpenAddressManagementWindow':
                 this.checkBtnOpenAdress();
@@ -210,6 +214,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkBtnSettingsManagement() {
         this.checkSettingsManagement(SettingsManagement);
     }
+    checkBtnSharingLists() {
+        this.checkWithUsersList(UserLists);
+    }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted) {
             OpenStreamScanSystem.disabled = true;
@@ -276,6 +283,16 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             button.disabled = true;
             button.isActive = false;
+        }
+    }
+
+    checkWithUsersList(button: BtnActionFields) {
+        const usersEdit = this.checkedUsers.filter(user => user.isEditable && !user.deleted);
+        // const isUnlimTech = this._appContext.CurrentUser.TECH_RIGHTS;
+        if (usersEdit.length === 1) {
+            this.checkWithLimitedUser(button);
+        } else {
+            button.disabled = true;
         }
     }
 
