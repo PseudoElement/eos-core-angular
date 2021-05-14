@@ -128,6 +128,18 @@ export const CommonTechLists: BtnActionFields = {
     isActive: false,
 };
 
+export const UserLists: BtnActionFields = {
+    name: 'UserLists',
+    title: 'Ведение списков пользователя',
+    disabledClass: 'eos-icon eos-icon-template-grey small',
+    enableClass: 'eos-icon eos-icon-template-blue small',
+    tooltip: 'Ведение списков пользователя',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-text-list-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
 export const GeneralLists: BtnActionFields = {
     name: 'GeneralLists',
     title: 'Ведение общих списков стандартных текстов',
@@ -143,11 +155,11 @@ export const GeneralLists: BtnActionFields = {
 export const SumProtocol: BtnActionFields = {
     name: 'OpenSumProtocol',
     title: 'Сводный протокол',
-    disabledClass: 'eos-icon eos-icon-new-doc-grey small',
-    enableClass: 'eos-icon eos-icon-new-doc-blue small',
+    disabledClass: 'eos-icon eos-icon-rules-grey small',
+    enableClass: 'eos-icon eos-icon-rules-blue small',
     tooltip: 'Сводный протокол',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-new-doc-blue small',
+    activeClass: 'eos-icon eos-icon-rules-blue small',
     activeBtnClass: '',
     isActive: false,
 };
@@ -179,12 +191,12 @@ export const UsersInfo: BtnActionFields = {
 export const Protocol: BtnActionFields = {
     name: 'Protocol',
     title: 'Протокол',
-    disabledClass: 'eos-icon eos-icon-new-doc-grey small',
-    enableClass: 'eos-icon eos-icon-new-doc-blue small',
+    disabledClass: 'eos-icon eos-icon-rules-grey small',
+    enableClass: 'eos-icon eos-icon-rules-blue small',
     tooltip: 'Протокол',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-new-doc-blue small',
-    activeBtnClass: 'eos-icon-new-doc-blue',
+    activeClass: 'eos-icon eos-icon-rules-blue small',
+    activeBtnClass: 'eos-icon-rules-blue',
     isActive: false,
 };
 
@@ -244,6 +256,7 @@ export const Allbuttons: BtnAction = {
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
         CommonTechLists,
+        UserLists,
         SettingsManagement,
         GeneralLists,
         UsersStats,

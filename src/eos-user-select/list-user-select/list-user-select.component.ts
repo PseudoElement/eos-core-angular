@@ -518,6 +518,24 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         });
     }
 
+    UserLists() {
+        const selectedUsers = this.listUsers.filter((user) => user.isChecked);
+        if (selectedUsers.length === 1) {
+            const selectedUser = selectedUsers[0];
+            const param: IOpenClassifParams = {
+                classif: 'SharingLists',
+                clUser: true,
+                isn_user: selectedUser.id
+            };
+            this.shadow = true;
+            this._waitCl.openClassif(param).then(data => {
+                this.shadow = false;
+            }).catch(error => {
+                this.shadow = false;
+            });
+        }
+    }
+
     GeneralLists() {
         const param: IOpenClassifParams = {
             classif: 'StdText',

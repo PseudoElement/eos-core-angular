@@ -24,18 +24,20 @@
                 </select>
             </div>
         </div>
-        <div class="divTable" *ngIf="nodes">
+        <div class="table-scroll">
+            <div class="divTable" *ngIf="nodes">
                 <div class="divTableHeading">
                     <div class="divTableHeaderRow">
                     <div class="divTableHead">&nbsp;Год</div>
                     <div class="divTableHead">&nbsp;Значение</div>
                     </div>
                 </div>
-            <div class="divTableBody">
-                <div class="divTableRow" *ngFor="let node of nodes"
-                    (click)="rowClick(node)">
-                    <div class="divTableCell">{{node.YEAR_NUMBER}}</div>
-                    <div class="divTableCell">{{node.CURRENT_NUMBER}}</div>
+                <div class="divTableBody">
+                    <div class="divTableRow" *ngFor="let node of nodes"
+                        (click)="rowClick(node)">
+                        <div class="divTableCell">{{node.YEAR_NUMBER}}</div>
+                        <div class="divTableCell">{{node.CURRENT_NUMBER}}</div>
+                    </div>
                 </div>
             </div>
         </div>
