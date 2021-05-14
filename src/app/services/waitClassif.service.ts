@@ -22,6 +22,7 @@ const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const COMMON_LIST: string = '../WebRC/Pages/CommonLists.html';
+const SharingLists: string = '../WebRC/Pages/SharingLists.html';
 
 @Injectable()
 export class WaitClassifService {
@@ -94,6 +95,8 @@ export class WaitClassifService {
             url = TECH_LISTS;
         } else if (params.classif === 'StdText') {
             url = this.stdTextUrl(StdText, params);
+        } else if (params.classif === 'SharingLists') {
+            url = this.sharingListsUrl(SharingLists, params);
         } else if (params.classif === 'gop_rc') {
             url = this._createUrlDict(url, params);
         } else if (params.classif === 'AR_EDITOR') {
@@ -145,6 +148,13 @@ export class WaitClassifService {
             if (params.editMode) {
                 url += `&editMode=` + params.editMode;
             }
+        }
+        return url;
+    }
+
+    private sharingListsUrl(url, params: IOpenClassifParams) {
+        if (params.isn_user !== undefined && params.isn_user !== null) {
+            url += `?isn_user=${params.isn_user}`;
         }
         return url;
     }

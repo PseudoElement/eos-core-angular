@@ -128,6 +128,18 @@ export const CommonTechLists: BtnActionFields = {
     isActive: false,
 };
 
+export const UserLists: BtnActionFields = {
+    name: 'UserLists',
+    title: 'Ведение списков пользователя',
+    disabledClass: 'eos-icon eos-icon-template-grey small',
+    enableClass: 'eos-icon eos-icon-template-blue small',
+    tooltip: 'Ведение списков пользователя',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-text-list-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
 export const GeneralLists: BtnActionFields = {
     name: 'GeneralLists',
     title: 'Ведение общих списков стандартных текстов',
@@ -244,6 +256,7 @@ export const Allbuttons: BtnAction = {
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
         CommonTechLists,
+        UserLists,
         SettingsManagement,
         GeneralLists,
         UsersStats,
