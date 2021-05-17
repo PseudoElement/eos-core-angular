@@ -1543,8 +1543,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         config.id = this.dictionary.id !== 'citizens' ? 'organiz_cl' : 'citizen';
         this._waitClassif.openClassif(config).then(() => {
             this._dictSrv.updateDopRec();
+            this.resetSearch();
         }).catch(e => {
             this._dictSrv.updateDopRec();
+            this.resetSearch();
             console.warn(e);
         });
     }
