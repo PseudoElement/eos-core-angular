@@ -5,7 +5,7 @@ export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_
     id: 'sev-collisions',
     apiInstance: 'SEV_COLLISION',
     visible: true,
-    actions: ['edit', 'defaultCollision'],
+    actions: ['edit', 'defaultCollision', 'protViewSecurity'],
     dictType: E_DICT_TYPE.custom,
     iconName: 'eos-icon-alert-blue',
     defaultOrder: 'COLLISION_CODE',

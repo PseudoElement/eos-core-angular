@@ -19,6 +19,7 @@ export class ViewProtocolServices {
         'status-reply': 'SRP',
         'status-exec': 'SEC',
         'sev-rules': 'SRL',
+        'sev-collisions': '',
         'broadcast-channel': 'SCH',
         'sev-participant': 'SPT',
         'cistatus': 'CST',
@@ -53,7 +54,7 @@ export class ViewProtocolServices {
 
     private templateUrl(isn: number, tableName: string, pkName: string, tableId: string): string {
         let postParams = `,"insDesc":"Создание","updDesc":"Редактирование"`;
-        if (tableName === 'SIGN_KIND_CL') {
+        if (tableName === 'SIGN_KIND_CL' || tableName === 'SEV_COLLISION') {
             postParams = '';
         }
         const url: string = this.defaultPath +
