@@ -161,6 +161,14 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         id: SEV_FOLDER.id, tech: E_TECH_RIGHT.SevCL,
         listedUT: false
     },
+    {
+        id: SEV_DICTIONARIES[1].id, tech: E_TECH_RIGHT.SevCL,
+        listedUT: false
+    },
+    {
+        id: SEV_DICTIONARIES[2].id, tech: E_TECH_RIGHT.SevCL,
+        listedUT: false
+    },
     // Шаблоны
     {
         id: Templates.id, tech: E_TECH_RIGHT.Templates,
