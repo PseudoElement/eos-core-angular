@@ -35,6 +35,9 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
             return 'Вернуться в Дело-Web';
         }
     }
+    get showtitle(): boolean {
+        return !!sessionStorage.getItem('fromclassif');
+    }
     constructor(
         _router: Router,
         private _route: ActivatedRoute,

@@ -1,7 +1,7 @@
 <!-- DON'T USE class="container" with display: grid -->
 <div class="header-wrapper usual-border" #resize *ngIf="headerShow">
         <div class="menu">
-            <div class="eos-title primary-text">
+            <div class="eos-title primary-text" *ngIf="showtitle">
                 <eos-title
                 style="display: block;"
                 tooltip="{{tooltip}}"
@@ -10,7 +10,7 @@
                 [delay]="tooltipDelay"
                 containerClass="tooltip-info"></eos-title>
             </div>
-            <ul class="header-content left">
+            <ul class="header-content left" [class.notTitle]="!showtitle">
                 <li class="header-item primary-text">
                     <eos-desktop-switcher></eos-desktop-switcher>
                 </li>

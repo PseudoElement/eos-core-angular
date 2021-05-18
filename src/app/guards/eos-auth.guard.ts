@@ -24,7 +24,7 @@ export class AuthorizedGuard implements CanActivate {
             .then((auth) => {
                 if (!auth) {
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
-                    if (this._profileSrv.openWithCurrentUserSettings ||  sessionStorage.getItem('openDeloOrCurSetng')) {
+                    if (this._profileSrv.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
                         document.location.assign('../terminate.aspx');
                         return auth;
                     }

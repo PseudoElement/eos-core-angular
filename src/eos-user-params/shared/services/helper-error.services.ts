@@ -43,7 +43,7 @@ export class ErrorHelperServices {
 
  private   razLogin() {
     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
-     if (this._userProfiler.openWithCurrentUserSettings ||  sessionStorage.getItem('openDeloOrCurSetng')) {
+     if (this._userProfiler.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
          document.location.assign('../terminate.aspx');
      } else {
          document.location.assign('../login.aspx');

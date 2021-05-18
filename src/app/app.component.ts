@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { environment } from '../environments/environment';
 import { EosUserProfileService } from './services/eos-user-profile.service';
@@ -12,21 +12,15 @@ export class AppComponent {
     isAuthorized = false;
     firstLoadAuth = true;
     isMode: boolean = false;
-
-    // private _containerRef: ViewContainerRef;
-
     constructor(
-        viewContainerRef: ViewContainerRef,
         private _profileSrv: EosUserProfileService,
         private _route: ActivatedRoute,
 
     ) {
-        // this._containerRef = viewContainerRef;
 
-        const query = new URLSearchParams(window.location.search);
-        if (!query.get('fromclassif')) {
-            this._profileSrv.openWithCurrentUserSettings = true;
-            sessionStorage.setItem('openDeloOrCurSetng', `${this._profileSrv.openWithCurrentUserSettings}`);
+        // параметр передается при открытии прилодения из веба. В противном случае нужно скрыть ссылку на переход в main.aspx
+        if (window.location.href.match('fromclassif=true')) {
+            sessionStorage.setItem('fromclassif', `true`);
         }
         this._profileSrv.authorized$.subscribe((auth) => {
             this.isAuthorized = auth;

@@ -20,7 +20,7 @@ export class EosErrorHandler implements ErrorHandler {
             if (error['rejection'] && error['rejection'] instanceof RestError) {
                 if (error['rejection']['code'] && +error['rejection']['code'] === 434) {
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
-                    if (this._userParms.openWithCurrentUserSettings || sessionStorage.getItem('openDeloOrCurSetng')) {
+                    if (this._userParms.openWithCurrentUserSettings || !sessionStorage.getItem('fromclassif')) {
                         document.location.assign('../terminate.aspx');
                     } else {
                         document.location.assign('../login.aspx');
