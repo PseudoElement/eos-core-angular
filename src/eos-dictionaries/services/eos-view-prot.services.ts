@@ -23,7 +23,7 @@ export class ViewProtocolServices {
         'broadcast-channel': 'SCH',
         'sev-participant': 'SPT',
         'cistatus': 'CST',
-        'visa-type': 'VTS',
+        'visa-type': 'VST',
         'org-type': 'OTY',
         'reestrtype': 'REE',
         'link': 'LNK',
