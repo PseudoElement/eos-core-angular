@@ -18,9 +18,16 @@ export class AppComponent {
     constructor(
         viewContainerRef: ViewContainerRef,
         private _profileSrv: EosUserProfileService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+
     ) {
         // this._containerRef = viewContainerRef;
+
+        const query = new URLSearchParams(window.location.search);
+        if (!query.get('fromclassif')) {
+            this._profileSrv.openWithCurrentUserSettings = true;
+            sessionStorage.setItem('openDeloOrCurSetng', `${this._profileSrv.openWithCurrentUserSettings}`);
+        }
         this._profileSrv.authorized$.subscribe((auth) => {
             this.isAuthorized = auth;
             if (auth !== null) {
