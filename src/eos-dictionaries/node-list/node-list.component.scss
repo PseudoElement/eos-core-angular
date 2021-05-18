@@ -112,6 +112,9 @@
     &.list-heigth-2 {
         .eos-node-list {
             height: calc(100vh - 423px);
+            @media (max-width: 694px) {
+                height: calc(100vh - 580px);
+            }
         }
     }
     &.list-heigth-3 {
