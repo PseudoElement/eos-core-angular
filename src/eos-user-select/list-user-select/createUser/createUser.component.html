@@ -28,13 +28,13 @@
         </div>
         <!-- <eos-dynamic-input class="create-user-login-input" [input]="inputs['classifName']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
         <eos-dynamic-input
-            style="display: block;"
+            style="display: inline-block;"
             *ngIf="!cbBase"
             [input]="inputs['teсhUser']"
             [form]="form"
             [readonly]="false"
             [tooltip]="techUserTooltip"
-            placement="left"
+            placement="top"
         ></eos-dynamic-input>
     </div>
     <div [ngClass]="{'flex-wr': !cbBase}">
