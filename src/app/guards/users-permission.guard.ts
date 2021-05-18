@@ -22,12 +22,12 @@ export class UsersPermissionGuard implements CanActivate {
         const conf: IKeyRightTech = this._getConf(url);
         return this._getContext().then((user: USER_CL[]) => {
             this._userProfile = user[0];
+            // если это пользовательские настройки с шестеренки, то ок
+            if (state.url.indexOf('/user_param/current-settings') !== -1) {
+                return true;
+            }
             const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS[0] === '1';
             if (this._apCtx.cbBase) {
-                // если это пользовательские настройки с шестеренки, то ок
-                if (state.url.indexOf('/user_param/current-settings') !== -1) {
-                    return true;
-                }
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -37,10 +37,6 @@ export class UsersPermissionGuard implements CanActivate {
                 }
                 return access;
             } else  {
-                // если это пользовательские настройки с шестеренки, то ок
-                if (state.url.indexOf('/user_param/current-settings') !== -1) {
-                    return true;
-                }
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
