@@ -218,7 +218,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithUsersList(UserLists);
     }
     checkBtnOpenStreamSystem() {
-        if (!this.selectUser || this.selectUser.deleted) {
+        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
             OpenStreamScanSystem.disabled = true;
         } else {
             if (this.limitCards.length) {
@@ -257,7 +257,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     checkWithLimitedUser(button: BtnActionFields): void {
-        if (!this.selectUser || this.selectUser.deleted) {
+        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
             button.disabled = true;
             button.isActive = false;
         } else {
@@ -322,7 +322,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     OpenRightsSystemCaseDelo(button: BtnActionFields): void {
-        if (!this.selectUser || this.selectUser.deleted) {
+        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
             button.disabled = true;
             button.isActive = false;
         } else {
