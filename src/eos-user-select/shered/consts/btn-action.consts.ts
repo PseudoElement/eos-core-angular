@@ -131,11 +131,11 @@ export const CommonTechLists: BtnActionFields = {
 export const UserLists: BtnActionFields = {
     name: 'UserLists',
     title: 'Ведение списков пользователя',
-    disabledClass: 'eos-icon eos-icon-template-grey small',
-    enableClass: 'eos-icon eos-icon-template-blue small',
+    disabledClass: 'eos-icon eos-icon-citizen-grey small',
+    enableClass: 'eos-icon eos-icon-citizen-blue small',
     tooltip: 'Ведение списков пользователя',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-text-list-blue small',
+    activeClass: 'eos-icon eos-icon-citizen-blue small',
     activeBtnClass: '',
     isActive: false,
 };
