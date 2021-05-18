@@ -49,6 +49,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     repitedPassword: string = '';
     cbBase: boolean;
     loginMaxLength: number = 64;
+    techUserTooltip: string = 'К техническим пользователям невозможно привязать должностное лицо';
     private ngUnsubscribe: Subject<any> = new Subject();
     private subscriptions: Subscription[] = [];
     private typesUsers = new Map()

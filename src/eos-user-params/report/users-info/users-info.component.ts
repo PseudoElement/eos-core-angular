@@ -103,7 +103,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
     }
 
     InformationSelectedUsers(selectUser: any): void {
-        let NumberLine: number = 1;
+        /* let NumberLine: number = 1;
         let informationContent: String = '';
         const encoding = '\uFEFF';
         const time = new Date().toLocaleString();
@@ -116,7 +116,18 @@ export class EosReportUsersInfoComponent implements OnChanges {
             : informationContent = `${NumberLine}; ${selectUser.department === '...' ? '' : selectUser.department}; ${selectUser.name}; ${selectUser.oracle_id === null ? 'УДАЛЕН' : selectUser.login};`;
         const sourceHTML = encoding + header + informationContent;
         const info = this.CheckAllUsers ? `Краткие сведения по всем пользователям.html` : `Краткие сведения ${selectUser.login}.html`;
-        this.download(info, sourceHTML);
+        this.download(info, sourceHTML); */
+
+        const uData = [];
+        const usersInfo = this.CheckAllUsers === true ? this.users : [selectUser];
+        usersInfo.forEach(user => {
+            uData.push({
+                department: user.department,
+                name: user.name,
+                login: user.oracle_id === null ? 'УДАЛЕН' : user.login,
+            });
+        });
+        this._userParamSrv.createShortReportHtml(uData);
     }
 
     // getHrefPrint(): string {
