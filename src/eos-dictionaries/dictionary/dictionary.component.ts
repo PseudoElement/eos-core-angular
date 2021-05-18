@@ -378,8 +378,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         setTimeout(() => {
             this.setStyles();
         }, 250);
-        // удаляем данные которые относятся к копированию/вырезанию данных
-        this._storageSrv.removeItem('markedNodes');
     }
 
     ngOnDestroy() {

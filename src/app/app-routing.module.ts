@@ -28,6 +28,7 @@ import { EosReportUsersStatsComponent } from 'eos-user-params/report/users-stats
 import { EosReportSummaryProtocolComponent } from 'eos-user-params/report/sum-protocol/sum-protocol.component';
 import { DefaultSettingsComponent } from 'eos-user-params/default-options/default-settings.component';
 import { CurrentUserSetComponent } from 'eos-user-params/current-user-set/current-user-set.component';
+import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -42,7 +43,7 @@ const formDictionariesComponent = [
         pathMatch: 'full'
     }
 ];
-const childrenDictionariesComponent = [{
+const childrenDictionariesComponent: Routes = [{
     path: '',
     pathMatch: 'full',
     component: DictionariesComponent,
@@ -55,6 +56,7 @@ const childrenDictionariesComponent = [{
         showSandwichInBreadcrumb: true,
         showPushpin: true
     },
+    canDeactivate: [CanDeactivateDictGuard],
     children: [{
         path: ':nodeId',
         data: { title: 'Запись', showInBreadcrumb: false },

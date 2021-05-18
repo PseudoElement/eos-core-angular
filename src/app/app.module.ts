@@ -58,6 +58,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { StaticHelper } from './app.static';
 import { CarmaHttp2Service } from './services/camaHttp2.service';
+import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 /* end guards */
 
 @NgModule({
@@ -107,6 +108,7 @@ import { CarmaHttp2Service } from './services/camaHttp2.service';
         AuthorizedGuard,
         UnauthorizedGuard,
         CanDeactivateGuard,
+        CanDeactivateDictGuard,
         UsersPermissionGuard,
         SystemParamsGuard,
         PermissionsGuard,
