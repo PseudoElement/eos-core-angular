@@ -125,4 +125,69 @@ export const KIND_ROLES_CB: string[] = [
     'Помощник заместителя Председателя и директоров департаментов', 'Исполнитель'
 ];
 
+export const HTML_TEMPLATE_TITLE = '$TITLE';
+export const HTML_TEMPLATE_DATE = '$DATE';
+export const HTML_TEMPLATE_DATA = '$DATA';
+export const HTML_TEMPLATE_SHORT_REPORT = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>${HTML_TEMPLATE_TITLE}</title>
+    <style>
+        table {
+        margin: 1em;
+        border: 1px solid black;
+        border-collapse: collapse;
+        }
+        caption {
+        font-size: 22px;
+        font-weight: bold;
+        }
+        th {
+        border: 1px solid black;
+        font-size: 16px;
+        padding: .5em;
+        min-width: 100px;
+        max-width: 400px;
+        text-align: left;
+        }
+        td {
+        border: 1px solid black;
+        font-size: 16px;
+        padding: .5em;
+        min-width: 100px;
+        max-width: 400px;
+        word-wrap: break-word;
+        }
+        p {
+            font-size: 14px;
+            text-align: right;
+        }
+    </style>
+    </head>
+    <body>
+
+    <table>
+        <caption>
+            ${HTML_TEMPLATE_TITLE}
+            <br>
+            <p>
+                <i>${HTML_TEMPLATE_DATE}</i>
+            </p>
+        </caption>
+        <tr>
+        <th>№</th>
+        <th>Подразделение</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        </tr>
+
+        ${HTML_TEMPLATE_DATA}
+
+    </table>
+    </body>
+    </html>
+`;
+
 

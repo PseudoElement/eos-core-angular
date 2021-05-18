@@ -1,3 +1,4 @@
+import { HTML_TEMPLATE_TITLE, HTML_TEMPLATE_DATA, HTML_TEMPLATE_DATE, HTML_TEMPLATE_SHORT_REPORT } from './../consts/user-param.consts';
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT, PipRX, IEnt, ORGANIZ_CL } from 'eos-rest';
@@ -628,6 +629,41 @@ export class UserParamsService {
             }
         }
         return null;
+    }
+
+    /**
+     * @method createShortReportHtml создает html файл
+     * кратких сведений о выбранных пользователях
+     */
+     createShortReportHtml(data) {
+        let htmlUserData = '';
+        let aboutInfo = 'о выбранных пользователях';
+        if (data && data.length) {
+            data.forEach((user, index) => {
+                htmlUserData += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${user.department || ''}</td>
+                    <td>${user.name || ''}</td>
+                    <td>${user.login || ''}</td>
+                </tr>
+                `;
+            });
+        }
+        if (data && data.length === 1) {
+            aboutInfo = data[0].login;
+        }
+        const time = new Date().toLocaleString();
+        const htmlTitle = `Краткие сведения ${aboutInfo}`;
+
+        const html: string = HTML_TEMPLATE_SHORT_REPORT
+            .replace(HTML_TEMPLATE_TITLE, htmlTitle)
+            .replace(HTML_TEMPLATE_TITLE, htmlTitle)
+            .replace(HTML_TEMPLATE_DATA, htmlUserData)
+            .replace(HTML_TEMPLATE_DATE, time);
+
+        const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
+        saveAs(blobHtml, `${htmlTitle}.html`);
     }
 
     /**
