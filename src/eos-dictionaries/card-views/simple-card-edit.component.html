@@ -1,9 +1,12 @@
-<div class="card-content-wrapper" [ngStyle]="styleModeEdit">
+<div class="card-content-wrapper" [ngStyle]="styleModeEdit" #root>
     <eos-dynamic-input *ngFor="let key of keys(inputs)"
         [input]="inputs[key]"
         [form]="form"
         [viewOpts]="selOpts"
         [container]="'body'"
-        [readonly]="!editMode || inputs[key]?.readonly">
+        [readonly]="!editMode || inputs[key]?.readonly"
+        eosTooltipErrorFix
+        [scrollableParent]="root"
+    >
     </eos-dynamic-input>
 </div>

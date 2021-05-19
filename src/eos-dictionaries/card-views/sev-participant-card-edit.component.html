@@ -1,4 +1,4 @@
-<div class="card-content-wrapper">
+<div class="card-content-wrapper" #root>
     <div class="clearfix"></div>
         <div class="form-group">
             <div class="organization-wrapper">
@@ -12,7 +12,10 @@
                     [input]="inputs['rec.CLASSIF_NAME']"
                     [form]="form"
                     hideLabel="true"
-                    readonly="true"></eos-dynamic-input>
+                    readonly="true"
+                    eosTooltipErrorFix
+                    [scrollableParent]="root"
+        ></eos-dynamic-input>
         <!-- <eos-dynamic-input *ngIf="inputs['rec.DUE_ORGANIZ']"
                     [input]="inputs['rec.DUE_ORGANIZ']"
                     [form]="form"
@@ -25,11 +28,15 @@
         <eos-dynamic-input *ngIf="inputs['rec.NOTE']"
                             [input]="inputs['rec.NOTE']"
                             [form]="form"
-                            [readonly]="!editMode"></eos-dynamic-input>
+                            [readonly]="!editMode"
+                            eosTooltipErrorFix
+                            [scrollableParent]="root"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.ISN_CHANNEL']"
                             [input]="inputs['rec.ISN_CHANNEL']"
                             [form]="form"
-                            [readonly]="!editMode"></eos-dynamic-input>
+                            [readonly]="!editMode"
+                            eosTooltipErrorFix
+                            [scrollableParent]="root"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.CRYPT'] && !isCBBase"
                             [input]="inputs['rec.CRYPT']"
                             [form]="form"

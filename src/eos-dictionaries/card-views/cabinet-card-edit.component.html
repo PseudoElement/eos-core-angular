@@ -10,14 +10,19 @@
     </ul>
 </div>
 <div class="card-content-wrapper"
-     [ngClass]="{'main-data': currTab === 0}">
+     [ngClass]="{'main-data': currTab === 0}"
+     #root
+>
     <div *ngIf="currTab === 0"
          class="eos-cabinet-tab tab" id="tab0">
         <!-- <div class="clearfix"> -->
             <eos-dynamic-input #intupString *ngIf="inputs['rec.CABINET_NAME']"
                                [input]="inputs['rec.CABINET_NAME']"
                                [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
+                               [readonly]="!editMode"
+                               eosTooltipErrorFix
+                               [scrollableParent]="root"
+            ></eos-dynamic-input>
             <!-- <label [ngClass]="{'unimportant-text': !editMode }">Подразделение</label>
             <p class="form-control-static m-font">{{data.department['CLASSIF_NAME']}}</p> -->
         <!-- </div> -->

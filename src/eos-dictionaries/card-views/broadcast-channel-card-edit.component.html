@@ -1,10 +1,14 @@
-<div class="card-content-wrapper">
+<div class="card-content-wrapper" #root>
     <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
                        [form]="form"
-                       [readonly]="!editMode"></eos-dynamic-input>
+                       [readonly]="!editMode"
+                       eosTooltipErrorFix
+                       [scrollableParent]="root"></eos-dynamic-input>
     <eos-dynamic-input [input]="inputs['rec.NOTE']"
                        [form]="form"
-                       [readonly]="!editMode"></eos-dynamic-input>
+                       [readonly]="!editMode"
+                       eosTooltipErrorFix
+                       [scrollableParent]="root"></eos-dynamic-input>
     <eos-dynamic-input [input]="inputs['rec.CHANNEL_TYPE']"
                        [form]="form"
                        (change)="onChannelTypeChanged()"
@@ -33,15 +37,22 @@
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_EMAIL']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"
+                                           ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"></eos-dynamic-input>
                         <!-- <span> -->
                             <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
                                                [form]="form"
                                                [disabled]="(+authMethod === 0)"
-                                               [readonly]="!editMode || (+authMethod === 0)"></eos-dynamic-input>
+                                               [readonly]="!editMode || (+authMethod === 0)"
+                                               eosTooltipErrorFix
+                                               [scrollableParent]="root"></eos-dynamic-input>
                         <!-- </span> -->
                         <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
                                            [form]="form"
@@ -54,12 +65,16 @@
                                            [readonly]="!editMode"></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"></eos-dynamic-input>
                         <span>
                             <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
                                                [form]="form"
                                                [disabled]="(+authMethod === 0)"
-                                               [readonly]="!editMode || (+authMethod === 0)"></eos-dynamic-input>
+                                               [readonly]="!editMode || (+authMethod === 0)"
+                                               eosTooltipErrorFix
+                                               [scrollableParent]="root"></eos-dynamic-input>
                         </span>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_DELAY']"
                                            [form]="form"
@@ -75,13 +90,19 @@
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.POP3_SERVER']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_LOGIN']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_ENCRYPTION']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"></eos-dynamic-input>
                     </td>
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.POP3_PORT']"
@@ -89,7 +110,9 @@
                                            [readonly]="!editMode"></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_PASSWORD']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           eosTooltipErrorFix
+                                           [scrollableParent]="root"></eos-dynamic-input>
                     </td>
                 </tr>
             </table>
