@@ -1,5 +1,5 @@
 
-<div class="card-content-wrapper">
+<div class="card-content-wrapper" #root>
     <div class="clearfix">
         <div class="col-1 pull-left">
             <div class="stamp-button" *ngIf="isStampEnable">
@@ -22,7 +22,10 @@
             <div class="department-shortname">
                 <eos-dynamic-input [input]="inputs['rec.nametitleDep']"
                                    [form]="form"
-                                   [readonly]="!editMode"></eos-dynamic-input>
+                                   [readonly]="!editMode"
+                                   eosTooltipErrorFix
+                                   [scrollableParent]="root"
+                ></eos-dynamic-input>
             </div>
             <div class="department-fullname">
                 <eos-dynamic-input [input]="inputs['rec.fullTitle']"
@@ -106,7 +109,10 @@
             <ng-container *ngIf="hasCard">
                 <eos-dynamic-input [input]="inputs['rec.CARD_NAME']"
                                    [form]="form"
-                                   [readonly]="!(this.editMode)"></eos-dynamic-input>
+                                   [readonly]="!(this.editMode)"
+                                   eosTooltipErrorFix
+                                   [scrollableParent]="root"
+                ></eos-dynamic-input>
             </ng-container>
 
         </div>
@@ -114,6 +120,9 @@
     <eos-dynamic-input class="department-note"
                        [input]="inputs['rec.NOTE']"
                        [form]="form"
-                       [readonly]="!editMode"></eos-dynamic-input>
+                       [readonly]="!editMode"
+                       eosTooltipErrorFix
+                       [scrollableParent]="root"
+    ></eos-dynamic-input>
 
 </div>

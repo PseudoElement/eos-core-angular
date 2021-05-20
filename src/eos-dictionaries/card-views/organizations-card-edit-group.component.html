@@ -1,10 +1,12 @@
-<div class="card-content-wrapper">
+<div class="card-content-wrapper" #root>
     <div class="clearfix">
         <eos-dynamic-input
             [input]="inputs['rec.CLASSIF_NAME']"
             [form]="form"
             [readonly]="!editMode"
             [isGroup]="true"
+            eosTooltipErrorFix
+            [scrollableParent]="root"
         ></eos-dynamic-input>
 
         <div class="card-time-perfom">
@@ -34,7 +36,12 @@
             [readonly]="!editMode"
             [viewOpts]="selOpts"
         ></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.NOTE']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.NOTE']"
+            [form]="form" [readonly]="!editMode"
+            eosTooltipErrorFix
+            [scrollableParent]="root"
+        ></eos-dynamic-input>
         <div *ngIf="isSevIndexes">
             <p class="xl-font paragraph-title"></p>
             <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"

@@ -1,4 +1,4 @@
-<div class="card-content-wrapper">
+<div class="card-content-wrapper" #root>
     <div class="text-right" *ngIf="editMode">
         <a class="btn btn-primary" (click)="editTemplate()">Шаблон</a>
         <a class="btn btn-primary" (click)="editTemplate(true)" [ngClass]="{ disabled: !isPrjFlag }">Шаблон проекта</a>
@@ -15,7 +15,11 @@
             [readonly]="!editMode"
         ></eos-dynamic-input>
     </div>
-    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.CLASSIF_NAME']"
+        [form]="form" [readonly]="!editMode"
+        eosTooltipErrorFix [scrollableParent]="root"
+    ></eos-dynamic-input>
 
     <div style="height: 69px; display: flex; align-items: flex-start; font-size: 12px">
         <div [ngClass]="{'disabled': !editMode}" class="dynamic-input-wrapper" >
@@ -52,7 +56,12 @@
             ></span>
         </div>
     </div>
-    <eos-dynamic-input [input]="inputs['rec.FULLNAME']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.FULLNAME']"
+        [form]="form" [readonly]="!editMode"
+        eosTooltipErrorFix
+        [scrollableParent]="root"
+    ></eos-dynamic-input>
     <div class="clearfix">
         <eos-dynamic-input *ngIf="!isCBBase || (!isNode)"
             class="pull-left"
@@ -76,7 +85,13 @@
         [form]="form"
         [readonly]="true"
     ></eos-dynamic-input>
-    <eos-dynamic-input [input]="inputs['rec.NOTE']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.NOTE']"
+        [form]="form"
+        [readonly]="!editMode"
+        eosTooltipErrorFix
+        [scrollableParent]="root"
+    ></eos-dynamic-input>
     <div class="clearfix">
         <eos-dynamic-input
             class="pull-right"
