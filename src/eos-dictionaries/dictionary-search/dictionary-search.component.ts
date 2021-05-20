@@ -214,6 +214,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 if (decimal && decimal.indexOf('-') === 0) {
                     this.inputs['rec.decimal'].length = this.arType.MAX_LEN + 1;
                     this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(this.arType.MAX_LEN + 1), Validators.pattern(validityReg)]);
+                    this.formSearch.controls['rec.decimal'].updateValueAndValidity({ onlySelf: true });
+                    this.formSearch.updateValueAndValidity({ emitEvent: false });
                 } else {
                     this.inputs['rec.decimal'].length = this.arType.MAX_LEN;
                     this.formSearch.controls['rec.decimal'].setValidators([Validators.maxLength(this.arType.MAX_LEN), Validators.pattern(validityReg)]);
