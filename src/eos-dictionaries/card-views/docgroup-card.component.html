@@ -66,6 +66,7 @@
         <eos-dynamic-input *ngIf="!isCBBase || (!isNode)"
             class="pull-left"
             [input]="inputs['rec.TEST_UNIQ_FLAG']"
+            [disabled] = "uniqFlagShablonCheck"
             [form]="form"
             [readonly]="!editMode"
         ></eos-dynamic-input>

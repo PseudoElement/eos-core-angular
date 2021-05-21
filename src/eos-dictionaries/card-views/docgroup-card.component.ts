@@ -45,9 +45,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     }
     isSignatura: boolean;
     isUsed = true;
+    uniqFlagShablonCheck: boolean = false;
     @ViewChild('inputChoice') inputChoice: ElementRef;
     private _prev = {};
-
     private modalSrv: BsModalService;
     private templateModal: BsModalRef;
     private _confirmSrv: ConfirmWindowService;
@@ -344,7 +344,10 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
 
         if (UNIQ_CHECK_EXPR.test(tpl)) {
+            this.uniqFlagShablonCheck = true;
             this.setValue('rec.TEST_UNIQ_FLAG', false);
+        } else {
+            this.uniqFlagShablonCheck = false;
         }
 
         if (Object.keys(updates).length) {
