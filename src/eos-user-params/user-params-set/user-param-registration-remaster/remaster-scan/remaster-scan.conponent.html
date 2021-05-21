@@ -1,6 +1,6 @@
 <div *ngIf="inputs">
-    <ng-container *ngIf="!isCbBase && !appMode.cbr; else notSettings">
-        <div class="user-group-form">
+    <ng-container *ngIf="!isCbBase && !appMode.cbr ; else notSettings">
+        <div class="user-group-form" *ngIf="!appMode.tkDoc">
             <div class="inputs-inline">
                 <span class="input-title">Печать штрих-кода на:</span>
                 <eos-dynamic-input
@@ -23,7 +23,7 @@
                     <span>&nbsp;шт.</span>
                 </div>
             </div>
-            <eos-dynamic-input
+            <eos-dynamic-input *ngIf="!appMode.tkDoc"
                 [input]="inputs['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE']"
                 [form]="form"
                 [readonly]="false"

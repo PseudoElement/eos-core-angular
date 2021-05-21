@@ -81,6 +81,8 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         if (this.isCurrentSettings) {
             if (!this.appMode.tkDoc) {
                 this.fieldGroupsForRegistration.set(3, 'Связки и переписка');
+            } else {
+                this.fieldGroupsForRegistration.set(2, 'Сканирование');
             }
             this.editFlag = true;
         }
