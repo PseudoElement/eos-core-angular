@@ -107,6 +107,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
     autoFocus() {
         BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container');
+        this.settings.lastSearch = SEARCHTYPE.none;
+        this.switchFastSrch.emit(false);
     }
     fullSearch() {
         this.settings.entity = this.getModelName();
@@ -127,7 +129,13 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.clearModel(this.getModelName());
     }
     showFastSrch() {
+        if (this.isQuickOpened) {
+            this.settings.lastSearch = SEARCHTYPE.none;
+        } else {
+            this.settings.lastSearch = SEARCHTYPE.quick;
+        }
         this.switchFastSrch.emit(this.isQuickOpened);
+        this.fSearchPop.hide();
     }
     close() {
     }

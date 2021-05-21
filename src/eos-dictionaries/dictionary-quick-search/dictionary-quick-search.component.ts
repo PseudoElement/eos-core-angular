@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, ViewChild, EventEmitter, Output, OnInit, Input} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
-import { E_DICT_TYPE, SearchFormSettings } from 'eos-dictionaries/interfaces';
+import { E_DICT_TYPE, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SEARCH_EMPTY } from 'eos-dictionaries/consts/messages.consts';
 
@@ -80,6 +80,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
     }
 
     closeQuickForm () {
+        this.settings.lastSearch = SEARCHTYPE.none;
         this.searchClose.emit(this.settings);
     }
 

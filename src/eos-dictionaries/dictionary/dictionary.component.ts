@@ -708,7 +708,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (this.quickSearchCtl && this.searchSettings.quick.data) {
             this.quickSearchCtl.quickSearch({ keyCode: 13 });
         } else {
-            this.fastSearch = !this.fastSearch;
+            // this.fastSearch = !this.fastSearch;
+            this.fastSearch = val;
         }
     }
 
