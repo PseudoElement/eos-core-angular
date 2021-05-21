@@ -27,6 +27,7 @@ import { PRJ_DEFAULTS_LIST_NAME } from 'eos-dictionaries/adv-card/adv-card-rk-da
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { STRICT_OPTIONS, NOT_STRICT_OPTIONS_PRG } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';
 
 // const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -179,6 +180,9 @@ export const RKPDDefaultFields: any[] = [
         DEFAULT_TYPE: E_FIELD_TYPE.numberIncrement,
         DESCRIPTION: 'Срок исп. (План. дата), от даты регистрации',
         order: 20,
+        PATTERN: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999
     }, {
         DEFAULT_ID: 'TERM_EXEC_M',
         DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -329,6 +333,8 @@ class PrjDefaultItem {
     length?: number;
     order?: number;
     options?: any[];
+    minValue?: number;
+    maxValue?: number;
 
     constructor(rec) {
         if (rec) {
@@ -345,6 +351,8 @@ class PrjDefaultItem {
             this.length = rec.LENGTH;
             this.order = rec.order;
             this.options = rec.options;
+            this.minValue = rec.minValue ? rec.minValue : undefined;
+            this.maxValue = rec.maxValue ? rec.maxValue : undefined;
         }
     }
 }
@@ -781,7 +789,6 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         this._waitClassifSrv.openClassif({ classif: 'COMMON_LIST' })
             .then()
             .catch(() => {
-                console.log('window closed');
                 this._zone.run(() => {
                     this._rereadUserLists();
                 });
@@ -893,7 +900,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         return EosDataConvertService.listToCommaList(list.map((el) => (el.longTitle || el.fullDescr || el.title || el.descr)));
     }
 
-    private _prjExecListOnChange() {
+    private _prjExecListOnChange(newValue?) {
         if (this.$valueChanges) {
             this.$valueChanges.unsubscribe();
         }
@@ -964,6 +971,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         pattern: prjDefault.pattern,
                         length: prjDefault.length,
                         options: prjDefault.options,
+                        minValue: prjDefault.minValue,
+                        maxValue: prjDefault.maxValue
                     };
 
                     switch (prjDefault.type) {
