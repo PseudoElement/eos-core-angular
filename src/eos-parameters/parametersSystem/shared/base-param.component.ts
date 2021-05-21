@@ -125,10 +125,12 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     submit() {
         if (this.updateData) {
+            const req = this.createObjRequest();
+            this.updateData = {};
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv
-            .setData(this.createObjRequest())
+            .setData(req)
             .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -204,14 +206,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             _value = null;
         } else if (value instanceof Date) {
             _value = EosUtils.dateToString(value);
-        } else if (value === null) {
+        } else {
+            _value = value;
+        }
+        /* else if (value === null) {
             _value = '';
         // } else if (value === '') {
         //     // fix empty strings in IE
         //     _value = null;
-        } else {
-            _value = value;
-        }
+        } */
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
         if (oldValue !== _value) {

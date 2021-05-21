@@ -180,7 +180,9 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         }
 
         this.newData.rec.CONVERTER_USE = this.newData.rec.CONVERTER_USE === 'YES' ? 1 : 0;
-        this.paramApiSrv.setData(this.createObjRequest())
+        const req = this.createObjRequest();
+        this.updateData = {};
+        this.paramApiSrv.setData(req)
             .then(() => {
                 this.prepareData.rec = Object.assign({}, this.newData.rec);
                 this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
