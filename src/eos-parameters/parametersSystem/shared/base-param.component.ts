@@ -197,6 +197,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     changeByPath(path: string, value: any) {
         const key = path.split('.')[1];
+        let toUpdate = true;
         let _value = null;
         if (typeof value === 'boolean' && !this.prepInputs.rec[key].formatDbBinary) {
             _value = value ? 'YES' : 'NO'; //  _value = +value;
@@ -206,22 +207,23 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             _value = null;
         } else if (value instanceof Date) {
             _value = EosUtils.dateToString(value);
-        } else {
-            _value = value;
-        }
-        /* else if (value === null) {
+        } else if (value === null) {
+            toUpdate = false;
             _value = '';
         // } else if (value === '') {
         //     // fix empty strings in IE
         //     _value = null;
-        } */
+        } else {
+            _value = value;
+        }
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
-        if (oldValue !== _value) {
+        if (oldValue !== _value && toUpdate) {
             this.updateData[key] = _value;
         } else if (oldValue === _value && this.updateData[key] !== undefined) {
             delete this.updateData[key];
         }
+        toUpdate = true;
         return _value !== oldValue;
     }
     getObjectInputFields(fields) {
