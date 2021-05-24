@@ -15,7 +15,8 @@
         </div>
         <!-- кнопка еще -->
         <div class="btn-group" dropdown #dropdown="bs-dropdown">
-            <button id="button-custom-html" dropdownToggle type="button" class="btn btn-primary-light"
+            <button tooltip="Показать меню" container="body" placement="bottom" containerClass="tooltip-info"  [delay]="tooltipDelay"
+            id="button-custom-html" dropdownToggle type="button" class="btn btn-primary-light"
                 aria-controls="dropdown-custom-html" [ngClass]="{'activemore': dropdown.isOpen}">
                 <span
                     [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
