@@ -106,20 +106,23 @@
 .node-list-container {
     &.list-heigth-1 {
         .eos-node-list {
-            height: calc(100vh - 373px);
+            max-height: calc(100vh - 373px);
         }
     }
     &.list-heigth-2 {
         .eos-node-list {
-            height: calc(100vh - 423px);
+            max-height: calc(100vh - 423px);
             @media (max-width: 694px) {
-                height: calc(100vh - 580px);
+                max-height: calc(100vh - 558px);
+            }
+            @media (max-width: 355px) {
+                max-height: calc(100vh - 611px);
             }
         }
     }
     &.list-heigth-3 {
         .eos-node-list {
-            height: calc(100vh - 471px);
+            max-height: calc(100vh - 471px);
         }
     }
 }
@@ -180,5 +183,63 @@
     }
     .slised {
         background-color: #eaeaea
+    }
+}
+
+@media (min-width: 1600px) and (max-width: 1647px){
+    .node-list-container {
+        &.list-heigth-1 {
+            .eos-node-list {
+                max-height: calc(100vh - 410px);
+            }
+        }
+        &.list-heigth-2 {
+            .eos-node-list {
+                max-height: calc(100vh - 460px);
+            }
+        }
+        &.list-heigth-3 {
+            .eos-node-list {
+                max-height: calc(100vh - 510px);
+            }
+        }
+    }
+}
+@media (min-width: 1209px) and (max-width: 1487px){
+    .node-list-container {
+        &.list-heigth-1 {
+            .eos-node-list {
+                max-height: calc(100vh - 410px);
+            }
+        }
+        &.list-heigth-2 {
+            .eos-node-list {
+                max-height: calc(100vh - 556px);
+            }
+        }
+        &.list-heigth-3 {
+            .eos-node-list {
+                max-height: calc(100vh - 510px);
+            }
+        }
+    }
+}
+@media (min-width: 1000px) and (max-width: 1209px){
+    .node-list-container {
+        &.list-heigth-1 {
+            .eos-node-list {
+                max-height: calc(100vh - 450px);
+            }
+        }
+        &.list-heigth-2 {
+            .eos-node-list {
+                max-height: calc(100vh - 555px);
+            }
+        }
+        &.list-heigth-3 {
+            .eos-node-list {
+                max-height: calc(100vh - 540px);
+            }
+        }
     }
 }
