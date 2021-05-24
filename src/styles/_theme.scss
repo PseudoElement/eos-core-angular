@@ -112,7 +112,7 @@
 .tooltip {
     opacity: 1 !important;
     // z-index: 1045;
-    word-break: break-all;
+    word-break: break-word;
     &.word-break {
         word-break: normal;
     }
