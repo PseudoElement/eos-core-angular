@@ -54,7 +54,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
             this.closeQuickForm();
         }
         // добавлено evt.key === "Enter" , т.к. при переходе на расширенны поиск срабатывает событие keydown с keyCode:13 (enter)
-        if (evt.keyCode === 13 && evt.key === "Enter") {
+        if (evt.keyCode === 13 && evt.key === 'Enter') {
             if (this.settings.quick.data && this.settings.quick.data.trim()) {
                 this.searchRun.emit(this.settings);
             } else {

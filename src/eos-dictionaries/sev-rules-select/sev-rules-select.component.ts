@@ -21,8 +21,8 @@ export class RulesSelectComponent {
     ) {
         this.isUpdating = true;
     }
-    public initbyLists (list: any, used: any) {
-        this.listNodes = list;
+    public initbyLists (list: any[], used: any) {
+        this.listNodes = list && list.length ? list.filter(el => !el.DELETED) : list;
         this.usedNodes = [...used];
         this.isUpdating = false;
     }
