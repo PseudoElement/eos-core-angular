@@ -68,7 +68,7 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         return this.getData(this.queryObj)
             .then(data => {
                 this.prepareData = this.convData(data);
-                this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE !== '0';
+                this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE === 'NO' ? false : true ;
                 this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.form.controls['rec.CONVERTER_USE'].disable();
