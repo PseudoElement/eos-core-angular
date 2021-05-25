@@ -125,10 +125,12 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     submit() {
         if (this.updateData) {
+            const req = this.createObjRequest();
+            this.updateData = {};
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv
-            .setData(this.createObjRequest())
+            .setData(req)
             .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -195,6 +197,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     changeByPath(path: string, value: any) {
         const key = path.split('.')[1];
+        let toUpdate = true;
         let _value = null;
         if (typeof value === 'boolean' && !this.prepInputs.rec[key].formatDbBinary) {
             _value = value ? 'YES' : 'NO'; //  _value = +value;
@@ -205,6 +208,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         } else if (value instanceof Date) {
             _value = EosUtils.dateToString(value);
         } else if (value === null) {
+            toUpdate = false;
             _value = '';
         // } else if (value === '') {
         //     // fix empty strings in IE
@@ -214,11 +218,12 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         }
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
-        if (oldValue !== _value) {
+        if (oldValue !== _value && toUpdate) {
             this.updateData[key] = _value;
         } else if (oldValue === _value && this.updateData[key] !== undefined) {
             delete this.updateData[key];
         }
+        toUpdate = true;
         return _value !== oldValue;
     }
     getObjectInputFields(fields) {
