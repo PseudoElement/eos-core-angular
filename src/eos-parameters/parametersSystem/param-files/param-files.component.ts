@@ -162,12 +162,16 @@ export class ParamFielsComponent extends BaseParamComponent {
         if (this.checkValid()) {
             alert('В параметре "Допустимые символы" описания файлов есть повторяющиеся символы или буквы/цифры. Лишние будут удалены.');
             this.deletValid();
-            this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
+            if (this.newData) {
+                this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
+            }
         }
         if (this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].valid && this.checkReplace()) {
             alert('В параметре "Символ для замены" описания файлов введен не допустимый символ. Он будет удален');
             this.deletReplace();
-            this.newData.rec['FILE_DESCRIPTION_REPLACE'] = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
+            if (this.newData) {
+                this.newData.rec['FILE_DESCRIPTION_REPLACE'] = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
+            }
         }
         this.submit();
         this.cancelEdit();
@@ -322,19 +326,21 @@ export class ParamFielsComponent extends BaseParamComponent {
 
     submit() {
         if (this.newData || this.newDataAttach) {
-            if (this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr)) {
+            if (this.newData && this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr)) {
                 this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] + this.validChengeValueStr;
             }
             let dataRes = [];
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.isChangeFormAttach = false;
-            if (this.newData) {
+            if (this.updateData) {
                 dataRes = this.createObjRequest();
             }
+            this.updateData = {};
             if (this.updateDataAttach) {
                 const dataAttachReq = this.dataAttachObjectReq(this.updateDataAttach);
                 dataRes = [...dataRes, ...dataAttachReq];
+                this.updateDataAttach = {};
                 /* this.dataAttachDb.forEach((item) => {
                     console.log(item);
                     dataRes.push({
