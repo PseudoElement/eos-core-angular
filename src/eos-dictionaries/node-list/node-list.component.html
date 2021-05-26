@@ -34,7 +34,14 @@
                      [attr.id]="'vf_'+field.key"
                      [ngStyle]="{'min-width.px': min_length[field.key]}">
                     <span class="text selected-text ng-bind-html"
-                          (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span>
+                          (click)="orderByField(field.key)"
+                          [tooltip]="field.title"
+                          placement="bottom"  
+                          container="body"         
+                          [delay]="tooltipDelay" 
+                          containerClass="tooltip-info"
+                          style="display: inline-block;"
+                          >{{untrimmedValue(field.customTitle || field.title)}}</span>
                     <span class="order-icon">
                         <span *ngIf="orderBy?.fieldKey === field.key"
                               class="icon eos-icon small"
