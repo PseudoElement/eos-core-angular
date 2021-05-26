@@ -57,8 +57,14 @@ export class ViewProtocolServices {
         if (tableName === 'SIGN_KIND_CL' || tableName === 'SEV_COLLISION') {
             postParams = '';
         }
-        const url: string = this.defaultPath +
-            `?params={"ref_isn":${isn},"tableName":"${tableName}","pkName":"${pkName}","tableId":"${tableId}" ${postParams}}`;
+        let url: string;
+
+        url = this.defaultPath +
+            `?params={"ref_isn":${isn},"tableName":"${tableName}","pkName":"${pkName}","tableId":"${tableId}"${postParams}}`;
+        if (tableName === 'SEV_COLLISION') {
+            url = this.defaultPath +
+                `?params={"ref_isn":${isn},"tableName":"${tableName}","pkName":"${pkName}","updDesc":"Редактирование"}`;
+        }
         return url;
     }
 }
