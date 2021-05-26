@@ -18,6 +18,7 @@ import { CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK } from 'eos-dictionaries/consts
 import { saveAs } from 'file-saver';
 import { HttpHeaders } from '@angular/common/http';
 import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
+import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 
 
 @Injectable()
@@ -711,11 +712,11 @@ export class UserParamsService {
      * @method checkLicenseCount проверяет хватит ли лицензий
      * выбранным пользователям
      */
-    checkLicenseCount(users = [], systems = {}): Promise<boolean> {
+    checkLicenseCount(users: UserSelectNode[] = [], systems = {}): Promise<boolean> {
         if (!users.length) {
             return Promise.resolve(true);
         }
-        const selectedUsers = users.filter((user) => user.isChecked);
+        const selectedUsers: UserSelectNode[] = users.filter((user: UserSelectNode) => user.isChecked);
         const licenseMap: Map<number, any> = new Map();
         let hasCrowded = false;
 
@@ -729,7 +730,7 @@ export class UserParamsService {
                         });
                     }
                 });
-                selectedUsers.forEach((user) => {
+                selectedUsers.forEach((user: UserSelectNode) => {
                     if (user.data && user.data.AV_SYSTEMS && user.data.AV_SYSTEMS.length) {
                         user.data.AV_SYSTEMS.split('').forEach((system, index) => {
                             const id = index + 1;
@@ -737,7 +738,7 @@ export class UserParamsService {
 
                             if (lic && Number(system)) {
                                 let { cur } = lic;
-                                cur += user.blockedUser ? 1 : -1;
+                                cur += user.blockedUser || user.blockedSystem ? 1 : -1;
                                 licenseMap.set(id, {
                                     ...lic,
                                     cur
