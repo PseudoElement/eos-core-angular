@@ -574,10 +574,13 @@ export class EosDictionary {
 
     public orderNodesByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
-
+        let key: string = _orderBy.fieldKey;
+        if (key === 'NOM_NUMBER' && this.id === 'nomenkl') {
+            key = 'NOM_NUMBER_SORT';
+        }
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
-            let _a = a.getFieldValueByName(_orderBy.fieldKey) || 0; // /*|| Number(a.id)*/ || '';
-            let _b = b.getFieldValueByName(_orderBy.fieldKey) || 0; // /*|| Number(b.id)*/ || '';
+            let _a = a.getFieldValueByName(key) || 0; // /*|| Number(a.id)*/ || '';
+            let _b = b.getFieldValueByName(key) || 0; // /*|| Number(b.id)*/ || '';
 
 
             // if (_a === null) { _a = ''; }

@@ -72,7 +72,14 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'string',
         length: 24,
         required: true,
-    }, {
+    },
+    {
+        key: 'NOM_NUMBER_SORT',
+        title: 'Индекс_SORT',
+        type: 'string',
+        length: 200,
+    },
+    {
         key: 'END_YEAR',
         title: 'Завершение',
         type: 'numberIncrement',
