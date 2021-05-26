@@ -123,7 +123,8 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         this.form.controls['rec.ISN_ORGANIZ'].enable({ emitEvent: false });
         this.form.controls['rec.ORG_ID'].enable({ emitEvent: false });
         this.form.controls['rec.FULLNAME'].enable({ emitEvent: false });
-        this.editMode = true;
+        // this.editMode = true;
+        this.editMode = false;
     }
     openOrganiz() {
         if (!this.form.controls['rec.ISN_ORGANIZ'].disabled) {
