@@ -19,6 +19,8 @@ import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { ICONS_CONTAINER_SEV } from 'eos-dictionaries/consts/dictionaries/_common';
+import { _ES } from 'eos-rest/core/consts';
+import { EntityHelper } from 'eos-rest/core/entity-helper';
 
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -216,7 +218,6 @@ export class EosDictionary {
 
     getFullNodeInfo(nodeId: string, refresh: boolean = false): Promise<EosDictionaryNode> {
         // TODO: обьеденить концепции getNodeRelatedData и loadRelatedFieldsOptions
-
         // const infoFields = this.descriptor.record.getInfoView({});
         // const updatefields = [].concat(infoFields);
         // const existNode = this.getNode(nodeId);
@@ -229,6 +230,15 @@ export class EosDictionary {
             return this.getNodeByNodeId(nodeId)
                 .then((node) => this.getNodeRelatedData(node, refresh));
         } else {
+            // чтобы не грузить заново данные , перезаписываю _orig
+            if (existNode.data.hasOwnProperty('sev')) {
+                if (!existNode.data.sev.hasOwnProperty('_orig')) {
+                    const sev = existNode.data.sev;
+                    if (sev._State !== _ES.Added) {
+                        sev._orig = EntityHelper.clone(sev);
+                    }
+                }
+            }
             return Promise.resolve(existNode);
         }
         /*
