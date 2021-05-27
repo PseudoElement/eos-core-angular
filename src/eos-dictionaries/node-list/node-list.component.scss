@@ -17,6 +17,14 @@
     cursor: pointer;
     background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(255,255,255,1),rgba(255,255,255,1) );
 }
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    /* IE10+ specific styles go here */
+    .arrow-right {
+        padding-left: 15px;
+        background-color: #ffffff;
+        box-shadow: -17px 0px 10px rgba(255,255,255,0.85)
+    }
+ }
 
 .arrow-left {
     display: inline-block;
@@ -112,12 +120,6 @@
     &.list-heigth-2 {
         .eos-node-list {
             max-height: calc(100vh - 423px);
-            @media (max-width: 694px) {
-                max-height: calc(100vh - 558px);
-            }
-            @media (max-width: 355px) {
-                max-height: calc(100vh - 611px);
-            }
         }
     }
     &.list-heigth-3 {
@@ -181,9 +183,6 @@
             margin: 0 auto;
         }
     }
-    .slised {
-        background-color: #eaeaea
-    }
 }
 
 @media (min-width: 1600px) and (max-width: 1647px){
@@ -214,7 +213,7 @@
         }
         &.list-heigth-2 {
             .eos-node-list {
-                max-height: calc(100vh - 556px);
+                max-height: calc(100vh - 555px);
             }
         }
         &.list-heigth-3 {
@@ -233,12 +232,22 @@
         }
         &.list-heigth-2 {
             .eos-node-list {
-                max-height: calc(100vh - 555px);
+                max-height: calc(100vh - 550px);
             }
         }
         &.list-heigth-3 {
             .eos-node-list {
                 max-height: calc(100vh - 540px);
+            }
+        }
+    }
+}
+
+@media (max-width: 694px) {
+    .node-list-container {
+        &.list-heigth-2 {
+            .eos-node-list {
+                max-height: calc(100vh - 565px);
             }
         }
     }
