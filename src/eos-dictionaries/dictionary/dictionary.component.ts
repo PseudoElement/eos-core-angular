@@ -1575,7 +1575,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         CONFIRM_SEV_DEFAULT.body = mess;
         this._confirmSrv.confirm(CONFIRM_SEV_DEFAULT).then(d => {
             if (d) {
-                this.dictionary.descriptor.updateDefaultValues(this.nodeList.nodes).then((h) => {
+                this.dictionary.descriptor.updateDefaultValues(Array.from(this.dictionary.nodes).map(n => n[1]).filter(n => n.id !== null)).then((h) => {
                     if (h) {
                         this._dictSrv.reload();
                         this._msgSrv.addNewMessage(SUCCESS_SAVE);

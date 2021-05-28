@@ -10,7 +10,6 @@ export class SevCollisionsNodeInfoComponent extends NodeInfoComponent implements
     fieldsResolveType: Array<{ title: string, default: boolean }> = [];
     ngOnChanges() {
         super.ngOnChanges();
-        console.log(this);
         this.fillFields();
     }
 
