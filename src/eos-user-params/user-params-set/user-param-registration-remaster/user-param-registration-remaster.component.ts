@@ -269,7 +269,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
                 this.editFlag = false;
                 this._RemasterService.submitEmit.next();
             }
-            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+            // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.isSave = false;
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });

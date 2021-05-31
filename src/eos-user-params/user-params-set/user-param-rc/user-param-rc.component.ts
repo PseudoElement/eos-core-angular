@@ -287,7 +287,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             } else {
                 this.btnDisabled = false;
             }
-            this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+            // this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.editMode();
             this._msg.addNewMessage(PARM_SUCCESS_SAVE);
             if (this.defaultTitle) {
