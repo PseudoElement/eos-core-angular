@@ -1,5 +1,5 @@
 ﻿trigger: 
-  - dev/20.2
+  - prod/20.2
 
 pool:
   name: Default
