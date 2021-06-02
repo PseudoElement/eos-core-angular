@@ -142,7 +142,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
                 } else {
                     this.btnDisable = false;
                 }
-                this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
+                // this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
                 if (this.defaultTitle) {

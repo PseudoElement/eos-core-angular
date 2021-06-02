@@ -206,7 +206,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
                 } else {
                     this.btnDisable = false;
                 }
-                this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+                // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit(this.form.value);

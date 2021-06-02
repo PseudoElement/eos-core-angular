@@ -180,7 +180,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.defaultSetFlagBtn();
             this.hash = this._userSrv.hashUserContext;
-            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+            // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             if (!this.isCurrentSettings) {
                 this.editFlag = false;
                 this._RemasterService.submitEmit.next();

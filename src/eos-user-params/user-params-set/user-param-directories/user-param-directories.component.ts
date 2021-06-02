@@ -147,7 +147,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 } else {
                     this.btnDisable = false;
                 }
-                this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
+                // this._userParamsSetSr.closeWindowForCurrentSettings(this.isCurrentSettings);
                 this.editMode();
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit(this.form.value);
