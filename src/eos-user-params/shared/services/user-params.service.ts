@@ -559,16 +559,16 @@ export class UserParamsService {
         }
     }
 
-    getSysTechUser(curUser: {oldRights: string[], newRights: string[], editUser: IParamUserCl} = null): Promise<any> {
+    getSysTechUser(curUser: {oldRights: string[], newRights: string[], editUser: IParamUserCl} = null, checkedUser = this.checkedUsers): Promise<any> {
         let limitTechUser = false;
         let checkedUsersIsn = '';
         if (!curUser) {
-            checkedUsersIsn = this.checkedUsers.map((user) => `^${user.data.ISN_LCLASSIF}|`).join('');
+            checkedUsersIsn = checkedUser.map((user) => `^${user.data.ISN_LCLASSIF}|`).join('');
         } else {
             limitTechUser = curUser.oldRights[0] === '1' && curUser.newRights[0] === '0';
             checkedUsersIsn = `^${this.curentUser.ISN_LCLASSIF}`;
         }
-        if (!limitTechUser) {
+        if (!limitTechUser && curUser) {
             return Promise.resolve(false);
         }
         return this._pipRx.read({
@@ -716,7 +716,7 @@ export class UserParamsService {
         if (!users.length) {
             return Promise.resolve(true);
         }
-        const selectedUsers: UserSelectNode[] = users.filter((user: UserSelectNode) => user.isChecked);
+        const selectedUsers: UserSelectNode[] = users;
         const licenseMap: Map<number, any> = new Map();
         let hasCrowded = false;
 
@@ -738,7 +738,7 @@ export class UserParamsService {
 
                             if (lic && Number(system)) {
                                 let { cur } = lic;
-                                cur += user.blockedUser || user.blockedSystem ? 1 : -1;
+                                cur += user.blockedUser ? 1 : 0;
                                 licenseMap.set(id, {
                                     ...lic,
                                     cur
@@ -748,7 +748,6 @@ export class UserParamsService {
                     }
                 });
                 CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK.bodyList = [];
-
                 Object.keys(systems).forEach((key) => {
                     const system = systems[key];
                     const lic = licenseMap.get(system.id);

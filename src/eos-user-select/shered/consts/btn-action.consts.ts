@@ -223,6 +223,17 @@ export const SettingsManagement: BtnActionFields = {
     activeBtnClass: '',
     isActive: false,
 };
+export const Unlock: BtnActionFields = {
+    name: 'Unlock',
+    title: 'Разблокировать пользователей',
+    disabledClass: 'eos-icon eos-icon-repair-grey small',
+    enableClass: 'eos-icon eos-icon-repair-blue small',
+    tooltip: 'Разблокировать выбранного (выбранных) пользователя',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-repair-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -241,6 +252,7 @@ export const Allbuttons: BtnAction = {
         RedactUser,
         // ActionMode,
         BlockUser,
+        Unlock,
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
@@ -252,6 +264,7 @@ export const Allbuttons: BtnAction = {
         ViewDeletedUsers,
         ViewTechicalUsers,
         BlockUser,
+        Unlock,
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,

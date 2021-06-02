@@ -272,7 +272,7 @@ export class UserParamApiSrv {
                 }
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
-                    this.users_pagination.UsersList =  this._getListUsers(res);
+                    this.users_pagination.UsersList = this._getListUsers(res);
                     this.initConfigTitle(dueDep);
                     this.users_pagination._initPaginationConfig(true);
                     this.users_pagination.saveUsersConf();
@@ -323,25 +323,15 @@ export class UserParamApiSrv {
         return this.getData<T>(query);
     }
 
-    blokedUser(users: UserSelectNode[], mainUser): Promise<any> {
+    blokedUser(users: UserSelectNode[], mainUser, lastAdmin): Promise<any> {
         const ARRAY_QUERY_SET_DELETE = [];
         let data = {};
         users.forEach((user: UserSelectNode) => {
-            if ((user.isChecked || user.selectedMark) && user.id !== +mainUser && user.isEditable && user.data.USERTYPE !== -1) {
-                if (user.blockedUser) {
-                    data = {
-                        DELETED: 0,
-                    };
-                } if (!user.blockedUser && !user.blockedSystem) {
-                    data = {
-                        DELETED: 1,
-                    };
-                } if (user.blockedSystem) {
-                    data = {
-                        DELETED: 0,
-                        LOGIN_ATTEMPTS: 0
-                    };
-                }
+            const cdAdm = lastAdmin ? user.data.IS_SECUR_ADM !== 1 : true;
+            if (user.id !== +mainUser && user.isEditable && user.data.USERTYPE !== -1 && cdAdm) {
+                data = {
+                    DELETED: 1,
+                };
                 ARRAY_QUERY_SET_DELETE.push({
                     method: 'MERGE',
                     requestUri: `USER_CL(${user.id})`,
@@ -355,6 +345,29 @@ export class UserParamApiSrv {
         } else {
             return Promise.resolve(false);
         }
+    }
+    unlockUsers(users: UserSelectNode[]): Promise<any> {
+        const query = users.map(_user => {
+            if (_user.blockedSystem) {
+                return {
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${_user.id})`,
+                    data: {
+                        DELETED: 0,
+                        LOGIN_ATTEMPTS: 0
+                    }
+                };
+            } else {
+                return {
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${_user.id})`,
+                    data: {
+                        DELETED: 0,
+                    }
+                };
+            }
+        });
+        return this.setData(query);
     }
     public updatePageList(pageList, curTab): Promise<any> {
         switch (curTab) {

@@ -15,7 +15,8 @@ import {
     UsersInfo,
     DefaultSettings,
     SettingsManagement,
-    UserLists
+    UserLists,
+    Unlock
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
@@ -39,6 +40,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'ViewDeletedUsers',
         'ViewTechicalUsers',
         'BlockUser',
+        'Unlock',
         'OpenAddressManagementWindow',
         'OpenStreamScanSystem',
         'OpenRightsSystemCaseDelo',
@@ -135,6 +137,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             case 'BlockUser':
                 this.checkBtnBlockUser();
                 break;
+            case 'Unlock':
+                this.checkBtnUnlockUser();
+                break;
             case 'UserLists':
                 this.checkBtnSharingLists();
                 break;
@@ -197,6 +202,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     checkBtnBlockUser() {
         this.checkWithBlocketUSer(BlockUser);
+    }
+    checkBtnUnlockUser() {
+        this.checkWithUnlockUSer(Unlock);
     }
     checkBtnOpenAdress() {
         this.checkWithLimitedUser(OpenAddressManagementWindow);
@@ -272,17 +280,24 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     checkWithBlocketUSer(button: BtnActionFields) {
-        const usersEdit = this.checkedUsers.filter(user => user.isEditable && !user.deleted);
-        const isNotOnlyNegativeUserType = usersEdit.some((user) => user.data.USERTYPE !== -1);
-        if (usersEdit.length && isNotOnlyNegativeUserType) {
-            if (this.limitCards.length) {
-                button.disabled = false;
-            } else {
-                button.disabled = false;
-            }
-        } else {
+        const usersEdit = this.checkedUsers.some(user => !user.isEditable || user.deleted);
+        const isOnlyBlocked = this.checkedUsers.every((user) => user.blockedUser || user.blockedSystem);
+        if (usersEdit || isOnlyBlocked) {
             button.disabled = true;
             button.isActive = false;
+        } else {
+            button.disabled = false;
+        }
+    }
+
+    checkWithUnlockUSer(button: BtnActionFields) {
+        const onlyNotBlocked = this.checkedUsers.every(user => !user.blockedSystem && !user.blockedUser);
+        const usersEdit = this.checkedUsers.some(user => !user.isEditable || user.deleted);
+        if (usersEdit || onlyNotBlocked) {
+            button.disabled = true;
+            button.isActive = false;
+        } else {
+            button.disabled = false;
         }
     }
 

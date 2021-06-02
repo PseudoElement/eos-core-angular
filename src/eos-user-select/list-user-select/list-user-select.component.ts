@@ -711,102 +711,128 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
         return query;
     }
-    getUsersBlocked(lastAdmin: boolean): UserSelectNode[] {
-        if (this._appContext.cbBase && lastAdmin) {
-            return this.listUsers.filter((user: UserSelectNode) => {
-                return user.data.IS_SECUR_ADM !== 1 || (user.blockedUser || user.blockedSystem && user.data.IS_SECUR_ADM === 1);
-            }
-            );
-        }
-        return this.listUsers;
-    }
-    BlockUser() {
-        this._userParamSrv.checkLicenseCount(this.listUsers, this.rtUserService.ArraySystemHelper).then((result) => {
-            if (result) {
-                const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
-                this._userParamSrv.getSysTechUser().then((allSysTech: boolean) => {
-                    if (allSysTech) {
-                        this._msgSrv.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение:',
-                            msg: `Ни один из незаблокированных пользователей не имеет права «Системный технолог» с доступом к модулю «Пользователи» без ограничений.`
-                        });
-                    } else {
-                        this._pipeSrv.read<USER_CL>({
-                            USER_CL: {
-                                criteries: this.getQuery(),
-                            }
-                        }).then((data: USER_CL[]) => {
-                            this.isLoading = true;
-                            const blockedUsers = this.listUsers.filter(user => !user.blockedUser && !user.blockedSystem && (user.selectedMark || user.isChecked) && user.data.IS_SECUR_ADM === 1);
-                            let lastAdmin = false;
-                            if (this._appContext.cbBase) {
-                                if (data['TotalRecords'] === blockedUsers.length) {
-                                    this._msgSrv.addNewMessage({
-                                        type: 'warning',
-                                        title: 'Предупреждение:',
-                                        msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
-                                    });
-                                    lastAdmin = true;
-                                }
-                            }
 
-                            this._apiSrv.blokedUser(this.getUsersBlocked(lastAdmin), idMain).then(user => {
-                                let hasNegativeTypeUsers = false;
-                                this.getUsersBlocked(lastAdmin).forEach(users => {
-                                    if (users.id === +idMain && (users.isChecked || users.selectedMark)) {
-                                        this._msgSrv.addNewMessage({
-                                            type: 'warning',
-                                            title: 'Предупреждение:',
-                                            msg: `Нельзя заблокировать самого себя.`
-                                        });
-                                    }
-                                    if ((users.isChecked || users.selectedMark) && users.data.USERTYPE === -1) {
-                                        hasNegativeTypeUsers = true;
-                                    }
-                                    if ((users.isChecked || users.selectedMark) && users.id !== +idMain && users.isEditable) {
-                                        if (users.blockedUser) {
-                                            users.blockedUser = false;
-                                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                                        } else {
-                                            if (!users.blockedUser && !users.blockedSystem) {
-                                                users.blockedUser = true;
-                                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
-                                            }
-                                            if (users.blockedSystem) {
-                                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
-                                                users.blockedUser = false;
-                                                users.blockedSystem = false;
-                                            }
-                                        }
-                                    }
-                                    users.isChecked = false;
-                                    return users;
-                                });
-                                if (hasNegativeTypeUsers) {
-                                    this._msgSrv.addNewMessage({
-                                        type: 'warning',
-                                        title: 'Предупреждение',
-                                        msg: `Пользователей без права входа в систему нельзя заблокировать.`
-                                    });
-                                }
-                                if (this.listUsers && this.listUsers.length) {
-                                    this.selectedNode(this.listUsers[0]);
-                                } else {
-                                    this.selectedUser = undefined;
-                                    this.updateFlafListen();
-                                }
-                                this.isLoading = false;
-                            }).catch(error => {
-                                error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
-                                this.isLoading = false;
-                                this._errorSrv.errorHandler(error);
-                            });
-                        });
+    BlockUser() {
+        const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
+        const selectedUser: UserSelectNode[] = this._userParamSrv.checkedUsers.filter(_user => !_user.blockedSystem && !_user.blockedUser);
+        if (!selectedUser.length) {
+            this._msgSrv.addNewMessage({
+                title: 'Сообщение',
+                type: 'info',
+                msg: 'Выберите не заблокированных пользователей'
+            });
+            return;
+        }
+
+        this._userParamSrv.getSysTechUser(null, selectedUser).then((allSysTech: boolean) => {
+            if (allSysTech) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение:',
+                    msg: `Ни один из незаблокированных пользователей не имеет права «Системный технолог» с доступом к модулю «Пользователи» без ограничений.`
+                });
+            } else {
+                this._pipeSrv.read<USER_CL>({
+                    USER_CL: {
+                        criteries: this.getQuery(),
                     }
+                }).then((data: USER_CL[]) => {
+                    this.isLoading = true;
+                    const blockedUsers = selectedUser.filter(user => user.data.IS_SECUR_ADM === 1);
+                    let lastAdmin = false;
+                    if (this._appContext.cbBase) {
+                        if (data['TotalRecords'] === blockedUsers.length) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение:',
+                                msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`
+                            });
+                            lastAdmin = true;
+                        }
+                    }
+
+                    this._apiSrv.blokedUser(selectedUser, idMain, lastAdmin).then(user => {
+                        let hasNegativeTypeUsers = false;
+                        if (selectedUser.findIndex(_u => _u.id === idMain) !== -1) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение:',
+                                msg: `Нельзя заблокировать самого себя.`
+                            });
+                        }
+                        selectedUser.forEach(users => {
+                            if (users.data.USERTYPE === -1) {
+                                hasNegativeTypeUsers = true;
+                            }
+                            if (users.id !== +idMain && users.isEditable && users.data.USERTYPE !== -1) {
+                                users.blockedUser = true;
+                                this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
+                            }
+                            users.isChecked = false;
+                        });
+                        if (hasNegativeTypeUsers) {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: `Пользователей без права входа в систему нельзя заблокировать.`
+                            });
+                        }
+                        if (this.listUsers && this.listUsers.length) {
+                            this.selectedNode(this.listUsers[0]);
+                        } else {
+                            this.selectedUser = undefined;
+                            this.updateFlafListen();
+                        }
+                        this.isLoading = false;
+                    }).catch(error => {
+                        error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
+                        this.isLoading = false;
+                        this._errorSrv.errorHandler(error);
+                    });
                 });
             }
         });
+        //     }
+        // });
+    }
+
+    Unlock() {
+        const selectedUserSystemBlock: UserSelectNode[] = [];
+        const selectedUserBlocked: UserSelectNode[] = [];
+        this._userParamSrv.checkedUsers.forEach((_user: UserSelectNode) => {
+            if (!_user.isEditable) {
+                return;
+            }
+            if (_user.blockedSystem) {
+                selectedUserSystemBlock.push(_user);
+            }
+            if (_user.blockedUser) {
+                selectedUserBlocked.push(_user);
+            }
+        });
+        this._userParamSrv.checkLicenseCount(selectedUserBlocked, this.rtUserService.ArraySystemHelper).then(result => {
+            const users = selectedUserSystemBlock.concat(result ? selectedUserBlocked : []);
+            this.isLoading = true;
+            this._apiSrv.unlockUsers(users).then(() => {
+                users.forEach(_user => {
+                    _user.blockedSystem = false;
+                    _user.blockedUser = false;
+                    this._userParamSrv.ProtocolService(_user.data.ISN_LCLASSIF, 1);
+                });
+                if (this.listUsers && this.listUsers.length) {
+                    this.selectedNode(this.listUsers[0]);
+                } else {
+                    this.selectedUser = undefined;
+                    this.updateFlafListen();
+                }
+                this.isLoading = false;
+            }).catch(error => {
+                error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
+                this.isLoading = false;
+                this._errorSrv.errorHandler(error);
+            });
+        });
+
     }
     getLoginDeleted(): { names: string; delIsns: string } {
         let names = '';
