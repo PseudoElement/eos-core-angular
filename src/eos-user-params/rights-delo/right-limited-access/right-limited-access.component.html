@@ -8,7 +8,7 @@
         </ul>
     </div>
     <div>
-        <div *ngIf="currTab === 0">
+        <div [hidden]="currTab !== 0">
             <div class="access-control">
                 <button [disabled]="!editFlag" type="button" class="btn btn-primary" (click)="OpenClassiv()" tooltip="Добавить" eosClickMode triggers="hover:click" containerClass="tooltip-info">
                 <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
@@ -43,14 +43,14 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="currTab === 1">
-            <div *ngIf="grifInput.length > 0">
-                <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag" [grifInput]="grifInput" [grifsForm]="grifsForm"></eos-grifs>
+        <div [hidden]="currTab !== 1">
+            <div>
+                <eos-grifs #eosgrifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag" [grifInput]="grifInput" [grifsForm]="grifsForm"></eos-grifs>
             </div>
         </div>
-        <div *ngIf="currTab === 2"> <!-- && checkCB -->
-            <div *ngIf="grifsFiles.length > 0">
-                <eos-grifs-files (changeGrifsFiles)="SubscribFiles($event)" [grifFilesInput]="grifsFiles" [editFlag]="editFlag" [grifsFilesForm]="grifsFileForm"></eos-grifs-files>
+        <div [hidden]="currTab !== 2" > <!-- && checkCB -->
+            <div>
+                <eos-grifs-files #eosfiles (changeGrifsFiles)="SubscribFiles($event)" [grifFilesInput]="grifsFiles" [editFlag]="editFlag" [grifsFilesForm]="grifsFileForm"></eos-grifs-files>
             </div>
         </div>
         <!-- <div *ngIf="currTab === 2 && !checkCB">

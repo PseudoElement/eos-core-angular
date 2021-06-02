@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -15,6 +15,8 @@ import { IMessage } from 'eos-common/interfaces';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { GrifsFilesComponent } from './grifs-files/grifs-files-component';
+import { GrifsComponent } from './grifs/grifs-component';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -22,6 +24,8 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 })
 
 export class RightLimitedAccessComponent implements OnInit, OnDestroy {
+    @ViewChild('eosgrifs') 'eosgrifs': GrifsComponent;
+    @ViewChild('eosfiles') 'eosfiles': GrifsFilesComponent;
     public isLoading = false;
     public statusBtnSub: boolean = true;
     public umailsInfo: Array<any>;
@@ -35,7 +39,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public bacgHeader: boolean;
     public grifsForm: FormGroup;
     public myElem: any[] = [];
-    public LinksForm: FormGroup;
     public myForm: FormGroup;
     public tabsForAccessLimited;
     public currTab = 0;
@@ -134,15 +137,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     checkGriffs(): boolean {
         let flagRk, flagFile;
         const flagGroups = this.checkedGroupForm();
-        if (this.grifsForm) {
-            flagRk = this.checkedFlagForm(this.grifsForm);
-        } else {
-            flagRk = this.checkedFlagForm(this.initGrifs, true);
+        if (this.eosgrifs) {
+            flagRk = this.checkedFlagForm(this.eosgrifs.fields);
         }
-        if (this.grifsFileForm) {
-            flagFile = this.checkedFlagForm(this.grifsFileForm);
-        } else {
-            flagFile = this.checkedFlagForm(this.initGrifsFiles, true);
+        if (this.eosfiles) {
+            flagFile = this.checkedFlagForm(this.eosfiles.fields);
         }
         if (flagGroups) {
             this.editFlag = true;
@@ -174,21 +173,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    checkedFlagForm(data: any, init?: boolean): boolean {
+    checkedFlagForm(data: any): boolean {
         let flag = false;
-        if (init) {
-            const checkVal = data.filter(item => item.value);
-            console.log(checkVal);
-            if (checkVal.length) {
-                flag = true;
-            }
-        } else {
-            Object.keys(data.controls).forEach(element => {
-                if (data.get(element).value) {
-                    flag = true;
-                }
-            });
+        const checkVal = data.filter(item => item.value);
+        if (checkVal.length) {
+            flag = true;
         }
+
         return flag;
     }
 
