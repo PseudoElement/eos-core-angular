@@ -153,6 +153,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     ngOnInit() {
     }
 
+    setClass() {
+        return this._dictId;
+    }
+
     ngAfterContentChecked() {
         const holder = this.nodeListElement.nativeElement;
         if ((this._recalcW !== holder.clientWidth)) {
