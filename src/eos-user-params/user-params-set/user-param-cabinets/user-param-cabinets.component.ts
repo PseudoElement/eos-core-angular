@@ -434,7 +434,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     if (this.defaultTitle) {
                         this.defaultNotificatorRef.submit(this.flagEdit);
                     }
-                    this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+                    // this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                     this.editMode();
                     this._pushState();
                 });

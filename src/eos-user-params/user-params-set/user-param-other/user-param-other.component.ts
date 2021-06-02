@@ -176,7 +176,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             }
             this.resetFlagsBtn();
             this._pushState();
-            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+            // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             // this._userSrv.getUserIsn().then(() => {
             // });
         }).catch(error => {

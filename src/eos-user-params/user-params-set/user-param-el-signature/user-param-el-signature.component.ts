@@ -213,7 +213,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 } else {
                     this.btnDisabled = true;
                 }
-                this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+                // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                 if (this.defaultTitle) {
                     this.DefaultSubmitEmit.emit([this.form.controls, true]);
                 }

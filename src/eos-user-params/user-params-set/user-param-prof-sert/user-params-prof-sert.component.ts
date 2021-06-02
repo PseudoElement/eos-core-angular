@@ -512,7 +512,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             }
         });
         return Promise.all([requestCreate, requestDelete]).then(data => {
-            this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
+            // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.listsSertInfo.splice(0, this.listsSertInfo.length);
             if (!this.isCurrentSettings) {
                 this.editFlag = false;
