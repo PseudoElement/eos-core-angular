@@ -14,7 +14,6 @@ export class EosErrorHandler implements ErrorHandler {
     }
 
     handleError(error: Error) {
-        /* tslint:disable:no-console */
         console.error('Unhandled error', error);
         try {
             if (error['rejection'] && error['rejection'] instanceof RestError) {
@@ -28,12 +27,15 @@ export class EosErrorHandler implements ErrorHandler {
                 }
             }
 
-            this._msgSrv.addNewMessage({
-                type: 'danger',
-                title: 'Ошибка приложения!',
-                msg: '',
-                // dismissOnTimeout: 30000
-            });
+            if (error && error.message &&  !/^.*instance\s.*NULL$/i.test(error.message)) {
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка приложения!',
+                    msg: error.message ? error.message : '',
+                    // dismissOnTimeout: 30000
+                });
+            }
+
         } catch (e) {
             console.error('addNewMessage failed', e);
         }
