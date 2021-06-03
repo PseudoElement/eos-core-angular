@@ -1,11 +1,11 @@
-import {Component, Injector, Input, OnInit} from '@angular/core';
-import {BaseParamComponent} from '../shared/base-param.component';
-import {PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
-import {CONVERSION_PARAM} from '../shared/consts/conversion.const';
-import {Validators} from '@angular/forms';
-import {debounceTime} from 'rxjs/operators';
-import {PipRX} from '../../../eos-rest';
-import {ALL_ROWS} from '../../../eos-rest/core/consts';
+import { Component, Injector, Input, OnInit } from '@angular/core';
+import { BaseParamComponent } from '../shared/base-param.component';
+import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
+import { CONVERSION_PARAM } from '../shared/consts/conversion.const';
+import { Validators } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
+import { PipRX } from '../../../eos-rest';
+import { ALL_ROWS } from '../../../eos-rest/core/consts';
 
 @Component({
     selector: 'eos-parameters-conversion',
@@ -26,7 +26,7 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
     ];
 
     constructor(injector: Injector,
-               private pipRX: PipRX
+        private pipRX: PipRX
     ) {
         super(injector, CONVERSION_PARAM);
     }
@@ -68,7 +68,7 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         return this.getData(this.queryObj)
             .then(data => {
                 this.prepareData = this.convData(data);
-                this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE === 'NO' ? false : true ;
+                this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE === 'NO' ? false : true;
                 this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.form.controls['rec.CONVERTER_USE'].disable();
@@ -95,7 +95,7 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
     }
 
     edit() {
-        this.form.enable({emitEvent: false});
+        this.form.enable({ emitEvent: false });
         this.editMode = true;
     }
 
@@ -106,10 +106,10 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
                 this.masDisable.push(key);
             }
         });
-        this.form.disable({emitEvent: false});
+        this.form.disable({ emitEvent: false });
     }
 
-    checkedPath(directory): Promise<any>  {
+    checkedPath(directory): Promise<any> {
         let url = 'CheckDirectoryRight?';
         url += `&directory=${directory}`;
         return this.pipRX.read({
@@ -142,10 +142,10 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         let emptyControls = [];
         let req = [];
         const pathInputs = [
-            {input: 'rec.CONVERTER_INPUT_DIR', dirName: '«Папка входящих файлов»', isDir: true},
-            {input: 'rec.CONVERTER_OUTPUT_DIR', dirName: ' «Папка результатов конвертации»', isDir: true},
-            {input: 'rec.CONVERTER_TEMP_DIR', dirName: ' «Папка временных файлов»', isDir: true},
-            {input: 'rec.CONVERTER_OUTPUT_SIZE', dirName: ' «Максимальный размер папки результатов, Гб»', isDir: false},
+            { input: 'rec.CONVERTER_INPUT_DIR', dirName: '«Папка входящих файлов»', isDir: true },
+            { input: 'rec.CONVERTER_OUTPUT_DIR', dirName: ' «Папка результатов конвертации»', isDir: true },
+            { input: 'rec.CONVERTER_TEMP_DIR', dirName: ' «Папка временных файлов»', isDir: true },
+            { input: 'rec.CONVERTER_OUTPUT_SIZE', dirName: ' «Максимальный размер папки результатов, Гб»', isDir: false },
         ];
         if (this.form.controls['rec.CONVERTER_USE'].value) {
             emptyControls = [...this.checkControlsEmpty(pathInputs)];
@@ -154,19 +154,19 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         if (emptyControls.length) {
             alert(`${emptyControls.join('\n')} `);
         } else {
-                Promise.all(req).then((res: any) => {
-                    const err = [];
-                    res.forEach((answ: any) => {
-                        if (answ !== 'Ок') {
-                            err.push(answ);
-                        }
-                    });
-                    if (err.length) {
-                        alert(`${err.join('\n')} `);
-                    } else {
-                        this.submit();
+            Promise.all(req).then((res: any) => {
+                const err = [];
+                res.forEach((answ: any) => {
+                    if (answ !== 'Ок') {
+                        err.push(answ);
                     }
                 });
+                if (err.length) {
+                    alert(`${err.join('\n')} `);
+                } else {
+                    this.submit();
+                }
+            });
 
         }
     }
@@ -184,12 +184,15 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
         this.updateData = {};
         this.paramApiSrv.setData(req)
             .then(() => {
-                this.prepareData.rec = Object.assign({}, this.newData.rec);
                 this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 this.formChanged.emit(false);
                 this.cancelEdit();
+                this.isChangeForm = false;
                 this.isLoading = true;
                 this.editMode = false;
+                this.newData = null;
+                this.ngOnDestroy();
+                this.ngOnInit();
             })
             .catch(er => {
                 this.formChanged.emit(true);
@@ -207,16 +210,17 @@ export class ParamConversionComponent extends BaseParamComponent implements OnIn
 
     cancel() {
         this.cancelEdit();
-        this.isLoading = false;
         if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            this.isChangeForm = false;
-            this.formChanged.emit(false);
-            this.ngOnDestroy();
-            this.init();
         }
-        this.editMode = true;
+        this.newData = null;
+        this.isChangeForm = false;
+        this.formChanged.emit(false);
         this.isLoading = true;
+        this.editMode = false;
+        this.ngOnDestroy();
+        this.init();
+
     }
 
     // changeValidators() {
