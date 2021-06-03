@@ -460,7 +460,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                         break;
                     }
                     case '-1': {
-                        this.saveMinusFirstType(userType, userLogin);
+                      //  this.saveMinusFirstType(userType, userLogin);
+                      this.ngOnDestroy();
+                      this.ngOnInit();
                         break;
                     }
                     case '1': {

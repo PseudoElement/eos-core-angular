@@ -328,7 +328,7 @@ export class UserParamApiSrv {
         let data = {};
         users.forEach((user: UserSelectNode) => {
             const cdAdm = lastAdmin ? user.data.IS_SECUR_ADM !== 1 : true;
-            if (user.id !== +mainUser && user.isEditable && user.data.USERTYPE !== -1 && cdAdm) {
+            if (user.id !== +mainUser && user.isEditable && cdAdm) {
                 data = {
                     DELETED: 1,
                 };

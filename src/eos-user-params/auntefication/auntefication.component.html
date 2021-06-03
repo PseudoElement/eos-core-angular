@@ -10,15 +10,15 @@
         ></eos-user-params-header><!-- (defaultEmit)='default($event)' -->
     <div class="autentification-control">
         <div class="select-auntef" >
-            <label>Система аутентификации</label>
+            <label>Тип аутентификации</label>
             <select
             class="form-control m-font"
             id="selectAut"
             #autentif
             [disabled]="returnEdit()"
             (change)="onChangeAuntef()">
-                    <option value="-1"  *ngIf='viewOptions(-1)'  [disabled]="optionDisable(-1)" [selected]="optionSelected(-1)">
-                        Без права входа в систему
+                    <option value="-1"  *ngIf='viewOptions(-1)'  disabled [selected]="optionSelected(-1)">
+                      ...
                     </option>
                     <option value="0" *ngIf='viewOptions(0)' [disabled]="optionDisable(0)" [selected]="optionSelected(0)">
                         Имя/пароль в БД
@@ -55,6 +55,7 @@
             {{inputs['CLASSIF_NAME'].label}}
         </label >
         <input
+            [readonly] ="!hiddenWithoutEnter"
             class="form-control m-font"
             [maxlength]="maxLoginLength"
             [formControlName]="inputs['CLASSIF_NAME'].key"

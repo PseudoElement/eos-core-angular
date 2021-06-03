@@ -752,7 +752,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     }
 
                     this._apiSrv.blokedUser(selectedUser, idMain, lastAdmin).then(user => {
-                        let hasNegativeTypeUsers = false;
                         if (selectedUser.findIndex(_u => _u.id === idMain) !== -1) {
                             this._msgSrv.addNewMessage({
                                 type: 'warning',
@@ -761,22 +760,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                             });
                         }
                         selectedUser.forEach(users => {
-                            if (users.data.USERTYPE === -1) {
-                                hasNegativeTypeUsers = true;
-                            }
-                            if (users.id !== +idMain && users.isEditable && users.data.USERTYPE !== -1) {
+                            if (users.id !== +idMain && users.isEditable) {
                                 users.blockedUser = true;
                                 this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
                             }
                             users.isChecked = false;
                         });
-                        if (hasNegativeTypeUsers) {
-                            this._msgSrv.addNewMessage({
-                                type: 'warning',
-                                title: 'Предупреждение',
-                                msg: `Пользователей без права входа в систему нельзя заблокировать.`
-                            });
-                        }
                         if (this.listUsers && this.listUsers.length) {
                             this.selectedNode(this.listUsers[0]);
                         } else {

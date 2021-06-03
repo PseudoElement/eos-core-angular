@@ -53,14 +53,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject();
     private subscriptions: Subscription[] = [];
     private typesUsers = new Map()
-        .set(-1, 'Без права входа в систему')
+        // .set(-1, 'Без права входа в систему')
         .set(0, 'Имя и пароль в БД')
         .set(1, 'ОС - аутентификация')
         .set(2, 'Пользователь в БД')
         .set(3, 'Имя и пароль')
         .set(4, 'ОС - аутентификация на сервере');
     private typesUsersValues2 = new Map()
-        .set(-1, '-1')
+        // .set(-1, '-1')
         .set(0, '0')
         .set(1, '1')
         .set(2, '2')
@@ -122,8 +122,12 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         Promise.all([query1, query2])
             .then(([data, list]) => {
                 const roles = data[0] ? data[0]['PARM_VALUE'].split(';') : [];
-                const types = data[0] ? data[1]['PARM_VALUE'].split(',') : [];
-                const defaultTypes = types[0] ? types[0] : '-1';
+                const types: string[] = data[0] ? data[1]['PARM_VALUE'].split(',') : [];
+                const index = types.indexOf('-1');
+                if (index !== -1) {
+                    types.splice(index, 1);
+                }
+                const defaultTypes = types[0] ? types[0] : '0';
                 let isnDepartments,
                     listI: LIST_ITEMS[],
                     mapDep: Map<number, any>;
@@ -261,8 +265,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.subscriptions.push(_combine);
                 this.modalRef = this.modalService.show(this.templatePassword, { ignoreBackdropClick: true, keyboard: false, class: 'gray modal-sm passModal' });
                 this.documentRef.getElementById('inpPass').focus();
-            } else if (this.data['USER_TYPE'] === '-1') {
-                await addUser(url, false);
             } else if (this.data['USER_TYPE'] === '2') {
                 await addUser(url, true);
             } else if (this.data['USER_TYPE'] === '1' || this.data['USER_TYPE'] === '4') {
@@ -484,7 +486,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         // url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
         url += `&isn_user_copy_from=0`; // если не выбран пользователь для копирования передаем '0'
-        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : -1}`;
+        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
         //   url += `&delo_rights=0`;
         return url;
     }
@@ -498,7 +500,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         const d = this.data;
         let url = 'ChangeLogin?';
         url += `isn_user=${id}`;
-        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : -1}`;
+        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
         url += `&classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
         if (this.password) {
             url += `&pass='${this.password}'`;
