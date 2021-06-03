@@ -226,11 +226,11 @@ export const SettingsManagement: BtnActionFields = {
 export const Unlock: BtnActionFields = {
     name: 'Unlock',
     title: 'Разблокировать пользователей',
-    disabledClass: 'eos-icon eos-icon-repair-grey small',
-    enableClass: 'eos-icon eos-icon-repair-blue small',
+    disabledClass: 'eos-icon eos-icon-user-unblock-grey small',
+    enableClass: 'eos-icon eos-icon-user-unblock-blue small',
     tooltip: 'Разблокировать выбранного (выбранных) пользователя',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-repair-blue small',
+    activeClass: 'eos-icon eos-icon-user-unblock-blue small',
     activeBtnClass: '',
     isActive: false,
 };
