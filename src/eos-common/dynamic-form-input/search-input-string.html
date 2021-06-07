@@ -1,0 +1,32 @@
+<div
+    class="form-group"
+    *ngIf="form && input && form.controls[input.key]"
+    [tooltip]="inputTooltip.message"
+    [placement]="inputTooltip.placement"
+    [containerClass]="inputTooltip.class"
+    [container]="inputTooltip.container"
+    [isOpen]="inputTooltip.visible"
+    triggers=""
+>
+    <div [formGroup]="form"
+        class="dynamic-input-wrapper">
+        <label [hidden]="(input.hideLabel || hideLabel)"
+            [attr.for]="input.key">{{label}}</label>
+        <div [ngClass]="{'required': isRequired, 'disabled': disabled}">
+            <input class="form-control m-font"
+                [formControlName]="input.key"
+                [id]="input.key"
+                type="text"
+                [readonly]="readonly"
+                [ngClass]="{'readonly': readonly}"
+                placeholder="..."
+                (focus)="onFocus()"
+                (blur)="onBlur()"
+                (input)="onInput($event)"
+                autocomplete="off">
+            <div style="font-size: 13px; display: inline-block; position: absolute; bottom: 0; right: 7px;" *ngIf="isFocused && !readonly" >
+                <span>{{getCounterLabel()}}</span>
+            </div>
+        </div>
+    </div>
+</div>
