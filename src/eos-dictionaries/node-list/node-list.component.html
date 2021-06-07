@@ -69,6 +69,7 @@
         </div>
     </div>
     <div class="eos-node-list"
+    ngClass="{{setClass()}}"
         #eosNodeList
         (scroll)="onListScroll($event)">
         <div class="block list"
