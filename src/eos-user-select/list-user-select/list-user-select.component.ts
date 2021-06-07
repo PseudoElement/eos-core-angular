@@ -806,7 +806,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 users.forEach(_user => {
                     _user.blockedSystem = false;
                     _user.blockedUser = false;
-                    this._userParamSrv.ProtocolService(_user.data.ISN_LCLASSIF, 1);
+                    this._userParamSrv.ProtocolService(_user.data.ISN_LCLASSIF, 2);
                 });
                 if (this.listUsers && this.listUsers.length) {
                     this.selectedNode(this.listUsers[0]);
