@@ -72,9 +72,16 @@ export class UserHeaderComponent implements OnInit {
         this.defaultEmit.emit('');
     }
 
-    cancel() {
+    cancelClose() {
+        this.cancel();
         if (this.checkSegment) {
             window.close();
+        }
+    }
+
+    cancel() {
+        if (this.checkSegment) {
+           // window.close();
             return;
         }
         this.editMode = false;
