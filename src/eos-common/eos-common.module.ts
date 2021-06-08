@@ -24,6 +24,7 @@ import { DynamicInputTextComponent } from './dynamic-form-input/dynamic-input-te
 import { DynamicInputToggleComponent } from './dynamic-form-input/dynamic-input-toggle.component';
 import { DynamicInputNumberIncrementComponent } from './dynamic-form-input/dynamic-input-increment-number.component';
 import { DynamicInputRadioComponent } from './dynamic-form-input/dynamic-input-radio.component';
+import { SearchInputStringComponent } from './dynamic-form-input/search-input-string';
 import { InfoComponent } from './info/info.component';
 import { MessagesComponent } from './messages/messages.component';
 import { PhotoUploaderComponent } from './photo-uploader/photo-uploader.component';
@@ -60,6 +61,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         SpinnerComponent,
         PhotoUploaderComponent,
         UnicValidatorDirective,
+        SearchInputStringComponent,
         DynamicInputComponent,
         DynamicInputButtonsComponent,
         DynamicInputCheckboxComponent,
@@ -97,6 +99,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         PhotoUploaderComponent,
         UnicValidatorDirective,
         DynamicInputComponent,
+        SearchInputStringComponent,
         EosDatePipe,
         UserSelectPaginationComponent,
         EosClickModeDirective

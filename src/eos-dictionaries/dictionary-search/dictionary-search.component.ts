@@ -184,7 +184,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
    public initFormDopRec() {
         const options = [];
-        const validityReg = new RegExp(/(^[\d\-\.]+$)/);
+        const validityReg = new RegExp(/^\-?(\d+\.?\d*|\d*\.?\d+)$/);
         this.arDescript.forEach(_d => {
             this.mapAr_Descr.set(_d.API_NAME, _d);
             options.push({ title: _d.UI_NAME, value: _d.API_NAME });
