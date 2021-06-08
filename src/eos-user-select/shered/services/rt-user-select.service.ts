@@ -223,6 +223,12 @@ export class RtUserSelectService {
             Trial: '-',
             Expired: '-',
         },
+        POSINTEGRATION: {
+            label: 'Модуль интеграции с ПОС',
+            checked: false,
+            Trial: '-',
+            Expired: '-',
+        }
     };
     scrollPosition: number = 0;
     private _ChangeSelectUser: UserSelectNode;
