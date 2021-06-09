@@ -291,6 +291,10 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this.serverSystem.DEPREPL.Trial = '+'; // elem.Trial;
                 this.serverSystem.DEPREPL.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
             }
+            if (elem.Id === 40) {
+                this.serverSystem.POSINTEGRATION.Trial = '+';
+                this.serverSystem.POSINTEGRATION.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
+            }
         });
         this.actualLicenz = enablelLicenze;
         // this.delowebLGO = this.items.length - this.delo - this.delowebKL;
