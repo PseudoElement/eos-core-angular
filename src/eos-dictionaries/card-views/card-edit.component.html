@@ -124,6 +124,14 @@
                                      [data]="data"
                                      [isNewRecord]="isNewRecord"
                                      [editMode]="editMode"></eos-reestrtype-card>
+                <eos-resolution-category-edit *ngSwitchCase="'resolution-category'"
+                                     #cardEditEl
+                                     class="resolution-category-card simple-card-edit"
+                                     [form]="form"
+                                     [inputs]="inputs"
+                                     [data]="data"
+                                     [isNewRecord]="isNewRecord"
+                                     [editMode]="editMode"></eos-resolution-category-edit>
                 <eos-link-card *ngSwitchCase="'link'"
                                #cardEditEl
                                class="simple-card-edit"

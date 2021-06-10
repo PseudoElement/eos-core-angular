@@ -1,0 +1,42 @@
+<div class="card-content-wrapper" #root>
+    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+        [form]="form"
+        [readonly]="!editMode"
+        eosTooltipErrorFix
+        [scrollableParent]="root"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.PLAN_COUNT_FLAG']"
+        [form]="form"
+        [readonly]="!editMode"></eos-dynamic-input>
+    <div class="resolution-card">
+        <label class="resolution-card-day-label">СРОК:</label>
+        <div class="resolution-card-day">
+            <eos-dynamic-input [input]="inputs['rec.PLAN_DAY_COUNT']"
+                [form]="form"
+                [readonly]="!editMode || !form.controls['rec.PLAN_COUNT_FLAG'].value"></eos-dynamic-input>
+        </div>
+        <div class="resolution-card-day">
+            <eos-dynamic-input [input]="inputs['rec.PLAN_DAY_TYPE']"
+                [form]="form"
+                [readonly]="!editMode || !form.controls['rec.PLAN_COUNT_FLAG'].value"></eos-dynamic-input> 
+        </div>
+        <label class="resolution-card-day-label">.Дня(дней)</label>
+    </div>
+    
+    <eos-dynamic-input [input]="inputs['rec.PLAN_PROTECTED']"
+        [form]="form"
+        [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input class="resolution-card-note"
+        [input]="inputs['rec.NOTE']"
+        [form]="form"
+        [readonly]="!editMode"
+        eosTooltipErrorFix
+        [scrollableParent]="root"></eos-dynamic-input>
+    
+    <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
+        [form]="form"
+        [readonly]="!editMode"
+        eosTooltipErrorFix
+        [scrollableParent]="root"></eos-dynamic-input>
+</div>
+
+        

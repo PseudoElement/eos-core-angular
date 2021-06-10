@@ -1,0 +1,14 @@
+.resolution-category-card{
+    .resolution-card{
+        display: flex;
+    }
+    .resolution-card-day{
+        margin: 0 5px;
+    }
+    .resolution-card-note textarea {
+        height: 75px;
+    }
+    .resolution-card-day-label{
+        padding-top: 11px;
+    }
+}
