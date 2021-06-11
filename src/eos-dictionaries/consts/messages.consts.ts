@@ -220,3 +220,8 @@ export const DANGER_ERROR_FILE: IMessage = {
     title: 'Предупреждение',
     msg: 'Ошибка чтения файла',
 };
+export const DANGER_SAVE_FILE: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение',
+    msg: 'Файл шаблона отсутсвует, сохранение невозможно',
+};
