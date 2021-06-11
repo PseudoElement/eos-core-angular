@@ -106,6 +106,7 @@ import { ListSelectorFormComponent } from './dict-forms/list-selector-modal/list
 import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-index-nomenclatur.component';
 import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.component';
 import { PrintTemplateComponent } from './print-template/print-template.component';
+import { ResolutionCategoryEditComponent } from './card-views/resolution-category-edit.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -177,6 +178,7 @@ import { PrintTemplateComponent } from './print-template/print-template.componen
         DictionaryPasteComponent,
         PrintTemplateComponent,
         TooltipErrorFixDirective,
+        ResolutionCategoryEditComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
