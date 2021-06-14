@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SortableModule } from 'ngx-bootstrap/sortable';
 
@@ -83,6 +84,7 @@ import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
         AppRoutingModule,
         BrowserModule,
         FormsModule,
+        BrowserAnimationsModule,
         ReactiveFormsModule,
         HttpClientModule,
         BsDropdownModule.forRoot(),
