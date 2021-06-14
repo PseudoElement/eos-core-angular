@@ -747,7 +747,7 @@ export class UserParamsService {
                         });
                     }
                 });
-                CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK.bodyList = [];
+                CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK.bodyList = ['Заблокированных технологом пользователей невозможно разблокировать.'];
                 Object.keys(systems).forEach((key) => {
                     const system = systems[key];
                     const lic = licenseMap.get(system.id);

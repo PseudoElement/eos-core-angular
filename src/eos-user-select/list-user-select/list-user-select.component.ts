@@ -764,14 +764,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                                 users.blockedUser = true;
                                 this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
                             }
+                        });
+                        const checkUser = this.getCheckedUsers(); // после блокировки убираем все галочки
+                        checkUser.forEach((users) => {
                             users.isChecked = false;
                         });
-                        if (this.listUsers && this.listUsers.length) {
-                            this.selectedNode(this.listUsers[0]);
-                        } else {
-                            this.selectedUser = undefined;
-                            this.updateFlafListen();
-                        }
+                        this.rtUserService.changeSelectedUser(null); // убираем из правого стакана
+                        this.selectedUser = undefined; // убираем выбраного
+                        this.rtUserService._updateBtn.next(this.optionsBtn); // обновляем кнопки
+                        this.rtUserService.subjectFlagBtnHeader.next(false); // обновляем кнопки
+                        this.updateFlafListen(); // обновить флаги
                         this.isLoading = false;
                     }).catch(error => {
                         error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
@@ -808,10 +810,25 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     _user.blockedUser = false;
                     this._userParamSrv.ProtocolService(_user.data.ISN_LCLASSIF, 2);
                 });
-                if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.listUsers[0]);
+                if (!result) {
+                    selectedUserBlocked.forEach((_user) => {
+                        this.selectedNodeSetFlags(_user);
+                    });
+                    this.selectedUser = selectedUserBlocked[0];
+                    if (selectedUserBlocked.length) {
+                        this.rtUserService.changeSelectedUser(selectedUserBlocked[0]);
+                    }
+                    this.rtUserService._updateBtn.next(this.optionsBtn);
+                    this.rtUserService.subjectFlagBtnHeader.next(true);
                 } else {
+                    const checkUser = this.getCheckedUsers(); // после блокировки убираем все галочки
+                    checkUser.forEach((user) => {
+                        user.isChecked = false;
+                    });
+                    this.rtUserService.changeSelectedUser(null);
                     this.selectedUser = undefined;
+                    this.rtUserService._updateBtn.next(this.optionsBtn);
+                    this.rtUserService.subjectFlagBtnHeader.next(true);
                     this.updateFlafListen();
                 }
                 this.isLoading = false;
