@@ -18,7 +18,7 @@
     <eos-dynamic-input
         [input]="inputs['rec.CLASSIF_NAME']"
         [form]="form" [readonly]="!editMode"
-        eosTooltipErrorFix [scrollableParent]="root"
+         
     ></eos-dynamic-input>
 
     <div style="height: 69px; display: flex; align-items: flex-start; font-size: 12px">
@@ -59,8 +59,8 @@
     <eos-dynamic-input
         [input]="inputs['rec.FULLNAME']"
         [form]="form" [readonly]="!editMode"
-        eosTooltipErrorFix
-        [scrollableParent]="root"
+        
+        
     ></eos-dynamic-input>
     <div class="clearfix">
         <eos-dynamic-input *ngIf="!isCBBase || (!isNode)"
@@ -90,8 +90,8 @@
         [input]="inputs['rec.NOTE']"
         [form]="form"
         [readonly]="!editMode"
-        eosTooltipErrorFix
-        [scrollableParent]="root"
+        
+        
     ></eos-dynamic-input>
     <div class="clearfix">
         <eos-dynamic-input

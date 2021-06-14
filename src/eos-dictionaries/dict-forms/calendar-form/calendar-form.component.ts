@@ -129,13 +129,15 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
 
     setTypeFor(type: number, date: Date) {
         const d = this._toDBFormattedDate(date);
-        let t = this.dbDates.find(v => String(v.DATE_CALENDAR) === d);
+        let t = this.dbDates && this.dbDates.find(v => String(v.DATE_CALENDAR) === d);
         if (t) {
             t.DATE_TYPE = type;
             t.isChanged = true;
         } else {
             t = { ISN_CALENDAR: -1, DATE_CALENDAR: d, DATE_TYPE: type, isChanged: true };
-            this.dbDates.push(t);
+            if (this.dbDates) {
+                this.dbDates.push(t);
+            }
         }
         this._formHasChanges = true;
         this.datepicker._repaint();
@@ -316,7 +318,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
 
         const d = this._toDBFormattedDate(date);
 
-        const t = this.dbDates.find(v => String(v.DATE_CALENDAR) === d);
+        const t = this.dbDates && this.dbDates.find(v => String(v.DATE_CALENDAR) === d);
 
         if (t) {
             this.form.controls['type'].setValue(t.DATE_TYPE);

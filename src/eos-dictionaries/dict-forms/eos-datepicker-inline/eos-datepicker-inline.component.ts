@@ -205,9 +205,12 @@ export class EosDatepickerInlineComponent implements OnInit {
         this.hoverFlags = [];
 
         const childElements = this.daystbody.nativeElement.childNodes;
-        while (childElements.length) {
-            this.renderer.removeChild(this.daystbody.nativeElement, childElements[0]);
+        for (const child of childElements) {
+            this.renderer.removeChild(this.daystbody.nativeElement, child);
         }
+        /* while (childElements.length) {
+            this.renderer.removeChild(this.daystbody.nativeElement, childElements[0]);
+        } */
 
         if (this.displayMode === 0) {
             this._paintDays();
