@@ -44,7 +44,7 @@ export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINE
             key: 'PLAN_DAY_TYPE',
             type: 'select',
             title: '',
-            default: 2,
+            default: 1,
             options: [
                 { value: 1, title: 'календарн.' },
                 { value: 2, title: 'рабоч.' },
