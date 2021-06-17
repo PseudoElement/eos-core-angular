@@ -8,6 +8,6 @@
                (onleave)="onLeave()"
                (mouseenter)="onEnter()"
                 maxlength="11">
-        <a bsDatepicker [hidden]="hidePicker" [placement]="placement" [bsConfig]="bsConfig" [bsValue]="bsDate" [minDate]="bsConfig.minDate" [maxDate]="bsConfig.maxDate" [isDisabled]="readonly" (bdValueChange)="dpChanged($event)"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+        <a bsDatepicker [hidden]="hidePicker" [placement]="placement" [bsConfig]="bsConfig" [bsValue]="bsDate" [minDate]="bsConfig.minDate" [maxDate]="bsConfig.maxDate" [isDisabled]="readonly" (bsValueChange)="dpChanged($event)"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
     </div>
 </div>

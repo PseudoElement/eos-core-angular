@@ -42,7 +42,9 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     }
 
     dpChanged(value: Date) {
-        this.form.controls[this.input.key].setValue(value);
+        if (value !== undefined) { // при инициализации запускается инициализация и вызывается с undefined
+            this.form.controls[this.input.key].setValue(value);
+        }
         this.onBlur();
     }
 
