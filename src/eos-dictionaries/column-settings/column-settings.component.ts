@@ -138,6 +138,9 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * @description emit custom fields and hide modal
      */
     public save() {
+        if (this.editedItem && this.newTitle !== null) {
+            this.saveNewTitle();
+        }
         const customsTitles = [].concat(
             this.fixedFields.filter(el => el.customTitle),
             this.dictionaryFields.filter(el => el.customTitle),
