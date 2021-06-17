@@ -39,13 +39,13 @@ export class EosDatepickerInlineComponent implements OnInit {
 
     @ViewChild('daystbody') daystbody: ElementRef;
 
-    @Output('bsValueChange') bsValueChange: EventEmitter<Date>;
+    @Output('bdValueChange') bdValueChange: EventEmitter<Date>;
     yearsItemsArr: number[][];
 
     constructor (
         private renderer: Renderer2,
     ) {
-        this.bsValueChange = new EventEmitter();
+        this.bdValueChange = new EventEmitter();
     }
 
     ngOnInit() {
@@ -56,7 +56,7 @@ export class EosDatepickerInlineComponent implements OnInit {
         this.displayMonth = this.bsValue.getMonth();
         this.displayMode = 0;
         this._repaint();
-        this.bsValueChange.emit(this.bsValue);
+        this.bdValueChange.emit(this.bsValue);
     }
 
     sameDay(d1, d2) {
@@ -124,7 +124,7 @@ export class EosDatepickerInlineComponent implements OnInit {
         }
         this.bsValue = value;
         this.jumpToValue(value);
-        this.bsValueChange.emit(value);
+        this.bdValueChange.emit(value);
     }
 
     jumpToValue(value: Date) {

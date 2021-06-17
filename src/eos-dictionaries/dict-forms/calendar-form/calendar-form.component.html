@@ -9,7 +9,7 @@
                 id="bsdatp"
                 [bsValue]="bsInlineValue"
                 [bsConfig]="bsDatepickerCfg"
-                (bsValueChange)="onDateChange($event)"
+                (bdValueChange)="onDateChange($event)"
                 (mousemove)="onDataMouseMove($event)"
                 >
             </bs-datepicker-inline> -->
@@ -18,7 +18,7 @@
                 #datepicker
                 [bsValue]="selectedDate"
                 [getClassForDate]="getClassForDate()"
-                (bsValueChange)="onDateChange($event)"
+                (bdValueChange)="onDateChange($event)"
             >
             </eos-datepicker-inline>
 
