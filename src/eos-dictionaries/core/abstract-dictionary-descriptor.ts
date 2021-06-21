@@ -708,7 +708,7 @@ export abstract class AbstractDictionaryDescriptor {
                         const existObjSevId = existSev.OBJECT_ID && existSev.OBJECT_ID.trim();
                         const newObjSevId = sevData.OBJECT_ID && sevData.OBJECT_ID.trim();
 
-                        return existObjSevId !== newObjSevId && newGlobSevId === existGlobSevId;
+                        return existObjSevId !== newObjSevId && newGlobSevId.toUpperCase() === existGlobSevId.toUpperCase();
                     });
                     if (exist) {
                         result.success = false;
