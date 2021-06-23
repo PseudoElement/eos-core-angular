@@ -165,7 +165,7 @@ export class WaitClassifService {
 
     private sharingListsUrl(url, params: IOpenClassifParams) {
         if (params.isn_user !== undefined && params.isn_user !== null) {
-            url += `?isn_user=${params.isn_user}`;
+            url += `?isn_classif=${params.isn_user}`;
         }
         return url;
     }
