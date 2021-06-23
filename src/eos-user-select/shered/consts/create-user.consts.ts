@@ -85,7 +85,7 @@ export const OPEN_CLASSIF_SECURITY_CL: IOpenClassifParams = {
     selectMulty: true,
     selected: '',
 };
-
+// Выбор из организаций
 export const OPEN_CLASSIF_ORGANIZ_CL: IOpenClassifParams = {
     classif: 'CONTACT',
     selectMulty: false,
