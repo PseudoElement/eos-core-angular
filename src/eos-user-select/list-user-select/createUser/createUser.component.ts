@@ -28,6 +28,7 @@ import { DOCUMENT } from '@angular/common';
 export class CreateUserComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
     @ViewChild('templatePassword') templatePassword: ElementRef;
+    @ViewChild('classifName') classifName;
     modalRef: BsModalRef;
     isLoading: boolean = true;
     data = {};
@@ -541,6 +542,11 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.data[c] = d[c];
                     }
                     this.btnDisabled = this.form.invalid;
+                }
+                if (this.form.controls['classifName'].value.length === this.loginMaxLength) {
+                    this.classifName.show();
+                } else {
+                    this.classifName.hide();
                 }
                 this.loginMaxLength = this.form.get('USER_TYPE') && `${this.form.get('USER_TYPE').value}` === '0' ? 12 : 64;
             });

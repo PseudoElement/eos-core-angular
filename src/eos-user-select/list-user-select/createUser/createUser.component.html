@@ -4,13 +4,16 @@
         <div class="form-group create-user-login-input log">
             <label>ЛОГИН</label>
             <div class="type-user">
-                <div class="required">
+                <div class = 'required-emptiness'[ngClass]="{'required' : !this.form.get('classifName').value}">
                     <form [formGroup]="form">
                         <input
+                            #classifName="bs-tooltip"
                             placement="bottom"
-                            containerClass="tooltip-info"
+                            containerClass="tooltip-error"
                             [tooltip]="'Максимальная длина поля ' + loginMaxLength +' символов'"
+                            [ngClass]="{'error': form.controls['classifName'].value.length === loginMaxLength}"
                             class=" form-control"
+                            triggers=""
                             [maxlength]="loginMaxLength"
                             type="text"
                             [formControlName]="inputs['classifName'].key"
