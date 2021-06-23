@@ -7,10 +7,6 @@
     display: grid; // sass-lint:disable-line no-duplicate-properties
     -ms-grid-columns: auto 1fr 336px;
     grid-template-columns: auto 1fr 1fr;
-    position: fixed;
-    bottom: 60px;
-    left: $grid-gutter-width / 2;
-    right: $grid-gutter-width / 2;
     transition: 300ms ease-in-out;
     .pagination {
         border-color: $border-color-main-theme;
@@ -184,6 +180,13 @@
             left: $grid-gutter-width / 2 + $dictionary-block-width;
             right: $grid-gutter-width / 2 + $dictionary-block-width;
         }
+    }
+}
+
+
+@media (max-width: 1294px) {
+    .pagination-option {
+        margin-top: 0;
     }
 }
 

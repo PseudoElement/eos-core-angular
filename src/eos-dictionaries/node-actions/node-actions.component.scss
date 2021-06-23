@@ -137,6 +137,22 @@ $drop-menu-width: 300px;
     }
 }
 
+@media (max-width: 1295px) {
+
+    .eos-node-actions {
+        .actions {
+            display: none;
+            &:last-child {
+                display: inline-block;
+            }
+        }
+    }
+
+    .action-menu.centered {
+        left: 0;
+    }
+}
+
 @media (max-width: 1000px) {
     .action-menu {
         width: $drop-menu-width;

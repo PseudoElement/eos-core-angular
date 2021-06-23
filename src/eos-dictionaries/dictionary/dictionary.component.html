@@ -30,120 +30,125 @@
     <div class="selected-wrapper"
         #selectedWrapper
         [ngClass]="{'open-tree': currentState[0] && !hideTree }">
-        <div class="node-actions" id="node-actions">
-            <div *ngIf="treeNode"
-                class="selected-node xl-font"
-                [ngClass]="{'has-custom': hasCustomTable, 'adapt': dictionaryId === 'departments' && stylesFlex === 'xl', 'adapt-middle': dictionaryId === 'departments' && stylesFlex === 'xs' }">
-                <div class="go-top-wrapper">
-                    <button *ngIf="hasParent"
-                        class="btn btn-primary-light"
-                        (click)="goUp()">
-                        <span class="eos-icon eos-icon-arrow-blue-left"></span>
-                    </button>
-                </div>
-
-                <ng-container *ngIf="this.isTitleSliced; then slicedTitle else nonSlicedTitle"></ng-container>
-                <ng-template #slicedTitle>
-                    <div class="selected-node-title"
-                    [tooltip]="this.title"
-                    [delay]="tooltipDelay"
-                    placement="bottom"
-                    container="body"
-                    (click)="goUp()"
-                    containerClass="tooltip-info">
-                    <div class="pointer"
-                        [ngClass]="{'selected-text' : hasParent}"
-                        (click)="goUp()">
-                        <span class="long-title xl-font vertical-align-middle">{{sliced_title}}</span>
-                    </div>
-
-                    </div>
-                </ng-template>
-                <ng-template #nonSlicedTitle>
-                    <div class="selected-node-title">
-                        <div class="pointer"
-                        [ngClass]="{'selected-text' : hasParent}"
-                            (click)="goUp()">
-                            <span class="long-title xl-font vertical-align-middle">{{this.title}}</span>
+        <div class="relative-wrapper">
+                <div class="node-actions" id="node-actions">
+                    <div *ngIf="treeNode"
+                        class="selected-node xl-font"
+                        [ngClass]="{'has-custom': hasCustomTable, 'adapt': dictionaryId === 'departments' && stylesFlex === 'xl', 'adapt-middle': dictionaryId === 'departments' && stylesFlex === 'xs' }">
+                        <div class="go-top-wrapper">
+                            <button *ngIf="hasParent"
+                                class="btn btn-primary-light"
+                                (click)="goUp()">
+                                <span class="eos-icon eos-icon-arrow-blue-left"></span>
+                            </button>
                         </div>
-                    </div>
-                </ng-template>
-
-                <div class="tabs-wrapper usual-border m-font">
-                    <ul class="tabs"
-                        *ngIf="dictionary?.id === 'departments'">
-                        <li class="tab-item"
-                            role="presentation"
-                            [ngClass]="{'active': dictMode === 0, 'disabled': !isDictModeEnabled(0)}"
-                            (click)="setDictMode(0)">
-                            <span class="tab-title"
-                            >Подразделения</span>
-                        </li>
-                        <li class="tab-item"
-                            role="presentation"
-                            [ngClass]="{'active': dictMode === 1, 'disabled': !isDictModeEnabled(1)}"
-                            (click)="setDictMode(1)">
-                            <span class="tab-title">Кабинеты</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="item-count usual-border m-font">
-                    <ng-container *ngIf="params.searchResults; then foundRecords; else records"></ng-container>
-                    <ng-template #records>
-                        <span class="item-count-content">
-                            Записей:
-                            <span class="counter">{{paginationConfig?.itemsQty}}</span>
-                            Выбрано:
-                            <span class="counter">{{markedCounter()}}</span>
-                        </span>
-                    </ng-template>
-                    <ng-template #foundRecords>
-                        <span class="item-count-found">
-                            Найдено: <span class="counter">{{paginationConfig?.itemsQty}}</span>
-                            Выбрано: <span class="counter">{{markedCounter()}}</span>
-                        <button class="btn btn-primary-light"
-                            tooltip="Очистить результаты"
+        
+                        <ng-container *ngIf="this.isTitleSliced; then slicedTitle else nonSlicedTitle"></ng-container>
+                        <ng-template #slicedTitle>
+                            <div class="selected-node-title"
+                            [tooltip]="this.title"
+                            [delay]="tooltipDelay"
                             placement="bottom"
                             container="body"
-                            containerClass="tooltip-info"
-                            (click)="resetSearch()"><span class="eos-icon eos-icon-close-blue small"></span></button>
-                        </span>
-                    </ng-template>
-                </div>
-            </div>
-            <div class="first-line" [hidden]="params.hideTopMenu || accessDenied">
-                <div class="controller pull-left">
-                    <eos-node-actions (action)="doAction($event)"></eos-node-actions>
-                </div>
-                <div class="pull-right">
-                    <eos-dictionary-search #searchCtl
-                        (switchFastSrch)="switchFastSearch($event)"
-                        (searchRun)="onRunFullSrch($event)"
+                            (click)="goUp()"
+                            containerClass="tooltip-info">
+                            <div class="pointer"
+                                [ngClass]="{'selected-text' : hasParent}"
+                                (click)="goUp()">
+                                <span class="long-title xl-font vertical-align-middle">{{sliced_title}}</span>
+                            </div>
+        
+                            </div>
+                        </ng-template>
+                        <ng-template #nonSlicedTitle>
+                            <div class="selected-node-title">
+                                <div class="pointer"
+                                [ngClass]="{'selected-text' : hasParent}"
+                                    (click)="goUp()">
+                                    <span class="long-title xl-font vertical-align-middle">{{this.title}}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+        
+                        <div class="tabs-wrapper usual-border m-font">
+                            <ul class="tabs"
+                                *ngIf="dictionary?.id === 'departments'">
+                                <li class="tab-item"
+                                    role="presentation"
+                                    [ngClass]="{'active': dictMode === 0, 'disabled': !isDictModeEnabled(0)}"
+                                    (click)="setDictMode(0)">
+                                    <span class="tab-title"
+                                    >Подразделения</span>
+                                </li>
+                                <li class="tab-item"
+                                    role="presentation"
+                                    [ngClass]="{'active': dictMode === 1, 'disabled': !isDictModeEnabled(1)}"
+                                    (click)="setDictMode(1)">
+                                    <span class="tab-title">Кабинеты</span>
+                                </li>
+                            </ul>
+                        </div>
+        
+                        <div class="item-count usual-border m-font">
+                            <ng-container *ngIf="params.searchResults; then foundRecords; else records"></ng-container>
+                            <ng-template #records>
+                                <span class="item-count-content">
+                                    Записей:
+                                    <span class="counter">{{paginationConfig?.itemsQty}}</span>
+                                    Выбрано:
+                                    <span class="counter">{{markedCounter()}}</span>
+                                </span>
+                            </ng-template>
+                            <ng-template #foundRecords>
+                                <span class="item-count-found">
+                                    Найдено: <span class="counter">{{paginationConfig?.itemsQty}}</span>
+                                    Выбрано: <span class="counter">{{markedCounter()}}</span>
+                                <button class="btn btn-primary-light"
+                                    tooltip="Очистить результаты"
+                                    placement="bottom"
+                                    container="body"
+                                    containerClass="tooltip-info"
+                                    (click)="resetSearch()"><span class="eos-icon eos-icon-close-blue small"></span></button>
+                                </span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="first-line" [hidden]="params.hideTopMenu || accessDenied">
+                        <div class="controller pull-left">
+                            <eos-node-actions (action)="doAction($event)"></eos-node-actions>
+                        </div>
+                        <div class="pull-right">
+                            <eos-dictionary-search #searchCtl
+                                (switchFastSrch)="switchFastSearch($event)"
+                                (searchRun)="onRunFullSrch($event)"
+                                [settings]="searchSettings"
+                            ></eos-dictionary-search>
+                        </div>
+                    </div>
+                    <eos-dictionary-quick-search #quickSearchCtl
+                        *ngIf="fastSearch"
+                        (searchClose)="onCloseFastSrch($event)"
+                        (searchRun)="onRunFastSrch($event)"
                         [settings]="searchSettings"
-                    ></eos-dictionary-search>
+                    >
+                    </eos-dictionary-quick-search>
+        
+                    <div class="second-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
+                        <div class="">
+                            <eos-dictionary-filter (setFilterNomenkl)="getFilterNomenkl($event)" (setFilter)="getFilterDate($event)" (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
+                        </div>
+                    </div>
+        
                 </div>
-            </div>
-            <eos-dictionary-quick-search #quickSearchCtl
-                *ngIf="fastSearch"
-                (searchClose)="onCloseFastSrch($event)"
-                (searchRun)="onRunFastSrch($event)"
-                [settings]="searchSettings"
-            >
-            </eos-dictionary-quick-search>
-
-            <div class="second-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
-                <div class="">
-                    <eos-dictionary-filter (setFilterNomenkl)="getFilterNomenkl($event)" (setFilter)="getFilterDate($event)" (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
-                </div>
-            </div>
-
+                <eos-node-list #nodeList
+                    class="node-list-container"
+                    [ngClass]="{'list-heigth-1': nlHeightType() === 1, 'list-heigth-2': nlHeightType() === 2, 'list-heigth-3': nlHeightType() === 3}"
+                ></eos-node-list>
+            
+            
+            <eos-node-list-pagination *ngIf="isPaginationVisible()" [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-node-list-pagination>
         </div>
-        <eos-node-list #nodeList
-            class="node-list-container"
-            [ngClass]="{'list-heigth-1': nlHeightType() === 1, 'list-heigth-2': nlHeightType() === 2, 'list-heigth-3': nlHeightType() === 3}"
-        ></eos-node-list>
-        <eos-node-list-pagination *ngIf="isPaginationVisible()" [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-node-list-pagination>
+        
     </div>
     <div class="opened-wrapper block"
         [ngClass]="{'open-info': currentState[1]}">
