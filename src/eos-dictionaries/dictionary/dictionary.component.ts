@@ -321,7 +321,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
-                    this.paginationConfig = config;
+                    setTimeout(() => {
+                        this.paginationConfig = config;
+                    }, 250);
                 }
             });
 
