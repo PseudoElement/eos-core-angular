@@ -850,18 +850,18 @@ bs-dropdown-container {
 
                                     div.flex-column {
                                         eos-dynamic-input {
+                                            width: 170px;
+
                                             &:first-child {
                                                 position: absolute;
                                                 top: 30px;
-                                                left: 105px;
-                                                width: 140px;
+                                                left: 110px;
                                             }
 
                                             &:last-child {
                                                 position: absolute;
-                                                bottom: 0px;
-                                                left: 300px;
-                                                width: 170px;
+                                                bottom: 5px;
+                                                left: 305px;                                                
                                             }
 
                                             p.form-control-static {
@@ -879,7 +879,7 @@ bs-dropdown-container {
                                 &:last-child {
                                     eos-dynamic-input {
                                         width: 133px !important;
-                                        margin-left: 10px;
+                                        margin-left: 15px;
                                     }
                                 }
                             }
