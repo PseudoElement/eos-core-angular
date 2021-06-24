@@ -215,6 +215,7 @@ export class PipRX extends PipeUtils {
         const rl = of(...urls)
             .pipe(
                 mergeMap(url => {
+                    url.indexOf('?') === -1 ? url = url + '?$format=compact' : url = url + '&$format=compact'; // дописываем в конце запроса $format=compact
                     return this.http
                         .get(url, _options)
                         .pipe(
