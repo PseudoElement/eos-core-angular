@@ -8,7 +8,7 @@ pool:
 
 steps:
 - task: PowerShell@2
-  displayName: Build
+  displayName: Pipeline
   inputs:
     targetType: filePath
     filePath: ./pipeline.ps1
