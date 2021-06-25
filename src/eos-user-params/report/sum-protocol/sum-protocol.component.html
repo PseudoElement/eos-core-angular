@@ -31,7 +31,7 @@
                                 triggers="hover"
                                 [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
                                 (click)="GetRefFile()"
-                                placement="bottom"
+                                placement="auto"
                                 container="body"
                                 containerClass="tooltip-info"
                             >
@@ -54,7 +54,7 @@
                                 <input [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
                                 <div>
                                     <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
-                                     placement="bottom" containerClass="tooltip-info fix-pos-check" ></span>
+                                     placement="auto" containerClass="tooltip-info fix-pos-check" container="body"></span>
                                 </div>
                             </label>
                         </div>
