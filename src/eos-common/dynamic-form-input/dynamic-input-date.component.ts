@@ -113,16 +113,18 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
 
     private updateDatePickerPlacement() {
         if (this.datePickerWrapper) {
-            const rect = this.datePickerWrapper.nativeElement.getBoundingClientRect();
-            if (window.innerHeight - rect.bottom >= 308) {
-                this.placement = 'bottom';
-            } else if (rect.top >= 308) {
-                this.placement = 'top';
-            } else if (rect.left + rect.width - 24 >= 318) {
-                this.placement = 'left';
-            } else {
-                this.placement = 'right';
-            }
+            setTimeout(() => {
+                const rect = this.datePickerWrapper.nativeElement.getBoundingClientRect();
+                if (window.innerHeight - rect.bottom >= 308) {
+                    this.placement = 'bottom';
+                } else if (rect.top >= 308) {
+                    this.placement = 'top';
+                } else if (rect.left + rect.width - 24 >= 318) {
+                    this.placement = 'left';
+                } else {
+                    this.placement = 'right';
+                }
+            }, 10);
         }
     }
 }
