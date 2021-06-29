@@ -72,6 +72,12 @@ export class PipeUtils {
         const md = data['odata.metadata'];
         const tn = md.split('#')[1].split('/')[0];
         const items = data.value || [data];
+        const _sh = this.findVal(data, '_sh'); // если возвращает undefaned значит такого свойства нет
+        if (_sh) {
+            const names = {};
+            // this.parseCompact(data, names);
+            this.getFiniteValue(data, names);
+        }
         if (tn !== 'Collection(Edm.Int32)' && tn !== 'Edm.String' && tn !== 'Int32') { // костыль для ответа от сопа по созданию пользователя
             this.parseEntity(items, tn);
         }
@@ -165,7 +171,103 @@ export class PipeUtils {
             item.__metadata = { __type: tn };
         }
     }
-
+    /* getFiniteValue рекурсивная проходка по более низким уровням объекта и изменение найденых записей на переделаные данные
+    names используется для запоминания ключей для различных записей*/
+    private getFiniteValue(obj: any, names?) {
+        if (typeof(obj) === 'object') {
+            if (obj._f && obj._sh) {
+                this.parseElemF(obj, obj['_sh']['names']);
+            }
+            Object.keys(obj).forEach( prop => {
+                if (obj[prop] && typeof(obj[prop]) === 'object') {
+                    if (this.findElem(obj[prop])) {
+                        const el = obj[prop][0];
+                        if (!names[prop] && obj[prop] && el['_sh'] && el['_sh']['names']) {
+                            names[prop] = obj[prop][0]['_sh']['names'];
+                        }
+                        this.parseElemValue(obj[prop], names[prop]);
+                    }
+                    this.getFiniteValue(obj[prop], names);
+                }
+            });
+        }
+    }
+    /* findElem проверяем есть ли нужные мне записи на нужном мне уровне */
+    private findElem(object: any): boolean {
+        return object && ((object.value && object.value[0]['_f']) || (object[0] && object[0]['_f']));
+    }
+    /* @parseCompact data объект для проверки и переделки. names используется если внутри массива для переделки не будет _sh
+    добавил из-за вкладки "Права в картотеках" там встретился данный недостаток*/
+    /* private parseCompact(data: any, names?) {
+        if (data.value) {
+            this.parseElemValue(data.value, data.value[0]['_sh']['names']);
+            Object.keys(data.value[0]).forEach(key => {
+                if (data.value[0][key] && typeof data.value[0][key] === 'object' && this.findVal(data.value[0][key], '_sh')) {
+                    const el = data.value[0][key];
+                    if (!names[key] && el[0]['_sh'] && el[0]['_sh']['names']) {
+                        names[key] = el[0]['_sh']['names'];
+                    }
+                    this.parseElemValue(data.value[0][key]);
+                }
+            });
+        } else if (data._f) {
+            this.parseElemF(data, data['_sh']['names']);
+            Object.keys(data).forEach(key => {
+                if (data[key] && typeof data[key] === 'object' && this.findVal(data[key], '_sh')) {
+                    this.parseElemValue(data[key]);
+                }
+            });
+        }
+    } */
+    /* parseElemF принимает объект для переделки и массив имён сделано из-за частного случая когда _f и _sh встречаются сразу в объекте
+    а не во внутренних элементах */
+    private parseElemF(data: any, arrName: string[]) {
+        data['_f'].forEach((element, index) => {
+            data[arrName[index]] = element;
+        });
+        delete data['_f'];
+        delete data['_sh'];
+    }
+    /* parseElemValue главная функция в которую передаётся сразу объект в котором на 1 или 2 уровня ниже и будут находиться записи которые необходимо
+    переделать  arrName используется в случае если будет передан массив ключей если же нет то предполагается, что ключ есть в 0 элементе массива*/
+    private parseElemValue(data: any, arrName?: string[]) {
+        let ans = {};
+        const name = arrName ? arrName : data[0]['_sh']['names'];
+        if (data[0] && data[0]['_f']) {
+            Object.keys(data).forEach((arr) => {
+                Object.keys(data[arr]).forEach((elem) => {
+                    if ('' + elem === '__metadata') { // прост опереносим __metadata без изменений
+                        ans[elem] = data[arr][elem];
+                    } else {
+                        if ('' + elem !== '_sh' && '' + elem !== '_f') { // если в обекте или в поле нет _f то просто переносим это поле
+                            ans[elem] = data[arr][elem];
+                        } else if (elem === '_f') {
+                            data[arr][elem].forEach((element, index) => {
+                                ans[name[index]] = element;
+                            });
+                        }
+                    }
+                });
+                data[arr] = JSON.parse(JSON.stringify(ans));
+                ans = {};
+            });
+        }
+    }
+    /* findVal поиск ключа в объекте если ключ будет найден то функция вернёт его значения поиск выполняется через рекурсию */
+    private findVal(object: any, key: string) {
+        let value;
+        Object.keys(object).some((k) => {
+            if (k === key) {
+                value = object[k];
+                return true;
+            }
+            if (object[k] && typeof object[k] === 'object') {
+                value = this.findVal(object[k], key);
+                return value !== undefined;
+            }
+        });
+        return value;
+    }
     private appendChange(it: any, chr: any[], path: string) {
         const etn = this._metadata.etn(it);
         const et = this._metadata[etn];
