@@ -150,8 +150,8 @@
 .tooltip-error {
     .tooltip-inner {
         max-width: 380px;
-        box-shadow: 0 0 0 1px $active-field-color-main-theme, 5px 5px 20px 0 rgba(0, 0, 0, 0.3);
-        border-color: $active-field-color-main-theme;
+        box-shadow: 0 0 0 1px $tooltip-color, 5px 5px 20px 0 rgba(0, 0, 0, 0.3);
+        border-color: $tooltip-color;
     }
     &.tooltip.bottom .tooltip-inner::before {
         content: '';
@@ -200,27 +200,27 @@
     &.tooltip.right .tooltip-arrow {
         top: calc(50% - 12px) !important;
         left: -13px;
-        border-right-color: $active-field-color-main-theme;
+        border-right-color: $tooltip-color;
         border-width: 9px 9px 9px;
     }
     &.tooltip.left .tooltip-arrow {
         top: calc(50% - 12px) !important;
         right: -13px;
-        border-left-color: $active-field-color-main-theme;
+        border-left-color: $tooltip-color;
         border-width: 9px 9px 9px;
     }
     &.tooltip.top .tooltip-arrow {
         bottom: -4px;
         left: calc(50% - 8px)!important;
         margin-left: -10px;
-        border-top-color: $active-field-color-main-theme;
+        border-top-color: $tooltip-color;
         border-width: 9px 9px 0;
     }
     &.tooltip.bottom .tooltip-arrow {
         top: -4px;
         left: 50% !important;
         margin-left: -10px;
-        border-bottom-color: $active-field-color-main-theme;
+        border-bottom-color: $tooltip-color;
         border-width: 0 9px 9px;
     }
 }

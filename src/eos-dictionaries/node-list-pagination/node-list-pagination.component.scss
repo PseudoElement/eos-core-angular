@@ -8,6 +8,10 @@
     -ms-grid-columns: auto 1fr 336px;
     grid-template-columns: auto 1fr 1fr;
     transition: 300ms ease-in-out;
+    position: fixed;
+    bottom: 60px;
+    left: 20px;
+    right: 20px;
     .pagination {
         border-color: $border-color-main-theme;
         border-radius: 0;
