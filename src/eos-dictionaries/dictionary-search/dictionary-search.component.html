@@ -4,6 +4,7 @@
         class="search-btn-wraper"
         placement="bottom"
         [container]="'body'"
+        [isOpen]="this.dictId === 'citizens'"
         #full="bs-popover"
         [outsideClick]="false">
         <button [ngClass]="{'hidden': !hasFull, 'opened': isActiveButton()}"
