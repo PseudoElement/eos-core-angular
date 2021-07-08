@@ -3,12 +3,9 @@
         <div class="menu">
             <div class="eos-title primary-text" *ngIf="showtitle">
                 <eos-title
+                [tooltip]="tooltip"
                 style="display: block;"
-                tooltip="{{tooltip}}"
-                placement="bottom"
-                container="body"
-                [delay]="tooltipDelay"
-                containerClass="tooltip-info"></eos-title>
+                ></eos-title>
             </div>
             <ul class="header-content left" [class.notTitle]="!showtitle">
                 <li class="header-item primary-text">

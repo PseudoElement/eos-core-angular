@@ -1,7 +1,8 @@
 .eos-title {
     position: absolute;
-    cursor: pointer;
-
+    .square-img-wrapper{
+        cursor: pointer;
+    }
     .title-wrapper {
         width: 228px;
         display: flex;
@@ -12,7 +13,7 @@
             text-decoration: none;
             display: inline-block;
             width: 140px;
-            cursor: pointer;
+            // cursor: pointer;
         }
     }
 }

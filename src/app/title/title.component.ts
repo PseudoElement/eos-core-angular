@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 // import { EosDeskService } from '../services/eos-desk.service';
 
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
     templateUrl: 'title.component.html'
 })
 export class TitleComponent {
+    @Input() tooltip: String;
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     /* todo: define it or remove. Mocked now*/
     title = 'Администрирование системы';
     openDelo() {
