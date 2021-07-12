@@ -81,7 +81,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.subscriptions.push(this._dictSrv.reloadDopRec$.subscribe(() => this.updateDopRec()));
     }
     get dictId(): string {
-        return this.dictionary.id;
+        return this.dictionary ? this.dictionary.id : null; // может придти null в этом случае просто передаём null
     }
     get noSearchData(): boolean {
         return Object.keys(this.searchModel).findIndex((prop) => this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
