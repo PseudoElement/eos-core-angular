@@ -703,12 +703,12 @@ export abstract class AbstractDictionaryDescriptor {
                 };
                 if (SevIndexHelper.PrepareForSave(sevData, record)) {
                     const exist = sevs.find((existSev) => {
-                        const existGlobSevId = existSev.GLOBAL_ID && existSev.GLOBAL_ID.trim();
-                        const newGlobSevId = sevData.GLOBAL_ID && sevData.GLOBAL_ID.trim();
+                        const existGlobSevId = existSev.GLOBAL_ID && existSev.GLOBAL_ID.trim().toUpperCase();
+                        const newGlobSevId = sevData.GLOBAL_ID && sevData.GLOBAL_ID.trim().toUpperCase();
                         const existObjSevId = existSev.OBJECT_ID && existSev.OBJECT_ID.trim();
                         const newObjSevId = sevData.OBJECT_ID && sevData.OBJECT_ID.trim();
 
-                        return existObjSevId !== newObjSevId && newGlobSevId.toUpperCase() === existGlobSevId.toUpperCase();
+                        return existObjSevId !== newObjSevId && newGlobSevId === existGlobSevId;
                     });
                     if (exist) {
                         result.success = false;
