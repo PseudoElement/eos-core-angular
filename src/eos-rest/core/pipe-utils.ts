@@ -128,7 +128,21 @@ export class PipeUtils {
         xhr.send();
         return result.promise;
     }
-
+    /* findVal поиск ключа в объекте если ключ будет найден то функция вернёт его значения поиск выполняется через рекурсию */
+    protected findVal(object: any, key: string) {
+        let value;
+        Object.keys(object).some((k) => {
+            if (k === key) {
+                value = object[k];
+                return true;
+            }
+            if (object[k] && typeof object[k] === 'object') {
+                value = this.findVal(object[k], key);
+                return value !== undefined;
+            }
+        });
+        return value;
+    }
     private parseMoreJson(item: any/*, tn: string*/) {
         if (typeof(item._more_json) === 'string') {
             item._more_json = JSON.parse(item._more_json);
@@ -252,21 +266,6 @@ export class PipeUtils {
                 ans = {};
             });
         }
-    }
-    /* findVal поиск ключа в объекте если ключ будет найден то функция вернёт его значения поиск выполняется через рекурсию */
-    private findVal(object: any, key: string) {
-        let value;
-        Object.keys(object).some((k) => {
-            if (k === key) {
-                value = object[k];
-                return true;
-            }
-            if (object[k] && typeof object[k] === 'object') {
-                value = this.findVal(object[k], key);
-                return value !== undefined;
-            }
-        });
-        return value;
     }
     private appendChange(it: any, chr: any[], path: string) {
         const etn = this._metadata.etn(it);

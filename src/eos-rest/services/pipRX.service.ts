@@ -197,7 +197,19 @@ export class PipRX extends PipeUtils {
 
         const ask = req[r._et];
         delete req[r._et];
-        const a = ask;
+        let a = ask;
+        let key = null;
+        // переопределяю ALL_ROWS для всего проекта
+        if (this._metadata[r._et]) {
+            key = Array.isArray(this._metadata[r._et]['pk']) ? this._metadata[r._et]['pk'][0] : this._metadata[r._et]['pk'];
+        }
+        if ((Array.isArray(a) && !a.length) ||
+            (this.findVal(a, 'ar') && key)) {
+            a = {
+                criteries: { [key]: 'isnotnull' },
+            };
+        }
+        // переопределяю ALL_ROWS для всего проекта
         const ids = ((a.criteries === undefined) && (a.args === undefined) && (a !== ALL_ROWS)) ? a : undefined;
         const urls = this._makeUrls(r, a, ids);
 
