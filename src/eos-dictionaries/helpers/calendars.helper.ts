@@ -1,4 +1,5 @@
 import { IEnt, PipRX } from 'eos-rest';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 // tslint:disable-next-line: class-name
 export interface CALENDAR_CL_BY_DEP extends IEnt {
@@ -53,14 +54,14 @@ export class CalendarHelper {
     }
 
     static readDB(pip: PipRX, due: any): Promise<any> {
-        const query = {
-        };
+        /* const query = {
+        }; */
         const req: any = due ? {
-            ['CalendarByDep']: query,
+            ['CalendarByDep']: ALL_ROWS,
             mode: '0',
             due_dep: due,
         } : {
-            ['CALENDAR_CL']: query,
+            ['CALENDAR_CL']: ALL_ROWS,
             orderby: 'DATE_CALENDAR',
             foredit: true,
         };

@@ -2545,6 +2545,24 @@ const commonMeta = {
         relations: [
         ]
     },
+    NTFY_OPERATION: {
+        pk: 'CODE',
+        properties: {
+            NAME: _t.s,
+            KING: _t.i,
+            MSG_HEADER: _t.s,
+            MSG_TEXT: _t.s,
+            MSG_EXTEND_TEXT: _t.s,
+            MSG_EXTEND_TEXT2: _t.s,
+            NOTE: _t.s,
+        },
+        readonly: [
+
+        ],
+        relations: [
+
+        ]
+    },
 };
 
 export function commonMergeMeta(meta: any) {
