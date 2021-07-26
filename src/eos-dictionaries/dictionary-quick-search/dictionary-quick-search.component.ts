@@ -48,13 +48,13 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
         // }
     }
 
-    quickSearch(evt: KeyboardEvent) {
+    quickSearch(evt: KeyboardEvent, val?) {
         // добавлено evt.key === undefined для закрытия быстрого поиска при переходе в расширенный поиск
-        if (evt.keyCode === 27 || evt.key === undefined) {
+        if (evt.keyCode === 27 || (evt.key === undefined && val === undefined)) {
             this.closeQuickForm();
         }
         // добавлено evt.key === "Enter" , т.к. при переходе на расширенны поиск срабатывает событие keydown с keyCode:13 (enter)
-        if (evt.keyCode === 13 && evt.key === 'Enter') {
+        if (evt.keyCode === 13 && (evt.key === 'Enter' || val === null)) {
             if (this.settings.quick.data && this.settings.quick.data.trim()) {
                 this.searchRun.emit(this.settings);
             } else {
