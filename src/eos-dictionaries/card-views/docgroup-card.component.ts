@@ -125,7 +125,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     openDict() {
         return this._waitClassifSrv.openClassif({
             classif: 'DOCVID_CL',
-            return_due: true,
+            // return_due: true,
             selectLeafs: true,
             selectNodes: true,
             skipDeleted: true,
