@@ -102,32 +102,31 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this.currentUser = this._userServices.curentUser;
             this.checkUserCard = this.currentUser['USERCARD_List'];
             this.isLoading = false;
-            this._limitservise.getGrifsName()
-            .then(result => {
+            const getGrifsName = this._limitservise.getGrifsName();
+            const getAccessCode = this._limitservise.getAccessCode();
+            /* обрабатываем и запускаем показываем страницу только после получения 2 запросов */
+            Promise.all([getGrifsName, getAccessCode]).then(values => {
                 if (this.currentUser['USER_FILESECUR_List']) {
                     this.grifsFiles[0] = this.currentUser['USER_FILESECUR_List'];
-                    this.grifsFiles[1] = result;
+                    this.grifsFiles[1] = values[0];
                 }
-                this.grifInput[1] = result;
+                this.grifInput[1] = values[0];
                 this.grifInput[0] = this.currentUser['USERSECUR_List'];
                 this.initGrifs = this.initValueGrifs(this.grifInput);
                 this.initGrifsFiles = this.initValueGrifs(this.grifsFiles);
-                // this.checkGrifs = this.currentUser['USERSECUR_List'];
-            });
-            this._limitservise.getAccessCode()
-                .then((result) => {
-                    this.umailsInfo = result.slice();
-                    this.sortArray(this.umailsInfo);
-                    this.saveParams = this.umailsInfo.slice();
-                    this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
-                    this.createForm(false, false);
-                    this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                    this.myForm.valueChanges.subscribe(data => {
-                        this.checkChanges(data);
-                    });
-                    this.editModeForm();
-                    this.isLoading = true;
+                // getAccessCode
+                this.umailsInfo = values[1].slice();
+                this.sortArray(this.umailsInfo);
+                this.saveParams = this.umailsInfo.slice();
+                this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
+                this.createForm(false, false);
+                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                this.myForm.valueChanges.subscribe(data => {
+                    this.checkChanges(data);
                 });
+                this.editModeForm();
+                this.isLoading = true;
+            });
         })
         .catch(err => {
 
