@@ -859,9 +859,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._dictSrv.setMarkAllNone();
             this._dictSrv.reload();
         }).catch((e) => {
-            this.updateRigthFields(node);
-            this._dictSrv.setMarkAllNone();
-            this._dictSrv.reload();
+            if (this._dictSrv.currentDictionary && this.dictionary && this._dictSrv.currentDictionary.id === this.dictionary.id) { // обновляем только тот справочник в котором находимся
+                this.updateRigthFields(node);
+                this._dictSrv.setMarkAllNone();
+                this._dictSrv.reload();
+            }
         });
     }
     private openClassifFromdepartment(params?) {
