@@ -165,15 +165,24 @@ export class ParamFielsComponent extends BaseParamComponent {
             if (this.newData) {
                 this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value;
             }
+            if (this.prepareData.rec['FILE_DESCRIPTION_VALID_CHARS'] === this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value) {
+                delete this.updateData['FILE_DESCRIPTION_VALID_CHARS'];
+            }
         }
         if (this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].valid && this.checkReplace()) {
             alert('В параметре "Символ для замены" описания файлов введен не допустимый символ. Он будет удален');
             this.deletReplace();
-            if (this.newData) {
+            if (this.newData && this.prepareData.rec['FILE_DESCRIPTION_REPLACE'] !== this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value) {
                 this.newData.rec['FILE_DESCRIPTION_REPLACE'] = this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value;
+                this.updateData['FILE_DESCRIPTION_REPLACE'] = this.newData.rec['FILE_DESCRIPTION_REPLACE'];
+            }
+            if (this.prepareData.rec['FILE_DESCRIPTION_REPLACE'] === this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value) {
+                delete this.updateData['FILE_DESCRIPTION_REPLACE'];
             }
         }
-        this.submit();
+        if (Object.keys(this.updateData).length !== 0) {
+            this.submit();
+        }
         this.cancelEdit();
     }
     buttonDefault() {
@@ -326,8 +335,9 @@ export class ParamFielsComponent extends BaseParamComponent {
 
     submit() {
         if (this.newData || this.newDataAttach) {
-            if (this.newData && this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr)) {
+            if (this.newData && this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'].indexOf(this.validChengeValueStr) && this.updateData['FILE_DESCRIPTION_VALID_CHARS']) {
                 this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] = this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'] + this.validChengeValueStr;
+                this.updateData['FILE_DESCRIPTION_VALID_CHARS'] = this.newData.rec['FILE_DESCRIPTION_VALID_CHARS'];
             }
             let dataRes = [];
             this.formChanged.emit(false);
