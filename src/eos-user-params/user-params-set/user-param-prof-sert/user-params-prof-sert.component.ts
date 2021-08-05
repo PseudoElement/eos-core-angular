@@ -1,10 +1,11 @@
+import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 import { AppContext } from './../../../eos-rest/services/appContext.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 /* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
 
 import { of, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+// import { catchError } from 'rxjs/operators';
 
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
@@ -44,7 +45,7 @@ interface SertInfo {
     selector: 'eos-prof-sert',
     styleUrls: ['user-params-prof-sert.component.scss'],
     templateUrl: 'user-params-prof-sert.component.html',
-    providers: [CarmaHttpService]
+    providers: [CarmaHttp2Service]
 })
 
 
@@ -63,6 +64,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         enc_mail_origin: null,
     };
     public selectedSertificatePopup: SertInfo;
+    public isLoading: boolean = true;
     public listsSertInfo: Array<SertInfo> = [];
     public alllistSertInfo: Array<SertInfo> = [];
     public selectList: SertInfo;
@@ -109,7 +111,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
         private _certService: CertificateService,
-        private carmaSrv: CarmaHttpService,
+        private carma2Srv: CarmaHttp2Service,
         private _appContext: AppContext
     ) { }
     ngOnDestroy() {
@@ -128,7 +130,18 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 this.selectedSertificatePopup = null;
                 const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
                 this.loadSert = true;
-                this.certStoresService.init(null, store)
+                this.carma2Srv.connectWrapper('', store)
+                .then((res) => {
+                    this.isCarma = true;
+                    this.isLoading = false;
+                    this.getSerts();
+                })
+                .catch((err) => {
+                    this.isCarma = false;
+                    this.isLoading = false;
+                    this.getSertNotCarma();
+                });
+                /* this.certStoresService.init(null, store)
                     .pipe(
                         takeUntil(this.ngUnsubscribe)
                     )
@@ -142,14 +155,14 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                             this.getSertNotCarma();
                             // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
                         }
-                    );
+                    ); */
             })
             .catch(err => {
 
             });
     }
     checkVersion(): boolean {
-        const arrVersion = this.certStoresService.ServiceInfo.carmaVersion.split('.');
+        const arrVersion = this.carma2Srv.getServiceInfo().carmaVersion.split('.');
         if (arrVersion[2] === '135') {
             return false;
         }
@@ -240,7 +253,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 this.loadSert = false;
             });
         }).catch(error => {
-                this.loadSert = false;
             this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
     }
@@ -291,27 +303,30 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     stableGetInfo() {
         const arrRequestSerts = [];
         this.DBserts.forEach(sert => {
-            arrRequestSerts.push(this.certStoresService.GetCertInfo2(sert['ID_CERTIFICATE']));
+            // arrRequestSerts.push(this.certStoresService.GetCertInfo2(sert['ID_CERTIFICATE']));
+            arrRequestSerts.push(this.carma2Srv.GetCertInfo(sert['ID_CERTIFICATE']));
         });
         return Promise.all(arrRequestSerts).then(data => {
-            data.forEach((infoSert, index) => {
-                if (!infoSert.errorCode) {
-                    this.listsSertInfo.push({
-                        who: infoSert['certInfo']['Issuer'],
-                        sn: infoSert['certInfo']['Serial'],
-                        whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
-                        data: infoSert,
-                        selected: false,
-                        id: this.DBserts[index]['ID_CERTIFICATE'],
-                        key: this.DBserts[index]['ISN_CERT_PROFILE'],
-                        create: false,
-                        delete: false,
-                        valid: this.parceValid(infoSert['certInfo']['Validity']),
-                    });
-                } else {
-                    this.notDataSert(this.DBserts[index]);
-                }
-            });
+            if (data) {
+                data.forEach((infoSert, index) => {
+                    if (!infoSert.errorCode) {
+                        this.listsSertInfo.push({
+                            who: infoSert['Issuer'],
+                            sn: infoSert['Serial'],
+                            whom: this.parseSertWhom(infoSert['X500Description']),
+                            data: infoSert,
+                            selected: false,
+                            id: this.DBserts[index]['ID_CERTIFICATE'],
+                            key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                            create: false,
+                            delete: false,
+                            valid: this.parceValid(infoSert['Validity']),
+                        });
+                    } else {
+                        this.notDataSert(this.DBserts[index]);
+                    }
+                });
+            }
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
         });
@@ -321,9 +336,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         this.DBserts.forEach((sert: USER_CERT_PROFILE) => {
             arrRequestSerts.push(sert['ID_CERTIFICATE']);
         });
-        return this.certStoresService.GetCertInfo2(arrRequestSerts.join(';')).then(serts => {
-            if (Array.isArray(serts['certInfos'])) {
-                serts['certInfos'].forEach((infoSert, index) => {
+        return this.carma2Srv.GetCertInfoMulty(arrRequestSerts.join(';')).then(serts => {
+            if (Array.isArray(serts)) {
+                serts.forEach((infoSert, index) => {
                     if (!infoSert.errorCode) {
                         this.listsSertInfo.push({
                             whom: infoSert['Issuer'],
@@ -341,7 +356,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                         this.notDataSert(this.DBserts[index]);
                     }
                 });
-            } else {
+            } /* else {
                 if (!serts.errorCode) {
                     this.listsSertInfo.push({
                         whom: serts['certInfo']['Issuer'],
@@ -358,7 +373,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 } else {
                     this.notDataSert(this.DBserts[0]);
                 }
-            }
+            } */
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
         });
@@ -388,14 +403,11 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
     openCarmWindow(idSert) {
-        this.certStoresService.ShowCert(String(idSert))
-            .pipe(
-                catchError(e => {
-                    this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-                    return of(null);
-                })
-            )
-            .subscribe(() => { });
+        this.carma2Srv.ShowCert(String(idSert))
+            .catch((e) => {
+                this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                return of(null);
+            });
     }
 
 
@@ -404,7 +416,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         };
         this._certService.openCerts(openSerts).then((data: string) => {
             if (data) {
-                this.carmaSrv.GetCertInfo2(data).then(result => {
+                this.carma2Srv.GetCertInfoP(data).then(result => {
                     this.selectedSertificatePopup = this.objectForSertInfo(result, data, false, false, false);
                     this.addSert();
                     this.addSertificate();

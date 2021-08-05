@@ -96,7 +96,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             this.allData = this.defaultUser;
             this.init();
             const stores: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
-            this.carmaHttp2Srv.connect('', stores);
+            this.carmaHttp2Srv.connectWrapper('', stores);
         } else {
             const config = {expand: 'USER_PARMS_List'};
             if (this.mainUser) {

@@ -1,6 +1,6 @@
 import { Component, Output, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import { SertsBase } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { CarmaHttpService } from 'app/services/carmaHttp.service';
+import { CarmaHttp2Service } from './../../../app/services/camaHttp2.service';
 import { CertificateService } from 'app/services/certificate.service';
 import { USER_CERTIFICATE } from 'eos-rest';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
@@ -9,7 +9,6 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { of } from 'rxjs';
 import { /* PARM_CANCEL_CHANGE, */ PARM_SUCCESS_SAVE,  PARM_ERROR_DB, PARM_ERROR_CARMA } from '../../user-params-set/shared-user-param/consts/eos-user-params.const';
-import { catchError } from 'rxjs/operators';
 @Component({
     selector: 'eos-base-serts',
     templateUrl: 'base-serts.component.html',
@@ -38,7 +37,7 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
     }
     @Output() closeModal: EventEmitter<any> = new EventEmitter();
     constructor(
-        private carmaSrv: CarmaHttpService,
+        private carma2Srv: CarmaHttp2Service,
         private _userParamSrv: UserParamsService,
         private _certService: CertificateService,
         private pip: PipRX,
@@ -62,7 +61,20 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
                 this.flagSave = 'POST';
             }
             const store = [{ Location: 'sscu', Address: '', Name: 'My' }];
-            this.carmaSrv.init(null, store).subscribe(data => {
+            this.carma2Srv.connectWrapper('MODULE=', store).then((res) => {
+                this.isCarma = true;
+                if (user_Sert.length) {
+                    this.getInfoSerts();
+                }
+            }).catch((err) => {
+                this.isCarma = false;
+                if (user_Sert.length) {
+                    this.setId();
+                }
+                this.notCarma();
+                this._msg.addNewMessage(PARM_ERROR_CARMA);
+            });
+            /* this.carmaSrv.init(null, store).subscribe(data => {
                 this.isCarma = true;
                 if (user_Sert.length) {
                     this.getInfoSerts();
@@ -74,7 +86,7 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
                 }
                 this.notCarma();
                 this._msg.addNewMessage(PARM_ERROR_CARMA);
-            });
+            }); */
         }).catch(error => {
             this._msg.addNewMessage(PARM_ERROR_DB);
         });
@@ -93,21 +105,24 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
     }
     getInfoSerts() {
         const arrayQuery = [];
-        arrayQuery.push(this.carmaSrv.GetCertInfo2(this.userSerts.SIGN_MAIL_CERT));
-        arrayQuery.push(this.carmaSrv.GetCertInfo2(this.userSerts.ENC_MAIL_CERT));
+        if (this.userSerts.SIGN_MAIL_CERT) {
+            arrayQuery.push(this.carma2Srv.GetCertInfoP(this.userSerts.SIGN_MAIL_CERT));
+        }
+        if (this.userSerts.ENC_MAIL_CERT) {
+            arrayQuery.push(this.carma2Srv.GetCertInfoP(this.userSerts.ENC_MAIL_CERT));
+        }
         if (arrayQuery.length > 0) {
             Promise.all([...arrayQuery]).then(([singd, encs]) => {
-
-                if (typeof singd === 'object' && singd.hasOwnProperty('certInfo')) {
-                    this.stateSerts.sing_mail = singd['certInfo']['Description'];
-                    this.stateSerts.sing_mail_origin = singd['certInfo']['Description'];
+                if (typeof singd === 'object') {
+                    this.stateSerts.sing_mail = singd['Description'];
+                    this.stateSerts.sing_mail_origin = singd['Description'];
                 }   else {
                     this.stateSerts.sing_mail = this.userSerts.SIGN_MAIL_CERT;
                     this.stateSerts.sing_mail_origin = this.userSerts.SIGN_MAIL_CERT;
                 }
-                if (typeof encs === 'object' && encs.hasOwnProperty('certInfo')) {
-                    this.stateSerts.enc_mail = encs['certInfo']['Description'];
-                    this.stateSerts.enc_mail_origin = encs['certInfo']['Description'];
+                if (typeof encs === 'object') {
+                    this.stateSerts.enc_mail = encs['Description'];
+                    this.stateSerts.enc_mail_origin = encs['Description'];
                 }   else {
                     this.stateSerts.enc_mail = this.userSerts.ENC_MAIL_CERT;
                     this.stateSerts.enc_mail_origin = this.userSerts.ENC_MAIL_CERT;
@@ -127,9 +142,9 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
             // let newSert = null;
             if (data) {
                 // newSert = data['certId'];
-                this.carmaSrv.GetCertInfo2(data).then(result => {
-                    this.stateSerts[paramSert] = result['certInfo']['Description'];
-                    this.stateSerts[id_sert] = result['certInfo']['Serial'] + result['certInfo']['Issuer'];
+                this.carma2Srv.GetCertInfoP(data).then(result => {
+                    this.stateSerts[paramSert] = result['Description'];
+                    this.stateSerts[id_sert] = result['Serial'] + result['Issuer'];
                 });
             }
         }).catch(error => {
@@ -206,17 +221,14 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
     }
     show(id: string) {
        const ids = this.stateSerts[id];
-        this.carmaSrv.ShowCert(ids)
-        .pipe(
-            catchError(e => {
-                this._msg.addNewMessage(PARM_ERROR_CARMA);
-                return of(null);
-            })
-        )
-        .subscribe(() => { });
+        this.carma2Srv.ShowCert(ids)
+        .catch((e) => {
+            this._msg.addNewMessage(PARM_ERROR_CARMA);
+            return of(null);
+        });
     }
     checkVersion(): boolean {
-        const arrVersion = this.carmaSrv.ServiceInfo.carmaVersion.split('.');
+        const arrVersion = this.carma2Srv.getServiceInfo().carmaVersion.split('.');
         if (arrVersion[2] === '135') {
             return false;
         }
