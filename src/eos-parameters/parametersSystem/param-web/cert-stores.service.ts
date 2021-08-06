@@ -18,6 +18,7 @@ export interface IListCertStotes extends Istore {
 @Injectable()
 export class CertStoresService {
     isMarkNode: boolean = false;
+    carmaLoader: boolean = true;
     private currentSelectedNode: IListCertStotes;
     private _currentSelectedNode$: Subject<IListCertStotes>;
     private updateFormControl$: Subject<string>;
@@ -58,7 +59,9 @@ export class CertStoresService {
         this.createInitCarmaStores(listCertStores);
         this.listsCetsStores = this.createListCetsStores();
         this._orderByField();
-        this.initCarmaServer();
+        this.initCarmaServer().then((result) => {
+            this.carmaLoader = false;
+        });
     }
     selectedNode(list: IListCertStotes) {
         this.isMarkNode = true;
@@ -111,7 +114,7 @@ export class CertStoresService {
         }
     }
     showListCertNode(): Promise<any> {
-        const curName = this.currentSelectedNode.Name;
+        const curName = this.currentSelectedNode && this.currentSelectedNode.Name;
         let name;
         if (curName.indexOf('\\') !== -1) {
             name = curName.split('\\')[1];
@@ -244,7 +247,8 @@ export class CertStoresService {
     }
     private initCarmaServer() {
         const initString = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
-        return this.carmaHttp2Srv.connect(initString, this.initCarmaStores);
+        return this.carmaHttp2Srv.connectWrapper(initString, this.initCarmaStores);
+        // return this.carmaHttp2Srv.connect(initString, this.initCarmaStores);
     }
     private checkMarkNode() {
         let check = false;

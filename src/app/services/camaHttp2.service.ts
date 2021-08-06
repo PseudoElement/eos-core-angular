@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
@@ -12,19 +11,18 @@ export class CarmaHttp2Service {
     ) {
         this.clientCarma = null;
     }
-    public connect(connectStirng: string, stores: any) {
-        try {
-            this.clientCarma = new CarmaHttp(connectStirng, stores, true);
-            this.clientCarma.InitializeAsync(() => {
-                this.carmaInitialized = true;
-            }, () => {
-                this.carmaInitialized = false;
-            });
-        } catch (e) {
-            this.clientCarma = null;
-            this.errHalper.errorHandler(e);
-        }
+
+    public connectWrapper(connectStirng: string, stores: any) {
+        return new Promise((resolve, reject) => {
+            try {
+                this.connect(connectStirng, stores);
+                resolve(true);
+            } catch (e) {
+                reject(false);
+            }
+        });
     }
+
     public getStores(store: any): Promise<any> {
         return new Promise((res, rej) => {
             if (this.clientCarma && this.carmaInitialized) {
@@ -55,6 +53,50 @@ export class CarmaHttp2Service {
         };
         return this.getStores(store);
     }
+
+    public getServiceInfo() {
+        if (this.clientCarma) {
+            return this.clientCarma.ServiceInfo;
+        }
+    }
+
+    public ShowCert(certId: string) {
+        if (this.clientCarma) {
+            return new Promise((resolve, reject) => {
+                const res = this.clientCarma.ShowCert(certId);
+                resolve(res);
+            });
+        }
+    }
+
+    public GetCertInfo(certId) {
+        return new Promise((resolve, reject) => {
+           const res = this.clientCarma.GetCertInfo(certId);
+            resolve(res);
+        });
+    }
+
+    public GetCertInfoP(certId) {
+        return new Promise((resolve, reject) => {
+            const res = this.clientCarma.GetCertInfoP(certId);
+             resolve(res);
+         });
+    }
+
+    public GetCertInfoMulty(certIds) {
+        return new Promise((resolve, reject) => {
+            const res = this.clientCarma.GetCertInfoMulty(certIds);
+            resolve(res);
+        });
+    }
+
+    public SetCert(certData) {
+        return new Promise((resolve, reject) => {
+            const res = this.clientCarma.SetCert(certData);
+            resolve(res);
+        });
+    }
+
     public EnumStores(location, address): Promise<any> {
         const objstore = {
             location: location
@@ -77,6 +119,19 @@ export class CarmaHttp2Service {
             this.clientCarma.ShowCert(certId);
         } else {
             this.errHalper.errorHandler({ code: 2000, message: 'Проверьте соединение с кармой' });
+        }
+    }
+    private connect(connectStirng: string, stores: any) {
+        try {
+            this.clientCarma = new CarmaHttp(connectStirng, stores, true);
+            this.clientCarma.InitializeAsync(() => {
+                this.carmaInitialized = true;
+            }, () => {
+                this.carmaInitialized = false;
+            });
+        } catch (e) {
+            this.clientCarma = null;
+            this.errHalper.errorHandler(e);
         }
     }
 }

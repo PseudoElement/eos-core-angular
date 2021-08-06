@@ -12,12 +12,15 @@ export class CertificateService {
     openCerts(params?: ICertificateInit) {
         return new Promise((resolve, reject) => {
             const url = this.getUrl(params);
-            const w = openPopup(url, function (event, str) {
-                if (str !== '') {
-                    return resolve(str);
-                }
-                return reject();
-            });
+            let w;
+            setTimeout(() => {
+                w = openPopup(url, function (event, str) {
+                    if (str !== '') {
+                        return resolve(str);
+                    }
+                    return reject();
+                });
+            }, 10);
             if (w) {
                 this.w = w;
             }

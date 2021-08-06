@@ -124,6 +124,9 @@
         </div>
         <div class="sert-table-content">
             <div>
+                <div class="spinner-prot" *ngIf="isLoading" style="position: absolute;top: 45%;left: 45%;">
+                    <eos-spinner size="lg"></eos-spinner>
+                </div>
                 <div class="item-container" *ngFor='let listSert of listsSertInfo'>
                     <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
                         <span tooltip="{{listSert.whom}}" placement="bottom" container="body" containerClass="tooltip-info" class="whom" boundary="scrollParent">{{listSert.whom}}</span>
