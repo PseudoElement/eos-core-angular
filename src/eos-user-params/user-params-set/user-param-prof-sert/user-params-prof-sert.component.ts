@@ -516,8 +516,8 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             this.listsSertInfo.splice(0, this.listsSertInfo.length);
             if (!this.isCurrentSettings) {
                 this.editFlag = false;
-                this.checkchanges();
             }
+            this.checkchanges();
             if (this.isCarma) {
                 this.getSerts();
             } else {
