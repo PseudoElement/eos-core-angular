@@ -114,10 +114,12 @@ export class SignatureAddComponent implements OnInit {
 
     }
     ngOnInit() {
-        this.init();
-        if (this.certSystemStore === 'sscu') {
-            this.searchStore();
-        }
+        setTimeout(() => {
+            this.init();
+            if (this.certSystemStore === 'sscu') {
+                this.searchStore();
+            }
+        }, 0);
     }
 
 
