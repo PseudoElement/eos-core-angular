@@ -165,7 +165,26 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             return_due: false,
         };
         this._waitClassifSrv.openClassif(query).then(data => {
-            this.addRcDocToInput(data);
+            /* Если получили данные из списка то получаем DUE если же мы получили DUE то тогда доп запрос на получение ISN */
+            if (data.indexOf('.') !== -1) {
+                const queryCriteries = data.replace('|', '||');
+                const q = {
+                    DOCGROUP_CL: {
+                        criteries: {
+                            DUE: queryCriteries
+                        }
+                    }
+                };
+                this._pipRx.read(q).then(result => {
+                    const newDate = [];
+                    result.forEach((doc) => {
+                        newDate.push(doc['ISN_NODE']);
+                    });
+                    this.addRcDocToInput(newDate.join('|'));
+                });
+            } else {
+                this.addRcDocToInput(data);
+            }
             this.flagBacground = false;
         }).catch(error => {
             this.flagBacground = false;
