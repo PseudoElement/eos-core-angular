@@ -15,7 +15,7 @@
 <div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
-            <li class="tab-item" *ngFor="let tab of fieldGroups | keyvalue" [ngClass]="{'active ': tab.key === currTab}" (click)="setTab(tab.key)">
+            <li class="tab-item tab-item-other" *ngFor="let tab of fieldGroups | keyvalue" [ngClass]="{'active ': tab.key === currTab}" (click)="setTab(tab.key)">
                 <span class="tab-title">{{tab.value}}</span>
             </li>
         </ul>
@@ -69,6 +69,15 @@
             ></eos-user-param-reestr>
         </div>
         <!--------------------------2--------------------------------------------->
+        <div [hidden]="currTab !==3" class="clearfix ">
+            <eos-user-param-dispatch 
+                (pushChange)="emitChangesDispatch($event)" 
+                [defaultValues]=" defaultValues" 
+                [defaultUser]="defaultUser"
+                [appMode]="appMode"
+                [isCurrentSettings]="isCurrentSettings"
+                ></eos-user-param-dispatch>
+        </div>
     </div>
 </div>
 <!-- <div class="sp " *ngIf="!isLoading ">

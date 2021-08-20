@@ -132,6 +132,50 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
         },
     ]
 };
+export const OTHER_USER_DISPATCH: IBaseUsers = {
+    id: 'other',
+    title: 'Передача',
+    apiInstance: 'USER_PARMS',
+    fields: [
+        {
+            key: 'RVO_NUMBER_FORMATION',
+            type: 'select',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'Пусто'},
+                {value: '1', title: 'От счетчика'},
+                {value: '2', title: 'Редактируемый'}
+            ]
+        },
+        {
+            key: 'RVO_URGENCY',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'RVO_IMPORTANCE',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'RVO_NOTE',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'RVO_MODE',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            dafault: 'COLLECTIVE',
+            options: [
+                {value: 'COLLECTIVE', title: 'Коллективные'},
+                {value: 'PERSONAL', title: 'Персональные'}
+            ]
+        },
+    ],
+};
 export const OTHER_USER_REESTR: IBaseUsers = {
     id: 'other',
     title: 'Передача',

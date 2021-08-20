@@ -33,6 +33,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     public sendFrom: string = '';
     public cBase: boolean = false;
     public flagInternalAdr: boolean = false;
+    public flagEdit: boolean = false;
     private sendFromOrigin: string = '';
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;
@@ -40,7 +41,6 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     private prepareInputs: any;
     private mapChanges = new Map();
     private defoltInputs: any;
-    private flagEdit: boolean = false;
     constructor(
         private _userSrv: UserParamsService,
         private formHelp: FormHelperService,

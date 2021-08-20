@@ -80,6 +80,7 @@ import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/rem
 
 import { CurrentUserSetComponent } from './current-user-set/current-user-set.component';
 import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.module';
+import { UserParamDispatchComponent } from './user-params-set/user-param-other/user-param-dispatch/user-param-dispatch.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -126,6 +127,7 @@ import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.modu
         ListCardRightComponent,
         UserParamTransferComponent,
         UserParamAddressesComponent,
+        UserParamDispatchComponent,
         UserParamReestrCBComponent,
         UserParamReestrComponent,
         UserParamShablonyComponent,
