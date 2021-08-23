@@ -129,12 +129,15 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.clearModel(this.getModelName());
     }
     showFastSrch() {
-        if (this.isQuickOpened) {
-            this.settings.lastSearch = SEARCHTYPE.none;
-        } else {
+        if ( this.settings.lastSearch !== SEARCHTYPE.quick) {
             this.settings.lastSearch = SEARCHTYPE.quick;
+            this.switchFastSrch.emit(this.isQuickOpened);
+        } else if (this.settings.quick.data === '') {
+            this.settings.lastSearch = SEARCHTYPE.none;
+            this.switchFastSrch.emit(this.isQuickOpened);
+        } else {
+            this.switchFastSrch.emit(null);
         }
-        this.switchFastSrch.emit(this.isQuickOpened);
         this.fSearchPop.hide();
     }
     close() {
