@@ -261,12 +261,13 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     submit(event) {
         this.isLoading = true;
         const changes = [];
+        const mergechange = [];
         this.mainArrayCards.forEach((card: CardsClass) => {
             if (card.deleted) {
                 this.queryDelete(card, changes);
             }
             if (!card.origin) {
-                this.queryPost(card, changes);
+                this.queryPost(card, changes, mergechange);
             }
             if (!card.deleted && card.origin) {
                 this.queryMerge(card, changes);
@@ -280,8 +281,16 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                     msg: '',
                     dismissOnTimeout: 6000
                 });
-                this.cancel(null);
-                this._userParamsSetSrv.setChangeState({ isChange: false });
+                /* В случае если были добавлены новые картотеки то необходимо изменить записи после их создания*/
+                if (mergechange.length) {
+                    this._pipSrv.batch(mergechange, '').then(() => {
+                        this.cancel(null);
+                        this._userParamsSetSrv.setChangeState({ isChange: false });
+                    });
+                } else {
+                    this.cancel(null);
+                    this._userParamsSetSrv.setChangeState({ isChange: false });
+                }
             }).catch(e => {
                 this.cancel(null);
                 this._errorSrv.errorHandler(e);
@@ -309,7 +318,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             });
         }
     }
-    queryPost(card: CardsClass, changes: Array<any>) {
+    queryPost(card: CardsClass, changes: Array<any>, merge?: Array<any>) {
         changes.push({
             method: 'POST',
             requestUri: `USER_CL(${this.userId})/USERCARD_List`,
@@ -318,6 +327,14 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 DUE: `${card.data.DUE}`,
                 HOME_CARD: `${card.data.HOME_CARD}`,
                 FUNCLIST: '010000000000010010000'
+            }
+        });
+        /*изменяем "Права в картотеках" -> "Читать файлы" разрешение на всё */
+        merge.push({
+            method: 'MERGE',
+            requestUri: `USER_CL(${this.userId})/USERCARD_List('${this.userId} ${card.data.DUE}')/USER_CARD_DOCGROUP_List('${this.userId} ${card.data.DUE} 0. 14')`,
+            data: {
+                ALLOWED: 1,
             }
         });
         card.cabinets.forEach((cab: Cabinets) => {
