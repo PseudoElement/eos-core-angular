@@ -482,7 +482,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         const d = this.data;
         // const isn_user_copy_from = (d['ISN_USER_COPY'] || d['USER_TEMPLATES']) || '0';
         let url = 'CreateUserCl?';
-        url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
+        url += `classifName='${d['classifName'] ? encodeURI(('' + d['classifName']).toUpperCase()) : ''}'`;
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
         url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         // url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
@@ -502,7 +502,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         let url = 'ChangeLogin?';
         url += `isn_user=${id}`;
         url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
-        url += `&classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
+        url += `&classifName='${d['classifName'] ? encodeURI(('' + d['classifName']).toUpperCase()) : ''}'`;
         if (this.password) {
             url += `&pass='${this.password}'`;
         }

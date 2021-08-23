@@ -550,7 +550,7 @@ export class UserParamsService {
                 requestUri: `USER_CL(${id})`,
                 data: {
 
-                    CLASSIF_NAME: clasName,
+                    CLASSIF_NAME: ('' + clasName).toUpperCase(),
                 }
             }], '');
         } else {
