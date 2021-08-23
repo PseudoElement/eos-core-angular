@@ -37,6 +37,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         [0, 'Пересылка документа'],
         [1, 'Адресаты документа'],
         [2, 'Реестр передачи документов'],
+        [3, 'Реестры внешней отправки'],
     ]);
     get titleHeader() {
         if (this.currentUser) {
@@ -53,10 +54,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     private newValuesAddresses: Map<string, any> = new Map();
     private flagAddresses: boolean = false;
     private newValuesReestr: Map<string, any> = new Map();
+    private newValuesDispatch: Map<string, any> = new Map();
+    private flagDispatch: boolean = false;
     private flagReestr: boolean = false;
     private TransferInputs: any;
     private AddressesInputs: any;
     private ReestInputsr: any;
+    private DispatchInputs: any;
     constructor(
         private _userSrv: UserParamsService,
         private _pipRx: PipRX,
@@ -104,7 +108,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     }
 
     get btnDisabled() {
-        if (this.flagAddresses || this.flagReestr || this.flagTransfer) {
+        if (this.flagAddresses || this.flagDispatch || this.flagTransfer || this.flagReestr) {
             return false;
         } else {
             return true;
@@ -153,7 +157,19 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         this._pushState();
     }
-
+    emitChangesDispatch($event) {
+        if (this.defaultUser) {
+            this.DispatchInputs = $event[1];
+        }
+        if ($event) {
+            this.flagDispatch = $event[0].btn;
+            this.newValuesDispatch = $event[0].data;
+        } else {
+            this.flagDispatch = false;
+            this.newValuesDispatch.clear();
+        }
+        this._pushState();
+    }
     emitIncrementError($event) {
         this.flagIncrementError = $event;
     }
@@ -193,6 +209,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         if (this.AddressesInputs !== undefined) {
             obj = Object.assign(this.AddressesInputs, obj);
+        }
+        if (this.DispatchInputs !== undefined) {
+            obj = Object.assign(this.DispatchInputs, obj);
         }
         if (this.ReestInputsr !== undefined) {
             obj = Object.assign(this.ReestInputsr, obj);

@@ -12,20 +12,17 @@
             <eos-dynamic-input class="inline-radio" [input]="inputs[ 'rec.RS_OUTER_DEFAULT_SENDING_TYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
     </div>
-    <!-- <div class="user-input-group">
-        <div *ngIf="cBase" class="send-from">
-            <div class="send-fron-title">
-                <span>Отправка:</span>
+    <div class="user-input-group">
+        <div class="send-from"> <!-- *ngIf="cBase" -->
+            <div class="send-from-title">
+                <span>Отправить из:</span>
             </div>
-            <div>
-                <eos-dynamic-input class="inline-radio" [input]="inputs['rec.RS_OUTER_DEFAULT_SENDING_TYPE']" [form]="form"></eos-dynamic-input>
-            </div> -->
-        <!-- <span class="send-from-input ">
-            <input [disabled]='!editFlag' readonly type="text " name="sendFrom " [ngModel]="sendFrom " >
+        <span class="">
+            <input [disabled]='!flagEdit' readonly type="text " name="sendFrom " [ngModel]="sendFrom" class="send-for-dep">
         </span>
             <span class="send-from-btn-choose ">
             <button
-                [disabled] = "!flagEdit "
+                [disabled]="!flagEdit"
                 class="btn btn-primary-light "
                 tooltip="Выбор из справочника "
                 triggers="hover "
@@ -36,7 +33,7 @@
             </span>
             <span class=" ">
             <button
-                [disabled] = "!flagEdit "
+                [disabled]="!flagEdit"
                 tooltip="Очистить "
                 #tooltipTemp = 'bs-tooltip'
                 containerClass="tooltip-info "
@@ -44,9 +41,9 @@
                 (click)="clearSendFrom() ">
                 <span class="eos-icon eos-icon-close-blue small "></span>
             </button>
-            </span> -->
-        <!-- </div>
-    </div> -->
+            </span>
+        </div>
+    </div>
     <div class="user-group-form" *ngIf="flagInternalAdr">
         <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
         <span>При добавлении указывать экземпляр документа в АРМ «ДелоWeb»:</span>
