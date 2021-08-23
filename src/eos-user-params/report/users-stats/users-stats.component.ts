@@ -165,7 +165,7 @@ export class EosReportUsersStatsComponent implements OnInit {
             // проверяем истекла ли лицензия
             if (elem.Enabled && elem.Expired) {
                 const expiredDate = new Date(elem.Expired);
-                if (dateNow < expiredDate) {
+                if (this.checkDade(dateNow, expiredDate)) {
                     enablelLicenze++;
                 }
             }
@@ -309,6 +309,20 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this.subServerArray.push(this.serverSystem[key]);
             }
         });
+    }
+    /* проверяем дату, учитываем что лицензия будет работать ещё в последний день */
+    checkDade(dateNow: Date, expirienceDate: Date): Boolean {
+        const year = dateNow.getFullYear() - expirienceDate.getFullYear();
+        const month = dateNow.getMonth() - expirienceDate.getMonth();
+        const day = dateNow.getDate() - expirienceDate.getDate();
+        if (year > 0) {
+            return true;
+        } else if (year === 0 && month > 0) {
+            return true;
+        } else if (year === 0 && month === 0 && day >= 0) {
+            return true;
+        }
+        return false;
     }
     convertDate(date: string) {
         if (date) {
