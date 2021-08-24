@@ -27,7 +27,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Отправка документов по реестрам',
         data: {
             isSelected: false,
-            // rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
