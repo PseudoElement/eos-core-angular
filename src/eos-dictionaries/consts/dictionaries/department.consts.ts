@@ -389,7 +389,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         ... !Features.cfg.departments.reestr_send ? [] : [
         {
             key: 'EXPEDITION_FLAG',
-            title: 'Отправка документов по реестрам',
+            title: 'Отправка документов',
             type: 'boolean',
         }, ],
         {

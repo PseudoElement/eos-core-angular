@@ -12,7 +12,7 @@ export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
     },
     departments: {
         numcreation: false,
-        reestr_send: false,
+        reestr_send: true, /* обображать поле пока сделаю для всех и для ЦБ и для Дела*/
         gas_ps: false,
         stamp: false,
         userCreateButton: true, /* в цб не должно быть, пока привязано к cb_func */
