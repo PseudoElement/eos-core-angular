@@ -478,7 +478,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             // if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
             //     this._deleteAllOrgType(item);
             // }
-            if (item !== this.selectedNode && item.isCreate) {
+            if (item !== this.selectedNode && (item.isCreate || item.key === '8')) {
                 this.selectNode(item);
             }
             if (item.value === 1 && item.contentProp === 5) {
