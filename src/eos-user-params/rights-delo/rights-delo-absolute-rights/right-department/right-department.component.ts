@@ -78,8 +78,11 @@ export class RightDepertmentComponent implements OnInit {
         this.funcNum = +this.selectedNode.key + 1;
         const rules = [35, 36];
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0 && rules.indexOf(this.funcNum) === -1) {
-            if (this.funcNum === 3 && this._appContext.cbBase) {
-                this.addNewDepAll();
+            if (this.funcNum === 3 /* && this._appContext.cbBase */) {
+                this.chechExpendionFlag()
+                .then(ans => {
+                    this.addNewDepAll(ans);
+                });
             } else {
                 this.addDep();
             }
@@ -162,6 +165,16 @@ export class RightDepertmentComponent implements OnInit {
         }
         return true;
     }
+    getAllDepart(dueDepart: string): Array<string> {
+        const arrDue = dueDepart.split('.');
+        arrDue.length = arrDue.length - 2;
+        const depQuer = [];
+        depQuer.push('' + arrDue.shift() + '.' + arrDue.shift() + '.'); // корневой департамент
+        arrDue.forEach(Due => {
+            depQuer.push(depQuer.join('.') + Due + '.');
+        });
+        return depQuer;
+    }
     addFieldChwckProp(node: INodeDocsTreeCfg, is_node: number, deep: number) {
         if (this.selectedNode['_constData'].data.flagcheck) {
             if (is_node === 0) {
@@ -185,37 +198,57 @@ export class RightDepertmentComponent implements OnInit {
     selectNode(dep: NodeDocsTree) {
         this.selectedDep = dep;
     }
-    addNewDepAll(): Promise<any> {
+    chechExpendionFlag(): Promise<DEPARTMENT | undefined> {
+        return this._userParmSrv.getDepartmentFromUser(this.getAllDepart(this.curentUser['DUE_DEP']))
+        .then((dep: DEPARTMENT[]) => {
+            let flag: DEPARTMENT;
+            dep.reverse().forEach(element => {
+                if (+element['EXPEDITION_FLAG'] === 1 && !flag) {
+                    flag = element;
+                }
+            });
+            return flag;
+        });
+    }
+    addNewDepAll(depFlag?: DEPARTMENT): Promise<any> {
         return this._userParmSrv.getDepartmentFromUser(['0.'])
         .then((data: DEPARTMENT[]) => {
             const newNodes: NodeDocsTree[] = [];
+            if (depFlag) {
+                data.push(depFlag);
+            }
             data.forEach((dep: DEPARTMENT) => {
                 const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
                     ISN_LCLASSIF: this._userParmSrv.userContextId,
                     DUE: dep.DUE,
                     FUNC_NUM: this.funcNum,
-                    WEIGHT: null,
+                    WEIGHT: this.funcNum === 3 ? null : -1,
                     DEEP: 1,
                     ALLOWED: null,
                 }, 'USERDEP');
                 const cfg: INodeDocsTreeCfg = {
                     due: newUserDep.DUE,
-                    label: '',
+                    label: dep.CLASSIF_NAME,
                     allowed: !!newUserDep.DEEP,
                     data: {
                         dep: dep,
                         userDep: newUserDep,
                     },
+                    weight: this._getNewWeight(),
                 };
                 this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
-                if (this.funcNum === 3 /* && this._appContext.cbBase */) {
-                    cfg.label = 'Все подразделения';
-                    newUserDep.ALLOWED = this._appContext.limitCardsUser.length > 0 ? 0 : 1;
-                    cfg.allowed = this._appContext.limitCardsUser.length > 0 ? false : true;
+                let flag;
+                if (this.funcNum === 3) {
+                    if (dep.DUE === '0.') {
+                        cfg.label = 'Все подразделения';
+                    }
+                    newUserDep.ALLOWED = dep.DUE === '0.' && depFlag ? 0 : 1;
+                    cfg.allowed = dep.DUE === '0.' && depFlag ? false : true;
                     cfg.viewAllowed = true;
+                    flag = true;
                 }
                 const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
-                const newNode = new NodeDocsTree(cfg, true, ownDep);
+                const newNode = new NodeDocsTree(cfg, flag, ownDep);
                 this.curentUser.USERDEP_List.push(newUserDep);
                     this.selectedNode.pushChange({
                         method: 'POST',
