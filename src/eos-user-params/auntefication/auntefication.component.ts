@@ -747,7 +747,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         let url = 'ChangeLogin?';
         url += `isn_user=${id}`;
         url += `&userType=${userType}`;
-        url += `&classifName='${encodeURIComponent(userLogin)}'`;
+        url += `&classifName='${encodeURIComponent(('' + userLogin).toUpperCase())}'`;
         url += `&pass='${userPassword}'`;
 
         const request = {
