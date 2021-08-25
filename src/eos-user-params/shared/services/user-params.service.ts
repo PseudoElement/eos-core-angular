@@ -751,7 +751,7 @@ export class UserParamsService {
                 Object.keys(systems).forEach((key) => {
                     const system = systems[key];
                     const lic = licenseMap.get(system.id);
-                    if (lic && (lic.max - lic.cur) < 0) {
+                    if (key !== 'delowebKL' && lic && (lic.max - lic.cur) < 0) { // Пользователей с КЛ можно зарегистрировать сколько угодно
                         hasCrowded = true;
                         CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK.bodyList.push(
                             `Количество пользователей подсистемы '${system.label}' не может превышать ${lic.max}`
