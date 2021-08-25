@@ -29,7 +29,7 @@
                         (click)="doAction(moreBtn.name, dropdown, $event)">
                         <span class="btn-icon" *ngIf='!moreBtn.isActive'
                             [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
-                        <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
+                        <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.activeClass : moreBtn.disabledClass"></span>
                         <span class="btn-title not-active-btn">{{moreBtn.title}}</span></a>
                 </li>
             </ul>
