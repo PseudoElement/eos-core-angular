@@ -768,6 +768,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                         const checkUser = this.getCheckedUsers(); // после блокировки убираем все галочки
                         checkUser.forEach((users) => {
                             users.isChecked = false;
+                            users.isSelected = false;
+                            users.selectedMark = false;
                         });
                         this.rtUserService.changeSelectedUser(null); // убираем из правого стакана
                         this.selectedUser = undefined; // убираем выбраного
@@ -810,6 +812,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     _user.blockedUser = false;
                     this._userParamSrv.ProtocolService(_user.data.ISN_LCLASSIF, 2);
                     _user.isChecked = false;
+                    _user.isSelected = false;
+                    _user.selectedMark = false;
                 });
                 if (!result) {
                     selectedUserBlocked.forEach((_user) => {
@@ -825,6 +829,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     const checkUser = this.getCheckedUsers(); // после блокировки убираем все галочки
                     checkUser.forEach((user) => {
                         user.isChecked = false;
+                        user.isSelected = false;
+                        user.selectedMark = false;
                     });
                     this.rtUserService.changeSelectedUser(null);
                     this.selectedUser = undefined;
