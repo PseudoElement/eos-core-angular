@@ -38,6 +38,7 @@ export class RightDepertmentComponent implements OnInit {
     selectedDep: NodeDocsTree;
     checkFlag: boolean = false;
     userTechDep: any[];
+    elementIsNotOpenInStart = [25, 26, 34]; // справочники департамента в которых не нужно сразу открывать добавление записей
     constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
@@ -83,7 +84,7 @@ export class RightDepertmentComponent implements OnInit {
                 .then(ans => {
                     this.addNewDepAll(ans);
                 });
-            } else {
+            } else if (this.elementIsNotOpenInStart.indexOf(this.funcNum) === -1) {
                 this.addDep();
             }
             this.isLoading = false;
