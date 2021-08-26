@@ -79,7 +79,9 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         this.ngUnsubscribe.next(null);
         this.ngUnsubscribe.complete();
     }
-
+    logOut() {
+        document.location.assign('../logoff.aspx');
+    }
     eiCl(id: any) {
         if (id === 'export') {
             this._eiCl.openExport('all').then().catch(err => { });
