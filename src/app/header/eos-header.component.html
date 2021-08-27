@@ -22,6 +22,7 @@
                         container="body" containerClass="tooltip-info">{{item.title}}</span></a>
                 </li>
                 <li class="header-item else-dropdown primary-text"
+                    [isDisabled]="!!currentUser.DELO_RIGHTS[0]"
                     dropdown
                     container="body">
                     <a class="link-name primary-text xl-font"
