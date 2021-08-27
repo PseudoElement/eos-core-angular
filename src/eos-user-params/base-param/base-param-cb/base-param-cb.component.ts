@@ -122,26 +122,26 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this._userParamSrv.curentUser.USER_PARMS_List.forEach(elem => {
                     if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
                         this.criptoView = true;
-                        this.apiSrvRx.read<any>({
-                            LicenseInfo: ALL_ROWS
-                        })
-                            .then(ans => {
-                                if (typeof (ans) === 'string') {
-                                    this.LicenzeInfo = JSON.parse(ans);
-                                } else {
-                                    this.LicenzeInfo = data;
-                                }
-                                if (this.LicenzeInfo.length > 0) {
-                                    this.createActualLicenze();
-                                }
-                                this.afterInit();
-                            })
-                            .catch(err => {
-                                this.afterInit();
-                                this.LicenzeInfo = [];
-                            });
                     }
                 });
+                this.apiSrvRx.read<any>({
+                    LicenseInfo: ALL_ROWS
+                })
+                    .then(ans => {
+                        if (typeof (ans) === 'string') {
+                            this.LicenzeInfo = JSON.parse(ans);
+                        } else {
+                            this.LicenzeInfo = data;
+                        }
+                        if (this.LicenzeInfo.length > 0) {
+                            this.createActualLicenze();
+                        }
+                        this.afterInit();
+                    })
+                    .catch(err => {
+                        this.afterInit();
+                        this.LicenzeInfo = [];
+                    });
                 // if (localStorage.getItem('lastNodeDue') == null) {
                 //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
                 // }
