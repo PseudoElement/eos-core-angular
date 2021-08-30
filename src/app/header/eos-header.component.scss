@@ -1,7 +1,12 @@
 .dropdown-content a:hover {background-color: #e3f2fd;}
 
 .menuitem div.dropdown-prot:hover .dropdown-content {display: block !important;}
-
+.close-header{
+    position: absolute;
+    right: 0;
+    top: 10px;
+    height: 49px;
+}
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
