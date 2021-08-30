@@ -21,6 +21,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     openProtocols: Array<any> = [];
     openWindows: Array<any> = [];
     headerShow = true;
+    currentUser;
     public disabled: boolean = false;
 
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -64,6 +65,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         // console.log(window.innerWidth);
     }
     ngOnInit() {
+        this.currentUser = this._appcontext.CurrentUser;
         if (this._appcontext.CurrentUser.DELO_RIGHTS && this._appcontext.CurrentUser.DELO_RIGHTS.length) {
             if (+this._appcontext.CurrentUser.DELO_RIGHTS[0]) {
                 this.disabled = false;
