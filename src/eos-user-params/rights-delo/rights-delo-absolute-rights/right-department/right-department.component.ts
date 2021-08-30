@@ -402,7 +402,7 @@ export class RightDepertmentComponent implements OnInit {
     // Проверка 'Создание РКПД' по ключу, вместо поиска по индексу в массиве
     confirmPkpd() {
         const rkpdRight = this.listRigth.filter((right) => right.key === '28')[0];
-        if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !rkpdRight.control.value) {
+        if (this.selectedNode.key === '31' && this.selectedNode.isCreate && !rkpdRight.control.value) {
             return new Promise((res, rej) => {
                 if (confirm('У пользователя нет права \'Создание РКПД\'. Добавить его?')) {
                     res(true);

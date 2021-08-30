@@ -203,11 +203,11 @@ export class RightOrganizDepertComponent implements OnInit {
             });
     }
     // только для исполнения поручений, спрашиваем на создание права ркпд P.S. из-за изменений этот код больше не отрабатывает если понадобиться то
-    // this.selectedNode.key === '5'
+    // this.selectedNode.key === '31'
     // Проверка 'Создание РКПД' по ключу, вместо поиска по индексу в массиве
     confirmPkpd() {
         const rkpdRight = this.listRigth.filter((right) => right.key === '28')[0];
-        if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !rkpdRight.control.value) {
+        if (this.selectedNode.key === '31' && this.selectedNode.isCreate && !rkpdRight.control.value) {
             return new Promise((res, rej) => {
                 if (confirm('У пользователя нет права \'Создание РКПД\', создать его?')) {
                     res(true);
