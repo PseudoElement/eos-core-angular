@@ -180,9 +180,9 @@ export class ParamFielsComponent extends BaseParamComponent {
                 delete this.updateData['FILE_DESCRIPTION_REPLACE'];
             }
         }
-        if (Object.keys(this.updateData).length !== 0) {
+        // if (Object.keys(this.updateData).length !== 0) {
             this.submit();
-        }
+        // }
         this.cancelEdit();
     }
     buttonDefault() {
