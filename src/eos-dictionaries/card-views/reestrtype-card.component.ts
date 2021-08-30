@@ -138,7 +138,6 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
         const isn = this.isNewRecord ? null : this.data.rec._orig['ISN_LCLASSIF'];
 
         if (oldDelivery !== newDeliv) {
-
             if (!this.isNewRecord && this._deliv_checkneed) {
                 this._checkReestrs(isn).then ( res => {
                     if (res === 'REESTR_NEW_EXISTS') {
@@ -147,18 +146,19 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
                             .then((confirmed: boolean) => {
                                 if (confirmed) {
                                     this._deliv_checkneed = false;
+                                    this.prevValues['ISN_DELIVERY'] = newDeliv;
                                 } else {
                                     this.setValue('rec.ISN_DELIVERY', oldDelivery);
+                                    this.prevValues['ISN_DELIVERY'] = oldDelivery;
                                 }
                                 return Promise.resolve(null);
                             });
                     } else {
                         this._deliv_checkneed = false;
+                        this.prevValues['ISN_DELIVERY'] = newDeliv;
                     }
-
                 }).catch(err => { this._errHandler(err); });
             }
-            this.prevValues['ISN_DELIVERY'] = newDeliv;
         }
 
     }
