@@ -67,6 +67,15 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     get checkHome() {
         return this.regExpFolders3.test(this.currentCabinet.data.FOLDERS_AVAILABLE);
     }
+    get getflagChecked() {
+        if (this.currentCabinet.data.FOLDERS_AVAILABLE.length === 9) {
+            return 'eos-icon-checkbox-square-v-blue';
+        } else if (this.currentCabinet.data.FOLDERS_AVAILABLE.length > 0) {
+            return 'eos-icon-checkbox-square-minus-blue';
+        } else {
+            return 'eos-icon-checkbox-square-blue';
+        }
+    }
     private unSubscribe: Subject<any> = new Subject();
     constructor(
         private _rtCabintsSrv: RigthsCabinetsServices,
@@ -92,6 +101,19 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     checkedFolder(value): boolean {
         // tslint:disable-next-line: no-bitwise
         return ~this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(value) !== 0;
+    }
+    checkAllElem() {
+        if (this.flagEdit) {
+            if (this.currentCabinet.data.FOLDERS_AVAILABLE === '123456789') {
+                this.currentCabinet.data.FOLDERS_AVAILABLE = '';
+                this.currentCabinet.data['HIDE_INACCESSIBLE'] = 0;
+                this.currentCabinet.data['HIDE_INACCESSIBLE_PRJ'] = 0;
+                this.currentCabinet.data.HOME_CABINET = 0;
+                this.alertWarning();
+            } else {
+                this.currentCabinet.data.FOLDERS_AVAILABLE = '123456789';
+            }
+        }
     }
     ngOnInit() {
         this.setFolders(this.card.cabinets[0]);

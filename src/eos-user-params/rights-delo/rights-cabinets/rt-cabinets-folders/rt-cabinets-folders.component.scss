@@ -32,14 +32,30 @@
         align-items: center;
         border-bottom: 1px solid #e6e6e6;
     }
+    .cabinet-bottom {
+        padding-top: 10px;
+        border-top: 1px solid #e6e6e6;
+    }
+    .pos-checkbox{
+        margin-right: 12px;
+    }
+    .item-pakege {
+        margin-left: 20px;
+    }
+    .pakege-main {
+        padding-left: 8px;
+        display: flex;
+        align-items: center;
+    }
     .cabinets-folders {
         overflow-y: auto;
         height: calc(100% - 72px);
     }
     .cabinets-wrapper {
+        overflow-y: auto;
         height: 100%;
     }
     .cabinets-fixed {
-        height: 72px;
+        height: 115px;
     }
 }
