@@ -442,7 +442,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         } else {
             this.initView(id ? id : '0.');
         }
-
+        /* Если мы показываем удалённых то меняем заголовок в пользователях */
+        if (this._apiSrv.flagDelitedPermanantly) {
+            this.titleCurrentDue = 'Удаленные пользователи';
+        }
     }
 
     ViewTechicalUsers() {
@@ -466,6 +469,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this._router.navigate(['user_param/0.']);
         } else {
             this.initView(id ? id : '0.');
+        }
+        /* Если мы показываем технических пользователей то меняем заголовок в пользователях */
+        if (this._apiSrv.flagTehnicalUsers) {
+            this.titleCurrentDue = 'Технические пользователи';
         }
     }
     upsavePagConfig() {
