@@ -39,6 +39,13 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     get showtitle(): boolean {
         return !!sessionStorage.getItem('fromclassif');
     }
+    get isDisabled(): boolean {
+        if (+this._appcontext.CurrentUser.DELO_RIGHTS[0]) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     constructor(
         _router: Router,
         private _route: ActivatedRoute,
