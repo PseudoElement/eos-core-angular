@@ -83,6 +83,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     }
     logOut() {
         document.location.assign('../logoff.aspx');
+        sessionStorage.removeItem('fromclassif');
     }
     eiCl(id: any) {
         if (id === 'export') {
