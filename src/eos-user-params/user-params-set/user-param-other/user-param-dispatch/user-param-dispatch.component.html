@@ -2,9 +2,9 @@
     <div class="pad-other-set">
         <div class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Номерообразование: </span>
+                <span class="input-title" style="margin-right: 9px;">Номерообразование: </span>
                 <eos-dynamic-input 
-                    [ngStyle]="{'width': isCurrentSettings ? '300px' : '', 'margin-left': isCurrentSettings ? '10px' : ''}" 
+                    [ngStyle]="{'width':'300px', 'margin-left': isCurrentSettings ? '10px' : ''}" 
                     [input]="inputs['rec.RVO_NUMBER_FORMATION']" 
                     [form]="form" 
                     [readonly]="false">
@@ -40,7 +40,7 @@
                 </eos-dynamic-input>
             </div>
             <div class="inputs-inline">
-                <span class="input-title">Создавать реестры:</span>
+                <span class="input-title" style="padding-top: 15px;">Создавать реестры:</span>
                 <eos-dynamic-input 
                     class="inline-radio"
                     [input]="inputs['rec.RVO_MODE']" 
