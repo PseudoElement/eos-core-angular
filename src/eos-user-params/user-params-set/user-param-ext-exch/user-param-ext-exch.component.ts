@@ -7,6 +7,7 @@ import { RemasterService } from 'eos-user-params/user-params-set/shared-user-par
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-ext-exch',
@@ -57,6 +58,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
+        private _appContext: AppContext,
     ) {}
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
@@ -66,6 +68,11 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         if (this.appMode.tkDoc) {
             this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
                 return item !== 'МЭДО';
+            });
+        }
+        if (this._appContext.cbBase && (this.appMode.arm || this.appMode.cbr)) {
+            this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
+                return item !== 'Эл. почта';
             });
         }
         if (this.defaultTitle) {
