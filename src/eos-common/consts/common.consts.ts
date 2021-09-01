@@ -12,7 +12,7 @@ export const NUMERIC_PATTERN = /(^\d{1,8}$)/;
 // export const VALID_REQ_STRING = /^(?!\ *$)[\wА-Яа-я.+\ \'\-]+[^\:\"\|!@$&^=~]*$/;
 export const VALID_REQ_STRING = /[^\s]+/;
 export const NOT_EMPTY_STRING2 = /[^\s]+/;
-export const VALID_REQ_MULTIPLE_STRING = /^(?!\s*$)[\wА-Яа-я.+\s\'\-]+$/;
+export const VALID_REQ_MULTIPLE_STRING = /^(?!\s*$)[\wА-Яа-я.+\s:;,\'\-]+$/;
 export const INPUT_ERROR_MESSAGES = {
     required: 'Обязательное поле.',
     isUnique: [
