@@ -312,9 +312,9 @@ export class EosReportUsersStatsComponent implements OnInit {
     }
     /* проверяем дату, учитываем что лицензия будет работать ещё в последний день */
     checkDade(dateNow: Date, expirienceDate: Date): Boolean {
-        const year = dateNow.getFullYear() - expirienceDate.getFullYear();
-        const month = dateNow.getMonth() - expirienceDate.getMonth();
-        const day = dateNow.getDate() - expirienceDate.getDate();
+        const year = expirienceDate.getFullYear() - dateNow.getFullYear();
+        const month = expirienceDate.getMonth() - dateNow.getMonth();
+        const day = expirienceDate.getDate() - dateNow.getDate();
         if (year > 0) {
             return true;
         } else if (year === 0 && month > 0) {
