@@ -8,6 +8,9 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { Subject } from 'rxjs';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-ext-exch',
@@ -41,6 +44,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     private newValuesMap = new Map();
     private newValuesSab: Map<string, any> = new Map();
     private newValuesMado: Map<string, any> = new Map();
+    private ngUnsubscribe: Subject<any> = new Subject();
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -59,7 +63,19 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
         private _appContext: AppContext,
-    ) {}
+        private _router: Router,
+    ) {
+        this._userSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit('')
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            });
+        });
+    }
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
@@ -100,7 +116,10 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             });
         }
     }
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     get btnDisabled(): boolean {
         if (this.EmailChangeFlag || this.SabChangeFlag ||  this.MadoChangeFlag) {
             return true;

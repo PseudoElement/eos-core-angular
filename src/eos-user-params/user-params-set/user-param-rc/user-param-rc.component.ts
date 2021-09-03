@@ -12,6 +12,9 @@ import { PipRX } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { takeUntil } from 'rxjs/operators';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { Subject } from 'rxjs';
 @Component({
     selector: 'eos-user-param-rc',
     templateUrl: 'user-param-rc.component.html',
@@ -51,7 +54,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     private mapChanges = new Map();
     private creatchesheDefault: any;
     private defoltInputs: any;
-
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private formHelp: FormHelperService,
@@ -61,7 +64,19 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+        private _router: Router,
+    ) {
+        this._userParamsSetSrv.canDeactivateSubmit$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((rout: RouterStateSnapshot) => {
+                this.submit()
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                });
+            });
+    }
     ngOnInit() {
         this.flagEdit = !!this.isCurrentSettings;
         if (this.defaultTitle) {
@@ -356,7 +371,10 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             }
         };
     }
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     cancel($event?) {
         if (this.mapChanges.size) {
             this._msg.addNewMessage(PARM_CANCEL_CHANGE);

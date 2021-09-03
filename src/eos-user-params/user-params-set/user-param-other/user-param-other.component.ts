@@ -8,6 +8,9 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
     selector: 'eos-user-param-other',
     templateUrl: 'user-param-other.component.html',
@@ -61,6 +64,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     private AddressesInputs: any;
     private ReestInputsr: any;
     private DispatchInputs: any;
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userSrv: UserParamsService,
         private _pipRx: PipRX,
@@ -69,7 +73,19 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _formHelper: FormHelperService,
         private _errorSrv: ErrorHelperServices,
         private _appContext: AppContext,
-    ) {}
+        private _router: Router,
+    ) {
+        this._userSrv.canDeactivateSubmit$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((rout: RouterStateSnapshot) => {
+                this.submit('')
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                });
+            });
+    }
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
         if (this.isCurrentSettings && this.appMode && this.appMode.arm) {
@@ -174,7 +190,10 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this.flagIncrementError = $event;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 
     edit($event?) {
         this.editFlag = $event;

@@ -222,9 +222,10 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
         if (this._isChanged) {
             return new Promise((res, rej) => {
-                if (confirm('Возможно, внесенные изменения не сохранятся.')) {
+                if (confirm('На текущей вкладке есть несохраненные изменения. Сохранить их и продолжить?')) {
+                    this._userParamService.setCanDeactivateSubmit(nextState);
                     this._isChanged = false;
-                    return res(true);
+                    return res(false);
                 } else {
                     return res(false);
                 }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -106,6 +106,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.currTab = 1;
             }
         });
+        this._userParamsSetSrv.canDeactivateSubmit$
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+                )
+            .subscribe((rout: RouterStateSnapshot) => {
+                this.submit()
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                });
+            });
     }
     ngOnInit() {
         this.onResize();

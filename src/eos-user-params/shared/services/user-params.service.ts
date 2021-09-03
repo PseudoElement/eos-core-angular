@@ -8,7 +8,7 @@ import { Subject, Observable } from 'rxjs';
 import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ErrorHelperServices } from './helper-error.services';
@@ -37,6 +37,7 @@ export class UserParamsService {
     private _saveFromAsk$: Subject<void> = new Subject<void>();
     private _updateUser$: Subject<void> = new Subject<void>();
     private _hasChanges$: Subject<IUserSetChanges> = new Subject<IUserSetChanges>();
+    private _canDeactivateSubmit$: Subject<RouterStateSnapshot> = new Subject<RouterStateSnapshot>();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
@@ -70,6 +71,9 @@ export class UserParamsService {
     }
     get isUserContexst() {
         return !!this._userContext;
+    }
+    get canDeactivateSubmit$(): Observable<RouterStateSnapshot> {
+        return this._canDeactivateSubmit$.asObservable();
     }
     get updateUser$(): Observable<void> {
         return this._updateUser$.asObservable();
@@ -287,6 +291,9 @@ export class UserParamsService {
     }
     saveChenges() {
         this._saveFromAsk$.next();
+    }
+    setCanDeactivateSubmit(router: RouterStateSnapshot) {
+        this._canDeactivateSubmit$.next(router);
     }
     setChangeState(state: IUserSetChanges) {
         this._hasChanges$.next(state);
