@@ -1,5 +1,9 @@
 import { E_CARD_RIGHT } from 'eos-rest/interfaces/rightName';
 
+export interface CardUpdate {
+    update?: boolean;
+    flag?: boolean;
+}
 export interface ICardFuncList {
     funcNum: E_CARD_RIGHT;
     label: string;

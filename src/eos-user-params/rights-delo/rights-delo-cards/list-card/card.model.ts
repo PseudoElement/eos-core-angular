@@ -10,6 +10,7 @@ export class CardRight {
     public expandable: boolean = true;
     public isExpanded: boolean = false;
     public isLoading: boolean = false;
+    public confirmAns = false;
     public isLimit: boolean;
     public type: E_CARD_TYPE;
     public listNodes: NodeDocsTree[];
@@ -25,22 +26,20 @@ export class CardRight {
         return !!this._value;
     }
     set value (v: boolean) {
-        this._value = +v;
-        if (!this.expandable) {
-            this._setValueEntity();
-            return;
-        }
-        if (v) {
-            this._setValueEntity();
-            this._srv.createRootEntity(this._card);
-            return;
-        }
-        this._setValueEntity();
-        this._srv.deleteAllDoc(this._card);
-        this.isExpanded = false;
+        this.setElemAll(v);
+        this._srv.setUpdateFlag();
+    }
+    set valueAll(v: boolean) {
+        this.setElemAll(v, true);
     }
     get limit(): boolean { // 0 1 2
         return this._value === 2;
+    }
+    get funcNum(): number {
+        return this._funcNum;
+    }
+    get card(): USERCARD {
+        return this._card;
     }
     set limit (v: boolean) {
         console.log('set limit (v: boolean)', v);
@@ -80,6 +79,21 @@ export class CardRight {
             this.isLoading = false;
         });
     }
+    setElemAll(v: boolean, flag?: boolean) {
+        this._value = +v;
+        if (!this.expandable) {
+            this._setValueEntity(flag);
+            return;
+        }
+        if (v) {
+            this._setValueEntity(flag);
+            this._srv.createRootEntity(this._card);
+            return;
+        }
+        this._setValueEntity(flag);
+        this._srv.deleteAllDoc(this._card);
+        this.isExpanded = false;
+    }
     select(node: NodeDocsTree) {
         if (node.DUE === '0.') {
             this.curentSelectedNode = null;
@@ -106,6 +120,15 @@ export class CardRight {
         this._srv.deleteNode(this.curentSelectedNode, this._card);
         this.listNodes = this.listNodes.filter((node: NodeDocsTree) => node !== this.curentSelectedNode);
         this.curentSelectedNode = null;
+    }
+    updateEditFileAll(num: number, func_list: string[]) {
+        if (num === 13 && func_list[13] === '0') {
+            func_list[14] = '0';
+            func_list[15] = '0';
+        }
+        if ((num === 14 || num === 15) && func_list[13] === '0') {
+            func_list[13] = '1';
+        }
     }
     updateEditFile(num: number, func_list: string[]) {
         const inListMes = [];
@@ -195,14 +218,29 @@ export class CardRight {
             }
         }
     }
-    private _setValueEntity() {
+    private _setValueEntity(flag?) {
         const value = this._card.FUNCLIST.split('');
         value[this._funcIndex] = this._value.toString();
         if (this._funcIndex > 12 && this._funcIndex < 16) {
-           this.updateEditFile(this._funcIndex, value);
+            if (flag !== undefined) {
+                if (flag) {
+                    this.updateEditFileAll(this._funcIndex, value);
+                }
+            } else {
+                this.updateEditFile(this._funcIndex, value);
+            }
         }
         if (this._funcIndex === 2) {
-            this.updateFileRk(value);
+            if (flag !== undefined) {
+                if (flag) {
+                    value[12] = value[this._funcIndex];
+                    value[13] = value[this._funcIndex];
+                    value[14] = value[this._funcIndex];
+                    value[15] = value[this._funcIndex];
+                }
+            } else {
+                this.updateFileRk(value);
+            }
         }
         this._card.FUNCLIST = value.join('');
         this._srv.checkChenge();
