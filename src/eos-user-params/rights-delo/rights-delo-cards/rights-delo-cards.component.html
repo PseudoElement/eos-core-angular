@@ -36,6 +36,12 @@
     <section class="content">
         <article class="left-block">
             <div *ngFor="let item of funcList" class="item-func-list" (click)="selectFuncNum(item)" [ngClass]="{'highlighted': item.isSelected}">
+                <div class="pakege-main checkbox-inline" style="padding: 0;">
+                    <label class="checkbox">
+                        <!-- (change)="changeMainCabinet()" -->
+                        <span class="eos-icon small pos-checkbox" [ngClass]="getflagChecked(item.funcNum)" (click)="selectFuncNum(item, checkAllElem(item.funcNum))"></span>
+                    </label>
+                </div>
                 {{item.label}}
             </div>
         </article>

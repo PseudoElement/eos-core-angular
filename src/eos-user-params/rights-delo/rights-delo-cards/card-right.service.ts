@@ -19,15 +19,18 @@ export class CardRightSrv {
     public departments = new Map<string, DEPARTMENT>(); // Map<DUE, DEPARTMENT>
     private _docGroup = new Map<string, DOCGROUP_CL>(); // Map<DUE, DOCGROUP_CL>
 
-    get selectingNode$(): Observable<void> {
+    get updateFlag$(): Observable<void> {
+        return this._updateFlag$.asObservable();
+    }
+    get selectingNode$(): Observable<any> {
         return this._selectingNode$.asObservable();
     }
     get chengeState$(): Observable<boolean> {
         return this._chengeState$.asObservable();
     }
-    private _selectingNode$: Subject<void>;
+    private _selectingNode$: Subject<any>;
     private _chengeState$: Subject<boolean>;
-
+    private _updateFlag$: Subject<void>;
     private _funcNum_skip_deleted: Array<number> = [1, 13, 14, 15, 16];
     constructor(
         private _userParamsSetSrv: UserParamsService,
@@ -37,8 +40,9 @@ export class CardRightSrv {
         private _msgSrv: EosMessageService,
         private _appCtx: AppContext,
     ) {
-        this._selectingNode$ = new Subject<void>();
+        this._selectingNode$ = new Subject<any>();
         this._chengeState$ = new Subject<boolean>();
+        this._updateFlag$ = new Subject<void>();
     }
     prepareforEdit() {
         this._userParamsSetSrv.curentUser.USERCARD_List = this._prepareforEdit(this._userParamsSetSrv.curentUser.USERCARD_List);
@@ -54,8 +58,11 @@ export class CardRightSrv {
                 return userCardList;
             });
     }
-    selectFuncnum() {
-        this._selectingNode$.next();
+    setUpdateFlag() {
+        this._updateFlag$.next();
+    }
+    selectFuncnum(newData?: any) {
+        this._selectingNode$.next(newData);
     }
     limitCardAccess(due: string): boolean {
         if (this._appCtx.limitCardsUser.length === 0) {
