@@ -73,13 +73,17 @@
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
-        <div class="col-2 pull-right" *ngIf="editMode && hasCard">
+        <div class="col-2 pull-right" *ngIf="hasCard">
             <div class="form-group">
                 <div class="organization-wrapper">
-                    <label [ngClass]="{'unimportant-text': !editMode }">Организация <a
-                        (click)="chooseOrganiz()"
-                        eosClickMode>[выбрать]</a> <a
-                        (click)="unbindOrganization()">[удалить]</a></label>
+                    <label [ngClass]="{'unimportant-text': !editMode }">Организация 
+                        <a (click)="chooseOrganiz()" eosClickMode *ngIf="editMode">
+                            [выбрать]
+                        </a> 
+                        <a (click)="unbindOrganization()" *ngIf="editMode">
+                            [удалить]
+                        </a>
+                    </label>
                     <p class="form-control-static m-font">{{orgName}}</p>
                 </div>
             </div>
