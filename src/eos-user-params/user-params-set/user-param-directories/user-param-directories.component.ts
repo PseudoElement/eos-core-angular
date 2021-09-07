@@ -10,6 +10,9 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { takeUntil } from 'rxjs/operators';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { Subject } from 'rxjs';
 @Component({
     selector: 'eos-user-param-directories',
     templateUrl: 'user-param-directories.component.html',
@@ -36,6 +39,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     private mapChanges = new Map();
     private defoltInputs;
     private hashDefolt;
+    private ngUnsubscribe: Subject<any> = new Subject();
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -53,10 +57,21 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-        private _appContext: AppContext
+        private _appContext: AppContext,
+        private _router: Router,
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
+        this._userParamsSetSr.canDeactivateSubmit$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((rout: RouterStateSnapshot) => {
+                this.submit()
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                });
+            });
     }
 
     ngOnInit() {
@@ -287,7 +302,10 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);

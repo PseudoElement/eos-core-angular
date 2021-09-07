@@ -8,6 +8,9 @@ import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { VISUALIZATION_USER } from '../shared-user-param/consts/visualization.consts';
+import { Subject } from 'rxjs';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-user-param-visualization',
@@ -42,7 +45,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     private prepareInputs;
     private mapChanges = new Map();
     private defoltInputs;
-
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _userParamsSetSr: UserParamsService,
         private formHelp: FormHelperService,
@@ -51,9 +54,20 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        private _router: Router,
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
+        this._userParamsSetSr.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit()
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            });
+        });
     }
     ngOnInit() {
         this.flagEdit = !!this.isCurrentSettings;
@@ -220,7 +234,10 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);

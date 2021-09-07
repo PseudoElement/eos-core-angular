@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -12,6 +12,8 @@ import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'eos-user-param-external-application',
@@ -42,14 +44,27 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     private prepDate;
     private allData;
     private listForQuery: Array<string> = [];
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private dataSrv: EosDataConvertService,
         private _userParamsSetSrv: UserParamsService,
         private _inputCntlSrv: InputControlService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _errorSrv: ErrorHelperServices
-    ) {}
+        private _errorSrv: ErrorHelperServices,
+        private _router: Router,
+    ) {
+        this._userParamsSetSrv.canDeactivateSubmit$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+                )
+            .subscribe((rout: RouterStateSnapshot) => {
+                this.submit()
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                });
+            });
+    }
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
         if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForDeskApl.length) {
@@ -74,7 +89,10 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             });
         }
     }
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     init() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         const allData = this._userParamsSetSrv.hashUserContext;

@@ -13,6 +13,9 @@ import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { AppContext } from '../../../eos-rest/services/appContext.service';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -63,6 +66,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     private readonly disableForNotTech = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'PKI_ACTIVEX', 'PKI_INITSTR', 'DIFF_CHECK_EDS', 'WEB_EDS_VERIFY_ON_SERVER'];
     private readonly second = ['DIFF_CHECK_CRYPTO_INITSTR', 'DIFF_CHECK_PKI_INITSTR'];
     private listForQuery: Array<string> = [];
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userSrv: UserParamsService,
         private _appCtx: AppContext,
@@ -74,7 +78,19 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         public carmaHttp2Srv: CarmaHttp2Service,
         public certStoresService: CarmaHttpService,
-    ) { }
+        private _router: Router,
+    ) {
+        this._userSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit()
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            });
+        });
+    }
     get isWebAndArm() {
         if (!this.isCurrentSettings) {
             return true;
@@ -88,7 +104,10 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         });
         return hasRule;
     }
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
         if (this.defaultTitle) {

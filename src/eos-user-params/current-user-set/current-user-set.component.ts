@@ -1,4 +1,4 @@
-import { Component, OnInit, /* HostListener, */ OnDestroy } from '@angular/core';
+import { Component, OnInit, /* HostListener, */ OnDestroy} from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { takeUntil } from 'rxjs/operators';
@@ -123,9 +123,10 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
     canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
         if (this._isChanged) {
             return new Promise((res, rej) => {
-                if (confirm('Изменения не сохранены и будут потеряны.')) {
+                if (confirm('"На текущей вкладке есть несохраненные изменения. Сохранить их и продолжить?')) {
+                    this._userParamService.setCanDeactivateSubmit(nextState);
                     this._isChanged = false;
-                    return res(true);
+                    return res(false);
                 } else {
                     return res(false);
                 }
