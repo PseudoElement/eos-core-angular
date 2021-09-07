@@ -70,14 +70,20 @@
                     }
                 }
             }
-            .btn-copy {
-                padding: 8px 10px;
-                height: 35px;
-                margin-right: 81px;
-            }
-            .btn-rights-cut {
-                margin-right: 200px;
-            }
+
+        }
+        .btn-copy-wr {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 48px;
+        }
+        .btn-copy {
+            width: 110px;
+            padding: 8px 10px;
+            height: 30px;
+        }
+        .btn-rights-cut {
+            margin-right: 200px;
         }
     }
     .shell {

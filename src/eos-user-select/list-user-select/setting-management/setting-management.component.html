@@ -10,7 +10,7 @@
 <main *ngIf="!isLoading && form; else spiner">
     <div [formGroup]="form" class="inline-block base-department-input">
         <div>
-            <label [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
+            <label [attr.for]="inputs['USER_COPY'].key">Скопировать выбранным пользователям настройки от:</label>
             <div class="copy-user-wr" style="width: 460px">
                 <input (keyup)="delSelectUser($event)" class="form-control m-font inline-block input-w" readonly
                     [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text"
@@ -20,8 +20,9 @@
                     [ngStyle]="{'margin-left': !form.value['USER_COPY'] ? '' : '-60px'}"
                     (click)="selectUser(form.get('USER_TEMPLATES').value)"></span>
 
-                <a [ngClass]="{'hide': !form.value['USER_COPY']}"  (click)="cleanUser()">
-                    <span style="margin-bottom: -7px; margin-left: 5px " class="eos-icon eos-icon-close-blue small"></span></a>
+                <a [ngClass]="{'hide': !form.value['USER_COPY']}" (click)="cleanUser()">
+                    <span style="margin-bottom: -7px; margin-left: 5px "
+                        class="eos-icon eos-icon-close-blue small"></span></a>
             </div>
         </div>
         <div class="">
@@ -32,23 +33,28 @@
     <div class="container-settings">
         <div class="container-param-check">
             <div class="group-close">
-                <eos-dynamic-input class="pad-par-copy" [input]="inputs['1']" [form]="form"  (change)="changeCheckbox($event, form.controls['2'] )"></eos-dynamic-input>
-                <eos-dynamic-input class="pad-par-copy" [input]="inputs['2']" [form]="form" [disabled]="!form.controls['1'].value"></eos-dynamic-input>
-                <eos-dynamic-input class="pad-par-copy" [input]="inputs['3']" [form]="form"  (change)="changeCheckbox($event, form.controls['4'] )"></eos-dynamic-input>
-                <eos-dynamic-input class="pad-par-copy" [input]="inputs['4']" [form]="form" [disabled]="!form.controls['3'].value"></eos-dynamic-input>
+                <eos-dynamic-input class="pad-par-copy" [input]="inputs['1']" [form]="form"
+                    (change)="changeCheckbox($event, form.controls['2'] )"></eos-dynamic-input>
+                <eos-dynamic-input class="pad-par-copy" [input]="inputs['2']" [form]="form"
+                    [disabled]="!form.controls['1'].value"></eos-dynamic-input>
+                <eos-dynamic-input class="pad-par-copy" [input]="inputs['3']" [form]="form"
+                    (change)="changeCheckbox($event, form.controls['4'] )"></eos-dynamic-input>
+                <eos-dynamic-input class="pad-par-copy" [input]="inputs['4']" [form]="form"
+                    [disabled]="!form.controls['3'].value"></eos-dynamic-input>
             </div>
             <div class="group-middle">
-                <eos-dynamic-input  [input]="inputs['5']" [form]="form"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['5']" [form]="form"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['6']" [form]="form"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['7']" [form]="form"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['8']" [form]="form"></eos-dynamic-input>
                 <!-- <eos-dynamic-input [input]="inputs['9']" [form]="form"></eos-dynamic-input> -->
             </div>
         </div>
-        <div>
-            <button class="btn btn-copy" (click)="copySettings()" [disabled]="!disabledCopy"
-                [ngClass]="{'btn-primary': disabledCopy, 'btn-light': !disabledCopy}">Скопировать</button>
-        </div>
+
+    </div>
+    <div class="btn-copy-wr">
+        <button class="btn btn-copy" (click)="copySettings()" [disabled]="!disabledCopy"
+            [ngClass]="{'btn-primary': disabledCopy, 'btn-light': !disabledCopy}">СКОПИРОВАТЬ</button>
     </div>
     <hr>
     <div class="container-settings">
@@ -59,17 +65,13 @@
             </div>
         </div>
         <div>
-            <button
-                class="btn btn-copy"
-                (click)="cutRights()"
-                [disabled]="!disabledCutRights"
-                [ngClass]="{'btn-primary': disabledCutRights, 'btn-light': !disabledCutRights}"
-            >Снять права</button>
+            <button class="btn btn-copy" (click)="cutRights()" [disabled]="!disabledCutRights"
+                [ngClass]="{'btn-primary': disabledCutRights, 'btn-light': !disabledCutRights}">СНЯТЬ ПРАВА</button>
         </div>
     </div>
 </main>
 
-    <div *ngIf="isShell" class="shell"></div>
+<div *ngIf="isShell" class="shell"></div>
 
 <ng-template #spiner>
     <div class="spiner-div">
