@@ -139,7 +139,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     }
 
     copySettings(): Promise<any> {
-        const  isn = this.isnCopyFrom || this.form.controls['USER_TEMPLATES'].value;
+        const isn = this.isnCopyFrom || this.form.controls['USER_TEMPLATES'].value;
         this.isLoading = true;
         return this._confirmSrv.confirm(CONFIRM_COPY_USER).then(res => {
             if (res) {
@@ -291,7 +291,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         });
         return flag;
     }
-    private _createUrlForSop(form: FormGroup, isn?: string,  copy?: boolean): string {
+    private _createUrlForSop(form: FormGroup, isn?: string, copy?: boolean): string {
         let url;
         let rigths = '';
         if (this.form.controls['USER_TEMPLATES'].value && copy) {
@@ -369,17 +369,25 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 });
             });
 
-            this.form.controls['USER_TEMPLATES'].valueChanges.subscribe((data) => {
-                if (this.checkedUsers.some((u: UserSelectNode) => +u.data.ISN_LCLASSIF === +data)) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Пользователь находится в перечне адресатов копирования. Выберите другого пользователя',
-                    });
-                    this.form.controls['USER_TEMPLATES'].patchValue('', {emitEvent: false});
-                    return;
-                }
-            });
+        this.form.controls['USER_TEMPLATES'].valueChanges.subscribe((data) => {
+            if (this.checkedUsers.some((u: UserSelectNode) => +u.data.ISN_LCLASSIF === +data)) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Пользователь находится в перечне адресатов копирования. Выберите другого пользователя',
+                });
+                this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
+                return;
+            } else {
+                const value = data ? true : false;
+                this.form.controls['3'].patchValue(value, { emitEvent: false });
+                this.form.controls['5'].patchValue(value, { emitEvent: false });
+                this.form.controls['6'].patchValue(value, { emitEvent: false });
+                this.form.controls['7'].patchValue(value, { emitEvent: false });
+                this.form.controls['8'].patchValue(value, { emitEvent: true });
+                this.form.controls['1'].patchValue(value, { emitEvent: false });
+            }
+        });
     }
 
     private _getUserCl(isn) {

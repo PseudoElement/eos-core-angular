@@ -58,13 +58,13 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
     {
         controlType: E_FIELD_TYPE.string,
         key: 'USER_COPY',
-        label: 'Скопировать выбранным пользователям настройки от:',
+        label: 'Выберите  пользователя',
         value: '',
     },
     {
         controlType: E_FIELD_TYPE.select,
         key: 'USER_TEMPLATES',
-        label: 'Скопировать настройки по шаблону',
+        label: 'Скопировать настройки по шаблону:',
         options: [],
         default: '...'
     },
