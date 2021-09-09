@@ -11,6 +11,7 @@ import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+declare function notifyOpener();
 @Component({
     selector: 'eos-user-param-other',
     templateUrl: 'user-param-other.component.html',
@@ -211,6 +212,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             }
             this.resetFlagsBtn();
             this._pushState();
+            notifyOpener();
             // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             // this._userSrv.getUserIsn().then(() => {
             // });
