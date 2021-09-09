@@ -1,21 +1,18 @@
 <div [formGroup]="form">
-    <label [hidden]="input.hideLabel"
-        [attr.for]="input.key">{{input.label}}</label>
+    <label [hidden]="input.hideLabel" [attr.for]="input.key">{{input.label}}</label>
     <div [ngClass]="{'required': isRequired}">
-        <textarea class="form-control m-font"
-            [formControlName]="input.key"
-            [id]="input.key"
-            [readonly]="readonly"
-            [ngClass]="{'readonly': readonly}"
-            placeholder="..."
-            (focus)="onFocus()"
-            (blur)="onBlur()"
-            (input)="onInput($event)"
-            triggers="">
+        <textarea class="form-control m-font" [formControlName]="input.key" [id]="input.key" [readonly]="readonly"
+            [ngClass]="{'readonly': readonly}" placeholder="..." (focus)="onFocus()" (blur)="onBlur()"
+            (input)="onInput($event)" triggers="">
         </textarea>
-        <div class="textareacounter" *ngIf="isFocused && !readonly" >
+        <div class="textareacounter" *ngIf="isFocused && !readonly">
             <span>{{getCounterLabel()}}</span>
         </div>
 
+    </div>
+    <div *ngIf="isShowText">
+        <div
+            style="position: fixed; top: 0; left: 0; right: 0; background-color:#98948e; opacity: 0.5; width: 100%; height: 100%; z-index: 1;">
+        </div>
     </div>
 </div>
