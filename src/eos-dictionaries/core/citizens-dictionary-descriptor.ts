@@ -88,6 +88,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         const config = {
             classif: 'gop_rc',
             id: 'CITIZEN_dict',
+            from_classif: true,
         };
         if (flag) {
             config['user_id'] = -1;

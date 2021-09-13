@@ -304,6 +304,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         const config = {
             classif: 'gop_rc',
             id: 'ORGANIZ_dict',
+            from_classif: true,
         };
         if (flag) {
             config['user_id'] = -1;
