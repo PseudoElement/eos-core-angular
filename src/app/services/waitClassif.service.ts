@@ -148,6 +148,9 @@ export class WaitClassifService {
             if (params.editMode) {
                 url += `&editMode=` + params.editMode;
             }
+            if (params.from_classif) {
+                url += `&from_classif=` + params.from_classif;
+            }
         } else if (params.id === 'ORGANIZ_dict') {
             url = ORGANIZ_dict;
             url += `#rc_id=` + params.user_id;
@@ -159,6 +162,9 @@ export class WaitClassifService {
             }
             if (params.editMode) {
                 url += `&editMode=` + params.editMode;
+            }
+            if (params.from_classif) {
+                url += `&from_classif=` + params.from_classif;
             }
         }
         return url;
