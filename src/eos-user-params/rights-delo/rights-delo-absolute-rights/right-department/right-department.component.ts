@@ -542,7 +542,10 @@ export class RightDepertmentComponent implements OnInit {
             if (this.massMy.length > 0) {
                 this.deletForAll();
             } else {
-                this.addDep()
+                this.selectedNode.restoreChangesWeight(this._storageSrv);
+                this.delDepMy();
+                this.ngOnInit();
+                /* this.addDep()
                     .then(() => {
                         // this.selectedNode.value = 1;
                         this.selectedNode.restoreChangesWeight(this._storageSrv);
@@ -550,7 +553,7 @@ export class RightDepertmentComponent implements OnInit {
                         this.ngOnInit();
                     }).catch((error) => {
 
-                    });
+                    }); */
             }
         }
     }
