@@ -331,7 +331,9 @@ export class RightOrganizDepertComponent implements OnInit {
             if (this.massMy.length > 0) {
                 this.deletForAll();
             } else {
-                this.addDep()
+                this.delDepMy();
+                this.ngOnInit();
+                /* this.addDep()
                     .then(() => {
                         // this.selectedNode.value = 1;
                         this.delDepMy();
@@ -340,7 +342,7 @@ export class RightOrganizDepertComponent implements OnInit {
                         // добавил чтобы тут могло быть пустое За всех и без записей
                         this.delDepMy();
                         this.ngOnInit();
-                    });
+                    }); */
             }
         }
     }
