@@ -157,7 +157,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 const ids = [];
                 data[0].forEach(value => {
                     data[1].forEach(val => {
-                        if (+value.ISN_ORGANI === +val.ISN_NODE) {
+                        if (+value.ISN_ORGANIZ === +val.ISN_NODE) {
                             ids.push(val);
                         }
                     });
@@ -170,11 +170,15 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             if (flagmedo && !flagorganiz) {
                 const ids = [];
                 data[0].forEach(value => {
-                    ids.push(value.ISN_ORGANI);
+                    ids.push(value.ISN_ORGANIZ);
                 });
                 if (ids.length) {
                     return this.apiSrv.read({
-                        ORGANIZ_CL: ids
+                        ORGANIZ_CL: {
+                            criteries: {
+                                ISN_NODE: ids.join('|')
+                            }
+                        }
                     });
                 }
                 return [];
