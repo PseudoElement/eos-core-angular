@@ -3903,7 +3903,7 @@ export interface FILE_TYPE_CL {
 }
 
 export interface MEDO_PARTICIPANT {
-    ISN_ORGANI: number;
+    ISN_ORGANIZ: number;
     GATE: string;
     GATE_ID: string;
     MSGFORMAT: string;
