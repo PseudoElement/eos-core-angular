@@ -142,9 +142,16 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 if (Features.cfg.nodeList.enumerationType === E_LIST_ENUM_TYPE.marked) {
                     this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
                 }
-
             });
-
+        if (this.dictionaryId === 'nomenkl') {
+            this._dictSrv.visibleList$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((nodes) => {
+                this.nodes = nodes;
+            });
+        }
         this._apiSrv.cancelFormChanges$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
