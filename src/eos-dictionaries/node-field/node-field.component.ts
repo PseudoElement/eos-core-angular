@@ -34,7 +34,9 @@ export class NodeFieldComponent implements OnInit {
     }
 
     viewNode(evt: Event) {
-        this.view.emit(evt);
+        if (this.getFolderIcon() !== 'emptyicon') { // делаю так чтобы нажатие на папку работало только если папка видна
+            this.view.emit(evt);
+        }
     }
 
     ngOnInit(): void {
