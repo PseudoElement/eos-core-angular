@@ -29,7 +29,8 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
-    public currTab = 0;
+    public currTabName = 'Эл. почта';
+    // public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
     public EmailChangeFlag: boolean = false;
@@ -78,9 +79,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
-        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
+        /* if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
             this.currTab = Number(this.openingTab) - 1;
-        }
+        } */
         if (this.appMode.tkDoc) {
             this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
                 return item !== 'МЭДО';
@@ -91,6 +92,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
                 return item !== 'Эл. почта';
             });
         }
+        this.currTabName = this.fieldGroupsForExhcExt[0];
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.defaultValues = this.defaultUser;
@@ -126,8 +128,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-    setTab(i: number) {
-        this.currTab = i;
+    setTab(tab: string) {
+        this.currTabName = tab;
+        // this.currTab = this.allFieldGroupsForExhcExt.indexOf(tab);
     }
 
     getChanges($event) {
