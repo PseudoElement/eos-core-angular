@@ -100,7 +100,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.inputs['rec.FILE_DESCRIPTION_VALID_CHARS'].value = newValueControl;
         }
         if (!this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].value) {
-            this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('', { emitEvent: false });
+            this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
             this.prepareData.rec['FILE_DESCRIPTION_REPLACE'] = '';
             this.inputs['rec.FILE_DESCRIPTION_REPLACE'].value = '';
         }
