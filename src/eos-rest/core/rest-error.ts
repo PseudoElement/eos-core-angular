@@ -89,7 +89,6 @@ export class RestError {
     }
 
     private _odataErrorsHandler(err) {
-        // console.log('odataErrorsHandler', err);
         const erl = err.odataErrors;
         let logic = '';
         for (let i = 0; i < erl.length; i++) {
