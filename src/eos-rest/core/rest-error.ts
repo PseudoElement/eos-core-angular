@@ -95,7 +95,6 @@ export class RestError {
             const e = erl[i].innererror || erl[i];
             if (e.type === 'Eos.Delo.Exceptions.LogicException') {
                 logic += e.message + '\n';
-                // console.log('logic error');
             } else {
                 // console.log('non logic odata error', e);
                 if (e.message.value) {
