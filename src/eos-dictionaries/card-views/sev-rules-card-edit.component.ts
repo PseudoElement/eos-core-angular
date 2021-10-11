@@ -534,6 +534,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     }
     deletGroup() {
         this.groupDocument.splice(this.checkItemForDelet, 1);
+        this.groupDocumentTemplate = this.groupDocument.filter(elem => true);
         this.checkItemForDelet = null;
     }
     cancelSelectedDocgroup(msg: string) {
