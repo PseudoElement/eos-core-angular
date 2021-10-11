@@ -35,6 +35,8 @@ export class IDynamicInputOptions {
 
 export class DynamicInputComponent {
     @Input() input: InputBase<any>;
+    @Input() iconForElem: string;
+    @Input() visibleDeletElem: boolean;
     @Input() form: FormGroup;
     @Input() readonly: boolean;
     @Input() disabled: boolean;
@@ -46,7 +48,6 @@ export class DynamicInputComponent {
     @Input() height: number; // ограничить высоту выпадалки
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
-
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
 
