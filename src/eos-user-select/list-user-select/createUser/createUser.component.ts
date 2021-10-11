@@ -354,7 +354,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         delete this.data['dueDL'];
         // delete this.data['SELECT_ROLE'];
     }
-
+    cleanDueCopy() {
+        this.data['ISN_USER_COPY'] = undefined;
+        this.form.get('USER_COPY').patchValue('');
+    }
     selectDepartment(status) {
         if (status) {
             this._showDepartment();
