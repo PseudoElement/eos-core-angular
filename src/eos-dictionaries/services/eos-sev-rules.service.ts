@@ -744,6 +744,7 @@ export class EosSevRulesService {
         const updateCalc = this._data['calcDate'] ? 'true' : 'None';
         const fileMaxLength = !this._data['fileMaxLength'] || this._data['fileMaxLength'] === 'null' ? '' : this._data['fileMaxLength'];
         const fileExtensions = !this._data['fileExtensions'] || this._data['fileExtensions'] === 'null' ? '' : this._data['fileExtensions'];
+        const Executor = this._data['executors'] === 0 ? 'None' : this._data['kindExecutorConsideration'] === 1 ? 'Responsible' : 'All';
         return `<?xml version="1.0"?>
         <SendReportRule>
             <ScriptConfig>
@@ -778,7 +779,7 @@ export class EosSevRulesService {
                     <!-- Основание для снятия с контроля				Включать в паспорт. Include: true|false -->
                     <Resume Include="${Boolean(this._data['Resume'])}"/>
                     <!-- Исполнители резолюции				Включать в паспорт. Include: All(Все)|Responsible(Ответственные)|None(Не включать) -->
-                    <Executor Include="${'' + this._data['executors']}">
+                    <Executor Include="${Executor}">
                         <!-- Отчеты исполнителей					Включать в паспорт. Include: true|false -->
                         <Report Include="${Boolean(this._data['NotificationConfigReport'])}"/>
                         <!-- Файлы отчетов исполнителей					Включать в паспорт. Include: true|false -->
@@ -786,7 +787,7 @@ export class EosSevRulesService {
                         <FileOptions Extensions="${fileExtensions}" MaxLength="${fileMaxLength}"/>
                     </Executor>
                     <!-- ЭП поручения				Включать в паспорт. Include: true|false -->
-                    <Eds Include="${'undefined'}"/>
+                    <Eds Include="${'false'}"/>
                 </Task>
             </ScriptConfig>
             <!-- Состав докладов. -->
