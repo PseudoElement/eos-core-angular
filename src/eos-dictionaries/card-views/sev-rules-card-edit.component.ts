@@ -562,6 +562,18 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     openDocGroupCl() {
         this.openClassifDocGroup();
     }
+    public openClassifDocGroup() {
+        const classif = +this.ruleKind === 2 ? Object.assign({}, OPEN_CLASSIF_DOCGR_LEAFS) : Object.assign({}, OPEN_CLASSIF_DOCGR_SEV);
+        this._waitClassif.openClassif(classif)
+        .then(data => {
+            this.updateInputDue_doc(data);
+            // this.loadOrganizatiomNames(data);
+        }).catch(e => {
+            if (e) {
+                this._errorHelper.errorHandler(e);
+            }
+        });
+    }
     public deleteFieldsNames(name, flag?) {
         if (!flag) {
             switch (name) {
@@ -670,18 +682,6 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 }
             });
         }
-    }
-    private openClassifDocGroup() {
-        const classif = +this.ruleKind === 2 ? Object.assign({}, OPEN_CLASSIF_DOCGR_LEAFS) : Object.assign({}, OPEN_CLASSIF_DOCGR_SEV);
-        this._waitClassif.openClassif(classif)
-        .then(data => {
-            this.updateInputDue_doc(data);
-            // this.loadOrganizatiomNames(data);
-        }).catch(e => {
-            if (e) {
-                this._errorHelper.errorHandler(e);
-            }
-        });
     }
     private updateInputDue_doc(newDue?) {
         const due = newDue || this.form.controls['rec.DUE_DOCGROUP'].value;
