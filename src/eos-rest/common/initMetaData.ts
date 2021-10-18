@@ -2546,10 +2546,10 @@ const commonMeta = {
         ]
     },
     NTFY_OPERATION: {
-        pk: 'CODE',
+        pk: 'KIND',
         properties: {
+            CODE: _t.s,
             NAME: _t.s,
-            KING: _t.i,
             MSG_HEADER: _t.s,
             MSG_TEXT: _t.s,
             MSG_EXTEND_TEXT: _t.s,
