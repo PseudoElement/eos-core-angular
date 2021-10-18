@@ -113,7 +113,7 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null);
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null);
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
-                    this.setValue('fict.ISN_CARD_REG_W_1', '0');
+                    this.setValue('fict.ISN_CARD_REG_W_1', null);
 
                 }
                 if (newValue === '2') {
@@ -152,7 +152,7 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
                 } else if (newValue === '1') {
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null);
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1');
-                    this.setValue('fict.ISN_CARD_REG_W_2', '0');
+                    this.setValue('fict.ISN_CARD_REG_W_2', null);
                 }
 
                 break;

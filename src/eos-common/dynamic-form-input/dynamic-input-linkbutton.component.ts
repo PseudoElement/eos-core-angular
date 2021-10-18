@@ -8,7 +8,8 @@ import { DynamicInputBase } from './dynamic-input-base';
 export class DynamicInputLinkButtonComponent extends DynamicInputBase {
     @Input() buttonClick: Function;
     @Input() buttonClickRemove: Function;
-
+    @Input() iconForElem: string;
+    @Input() visibleDeletElem: boolean;
     get textType(): string {
         if (this.input.password) {
             return 'password';
@@ -20,7 +21,9 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
 
         return this.input.groupLabel && this.isGroup ? this.input.groupLabel : this.input.label;
     }
-
+    get newClass(): string {
+        return 'eos-icon small ' + (this.iconForElem ? this.iconForElem : '');
+    }
     onButtonClick1 () {
         if (this.viewOpts && this.viewOpts.events && this.viewOpts.events.select) {
             this.viewOpts.events.select(this);
@@ -51,8 +54,8 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
         this.control.setValue(value);
     }
 
-    enRemoveButton (): boolean {
-        return this.viewOpts && this.viewOpts.enRemoveButton;
+    enRemoveButton(): boolean {
+        return this.viewOpts && this.viewOpts.enRemoveButton && (this.visibleDeletElem || !this.iconForElem);
     }
 
     ignoreKeyDown(event) { // IE backspace

@@ -18,8 +18,14 @@
                 [attr.for]="input.key"
                 >
                     <span>
-                        <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick1()" *ngIf="!readonly"><span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span></a>
+                        <a 
+                        [ngClass]="{'readonly': readonly, 'disabled': disabled}" 
+                        (click)="onButtonClick1()" *ngIf="!readonly && !iconForElem">
+                            <span class="eos-icon eos-icon-arrow-v-blue-bottom small">
+                            </span>
+                        </a>
                         <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick2()" *ngIf="enRemoveButton() && !readonly" ><span class="eos-icon eos-icon-close-blue small"></span></a>
+                        <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick1()" *ngIf="!readonly && iconForElem"><span class="{{newClass}}" ></span></a>
                     </span>
                 </div>
         </div>

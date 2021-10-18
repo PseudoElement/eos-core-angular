@@ -757,7 +757,8 @@
                     class="form-control light"
                     [(ngModel)]="searchModel['CITIZEN_SURNAME']"
                     placeholder="..."
-                    maxlength="{{fieldsDescription.rec['CITIZEN_SURNAME']?.length}}">
+                    maxlength="{{fieldsDescription.rec['CITIZEN_SURNAME']?.length}}"
+                    autofocus>
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['CITIZEN_SURNAME']}"
                     (click)="searchModel['CITIZEN_SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -800,17 +801,25 @@
                 for="region-name">Регион</label>
             <div class="search-fld">
                 <input id="region-name"
-                    (click)="openDict()"
                     onfocus="this.blur()"
                     readonly
                     name="region-name"
                     type="text"
-                    style="cursor:pointer;background-color: #bababa;"
                     class="form-control light"
                     [(ngModel)]="searchModel['REGION_NAME']"
                     placeholder="..."
                     maxlength="{{fieldsDescription.rec['REGION_NAME']?.length}}">
-                <a class="clear-btn"
+                    <span 
+                        class="action eos-icon eos-icon-directory-book-blue"
+                        style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        triggers="hover"
+                        eosClickMode
+                        tooltip="Выбрать" (click)="openDict()"></span>
+                <a style="right: 30px;"
+                    class="clear-btn"
                     [ngClass]="{'hide': !searchModel['REGION_NAME']}"
                     (click)="[searchModel['REGION_NAME'] = '', searchModel['ISN_REGION'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
             </div>
