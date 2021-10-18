@@ -155,7 +155,7 @@ export class EosSevRulesService {
                         const document = receiveDocumentRule['ScriptConfig'][0]['Document'][0];
                         const Contact = receiveDocumentRule['ScriptConfig'][0]['Contact'][0];
                         const Task = receiveDocumentRule['ScriptConfig'][0]['Task'][0];
-                        const UpdateParams = receiveDocumentRule['ScriptConfig'][0]['UpdateParams'][0];
+                        const UpdateParams = receiveDocumentRule['ScriptConfig'][0]['UpdateParams'] ? receiveDocumentRule['ScriptConfig'][0]['UpdateParams'][0] : undefined;
                         this._data['type'] = 1;
                         this._data['kind'] = 2;
                         this._data['DUE_DEP'] = data['DUE_DEP'];
@@ -168,7 +168,7 @@ export class EosSevRulesService {
                         this._data['cabinetFile'] = receiveDocumentRule['ScriptConfig'][0]['RegistrationParams'][0]['Cabinet'][0]; // кабинет автомата cabinetFile
                         this._data['groupDocument'] = filter;
                         this._data['OrganizationFolderInput'] = Contact['OrganizationFolder'][0]; // организаци
-                        this._data['handRegistration'] = receiveDocumentRule['ScriptConfig'][0]['SendToManualQueue'][0] === 'true'; // handRegistration направлять на ручную регистрацию
+                        this._data['handRegistration'] = receiveDocumentRule['ScriptConfig'][0]['SendToManualQueue'] ? receiveDocumentRule['ScriptConfig'][0]['SendToManualQueue'][0] === 'true' : false;
                         this._data['link'] = document['Link'][0].$['Use'] !== 'None'; // link Связки РК
                         this._data['linkKind'] = document['Link'][0].$['Use'] === 'List' ? 1 : 0; // linkKind кнопки после
                         this._data['linkTypeList'] = document['Link'][0].$['LinkTypeList']; // linkTypeList поле после
@@ -183,8 +183,8 @@ export class EosSevRulesService {
                         this._data['taskCategory'] = Task['Category'][0].$['Use'] === 'true';
                         this._data['noteOrders'] = Task['Note'][0].$['Use'] === 'true';
                         this._data['takeFileOrders'] = Task['File'][0].$['Use'] === 'true';
-                        this._data['FileRK'] = UpdateParams['File'][0].$['Use'] === 'true'; // файлы РК
-                        this._data['takeOrdersRK'] = UpdateParams['Task'][0].$['Use'] === 'true'; // поручения РК
+                        this._data['FileRK'] = UpdateParams ? UpdateParams['File'][0].$['Use'] === 'true' : false; // файлы РК
+                        this._data['takeOrdersRK'] = UpdateParams ? UpdateParams['Task'][0].$['Use'] === 'true' : false; // поручения РК
                     } catch (e) {
                         console.dir(e);
                         const error: IMessage = { title: 'Ошибка', type: 'danger', msg: `Не верный формат документа: ${data.CLASSIF_NAME}` };
@@ -259,9 +259,8 @@ export class EosSevRulesService {
                         this._data['forwardingDocs'] = Notification['Forwarding'][0].$['Include'] !== 'None'; // forwardingDocs Доклад о направлениях документа
                         const kindForwardingDocs = Notification['Forwarding'][0].$['Include'] === 'First' ? 1 : 0;
                         this._data['kindForwardingDocs'] = kindForwardingDocs;
-
-                        this._data['editSet'] = Notification['NotificationUpdateOptions'][0].$['Update'] === 'true';
-                        this._data['calcDate'] = Notification['NotificationUpdateOptions'][0].$['StopDayCalc'] === 'true';
+                        this._data['editSet'] = Notification['NotificationUpdateOptions'] ? Notification['NotificationUpdateOptions'][0].$['Update'] === 'true' : false;
+                        this._data['calcDate'] = Notification['NotificationUpdateOptions'] ? Notification['NotificationUpdateOptions'][0].$['StopDayCalc'] === 'true' : false;
 
                     } catch (e) {
                         console.dir(e);
@@ -391,7 +390,7 @@ export class EosSevRulesService {
                         this._data['forwardingSign'] = !!(document2[0]['SignDirection'][0].$.Include === 'true');
                         this._data['reportVisa'] = !!(document2[0]['VisaInformation'][0].$.Include === 'true');
                         this._data['reportSign'] = !!(document2[0]['SignInformation'][0].$.Include === 'true');
-                        this._data['progectRegistration'] = !!(document2[0]['ProjectRegistrationSubscription'][0].$.Include === 'true');
+                        this._data['progectRegistration'] = document2[0]['ProjectRegistrationSubscription'] ? !!(document2[0]['ProjectRegistrationSubscription'][0].$.Include === 'true') : false;
                         this._data['stopDayCount'] = isNaN(document2[0].$.StopDayCount) ? 1 : document2[0].$.StopDayCount;
                     } catch (e) {
                         console.dir(e);
