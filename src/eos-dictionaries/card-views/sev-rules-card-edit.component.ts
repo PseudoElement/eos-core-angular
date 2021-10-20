@@ -674,9 +674,14 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
         if (this.linkTypeListControl.value && this.linkTypeListControl.value !== 'null') {
             this.dictSrv.currentDictionary.descriptor.loadNames('LINK_CL', this.linkTypeListControl.value).then((names: LINK_CL[]) => {
                 this.linkTypeListNames = [];
+                const loadLinksIsn: string[] = [];
                 names.forEach((n: LINK_CL) => {
                     this.linkTypeListNames.push(n.CLASSIF_NAME);
+                    loadLinksIsn.push('' + n.ISN_LCLASSIF);
                 });
+                if (names.length !== String(this.linkTypeListControl.value).split('|').length) {
+                    this.form.controls['rec.linkTypeList'].setValue(loadLinksIsn.join('|'));
+                }
             }).catch(e => {
                 if (e) {
                     this._errorHelper.errorHandler(e);
