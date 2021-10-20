@@ -127,21 +127,21 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.apiSrvRx.read<any>({
                     LicenseInfo: ALL_ROWS
                 })
-                    .then(ans => {
-                        if (typeof (ans) === 'string') {
-                            this.LicenzeInfo = JSON.parse(ans);
-                        } else {
-                            this.LicenzeInfo = data;
-                        }
-                        if (this.LicenzeInfo.length > 0) {
-                            this.createActualLicenze();
-                        }
-                        this.afterInit();
-                    })
-                    .catch(err => {
-                        this.afterInit();
-                        this.LicenzeInfo = [];
-                    });
+                .then(ans => {
+                    if (typeof (ans) === 'string') {
+                        this.LicenzeInfo = JSON.parse(ans);
+                    } else {
+                        this.LicenzeInfo = ans;
+                    }
+                    if (this.LicenzeInfo.length > 0) {
+                        this.createActualLicenze();
+                    }
+                    this.afterInit();
+                })
+                .catch(err => {
+                    this.afterInit();
+                    this.LicenzeInfo = [];
+                });
                 // if (localStorage.getItem('lastNodeDue') == null) {
                 //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
                 // }
@@ -223,7 +223,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     createActualLicenze() {
         const masEl = [];
         this.LicenzeInfo.forEach(elem => {
-            if (elem.Users > elem.ActualUsers) {
+            if (elem.Users > elem.ActualUsers || (elem.Id === 28 && elem.Users > 0)) {
                 masEl.push('' + (elem.Id - 1));
             }
         });
