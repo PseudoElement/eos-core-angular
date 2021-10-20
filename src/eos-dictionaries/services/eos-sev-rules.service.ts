@@ -619,7 +619,7 @@ export class EosSevRulesService {
                     </Address>
                 </Contact>
                 <Document UserGrantedOnly="${Boolean(this._data['userGrantedOnly'])}">
-                    <Link Include="${linkInclude}" LinkTypeList="${linkTypeList}"/>
+                    <Link Include="${linkInclude}" LinkTypeList="${linkTypeList || ''}"/>
                     <Access Include="${Boolean(this._data['access'])}"/>
                     <Rubric Include="${Boolean(this._data['rubric'])}"/>
                     <Visa Include="${Boolean(this._data['visa'])}"/>
@@ -662,7 +662,7 @@ export class EosSevRulesService {
 
     private receiveDocumentRule(): string {
         const link = !this._data['link'] ? 'None' : this._data['linkKind'] === 1 ? 'List' : 'All'; // TODO All(Все)|List(Определенного типа)|None(Не посылать)
-        const linkTypeList = this._data['linkTypeList']; // TODO список link_cl.isn_lclassif через символ |
+        const linkTypeList = link === 'List' ? this.data['linkTypeList'] : ''; // TODO список link_cl.isn_lclassif через символ |
         const task = !this._data['orders'] ? 'None' : this._data['ordersKind'] === 1 ? 'Own' : 'All'; // TODO All(Все)|Own(Только свои)
         const correspondent = 'Author'; // TODO Use: Sender(Из отправителя)|Author(Из автора документа)
         const Address = !this._data['address'] ? 'DoNotUse' : this._data['adrReplace'] === 2 ? 'IfEmpty' : 'Always';
@@ -695,7 +695,7 @@ export class EosSevRulesService {
                     <File Use="${Boolean(this._data['takeFileRK'])}" AccessList="${this._data['fileAccessList'] || ''}"/>
                     <!--Связанные РК:				Загружать. Use: None(Не загружать)|All(Все)|List
                     Типы связок. LinkTypeList: список link_cl.isn_lclassif через символ | -->
-                    <Link Use="${link}" LinkTypeList="${linkTypeList}"/>
+                    <Link Use="${link}" LinkTypeList="${linkTypeList || ''}"/>
                     <!-- Поручения.				Загружать. Use: All(Все)|Own(Только свои) -->
                     <Task Use="${task}"/>
                     <!-- Корреспондент.				Загружать. Use: Sender(Из отправителя)|Author(Из автора документа) -->
@@ -714,7 +714,7 @@ export class EosSevRulesService {
                     <!-- Картотека в которой будут регистрироваться новые РК -->
                     <Card>${this._data['cardFile'] || ''}</Card>
                     <!-- Кабинет в котором будут регистрироваться новые РК -->
-                    <Cabinet>${this._data['cabinetFile'] || ''}</Cabinet>
+                    <Cabinet>${this._data['cabinetFile'] || '0'}</Cabinet>
                 </RegistrationParams>
                 <SendToManualQueue>${Boolean(this._data['handRegistration'])}</SendToManualQueue>
                 <UpdateParams>
@@ -846,7 +846,7 @@ export class EosSevRulesService {
                     <Address Include="${Boolean(this._data['address'])}"><Region Include="${Boolean(this._data['region'])}"/></Address>
                 </Contact>
                 <Project>
-                    <Link Include="${linkRk}" LinkTypeList="${linkTypeList}"/>
+                    <Link Include="${linkRk}" LinkTypeList="${linkTypeList || ''}"/>
                     <Access Include="${Boolean(this._data['access'])}"/>
                     <Rubric Include="${Boolean(this._data['rubric'])}"/>
                     <Addressee Include="${Boolean(this._data['addressee'])}"/>
