@@ -48,7 +48,30 @@
                             </span>
                         </button>
                     </div>
-
+                    <div style="display: inline-block"
+                        [tooltip]="node.curentSelectedNode ? 'Копировать' : ''"
+                        placement="bottom"
+                        containerClass="tooltip-info">
+                        <button
+                            class="btn"
+                            [disabled]="!editMode || !node?.allowed"
+                            (click)="[node.copyInstance()]">
+                            <span class="eos-icon small"  [ngClass]="{'eos-icon-copy-blue': editMode, 'eos-icon-copy-grey': !editMode}">
+                            </span>
+                        </button>
+                    </div>
+                    <div style="display: inline-block"
+                        [tooltip]="node.curentSelectedNode ? 'Вставить' : ''"
+                        placement="bottom"
+                        containerClass="tooltip-info">
+                        <button
+                            class="btn"
+                            [disabled]="!editMode || !node?.allowed || !node.copyFuncNum || node.copyButton(node)"
+                            (click)="[node.pasteInstance()]">
+                            <span class="eos-icon small"  [ngClass]="{'eos-icon-paste-blue': editMode, 'eos-icon-paste-grey': !editMode}">
+                            </span>
+                        </button>
+                    </div>
                 </div>
 
                 <div *ngIf="node.isLimit" class="card-limit">

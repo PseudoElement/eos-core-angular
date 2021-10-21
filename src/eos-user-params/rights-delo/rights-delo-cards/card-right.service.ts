@@ -16,6 +16,8 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 @Injectable()
 export class CardRightSrv {
     public selectedFuncNum: FuncNum;
+    public copyFuncNum: number;
+    public copyDueCard: string;
     public departments = new Map<string, DEPARTMENT>(); // Map<DUE, DEPARTMENT>
     private _docGroup = new Map<string, DOCGROUP_CL>(); // Map<DUE, DOCGROUP_CL>
 
@@ -32,6 +34,7 @@ export class CardRightSrv {
     private _chengeState$: Subject<boolean>;
     private _updateFlag$: Subject<void>;
     private _funcNum_skip_deleted: Array<number> = [1, 13, 14, 15, 16];
+    private _copyNodes: NodeDocsTree[];
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private _apiSrv: UserParamApiSrv,
@@ -313,6 +316,49 @@ export class CardRightSrv {
             return fum === func_num;
         });
     }
+    copyNodeList(nodes: NodeDocsTree[], funcNum: number, DUE: string) {
+        this.copyFuncNum = funcNum;
+        this.copyDueCard = DUE;
+        this._copyNodes = [...nodes];
+    }
+    pasteNodeList(card: USERCARD, listNodes: NodeDocsTree[]): NodeDocsTree[] {
+        const nodes: string[] = [];
+        const newCopy = [...this._copyNodes];
+        const userDocGroup: USER_CARD_DOCGROUP[] = [];
+        this.deleteAllDoc(card);
+        newCopy.forEach((node) => {
+            const index = card.USER_CARD_DOCGROUP_List.findIndex((doc: USER_CARD_DOCGROUP) => doc.DUE === node.DUE && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
+            if (index === -1) {
+                nodes.push(node.DUE);
+            } else {
+                userDocGroup.push(card.USER_CARD_DOCGROUP_List[index]);
+            }
+        });
+        let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, nodes);
+        card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
+        card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
+            const index = newCopy.findIndex((node: any) => doc.DUE === node.DUE && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
+            if (index !== -1) {
+                if (doc._State === _ES.Deleted) {
+                    doc.ALLOWED = newCopy[index].isAllowed ? 1 : 0;
+                    if (doc._orig.ALLOWED === doc.ALLOWED) {
+                        delete doc._State;
+                    } else {
+                        doc._State = 'MERGE';
+                    }
+                }
+                doc.ALLOWED = newCopy[index].isAllowed ? 1 : 0;
+            }
+        });
+        userDG = userDG.concat(userDocGroup);
+        const nodeList: NodeDocsTree[] = [];
+        userDG.forEach((userCardDG: USER_CARD_DOCGROUP) => {
+            const docGroup = this._docGroup.get(userCardDG.DUE);
+            this._createListNode(nodeList, { docGroup, userCardDG });
+        });
+        this._checkChenge();
+        return nodeList;
+    }
     addingDocGroup$(card: USERCARD): Promise<NodeDocsTree[]> {
         let dues: string[];
         let msg: string = '';
@@ -327,7 +373,6 @@ export class CardRightSrv {
                     throw null;
                 }
                 dues = str.split('|');
-
                 // получить инстансы по дуе в мап
                 return this._getDocGroupEntity$(dues);
             })
