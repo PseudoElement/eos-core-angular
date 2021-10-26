@@ -19,6 +19,15 @@ export class CardRight {
     private _value: number;
     private _funcIndex: number;
     private _funcNum: number;
+    get copyFuncNum(): number {
+        return this._srv.copyFuncNum;
+    }
+    get copyDueCard(): string {
+        return this._srv.copyDueCard;
+    }
+    get cardDUE(): string {
+        return this._card ? this._card.DUE : undefined;
+    }
     get name (): string {
         return this._srv.departments.get(this._card.DUE).CARD_NAME;
     }
@@ -65,6 +74,9 @@ export class CardRight {
         this.isLimit = this._srv.selectedFuncNum.type === E_CARD_TYPE.docGroup;
         this._value = +this._card.FUNCLIST[this._funcIndex];
         this.limitcard = this._srv.limitCardAccess(this._card.DUE);
+    }
+    copyButton(node): boolean {
+        return node.copyFuncNum === node.funcNum && node.copyDueCard === this.cardDUE;
     }
     expanded() {
         this.isExpanded = !this.isExpanded;
@@ -120,6 +132,12 @@ export class CardRight {
         this._srv.deleteNode(this.curentSelectedNode, this._card);
         this.listNodes = this.listNodes.filter((node: NodeDocsTree) => node !== this.curentSelectedNode);
         this.curentSelectedNode = null;
+    }
+    copyInstance() {
+        this._srv.copyNodeList(this.listNodes, this.funcNum, this.card.DUE);
+    }
+    pasteInstance() {
+        this.listNodes = this._srv.pasteNodeList(this._card, this.listNodes);
     }
     updateEditFileAll(num: number, func_list: string[]) {
         if (num === 13 && func_list[13] === '0') {
