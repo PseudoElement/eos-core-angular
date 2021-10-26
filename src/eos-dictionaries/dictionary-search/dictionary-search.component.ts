@@ -322,11 +322,21 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             skipDeleted: skipDeleted,
         };
         return this._classif.openClassif(params, true).then(isnNode => {
-            if (isnNode) {
+            if (isnNode && isnNode.indexOf('.') === -1) {
                 return this.dictionary['dictDescrSrv']['apiSrv'].read({
                     REGION_CL: {
                         criteries: {
                             ISN_NODE: isnNode
+                        }
+                    }
+                }).then(data => {
+                    return { data, isnNode };
+                });
+            } else if (isnNode && isnNode.indexOf('.') !== -1) {
+                return this.dictionary['dictDescrSrv']['apiSrv'].read({
+                    REGION_CL: {
+                        criteries: {
+                            DUE: isnNode
                         }
                     }
                 }).then(data => {
