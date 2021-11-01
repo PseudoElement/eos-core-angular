@@ -87,7 +87,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     this._dictId = _dictSrv.currentDictionary.id;
 
                     this.customFields = this._dictSrv.customFields;
-
+                    this.nodes = nodes;
                     this.updateViewFields(this.customFields, nodes).then(() => {
                         const _customTitles = this._dictSrv.customTitles;
                         _customTitles.forEach((_title) => {
@@ -96,7 +96,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                                 vField.customTitle = _title.customTitle;
                             }
                         });
-                        this.nodes = nodes;
                         if (nodes && nodes.length) {
                             this.highlightNewNode();
                         }
