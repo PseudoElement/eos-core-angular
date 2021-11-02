@@ -340,7 +340,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                         }
                     }
                 }).then(data => {
-                    return { data, isnNode };
+                    return { data, isnNode: '' + data[0]['ISN_NODE']};
                 });
             }
         }).catch((e) => {
