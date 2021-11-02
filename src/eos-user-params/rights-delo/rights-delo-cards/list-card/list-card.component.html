@@ -49,7 +49,7 @@
                         </button>
                     </div>
                     <div style="display: inline-block"
-                        [tooltip]="node.curentSelectedNode ? 'Копировать' : ''"
+                        [tooltip]="!editMode || !node?.allowed ? '' : 'Копировать'"
                         placement="bottom"
                         containerClass="tooltip-info">
                         <button
@@ -61,7 +61,7 @@
                         </button>
                     </div>
                     <div style="display: inline-block"
-                        [tooltip]="node.curentSelectedNode ? 'Вставить' : ''"
+                        [tooltip]="!editMode || !node?.allowed || !node.copyFuncNum || node.copyButton(node) ? '' : 'Вставить'"
                         placement="bottom"
                         containerClass="tooltip-info">
                         <button
