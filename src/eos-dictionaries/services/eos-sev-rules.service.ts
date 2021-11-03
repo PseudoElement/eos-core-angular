@@ -98,10 +98,10 @@ export class EosSevRulesService {
                         this._data['taskCategory'] = task['Category'][0].$['Include'] === 'true';
                         this._data['taskController'] = task['Controller'][0].$['Include'] === 'true';
                         this._data['taskNote'] = task['Note'][0].$['Include'] === 'true';
-                        this._data['taskFile'] = task['File'][0].$['Include'] === 'true';
-                        const ext = task['FileOptions'][0].$['Extensions'];
+                        this._data['taskFile'] = task['File'] ? task['File'][0].$['Include'] === 'true' : false;
+                        const ext = task['FileOptions'] ? task['FileOptions'][0].$['Extensions'] : '';
                         this._data['taskFileExtensions'] = ext && ext !== 'null' ? ext : '';
-                        const maxLength = task['FileOptions'][0].$['MaxLength'];
+                        const maxLength = task['FileOptions'] ? task['FileOptions'][0].$['MaxLength'] : '';
                         this._data['taskFileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
                         const subscriptions = sendDocumentRule['Subscriptions'][0];
                         this._data['reception'] = subscriptions['Reception'][0].$['Include'] === 'true';
@@ -182,7 +182,7 @@ export class EosSevRulesService {
                         this._data['ordersKind'] = document['Task'][0].$['Use'] === 'Own' ? 1 : 0;
                         this._data['taskCategory'] = Task['Category'][0].$['Use'] === 'true';
                         this._data['noteOrders'] = Task['Note'][0].$['Use'] === 'true';
-                        this._data['takeFileOrders'] = Task['File'][0].$['Use'] === 'true';
+                        this._data['takeFileOrders'] = Task['File'] ? Task['File'][0].$['Use'] === 'true' : false;
                         this._data['FileRK'] = UpdateParams ? UpdateParams['File'][0].$['Use'] === 'true' : false; // файлы РК
                         this._data['takeOrdersRK'] = UpdateParams ? UpdateParams['Task'][0].$['Use'] === 'true' : false; // поручения РК
                     } catch (e) {
@@ -245,9 +245,9 @@ export class EosSevRulesService {
                         this._data['kindExecutorConsideration'] = Task['Executor'][0].$['Include'] === 'All' ? 0 : 1; // kindExecutorConsideration
                         this._data['NotificationConfigReport'] = Notification['Report'][0].$['Include'] === 'true'; // NotificationConfigReport Доклад об исполнении поручений
                         this._data['executorFile'] = Task['Executor'][0]['File'][0].$['Include'] === 'true';
-                        const ext1 = Task['Executor'][0]['FileOptions'][0].$['Extensions'];
+                        const ext1 = Task['Executor'][0]['FileOptions'] ? Task['Executor'][0]['FileOptions'][0].$['Extensions'] : '';
                         this._data['fileExtensions'] = ext1 && ext1 !== 'null' ? ext1 : '';
-                        const maxLength = Task['Executor'][0]['FileOptions'][0].$['MaxLength'];
+                        const maxLength = Task['Executor'][0]['FileOptions'] ? Task['Executor'][0]['FileOptions'][0].$['MaxLength'] : '';
                         this._data['fileMaxLength'] = maxLength && maxLength !== 'null' ? maxLength : '';
                         this._data['redirection'] = Notification['Redirection'][0].$['Include'] === 'true'; // Доклад об отправке документов
                         this._data['answer'] = Notification['Answer'][0].$['Include'] === 'true'; // Доклад об отправке документа ответа
@@ -305,7 +305,7 @@ export class EosSevRulesService {
                         const adrReplace = ScriptConfig['Contact'][0]['Address'][0].$['Use'] === 'IfEmpty' ? 2 : 1;
                         this._data['adrReplace'] = adrReplace;
                         this._data['region'] = ScriptConfig['Contact'][0]['Address'][0]['Region'][0].$['Use'] === 'true';
-                        this._data['executorFile'] = ScriptConfig['Task'][0]['ExecutorFile'][0].$['Use'] === 'true';
+                        this._data['executorFile'] = ScriptConfig['Task'][0]['ExecutorFile'] ? ScriptConfig['Task'][0]['ExecutorFile'][0].$['Use'] === 'true' : false;
                         this._data['regNumber'] = ScriptConfig['Registration'][0].$['MarkAddresse'] === 'true';
                         // regNumber Рег.№ в 'Адресат'
                     } catch (e) {
@@ -523,8 +523,8 @@ export class EosSevRulesService {
                         this._data['reportSign'] = NotificationConfig['Sign'][0].$['Include'] !== 'None'; //  Доклад о направлении документа на подписание
                         this._data['reportSignKind'] = NotificationConfig['Sign'][0].$['Include'] === 'Sent' ? 1 : 0; // кнопочки после reportVisa
                         this._data['signaturesFile'] = NotificationConfig['Sign'][0]['File'][0].$['Include'] === 'true';
-                        this._data['progectRegistration'] = NotificationConfig['ProjectRegistration'][0].$['Include'] === 'true'; //
-                        this._data['fileDocument'] = NotificationConfig['ProjectRegistration'][0]['File'][0].$['Include'] === 'true'; //
+                        this._data['progectRegistration'] = NotificationConfig['ProjectRegistration'] ? NotificationConfig['ProjectRegistration'][0].$['Include'] === 'true' : false;
+                        this._data['fileDocument'] = NotificationConfig['ProjectRegistration'] ? NotificationConfig['ProjectRegistration'][0]['File'][0].$['Include'] === 'true' : false; //
 
                         this._data['address'] = ScriptConfig['Contact'][0]['Address'][0].$['Include'] === 'true'; //
                         this._data['region'] = ScriptConfig['Contact'][0]['Address'][0]['Region'][0].$['Include'] === 'true'; //
