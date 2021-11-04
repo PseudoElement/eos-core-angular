@@ -659,7 +659,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         IS_PASSWORD: 0
                     }
                 }];
-                return this._userParamSrv.dropLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
+                return this._userParamSrv.сhangeLogin(id, this.curentUser.USERTYPE, this.form.controls['CLASSIF_NAME'].value).then(() => {
                     if (+this.curentUser.USERTYPE !== 1) {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
