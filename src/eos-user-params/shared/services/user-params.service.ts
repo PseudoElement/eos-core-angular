@@ -549,7 +549,18 @@ export class UserParamsService {
         };
         return this._pipRx.read(queryCabinet);
     }
-
+    сhangeLogin(id, userT, clasName?): Promise<any> {
+        let url = 'ChangeLogin?';
+        url += `isn_user=${id}`;
+        url += `&userType=${userT}`;
+        url += `&classifName='${clasName}'`;
+        url += `&pass='1'`;
+        const request = {
+            method: 'POST',
+            requestUri: url,
+        };
+        return this._pipRx.batch([request], '');
+    }
     dropLogin(id, userT, clasName?): Promise<any> {
         if (userT && +userT === 1 && clasName) {
             return this._pipRx.batch([{
