@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ICertificateInit } from 'eos-common/interfaces';
+import { AppContext } from 'eos-rest/services/appContext.service';
 declare function openPopup(url: string, callback?: Function): boolean;
 
 @Injectable()
 export class CertificateService {
     w: any;
-    constructor() {
+    constructor(
+        private _appContext: AppContext,
+    ) {
 
     }
     // http://localhost/X1807/Pages/Project/ChooseCertificate.aspx?Stores=sscu:Root,sslm:My&AddToSignProfileVisible=1&FilterBlockVisible=1
@@ -37,7 +40,7 @@ export class CertificateService {
         });
     }
     getUrl(params?: ICertificateInit): string {
-        let url = '../WebRc/Pages/Certificate.html?showLdapFilter=true';
+        let url = '../WebRc/Pages/Certificate.html' + (this._appContext.cbBase ? '?showLdapFilter=true' : '');
         let connector = '&';
         if (params.UseUserStores) {
             url += `${connector}UseUserStores=${params.UseUserStores}`;
