@@ -7,6 +7,8 @@ import { FormGroup } from '@angular/forms';
 import { SearchServices } from '../shered/services/search.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { PipRX } from 'eos-rest';
 
 @Component({
     selector: 'eos-user-search',
@@ -21,16 +23,21 @@ export class UserSearchComponent implements OnInit  {
     @ViewChild('full') fSearchPop;
     @Input() quickSearchOpen;
     @Input() flagDeep;
-    readonly fieldGroupsForSearch: string[] = ['Общий поиск', 'Поиск удаленных', 'Поиск по системам'];
+    readonly fieldGroupsForSearch: string[] = ['Общий поиск', 'Поиск удаленных', 'Поиск по системам', 'Поиск по правам'];
     public srchString: string;
     public fastSearch: boolean = false;
     public fullSearch: boolean = false;
     public currTab: number = 0;
     public SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
+    public inputs: any;
+    public form: FormGroup;
+    public disabledOrg = false;
+    public disabledDep = false;
     private prapareData: any;
     private prepareInputs: any;
-    private inputs: any;
-    private form: FormGroup;
+    private isnOrganization = '';
+    private isnDepartment = '';
+    private numberOrg: string[] = ['5', '6', '11', '12'];
     constructor(
         private _formHelper: FormHelperService,
         private dataConv: EosDataConvertService,
@@ -38,6 +45,8 @@ export class UserSearchComponent implements OnInit  {
         private srhSrv: SearchServices,
         private _storage: EosStorageService,
         private users_pagination: UserPaginationService,
+        private _waitClassifSrv: WaitClassifService,
+        private _pipSrv: PipRX,
     ) {
     }
     isActiveButton(): boolean {
@@ -74,11 +83,14 @@ export class UserSearchComponent implements OnInit  {
     get disableSearchBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (
+                (this.form.controls['rec.DELO_RIGHTS'].value && this.form.controls['rec.DELO_RIGHTS'].value.trim().length) ||
+                this.form.controls['rec.USERDEP_List'].value.trim().length ||
+                this.form.controls['rec.USER_ORGANIZ_List'].value.trim().length ||
                 this.form.controls['rec.LOGIN'].value.trim().length > 0 ||
                 this.form.controls['rec.DEPARTMENT'].value.trim().length > 0 ||
                 this.form.controls['rec.fullDueName'].value.trim().length > 0  ||
                 this.form.controls['rec.SURNAME'].value.trim().length > 0 ||
-                this.form.controls['rec.BLOCK_USER'].value === '2' ||
+                (this.form.controls['rec.BLOCK_USER'].value === '2' &&  this.currTab !== 3) ||
                 this.currTab === 2
             );
         }
@@ -92,10 +104,18 @@ export class UserSearchComponent implements OnInit  {
             this.form.controls['rec.SURNAME'].value.length > 0 ||
             this.form.controls['rec.BLOCK_USER'].value === '1' ||
             this.form.controls['rec.BLOCK_USER'].value === '2' ||
+            (this.form.controls['rec.DELO_RIGHTS'].value && this.form.controls['rec.DELO_RIGHTS'].value.trim().length) ||
+            this.form.controls['rec.USERDEP_List'].value.trim().length ||
+            this.form.controls['rec.USER_ORGANIZ_List'].value.trim().length ||
             this.currTab === 2;
         }
     }
-
+    get disableDep(): boolean {
+        return this.disabledDep || this.form.controls['rec.USER_ORGANIZ_List'].value;
+    }
+    get disableOrg(): boolean {
+        return this.disabledOrg || this.form.controls['rec.USERDEP_List'].value;
+    }
     ngOnInit() {
         const objSearch = this._getItemsSearchUsers();
         this.pretInputs();
@@ -117,14 +137,107 @@ export class UserSearchComponent implements OnInit  {
         this.prepareInputs = this._formHelper.getObjectInputFields(USER_SEARCH.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
         this.form = this.inpSrv.toFormGroup(this.inputs);
+        this.form.controls['rec.USER_ORGANIZ_List'].disable();
+        this.form.controls['rec.USERDEP_List'].disable();
+        this.form.controls['rec.DELO_RIGHTS'].valueChanges
+        .subscribe((value) => {
+            if (value === '0' || !value) {
+                /* this.disabledOrg = true;
+                this.disabledDep = true;
+                if (this.form.controls['rec.USER_ORGANIZ_List'].value) {
+                    this.form.controls['rec.USER_ORGANIZ_List'].patchValue('');
+                }
+                if (this.form.controls['rec.USERDEP_List'].value) {
+                    this.form.controls['rec.USERDEP_List'].patchValue('');
+                } */
+            } else {
+                if (this.numberOrg.indexOf(value) === -1) {
+                    this.disabledOrg = true;
+                } else {
+                    this.disabledOrg = false;
+                }
+                // this.disabledDep = false;
+            }
+        });
     }
     AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
-
+    clearField(field: string) {
+        setTimeout(() => {
+            this.form.controls[field].patchValue('');
+        }, 0);
+        this.isnOrganization = '';
+        this.isnDepartment = '';
+    }
+    breakDUE(due: string): string[] {
+        const returnDue = [];
+        const arrDue: string[] = due.split('.');
+        arrDue.pop();
+        let str = '';
+        arrDue.forEach((key) => {
+            str = str + (key + '.');
+            returnDue.push(str);
+        });
+        return returnDue;
+    }
+    openClassif(classif: string, disable: boolean) {
+        if (disable) {
+            return;
+        }
+        this._waitClassifSrv.openClassif({
+            classif: classif,
+            selectLeafs: true,
+            selectNodes: true,
+            skipDeleted: false,
+            selectMulty: true,
+        }, true)
+            .then((data: string) => {
+                let query = {};
+                if (classif === 'CONTACT') {
+                    query = {
+                        ORGANIZ_CL: {
+                            criteries: {
+                                ISN_NODE: data
+                            }
+                        }
+                    };
+                } else {
+                    query = {
+                        DEPARTMENT: {
+                            criteries: {
+                                ISN_NODE: data
+                            }
+                        }
+                    };
+                }
+                this._pipSrv.read(query)
+                .then((elemAll: any[]) => {
+                    const field = [];
+                    let DUE = [];
+                    elemAll.forEach((elem) => {
+                        field.push(elem['CLASSIF_NAME']);
+                        DUE = [...DUE, ...this.breakDUE(elem['DUE'])];
+                    });
+                    DUE = DUE.filter(function (e, i, arr) {
+                        return arr.lastIndexOf(e) === i;
+                    });
+                    if (classif === 'CONTACT') {
+                        this.form.controls['rec.USER_ORGANIZ_List'].setValue(field.join('; '));
+                        this.isnOrganization = DUE.join('|');
+                    } else {
+                        this.form.controls['rec.USERDEP_List'].setValue(field.join('; '));
+                        this.isnDepartment = DUE.join('|');
+                    }
+                });
+            })
+            .catch((e) => {
+                console.log('error', e);
+            });
+    }
     RemoveQuotes(newObj: any): void {
         for (const key in newObj) {
-            if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS' && key !== 'BLOCK_USER') {
+            if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS' && key !== 'BLOCK_USER' && key !== 'DELO_RIGHTS' && key !== 'USERDEP_List' && key !== 'USER_ORGANIZ_List') {
                 const list = newObj[key];
                 if (typeof list === 'string') {
                     newObj[key] = list.replace(this.SEARCH_INCORRECT_SYMBOLS, '');
@@ -180,7 +293,20 @@ export class UserSearchComponent implements OnInit  {
         if (this.form.controls['rec.SURNAME'].valid && this.form.controls['rec.SURNAME'].value !== '') {
             newObj['SURNAME'] = searchVal['rec.SURNAME'].trim();
         }
-
+        if (this.form.controls['rec.DELO_RIGHTS'].value !== ''
+            && this.form.controls['rec.USERDEP_List'].value === ''
+            && this.form.controls['rec.USER_ORGANIZ_List'].value === '') {
+            const deloR = '________________________________________';
+            newObj['DELO_RIGHTS'] = this.SetAvSytemValue(deloR, +searchVal['rec.DELO_RIGHTS'] - 1, '1');
+        }
+        if (this.form.controls['rec.USERDEP_List'].value !== '') {
+            newObj['USERDEP_List'] = this.isnDepartment;
+            newObj['DELO_RIGHTS'] = searchVal['rec.DELO_RIGHTS'];
+        }
+        if (this.form.controls['rec.USER_ORGANIZ_List'].value !== '') {
+            newObj['USER_ORGANIZ_List'] = this.isnOrganization;
+            newObj['DELO_RIGHTS'] = searchVal['rec.DELO_RIGHTS'];
+        }
         newObj['AV_SYSTEMS'] = this.GetStrAvSystems();
 
         switch (searchVal['rec.BLOCK_USER']) {
@@ -311,6 +437,10 @@ export class UserSearchComponent implements OnInit  {
             this.clearQuickForm();
             this._setItemsSearchUsers(null, '', 0);
         }
+        this.form.controls['rec.USER_ORGANIZ_List'].setValue('');
+        this.form.controls['rec.USERDEP_List'].setValue('');
+        this.isnOrganization = '';
+        this.isnDepartment = '';
     }
     private _setItemsSearchUsers(full: any, quick: string, tab: number): void {
         const serchUsers: USERSRCHFORM = {fullForm: full, quickForm: quick, currTab: tab};

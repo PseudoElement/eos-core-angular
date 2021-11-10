@@ -2,6 +2,27 @@
     height: 48px;
     width: 48px;
 }
+.icon-select-element {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 42px;
+    z-index: 1;
+    right: 3px;
+    cursor: pointer;
+}
+.icon-delete-element {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 42px;
+    z-index: 1;
+    right: 30px;
+    cursor: pointer;
+}
+.disabled {
+    cursor: not-allowed;
+}
 .search-container {
     display: flex;
     margin-right: 16px;
