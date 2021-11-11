@@ -30,7 +30,7 @@ export class UserSelectNode {
         this.id = data.ISN_LCLASSIF;
         this.deep = data.DUE_DEP;
         this.department = data['DEPARTMENT'] || '...';
-        this.deleted = (data.DELETED && data.ORACLE_ID === null && data.CLASSIF_NAME === '') ? true : false;
+        this.deleted = (data.DELETED && data.ORACLE_ID === null && data.CLASSIF_NAME.trim() === '') ? true : false;
         this.oracle_id = data.ORACLE_ID;
         this.dueName = data['DEPARTMENT_SURNAME'];
         this.dueDytu = data['DEPARTMENT_DYTU'];
