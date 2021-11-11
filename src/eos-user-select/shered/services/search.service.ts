@@ -193,6 +193,32 @@ export class SearchServices {
                 query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
                 query.USER_CL.criteries['USER_CL.Removed'] = `false`;
                 break;
+            case 3:
+                if (params.USERDEP_List) {
+                    query.USER_CL.criteries['USERDEP.DUE'] = params.USERDEP_List;
+                    if (params.DELO_RIGHTS) {
+                        query.USER_CL.criteries['USERDEP.FUNC_NUM'] = params.DELO_RIGHTS;
+                    } else {
+                        query.USER_CL.criteries['USERDEP.FUNC_NUM'] = '5|23|6|7|11|12|32|33|25|26|34|35|36';
+                    }
+                }
+                if (params.USER_ORGANIZ_List) {
+                    query.USER_CL.criteries['USER_ORGANIZ.DUE'] = params.USER_ORGANIZ_List;
+                    if (params.DELO_RIGHTS) {
+                        query.USER_CL.criteries['USER_ORGANIZ.FUNC_NUM'] = params.DELO_RIGHTS;
+                    } else {
+                        query.USER_CL.criteries['USER_ORGANIZ.FUNC_NUM'] = '5|23|6|7|11|12|32|33|25|26|34|35|36';
+                    }
+                }
+                if (params.BLOCK_USER) {
+                    query.USER_CL.criteries['DELETED'] = `${params.BLOCK_USER}`;
+                    query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
+                }
+                if (!params.USERDEP_List && !params.USER_ORGANIZ_List && params.DELO_RIGHTS) {
+                    query.USER_CL.criteries['DELO_RIGHTS'] = `${params.DELO_RIGHTS}%`;
+                }
+                query.USER_CL.criteries['USER_CL.Removed'] = `false`;
+                break;
             default:
                 if (params.LOGIN) {
                     query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;

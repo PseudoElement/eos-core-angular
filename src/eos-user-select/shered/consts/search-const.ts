@@ -125,6 +125,40 @@ export const USER_SEARCH = {
             title: 'EOS Desktop Service',
             value: '0'
         },
+        {
+            type: 'select',
+            key: 'DELO_RIGHTS',
+            title: 'Абсолютное право',
+            options: [
+                { value: '', title: '...' },
+                { value: '5', title: 'Ввод резолюций' },
+                { value: '23', title: 'Ввод проектов резолюций' },
+                { value: '6', title: 'Исполнение поручений' },
+                { value: '7', title: 'Контроль исполнения поручений'},
+                { value: '11', title: 'Визирование проектов'},
+                { value: '12', title: 'Подписание проектов'},
+                { value: '32', title: 'Исполнение проектов'},
+                { value: '33', title: 'Чтение проектов'},
+                { value: '25', title: 'Чтение РК персонифицированного доступа'},
+                { value: '26', title: 'Чтение файлов персонифицированного доступа'},
+                { value: '34', title: 'Чтение файлов строгого доступа'},
+                { value: '35', title: 'Чтение событий'},
+                { value: '36', title: 'Работа с событиями'},
+            ],
+            default: 0, // на самом деле наследование в docgroup-dictionary-descriptor
+        },
+        {
+            type: 'string',
+            key: 'USER_ORGANIZ_List',
+            title: 'Организация',
+            value: '0'
+        },
+        {
+            type: 'string',
+            key: 'USERDEP_List',
+            title: 'Подразделение / Должностное лицо',
+            value: '0'
+        },
     ]
 };
 
@@ -136,6 +170,9 @@ export interface USERSRCH {
     SURNAME?: string;
     AV_SYSTEMS?: string;
     BLOCK_USER?: string;
+    USERDEP_List?: string;
+    USER_ORGANIZ_List?: string;
+    DELO_RIGHTS?: string;
 }
 
 export interface USERSRCHFORM {

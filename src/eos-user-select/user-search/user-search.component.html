@@ -97,6 +97,25 @@
                 </div>
             </div>
         </div>
+        <div  class="search-input-wr-av" *ngIf="currTab === 3">
+            <div class="search-input-wr block-user">
+                <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <eos-dynamic-input [input]="inputs['rec.DELO_RIGHTS']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div style="position: relative;">
+                <span *ngIf="form.controls['rec.USERDEP_List'].value" class="eos-icon eos-icon-close-blue icon-delete-element" (click)="clearField('rec.USERDEP_List')"></span>
+                <span [ngClass]="{'eos-icon-directory-book-blue' : !disableDep,  'eos-icon-directory-book-grey disabled' : disableDep}" class="eos-icon icon-select-element" (click)="openClassif('DEPARTMENT', disabledDep)"></span>
+                <eos-dynamic-input aria-disabled="true" [input]="inputs['rec.USERDEP_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div style="position: relative;">
+                <span *ngIf="form.controls['rec.USER_ORGANIZ_List'].value" class="eos-icon eos-icon-close-blue icon-delete-element" (click)="clearField('rec.USER_ORGANIZ_List')"></span>
+                <span 
+                    [ngClass]="{'eos-icon-directory-book-blue' : !disableOrg,  'eos-icon-directory-book-grey disabled' : disableOrg}" 
+                    class="eos-icon icon-select-element" (click)="openClassif('CONTACT', disabledOrg)">
+                </span>
+                <eos-dynamic-input aria-disabled="true" [input]="inputs['rec.USER_ORGANIZ_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        </div>
     </div>
 </form>
 </ng-template>
