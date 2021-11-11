@@ -253,6 +253,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 /* если мы уже стоим то нужно проверить на нужной ли лицензии если на нужной просто блок */
                 if (this.formAccess.controls['1-27'].value === radioVal) {
                     this._toggleFormControl(this.formAccess.controls['1-27'], true);
+                } else {
+                    this.formAccess.controls['1-27'].setValue(radioVal, { emitEvent: false });
+                    this._toggleFormControl(this.formAccess.controls['1-27'], true);
                 }
             }
         }

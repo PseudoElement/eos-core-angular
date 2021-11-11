@@ -226,7 +226,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         };
         this.LicenzeInfo.forEach(elem => {
             // if (this.checkDateLicense(elem.Expired) && (+elem.Users === 0 || +elem.Users > +elem.ActualUsers)) {
-            if (this.checkDateLicense(elem.Expired) && _compareUserCount(elem)) {
+            if (((this.checkDateLicense(elem.Expired) && _compareUserCount(elem))) || (elem.Id === 28 && elem.Users > 0)) {
                 masEl.push('' + (elem.Id - 1));
             }
         });
@@ -263,6 +263,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             } else {
                 /* если мы уже стоим то нужно проверить на нужной ли лицензии если на нужной просто блок */
                 if (this.formAccess.controls['1-27'].value === radioVal) {
+                    this._toggleFormControl(this.formAccess.controls['1-27'], true);
+                } else {
+                    this.formAccess.controls['1-27'].setValue(radioVal, { emitEvent: false });
                     this._toggleFormControl(this.formAccess.controls['1-27'], true);
                 }
             }
