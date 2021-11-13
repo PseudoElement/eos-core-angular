@@ -243,8 +243,8 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         formatDbBinary: descr[_key].formatDbBinary,
                                         forNode: descr[_key].forNode,
-                                        value: !!data[_dict][descr[_key].foreignKey],
-                                        disabled: !editMode,
+                                        value: _key !== 'PRJ_AUTO_REG' ? !!data[_dict][descr[_key].foreignKey] : data[_dict][descr[_key].foreignKey] === 2,
+                                        disabled: _key !== 'PRJ_AUTO_REG' ? !editMode : data[_dict][descr[_key].foreignKey] === 0,
                                     });
                                     break;
                                 case E_FIELD_TYPE.radio:
