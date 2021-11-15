@@ -1,7 +1,7 @@
 import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
-import { COMMON_FIELDS, COMMON_FIELD_NAME } from './_common';
+import { COMMON_FIELDS, COMMON_FIELD_NAME, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from 'eos-common/consts/common.consts';
@@ -29,7 +29,19 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         key: 'medo',
         title: 'Реквизиты МЭДО',
     }],
-    fields: COMMON_FIELDS.concat([{
+    fields: COMMON_FIELDS.concat([
+    {
+        key: ICONS_CONTAINER_SEV,
+        title: '',
+        type: 'icon_sev',
+        length: 5,
+        preferences: {
+            minColumnWidth: 45,
+            noLeftPadding: true,
+            inline: true,
+        }
+    },
+    {
         key: 'DUE',
         type: 'string',
         title: 'Код Дьюи организации',
@@ -291,7 +303,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [
-        // ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
+        ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'
     ],
     allVisibleFields: ['NOTE', 'NEW_RECORD'],
