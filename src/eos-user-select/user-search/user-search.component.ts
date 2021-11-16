@@ -191,6 +191,7 @@ export class UserSearchComponent implements OnInit  {
             selectNodes: true,
             skipDeleted: false,
             selectMulty: true,
+            return_due: true,
         }, true)
             .then((data: string) => {
                 let query = {};
@@ -198,7 +199,7 @@ export class UserSearchComponent implements OnInit  {
                     query = {
                         ORGANIZ_CL: {
                             criteries: {
-                                ISN_NODE: data
+                                DUE: data
                             }
                         }
                     };
@@ -206,7 +207,7 @@ export class UserSearchComponent implements OnInit  {
                     query = {
                         DEPARTMENT: {
                             criteries: {
-                                ISN_NODE: data
+                                DUE: data
                             }
                         }
                     };
