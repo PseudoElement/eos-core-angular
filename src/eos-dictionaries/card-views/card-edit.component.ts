@@ -84,8 +84,18 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             newData.rec['SCRIPT_CONFIG'] = this._rulesSrv.scriptConfigToXml();
             newData.rec['FILTER_CONFIG'] = this._rulesSrv.filterConfigToXml();
         } else if (this.dictionaryId === DOCGROUP_DICT.id) {
-            if (newData.rec['PRJ_AUTO_REG'] !== 0) {
-                newData.rec['PRJ_AUTO_REG'] = 2;
+            /*  вся эта конструкция из-за особенностей данного поля, у него 3 возможных значения
+            0 - нет возможности редактирования и галочка снята
+            1 - галочка снята но возможности редактирования есть
+            2 - галочка стоит и есть возможность редактирования */
+            if (newData.rec['SHABLON'].indexOf('{2}') === -1) {
+                newData.rec['PRJ_AUTO_REG'] = 0;
+            } else {
+                if (this.form.controls['rec.PRJ_AUTO_REG'].value) {
+                    newData.rec['PRJ_AUTO_REG'] = 2;
+                } else {
+                    newData.rec['PRJ_AUTO_REG'] = 1;
+                }
             }
         } else if (this.dictionaryId === 'departments') {
             if (newData.printInfo['SURNAME'] === null && newData.rec['SURNAME']) {
@@ -248,8 +258,16 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         } else {
             _value = value;
         }
-        if (path === 'rec.PRJ_AUTO_REG' && _value === 1) {
-            _value = 2;
+        if (path === 'rec.PRJ_AUTO_REG') {
+            if (this.form.controls['rec.SHABLON'].value.indexOf('{2}') === -1) {
+                _value = 0;
+            } else {
+                if (_value === 0) {
+                    _value = 1;
+                } else {
+                    _value = 2;
+                }
+            }
         }
 
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
