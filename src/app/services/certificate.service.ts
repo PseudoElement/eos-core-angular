@@ -41,7 +41,7 @@ export class CertificateService {
     }
     getUrl(params?: ICertificateInit): string {
         let url = '../WebRc/Pages/Certificate.html' + (this._appContext.cbBase ? '?showLdapFilter=true' : '');
-        let connector = '&';
+        let connector = url.indexOf('?') === -1 ? '?' : '&';
         if (params.UseUserStores) {
             url += `${connector}UseUserStores=${params.UseUserStores}`;
             connector = '&';
