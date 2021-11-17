@@ -69,6 +69,13 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         key: 'cabinetAccess',
         type: 'dictionary',
         title: 'Доступ пользователей'
+    },
+    {
+        key: 'ORDER_NUM',
+        type: 'number',
+        title: 'Порядок сортировки',
+        pattern: /^\d*$/,
+        length: 1000,
     }],
     treeFields: ['CABINET_NAME'],
     listFields: ['CABINET_NAME', 'DEPARTMENT_NAME'],

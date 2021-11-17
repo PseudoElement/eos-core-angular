@@ -3,194 +3,296 @@
         <li
             *ngFor="let tab of tabs; let i = index"
             role="presentation"
-            [ngClass]="{'tab-item': tabOptions[i].isValid,'tab-item-invalid': !tabOptions[i].isValid, 'active secondary-text': i === currTab && tabOptions[i].isValid, 'active-invalid secondary-text': i === currTab && !tabOptions[i].isValid}"
-            (click)="setTab(i)">
-            <span class="tab-title">{{tab}}</span>
+            [ngClass]="{
+                'tab-item': tabOptions[i].isValid,
+                'tab-item-invalid': !tabOptions[i].isValid,
+                'active secondary-text': i === currTab && tabOptions[i].isValid,
+                'active-invalid secondary-text': i === currTab && !tabOptions[i].isValid
+            }"
+            (click)="setTab(i)"
+        >
+            <span class="tab-title">{{ tab }}</span>
         </li>
     </ul>
 </div>
-<div class="card-content-wrapper"
-     [ngClass]="{'main-data': currTab === 0}"
-     #root
->
-    <div *ngIf="currTab === 0"
-         class="eos-cabinet-tab tab" id="tab0">
+<div class="card-content-wrapper" [ngClass]="{ 'main-data': currTab === 0 }" #root>
+    <div *ngIf="currTab === 0" class="eos-cabinet-tab tab" id="tab0">
         <!-- <div class="clearfix"> -->
-            <eos-dynamic-input #intupString *ngIf="inputs['rec.CABINET_NAME']"
-                               [input]="inputs['rec.CABINET_NAME']"
-                               [form]="form"
-                               [readonly]="!editMode"
-                               
-                               
-            ></eos-dynamic-input>
-            <!-- <label [ngClass]="{'unimportant-text': !editMode }">Подразделение</label>
+        <eos-dynamic-input
+            #intupString
+            *ngIf="inputs['rec.CABINET_NAME']"
+            [input]="inputs['rec.CABINET_NAME']"
+            [form]="form"
+            [readonly]="!editMode"
+        ></eos-dynamic-input>
+        <!-- <label [ngClass]="{'unimportant-text': !editMode }">Подразделение</label>
             <p class="form-control-static m-font">{{data.department['CLASSIF_NAME']}}</p> -->
         <!-- </div> -->
         <p class="xl-font paragraph-title">Владельцы кабинета</p>
-        <div class="usual-border border-top row secondary-block"
-             *ngIf="editMode">
-            <div class="btn-group"
-                 [ngStyle]="{'margin-left.px': 20}"
-                 dropdown
-                 container="body">
-                <button dropdownToggle
-                        tooltip="Добавить владельца"
-                        placement="bottom"
-                        container="body"
-                        containerClass="tooltip-info"
-                        class="btn action-btn btn-primary-light">
+        <div class="usual-border border-top row secondary-block" *ngIf="editMode">
+            <div class="btn-group"  dropdown container="body">
+                <button
+                    dropdownToggle
+                    tooltip="Добавить владельца"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info"
+                    class="btn action-btn btn-primary-light"
+                >
                     <span class="eos-icon eos-icon-plus-blue small" aria-hidden="true"></span>
                 </button>
-                <ul *dropdownMenu
-                    class="dropdown-menu owners-menu"
-                    role="menu">
-                    <li *ngFor="let owner of possibleOwners"
+                <ul *dropdownMenu class="dropdown-menu owners-menu" role="menu">
+                    <li
+                        *ngFor="let owner of possibleOwners"
                         role="menuitem"
                         class="selected-text menuitem"
-                        [ngClass]="{deleted: owner.data['DELETED'], disabled: owner.data['DELETED']}"
-                        (click)="add(owner);">{{owner.data['CLASSIF_NAME']}}</li>
-                    <li *ngIf="!possibleOwners.length"
-                        class="disabled menuitem"><span class="disabled">Нет доступных ДЛ</span></li>
+                        [ngClass]="{ deleted: owner.data['DELETED'], disabled: owner.data['DELETED'] }"
+                        (click)="add(owner)"
+                    >
+                        {{ owner.data["CLASSIF_NAME"] }}
+                    </li>
+                    <li *ngIf="!possibleOwners.length" class="disabled menuitem">
+                        <span class="disabled">Нет доступных ДЛ</span>
+                    </li>
                 </ul>
             </div>
-            <button class="btn action-btn btn-primary-light"
-                    tooltip="Удалить выбранные"
-                    placement="bottom"
-                    containerClass="tooltip-info"
-                    (click)="remove()"><span class="eos-icon eos-icon-bin-blue small" aria-hidden="true"></span>
+            <button
+                class="btn action-btn btn-primary-light"
+                tooltip="Удалить выбранные"
+                placement="bottom"
+                containerClass="tooltip-info"
+                (click)="remove()"
+            >
+                <span class="eos-icon eos-icon-bin-blue small" aria-hidden="true"></span>
             </button>
+            <div
+                class="btn-group"
+                dropdown
+                #dropdown="bs-dropdown"
+                (isOpenChange)="isOpenChange(dropdown)"
+                [autoClose]="false"
+            >
+                <button
+                    dropdownToggle
+                    type="button"
+                    [ngClass]="{ active: dropdown.isOpen }"
+                    class="btn action-btn btn-primary-light user-sort-btn"
+                    tooltip="Пользовательская сортировка"
+                    #itemTooltip="bs-tooltip"
+                    placement="bottom"
+                    container="body"
+                    triggers="hover:click"
+                    container="body"
+                    containerClass="tooltip-info"
+                >
+                    <span
+                        [ngClass]="
+                            dropdown.isOpen
+                                ? 'eos-icon eos-icon-custom-list-white small'
+                                : 'eos-icon eos-icon-custom-list-blue small'
+                        "
+                    ></span>
+                </button>
+                <ul *ngIf="dropdown.isOpen" class="dropdown-menu user-sort-menu" role="menu">
+                    <li>
+                        <button [disabled]="!isTop" (click)="userSort(1)" class="btn action-btn btn-primary-light">
+                            <span
+                                [ngClass]="{
+                                    'eos-icon': true,
+                                    small: true,
+                                    'eos-icon-arrow-v-blue-top': isTop,
+                                    'eos-icon-arrow-v-grey-top': !isTop
+                                }"
+                            ></span>
+                        </button>
+                    </li>
+                    <li>
+                        <button [disabled]="!isBot" (click)="userSort(2)" class="btn action-btn btn-primary-light">
+                            <span
+                                [ngClass]="{
+                                    'eos-icon': true,
+                                    small: true,
+                                    'eos-icon-arrow-v-blue-bottom': isBot,
+                                    'eos-icon-arrow-v-grey-bottom': !isBot
+                                }"
+                            ></span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="row">
-            <table class="table usual-border border-bottom table-owners">
+        <div class="row scroll-table usual-border border-bottom table-owners">
+            <table>
                 <thead class="secondary-block">
-                <tr class="border-top border-bottom usual-border">
-                    <th class="td-checkbox secondary-block">
-                        <ng-container *ngIf="editMode">
-                            <label class="checkbox checkbox-inline"
-                                   [ngClass]="{'group-checkbox': anyUnmarkedOwners && anyMarkedOwners}">
-                                <input type="checkbox"
-                                       name="owners"
-                                       [(ngModel)]="allMarkedOwners"
-                                       (change)="toggleAllOwnersMarks()"><span></span>
-                            </label>
-                        </ng-container>
-                    </th>
-                    <th class="text selected-text l-font secondary-block clicked"
-                        (click)="order('SURNAME')">
-                        Фамилия И.О.
-                        <span [hidden]="orderBy.fieldKey !== 'SURNAME'"
-                              class="icon eos-icon small"
-                              [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span>
-                    </th>
-                    <th class="text selected-text l-font secondary-block clicked"
-                        (click)="order('DUTY')">Должность <span [hidden]="orderBy.fieldKey !== 'DUTY'"
-                                                                class="icon eos-icon small"
-                                                                [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <ng-container *ngFor="let owner of cabinetOwners">
-                    <tr *ngIf="owner.data['ISN_CABINET'] === data.rec['ISN_CABINET']"
-                        [ngClass]="{deleted: owner.data['DELETED']}">
-                        <td class="td-checkbox">
-                            <label class="checkbox checkbox-inline"
-                                   *ngIf="editMode"><input type="checkbox"
-                                                           name="owner"
-                                                           [checked]="emitHeadCheckbox(owner.marked)"
-                                                           [(ngModel)]="owner.marked"><span></span></label>
-                        </td>
-                        <td>{{owner.data['SURNAME']}}</td>
-                        <td>{{owner.data['DUTY']}}</td>
+                    <tr class="border-top border-bottom usual-border">
+                        <th class="td-checkbox secondary-block">
+                            <ng-container *ngIf="editMode">
+                                <label
+                                    class="checkbox checkbox-inline"
+                                    [ngClass]="{ 'group-checkbox': anyUnmarkedOwners && anyMarkedOwners }"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        name="owners"
+                                        [(ngModel)]="allMarkedOwners"
+                                        (change)="toggleAllOwnersMarks()"
+                                    /><span></span>
+                                </label>
+                            </ng-container>
+                        </th>
+                        <th class="text selected-text l-font secondary-block clicked" (click)="order('SURNAME')">
+                            Фамилия И.О.
+                            <span
+                                [hidden]="orderBy.fieldKey !== 'SURNAME'"
+                                class="icon eos-icon small"
+                                [ngClass]="{
+                                    'eos-icon-arrow-blue-top': orderBy?.ascend,
+                                    'eos-icon-arrow-blue-bottom': !orderBy?.ascend
+                                }"
+                            ></span>
+                        </th>
+                        <th class="text selected-text l-font secondary-block clicked" (click)="order('DUTY')">
+                            Должность
+                            <span
+                                [hidden]="orderBy.fieldKey !== 'DUTY'"
+                                class="icon eos-icon small"
+                                [ngClass]="{
+                                    'eos-icon-arrow-blue-top': orderBy?.ascend,
+                                    'eos-icon-arrow-blue-bottom': !orderBy?.ascend
+                                }"
+                            ></span>
+                        </th>
                     </tr>
-                </ng-container>
-                </tbody>
+                </thead>
             </table>
+            <div class="scroll-table-body">
+                <table>
+                    <tbody>
+                        <ng-container *ngFor="let owner of cabinetOwners">
+                            <tr
+                                *ngIf="owner.data['ISN_CABINET'] === data.rec['ISN_CABINET']"
+                                [ngClass]="{ deleted: owner.data['DELETED'] }"
+                            >
+                                <td class="td-checkbox">
+                                    <label class="checkbox checkbox-inline" *ngIf="editMode"
+                                        ><input
+                                            type="checkbox"
+                                            name="owner"
+                                            [checked]="emitHeadCheckbox(owner.marked)"
+                                            [(ngModel)]="owner.marked" /><span></span
+                                    ></label>
+                                </td>
+                                <td>{{ owner.data["SURNAME"] }}</td>
+                                <td>{{ owner.data["DUTY"] }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="folder-access-wrapper">
             <div class="xl-font paragraph-title">Настройка папок кабинета</div>
             <div class="folder-access-header s-font row secondary-block">
-                <label class="checkbox checkbox-inline"
-                       [ngClass]="{'group-checkbox': anyUnmarkedAccess && anyMarkedAccess,
+                <label
+                    class="checkbox checkbox-inline"
+                    [ngClass]="{
+                        'group-checkbox': anyUnmarkedAccess && anyMarkedAccess,
                         disabled: !editMode,
-                        'minus-checkbox': !editMode && anyUnmarkedAccess}"><input type="checkbox" name="access"
-                                                                                  [(ngModel)]="allMarkedAccess" (change)="toggleAllAccessMarks()" [disabled]="!editMode">
+                        'minus-checkbox': !editMode && anyUnmarkedAccess
+                    }"
+                    ><input
+                        type="checkbox"
+                        name="access"
+                        [(ngModel)]="allMarkedAccess"
+                        (change)="toggleAllAccessMarks()"
+                        [disabled]="!editMode"
+                    />
                     <span></span>
-                    <span class="header-label">Полный доступ</span></label>
+                    <span class="header-label">Полный доступ</span></label
+                >
                 <span class="text-uppercase s-font unimportant-text pull-right" *ngIf="editMode">
-                    Отметьте папки, поступление документов в которые должно быть открыто</span>
+                    Отметьте папки, поступление документов в которые должно быть открыто</span
+                >
             </div>
             <div class="folder-access-body row">
-                <div class="pull-left"
-                     *ngFor="let colIdx of [0,1,2]">
-                    <div class="folder-access-item"
-                         *ngFor="let rIdx of [0,1,2,3]">
+                <div class="pull-left" *ngFor="let colIdx of [0, 1, 2]">
+                    <div class="folder-access-item" *ngFor="let rIdx of [0, 1, 2, 3]">
                         <div class="minus-checkbox">
-                            <eos-dynamic-input *ngIf="inputs['rec.FOLDER_List['+ (colIdx*4 + rIdx) +'].USER_COUNT']"
-                                               [input]="inputs['rec.FOLDER_List['+ (colIdx*4 + rIdx) +'].USER_COUNT']"
-                                               [form]="form"
-                                               [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input
+                                *ngIf="inputs['rec.FOLDER_List[' + (colIdx * 4 + rIdx) + '].USER_COUNT']"
+                                [input]="inputs['rec.FOLDER_List[' + (colIdx * 4 + rIdx) + '].USER_COUNT']"
+                                [form]="form"
+                                [readonly]="!editMode"
+                            ></eos-dynamic-input>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div *ngIf="currTab === 1"
-         class="cabinet-access eos-cabinet-tab tab"
-         id="tab1">
-        <div class="table-wrapper row"
-             [ngClass]="{scrollable: showScroll}">
-            <button class="btn btn-primary-light scroll-btn"
-                    (mousedown)="startScrollToLeft()"
-                    (mouseup)="endScroll()"><span class="eos-icon eos-icon-arrow-v-blue-left small" aria-hidden="true"></span></button>
-            <button class="btn btn-primary-light scroll-btn right"
-                    (mousedown)="startScrollToRight()"
-                    (mouseup)="endScroll()"><span class="eos-icon eos-icon-arrow-v-blue-right small" aria-hidden="true"></span></button>
-            <div class="table-responsive"
-                 #tableEl>
+    <div *ngIf="currTab === 1" class="cabinet-access eos-cabinet-tab tab" id="tab1">
+        <div class="table-wrapper row" [ngClass]="{ scrollable: showScroll }">
+            <button class="btn btn-primary-light scroll-btn" (mousedown)="startScrollToLeft()" (mouseup)="endScroll()">
+                <span class="eos-icon eos-icon-arrow-v-blue-left small" aria-hidden="true"></span>
+            </button>
+            <button
+                class="btn btn-primary-light scroll-btn right"
+                (mousedown)="startScrollToRight()"
+                (mouseup)="endScroll()"
+            >
+                <span class="eos-icon eos-icon-arrow-v-blue-right small" aria-hidden="true"></span>
+            </button>
+            <div class="table-responsive" #tableEl>
                 <table class="table table-hover usual-border">
                     <thead class="secondary-block">
-                    <tr class="first-line border-bottom usual-border">
-                        <th class="usual-border border-right headcol"></th>
-                        <th *ngFor="let person of cabinetUsers"
-                            class="cell text-center l-font text-primary"
-                            align="center">{{person.fio}}</th>
-                    </tr>
+                        <tr class="first-line border-bottom usual-border">
+                            <th class="usual-border border-right headcol"></th>
+                            <th
+                                *ngFor="let person of cabinetUsers"
+                                class="cell text-center l-font text-primary"
+                                align="center"
+                            >
+                                {{ person.fio }}
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let row of cabinetFolders">
-                        <th class="usual-border border-right headcol l-font primary-text">{{row.title}}</th>
-                        <td *ngFor="let person of cabinetUsers"
-                            class="cell"
-                            align="center">
-                                <span class="eos-icon small"
-                                      aria-hidden="true"
-                                      [ngClass]="{'eos-icon-checkbox-grey': person[row.key], 'eos-icon-minus-grey': !person[row.key]}"></span>
-                        </td>
-                    </tr>
+                        <tr *ngFor="let row of cabinetFolders">
+                            <th class="usual-border border-right headcol l-font primary-text">{{ row.title }}</th>
+                            <td *ngFor="let person of cabinetUsers" class="cell" align="center">
+                                <span
+                                    class="eos-icon small"
+                                    aria-hidden="true"
+                                    [ngClass]="{
+                                        'eos-icon-checkbox-grey': person[row.key],
+                                        'eos-icon-minus-grey': !person[row.key]
+                                    }"
+                                ></span>
+                            </td>
+                        </tr>
                     </tbody>
                     <thead class="secondary-block">
-                    <tr class="usual-border border-top border-bottom tr-divider">
-                        <th class="l-font primary-text usual-border">Учитывать пользовательские ограничения доступа</th>
-                        <td *ngFor="let person of cabinetUsers"
-                            class="cell usual-border"
-                            align="center">
-                        </td>
-                    </tr>
+                        <tr class="usual-border border-top border-bottom tr-divider">
+                            <th class="l-font primary-text usual-border">
+                                Учитывать пользовательские ограничения доступа
+                            </th>
+                            <td *ngFor="let person of cabinetUsers" class="cell usual-border" align="center"></td>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let row of accessHeaders">
-                        <th class="usual-border border-right headcol l-font primary-text">{{row.title}}</th>
-                        <td *ngFor="let person of cabinetUsers"
-                            class="cell"
-                            align="center">
-                                <span class="eos-icon small"
-                                      aria-hidden="true"
-                                      [ngClass]="{'eos-icon-checkbox-grey': person[row.key], 'eos-icon-minus-grey': !person[row.key]}"></span>
-                        </td>
-                    </tr>
-
+                        <tr *ngFor="let row of accessHeaders">
+                            <th class="usual-border border-right headcol l-font primary-text">{{ row.title }}</th>
+                            <td *ngFor="let person of cabinetUsers" class="cell" align="center">
+                                <span
+                                    class="eos-icon small"
+                                    aria-hidden="true"
+                                    [ngClass]="{
+                                        'eos-icon-checkbox-grey': person[row.key],
+                                        'eos-icon-minus-grey': !person[row.key]
+                                    }"
+                                ></span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

@@ -9,11 +9,14 @@ import { CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { BsDropdownDirective } from 'ngx-bootstrap';
 
 interface ICabinetOwner {
     index: number;
     marked: boolean;
     data: DEPARTMENT;
+    isOwnerView: boolean;
+    orderNum: number | null;
 }
 
 @Component({
@@ -41,8 +44,9 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
     orderBy: IOrderBy = {
         ascend: true,
-        fieldKey: 'SURNAME'
+        fieldKey: 'SURNAME',
     };
+    isUserSorted = false;
 
     @ViewChild('tableEl') tableEl;
     @ViewChild('intupString') intupString;
@@ -74,14 +78,20 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     }
 
     get anyUnmarkedOwners(): boolean {
-        return !!~this.cabinetOwners.findIndex((_person) => !_person.marked && _person.data.ISN_CABINET === this.data.rec['ISN_CABINET']);
+        return !!~this.cabinetOwners.findIndex(
+            (_person) => !_person.marked && _person.data.ISN_CABINET === this.data.rec['ISN_CABINET']
+        );
     }
     /* tslint:enable:no-bitwise */
 
     get possibleOwners(): any[] {
-        const res = this.cabinetOwners
-            .filter((owner) => !owner.data['ISN_CABINET'] && !owner.data['ISN_ORGANIZ']
-                && owner.data['ISN_HIGH_NODE'] && !owner.data['DELETED']);
+        const res = this.cabinetOwners.filter(
+            (owner) =>
+                !owner.data['ISN_CABINET'] &&
+                !owner.data['ISN_ORGANIZ'] &&
+                owner.data['ISN_HIGH_NODE'] &&
+                !owner.data['DELETED']
+        );
         return res;
     }
 
@@ -89,9 +99,10 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     private scrollInterval = 50;
     private _interval: any;
 
-    constructor(injector: Injector,
+    constructor(
+        injector: Injector,
         private _confirmSrv: ConfirmWindowService,
-        private _classifSrv: WaitClassifService,
+        private _classifSrv: WaitClassifService
     ) {
         super(injector);
         this.foldersMap = new Map<number, any>();
@@ -112,7 +123,10 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe(() => {
                 this.updateValidTabs();
-                if (this.form.controls['rec.CABINET_NAME'].value && this.form.controls['rec.CABINET_NAME'].value.indexOf('"') !== -1) {
+                if (
+                    this.form.controls['rec.CABINET_NAME'].value &&
+                    this.form.controls['rec.CABINET_NAME'].value.indexOf('"') !== -1
+                ) {
                     const val = this.form.controls['rec.CABINET_NAME'].value.replace('"', '');
                     this.form.controls['rec.CABINET_NAME'].patchValue(val);
                     this.inputs['rec.CABINET_NAME'].value = val;
@@ -121,29 +135,31 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             setTimeout(() => {
                 this.form.controls['rec.CABINET_NAME'].setAsyncValidators((control: AbstractControl) => {
                     if (control && control.value && control.value.length) {
-                        return this.appctx['pip']['read']({
-                            CABINET: {
-                                criteries: {
-                                    DUE: this.data.rec.DUE,
-                                    CABINET_NAME: '="' + control.value + '"'
-                                }
-                            }
-                        }).then((date: CABINET[]) => {
-                            if (date && date.length) {
-                                const filteredDate = date.filter((_d) => {
-                                    return _d.ISN_CABINET !== this.data.rec.ISN_CABINET;
-                                });
-                                if (filteredDate.length) {
-                                    setTimeout(() => {
-                                        if (this.intupString) {
-                                            this.intupString.input.dib.toggleTooltip();
-                                        }
+                        return this.appctx['pip']
+                            ['read']({
+                                CABINET: {
+                                    criteries: {
+                                        DUE: this.data.rec.DUE,
+                                        CABINET_NAME: '="' + control.value + '"',
+                                    },
+                                },
+                            })
+                            .then((date: CABINET[]) => {
+                                if (date && date.length) {
+                                    const filteredDate = date.filter((_d) => {
+                                        return _d.ISN_CABINET !== this.data.rec.ISN_CABINET;
                                     });
-                                    return { isUnique: true };
+                                    if (filteredDate.length) {
+                                        setTimeout(() => {
+                                            if (this.intupString) {
+                                                this.intupString.input.dib.toggleTooltip();
+                                            }
+                                        });
+                                        return { isUnique: true };
+                                    }
+                                    return null;
                                 }
-                                return null;
-                            }
-                        });
+                            });
                     } else {
                         return Promise.resolve(null);
                     }
@@ -153,6 +169,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         }
     }
 
+    get isTop(): boolean {
+        const is = this.cabinetOwners.filter((o) => o.isOwnerView);
+        return this.anyMarkedOwners && is.length && !is[0].marked;
+    }
+    get isBot(): boolean {
+        const is = this.cabinetOwners.filter((o) => o.isOwnerView);
+        return this.anyMarkedOwners && is.length && !is[is.length - 1].marked;
+    }
     getCardTitle(): any {
         if (this.data && this.data.department && this.data.department.CLASSIF_NAME) {
             return this.data.department.CLASSIF_NAME;
@@ -162,8 +186,26 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
     add(owner: ICabinetOwner) {
         if (!owner.data['DELETED']) {
+            const ownerOrder = this.getMaxOrderNum();
             this.setValue(this.getOwnerPath(owner.index), this.data.rec.ISN_CABINET);
+            this.setValue(this.getOrderNumPath(owner.index), ownerOrder);
             owner.data.ISN_CABINET = this.data.rec.ISN_CABINET;
+            owner.orderNum = ownerOrder;
+            if (this.isUserSorted) {
+                this.reorderNum();
+            }
+        }
+    }
+
+    getMaxOrderNum(): number {
+        const maxOrder = this.getCabinetsOwners().sort((o1, o2) => {
+            return String(+o1.orderNum).localeCompare(String(+o2.orderNum));
+        });
+        if (maxOrder.length) {
+            const m = maxOrder[maxOrder.length - 1].orderNum;
+            return !m ? 1 : m + 1;
+        } else {
+            return 1;
         }
     }
 
@@ -199,42 +241,48 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         this.reorderCabinetOwners();
     }
 
-
     _checkDeletion(due): Promise<any> {
         return this._classifSrv.canChangeClassifRequest('DEPARTMENT', 'DELETE_FROM_CABINET', { id: String(due) });
     }
 
     remove() {
-        this.cabinetOwners.filter((owner) => owner.marked)
+        this.cabinetOwners
+            .filter((owner) => owner.marked)
             .forEach((owner) => {
                 let canceled = false;
-                this._checkDeletion(owner.data['DUE']).then(result => {
-                    if (result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
-                        result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY' ||
-                        result === 'NP_FOLDER_NOT_EMPTY_BY_NP_ACL') {
-                        const testc: IConfirmWindow2 = Object.assign({}, CONFIRM_CABINET_NON_EMPTY);
-                        testc.body = testc.body.replace('{{XXX}}', (owner.data.CLASSIF_NAME));
+                this._checkDeletion(owner.data['DUE'])
+                    .then((result) => {
+                        if (
+                            result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
+                            result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY' ||
+                            result === 'NP_FOLDER_NOT_EMPTY_BY_NP_ACL'
+                        ) {
+                            const testc: IConfirmWindow2 = Object.assign({}, CONFIRM_CABINET_NON_EMPTY);
+                            testc.body = testc.body.replace('{{XXX}}', owner.data.CLASSIF_NAME);
 
-                        return this._confirmSrv.confirm2(testc).then(button => {
-
-                            if (!button || button.result === 3) {
-                                canceled = true;
-
-                            } else if (button.result === 1) {
-                                if (!this.data['updateTrules']) {
-                                    this.data['updateTrules'] = [];
+                            return this._confirmSrv.confirm2(testc).then((button) => {
+                                if (!button || button.result === 3) {
+                                    canceled = true;
+                                } else if (button.result === 1) {
+                                    if (!this.data['updateTrules']) {
+                                        this.data['updateTrules'] = [];
+                                    }
+                                    PipRX.invokeSop(this.data['updateTrules'], 'DepartmentCabinet_TRule', {
+                                        due: owner.data['DUE'],
+                                        ClearCabinet: 1,
+                                        MoveCabinet: 0,
+                                    });
                                 }
-                                PipRX.invokeSop(this.data['updateTrules'], 'DepartmentCabinet_TRule', { 'due': owner.data['DUE'], 'ClearCabinet': 1, 'MoveCabinet': 0 });
-                            }
-                        });
-                    }
-                }).then(() => {
-                    if (!canceled) {
-                        this.setValue(this.getOwnerPath(owner.index), null);
-                        owner.data['ISN_CABINET'] = null;
-                        owner.marked = false;
-                    }
-                });
+                            });
+                        }
+                    })
+                    .then(() => {
+                        if (!canceled) {
+                            this.setValue(this.getOwnerPath(owner.index), null);
+                            owner.data['ISN_CABINET'] = null;
+                            owner.marked = false;
+                        }
+                    });
             });
         this.updateOwnersMarks();
         // this.formChanged.emit(this.data);
@@ -287,6 +335,62 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         }
     }
 
+    userSort(type: number) {
+        let indexes = [];
+        this.cabinetOwners.filter((o) => {
+            if (o.isOwnerView && o.marked) {
+                return indexes.push({ item: o });
+            }
+        });
+        if (type === 1) {
+            indexes = indexes.reverse();
+        }
+
+        indexes.forEach((currentItem) => {
+            const owners = this.getCabinetsOwners();
+            const currentItemNode: ICabinetOwner = currentItem.item;
+            const currentItemIndex = owners.findIndex((i) => i === currentItemNode);
+            let replaceItem: ICabinetOwner;
+            if (type === 1) {
+                replaceItem = owners[currentItemIndex - 1];
+            } else {
+                replaceItem = owners[currentItemIndex + 1];
+            }
+
+            this.setValue(this.getOrderNumPath(currentItemNode.index), replaceItem.orderNum);
+            this.setValue(this.getOrderNumPath(replaceItem.index), currentItemNode.orderNum);
+            const oldOrderNum = currentItemNode.orderNum;
+            currentItemNode.orderNum = replaceItem.orderNum;
+            replaceItem.orderNum = oldOrderNum;
+        });
+        this.reorderNum();
+    }
+    getOrderNumPath(index: number): string {
+        return 'owners[' + index + '].ORDER_NUM';
+    }
+
+    isOpenChange(dropdown: BsDropdownDirective) {
+        this.isUserSorted = dropdown.isOpen;
+        this.resort(dropdown.isOpen);
+    }
+
+    private resort(isOpen) {
+        if (isOpen) {
+            this.reorderNum();
+        } else {
+            this.reorderCabinetOwners();
+        }
+    }
+
+    private reorderNum() {
+        this.cabinetOwners = this.cabinetOwners.sort((o1, o2) => {
+            return String(+o1.orderNum).localeCompare(String(+o2.orderNum));
+        });
+    }
+    private getCabinetsOwners(): ICabinetOwner[] {
+        return this.cabinetOwners.filter((o) => o.isOwnerView);
+    }
+
     private getOwnerPath(index: number) {
         return 'owners[' + index + '].ISN_CABINET';
     }
@@ -303,27 +407,40 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             });
             this.cabinetOwners = owners.map((owner, idx) => {
                 const path = 'owners[' + idx + '].ISN_CABINET';
+                const orderNum = 'owners[' + idx + '].ORDER_NUM';
                 this.form.addControl(path, new FormControl(owner['ISN_CABINET']));
+                this.form.addControl(orderNum, new FormControl(owner['ORDER_NUM']));
 
                 return <ICabinetOwner>{
                     index: idx,
                     marked: false,
                     data: owner,
+                    orderNum: owner['ORDER_NUM'],
+                    get isOwnerView() {
+                        return owner['ISN_CABINET'] === data.rec['ISN_CABINET'];
+                    },
                 };
             });
 
+            this.getCabinetsOwners().forEach((owner) => {
+                owner.orderNum = owner.data.ORDER_NUM || this.getMaxOrderNum();
+            });
+            console.log(this.getCabinetsOwners());
             this.reorderCabinetOwners();
         });
 
         this.cabinetFolders = CABINET_FOLDERS;
 
-        this.accessHeaders = [{
-            title: 'Ограничение доступа к РК',
-            key: 'rk'
-        }, {
-            title: 'Ограничение доступа к РКПД',
-            key: 'rkpd'
-        }];
+        this.accessHeaders = [
+            {
+                title: 'Ограничение доступа к РК',
+                key: 'rk',
+            },
+            {
+                title: 'Ограничение доступа к РКПД',
+                key: 'rkpd',
+            },
+        ];
 
         this.cabinetUsers = [];
         data.users.forEach((user) => {
@@ -332,7 +449,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                 const cUser = {
                     fio: user.SURNAME_PATRON,
                     rk: userAccess.HIDE_INACCESSIBLE,
-                    rkpd: userAccess.HIDE_INACCESSIBLE_PRJ
+                    rkpd: userAccess.HIDE_INACCESSIBLE_PRJ,
                 };
                 this.cabinetFolders.forEach((folder) => {
                     cUser[folder.key] = userAccess.FOLDERS_AVAILABLE.indexOf(folder.charKey + '') > -1;
@@ -344,13 +461,12 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         this.updateAccessMarks();
         this.updateOwnersMarks();
 
-        if (this._interval) {
-            window.clearInterval(this._interval);
-        }
-        this._interval = setInterval(() => {
-            this.updateScroller();
-        }, this.scrollInterval);
-
+        // if (this._interval) {
+        //     window.clearInterval(this._interval);
+        // }
+        // this._interval = setInterval(() => {
+        //     this.updateScroller();
+        // }, this.scrollInterval);
     }
 
     private reorderCabinetOwners() {
@@ -377,12 +493,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     }
 
     private updateAccessMarks(): boolean {
-        return this.allMarkedAccess = this.folderListControls.findIndex((ctrl) => ctrl.value) > -1;
+        return (this.allMarkedAccess = this.folderListControls.findIndex((ctrl) => ctrl.value) > -1);
     }
 
     private updateOwnersMarks(): boolean {
-        return this.allMarkedOwners = this.cabinetOwners.findIndex((_person) =>
-            _person.marked && _person.data.ISN_CABINET === this.data.rec['ISN_CABINET']) > -1;
+        return (this.allMarkedOwners =
+            this.cabinetOwners.findIndex(
+                (_person) => _person.marked && _person.data.ISN_CABINET === this.data.rec['ISN_CABINET']
+            ) > -1);
     }
 
     @HostListener('window:resize')

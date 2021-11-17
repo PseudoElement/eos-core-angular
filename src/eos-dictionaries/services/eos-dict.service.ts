@@ -980,7 +980,7 @@ export class EosDictService {
                 .then((results) => {
                     // let success = true;
                     results.forEach((result) => {
-                        if (result.error) {
+                        if (result && result.error) {
                             if (result.error.code !== 434) {
                                 this._msgSrv.addNewMessage({
                                     type: 'warning',
@@ -995,7 +995,9 @@ export class EosDictService {
                     });
                     return this._reloadList()
                         .then(() => {
-                            const deletedList = results.filter(r => !r.error)
+                            const deletedList = results.filter(r => {
+                               return r && !r.error;
+                            })
                                 .map(r => r.record[title] || r.record['CLASSIF_NAME']);
                             this.deleteCutedNodes(title, deletedList);
                             this.updateViewParameters({ updatingList: false });
