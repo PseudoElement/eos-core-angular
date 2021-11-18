@@ -1393,7 +1393,26 @@ export class EosDictService {
                 // });
             });
     }
-
+    public updateNameDepartment(newName: string): Promise<any> {
+            return this._apiSrv.batch([{
+                method: 'MERGE',
+                requestUri: 'DEPARTMENT(\'0.\')',
+                data: {
+                    CARD_NAME: newName
+                }
+            }], '');
+    }
+    public getCardName(): string | undefined {
+        const node = this.currentDictionary.nodes.get('0.');
+        const cardName = node ? node.data['rec']['CARD_NAME'] : undefined;
+        return cardName;
+    }
+    public setCardName(cardName: string) {
+        const node = this.currentDictionary.nodes.get('0.');
+        if (node) {
+            node.data['rec']['CARD_NAME'] = cardName.trim();
+        }
+    }
     public checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {
         return this.currentDictionary.descriptor.checkPreDelete(selectedNodes);
     }

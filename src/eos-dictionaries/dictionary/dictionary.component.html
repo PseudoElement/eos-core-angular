@@ -159,3 +159,24 @@
         <eos-node-info-switcher *ngIf="!params.updatingInfo"></eos-node-info-switcher>
     </div>
 </div>
+<ng-template #modalWord> <!--  -->
+    <header>
+        <div class="header paaram-header-wrapp">
+            <div class="header__text-wrap">
+                <span class="header__text">Переименование центральной картотеки</span>
+            </div>
+            <div class="header__button-wrap">
+                <button class="btn btn-primary header__button" (click)="cancelModalWord()">ОТМЕНИТЬ
+                </button>
+                <button class="btn btn-primary-full header__button" (click)="submitModalWord()" [disabled]="disableCollection">СОХРАНИТЬ
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="modalWord-content">
+        <div class="input-form-new-name"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+            <input  class="form-control m-font inline-block" style="background-color: #f3f2f2;" type="text" [(ngModel)]="newNameBaseDepartment">
+            <span *ngIf="newNameBaseDepartment.length > 64" class="warning">Допустимо максимальное количество символов 64</span>
+        </div>
+    </main>
+</ng-template>

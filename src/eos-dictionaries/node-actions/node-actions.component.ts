@@ -469,6 +469,9 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = this._eaps.checkAccessTech(E_TECH_RIGHT.ArrDescripts);
                     }
                     break;
+                case E_RECORD_ACTIONS.renameBaseDepartment:
+                    _enabled = this._eaps.checkBaseDepartmentRight();
+                    break;
             }
 
             if (this.dictionary.id === 'nomenkl' && _enabled) {

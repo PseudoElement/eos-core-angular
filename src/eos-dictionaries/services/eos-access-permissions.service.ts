@@ -294,6 +294,11 @@ export class EosAccessPermissionsService {
         }
         return false;
     }
+    /* системному технологу с доступом к справочнику "Подразделения" и разрешеной вершиной "Все подразделения" */
+    public checkBaseDepartmentRight(): boolean {
+        const direct_rule = this.appCtx.CurrentUser.USER_TECH_List.findIndex(e => (e['FUNC_NUM'] === 10 && e['DUE'] === '0.' && e['ALLOWED'] === 1));
+        return direct_rule === -1 ? false : true;
+    }
 
     // --------------------------------------------------------------
     private _userTechListGranted(tech: E_TECH_RIGHT, due: string): APS_DICT_GRANT {
