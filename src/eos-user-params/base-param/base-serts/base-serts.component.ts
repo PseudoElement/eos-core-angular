@@ -152,7 +152,8 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
         });
     }
     save(): void {
-        this.pip.batch(this.getSave(), '').then(res => {
+        this.pip.batch(this.getSave(), '')
+        .then(res => {
             this._msg.addNewMessage(PARM_SUCCESS_SAVE);
             this.stateSerts.sing_mail_origin = this.stateSerts.sing_mail;
             this.stateSerts.enc_mail_origin = this.stateSerts.enc_mail;
@@ -161,6 +162,7 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
             if (this.flagSave = 'POST') {
                 this.flagSave = 'MERGE';
             }
+            this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
             this.closeModal.emit();
         }).catch(error => {
             this._msg.addNewMessage(PARM_ERROR_DB);
