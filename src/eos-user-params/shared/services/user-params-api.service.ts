@@ -88,7 +88,7 @@ export class UserParamApiSrv {
             return data;
         });
     }
-    getQueryforDB(dueDep?) {
+    getQueryforDB(dueDep?, cabinet?) {
         let q: any = {};
         let skip, top;
         const ob1 = {};
@@ -180,7 +180,11 @@ export class UserParamApiSrv {
                 propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
             }
             const ob = {};
-            ob['USERCARD.DUE'] = `${dueDep ? dueDep : '0.'}`;
+            if (cabinet) {
+                ob['USER_CL.avail_cabs'] = `${cabinet}`; //    avail_cabs
+            } else {
+                ob['USERCARD.DUE'] = `${dueDep ? dueDep : '0.'}`;
+            }
             q = {
                 USER_CL: PipRX.criteries(ob),
                 orderby: `${propOrderBy}`,
@@ -234,13 +238,13 @@ export class UserParamApiSrv {
 
         // }
     }
-    getUsers(dueDep?: string): Promise<any> {
+    getUsers(dueDep?: string, cabinet?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
         let q;
         if (this._storageSrv.getItem('quickSearch')) {
             q = this.getQueryForSearch();
         } else {
-            q = this.getQueryforDB(dueDep);
+            q = this.getQueryforDB(dueDep, cabinet);
         }
 
         q._moreJSON = { CanTech: null };

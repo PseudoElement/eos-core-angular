@@ -39,6 +39,27 @@
             <eos-user-search (quickSearchKey)="quickSearchKey($event)" #quickSearchOpen (search)="searchUsers($event)"
                 [flagDeep]="shooseP"></eos-user-search>
         </div>
+        <div class="cabinet-filter" *ngIf="cabinetFilterShow()">
+            <div class="input-cabinet-select">
+                <div style="padding: 13px 10px 0px 0px;">
+                    <span>Кабинеты</span>
+                </div>
+                <eos-dynamic-input
+                style="margin: 0; width: 265px;"
+                [input]="inputs['USER_CABINET']"
+                [form]="form"
+                ></eos-dynamic-input>
+            </div>
+            <div *ngIf="false" class="input-cabinet-checkbox" > <!-- Пока не буду использвать -->
+                <eos-dynamic-input
+                [input]="inputs['CHECK_ALL_CARTOTEC']"
+                [form]="form"
+                ></eos-dynamic-input>
+                <div style="padding-top: 7px;">
+                    <span>Учитывать право "Поиск по всем картотекам"</span>
+                </div>
+            </div>
+        </div>
         <!--Быстрый поиск-->
         <div class="table-header">
             <!-- header -->
@@ -86,7 +107,7 @@
         </div>
         <div *ngIf="!isLoading" #listContent class="list-user-sel">
             <div>
-                <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
+                <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': ''}">
                     <div *ngFor="let user of listUsers;   let last = last" class="user-item"
                         [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}"
                         (dblclick)="buttons.buttons[1].disabled === false ? RedactUser(user): null" onclick=this.blur()>

@@ -1,4 +1,25 @@
 .list-user-select-wrapper {
+    .cabinet-filter {
+        display: flex;
+        background-color: #fafafa;
+        padding: 0px 20px;
+        .input-cabinet-select {
+            display: flex;
+            .form-group {
+                margin: 0 0 5px;
+            }
+        }
+        .input-cabinet-checkbox {
+            display: flex;
+            margin-left: 10px;
+            padding-top: 5px;
+            .form-group {
+                margin: 0 0 0px;
+                background-color: white;
+            }
+        }
+    }
+    
     .table-header {
         .btn {
             background: transparent;

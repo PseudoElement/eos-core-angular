@@ -31,6 +31,9 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { SearchServices } from 'eos-user-select/shered/services/search.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { SettingManagementComponent } from './setting-management/setting-management.component';
+import { FormGroup } from '@angular/forms';
+import { LIST_USER_CABINET } from 'eos-user-select/shered/consts/list-user.const';
+import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 interface TypeBread {
     action: number;
 }
@@ -63,7 +66,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     countcheckedField: number;
     shadow: boolean = false;
     deleteOwnUser: any;
-
+    CabinetOptions = [];
+    public inputs: any;
+    public form: FormGroup;
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries['USER_CL.Removed'] === 'true') {
             this._apiSrv.sortDelUsers = true;
@@ -133,7 +138,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _waitCl: WaitClassifService,
         private _userParamSrv: UserParamsService,
         private _srhSrv: SearchServices,
-        private _appContext: AppContext
+        private _appContext: AppContext,
+        private _inputCtrlSrv: InputParamControlService,
     ) {
 
     }
@@ -150,13 +156,26 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.paginationConfig = confUsers;
         this.buttons = Allbuttons;
         //  this.helpersClass = new HelpersSortFunctions();
+        this.inputs = this._inputCtrlSrv.generateInputs(LIST_USER_CABINET);
+        this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this._apiSrv.initSort();
         this._route.params
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(param => {
-                this.initView(param['nodeId']);
+                if (this._apiSrv.configList.shooseTab === 1) {
+                    this.isLoading = true;
+                    this.updateOptionSelect(param['nodeId'] || '0.')
+                    .then(() => {
+                        this.initView(param['nodeId']);
+                    })
+                    .catch(() => {
+                        this.initView(param['nodeId']);
+                    });
+                } else {
+                    this.initView(param['nodeId']);
+                }
             });
         this._pagSrv.NodeList$
             .pipe(
@@ -171,6 +190,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(r => {
+                if (this._apiSrv.configList.shooseTab === 1) {
+                    this.updateOptionSelect('0.');
+                }
                 this._storage.removeItem('selected_user_save');
                 this.initView();
             });
@@ -192,8 +214,47 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     this.RedactUser(this.selectedUser);
                 }
             });
+        this.form.controls['USER_CABINET'].valueChanges
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((value) => {
+            const id = this._route.params['value'].nodeId;
+            this._storage.setItem('cabinetFilter', value);
+            this.initView(id, value);
+        });
     }
-
+    updateOptionSelect(depart: string): Promise<boolean> {
+        return this._pipeSrv.read<USER_CL>({
+            CABINET: {
+                criteries: { 'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${depart}`},
+            }
+        })
+        .then((cabinets) => {
+            const filter = this._storage.getItem('cabinetFilter');
+            let flag = false;
+            const option = [{
+                title: 'Все кабинеты',
+                value: ''
+            }];
+            cabinets.forEach((cab) => {
+                if (filter && +cab['ISN_CABINET'] === +filter) {
+                    flag = true;
+                }
+                option.push({
+                    title: cab['CABINET_NAME'],
+                    value: cab['ISN_CABINET']
+                });
+            });
+            this.inputs['USER_CABINET'].options = option;
+            this.form.controls['USER_CABINET'].setValue(flag ?  filter : '', {emitEvent: false});
+            this._storage.setItem('cabinetFilter', flag ? filter : '');
+            return true;
+        });
+    }
+    cabinetFilterShow() {
+        return !this.showCloseQuickSearch && this.shooseP === 1;
+    }
     changeCurentSelectedUser(type: TypeBread) {
         const usersNotDeleted = this.listUsers.filter((user: UserSelectNode) => {
             return user.selectedMark === true || user.isSelected === true || user.isChecked === true;
@@ -230,7 +291,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
-    initView(param?) {
+    initView(param?, cabinet?) {
+        if (!cabinet && this.form.controls['USER_CABINET'].value) {
+            cabinet = this.form.controls['USER_CABINET'].value;
+        }
         this.selectedUser = undefined;
         this.checkSortSessionStore();
         this.countcheckedField = 0;
@@ -253,7 +317,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         // this.flagScan = null; убираю из-за сканирования
         this.flagChecked = null;
         this.isLoading = true;
-        this._apiSrv.getUsers(param || '0.')
+        this._apiSrv.getUsers(param || '0.', cabinet)
             .then((data: UserSelectNode[]) => {
                 this.listUsers = this._pagSrv.UsersList;
                 this.flagScan = null;
