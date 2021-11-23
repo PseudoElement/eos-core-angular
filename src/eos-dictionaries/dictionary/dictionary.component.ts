@@ -79,6 +79,7 @@ import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-te
 import { Templates } from '../consts/dictionaries/templates.consts';
 import { ViewProtocolServices } from 'eos-dictionaries/services/eos-view-prot.services';
 import { DictionaryDescriptor } from 'eos-dictionaries/core/dictionary-descriptor';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -189,6 +190,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         private _sandwichSrv: EosSandwichService,
         private _waitClassif: WaitClassifService,
         private _viewPortSrv: ViewProtocolServices,
+        private _appContext: AppContext,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
     ) {
@@ -783,6 +785,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (this.newNameBaseDepartment !== this._dictSrv.getCardName()) {
             this._dictSrv.updateNameDepartment(this.newNameBaseDepartment)
             .then(() => {
+                this._appContext.nameCentralСabinet = this.newNameBaseDepartment;
                 this._dictSrv.setCardName(this.newNameBaseDepartment);
                 this.modalWordRef.hide();
             })

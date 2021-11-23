@@ -239,7 +239,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             if (this._apiSrv.flagDelitedPermanantly && this._apiSrv.configList.shooseTab === 1) {
                 this.titleCurrentDue = '';
             } else {
-                this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
+                this.titleCurrentDue = this._apiSrv.configList.shooseTab === 0 ? 'Все подразделения' : this._appContext.nameCentralСabinet;
             }
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;

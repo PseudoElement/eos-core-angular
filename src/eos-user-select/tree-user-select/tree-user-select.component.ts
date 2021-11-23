@@ -8,6 +8,7 @@ import { ActivatedRoute} from '@angular/router';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { SearchServices } from 'eos-user-select/shered/services/search.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 const BIG_PANEL = 340,
     SMALL_PANEL = 260,
     PADDING_W = 32,
@@ -33,7 +34,8 @@ export class TreeUserSelectComponent implements OnInit {
         private _apiSrv: UserParamApiSrv,
         private actRoute: ActivatedRoute,
         private _store: EosStorageService,
-        private _srhSrv: SearchServices
+        private _srhSrv: SearchServices,
+        private _appContext: AppContext,
     ) {
         this.actRoute.params.subscribe(param => {
             this.id = param['nodeId'];
@@ -73,7 +75,7 @@ export class TreeUserSelectComponent implements OnInit {
         }
         this._apiSrv.confiList$.next({
             shooseTab: this.currMode,
-            titleDue: this.currMode === 0 ? 'Все подразделения' : this.currMode === 1 ? 'Центральная картотека' : 'Все организации',
+            titleDue: this.currMode === 0 ? 'Все подразделения' : this.currMode === 1 ? this._appContext.nameCentralСabinet : 'Все организации',
         });
         // this.ngOnInit();
         this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
