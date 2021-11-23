@@ -43,6 +43,31 @@ export const TYPE_OF_RULE: Array<OptionDiscription> = [{
     value: 4,
     title: 'Прием доклада'
 }];
+export const NAME_OF_RULE: Array<OptionDiscription> = [{
+    value: 1,
+    title: 'Отправка документа (РК)'
+}, {
+    value: 2,
+    title: 'Прием документа (РК)'
+}, {
+    value: 3,
+    title: 'Отправка доклада (РК)'
+}, {
+    value: 4,
+    title: 'Прием доклада (РК)'
+}, {
+    value: 5,
+    title: 'Отправка документа (РКПД)'
+}, {
+    value: 6,
+    title: 'Прием документа (РКПД)'
+}, {
+    value: 7,
+    title: 'Отправка доклада (РКПД)'
+}, {
+    value: 8,
+    title: 'Прием доклада (РКПД)'
+}];
 export const RESEVER_SELECT:  Array<OptionDiscription> = [{
     value: 1,
     title: 'Организация'

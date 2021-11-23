@@ -177,6 +177,31 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             console.log(e);
         });
     }
+    public openDictDocgroup() {
+        const params: IOpenClassifParams = {
+            classif: 'DOCGROUP_CL',
+            selectMulty: false,
+            skipDeleted: false,
+        };
+        return this._classif.openClassif(params, true)
+        .then((isnNode) => {
+            if (isnNode) {
+                return this.dictionary['dictDescrSrv']['apiSrv']
+                .read({
+                    DOCGROUP_CL: {
+                        criteries: {
+                            ISN_NODE: isnNode
+                        }
+                    }
+                }).then(data => {
+                    this.searchModel['DOCGROUP_NAME'] = data[0]['CLASSIF_NAME'];
+                    this.searchModel['DUE_DOCGROUP'] = data[0]['DUE'];
+                });
+            }
+        }).catch((e) => {
+            return { data: [], isnNode: null };
+        });
+    }
     public updateDopRec() {
         this.dictionary.descriptor.ar_Descript().then(() => {
             this.clearDopRecAfterChange();
@@ -240,6 +265,60 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             }
         });
     }
+    public initFormRule(allField: any[]) {
+        let type: any = {};
+        let kind: any = {};
+        allField.forEach((field) => {
+            if (field.foreignKey === 'type') {
+                type = field;
+            }
+            if (field.foreignKey === 'kind') {
+                kind = field;
+            }
+        });
+        this.inputsSelect = this._dataSrv.getInputs({
+            rec: {
+                type: {
+                    foreignKey: 'type',
+                    title: '',
+                    type: 17,
+                    options: [
+                        { title: '...', value: '' },
+                        ...type.options
+                    ]
+                },
+                kind: {
+                    foreignKey: 'kind',
+                    title: '',
+                    type: 17,
+                    options: [
+                        { title: '...', value: '' },
+                        ...kind.options
+                    ]
+                }
+            }
+        } as any, { rec: { select: '' } });
+        this.formSelect = this._inputCtrlSrv.toFormGroup(this.inputsSelect);
+        this.formSelect.valueChanges.subscribe(_d => {
+            const typeForm = this.formSelect.controls['rec.type'].value;
+            const kindForm = this.formSelect.controls['rec.kind'].value;
+            if (kindForm || typeForm) { // если хоть одно поле заполнено
+                if (typeForm) {
+                    if (kindForm) {
+                        this.searchModel['RULE_KIND'] = kindForm;
+                    } else {
+                        this.searchModel['RULE_KIND'] = typeForm === '1' ? '1|2|3|4' : '5|6|7|8';
+                    }
+                } else {
+                    if (kindForm) {
+                        this.searchModel['RULE_KIND'] = '' + kindForm + '|' + (+kindForm + 4);
+                    }
+                }
+            } else { // если не оба поля пустые
+                this.searchModel['RULE_KIND'] = null;
+            }
+        });
+    }
 
     // принудительное очищение поисковых критериев для доп реквизитов после работы в окне с допами.
     private clearDopRecAfterChange(): void {
@@ -252,6 +331,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     private clearModel(modelName: string) {
         if (this.formSearch && (this.dictId === 'organization' || this.dictId === 'citizens') && modelName !== 'medo') {
             this.formSearch.reset();
+            this.formSelect.reset();
+        }
+        if (this.formSelect && this.dictId === 'sev-rules') {
             this.formSelect.reset();
         }
         this.mode = 0;
@@ -312,6 +394,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             this.hasFull = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.full);
             if (this.arDescript && this.arDescript.length) {
                 this.initFormDopRec();
+            }
+            if (this.dictionary.descriptor.id === 'sev-rules') {
+                this.initFormRule(this.dictionary.descriptor.record.getFullSearchFields);
             }
         }
     }

@@ -57,7 +57,9 @@ export class RecordDescriptor {
      * set of actions available for dictionary
      */
     private actions: E_RECORD_ACTIONS[];
-
+    get getFullSearchFields(): any {
+        return this.fullSearchFields;
+    }
     constructor(dictionary: AbstractDictionaryDescriptor, data: IDictionaryDescriptor) {
         const fields = data.fields;
         this.dictionary = dictionary;
@@ -238,7 +240,14 @@ export class RecordDescriptor {
             return this.getFieldValue({ ...field, value: null }, data);
         }
     }
-
+    public sevFieldFullSearch(fsKeys: string[], descriptor: IDictionaryDescriptor) {
+        fsKeys.forEach((foreignKey) => {
+            this[foreignKey] = [];
+            if (descriptor[foreignKey] && descriptor[foreignKey] instanceof Array) {
+                descriptor[foreignKey].forEach((fldName) => this._addFieldToSet(fldName, this[foreignKey]));
+            }
+        });
+    }
     protected _getFullSearchFields() {
         return this.fullSearchFields;
     }

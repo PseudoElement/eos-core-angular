@@ -10,13 +10,14 @@ import {
     ITEMS_KIND,
     KOR_RULE_SEND, ORDERS_KIND,
     RESOLUTION_KIND, SIGNATURES_KIND,
-    TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE, RESEVER_SELECT
+    TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE, RESEVER_SELECT, NAME_OF_RULE
 } from './types.consts';
 import {SECURITY_DICT} from '../security.consts';
 import {ORG_TYPE_DICT} from '../org-type.consts';
 import {CONTACT_DICT} from '../contact.consts';
 import {ORGANIZ_DICT} from '../organiz.consts';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
+import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
 
 export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
     id: 'sev-rules',
@@ -24,7 +25,11 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
     visible: true,
     iconName: 'eos-icon-rules-blue',
     title: 'Правила СЭВ',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
+        'removeHard', 'edit', 'view', 'protViewSecurity'],
     keyField: 'ISN_LCLASSIF',
+    searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     fields: [...LINEAR_TEMPLATE.fields,
         {
             key: 'CLASSIF_NAME',
@@ -34,7 +39,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             required: true,
             isUnique: true,
             pattern:  /^(?! *$)[\wА-Яа-я.+ '-][^!@$&^=~]*$/,
-            preferences: {minColumnWidth: 549}
+            preferences: {minColumnWidth: 400}
         },
         Object.assign({}, COMMON_FIELD_NOTE, {
             title: 'Примечание'
@@ -60,6 +65,13 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'RULE_KIND',
             type: 'number',
             default: 1,
+        }, {
+            key: 'NAME_RULE_KIND',
+            type: 'select',
+            title: 'Вид правила',
+            options: NAME_OF_RULE,
+            default: 1,
+            preferences: {minColumnWidth: 240}
         }, {
             key: 'RC_TYPE',
             type: 'number',
@@ -684,7 +696,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             default: ''
         }
     ],
-    editFields: ['CLASSIF_NAME', 'RULE_KIND', 'RC_TYPE', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DOCGROUP_NAME', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
+    editFields: ['CLASSIF_NAME', 'NAME_RULE_KIND', 'RULE_KIND', 'RC_TYPE', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DOCGROUP_NAME', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
         'linkKind', 'linkTypeList', 'access', 'rubric', 'address', 'region', 'visa', 'addressee', 'addresseeKind', 'additionalField',
         'userGrantedOnly', 'file', 'fileExtensions', 'fileAccessList', 'fileMaxLength', 'item', 'itemKind', 'resolution',
         'resolutionKind', 'taskCategory', 'taskController', 'taskNote', 'taskFile', 'taskFileExtensions', 'taskFileMaxLength', 'reception',
@@ -703,8 +715,9 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         'NotificationConfigReport', 'controllerMission', 'OrganizationFolderInput', 'reportExecution', 'filterConfig', 'linkTypeListInput', 'executiveInput',
         'groupDocument', 'fileDocument', 'FileRK', 'departmentReceive', 'departmentReceiveInput', 'organizationNow'
     ],
-    listFields: ['CLASSIF_NAME', 'NOTE'],
+    listFields: ['CLASSIF_NAME', 'NAME_RULE_KIND', 'NOTE'],
     allVisibleFields: [],
+    fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'type', 'kind', 'RULE_KIND', 'DUE_DOCGROUP'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'kind', 'DUE_DOCGROUP_NAME'],
-    searchFields: ['CLASSIF_NAME'],
+    searchFields: ['CLASSIF_NAME', 'NAME_RULE_KIND', 'NOTE'],
 });
