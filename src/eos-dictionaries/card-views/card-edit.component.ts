@@ -88,10 +88,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             0 - нет возможности редактирования и галочка снята
             1 - галочка снята но возможности редактирования есть
             2 - галочка стоит и есть возможность редактирования */
-            if (newData.rec['SHABLON'].indexOf('{2}') === -1) {
+            if (!newData.rec['SHABLON'] || newData.rec['SHABLON'].indexOf('{2}') === -1) {
                 newData.rec['PRJ_AUTO_REG'] = 0;
             } else {
-                if (this.form.controls['rec.PRJ_AUTO_REG'].value) {
+                if (this.form.controls['rec.PRJ_AUTO_REG'] && this.form.controls['rec.PRJ_AUTO_REG'].value) {
                     newData.rec['PRJ_AUTO_REG'] = 2;
                 } else {
                     newData.rec['PRJ_AUTO_REG'] = 1;
@@ -259,7 +259,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             _value = value;
         }
         if (path === 'rec.PRJ_AUTO_REG') {
-            if (this.form.controls['rec.SHABLON'].value.indexOf('{2}') === -1) {
+            if (!this.form.controls['rec.SHABLON'] || (this.form.controls['rec.SHABLON'].value && this.form.controls['rec.SHABLON'].value.indexOf('{2}') === -1)) {
                 _value = 0;
             } else {
                 if (_value === 0) {
