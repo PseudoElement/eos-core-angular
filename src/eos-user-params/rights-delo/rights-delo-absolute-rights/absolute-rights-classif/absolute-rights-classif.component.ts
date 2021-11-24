@@ -34,6 +34,34 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     isShell: Boolean = false;
     strNewCards: any;
     listClassif: RightClassifNode[] = [];
+    get isCheckedSide() {
+        let type = null;
+        let count = 0;
+        this.listClassif.forEach(item => {
+            if (item.value) {
+                count++;
+            }
+        });
+        if (count === this.listClassif.length) {
+            type = true;
+        }   else if (count === 0) {
+            type = null;
+        }   else {
+            type = false;
+        }
+        return type;
+    }
+
+    get getflagChecked() {
+        switch (this.isCheckedSide) {
+            case true:
+                return this.editMode ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-black';
+            case false:
+                return this.editMode ? 'eos-icon-checkbox-square-minus-blue' : 'eos-icon-checkbox-square-minus-grey';
+            default:
+                return this.editMode ?  'eos-icon-checkbox-square-blue' : 'eos-icon-checkbox-square-grey';
+        }
+    }
     constructor (
         private _apiSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
@@ -47,6 +75,11 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     ngOnInit() {
         this._init();
         this.isLoading = true;
+    }
+    updateFlagDictionaries() {
+        this.listClassif.forEach(item => {
+            item.value = this.isCheckedSide ? 0 : 1;
+        });
     }
     expendList(node: RightClassifNode) {
         node.isExpanded = !node.isExpanded;

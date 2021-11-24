@@ -83,11 +83,11 @@ export class RightClassifNode {
                 }
             }
         }
-        const pos_in =  this._curentUser['TECH_RIGHTS'].indexOf('1');
-        const math_in = this._curentUser['TECH_RIGHTS'].match(/1/g);
-        if (pos_in === -1 || pos_in >= 37 || math_in.length === 4) {
-            this._component.allNotCheck.emit(true);
-        }
+        // const pos_in =  this._curentUser['TECH_RIGHTS'].indexOf('1');
+        // const math_in = this._curentUser['TECH_RIGHTS'].match(/1/g);
+        // if (pos_in === -1 || pos_in >= 37 || math_in.length === 4) {
+        //     this._component.allNotCheck.emit(true);
+        // }
     }
     private _value: number;
     private _item: ITechUserClassifConst;
