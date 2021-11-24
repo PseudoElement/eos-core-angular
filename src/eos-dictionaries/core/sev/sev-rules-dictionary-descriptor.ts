@@ -17,6 +17,9 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
         private _rulesSrv: EosSevRulesService
     ) {
         super(descriptor, apiSrv);
+        this.record.sevFieldFullSearch([
+            'fullSearchFields',
+        ], descriptor);
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
@@ -152,6 +155,7 @@ export class SevRulesDictionaryDescriptor extends SevDictionaryDescriptor {
                             return resolve(value);
                         })
                     );
+                    value['NAME_RULE_KIND'] = value['RULE_KIND'];
                 }
                 return Promise.all(processors);
             });

@@ -49,12 +49,12 @@
         </div>
     </div>
     <div class="full-search-settings-container usual-border">
-        <div *ngIf="dictId !=='cabinet' && dictId !=='templates' && dictId !== 'citizens'">
+        <div *ngIf="dictId !=='cabinet' && dictId !=='templates' && dictId !== 'citizens' && dictId !== 'sev-rules'">
             <label class="radio-inline"><input type="radio" name="full-space" [value]="0" [(ngModel)]="mode"><span></span><span class="m-font">Во всём справочнике</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="1" [(ngModel)]="mode"><span></span><span class="m-font">В текущей ветке</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="2" [(ngModel)]="mode"><span></span><span class="m-font">Текущая и подчиненные</span></label>
         </div>
-        <div class="line" *ngIf="dictId !== 'templates' && dictId !== 'citizens' && dictId !== 'organization'">
+        <div class="line" *ngIf="dictId !== 'templates' && dictId !== 'citizens' && dictId !== 'organization' && dictId !== 'sev-rules'">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
         </div>
     </div>
@@ -976,6 +976,89 @@
         </form>
     </div>
 
+</div>
+<!-- For правила СЭВ -->
+<div [hidden]="dictId !== 'sev-rules'"
+    *ngIf="searchModel && dictId === 'sev-rules'"
+    class="row full-search-form">
+    <form id="sev-rules">
+        <button [disabled]="noSearchData"
+            type="submit"
+            (click)="fullSearch()"
+            class="hidden-submit">Найти</button>
+
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="1">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                <div class="search-fld">
+                    <input id="1"
+                        name="1"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['CLASSIF_NAME']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+            <div style="display: flex;">
+                <div class="type-sev-left">
+                    <span class="label-select-rec">Тип документа</span>
+                    <div >
+                        <eos-dynamic-input
+                            [input]="inputsSelect['rec.type']"
+                            [form]="formSelect"
+                            [height]="200"
+                            [readonly]="false">
+                        </eos-dynamic-input>
+                    </div>
+                    
+                </div>
+                <div class="type-sev-right">
+                    <span class="label-select-rec">Вид правила</span>
+                    <div > <!-- style="margin-top: -15px;" -->
+                        <eos-dynamic-input
+                        [input]="inputsSelect['rec.kind']"
+                        [form]="formSelect"
+                        [height]="200"
+                        [readonly]="false">
+                    </eos-dynamic-input>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="region-name">Группа документов</label>
+                <div class="search-fld">
+                    <input id="region-name"
+                        onfocus="this.blur()"
+                        readonly
+                        name="region-name"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['DOCGROUP_NAME']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['DOCGROUP_NAME']?.length}}">
+                        <span 
+                            class="action eos-icon eos-icon-directory-book-blue"
+                            style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
+                            container="body"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            triggers="hover"
+                            eosClickMode
+                            tooltip="Выбрать" (click)="openDictDocgroup()"></span>
+                    <a style="right: 30px;"
+                        class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['DOCGROUP_NAME']}"
+                        (click)="[searchModel['DOCGROUP_NAME'] = '', searchModel['DUE_DOCGROUP'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+    </form>
 </div>
 
 </ng-template>

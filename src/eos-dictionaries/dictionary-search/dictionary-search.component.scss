@@ -246,7 +246,22 @@
 .popover {
     padding: 0;
 }
-
+.label-select-rec {
+    font-size: 12px; 
+    width: 100%;
+    text-transform: uppercase;
+    color: #000;
+}
+.type-sev-left { 
+    margin-bottom: 20px;
+    width: 50%;
+    padding-right: 10px;
+}
+.type-sev-right {
+    margin-bottom: 20px;
+    width: 50%;
+    padding-left: 10px;
+}
 .dop-rec-wpapper {
     width: 100%;
     display: inline-flex;
@@ -268,6 +283,7 @@
             width: 100%;
         }
     }
+    
     .label-dop-rec {
         font-size: 14px;
         position: absolute;
