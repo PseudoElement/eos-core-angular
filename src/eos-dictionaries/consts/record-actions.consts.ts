@@ -565,6 +565,19 @@ export const RECORD_ACTION_COPY: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+export const RENAME_BASE_DIRECTORY: IAction = {
+    type: E_RECORD_ACTIONS.renameBaseDepartment,
+    group: E_ACTION_GROUPS.group,
+    title: 'Переименовать центральную картотеку',
+    hint: 'Переименовать центральную картотеку',
+    iconClass: 'eos-icon eos-icon-rename-blue small',
+    disabledIconClass: 'eos-icon eos-icon-rename-grey small',
+    hoverIconClass: 'eos-icon eos-icon-rename-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -625,6 +638,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_COPY,
     RECORD_ACTION_COMBINE,
     RECORD_ACTION_PASTE,
+    RENAME_BASE_DIRECTORY,
     RECORD_ACTION_EXPORT_DIRECTORY,
     RECORD_ACTION_IMPORT_DIRECTORY,
     RECORD_COPY_PROPERTIES_FROM_PARRENT,

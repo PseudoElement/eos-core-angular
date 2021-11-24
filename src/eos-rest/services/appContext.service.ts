@@ -11,6 +11,7 @@ export const CB_FUNCTIONS = 'CB_FUNCTIONS';
 @Injectable()
 export class AppContext {
 
+    public nameCentralСabinet = 'Центральная картотека';
     /**
      * залогиненый пользователь
      */
@@ -98,6 +99,16 @@ export class AppContext {
                 licensed: null,
                 ParamsDic: '-99'
             }
+        });
+        p.read<SYS_PARMS>({
+            DEPARTMENT: {
+                criteries: {
+                    DUE: '0.'
+                },
+            },
+        })
+        .then((dep) => {
+            this.nameCentralСabinet = dep[0]['CARD_NAME']; // имя центральной картотеки, может использоваться в разных местах, добавил тут чтобы не приходилось постоянно делать лишний запрос
         });
         const oCurrentUser = p.read<USER_CL>({
             CurrentUser: ALL_ROWS,

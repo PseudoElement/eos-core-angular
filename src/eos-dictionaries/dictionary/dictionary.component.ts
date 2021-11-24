@@ -7,7 +7,8 @@ import {
     HostListener,
     OnDestroy,
     ViewChild,
-    OnInit
+    OnInit,
+    TemplateRef
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -78,6 +79,7 @@ import { PrintTemplateComponent } from 'eos-dictionaries/print-template/print-te
 import { Templates } from '../consts/dictionaries/templates.consts';
 import { ViewProtocolServices } from 'eos-dictionaries/services/eos-view-prot.services';
 import { DictionaryDescriptor } from 'eos-dictionaries/core/dictionary-descriptor';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -91,7 +93,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     @ViewChild('selectedWrapper') selectedEl;
     @ViewChild('quickSearchCtl') quickSearchCtl;
     @ViewChild('searchCtl') searchCtl;
-
+    @ViewChild('modalWord') modalWord: TemplateRef<any>;
+    isLoading = false;
+    modalWordRef: BsModalRef;
+    newNameBaseDepartment: string = '';
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionary: EosDictionary;
     listDictionary: EosDictionary;
@@ -111,7 +116,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     protocolWindow: Window;
     filterDate;
     filterDateNomenkl;
-
+    get disableCollection() {
+        return this.newNameBaseDepartment === '' || this.newNameBaseDepartment.length > 64;
+    }
     get sliced_title(): string {
         if (this.isTitleSliced) {
             let sliced = this.title.slice(0, this.SLICE_LEN).trim();
@@ -183,6 +190,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         private _sandwichSrv: EosSandwichService,
         private _waitClassif: WaitClassifService,
         private _viewPortSrv: ViewProtocolServices,
+        private _appContext: AppContext,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
     ) {
@@ -602,6 +610,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.printNomenc:
                 this._printNomenc();
                 break;
+            case E_RECORD_ACTIONS.renameBaseDepartment:
+                this._renameBaseDepartment();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -769,6 +780,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     markedCounter(): number {
         return this._dictSrv.getMarkedNodes().length;
+    }
+    submitModalWord() {
+        if (this.newNameBaseDepartment !== this._dictSrv.getCardName()) {
+            this._dictSrv.updateNameDepartment(this.newNameBaseDepartment)
+            .then(() => {
+                this._appContext.nameCentralСabinet = this.newNameBaseDepartment;
+                this._dictSrv.setCardName(this.newNameBaseDepartment);
+                this.modalWordRef.hide();
+            })
+            .catch(() => {
+                this.modalWordRef.hide();
+            });
+        } else {
+            this.modalWordRef.hide();
+        }
+    }
+    cancelModalWord() {
+        this.newNameBaseDepartment = this._dictSrv.getCardName();
+        this.modalWordRef.hide();
     }
     /**
      * @description convert selected persons to list of organization representatives,
@@ -1624,5 +1654,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const checkYear = this._dictSrv.getFilterValue('YEAR');
         this._openPrintTemplate(dues, checkYear, this._checkIncludeDepartment(dues));
     }
-
+    /* Меняем имя базового Подразделения */
+    private _renameBaseDepartment() {
+        this._openModal();
+    }
+    private _openModal() {
+        if (!this.newNameBaseDepartment) {
+            this.newNameBaseDepartment = this._dictSrv.getCardName();
+        }
+        this.modalWordRef = this._modalSrv.show(this.modalWord, { ignoreBackdropClick: true });
+    }
 }

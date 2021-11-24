@@ -70,7 +70,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'copy', 'paste', 'moveUp', 'moveDown', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
-        'showDeleted', 'tuneFields', ...
+        'showDeleted', 'tuneFields', 'renameBaseDepartment', ...
         Features.cfg.departments.numcreation ? ['counterDepartmentMain', 'counterDepartment', 'counterDepartmentRK', 'counterDepartmentRKPD', ] : [] ,
         'export', 'import', 'protViewSecurity'],
     keyField: 'DUE',

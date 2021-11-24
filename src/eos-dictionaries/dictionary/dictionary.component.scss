@@ -14,7 +14,14 @@
     flex-direction: column;
     position: relative;
 }
-
+.input-form-new-name{
+    padding: 20px;
+    .warning {
+        display: block;
+        text-align: center;
+        color: red;
+    }
+}
 .eos-dictionary {
     overflow: hidden;
     .tree-wrapper,

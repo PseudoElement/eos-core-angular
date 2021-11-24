@@ -3,6 +3,7 @@ import { PipRX, DEPARTMENT } from 'eos-rest';
 import { TreeUserNode } from 'eos-user-select/tree-user-select/core/tree-user-node';
 import { E_MODES_USER_SELECT } from '../interfaces/user-select.interface';
 import {Subject} from 'rxjs';
+import { AppContext } from 'eos-rest/services/appContext.service';
 const DEPARTMENT_QUERY = {DEPARTMENT: PipRX.criteries({
     LAYER: '1:2',
     IS_NODE: '0',
@@ -23,6 +24,7 @@ export class TreeUserSelectService {
     }
     constructor (
         private apiSrv: PipRX,
+        private _appContext: AppContext,
     ) {
         this._nodes = new Map<string, TreeUserNode>();
         this.root = new TreeUserNode({DUE: '0.', IS_NODE: 0}, 0);
@@ -36,7 +38,7 @@ export class TreeUserSelectService {
         if (mode === E_MODES_USER_SELECT.card) {
             this.cardFlag = 1;
             query.DEPARTMENT.criteries['CARD_FLAG'] = '1';
-            this.root.title = 'Центральная картотека';
+            this.root.title = this._appContext.nameCentralСabinet;
         } else {
             delete query.DEPARTMENT.criteries['CARD_FLAG'];
             this.cardFlag = 0;
