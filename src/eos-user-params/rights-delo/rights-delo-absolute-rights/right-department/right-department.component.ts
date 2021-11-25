@@ -121,7 +121,7 @@ export class RightDepertmentComponent implements OnInit {
                         if (this.funcNum === 3 /* && this._appContext.cbBase */) {
                             cfg.allowed = !!userDep.ALLOWED;
                             cfg.viewAllowed = true;
-                            if (cfg.label === ' ') {
+                            if (typeof(cfg.label) === 'string' && cfg.label.trim() === '') {
                                 cfg.label = 'Все подразделения';
                             }
                             flag = true;
@@ -167,6 +167,9 @@ export class RightDepertmentComponent implements OnInit {
         return true;
     }
     getAllDepart(dueDepart: string): Array<string> {
+        if (!dueDepart) {
+            return [];
+        }
         const arrDue = dueDepart.split('.');
         arrDue.length = arrDue.length - 2;
         const depQuer = [];
