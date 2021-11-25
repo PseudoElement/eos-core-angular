@@ -240,7 +240,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
 
     submit(flag?): Promise<any> {
-        if (!/[1]+/g.test(this.listRight[0].change[0].data['TECH_RIGHTS'])) {
+        if (this.listRight[0].change.length && !/[1]+/g.test(this.listRight[0].change[0].data['TECH_RIGHTS'])) {
             this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Не заданы настройки для права "Системный технолог"`, type: 'warning' });
             return;
         }
