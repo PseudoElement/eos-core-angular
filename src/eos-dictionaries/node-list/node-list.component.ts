@@ -51,7 +51,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     markedInfo: MarkedInformation;
     allMarked: boolean;
-
+    isLoading: boolean = false;
     public hasOverflowedColumns: boolean;
     public firstColumnIndex: number;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -81,6 +81,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (_dictSrv.currentDictionary) {
                     this._repaintFlag = true;
+                    this.isLoading = true;
                     if (_dictSrv.currentDictionary.id !== this._dictId) {
                         this.firstColumnIndex = 0;
                     }
@@ -99,6 +100,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                         if (nodes && nodes.length) {
                             this.highlightNewNode();
                         }
+                        this.isLoading = false;
                         setTimeout(() => {
                             this._countColumnWidth();
                             this._repaintFlag = false;
@@ -568,7 +570,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     get recalcDone() {
-        return /*!this._recalcEvent && */!this._repaintFlag && this.modalWindow === null;
+        return /*!this._recalcEvent && */!this._repaintFlag && this.modalWindow === null && !this.isLoading;
     }
     private _countColumnWidth() {
         if (!this.viewFields || this.viewFields.length === 0) {

@@ -272,7 +272,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
 
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         let oldValue = EosUtils.getValueByPath(this.data, path, false);
-        if (oldValue === '') { // fix empty strings in IE
+        if (oldValue === '' || oldValue === undefined) { // fix empty strings in IE
             oldValue = null;
         }
 
