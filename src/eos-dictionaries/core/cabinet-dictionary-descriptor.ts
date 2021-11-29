@@ -132,7 +132,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
             this.apiSrv.read({ 'FOLDER': PipRX.criteries({ 'ISN_CABINET': rec.ISN_CABINET + '' }) }),
             this.apiSrv.read({ 'DEPARTMENT': [rec.DUE] })
                 .then(([department]: DEPARTMENT[]) => {
-                    return this.getOwners(department.DEPARTMENT_DUE)
+                    return this.getOwners(department.DEPARTMENT_DUE, rec.ISN_CABINET)
                         .then((owners) => [department, owners]);
                 }),
             this.apiSrv.read({ 'USER_CABINET': PipRX.criteries({ 'ISN_CABINET': rec.ISN_CABINET + '' }) })
@@ -192,9 +192,10 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         }
     }
 
-    getOwners(depDue: string): Promise<DEPARTMENT[]> {
+    getOwners(depDue: string, cabinet: number): Promise<DEPARTMENT[]> {
         return this.apiSrv.read<DEPARTMENT>({ 'DEPARTMENT': PipRX.criteries({ 'IS_NODE': '1', DEPARTMENT_DUE: depDue }) })
             .then((owners) => {
+                owners =   owners.filter(item => (!item.ISN_CABINET && item.ISN_HIGH_NODE && !item.DELETED) || item.ISN_CABINET === cabinet);
                 this.prepareForEdit(owners);
                 return owners;
             });

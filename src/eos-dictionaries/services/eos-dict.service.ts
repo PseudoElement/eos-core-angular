@@ -483,11 +483,11 @@ export class EosDictService {
                 this._errHandler(er);
             });
     }
-    getCabinetOwners(departmentDue: string): Promise<any[]> {
+    getCabinetOwners(departmentDue: string, cabinet: number): Promise<any[]> {
         return this.getDictionaryById('cabinet')
             .then((dictionary) => {
                 const descriptor: CabinetDictionaryDescriptor = <CabinetDictionaryDescriptor>dictionary.descriptor;
-                return descriptor.getOwners(departmentDue);
+                return descriptor.getOwners(departmentDue, cabinet);
             })
             .catch((err) => this._errHandler(err));
     }

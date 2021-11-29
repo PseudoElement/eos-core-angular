@@ -398,7 +398,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     private init(data: any) {
         // console.log('data', data);
         this.cabinetOwners = [];
-        this.dictSrv.getCabinetOwners(data.department.DEPARTMENT_DUE).then((owners) => {
+        this.dictSrv.getCabinetOwners(data.department.DEPARTMENT_DUE, this.data.rec['ISN_CABINET']).then((owners) => {
             data.owners = owners;
             Object.keys(this.form.controls).forEach((key) => {
                 if (key.indexOf('owners') > -1) {
