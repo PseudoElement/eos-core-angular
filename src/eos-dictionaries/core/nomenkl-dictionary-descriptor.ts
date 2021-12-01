@@ -50,9 +50,9 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
                 if (!redirected && (end) && (now !== end)) {
                     return false;
                 }
-                if (!closed && closedNode) {
-                    return false;
-                }
+            }
+            if (!closed && closedNode) {
+                return false;
             }
         }
         return super.filterBy(filters, data);
