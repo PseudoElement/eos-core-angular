@@ -186,11 +186,15 @@ export class WaitClassifService {
         // if (params.form !== undefined && params.form !== null) {
         //     url += `&form=${params.form}`;
         // }
-        if (params.isn_user !== undefined && params.isn_user !== null) {
-            url += `?isn_user=${params.isn_user}`;
+        if (params.idText !== undefined && params.idText !== null) {
+            url += `?id=${params.idText}`;
+            url += `&name=${params.idText}`;
         }
-        if (params.clUser !== undefined && params.clUser !== null) {
-            url += `&clUser=${params.clUser}`;
+        if (params.formText !== undefined && params.formText !== null) {
+            url += `&form=${params.formText}`;
+        }
+        if (params.selected !== undefined && params.selected !== null) {
+            url += `&select=${params.selected}`;
         }
         return url;
     }
