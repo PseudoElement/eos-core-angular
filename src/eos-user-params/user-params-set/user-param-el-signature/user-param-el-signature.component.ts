@@ -104,6 +104,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         });
         return hasRule;
     }
+    get isCb() {
+        return this._appCtx.cbBase;
+    }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
