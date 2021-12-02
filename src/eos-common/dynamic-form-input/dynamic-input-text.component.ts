@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
@@ -9,14 +9,14 @@ import { DynamicInputBase } from './dynamic-input-base';
     templateUrl: 'dynamic-input-text.component.html'
 })
 export class DynamicInputTextComponent extends DynamicInputBase {
+    @ViewChild('textArea') textArea: ElementRef<HTMLElement>;
     /* public isShowText = false; */
     constructor(private _waitCl: WaitClassifService/* , private appCtx: AppContext */) {
         super();
     }
     get getOverflou(): boolean {
-        const el = document.getElementById(this.input.key);
-        if (el) {
-            return el.scrollHeight > el.clientHeight;
+        if (this.textArea && this.textArea.nativeElement) {
+            return this.textArea.nativeElement.scrollHeight > this.textArea.nativeElement.clientHeight;
         }
         return false;
     }

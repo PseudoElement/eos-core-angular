@@ -1,7 +1,7 @@
 <div [formGroup]="form">
     <label [hidden]="input.hideLabel" [attr.for]="input.key">{{input.label}}</label>
     <div [ngClass]="{'required': isRequired}" style="position: relative;">
-        <textarea class="form-control m-font" [formControlName]="input.key" [id]="input.key" [readonly]="readonly"
+        <textarea #textArea class="form-control m-font" [formControlName]="input.key" [id]="input.key" [readonly]="readonly"
             [ngClass]="{'readonly': readonly}" placeholder="..." (focus)="onFocus()" (blur)="onBlur()"
             (input)="onInput($event)" triggers="">
         </textarea>
