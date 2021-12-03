@@ -1,9 +1,9 @@
 import { OTHER_PARAM, OTHER_PARAM_CB } from './../shared/consts/other-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, Input } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { USER_PARMS } from 'eos-rest';
 
 @Component({
     selector: 'eos-param-other',
@@ -15,11 +15,6 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     @Input() btnError;
     masDisable: any[] = [];
-    inputServer = {
-        controlType: E_FIELD_TYPE.string,
-        key: 'server',
-        label: 'Сервер приложений и сервер «ДелоWEB»',
-    };
     formServer: FormGroup;
     licMedo: boolean = false;
 
@@ -38,7 +33,13 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     public init() {
         this.prepareDataParam();
         return this.getData(this.queryObj)
-            .then(data => {
+            .then((data: Array<USER_PARMS>) => {
+                data.map(d => {
+                    if (d.PARM_NAME === 'СЕРВЕР ПРИЛОЖЕНИЙ') {
+                        d.PARM_NAME = 'СЕРВЕР_ПРИЛОЖЕНИЙ';
+                    }
+                    return d;
+                });
                 this.prepareData = this.convData(data);
                 this._updateDeliveryOptions();
                 this.prepareDataParam();
@@ -55,9 +56,6 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
             if (elem === 35) {
                 this.licMedo = true;
             }
-        });
-        this.formServer = new FormGroup({
-            server: new FormControl({ value: this.context.SysParms._more_json.ParamsDic['СЕРВЕР ПРИЛОЖЕНИЙ'], disabled: true })
         });
         this.getData({DELIVERY_CL: {
             criteries: {
@@ -101,6 +99,26 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
             }
         });
         setTimeout(() => this.form.disable({ emitEvent: false }), 100);
+    }
+
+    public createObjRequest(): any[] {
+        const req = [];
+        for (const key in this.updateData) {
+            if (key) {
+                let key2 = key;
+                if (key === 'СЕРВЕР_ПРИЛОЖЕНИЙ') {
+                    key2 = 'СЕРВЕР ПРИЛОЖЕНИЙ';
+                }
+                req.push({
+                    method: 'MERGE',
+                    requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${key2}')`,
+                    data: {
+                        PARM_VALUE: this.updateData[key]
+                    }
+                });
+            }
+        }
+        return req;
     }
     private _updateDeliveryOptions(opts?: any) {
         this.constParam.fields.forEach(field => {

@@ -143,6 +143,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                         title: 'Ошибка сервера',
                         msg: data.message ? data.message : data
                     });
+                    this.cancel();
                 });
         }
     }

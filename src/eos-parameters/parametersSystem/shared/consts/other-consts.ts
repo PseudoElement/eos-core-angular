@@ -5,21 +5,27 @@ export const OTHER_PARAM: IBaseParameters = {
     title: 'Прочие',
     fields: [
         {
+            type: 'string',
+            key: 'СЕРВЕР_ПРИЛОЖЕНИЙ',
+            readonly: false,
+            title: 'Сервер приложений и сервер «ДелоWEB»',
+        },
+        {
             key: 'SEV_SERVER',
             type: 'string',
-            readonly: true,
+            readonly: false,
             title: 'Имя сервера СЭВ',
         },
         {
             key: 'SEV_ROOT_DIR',
             type: 'string',
-            readonly: true,
+            readonly: false,
             title: 'Хранилище подсистемы СЭВ',
         },
         {
             key: 'NOTIFY_MANAGMENT',
             type: 'string',
-            readonly: true,
+            readonly: false,
             title: 'Подсистемы "Оповещения и уведомления" и "управление процессами"',
         },
         {
