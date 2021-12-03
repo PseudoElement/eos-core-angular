@@ -8,6 +8,20 @@ eos-dynamic-input {
         bottom: 0;
         right: 7px;
     }
+    .textareabutton {
+        font-size: 13px;
+        display: inline-block;
+        position: absolute;
+        top: 1px;
+        right: 17px;
+        .span {
+            padding-left: 6px;
+            font-size: 12px;
+        }
+        &.spanScrol {
+            right: 2px;
+        }
+    }
 
 
 }
