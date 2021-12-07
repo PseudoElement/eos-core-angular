@@ -21,7 +21,7 @@ export class UserHeaderComponent implements OnInit {
     @Output() submitEmit = new EventEmitter<any>();
     @Output() cancelEmit = new EventEmitter<boolean>();
     @Output() editEmit = new EventEmitter<boolean>();
-
+    public isn_user = false;
     public btnTitles = {
         default: 'По умолчанию',
         save: 'Сохранить',
@@ -32,6 +32,10 @@ export class UserHeaderComponent implements OnInit {
 
     get checkSegment() {
         const segmentsUrl = this._router.parseUrl(this._router.url).root.children.primary.segments;
+        const parsUrl = this._router.parseUrl(this._router.url);
+        if (parsUrl && parsUrl.queryParams && parsUrl.queryParams['isn'] === '-99') {
+            this.isn_user = true;
+        }
         if (segmentsUrl.length && segmentsUrl.length > 2 && segmentsUrl[1].path === 'current-settings') {
             return true;
         }
