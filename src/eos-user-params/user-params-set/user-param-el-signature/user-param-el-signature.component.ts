@@ -95,7 +95,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         if (!this.isCurrentSettings) {
             return true;
         }
-        const rules = ['arm', 'cbr'];
+        const rules = ['arm', 'cbr', 'tk'];
         let hasRule = false;
         rules.forEach((rule) => {
             if (this.appMode.hasOwnProperty(rule)) {
