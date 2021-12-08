@@ -10,6 +10,8 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { BsDropdownDirective } from 'ngx-bootstrap';
+import { IOpenClassifParams } from 'eos-common/interfaces';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 interface ICabinetOwner {
     index: number;
@@ -51,7 +53,8 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     @ViewChild('tableEl') tableEl;
     @ViewChild('intupString') intupString;
 
-    // private _apiSrv: PipRX;
+    private _apiSrv: PipRX;
+    private _msgSrv: EosMessageService;
     // private folderList: any[];
 
     /* tslint:disable:no-bitwise */
@@ -109,7 +112,8 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         CABINET_FOLDERS.forEach((folder) => {
             this.foldersMap.set(folder.key, folder);
         });
-        // this._apiSrv = injector.get(PipRX);
+        this._apiSrv = injector.get(PipRX);
+        this._msgSrv = injector.get(EosMessageService);
         // this.folderList = [];
     }
 
@@ -196,7 +200,87 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             }
         }
     }
-
+    addUserDepartment() {
+        const selected: string[] = [];
+        const cabinets: ICabinetOwner[] = this.getCabinetsOwners();
+        cabinets.forEach(dep => {
+            selected.push(dep.data['DUE']);
+        });
+        const OPEN_CLASSIF_ORGANIZ_DEP: IOpenClassifParams = {
+            classif: 'DEPARTMENT',
+            return_due: true,
+            selected: selected.join('|'),
+            curdue: this.data.rec['DUE'],
+            skipDeleted: true,
+            selectMulty: true,
+            selectLeafs: true,
+            selectNodes: false,
+        };
+        return this._classifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_DEP)
+        .then((due: string) => {
+            const queryDue: string[] = [];
+            due.split('|').forEach((el) => {
+                const notNew = this.possibleOwners.findIndex((own: ICabinetOwner)  => own.data['DUE'] === el);
+                if (notNew > -1) {
+                    this.add(this.possibleOwners[notNew]);
+                } else if (selected.indexOf(el) === -1) {
+                    queryDue.push(el);
+                }
+            });
+            if (queryDue.length === 0) {
+                return;
+            }
+            this._apiSrv.read({
+                DEPARTMENT: {
+                    criteries: {
+                        DUE: queryDue.join('|'),
+                    }
+                }
+            })
+            .then((ans: DEPARTMENT[]) => {
+                let startIndex = this.data.owners.length;
+                let cabinetsView = cabinets.length;
+                const notAdd: string[] = [];
+                ans.forEach((dep) => {
+                    if (dep['DEPARTMENT_DUE'] === this.data.department['DEPARTMENT_DUE']) {
+                        dep._orig = JSON.parse(JSON.stringify(dep));
+                        dep['ISN_CABINET'] = this.data.rec['ISN_CABINET'];
+                        dep['ORDER_NUM'] = cabinetsView + 1;
+                        this.data.owners.push(dep);
+                        const path = 'owners[' + startIndex + '].ISN_CABINET';
+                        const orderNum = 'owners[' + startIndex + '].ORDER_NUM';
+                        this.form.addControl(path, new FormControl(dep['ISN_CABINET']));
+                        this.form.addControl(orderNum, new FormControl(dep['ORDER_NUM']));
+                        const newCabinet = <ICabinetOwner>{
+                            index: startIndex,
+                            marked: false,
+                            data: dep,
+                            orderNum: dep['ORDER_NUM'],
+                            get isOwnerView() {
+                                return dep['ISN_CABINET'] === this.data['ISN_CABINET'];
+                            },
+                        };
+                        this.cabinetOwners.push(newCabinet);
+                        this.add(newCabinet);
+                        cabinetsView++;
+                        startIndex++;
+                    } else {
+                        notAdd.push(dep['CLASSIF_NAME']);
+                    }
+                });
+                if (notAdd.length > 0) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: notAdd.length === 1 ? `Должностное лицо \'${notAdd.join(', ')}\' не принадлежит текущей картотеке` : `Должностные лица \'${notAdd.join(', ')}\' не принадлежит текущей картотеке`
+                    });
+                }
+            });
+        })
+        .catch(() => {
+            console.log('window closed');
+        });
+    }
     getMaxOrderNum(): number {
         const maxOrder = this.getCabinetsOwners().sort((o1, o2) => {
             return String(+o1.orderNum).localeCompare(String(+o2.orderNum));
@@ -278,8 +362,17 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                     })
                     .then(() => {
                         if (!canceled) {
-                            this.setValue(this.getOwnerPath(owner.index), null);
-                            owner.data['ISN_CABINET'] = null;
+                            const update = owner.data._orig['ISN_CABINET'] === this.data.rec.ISN_CABINET ? null : owner.data._orig['ISN_CABINET'];
+                            if (update) { // если удалили пользователя которого добавили из Спавочника то удаляем его полностью
+                                const path = 'owners[' + owner.index + '].ISN_CABINET';
+                                const orderNum = 'owners[' + owner.index + '].ORDER_NUM';
+                                this.form.removeControl(path);
+                                this.form.removeControl(orderNum);
+                                this.data.owners = this.data.owners.filter(dat => owner.data.DUE !== dat['DUE']);
+                                this.cabinetOwners = this.cabinetOwners.filter(cab => owner.index !== cab.index);
+                            }
+                            this.setValue(this.getOwnerPath(owner.index), update);
+                            owner.data['ISN_CABINET'] = update;
                             owner.marked = false;
                         }
                     });
