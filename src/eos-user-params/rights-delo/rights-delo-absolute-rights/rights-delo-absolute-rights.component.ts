@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -83,17 +83,37 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List'
         })
-            .then(() => {
-                const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-                this._userParamsSetSrv.checkGrifs(id).then(el => {
-                    this.flagGrifs = el;
-                    this.init();
-                });
-            })
-            .catch(el => {
+        .then(() => {
+            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+            this._userParamsSetSrv.checkGrifs(id).then(el => {
+                this.flagGrifs = el;
+                this.init();
             });
+        })
+        .catch(el => {
+        });
+        this._userParamsSetSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit('')
+            .then((el) => {
+                if (el === 'error') {
+                    this._userParamsSetSrv.setChangeState({ isChange: true });
+                } else {
+                    this._router.navigateByUrl(rout.url);
+                }
+            })
+            .catch(() => {
+                this._userParamsSetSrv.setChangeState({ isChange: true });
+            });
+        });
     }
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
 
     /* absoluteRightReturnCB() {
         const arrayFirst = ABSOLUTE_RIGHTS.filter(elem => {
@@ -242,7 +262,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     submit(flag?): Promise<any> {
         if (this.listRight[0].value && !/[1]+/g.test(this.listRight[0]['_curentUser'].TECH_RIGHTS)) {
             this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Не заданы настройки для права "Системный технолог"`, type: 'warning' });
-            return;
+            return Promise.reject(true);
         }
 
         this.isLoading = false;
@@ -273,7 +293,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
                     }
                     this.isLoading = true;
-                    return Promise.resolve(true);
+                    return Promise.resolve('error');
                 }
                 this.editMode = false;
                 this.btnDisabled = true;

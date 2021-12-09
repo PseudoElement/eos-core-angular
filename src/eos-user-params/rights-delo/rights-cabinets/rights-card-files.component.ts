@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, RouterStateSnapshot} from '@angular/router';
 import { PipRX } from 'eos-rest';
 import { RigthsCabinetsServices } from 'eos-user-params/shared/services/rigths-cabinets.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
@@ -10,6 +10,8 @@ import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'eos-card-files',
@@ -36,6 +38,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
     private flagGrifs: boolean;
     private userId: number;
+    private _ngUnsubscribe: Subject<any> = new Subject();
     // private indexDeleted: Array<number> = [];
     constructor(
         private _rightsCabinetsSrv: RigthsCabinetsServices,
@@ -52,18 +55,28 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this._userSrv.getUserIsn({
             expand: 'USERCARD_List'
         })
-            .then(() => {
-                this.flagChangeCards = true;
-                this.userId = this._userSrv.userContextId;
-                this._userSrv.checkGrifs(this.userId).then(elem => {
-                    this.flagGrifs = elem;
-                    this.init();
-                });
-            })
-            .catch(e => {
-                this.cancel(null);
-                this._errorSrv.errorHandler(e);
+        .then(() => {
+            this.flagChangeCards = true;
+            this.userId = this._userSrv.userContextId;
+            this._userSrv.checkGrifs(this.userId).then(elem => {
+                this.flagGrifs = elem;
+                this.init();
             });
+        })
+        .catch(e => {
+            this.cancel(null);
+            this._errorSrv.errorHandler(e);
+        });
+        this._userParamsSetSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit('')
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            });
+        });
     }
     ngOnDestroy() {
     }
@@ -258,7 +271,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             return this.currentCard && card.data.DUE !== this.currentCard.data.DUE;
         });
     }
-    submit(event) {
+    submit(event): Promise<any> {
         this.isLoading = true;
         const changes = [];
         const mergechange = [];
@@ -274,7 +287,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             }
         });
         if (changes.length) {
-            this._pipSrv.batch(changes, '').then(data => {
+            return this._pipSrv.batch(changes, '').then(data => {
                 this._msgSrv.addNewMessage({
                     type: 'success',
                     title: 'Изменения сохранены',
@@ -283,22 +296,26 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 });
                 /* В случае если были добавлены новые картотеки то необходимо изменить записи после их создания*/
                 if (mergechange.length) {
-                    this._pipSrv.batch(mergechange, '').then(() => {
+                    return this._pipSrv.batch(mergechange, '').then(() => {
                         this.cancel(null);
                         this._userParamsSetSrv.setChangeState({ isChange: false });
+                        this.isLoading = false;
                     });
                 } else {
                     this.cancel(null);
                     this._userParamsSetSrv.setChangeState({ isChange: false });
+                    this.isLoading = false;
                 }
             }).catch(e => {
                 this.cancel(null);
                 this._errorSrv.errorHandler(e);
+                this.isLoading = false;
             });
         } else {
             this.cancel(null);
+            this.isLoading = false;
+            return Promise.resolve(true);
         }
-        this.isLoading = false;
     }
     queryDelete(card: CardsClass, changes: Array<any>): void {
         changes.push({

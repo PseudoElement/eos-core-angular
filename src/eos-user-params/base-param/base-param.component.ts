@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -111,6 +111,26 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 .catch(err => {
                     this.afterInit();
                     this.LicenzeInfo = [];
+                });
+            }
+        });
+        this._userParamSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            if (!this.getValidDate) {
+                this.messageAlert({ title: 'Предупреждение', msg: 'Невозможно сохранить некорректные данные', type: 'warning' });
+                setTimeout(() => {
+                    this._userParamSrv.setChangeState({ isChange: true, disableSave: this.getValidDate });
+                }, 0);
+            } else {
+                this.submit('')
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                })
+                .catch(() => {
+                    this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
                 });
             }
         });
@@ -483,7 +503,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     submit(meta?: string): Promise<any> {
         if (this.cheackCtech() || this.checkRole()) {
-            return;
+            return Promise.reject(false);
         }
         return this._checkLicenseInfo()
         .then((checkResult) => {

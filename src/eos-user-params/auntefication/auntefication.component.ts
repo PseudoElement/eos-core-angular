@@ -14,6 +14,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_PARMS } from 'eos-rest';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ESIA_AUTH_PARM_VALUE } from 'eos-parameters/parametersSystem/shared/consts/auth-consts';
+import { Router, RouterStateSnapshot } from '@angular/router';
 
 // Input, Output, EventEmitter
 @Component({
@@ -70,6 +71,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _msgSrv: EosMessageService,
         private _appCtx: AppContext,
+        private _router: Router,
     ) {
 
     }
@@ -225,6 +227,30 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         ).subscribe(() => {
             this.getErrorSave();
         }); */
+        this._userParamSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            if (this.form.status === 'INVALID' || this.form.controls['CLASSIF_NAME'].value === '' || this.checkCurrentUser || this.errorPass) {
+                this._alertMessage('Невозможно сохранить некорректные данные');
+                setTimeout(() => {
+                    this._userParamSrv.setChangeState({ isChange: true });
+                }, 0);
+            } else {
+                this.preSubmit('')
+                .then((ans) => {
+                    if (ans === 'not save') {
+                        this._userParamSrv.setChangeState({ isChange: true });
+                    } else {
+                        this._router.navigateByUrl(rout.url);
+                    }
+                })
+                .catch(() => {
+                    this._userParamSrv.setChangeState({ isChange: true });
+                });
+            }
+        });
     }
     getEditDate(): boolean {
         const provElem = !this.form.controls['PASSWORD_DATE'].value;
@@ -419,7 +445,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
     }
 
-    preSubmit($event?) {
+    preSubmit($event?): Promise<any> {
         // const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
         // const url = `ChangePassword?isn_user=${this._userParamSrv.userContextId}&pass='${encodeURI('1234')}'`;
         if (this.externalTypeIsEmpty()) {
@@ -427,7 +453,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             alert(`Поле "${field}" обязательно для заполнения`);
             return;
         }
-        this.apiSrvRx.read({ USER_CL: {
+        return this.apiSrvRx.read({ USER_CL: {
             criteries: {
                 CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value // isnull(выборка по null), isnotnull(не null)
             },
@@ -445,7 +471,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     msg: 'Пользователь с идентификатором \"' + this.form.controls['CLASSIF_NAME'].value + '\" уже существует.',
                     dismissOnTimeout: 6000,
                 });
-                return ;
+                return 'not save';
             }
             const userType = this.form.get('SELECT_AUTENT') &&
                 String(this.form.get('SELECT_AUTENT').value || '-1') || '-1';
