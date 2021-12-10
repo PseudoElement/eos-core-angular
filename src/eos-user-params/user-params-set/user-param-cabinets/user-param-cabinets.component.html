@@ -131,7 +131,7 @@
             <eos-dynamic-input [hidden]="!appMode.arm && !appMode.cbr" [input]="inputs['rec.INFORM_DIFFERENCE_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.RESOLUTION_PLAN_DATE_ASK']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.CASCADE_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
-			<eos-dynamic-input [hidden]="!appMode.arm" [input]="inputs['rec.APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
+			<eos-dynamic-input [hidden]="!appMode.arm && !appMode.tk" [input]="inputs['rec.APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>        
         <div [hidden]="appMode.cbr" class="send-res">
             <div class="send-oreder-no-arm" *ngIf="!appMode.arm">
