@@ -152,12 +152,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            if (this.getErrorSave) {
-                this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
-                setTimeout(() => {
-                    this._userParamSrv.setChangeState({ isChange: true, disableSave: this.getValidDate });
-                }, 0);
-            } else {
                 this.submit('')
                 .then(() => {
                     this._router.navigateByUrl(rout.url);
@@ -165,7 +159,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 .catch(() => {
                     this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
                 });
-            }
         });
     }
     afterInit() {
@@ -549,6 +542,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     submit(meta?: string): Promise<any> {
+        if (this.getErrorSave) {
+            this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
+            return Promise.reject(false);
+        }
         if (this.cheackCtech()) {
             return Promise.reject(false);
         }

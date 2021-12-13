@@ -232,24 +232,13 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            if (this.form.status === 'INVALID' || this.form.controls['CLASSIF_NAME'].value === '' || this.checkCurrentUser || this.errorPass) {
-                this._alertMessage('Невозможно сохранить некорректные данные');
-                setTimeout(() => {
-                    this._userParamSrv.setChangeState({ isChange: true });
-                }, 0);
-            } else {
                 this.preSubmit('')
                 .then((ans) => {
-                    if (ans === 'not save') {
-                        this._userParamSrv.setChangeState({ isChange: true });
-                    } else {
                         this._router.navigateByUrl(rout.url);
-                    }
                 })
                 .catch(() => {
                     this._userParamSrv.setChangeState({ isChange: true });
                 });
-            }
         });
     }
     getEditDate(): boolean {
@@ -448,10 +437,14 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     preSubmit($event?): Promise<any> {
         // const url = `DropLogin?isn_user=${this._userParamSrv.userContextId}`;
         // const url = `ChangePassword?isn_user=${this._userParamSrv.userContextId}&pass='${encodeURI('1234')}'`;
+        if (this.form.status === 'INVALID' || this.form.controls['CLASSIF_NAME'].value === '' || this.checkCurrentUser || this.errorPass) {
+            this._alertMessage('Невозможно сохранить некорректные данные');
+            return Promise.reject();
+        }
         if (this.externalTypeIsEmpty()) {
             const field = this.form.controls['EXTERNAL_ID'].value ? 'Тип идентификатора' : 'Идентификатор ЕСИА';
             alert(`Поле "${field}" обязательно для заполнения`);
-            return;
+            return Promise.reject();
         }
         return this.apiSrvRx.read({ USER_CL: {
             criteries: {
@@ -471,7 +464,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     msg: 'Пользователь с идентификатором \"' + this.form.controls['CLASSIF_NAME'].value + '\" уже существует.',
                     dismissOnTimeout: 6000,
                 });
-                return 'not save';
+                return Promise.reject();
             }
             const userType = this.form.get('SELECT_AUTENT') &&
                 String(this.form.get('SELECT_AUTENT').value || '-1') || '-1';

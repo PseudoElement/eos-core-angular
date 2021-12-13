@@ -119,12 +119,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            if (!this.getValidDate) {
-                this.messageAlert({ title: 'Предупреждение', msg: 'Невозможно сохранить некорректные данные', type: 'warning' });
-                setTimeout(() => {
-                    this._userParamSrv.setChangeState({ isChange: true, disableSave: this.getValidDate });
-                }, 0);
-            } else {
                 this.submit('')
                 .then(() => {
                     this._router.navigateByUrl(rout.url);
@@ -132,7 +126,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 .catch(() => {
                     this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
                 });
-            }
         });
         // if (localStorage.getItem('lastNodeDue') == null) {
         //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
@@ -502,6 +495,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     submit(meta?: string): Promise<any> {
+        if (!this.getValidDate) {
+            this.messageAlert({ title: 'Предупреждение', msg: 'Невозможно сохранить некорректные данные', type: 'warning' });
+            return Promise.reject(false);
+        }
         if (this.cheackCtech() || this.checkRole()) {
             return Promise.reject(false);
         }
