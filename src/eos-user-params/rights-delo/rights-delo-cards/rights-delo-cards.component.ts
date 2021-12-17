@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -109,6 +109,19 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         })
         .catch(error => {
                 this._errorSrv.errorHandler(error);
+        });
+        this._userParamsSetSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit('')
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            })
+            .catch(() => {
+                this._userParamsSetSrv.setChangeState({ isChange: true });
+            });
         });
     }
     updateCheckbox() {

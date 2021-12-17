@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -146,6 +146,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
                 // }
             }
+        });
+        this._userParamSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+                this.submit('')
+                .then(() => {
+                    this._router.navigateByUrl(rout.url);
+                })
+                .catch(() => {
+                    this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
+                });
         });
     }
     afterInit() {
@@ -529,12 +542,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     submit(meta?: string): Promise<any> {
+        if (this.getErrorSave) {
+            this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
+            return Promise.reject(false);
+        }
         if (this.cheackCtech()) {
-            return;
+            return Promise.reject(false);
         }
         if (this._newData.get('IS_SECUR_ADM') && this.curentUser.TECH_RIGHTS && this.curentUser.TECH_RIGHTS[0] === '1') {
             this.messageAlert({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
-            return;
+            return Promise.reject(false);
         }
         const id = this._userParamSrv.userContextId;
         const newD = {};

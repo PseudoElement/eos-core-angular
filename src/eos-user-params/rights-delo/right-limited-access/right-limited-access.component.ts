@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -131,6 +131,19 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         .catch(err => {
 
         });
+        this._userServices.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.saveAllForm('')
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            })
+            .catch(() => {
+                this._userServices.setChangeState({ isChange: true });
+            });
+        });
     }
 
     checkGriffs(): boolean {
@@ -229,7 +242,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
     saveAllForm($event?): Promise<any> {
         if (this.checkGriffs()) {
-            return;
+            return Promise.reject(false);
         }
         this.isLoading = false;
         const promise_all = [];

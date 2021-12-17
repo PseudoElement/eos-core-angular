@@ -8,6 +8,9 @@ import {FormHelperService} from '../shared/services/form-helper.services';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import {ErrorHelperServices} from '../shared/services/helper-error.services';
+import { takeUntil } from 'rxjs/operators';
+import { Router, RouterStateSnapshot } from '@angular/router';
+import { Subject } from 'rxjs';
 
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
@@ -49,6 +52,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     private inputFields: any;
     private form: FormGroup;
     private newData = {};
+    private _ngUnsubscribe: Subject<any> = new Subject();
     get title() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -65,10 +69,14 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         private _formHelper: FormHelperService,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        private _router: Router,
         ) {
             this.countChecnged = 0;
     }
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List'
@@ -81,6 +89,17 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         .catch(error => {
             this._errorSrv.errorHandler(error);
         });
+        this._userParamSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this.submit('')
+            .then(() => {
+                this._router.navigateByUrl(rout.url);
+            });
+        });
+
     }
 
     init() {
