@@ -1,8 +1,8 @@
 <div class="user-tech-classif" *ngIf="isLoading">
     <div class="side">
         <div class="right-classif-node ">
-            <label class="classif-list-tech-user checkbox" [ngClass]="{'disabled': !editMode}">
-                <input [disabled]="!editMode" type="checkbox" [checked]="isCheckedSide" (change)="updateFlagDictionaries()">
+            <label class="classif-list-tech-user checkbox" [ngClass]="{'disabled': !editMode || limitedTehnologist}">
+                <input [disabled]="!editMode || limitedTehnologist" type="checkbox" [checked]="isCheckedSide" (change)="updateFlagDictionaries()">
                 <div>
                     <span class="eos-icon small" [ngClass]="getflagChecked"></span>
                     Все справочники и опции

@@ -55,12 +55,16 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     get getflagChecked() {
         switch (this.isCheckedSide) {
             case true:
-                return this.editMode ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-black';
+                return this.editMode && !this.limitedTehnologist ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-black';
             case false:
-                return this.editMode ? 'eos-icon-checkbox-square-minus-blue' : 'eos-icon-checkbox-square-minus-grey';
+                return  this.editMode && !this.limitedTehnologist ? 'eos-icon-checkbox-square-minus-blue' : 'eos-icon-checkbox-square-minus-grey';
             default:
-                return this.editMode ?  'eos-icon-checkbox-square-blue' : 'eos-icon-checkbox-square-grey';
+                return  this.editMode && !this.limitedTehnologist ?  'eos-icon-checkbox-square-blue' : 'eos-icon-checkbox-square-grey';
         }
+    }
+
+    get limitedTehnologist() {
+        return !!this._appContext.limitCardsUser.length;
     }
     constructor (
         private _apiSrv: UserParamApiSrv,
@@ -77,8 +81,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         this.isLoading = true;
     }
     updateFlagDictionaries() {
+        const flag = this.isCheckedSide;
         this.listClassif.forEach(item => {
-            item.value = this.isCheckedSide ? 0 : 1;
+            item.value = flag ? 0 : 1;
         });
     }
     expendList(node: RightClassifNode) {
