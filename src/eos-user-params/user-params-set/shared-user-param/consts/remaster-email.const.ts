@@ -1729,7 +1729,7 @@ export const REMASTER_MADO: IBaseUsers =  {
     {
         key: 'MEDO_ADD_CITIZEN_TO_ORGANIZ',
         type: 'boolean',
-        title: 'Автоматически добавлять организации представителей в справочник "Организации"'
+        title: 'Автоматически добавлять организации и представителей в справочник "Организации"'
     },
     {
         key: 'ARM_MEDO_HIDE',
