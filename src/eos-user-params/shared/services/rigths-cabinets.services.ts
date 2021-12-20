@@ -66,16 +66,20 @@ export class RigthsCabinetsServices {
     }
 
     fillArrayCards(cards: USERCARD[], isNew?: boolean): void {
-        cards.forEach((card: USERCARD) => {
-            this.cardsArray.push(new CardsClass(this._apCtx, card, isNew));
-        });
+        if (cards) {
+            cards.forEach((card: USERCARD) => {
+                this.cardsArray.push(new CardsClass(this._apCtx, card, isNew));
+            });
+        }
     }
 
     createArrayQueryFor(cards: USERCARD[]): string[] {
         const arr = [];
-        cards.forEach((card: USERCARD) => {
+        if (cards) {
+            cards.forEach((card: USERCARD) => {
                 arr.push(card.DUE);
             });
+        }
         return arr;
     }
 

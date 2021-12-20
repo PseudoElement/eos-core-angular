@@ -79,6 +79,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
 
     checkGlobalChanges() {
