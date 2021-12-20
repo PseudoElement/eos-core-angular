@@ -137,8 +137,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             )
         .subscribe((rout: RouterStateSnapshot) => {
             this.saveAllForm('')
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
+            .then((data) => {
+                if (data === 'error') {
+                    this._userServices.setChangeState({ isChange: true });
+                } else {
+                    this._router.navigateByUrl(rout.url);
+                }
             })
             .catch(() => {
                 this._userServices.setChangeState({ isChange: true });
@@ -242,7 +246,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
     saveAllForm($event?): Promise<any> {
         if (this.checkGriffs()) {
-            return Promise.reject(false);
+            return Promise.resolve('error');
         }
         this.isLoading = false;
         const promise_all = [];
