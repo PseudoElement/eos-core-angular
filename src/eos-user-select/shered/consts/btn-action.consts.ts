@@ -214,12 +214,12 @@ export const DefaultSettings: BtnActionFields = {
 
 export const SettingsManagement: BtnActionFields = {
     name: 'SettingsManagement',
-    title: 'Управление настройками',
-    disabledClass: 'eos-icon eos-icon-department-grey small',
-    enableClass: 'eos-icon eos-icon-department-blue small',
-    tooltip: 'Управление настройками',
+    title: 'Управление настройками пользователей',
+    disabledClass: 'eos-icon eos-icon-options-grey small',
+    enableClass: 'eos-icon eos-icon-options-blue small',
+    tooltip: 'Управление настройками пользователей',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-department-blue small',
+    activeClass: 'eos-icon eos-icon-options-blue small',
     activeBtnClass: '',
     isActive: false,
 };
