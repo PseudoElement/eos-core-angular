@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
+import { DOCGROUP_CL, USER_CL } from 'eos-rest';
 @Injectable()
 export class LimitedAccesseService {
     CurrentUser: any;
@@ -35,7 +36,7 @@ export class LimitedAccesseService {
         };
 
     return    this._pipSrv.getData(query)
-        .then((result) => {
+        .then((result: USER_CL[]) => {
             const paramsString = this.parseResultAccessCode(result['0'].USER_DOCGROUP_ACCESS_List);
             if (paramsString) {
             return  this.getCodeNameDOCGROUP(paramsString, result['0'].USER_DOCGROUP_ACCESS_List);
@@ -49,24 +50,41 @@ export class LimitedAccesseService {
     }
 
     getCodeNameDOCGROUP (queryString: string, result?) {
-        const query = {
-            DOCGROUP_CL: {
-                criteries: {
-                    DUE: queryString
-                }
-            }
-        };
-      return  this._pipSrv.getData(query)
-      .then(results => {
+        let queryParseString = [];
+        const splits = queryString.split('||');
+        while (splits.length >= 10) {
+            queryParseString.push(splits.splice(0, 10).join('||'));
+        }
+        queryParseString.push(splits.splice(0, splits.length).join('||'));
+        queryParseString = queryParseString.filter(s => s !== '');
+        const queries = [];
+        queryParseString.forEach(str => {
+            queries.push(
+                this._pipSrv.getData({
+                    DOCGROUP_CL: {
+                        criteries: {
+                            DUE: str
+                        }
+                    }
+            })
+        );
+    });
+      return  Promise.all(queries)
+      .then((results: Array<DOCGROUP_CL[]>) => {
+        const linearDocGroup = [];
+        results.forEach(arrDoc => {
+            arrDoc.forEach(doc => {
+                linearDocGroup.push(doc);
+            });
+        });
           if (result) {
             result.forEach((el, index) => {
-                el['NAME'] = results[index]['CLASSIF_NAME'];
+                el['NAME'] = linearDocGroup[index]['CLASSIF_NAME'];
             });
              return result;
           }
-        return results;
+        return linearDocGroup;
         }).catch(error => {
-            error.message = 'Внутренняя ошибка сервера';
             this._errorHandler(error);
             return false;
         });
