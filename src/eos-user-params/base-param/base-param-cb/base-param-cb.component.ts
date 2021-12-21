@@ -152,9 +152,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-                this.submit('')
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
+                this.submit('true')
+                .then((el) => {
+                    if (el === 'error') {
+                        this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
+                    } else {
+                        this._router.navigateByUrl(rout.url);
+                    }
                 })
                 .catch(() => {
                     this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
@@ -557,12 +561,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const newD = {};
         const query = [];
         const accessStr = '';
-        this.checkDLSurname(query)
+        return this.checkDLSurname(query)
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
                 if (this._newData.get('IS_SECUR_ADM') === false) {
-                    this.apiSrvRx.read<USER_CL>({
+                    return this.apiSrvRx.read<USER_CL>({
                         USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1', 'ORACLE_ID': 'isnotnull' }),
                         orderby: 'ISN_LCLASSIF',
                         top: 2,
@@ -573,9 +577,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         });
                         if (!adminUsers.length) {
                             this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
-                            return;
+                            return 'error';
                         } else {
-                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1) {
+                            /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
+                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && !meta) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query).then(() => {
@@ -591,7 +596,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         }
                     });
                 } else {
-                    if (!this.curentUser['IS_PASSWORD']) {
+                    /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
+                    if (!this.curentUser['IS_PASSWORD'] && !meta) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                             if (res) {
                                 return this.ConfirmAvSystems(accessStr, id, query).then(() => {
