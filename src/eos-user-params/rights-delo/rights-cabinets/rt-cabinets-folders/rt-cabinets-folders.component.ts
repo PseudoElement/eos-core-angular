@@ -113,6 +113,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
             } else {
                 this.currentCabinet.data.FOLDERS_AVAILABLE = '123456789';
             }
+            this.changes.emit();
         }
     }
     ngOnInit() {
@@ -130,6 +131,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     changeFolders(key): void {
         if (key === 'HIDE_INACCESSIBLE' || key === 'HIDE_INACCESSIBLE_PRJ') {
             this.currentCabinet.data[key] = +!this.currentCabinet.data[key];
+            this.changes.emit();
             return;
         }
         // tslint:disable-next-line: no-bitwise
@@ -178,6 +180,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
                 this.alertWarning();
             }
         }
+        this.changes.emit();
         this._updateSelect(true);
     }
 
