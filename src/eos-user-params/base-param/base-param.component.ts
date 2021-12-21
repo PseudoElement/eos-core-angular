@@ -509,7 +509,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 const newD = {};
                 const query = [];
                 const accessStr = '';
-                this.checkDLSurname(query)
+                return this.checkDLSurname(query)
                     .then(() => {
                         this.setQueryNewData(accessStr, newD, query);
                         this.setNewDataFormControl(query, id);
