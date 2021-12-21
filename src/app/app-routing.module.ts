@@ -29,6 +29,7 @@ import { EosReportSummaryProtocolComponent } from 'eos-user-params/report/sum-pr
 import { DefaultSettingsComponent } from 'eos-user-params/default-options/default-settings.component';
 import { CurrentUserSetComponent } from 'eos-user-params/current-user-set/current-user-set.component';
 import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
+import { PluginReactComponent } from 'eos-rest/plugin-react/plugin-react.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -297,6 +298,18 @@ const routes: Routes = [{
                     // },
                 },
             ]
+        },
+        {
+            path: 'user-session',
+            canActivate: [AuthorizedGuard],
+            component: PluginReactComponent,
+            data: {
+                title: 'Текущие сессии пользователей',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+                showSandwichInBreadcrumb: false,
+                showPushpin: false
+            }
         },
         {
             path: ':nodeId',

@@ -1045,6 +1045,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
+    UserSession() {
+        this._router.navigate(['user_param/user-session']);
+    }
+
     get getflagChecked() {
         switch (this.flagChecked) {
             case true:

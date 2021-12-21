@@ -23,6 +23,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 @Component({
     selector: 'eos-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
+    styleUrls: ['./breadcrumb.component.scss']
 })
 
 export class BreadcrumbsComponent implements OnDestroy {

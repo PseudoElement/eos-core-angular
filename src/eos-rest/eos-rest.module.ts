@@ -22,6 +22,7 @@ import { AuthService } from './services/auth.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ViewManager } from 'eos-rest/services/viewManager';
 import { EosTemplateComponent } from './clman/eos-template/eos-template.component';
+import { PluginReactComponent } from './plugin-react/plugin-react.component';
 // import { commonMergeMeta } from 'eos-rest/common/initMetaData';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { EosTemplateComponent } from './clman/eos-template/eos-template.componen
         DepartmentComponent,
         UserRestComponent,
         EosTemplateComponent,
+        PluginReactComponent,
     ],
     exports: [
         DeliveryComponent,

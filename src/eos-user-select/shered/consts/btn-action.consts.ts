@@ -234,6 +234,17 @@ export const Unlock: BtnActionFields = {
     activeBtnClass: '',
     isActive: false,
 };
+export const USER_SESSION: BtnActionFields = {
+    name: 'UserSession',
+    title: 'Текущие сессии пользователей',
+    disabledClass: 'eos-icon eos-icon-key-grey small',
+    enableClass: 'eos-icon eos-icon-key-blue small',
+    tooltip: 'Текущие сессии пользователей',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-key-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -273,6 +284,7 @@ export const Allbuttons: BtnAction = {
         SettingsManagement,
         GeneralLists,
         UsersStats,
+        USER_SESSION,
         Protocol,
         SumProtocol,
         UsersInfo,

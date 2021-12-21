@@ -9,7 +9,8 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-header',
-    templateUrl: './eos-header.component.html'
+    templateUrl: './eos-header.component.html',
+    styleUrls: ['./eos-header.component.scss']
 })
 export class EosHeaderComponent implements OnDestroy, OnInit {
     modules = APP_MODULES;

@@ -10,6 +10,7 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 @Component({
     selector: 'eos-pushpin',
     templateUrl: 'pushpin.component.html',
+    styleUrls: ['./pushpin.component.scss']
 })
 export class PushpinComponent {
     @Input() infoOpened: boolean;
