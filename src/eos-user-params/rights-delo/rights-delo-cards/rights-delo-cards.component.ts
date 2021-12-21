@@ -115,7 +115,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit('')
+            this.submit(true)
             .then(() => {
                 this._router.navigateByUrl(rout.url);
             })
