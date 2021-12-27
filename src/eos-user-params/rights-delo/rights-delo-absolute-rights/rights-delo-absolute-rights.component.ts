@@ -97,7 +97,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit('')
+            this.submit('true')
             .then((el) => {
                 if (el === 'error') {
                     this._userParamsSetSrv.setChangeState({ isChange: true });

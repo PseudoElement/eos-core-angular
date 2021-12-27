@@ -52,6 +52,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public newLogin: boolean = false;
     public maxLoginLength: string;
     public esiaExternalAuth: number = 0;
+    public chengeRouter: boolean =  false;
     inputFields: IInputParamControl[];
     public externalOrig: any;
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -73,15 +74,14 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         private _appCtx: AppContext,
         private _router: Router,
     ) {
-
-    }
-    ngOnInit() {
-        this.isLoading = true;
         this.inputFields = AUNTEFICATION_CONTROL_INPUT;
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, !this.editMode);
-        this.init();
         this.subscribeForms();
+    }
+    ngOnInit() {
+        this.isLoading = true;
+        this.init();
     }
 
     get hiddenWithoutEnter() {
@@ -232,11 +232,13 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-                this.preSubmit('')
+                this.chengeRouter = true;
+                this.preSubmit('true')
                 .then((ans) => {
                         this._router.navigateByUrl(rout.url);
                 })
                 .catch(() => {
+                    this.chengeRouter = false;
                     this._userParamSrv.setChangeState({ isChange: true });
                 });
         });
@@ -419,8 +421,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
 
     afterSuccessSubmit() {
         this._alertMessage('Изменения сохранены', true);
-        this.ngOnDestroy();
-        this.ngOnInit();
+        if (!this.chengeRouter) {  // если сохранение идёт перед переходом то перечитывать данные не нужно
+            // this.ngOnDestroy();
+            this.ngOnInit();
+        }
     }
     /**Сохранение полей ESIA*/
     saveExternal() {
@@ -480,7 +484,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     }
                     case '-1': {
                       //  this.saveMinusFirstType(userType, userLogin);
-                      this.ngOnDestroy();
+                      // this.ngOnDestroy();
                       this.ngOnInit();
                         break;
                     }
