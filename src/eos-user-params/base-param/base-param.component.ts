@@ -70,7 +70,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
-
+    private chengeRouter: boolean =  false;
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
             return false;
@@ -78,7 +78,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return true;
     }
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
-
+    private _ngUnsubscribe2: Subject<void> = new Subject<void>();
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
@@ -115,18 +115,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         });
         this._userParamSrv.canDeactivateSubmit$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-            )
-        .subscribe((rout: RouterStateSnapshot) => {
+            .pipe(
+                takeUntil(this._ngUnsubscribe2)
+                )
+            .subscribe((rout: RouterStateSnapshot) => {
+                this.chengeRouter = true;
                 this.submit('')
                 .then(() => {
                     this._router.navigateByUrl(rout.url);
                 })
                 .catch(() => {
+                    this.chengeRouter = false;
                     this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
                 });
-        });
+            });
         // if (localStorage.getItem('lastNodeDue') == null) {
         //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         // }
@@ -138,9 +140,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         });
     }
+    unSubscribe() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
+        this._ngUnsubscribe2.next();
+        this._ngUnsubscribe2.complete();
     }
     get validClassif() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
@@ -653,8 +661,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         this.clearMap();
         this._pushState();
-        this.ngOnDestroy();
-        this.init();
+        if (!this.chengeRouter) { // если сохранение происходило перед переходом, то отменить запрос новых данных
+            this.unSubscribe();
+            this.init();
+        }
     }
 
     clearMap() {
@@ -667,7 +677,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.editMode = false;
         this.clearMap();
-        this.ngOnDestroy();
+        this.unSubscribe();
         this.init();
         this._pushState();
     }
