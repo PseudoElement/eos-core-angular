@@ -709,7 +709,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
             .then(() => {
+
+                const newDl = this._newData.get('DUE_DEP_NAME');
+                if (newDl) {
+                    this.apiSrvRx.batch([{
+                        method: 'POST',
+                        requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role="${this._userParamSrv.curentUser.USERTYPE}"&isn_user_copy_from=0`
+                    }], '')
+                    .then(() => {
+                        return this.AfterSubmit(accessStr, query);
+                    });
+            } else {
                 return this.AfterSubmit(accessStr, query);
+            }
             }).catch(error => {
                 this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
                 this.cancel();

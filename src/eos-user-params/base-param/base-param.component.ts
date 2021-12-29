@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB, USERDEP } from 'eos-rest';
+import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB/* , USERDEP */ } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -422,7 +422,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (this._newData.size) {
             const newDl = this._newData.get('DUE_DEP_NAME');
             if (newDl) {
-                const newDue = this.curentUser.DUE_DEP;
+                /* const newDue = this.curentUser.DUE_DEP;
                 let F26 = false;
                 let F25 = false;
                 this.curentUser.USERDEP_List.forEach((_udep: USERDEP) => {
@@ -432,9 +432,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (_udep.ISN_LCLASSIF === id && _udep.FUNC_NUM === 25) {
                         F25 = true;
                     }
-                });
+                }); */
                 // у нового пользователя тут может быть null -> записываем  строку '000000000000000000000000000000 000      '
-                const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
+                /* const DELO_RIGHTS = this.curentUser.DELO_RIGHTS ? this.curentUser.DELO_RIGHTS : '000000000000000000000000000000 000      ';
                 const arr = DELO_RIGHTS.split('');
                 const newDELO_RIGHTS = arr.map((v, i) => {
                     if (i === 24 || i === 25) {
@@ -467,7 +467,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                             'ISN_LCLASSIF': id, 'DUE': `${newDue}`, 'FUNC_NUM': 25, 'DEEP': 1, 'ALLOWED': 0
                         }
                     });
-                }
+                } */
             }
         }
     }
@@ -625,7 +625,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     sendData(query, accessStr): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
-            return this.AfterSubmit(accessStr);
+            const newDl = this._newData.get('DUE_DEP_NAME');
+            if (newDl) {
+                this.apiSrvRx.batch([{
+                    method: 'POST',
+                    requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role="${this._userParamSrv.curentUser.USERTYPE}"&isn_user_copy_from=0`
+                }], '')
+                .then(() => {
+                    return this.AfterSubmit(accessStr);
+                });
+            } else {
+                return this.AfterSubmit(accessStr);
+            }
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
