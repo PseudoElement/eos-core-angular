@@ -87,6 +87,29 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     }
     /* tslint:enable:no-bitwise */
 
+    get disabledAnyMarkedCheckbox(): boolean {
+        return !!this.Owners.length;
+    }
+    get Owners(): ICabinetOwner[] {
+        return this.cabinetOwners.filter(cabinet => {
+            return cabinet.data.ISN_CABINET === this.data.rec['ISN_CABINET'];
+        });
+    }
+    get checkedOwners(): ICabinetOwner[] {
+        return this.Owners.filter(owner => owner.marked);
+    }
+
+    get getflagChecked() {
+        const count = this.Owners.length - this.checkedOwners.length;
+        switch (count) {
+            case 0:
+                return ' ';
+            case this.Owners.length:
+                return '';
+            default:
+                return 'group-checkbox';
+        }
+    }
     get possibleOwners(): any[] {
         const res = this.cabinetOwners.filter(
             (owner) =>

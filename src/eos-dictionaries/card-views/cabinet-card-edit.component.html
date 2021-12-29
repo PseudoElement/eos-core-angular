@@ -30,7 +30,7 @@
         <!-- </div> -->
         <p class="xl-font paragraph-title">Владельцы кабинета</p>
         <div class="usual-border border-top row secondary-block" *ngIf="editMode">
-            <div class="btn-group"  dropdown container="body">
+            <div class="btn-group" dropdown container="body">
                 <button
                     dropdownToggle
                     tooltip="Добавить владельца"
@@ -56,12 +56,13 @@
                     </li>
                 </ul>
             </div>
-            <div 
+            <div
                 class="btn-group"
                 tooltip="Добавить владельца из справочника"
                 placement="bottom"
                 containerClass="tooltip-info"
-                (click)="addUserDepartment()">
+                (click)="addUserDepartment()"
+            >
                 <span class="eos-icon small eos-icon-avatar-blue"></span>
             </div>
             <button
@@ -135,17 +136,21 @@
                     <tr class="border-top border-bottom usual-border">
                         <th class="td-checkbox secondary-block">
                             <ng-container *ngIf="editMode">
-                                <label
-                                    class="checkbox checkbox-inline"
-                                    [ngClass]="{ 'group-checkbox': anyUnmarkedOwners && anyMarkedOwners }"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        name="owners"
-                                        [(ngModel)]="allMarkedOwners"
-                                        (change)="toggleAllOwnersMarks()"
-                                    /><span></span>
-                                </label>
+                                <div>
+                                    <label class="checkbox checkbox-inline" 
+                                    [ngClass]="getflagChecked"
+                                    >
+                                        <input
+                                            [disabled]="!disabledAnyMarkedCheckbox"
+                                            type="checkbox"
+                                            name="owners"
+                                            [checked]="anyMarkedOwners"
+                                            [(ngModel)]="allMarkedOwners"
+                                            (change)="toggleAllOwnersMarks()"
+                                        />
+                                            <span></span>
+                                    </label>
+                                </div>
                             </ng-container>
                         </th>
                         <th class="text selected-text l-font secondary-block clicked" (click)="order('SURNAME')">
