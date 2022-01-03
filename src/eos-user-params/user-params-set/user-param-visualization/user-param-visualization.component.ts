@@ -9,7 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { VISUALIZATION_USER } from '../shared-user-param/consts/visualization.consts';
 import { Subject } from 'rxjs';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -54,7 +54,6 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-        private _router: Router,
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
@@ -63,10 +62,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             takeUntil(this.ngUnsubscribe)
         )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit()
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userParamsSetSr.submitSave = this.submit();
         });
     }
     ngOnInit() {

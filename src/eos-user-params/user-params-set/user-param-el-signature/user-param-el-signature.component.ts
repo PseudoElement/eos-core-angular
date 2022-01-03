@@ -13,7 +13,7 @@ import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { AppContext } from '../../../eos-rest/services/appContext.service';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 @Component({
@@ -78,17 +78,13 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         public carmaHttp2Srv: CarmaHttp2Service,
         public certStoresService: CarmaHttpService,
-        private _router: Router,
     ) {
         this._userSrv.canDeactivateSubmit$
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit()
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userSrv.submitSave = this.submit();
         });
     }
     get isWebAndArm() {

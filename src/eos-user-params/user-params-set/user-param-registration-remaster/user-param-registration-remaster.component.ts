@@ -9,7 +9,7 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 @Component({
     selector: 'eos-registration-remaster',
     styleUrls: ['user-param-registration-remaster.component.scss'],
@@ -79,17 +79,13 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
-        private _router: Router,
     ) {
         this._userSrv.canDeactivateSubmit$
         .pipe(
             takeUntil(this.ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit('')
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userSrv.submitSave = this.submit('');
         });
     }
     ngOnInit() {

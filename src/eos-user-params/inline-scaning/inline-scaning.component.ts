@@ -9,7 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import {ErrorHelperServices} from '../shared/services/helper-error.services';
 import { takeUntil } from 'rxjs/operators';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { Subject } from 'rxjs';
 
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
@@ -69,7 +69,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         private _formHelper: FormHelperService,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-        private _router: Router,
         ) {
             this.countChecnged = 0;
     }
@@ -94,10 +93,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit('')
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userParamSrv.submitSave = this.submit('');
         });
 
     }

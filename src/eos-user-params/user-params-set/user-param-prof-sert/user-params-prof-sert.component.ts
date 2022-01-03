@@ -23,7 +23,7 @@ import { SertsBase } from 'eos-user-params/shared/intrfaces/user-parm.intterface
 import { CertificateService } from 'app/services/certificate.service';
 import { ICertificateInit } from 'eos-common/interfaces';
 import { takeUntil } from 'rxjs/operators';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -115,17 +115,13 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private _certService: CertificateService,
         private carma2Srv: CarmaHttp2Service,
         private _appContext: AppContext,
-        private _router: Router,
     ) {
         this._userSrv.canDeactivateSubmit$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((rout: RouterStateSnapshot) => {
-                this.submit('')
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
-                });
+                this._userSrv.submitSave = this.submit('');
             });
     }
     ngOnDestroy() {

@@ -72,10 +72,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit('')
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userParamsSetSrv.submitSave = this.submit('');
         });
     }
     ngOnDestroy() {

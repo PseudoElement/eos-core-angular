@@ -14,7 +14,7 @@ import { ErrorHelperServices } from '../shared/services/helper-error.services';
 import { takeUntil } from 'rxjs/operators';
 import { NavParamService } from 'app/services/nav-param.service';
 import { Subject } from 'rxjs';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 @Component({
     selector: 'eos-params-email-address',
     styleUrls: ['email-address.component.scss'],
@@ -72,7 +72,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
         private _navSrv: NavParamService,
-        private _router: Router,
     ) { }
     ngOnInit() {
         this._navSrv.StateSandwichRight$
@@ -112,10 +111,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.saveAllForm('')
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userServices.submitSave = this.saveAllForm('true');
         });
 
     }

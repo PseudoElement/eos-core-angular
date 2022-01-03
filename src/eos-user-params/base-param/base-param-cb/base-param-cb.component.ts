@@ -152,17 +152,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-                this.submit('true')
-                .then((el) => {
-                    if (el === 'error') {
-                        this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
-                    } else {
-                        this._router.navigateByUrl(rout.url);
-                    }
-                })
-                .catch(() => {
-                    this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
-                });
+                this._userParamSrv.submitSave = this.submit('true');
         });
     }
     afterInit() {

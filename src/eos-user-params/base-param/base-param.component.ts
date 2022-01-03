@@ -70,7 +70,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
-    private chengeRouter: boolean =  false;
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
             return false;
@@ -78,7 +77,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return true;
     }
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
-    private _ngUnsubscribe2: Subject<void> = new Subject<void>();
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
@@ -114,21 +112,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 });
             }
         });
-        this._userParamSrv.canDeactivateSubmit$
-            .pipe(
-                takeUntil(this._ngUnsubscribe2)
-                )
-            .subscribe((rout: RouterStateSnapshot) => {
-                this.chengeRouter = true;
-                this.submit('')
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
-                })
-                .catch(() => {
-                    this.chengeRouter = false;
-                    this._userParamSrv.setChangeState({ isChange: true, disableSave: !this.getValidDate });
-                });
-            });
         // if (localStorage.getItem('lastNodeDue') == null) {
         //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         // }
@@ -140,15 +123,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         });
     }
-    unSubscribe() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
-        this._ngUnsubscribe2.next();
-        this._ngUnsubscribe2.complete();
     }
     get validClassif() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
@@ -325,6 +302,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     subscribeForms() {
+        this._userParamSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this._userParamSrv.submitSave = this.submit('true');
+        });
         this.form.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => {
             this.checkChangeForm(data);
         });
@@ -524,15 +508,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
                             return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                 if (res) {
-                                    return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                    return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
                                         this._router.navigate(['/user-params-set/auntefication']);
                                     });
                                 } else {
-                                    return this.ConfirmAvSystems(accessStr, id, query);
+                                    return this.ConfirmAvSystems(accessStr, id, query, meta);
                                 }
                             });
                         } else {
-                            return this.ConfirmAvSystems(accessStr, id, query);
+                            return this.ConfirmAvSystems(accessStr, id, query, meta);
                         }
                     });
             }
@@ -559,7 +543,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     }
 
-    ConfirmAvSystems(accessStr: string, id: number, query: any[]): Promise<any> {
+    ConfirmAvSystems(accessStr: string, id: number, query: any[], route?: string): Promise<any> {
         if (this.uncheckedAvSystems()) {
             return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
                 if (res) {
@@ -569,13 +553,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     // не имеет смысла проверка кабинета
 
                     this.apiSrvRx.read( {[this._createUrlForSop(`${id}`)]: ALL_ROWS});
-                    return this.saveData(accessStr, id, query);
+                    return this.saveData(accessStr, id, query, route);
                 } else {
                     return;
                 }
             });
         }
-        return this.saveData(accessStr, id, query);
+        return this.saveData(accessStr, id, query, route);
     }
 
     // saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
@@ -599,11 +583,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     //     }
     // }
 
-    saveData(accessStr: string, id: number, query: any): Promise<any> {
+    saveData(accessStr: string, id: number, query: any, route?: string): Promise<any> {
         this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
-                return this.sendData(query, accessStr);
+                return this.sendData(query, accessStr, route);
             } else {
                 const queryPas = [{
                     method: 'MERGE',
@@ -616,10 +600,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (+this.curentUser.USERTYPE !== 1) {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            return this.sendData(query, accessStr);
+                            return this.sendData(query, accessStr, route);
                         });
                     } else {
-                        return this.sendData(query, accessStr);
+                        return this.sendData(query, accessStr, route);
                     }
                 }).catch(error => {
                     this._errorSrv.errorHandler(error);
@@ -627,11 +611,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 });
             }
         } else {
-            return this.sendData(query, accessStr);
+            return this.sendData(query, accessStr, route);
         }
     }
 
-    sendData(query, accessStr): Promise<any> {
+    sendData(query, accessStr, route?): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
             const newDl = this._newData.get('DUE_DEP_NAME');
             if (newDl) {
@@ -640,10 +624,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role="${this._userParamSrv.curentUser.USERTYPE}"&isn_user_copy_from=0`
                 }], '')
                 .then(() => {
-                    return this.AfterSubmit(accessStr);
+                    return this.AfterSubmit(accessStr, route);
                 });
             } else {
-                return this.AfterSubmit(accessStr);
+                return this.AfterSubmit(accessStr, route);
             }
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
@@ -651,7 +635,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
     }
-    AfterSubmit(accessStr: string): void {
+    AfterSubmit(accessStr: string, route?: string): void {
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         this.editMode = false;
@@ -661,8 +645,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         this.clearMap();
         this._pushState();
-        if (!this.chengeRouter) { // если сохранение происходило перед переходом, то отменить запрос новых данных
-            this.unSubscribe();
+        if (!route) { // если сохранение происходило перед переходом, то отменить запрос новых данных
+            this.ngOnDestroy();
             this.init();
         }
     }
@@ -677,7 +661,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.editMode = false;
         this.clearMap();
-        this.unSubscribe();
+        this.ngOnDestroy();
         this.init();
         this._pushState();
     }

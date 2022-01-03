@@ -12,7 +12,7 @@ import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -52,17 +52,13 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-        private _router: Router,
     ) {
         this._userParamsSetSrv.canDeactivateSubmit$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
                 )
             .subscribe((rout: RouterStateSnapshot) => {
-                this.submit()
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
-                });
+                this._userParamsSetSrv.submitSave = this.submit();
             });
     }
     ngOnInit() {

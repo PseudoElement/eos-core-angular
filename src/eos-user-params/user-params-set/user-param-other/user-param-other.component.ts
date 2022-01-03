@@ -8,7 +8,7 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 declare function notifyOpener();
@@ -74,17 +74,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _formHelper: FormHelperService,
         private _errorSrv: ErrorHelperServices,
         private _appContext: AppContext,
-        private _router: Router,
     ) {
         this._userSrv.canDeactivateSubmit$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((rout: RouterStateSnapshot) => {
-                this.submit('')
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
-                });
+                this._userSrv.submitSave = this.submit('');
             });
     }
     ngOnInit() {

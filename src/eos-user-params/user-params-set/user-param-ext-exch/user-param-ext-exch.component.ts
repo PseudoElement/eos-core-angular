@@ -9,7 +9,7 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from 'eos-parameters/parameters
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { Subject } from 'rxjs';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -64,17 +64,13 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
         private _appContext: AppContext,
-        private _router: Router,
     ) {
         this._userSrv.canDeactivateSubmit$
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.submit('')
-            .then(() => {
-                this._router.navigateByUrl(rout.url);
-            });
+            this._userSrv.submitSave = this.submit('');
         });
     }
     ngOnInit() {

@@ -221,15 +221,23 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     }
     canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
         if (this._isChanged) {
-            return new Promise((res, rej) => {
-                if (confirm('На текущей вкладке есть несохраненные изменения. Сохранить их и продолжить?')) {
-                    this._userParamService.setCanDeactivateSubmit(nextState);
-                    this._isChanged = false;
-                    return res(false);
-                } else {
-                    return res(false);
-                }
-            });
+            if (confirm('На текущей вкладке есть несохраненные изменения. Сохранить их и продолжить?')) {
+                this._userParamService.setCanDeactivateSubmit(nextState);
+                return this._userParamService.submitSave
+                .then((ans) => {
+                    if (ans === 'error') {
+                        return false;
+                    } else {
+                        this._isChanged = false;
+                        return true;
+                    }
+                 }).catch((error) => {
+                     console.log(error);
+                     return false;
+                 });
+            } else {
+                return Promise.resolve(false);
+            }
         } else {
             return Promise.resolve(true);
         }

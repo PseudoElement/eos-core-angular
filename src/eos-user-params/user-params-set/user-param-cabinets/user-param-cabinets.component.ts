@@ -111,10 +111,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 takeUntil(this._ngUnsubscribe)
                 )
             .subscribe((rout: RouterStateSnapshot) => {
-                this.submit()
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
-                });
+                this._userParamsSetSrv.submitSave = this.submit();
             });
     }
     ngOnInit() {

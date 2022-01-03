@@ -11,7 +11,7 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { takeUntil } from 'rxjs/operators';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
 import { Subject } from 'rxjs';
 @Component({
     selector: 'eos-user-param-directories',
@@ -57,8 +57,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-        private _appContext: AppContext,
-        private _router: Router,
+        private _appContext: AppContext
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
@@ -67,10 +66,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((rout: RouterStateSnapshot) => {
-                this.submit()
-                .then(() => {
-                    this._router.navigateByUrl(rout.url);
-                });
+                this._userParamsSetSr.submitSave = this.submit();
             });
     }
 

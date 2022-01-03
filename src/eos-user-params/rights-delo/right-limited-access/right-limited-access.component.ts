@@ -136,17 +136,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this.saveAllForm('')
-            .then((data) => {
-                if (data === 'error') {
-                    this._userServices.setChangeState({ isChange: true });
-                } else {
-                    this._router.navigateByUrl(rout.url);
-                }
-            })
-            .catch(() => {
-                this._userServices.setChangeState({ isChange: true });
-            });
+            this._userServices.submitSave = this.saveAllForm('');
         });
     }
 

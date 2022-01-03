@@ -14,7 +14,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_PARMS } from 'eos-rest';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ESIA_AUTH_PARM_VALUE } from 'eos-parameters/parametersSystem/shared/consts/auth-consts';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { /* Router, */ RouterStateSnapshot } from '@angular/router';
 
 // Input, Output, EventEmitter
 @Component({
@@ -72,7 +72,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _msgSrv: EosMessageService,
         private _appCtx: AppContext,
-        private _router: Router,
+        // private _router: Router,
     ) {
         this.inputFields = AUNTEFICATION_CONTROL_INPUT;
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
@@ -232,15 +232,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-                this.chengeRouter = true;
-                this.preSubmit('true')
-                .then((ans) => {
-                        this._router.navigateByUrl(rout.url);
-                })
-                .catch(() => {
-                    this.chengeRouter = false;
-                    this._userParamSrv.setChangeState({ isChange: true });
-                });
+            this._userParamSrv.submitSave = this.preSubmit('true');
         });
     }
     getEditDate(): boolean {
