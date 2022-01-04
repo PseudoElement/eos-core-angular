@@ -80,6 +80,7 @@ export class LimitedAccesseService {
           if (result) {
             result.forEach((el, index) => {
                 el['NAME'] = linearDocGroup[index]['CLASSIF_NAME'];
+                el['DELETED'] = linearDocGroup[index]['DELETED'];
             });
              return result;
           }
@@ -118,6 +119,7 @@ export class LimitedAccesseService {
             controlType: E_FIELD_TYPE.boolean,
             key: '' + elem['ISN_LCLASSIF'],
             label: elem['CLASSIF_NAME'],
+            deleted: !!elem['DELETED']
         };
         return data;
     }

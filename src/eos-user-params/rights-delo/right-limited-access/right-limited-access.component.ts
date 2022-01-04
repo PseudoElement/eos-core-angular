@@ -449,6 +449,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         controls['checkbox'] = new FormControl(Boolean(element.ALLOWED));
         controls['change'] = new FormControl(bool1);
         controls['newField'] = new FormControl(bool2);
+        controls['DELETED'] = new FormControl(element['DUE'] !== '0.' && element['DELETED'] === 1);
         return controls;
     }
     checkChanges(data?: { [key: string]: Array<any> }) {

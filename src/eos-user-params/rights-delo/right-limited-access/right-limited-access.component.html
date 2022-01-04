@@ -24,7 +24,7 @@
                 <div class="email-content" *ngIf="umailsInfo && myForm">
                     <form [formGroup]="myForm">
                         <div formArrayName="groupForm">
-                            <div class="acess-content" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index" (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
+                            <div class="acess-content" *ngFor="let group of myForm.controls['groupForm']['controls']; let i = index" (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
                                 <div class="access-list" formGroupName="{{i}}">
                                     <span [ngClass]="{current: currentIndex === i}" class="access-list-second">
                                         <label class="checkbox disabled minus-checkbox redUnchecked">
@@ -33,9 +33,10 @@
                                             <span class="eos-icon-checkbox-square-v-grey "></span>
                                     </label>
                                     </span>
+                                    <span *ngIf="group.value['DELETED']" class="icon eos-icon small eos-icon-bin-grey icon-logic-bin-grifs"></span>
                                     <span [ngClass]="{current: currentIndex === i}" class="access-list-last">
-                                        <input formControlName="name"  type="text" readonly="readonly" class="readonly" >
-                                </span>
+                                        <input formControlName="name" [ngClass]="{'color-deleted': group.value['DELETED']}" type="text" readonly="readonly" class="readonly" >
+                                    </span>
                                 </div>
                             </div>
                         </div>

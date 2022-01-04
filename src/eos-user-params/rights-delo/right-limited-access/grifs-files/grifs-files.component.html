@@ -1,9 +1,10 @@
 <div class="grifs-wrapper" >
     <div class="list-card-files" *ngFor="let item of fields">
         <div [formGroup]="form"  class="emali-list grifs-content">
-            <label class="checkbox minus-checkbox" [ngClass]="{'disabled': editFlag}" (click)="clickLable($event, item)">
+            <label class="checkbox minus-checkbox" [ngClass]="{'disabled': editFlag, 'color-deleted': item.deleted}" (click)="clickLable($event, item)">
+                <span *ngIf='item.deleted' class="icon eos-icon small eos-icon-bin-grey icon-logic-bin-grifs"></span>
                 <input type="checkbox" hide [formControlName]="item.key" [id]="item.key">
-                <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small" [ngClass]="{'deleted-margin': item.deleted}">
                 </span>
                 {{item.label}}
             </label>

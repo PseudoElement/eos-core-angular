@@ -20,6 +20,7 @@ export interface IInputParamControl {
     options?: ISelectOptionControl[];
     disabled?: boolean;
     data?: any;
+    deleted?: boolean;
 }
 
 export interface IInputParamControlForIndexRight {
