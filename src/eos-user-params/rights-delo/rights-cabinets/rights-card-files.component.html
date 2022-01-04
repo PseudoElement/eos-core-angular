@@ -30,7 +30,13 @@
             </div>
             <div class="card-wrr">
                 <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
-                    <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.data.HOME_CARD && flagEdit ? 'homeCard' : ''" (click)='selectCurentCard(card)'>{{card.cardName}}</span>
+                    <span *ngIf='card.deleted' class="icon eos-icon small eos-icon-bin-grey position-card-bin-icon"></span>
+                    <span 
+                        class="cards-item" 
+                        [ngClass]="{'homeCard': card.data.HOME_CARD, 'card-delet-elem': card.deleted}" 
+                        (click)='selectCurentCard(card)'>
+                        {{card.cardName}}
+                    </span> <!-- *ngIf='!card.deleted' -->
                 </div>
                 <!-- <div *ngIf="!currentCard">
                     <p class="cards-wrd">Картотеки отсутствуют</p>
