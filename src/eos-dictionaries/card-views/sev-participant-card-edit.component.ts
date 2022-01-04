@@ -17,6 +17,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
     styleUrls: ['./sev-participant-card-edit.component.scss'],
 })
 export class SevParticipantCardEditComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+    _logDeletOrg: boolean;
     _orgName: any;
     modalWindow: BsModalRef;
     private _flagSetOrigin: boolean = true;
@@ -48,7 +49,15 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
             return '';
         }
     }
-
+    get logDeletOrg(): boolean {
+        if (this._logDeletOrg !== undefined) {
+            return this._logDeletOrg;
+        } else if (this.data && this.data.rec) {
+            return Boolean(this.data.rec.DELETED);
+        } else {
+            return false;
+        }
+    }
     ngOnInit(): void {
         this._usedRules = [];
         this._listRules = [];
@@ -101,6 +110,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
                     this.dictSrv.bindOrganization(dues[0])
                         .then((org) => {
                             if (org) {
+                                this._logDeletOrg = Boolean(org['DELETED']);
                                 this._orgName = org['CLASSIF_NAME'];
                                 this.setValue('rec.DUE_ORGANIZ', org.DUE);
                                 this.setValue('rec.CLASSIF_NAME', org['CLASSIF_NAME']);
@@ -116,6 +126,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         if (this.hasOrganization) {
             this.dictSrv.unbindOrganization();
             this._orgName = '';
+            this._logDeletOrg = false;
             this.setValue('rec.CLASSIF_NAME', null);
             this.setValue('rec.DUE_ORGANIZ', null);
         } else {
