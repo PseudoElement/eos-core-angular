@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
@@ -10,6 +10,7 @@ import { DynamicInputBase } from './dynamic-input-base';
 })
 export class DynamicInputTextComponent extends DynamicInputBase {
     @ViewChild('textArea') textArea: ElementRef<HTMLElement>;
+    @Input() notStandartText: boolean;
     /* public isShowText = false; */
     constructor(private _waitCl: WaitClassifService/* , private appCtx: AppContext */) {
         super();

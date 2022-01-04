@@ -13,7 +13,7 @@
             tooltip="Стандартные тексты"
             containerClass="tooltip-info"
             container="body">
-            <span class="eos-icon eos-icon-text-blue small span"></span>
+            <span *ngIf="!notStandartText" class="eos-icon eos-icon-text-blue small span"></span>
         </div>
         <div class="textareacounter" *ngIf="isFocused && !readonly">
             <span>{{getCounterLabel()}}</span>

@@ -46,6 +46,7 @@ export class DynamicInputComponent {
     @Input() container: string; // контейнер для dropdown select. 'body' или не указано для локального положения
     @Input() dropup: boolean; // выкидывать меню селекта вверх, а не вниз
     @Input() height: number; // ограничить высоту выпадалки
+    @Input() notStandartText: boolean; // параметр для text принимает boolean по дефолту undefined, если true то прячет иконку
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
     types = E_FIELD_TYPE;

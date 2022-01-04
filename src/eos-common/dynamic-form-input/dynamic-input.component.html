@@ -32,6 +32,7 @@
                 (onControlBlur)="onControlBlur.emit($event)"
                 (onControlFocus)="onControlFocus.emit($event)"
                 [inputTooltip]="tooltip"
+                [notStandartText]="notStandartText"
             ></eos-dynamic-input-text>
             <eos-dynamic-input-select2
                 *ngSwitchCase="types.select"
