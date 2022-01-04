@@ -108,6 +108,10 @@
     .table-templates {
         padding-left: 7%;
     }
+    .user-cabinet-log-delet {
+        position: absolute;
+        margin-top: 20px;
+    }
 }
 
 .instructions {
@@ -147,6 +151,17 @@
                     padding-left: 5px;
                     border-color: #e6e6e6;
                 }
+
+            }
+            
+        }
+        .delete-wr-input {
+            .form-group {
+                input {
+                    padding-left: 20px;
+                    border-color: #BABABA;
+                }
+
             }
         }
         >span {

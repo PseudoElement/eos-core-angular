@@ -1,12 +1,22 @@
-.readonlyInput{
+.readonlyInput {
     display: flex;
     align-items: center;
     padding-bottom: 20px;
 }
-.get-new-org{
+.get-new-org {
     padding-left: 10px;
     input{
         width: 350px;
         padding-left: 10px;
     }
+}
+.text-log-deleted {
+    input{
+        padding-left: 20px;
+        color: #BABABA;
+    }
+}
+.address-log-delet {
+    position: absolute;
+    margin-top: 2px;
 }

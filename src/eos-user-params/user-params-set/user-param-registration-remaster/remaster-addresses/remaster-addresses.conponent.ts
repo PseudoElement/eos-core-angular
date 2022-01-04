@@ -32,6 +32,8 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     public flagBacground: boolean = false;
     public orgName;
+    public logDeletOrg: boolean = false;
+    public logSaveDeletOrg;
     public orgSaveName;
     public flagEdit: boolean = false;
 
@@ -74,6 +76,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         .subscribe(() => {
             this.setNewValInputs();
             this.orgSaveName = this.orgName;
+            this.logSaveDeletOrg = this.logDeletOrg;
             this.flagEdit = false;
             this.form.disable({emitEvent: false});
         });
@@ -114,9 +117,13 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
             if (res.length) {
                 this.orgName = res[0]['CLASSIF_NAME'];
                 this.orgSaveName =  res[0]['CLASSIF_NAME'];
+                this.logDeletOrg = res[0]['DUE'] !== '0.'  && Boolean(res[0]['DELETED']);
+                this.logSaveDeletOrg = res[0]['DUE'] !== '0.' && Boolean(res[0]['DELETED']);
             } else {
                 this.orgName = '';
                 this.orgSaveName = '';
+                this.logSaveDeletOrg = false;
+                this.logDeletOrg = false;
             }
         }).catch(error => {
             this._errorSrv.errorHandler(error);
@@ -197,6 +204,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
             this.orgName = this.orgSaveName;
+            this.logDeletOrg = this.logSaveDeletOrg;
             const orgISN = this.form.controls['rec.ORGGROUP'].value;
             this.getOrgGroupValue(orgISN);
         }
@@ -234,6 +242,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 this._RemasterService.getOrgGroupNameDUE(data).then(list => {
                     if (list.length) {
                         this.orgName = list[0]['CLASSIF_NAME'];
+                        this.logDeletOrg = !!list[0]['DELETED'];
                         this.form.controls['rec.ORGGROUP'].patchValue(list[0].ISN_NODE);
                     }
                    this.flagBacground = false;

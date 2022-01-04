@@ -60,6 +60,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public creatchesheDefault;
     public currentUser;
     public isInformer: boolean = false;
+    public logDeletController: boolean = false;
     placementForTooltip: string = 'bottom';
     public lastTabs: string[] = ['Информер', 'Оповещатель'];
     public fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
@@ -163,6 +164,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.editMode();
         this.formSubscriber();
         return Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
+            this.logDeletController = Boolean(author[0]['DELETED']);
             [...CABINETS_USER_FOLDERS.fields, ...CABINETS_USER_ASSIGMENTS.fields].map(fields => {
                 if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
                     fields.options.splice(1, fields.options.length);
@@ -396,6 +398,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue(String(this.dueForLink));
                     this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']));
                     this.controller = true;
+                    this.logDeletController = Boolean(data[0]['DELETED']);
                 }
             })
             .catch(error => {

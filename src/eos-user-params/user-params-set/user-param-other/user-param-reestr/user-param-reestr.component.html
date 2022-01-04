@@ -28,7 +28,10 @@
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">
                 <div class="user-input-group-hi " *ngIf="list && list.length">
-                    <span *ngFor="let node of list ">{{node.label}}</span>
+                    <span *ngFor="let node of list" style="position: relative;">
+                        <span *ngIf="node.data['DELETED']" class="icon eos-icon small eos-icon-bin-grey" style="position: absolute;"></span>
+                        <span style="height: 25px; padding-top: 4px;" [ngClass]="{'text-log-delet': node.data['DELETED']}">{{node.label}}</span>
+                    </span>
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">

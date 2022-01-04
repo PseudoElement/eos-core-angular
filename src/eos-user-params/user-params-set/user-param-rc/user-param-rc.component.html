@@ -26,8 +26,10 @@
                         <span class="eos-icon small" [ngClass] = "flagEdit && !disabledFlagDelite && !disableDelet() ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                     </button>
             </div>
-            <div class="user-input-group-flex">
-                <span class="rc-doc" *ngFor='let title of dopRec; let i = index' [ngClass]="{'current' : cutentTab === i}" (click)='setTab(i)'>{{title.CLASSIF_NAME}}
+            <div class="user-input-group-flex" >
+                <span style="position: relative;" class="rc-doc" *ngFor='let title of dopRec; let i = index' [ngClass]="{'current' : cutentTab === i, 'log-delet-text': title.DELETED}" (click)='setTab(i)'>
+                    <span *ngIf='title.DELETED' class="icon eos-icon small eos-icon-bin-grey delet-icon-log"></span>
+                    {{title.CLASSIF_NAME}}
                 </span>
             </div>
         </div>  
