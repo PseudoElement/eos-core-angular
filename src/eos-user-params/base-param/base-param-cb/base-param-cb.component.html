@@ -35,8 +35,21 @@
                 <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
                     <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
                     <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required, 'department-role-flex': true}" style="width: 534px">
-                        <input class="form-control m-font inline-block" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label" autocomplete="off">
-                        <span class="icon eos-icon small icon-add-department span-avatar-icon" [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
+                        <span *ngIf="curentUser['DEPARTMENT_DELETE']" class="icon eos-icon small icon-bin-due-dep eos-icon-bin-grey"></span>
+                        <input 
+                            class="form-control m-font inline-block" 
+                            [ngClass]="{'delete-department': curentUser['DEPARTMENT_DELETE']}" 
+                            readonly 
+                            [formControlName]="inputs['DUE_DEP_NAME'].key" 
+                            [id]="inputs['DUE_DEP_NAME'].key" 
+                            type="text" 
+                            [placeholder]="inputs['DUE_DEP_NAME'].label" 
+                            autocomplete="off">
+                        <span 
+                            class="icon eos-icon small icon-add-department span-avatar-icon" 
+                            [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" 
+                            (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)">
+                        </span>
                     </div>
                 </div>
             </div>

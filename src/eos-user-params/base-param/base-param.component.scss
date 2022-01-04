@@ -193,7 +193,15 @@
                  display: flex;
                  align-items: center;
                  .span-avatar-icon {
-                     margin-bottom: 0;
+                    margin-bottom: 0;
+                 }
+                 .icon-bin-due-dep{
+                    position: absolute;
+                    color: #BABABA;
+                 }
+                 .delete-department{
+                    padding-left: 25px;
+                    color: #BABABA;
                  }
              }
          }
