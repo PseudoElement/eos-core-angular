@@ -462,14 +462,16 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                     return i.DUE_LINK_ORGANIZ;
                 });
             }
-            this.dictSrv['_apiSrv'].read({ ORGANIZ_CL: idsOrganiz }).then((o: ORGANIZ_CL[]) => {
-                const due_depInput = this.inputs['rec.DUE_DEP'];
-                o.forEach((e: ORGANIZ_CL) => {
-                    const val = options.get(e.DUE);
-                    val.title = e.CLASSIF_NAME;
-                    due_depInput.options.push(val);
+            if (options.size > 0) {
+                this.dictSrv['_apiSrv'].read({ ORGANIZ_CL: idsOrganiz }).then((o: ORGANIZ_CL[]) => {
+                    const due_depInput = this.inputs['rec.DUE_DEP'];
+                    o.forEach((e: ORGANIZ_CL) => {
+                        const val = options.get(e.DUE);
+                        val.title = e.CLASSIF_NAME;
+                        due_depInput.options.push(val);
+                    });
                 });
-            });
+            }
         });
     }
     checkKind() {
