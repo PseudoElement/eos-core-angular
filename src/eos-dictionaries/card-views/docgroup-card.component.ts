@@ -46,6 +46,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     isSignatura: boolean;
     isUsed = true;
     uniqFlagShablonCheck: boolean = false;
+    logDeletDoc: boolean = false;
     @ViewChild('inputChoice') inputChoice: ElementRef;
     private _prev = {};
     private modalSrv: BsModalService;
@@ -150,12 +151,14 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                 if (emitChange) {
                     this.setValue('rec.ISN_DOCVID', data, emit);
                 }
+                this.logDeletDoc = Boolean(docvid[0]['DELETED']);
                 this.inputChoice.nativeElement.value = docvid[0].CLASSIF_NAME;
             }
         });
     }
     deleteSel() {
         this.setValue('rec.ISN_DOCVID', null);
+        this.logDeletDoc = false;
         this.inputChoice.nativeElement.value = '';
     }
 
