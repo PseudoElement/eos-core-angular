@@ -392,7 +392,8 @@
             <div class="flex-box align-items-end add-margin-bottom">
                 <span class="left-title title-replace">Замещает:</span>
                 <div class="input-box more-width">
-                    <eos-dynamic-input class="full-width due-field" [input]="inputs['replace.DUE_REPLACE_NAME']" [form]="form"
+                    <span *ngIf="this.data['replace']['DELETED_DUE_REPLACE_NAME']" class="icon eos-icon small eos-icon-bin-grey" style="position: absolute; left: 0px"></span>
+                    <eos-dynamic-input class="full-width due-field" [ngClass]="{'log-delet-text': this.data['replace']['DELETED_DUE_REPLACE_NAME']}" [input]="inputs['replace.DUE_REPLACE_NAME']" [form]="form"
                         [disabled]="true" [readonly]="!editMode">
                     </eos-dynamic-input>
                     <span class="icon eos-icon small icon-add-department"

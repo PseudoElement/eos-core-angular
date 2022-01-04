@@ -236,6 +236,9 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                             if (dep.length && dep[0]['CLASSIF_NAME']) {
                                 replace['DUE_REPLACE_NAME'] = dep[0]['CLASSIF_NAME'];
                             }
+                            if (dep.length && dep[0]) {
+                                replace['DELETED_DUE_REPLACE_NAME'] = +dep[0]['DELETED'];
+                            }
                             return this.apiSrv.entityHelper.prepareForEdit(replace, 'DEP_REPLACE');
                         });
                 }

@@ -57,6 +57,12 @@ export const REPLACE_FIELDS = [
         length: 1999,
         title: '',
         disabled: true,
+    }, {
+        key: 'DELETED_DUE_REPLACE_NAME', // Поле для хранения значения удаления
+        type: 'text',
+        length: 3,
+        title: '',
+        disabled: true,
     },
 ];
 /* tslint:disable:max-line-length */

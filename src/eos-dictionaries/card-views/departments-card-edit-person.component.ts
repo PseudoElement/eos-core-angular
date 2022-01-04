@@ -445,6 +445,9 @@ formatSurname(fam: string, name: string, patron: string): string {
 
     public deleteDL() {
         if (this._newDueReplace) {
+            if (this.data && this.data['replace']) {
+                this.data['replace']['DELETED_DUE_REPLACE_NAME'] = 0;
+            }
             this.form.controls['replace.DUE_REPLACE_NAME'].patchValue('');
             this._newDueReplace = null;
         }
@@ -723,6 +726,9 @@ if (opt.fio || opt.gender || opt.nomenative) {
                         isAvailableDL = relatedDep && relatedDep['ALLOWED'] === 1;
                         if (isAvailableDL) {
                             this._newDueReplace = due;
+                            if (this.data && this.data['replace']) {
+                                this.data['replace']['DELETED_DUE_REPLACE_NAME'] = +chosenDep['DELETED'];
+                            }
                             this.form.controls['replace.DUE_REPLACE_NAME'].patchValue(chosenDep['CLASSIF_NAME']);
                         } else {
                             this._msgSrv.addNewMessage({
