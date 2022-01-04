@@ -15,7 +15,10 @@
     <div
         [ngClass]="{'highlighted': node.isSelected}"
         [ngStyle]="{'padding-left.px': node.layer * 27 * (hideExpand ? 0 : 1) }">
-
+        <span 
+            *ngIf='node.logDelete' 
+            [ngClass]="{'icon-bin-tree': node.isviewAllowed && systemTech!==1, 'icon-bin-tree-only-text': !node.isviewAllowed || systemTech===1}" 
+            class="icon eos-icon small eos-icon-bin-grey"></span>
         <div class="tree-node-due">
             <!-- icon for open -->
             <div
@@ -30,18 +33,18 @@
             </div>
 
             <!-- checkbox and label -->
-            <label *ngIf="node.isviewAllowed && systemTech!==1" class="checkbox tree-checkbox" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
+            <label *ngIf="node.isviewAllowed && systemTech!==1" class="checkbox tree-checkbox" [ngClass]="{'color-delet-elem': node.logDelete}" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
                 <span style="width:60px; display:inline-block;" *ngIf = "node.flagCheckNode">{{node.isAllowed ? '(С вл.)' : '(Без вл.)'}}</span>
                 <input type="checkbox"
                     [disabled]="!editMode || !node.isOwnDepartment"
                     hide
                     [checked]="node.isAllowed"
                 >
-                <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                <span [ngClass]="{'text-delet-elem': node.logDelete}" class="eos-icon eos-icon-checkbox-square-blue x-small">
                 </span>
                 {{node.label}}
             </label>
-            <label *ngIf="!node.isviewAllowed || systemTech===1" class="tree-text" (click)="clickLable($event, node)">{{node.label}}</label>
+            <label *ngIf="!node.isviewAllowed || systemTech===1" [ngClass]="{'color-delet-elem': node.logDelete}" class="tree-text" (click)="clickLable($event, node)">{{node.label}}</label>
         </div>
 
     </div>

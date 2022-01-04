@@ -16,12 +16,13 @@ export class NodeDocsTree implements IListDocsTree {
     flagCheckNode: any;
     redFlag: boolean;
     weight: number;
+    logDelete: boolean;
     get classChecBox() {
         return {
             'redUnchecked': !this.isAllowed && this.redFlag,
         };
     }
-    constructor({due, label, allowed, data, viewAllowed, flagCheckNode, weight}: INodeDocsTreeCfg, redFlag?, isOwnDepartment = true) {
+    constructor({due, label, allowed, data, viewAllowed, flagCheckNode, weight}: INodeDocsTreeCfg, redFlag?, isOwnDepartment = true, logDeleted?: any) {
         this.DUE = due;
         this.label = label;
         this.isAllowed = allowed;
@@ -31,6 +32,7 @@ export class NodeDocsTree implements IListDocsTree {
         this.isOwnDepartment = isOwnDepartment;
         this.data = data;
         this.weight = weight;
+        this.logDelete = logDeleted;
         this.link = due.split('.');
         this.link.pop();
     }

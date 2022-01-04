@@ -41,6 +41,9 @@ export class RightDepertOrganizComponent implements OnInit {
         private _appContext: AppContext,
     ) {
     }
+    getLogDelet(item): boolean {
+        return item.DUE !== '0.' && !!item['DELETED'] ? true : false;
+    }
     ngOnInit() {
         this.listUserDep = [];
         this.isLoading = true;
@@ -62,7 +65,7 @@ export class RightDepertOrganizComponent implements OnInit {
                             },
                         };
                         this.addFieldChwckProp(cfg, dep.IS_NODE, null);
-                        this.listUserDep.push(new NodeDocsTree(cfg));
+                        this.listUserDep.push(new NodeDocsTree(cfg, undefined, undefined, this.getLogDelet(dep)));
                     });
                     this.isLoading = false;
                 })

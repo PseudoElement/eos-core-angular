@@ -47,6 +47,9 @@ export class RightOrganizDepertComponent implements OnInit {
         private _appContext: AppContext,
     ) {
     }
+    getLogElem(item): boolean {
+        return item.DUE !== '0.' && !!item['DELETED'] ? true : false;
+    }
     ngOnInit() {
         this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
@@ -79,7 +82,7 @@ export class RightOrganizDepertComponent implements OnInit {
                         };
                         this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
                         if (!(this.getAllDep && cfg.due === '0.')) {
-                            this.listUserDep.push(new NodeDocsTree(cfg));
+                            this.listUserDep.push(new NodeDocsTree(cfg, undefined, undefined, this.getLogElem(dep)));
                         } else {
                             this.checkFlag = true;
                         }

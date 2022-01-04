@@ -212,6 +212,9 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                 }
             });
     }
+    private _getLogDelet(item): boolean {
+        return item.DUE !== '0.' && !!item['DELETED'] ? true : false;
+    }
     private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
         const cfg: INodeDocsTreeCfg = {
             due: doc.DUE,
@@ -222,7 +225,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                 docGroup: doc
             },
         };
-        return new NodeDocsTree(cfg, true);
+        return new NodeDocsTree(cfg, true, undefined, this._getLogDelet(doc));
     }
     private _checkRepeat(arrDoc: DOCGROUP_CL[]): boolean {
         this.list.forEach((node: NodeDocsTree) => {

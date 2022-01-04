@@ -446,12 +446,15 @@ export class CardRightSrv {
     }
     private _createListNode(list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
         list.push(new NodeDocsTree({
-            due: data.docGroup.DUE,
-            label: data.docGroup.CLASSIF_NAME,
-            allowed: !!data.userCardDG.ALLOWED,
-            data
-        },
-            this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true));
+                due: data.docGroup.DUE,
+                label: data.docGroup.CLASSIF_NAME,
+                allowed: !!data.userCardDG.ALLOWED,
+                data
+            },
+            this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true,
+            undefined,
+            data.docGroup.DUE !== '0.' && !!data['docGroup']['DELETED'] ? true : false)
+        );
     }
     private _checkChenge() {
         let state: boolean = false;

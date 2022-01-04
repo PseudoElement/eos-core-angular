@@ -291,6 +291,9 @@ export class RightClassifNode {
         });
         this._component.Changed.emit();
     }
+    getLogElem(item): boolean {
+        return item.DUE !== '0.' && !!item['DELETED'] ? true : false;
+    }
     private _createListContent(userTech: any[], listContent: NodeDocsTree[]) {
         this.isLoading = true;
         const arr = [];
@@ -311,7 +314,7 @@ export class RightClassifNode {
                         allowed: uT['ALLOWED'],
                         data: d,
                     };
-                    listContent.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
+                    listContent.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true, undefined, this.getLogElem(item)));
                 });
                 this.isLoading = false;
             });

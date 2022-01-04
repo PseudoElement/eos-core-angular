@@ -68,7 +68,9 @@ export class RightDepertmentComponent implements OnInit {
         }
         return true;
     }
-
+    getLogElem(item): boolean {
+        return item.DUE !== '0.' && !!item['DELETED'] ? true : false;
+    }
     ngOnInit() {
         this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
@@ -128,7 +130,7 @@ export class RightDepertmentComponent implements OnInit {
                         }
                         const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
                         if (!(this.getAllDep && cfg.due === '0.')) {
-                            const elem = new NodeDocsTree(cfg, flag, ownDep);
+                            const elem = new NodeDocsTree(cfg, flag, ownDep, this.getLogElem(dep));
                             this.listUserDep.push(elem);
                         } else {
                             this.checkFlag = true;
