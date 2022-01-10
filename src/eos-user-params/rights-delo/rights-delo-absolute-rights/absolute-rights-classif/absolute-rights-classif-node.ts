@@ -152,7 +152,7 @@ export class RightClassifNode {
                             allowed: !!newTechRight['ALLOWED'],
                             data: d,
                         };
-                        newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
+                        newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true, undefined, this.getLogElem(entity)));
 
                         this._parentNode.pushChange({
                             method: 'POST',

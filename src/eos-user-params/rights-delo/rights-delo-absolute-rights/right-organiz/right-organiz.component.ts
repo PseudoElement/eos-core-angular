@@ -150,7 +150,7 @@ export class RightDepertOrganizComponent implements OnInit {
                         },
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, null);
-                    const newNode = new NodeDocsTree(cfg);
+                    const newNode = new NodeDocsTree(cfg, undefined, undefined, this.getLogDelet(dep));
                     this.curentUser['USER_ORGANIZ_List'].push(newUserDep);
                     this.selectedNode.pushChange({
                         method: 'POST',

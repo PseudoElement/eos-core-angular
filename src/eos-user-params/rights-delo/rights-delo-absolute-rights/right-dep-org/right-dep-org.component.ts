@@ -169,7 +169,7 @@ export class RightOrganizDepertComponent implements OnInit {
                         weight: this._getNewWeight(),
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
-                    const newNode = new NodeDocsTree(cfg);
+                    const newNode = new NodeDocsTree(cfg, undefined, undefined, this.getLogElem(dep));
                     this.curentUser.USERDEP_List.push(newUserDep);
                     this.selectedNode.pushChange({
                         method: 'POST',
@@ -455,7 +455,7 @@ export class RightOrganizDepertComponent implements OnInit {
                     /* userDep: userDep, */
                 },
             };
-            this.listUserDep.push(new NodeDocsTree(cfg));
+            this.listUserDep.push(new NodeDocsTree(cfg, undefined, undefined, this.getLogElem(dep)));
         });
         this.massMy.forEach(dat => {
             if (!dat['CompositePrimaryKey']) {

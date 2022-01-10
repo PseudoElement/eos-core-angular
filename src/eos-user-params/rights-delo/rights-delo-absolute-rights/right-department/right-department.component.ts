@@ -254,7 +254,7 @@ export class RightDepertmentComponent implements OnInit {
                     flag = true;
                 }
                 const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
-                const newNode = new NodeDocsTree(cfg, flag, ownDep);
+                const newNode = new NodeDocsTree(cfg, flag, ownDep, this.getLogElem(dep));
                 this.curentUser.USERDEP_List.push(newUserDep);
                     this.selectedNode.pushChange({
                         method: 'POST',
@@ -368,7 +368,7 @@ export class RightDepertmentComponent implements OnInit {
                         flag = true;
                     }
                     const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
-                    const newNode = new NodeDocsTree(cfg, flag, ownDep);
+                    const newNode = new NodeDocsTree(cfg, flag, ownDep, this.getLogElem(dep));
                     this.curentUser.USERDEP_List.push(newUserDep);
                         this.selectedNode.pushChange({
                             method: 'POST',
@@ -665,7 +665,7 @@ export class RightDepertmentComponent implements OnInit {
                 },
             };
             const ownDep = this.userTechDep && this._userParmSrv.checkAvailableDep(cfg.due, this.userTechDep);
-            this.listUserDep.push(new NodeDocsTree(cfg, false, ownDep));
+            this.listUserDep.push(new NodeDocsTree(cfg, false, ownDep, this.getLogElem(dep)));
         });
         this.massMy.forEach(dat => {
             if (!dat['CompositePrimaryKey']) {
