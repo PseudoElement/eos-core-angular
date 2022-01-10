@@ -196,7 +196,14 @@ bs-dropdown-container {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: $text-color;
     user-select: none;
-
+    .input-user-cabinets-rk-forwarding-wrapper {
+        .user-cabinet-log-delet {
+            position: absolute;
+            z-index: 1;
+            margin-top: 0px;
+        }
+    }
+    
     .left {
         position: absolute;
         top: 45px;
