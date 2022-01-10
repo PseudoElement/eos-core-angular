@@ -30,6 +30,9 @@ export class CardRightSrv {
     get chengeState$(): Observable<boolean> {
         return this._chengeState$.asObservable();
     }
+    get docGroup() {
+        return this._docGroup;
+    }
     private _selectingNode$: Subject<any>;
     private _chengeState$: Subject<boolean>;
     private _updateFlag$: Subject<void>;
