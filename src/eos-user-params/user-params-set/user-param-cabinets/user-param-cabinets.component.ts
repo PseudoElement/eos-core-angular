@@ -163,7 +163,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
         this.formSubscriber();
-        return Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
+        return Promise.all([this.getControlAuthor(), this.getNameSortCabinets(), this.getProjectResolution()]).then(([author, sort, projectResol]) => {
             if (author && author[0]) {
                 this.logDeletController = Boolean(author[0]['DELETED']);
             } else {
@@ -182,6 +182,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             });
             if (author) {
                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+            }
+            if (projectResol) {
+                this.inputs['rec.RESPRJ_PRIORITY_DEFAULT'].options = [];
+                projectResol.forEach((opt) => {
+                    this.inputs['rec.RESPRJ_PRIORITY_DEFAULT'].options.push({value: opt['ISN_LCLASSIF'], title: opt['CLASSIF_NAME']});
+                });
             }
         });
     }
@@ -424,6 +430,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     CLASSIF_ID: '105'
                 }
             },
+        };
+        return this._pipRx.read(query);
+    }
+    getProjectResolution(): Promise<any[]> {
+        const query = {
+            RESPRJ_PRIORITY_CL: {
+                criteries: {
+                    ISN_LCLASSIF: 'isnotnull'
+                }
+            }
         };
         return this._pipRx.read(query);
     }

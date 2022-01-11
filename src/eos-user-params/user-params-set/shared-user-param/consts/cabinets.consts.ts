@@ -399,12 +399,7 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             key: 'RESPRJ_PRIORITY_DEFAULT',
             type: 'select',
             title: '',
-            options: [
-                {value: '1', title: 'Высокий'},
-                {value: '2', title: 'Средний'},
-                {value: '3', title: 'Низкий'},
-                {value: '4', title: 'Без приоритета'},
-            ]
+            options: []
         },
         {
             key: 'CHECK_RESOL_REPORT',
