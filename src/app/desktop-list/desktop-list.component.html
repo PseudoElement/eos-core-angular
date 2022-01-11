@@ -101,7 +101,10 @@
                         placement="top"
                         container="body"
                         containerClass="tooltip-info">
-                        <span class="eos-icon eos-icon-checkbox-blue small"></span>
+                        <span 
+                            class="eos-icon small" 
+                            [ngClass]="{'eos-icon-checkbox-grey': deskName.trim().length === 0, 'eos-icon-checkbox-blue': deskName.trim().length > 0}">
+                        </span>
                     </div>
             </div>
     </div>

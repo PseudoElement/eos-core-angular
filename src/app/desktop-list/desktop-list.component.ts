@@ -116,6 +116,11 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
     }
 
     saveDesk($evt: Event): void {
+        if (this.deskName.trim().length === 0) {
+            this.inputTooltip.message = 'Обязательное поле.';
+            this.inputTooltip.visible = true;
+            return;
+        }
         $evt.stopPropagation();
         const findDesk = this._deskSrv.desktopExisted(this.deskName);
         let desk = this.deskList.find((d) => d.edited);
