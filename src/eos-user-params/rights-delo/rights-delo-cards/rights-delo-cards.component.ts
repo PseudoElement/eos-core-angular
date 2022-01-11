@@ -152,7 +152,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     getFlagInDepartment(funkNum: number): number {
         let count = 0;
         this.funcListDepartment.forEach(dep => {
-            if (dep[funkNum - 1] !== '0') {
+            if (dep[funkNum - 1] && dep[funkNum - 1] !== '0') { // #152870 элементов может быть на 3 меньше вот и повялялись флаги которых нет
                 count += 1;
             }
         });
