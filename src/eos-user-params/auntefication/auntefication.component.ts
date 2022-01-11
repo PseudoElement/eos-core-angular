@@ -52,7 +52,6 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     public newLogin: boolean = false;
     public maxLoginLength: string;
     public esiaExternalAuth: number = 0;
-    public chengeRouter: boolean =  false;
     inputFields: IInputParamControl[];
     public externalOrig: any;
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -232,7 +231,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamSrv.submitSave = this.preSubmit('true');
+            this._userParamSrv.submitSave = this.preSubmit(true);
         });
     }
     getEditDate(): boolean {
@@ -411,22 +410,22 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
     }
 
-    afterSuccessSubmit() {
+    afterSuccessSubmit(flagRout?) {
         this._alertMessage('Изменения сохранены', true);
-        if (!this.chengeRouter) {  // если сохранение идёт перед переходом то перечитывать данные не нужно
+        if (!flagRout) {  // если сохранение идёт перед переходом то перечитывать данные не нужно
             // this.ngOnDestroy();
             this.ngOnInit();
         }
     }
     /**Сохранение полей ESIA*/
-    saveExternal() {
+    saveExternal(flagRout?) {
         if (this.externalIsChanged()) {
             this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
-                this.afterSuccessSubmit();
+                this.afterSuccessSubmit(flagRout);
             }).catch(er => {
                 this._errorSrv.errorHandler(er); });
         } else {
-            this.afterSuccessSubmit();
+            this.afterSuccessSubmit(flagRout);
         }
     }
 
@@ -471,35 +470,37 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             if (this._newDataCheck(userType, userPassword, userLogin)) {
                 switch (userType) {
                     case '0': {
-                        this.saveZeroType(userType, userPassword, userLogin);
+                        this.saveZeroType(userType, userPassword, userLogin, $event);
                         break;
                     }
                     case '-1': {
                       //  this.saveMinusFirstType(userType, userLogin);
                       // this.ngOnDestroy();
-                      this.ngOnInit();
+                        if (!$event) {
+                            this.ngOnInit();
+                        }
                         break;
                     }
                     case '1': {
-                        this.saveFirstType(userType, userLogin);
+                        this.saveFirstType(userType, userLogin, $event);
                         break;
                     }
                     case '2': {
-                        this.saveSecondType(userType, userLogin);
+                        this.saveSecondType(userType, userLogin, $event);
                         break;
                     }
                     case '3': {
-                        this.saveThirdType(userType, userPassword, userLogin);
+                        this.saveThirdType(userType, userPassword, userLogin, $event);
                         break;
                     }
                     case '4': {
-                        this.saveFourthType(userType, userLogin);
+                        this.saveFourthType(userType, userLogin, $event);
                         break;
                     }
                 }
             } else if (this.externalIsChanged()) {
                 this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
-                    this.afterSuccessSubmit();
+                    this.afterSuccessSubmit($event);
                 }).catch(er => {
                     this._errorSrv.errorHandler(er); });
             } else {
@@ -512,7 +513,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         });
     }
 
-    saveZeroType(userType, userPassword, userLogin) {
+    saveZeroType(userType, userPassword, userLogin, flagRout) {
         if (!userPassword) {
             this._alertMessage('Необходимо ввести пароль');
             return;
@@ -529,10 +530,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
                 }
                 this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
-                    this.saveExternal();
+                    this.saveExternal(flagRout);
                 });
             } else {
-                this.saveExternal();
+                this.saveExternal(flagRout);
             }
         }).catch(() => { });
     }
@@ -543,23 +544,23 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }).catch(() => {});
     }
 
-    saveFirstType(userType, userLogin) {
+    saveFirstType(userType, userLogin, flagRout) {
         if (userLogin.indexOf('\\') >= 0) {
             this._createUrlChangeLOgin({userType, userLogin}).then(() => {
-                this.saveExternal();
+                this.saveExternal(flagRout);
             }).catch(() => { });
         } else {
             this._alertMessage('Имя пользователя не соответствует шаблону для ОС-авторизации.');
         }
     }
 
-    saveSecondType(userType, userLogin) {
+    saveSecondType(userType, userLogin, flagRout) {
         this._createUrlChangeLOgin({userType, userLogin}).then(() => {
-            this.saveExternal();
+            this.saveExternal(flagRout);
         }).catch(() => { });
     }
 
-    saveThirdType(userType, userPassword, userLogin) {
+    saveThirdType(userType, userPassword, userLogin, flagRout) {
         if (this.provUpdateDate()) {
             this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
             return;
@@ -576,20 +577,20 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
                 }
                 this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
-                    this.saveExternal();
+                    this.saveExternal(flagRout);
                 }).catch(e => {
                     this.cancel(null);
                     this._errorSrv.errorHandler(e);
                 });
             } else {
-                this.saveExternal();
+                this.saveExternal(flagRout);
             }
         }).catch(() => { });
     }
 
-    saveFourthType(userType, userLogin) {
+    saveFourthType(userType, userLogin, flagRout) {
         this._createUrlChangeLOgin({userType, userLogin}).then(() => {
-            this.saveExternal();
+            this.saveExternal(flagRout);
         }).catch(() => { });
     }
 
