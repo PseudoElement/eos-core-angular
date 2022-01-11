@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
@@ -70,6 +70,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
+    private subscription: Subscription;
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
             return false;
@@ -94,6 +95,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private apiSrvRx: PipRX,
         private _rtUserSel: RtUserSelectService
     ) {
+        this.subscription = this._userParamSrv.canDeactivateSubmit$
+        .subscribe((rout: RouterStateSnapshot) => {
+            this._userParamSrv.submitSave = this.submit('true');
+        });
     }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
@@ -123,9 +128,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         });
     }
+    unSubscribe() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
+        this.subscription.unsubscribe();
     }
     get validClassif() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
@@ -194,6 +204,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.editModeF();
                     this.setValidators();
+                    this.unSubscribe();
                     this.subscribeForms();
                     this._subscribe();
                 });
@@ -302,13 +313,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     subscribeForms() {
-        this._userParamSrv.canDeactivateSubmit$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-            )
-        .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamSrv.submitSave = this.submit('true');
-        });
         this.form.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => {
             this.checkChangeForm(data);
         });
@@ -489,10 +493,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     submit(meta?: string): Promise<any> {
         if (!this.getValidDate) {
             this.messageAlert({ title: 'Предупреждение', msg: 'Невозможно сохранить некорректные данные', type: 'warning' });
-            return Promise.reject(false);
+            return Promise.resolve('error');
         }
         if (this.cheackCtech() || this.checkRole()) {
-            return Promise.reject(false);
+            return Promise.resolve('error');
         }
         return this._checkLicenseInfo()
         .then((checkResult) => {
@@ -646,7 +650,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.clearMap();
         this._pushState();
         if (!route) { // если сохранение происходило перед переходом, то отменить запрос новых данных
-            this.ngOnDestroy();
+            this.unSubscribe();
             this.init();
         }
     }
@@ -661,7 +665,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.editMode = false;
         this.clearMap();
-        this.ngOnDestroy();
+        this.unSubscribe();
         this.init();
         this._pushState();
     }
