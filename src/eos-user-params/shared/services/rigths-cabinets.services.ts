@@ -59,7 +59,8 @@ export class RigthsCabinetsServices {
             this.cardsArray.map((card: CardsClass) => {
                 if (depart.DUE === card.data.DUE) {
                     card.cardName = depart.CARD_NAME;
-                    card.deleted = !!depart.DELETED;
+                    card.deleted = false;
+                    card.logDelet = !!depart.DELETED;
                 }
                 return card;
             });

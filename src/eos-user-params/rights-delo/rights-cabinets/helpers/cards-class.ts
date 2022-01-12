@@ -114,6 +114,7 @@ export class CardsClass {
         this.cardTitle = name;
     }
     public deleted = false;
+    public logDelet = false;
     public current = false;
     public cabinets: Cabinets[] = [];
     public data: USERCARD;
