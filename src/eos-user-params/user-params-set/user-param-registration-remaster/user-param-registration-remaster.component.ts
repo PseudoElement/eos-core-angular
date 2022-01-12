@@ -91,7 +91,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     ngOnInit() {
         if (this.isCurrentSettings) {
             if (!this.appMode.tkDoc) {
-                this.fieldGroupsForRegistration.set(3, 'Связки и переписка');
+                if (this.appMode.arm) {
+                    this.fieldGroupsForRegistration.set(3, 'Связки и переписка');
+                }
             } else {
                 this.fieldGroupsForRegistration.set(2, 'Сканирование');
             }
