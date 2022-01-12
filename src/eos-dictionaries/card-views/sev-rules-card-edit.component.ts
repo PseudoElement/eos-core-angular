@@ -46,6 +46,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
     public groupDocumentTemplate = [];
     public checkItemForDelet: number = null;
     public departmentReceiveInput: string = '';
+    public deleteLogName: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     private _errorHelper: ErrorHelperServices;
     constructor(injector: Injector,
@@ -474,6 +475,9 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
             }
         });
     }
+    getDeletElem(item): boolean {
+        return item['DUE'] !== '0.' && Boolean(item['DELETED']);
+    }
     checkKind() {
         if (String(this.RuleKind.value) !== '1' && String(this.RuleKind.value) !== '5' && this.editMode) {
             const error = { code: 2000, message: 'Данный вид правила не поддерживается. Доступный вид правила: "Отправка документов"' };
@@ -722,6 +726,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 if (newDue) {
                     this.form.controls['rec.DUE_DOCGROUP'].patchValue(newDue);
                 }
+                this.deleteLogName = this.getDeletElem(docGroup);
                 this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(docGroup ? docGroup.CLASSIF_NAME : '');
                 this.form.controls['rec.RC_TYPE'].patchValue(rcType, { eventEmit: false });
             }).catch(e => {
