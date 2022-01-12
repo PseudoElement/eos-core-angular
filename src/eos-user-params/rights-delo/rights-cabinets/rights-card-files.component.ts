@@ -51,7 +51,18 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _appContext: AppContext,
         private _userParamsSetSrv: UserParamsService,
     ) { }
-    ngOnInit() {
+     // чтобы подписка происходила только 1 перенёс основной код из ngOnInit
+     ngOnInit() {
+        this.updateInit();
+        this._userParamsSetSrv.canDeactivateSubmit$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this._userParamsSetSrv.submitSave = this.submit(true);
+        });
+    }
+    updateInit () {
         this._userSrv.getUserIsn({
             expand: 'USERCARD_List'
         })
@@ -66,13 +77,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         .catch(e => {
             this.cancel(null);
             this._errorSrv.errorHandler(e);
-        });
-        this._userParamsSetSrv.canDeactivateSubmit$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-            )
-        .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamsSetSrv.submitSave = this.submit('');
         });
     }
     ngOnDestroy() {
@@ -270,6 +274,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             return this.currentCard && card.data.DUE !== this.currentCard.data.DUE;
         });
     }
+    /*
+    * если сохраняем через кнопку то в event лежит false если при переходе то true
+    */
     submit(event): Promise<any> {
         this.isLoading = true;
         const changes = [];
@@ -296,22 +303,22 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 /* В случае если были добавлены новые картотеки то необходимо изменить записи после их создания*/
                 if (mergechange.length) {
                     return this._pipSrv.batch(mergechange, '').then(() => {
-                        this.cancel(null);
+                        this.cancel(event);
                         this._userParamsSetSrv.setChangeState({ isChange: false });
                         this.isLoading = false;
                     });
                 } else {
-                    this.cancel(null);
+                    this.cancel(event);
                     this._userParamsSetSrv.setChangeState({ isChange: false });
                     this.isLoading = false;
                 }
             }).catch(e => {
-                this.cancel(null);
+                this.cancel(event);
                 this._errorSrv.errorHandler(e);
                 this.isLoading = false;
             });
         } else {
-            this.cancel(null);
+            this.cancel(event);
             this.isLoading = false;
             return Promise.resolve(true);
         }
@@ -433,6 +440,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         if (this.currentCard) {
             this.findHomeCard();
             this.currentCard.data.HOME_CARD = 1;
+            this.checkGlobalChanges(); // обновить состояние при назначении новой главной картотеки
         }
     }
     findHomeCard(): void {
@@ -459,7 +467,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.mainArrayCards.length = 0;
         this._rightsCabinetsSrv.cardsArray.length = 0;
         this._userParamsSetSrv.setChangeState({ isChange: false });
-        this.ngOnInit();
+        if (!event) { // если event === true то не нужно загружать данные снова так сохранение идёт перед переходом
+            this.updateInit();
+        }
     }
     sendMessage(tittle: string, msg: string) {
         this._msgSrv.addNewMessage({
