@@ -556,8 +556,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     // "Разрешаем назначать роль пользователю без АДЛ"
                     // не имеет смысла проверка кабинета
 
-                    this.apiSrvRx.read( {[this._createUrlForSop(`${id}`)]: ALL_ROWS});
-                    return this.saveData(accessStr, id, query, route);
+                    return this.apiSrvRx.read( {[this._createUrlForSop(`${id}`)]: ALL_ROWS})
+                    .then(() => {
+                        return this.saveData(accessStr, id, query, route);
+                    });
                 } else {
                     return;
                 }
