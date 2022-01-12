@@ -80,7 +80,6 @@ import { Templates } from '../consts/dictionaries/templates.consts';
 import { ViewProtocolServices } from 'eos-dictionaries/services/eos-view-prot.services';
 import { DictionaryDescriptor } from 'eos-dictionaries/core/dictionary-descriptor';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { CardRightSrv } from 'eos-user-params/rights-delo/rights-delo-cards/card-right.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -192,7 +191,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         private _waitClassif: WaitClassifService,
         private _viewPortSrv: ViewProtocolServices,
         private _appContext: AppContext,
-        private cardDocgroup: CardRightSrv,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
     ) {
@@ -981,11 +979,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                         const needInclude = confirmed.result === 2;
                         this._dictSrv.setFlagForMarked('DELETED', needInclude, false)
                             .then(() => {
-                                if (this.dictionaryId === 'docgroup') {
-                                    selectedNodes.forEach((node) => {
-                                        this.cardDocgroup.docGroup.delete(node.id);
-                                    });
-                                }
                                 this._dictSrv.setMarkAllNone();
                                 const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                                 message.msg = message.msg
@@ -1181,11 +1174,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             .replace('{{OPERATION}}', 'удалены логически.');
 
                         return this._dictSrv.setFlagForMarked('DELETED', true, true).then((flag) => {
-                            if (this.dictionaryId === 'docgroup') {
-                                selectedNodes.forEach((node) => {
-                                    this.cardDocgroup.docGroup.delete(node.id);
-                                });
-                            }
                             this._dictSrv.setMarkAllNone();
                             this._msgSrv.addNewMessage(message);
                         });

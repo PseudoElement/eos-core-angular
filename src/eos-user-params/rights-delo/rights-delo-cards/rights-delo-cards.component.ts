@@ -65,6 +65,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         .subscribe(() => {
             this.updateCheckbox();
         });
+        this._cardSrv.clearDocGroup();
     }
     ngOnInit() {
         this._userParamsSetSrv.getUserIsn({
