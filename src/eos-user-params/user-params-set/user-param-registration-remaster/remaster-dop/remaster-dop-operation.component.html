@@ -69,6 +69,7 @@
 <div [hidden]="appMode.cbr" class="user-group-form">
     <span>Проверять повторность документа:</span>
     <eos-dynamic-input
+        *ngIf="!appMode.arm"
         [input]="inputs['rec.TESTRAPID_ONSAVE']"
         [form]="form"
         [readonly]="false"
