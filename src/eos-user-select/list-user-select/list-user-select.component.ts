@@ -235,7 +235,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             let flag = false;
             const option = [{
                 title: 'Все кабинеты',
-                value: ''
+                value: '.'
             }];
             cabinets.forEach((cab) => {
                 if (filter && +cab['ISN_CABINET'] === +filter) {
@@ -247,8 +247,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 });
             });
             this.inputs['USER_CABINET'].options = option;
-            this.form.controls['USER_CABINET'].setValue(flag ?  filter : '', {emitEvent: false});
-            this._storage.setItem('cabinetFilter', flag ? filter : '');
+            this.form.controls['USER_CABINET'].setValue(flag ?  filter : '.', {emitEvent: false});
+            this._storage.setItem('cabinetFilter', flag ? filter : '.');
             return true;
         });
     }
@@ -292,8 +292,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     initView(param?, cabinet?) {
-        if (!cabinet && this.form.controls['USER_CABINET'].value) {
+        if (!cabinet && this.form.controls['USER_CABINET'].value !== '.') {
             cabinet = this.form.controls['USER_CABINET'].value;
+        }
+        if (cabinet === '.') {
+            cabinet = '';
         }
         this.selectedUser = undefined;
         this.checkSortSessionStore();
