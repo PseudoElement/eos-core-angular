@@ -67,14 +67,16 @@
 </div>
 
 <div [hidden]="appMode.cbr" class="user-group-form">
-    <span>Проверять повторность документа:</span>
+    <span>Проверка повторности входящих документов и обращений граждан:</span>
     <eos-dynamic-input
-        *ngIf="!appMode.arm"
+        class="input-right"
         [input]="inputs['rec.TESTRAPID_ONSAVE']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        *ngIf="!appMode.arm"
+        class="input-right"
         [input]="inputs['rec.TESTRAPID_USECORRESP']"
         [form]="form"
         [readonly]="false"
