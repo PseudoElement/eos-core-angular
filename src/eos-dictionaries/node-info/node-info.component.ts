@@ -32,6 +32,7 @@ export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestro
         }
         if (this.dictSrv.currentDictionary.id  === 'sev-rules' && Object.keys(this.nodeDataFull).length > 0 && this.node) {
             this.nodeDataFull.rec['DUE_DOCGROUP_NAME'] = this.node.data.DOCGROUP_Ref[0]['CLASSIF_NAME'];
+            this.fieldsDescriptionFull.rec['DUE_DOCGROUP_NAME'].logDelet = this.node.data.DOCGROUP_Ref[0]['DELETED'];
         }
     }
     // TODO: объеденить  loadRelated и loadOptionsDictionary во что то одно внятное.
@@ -45,7 +46,6 @@ export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestro
         let res = this.nodeDataFull.rec[key];
 
         const field = this.fieldsDescriptionFull.rec[key];
-
         if ((field.type === E_FIELD_TYPE.select || field.type === E_FIELD_TYPE.buttons)) {
             let f = null;
             if (field.options.length) {

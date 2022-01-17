@@ -23,7 +23,9 @@
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                                 <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <span *ngIf="fieldsDescriptionFull.rec[key].logDelet" class="icon eos-icon small icon-bin-due-dep eos-icon-bin-grey"></span>
                                 <p class="field-value m-font"
+                                [ngClass]="{'text-log-delet': fieldsDescriptionFull.rec[key].logDelet}"
                                     >{{value(key) || '...'}}</p>
                         </ng-container>
                     </ng-container>
