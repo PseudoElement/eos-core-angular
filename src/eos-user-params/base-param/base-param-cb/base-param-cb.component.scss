@@ -147,10 +147,11 @@
             .department-role-flex {
                 display: flex;
                 align-items: center;
+                position: relative;
                 .span-avatar-icon {
                     margin-bottom: 0;
                 }
-                .icon-bin-due-dep{
+                .icon-bin-due-dep-base-cb{
                     position: absolute;
                  }
                  .delete-department{

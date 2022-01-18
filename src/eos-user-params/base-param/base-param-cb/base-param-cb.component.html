@@ -35,7 +35,7 @@
                 <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
                     <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
                     <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required, 'department-role-flex': true}" style="width: 534px">
-                        <span *ngIf="curentUser['DEPARTMENT_DELETE']" class="icon eos-icon small icon-bin-due-dep eos-icon-bin-grey"></span>
+                        <span *ngIf="curentUser['DEPARTMENT_DELETE']" class="icon eos-icon small icon-bin-due-dep-base-cb eos-icon-bin-grey"></span>
                         <input 
                             class="form-control m-font inline-block" 
                             [ngClass]="{'delete-department': curentUser['DEPARTMENT_DELETE']}" 
