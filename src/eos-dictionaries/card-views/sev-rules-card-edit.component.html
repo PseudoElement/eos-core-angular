@@ -19,16 +19,16 @@
                        [readonly]="!editMode"></eos-dynamic-input>
     <div class="doc-wr">
         <div
-        [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input"><!--  -->
+        [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
             <label [attr.for]="inputs['rec.DUE_DOCGROUP_NAME'].key">{{inputs['rec.DUE_DOCGROUP_NAME'].label}}</label>
             <div class="create-user-wr" style="width: 461px; position: relative;">
-                <span *ngIf="deleteLogName" class="icon eos-icon small icon-bin-due-dep-sev eos-icon-bin-grey" [ngClass]="{'delet-log-icon': deleteLogName}"></span>
+                <span *ngIf="form.controls['rec.DUE_DOCGROUP_DELET'].value" class="icon eos-icon small icon-bin-due-dep-sev eos-icon-bin-grey" [ngClass]="{'delet-log-icon': form.controls['rec.DUE_DOCGROUP_DELET'].value}"></span>
                 <input
                 [tooltip]="!form.controls['rec.DUE_DOCGROUP'].valid ? 'Обязательное поле.' : ''"
                 [placement]="'bottom'"
                 [containerClass]="'tooltip-error'"
                 [container]=""
-                [ngClass]="{'delet-log-text': deleteLogName}"
+                [ngClass]="{'delet-log-text': form.controls['rec.DUE_DOCGROUP_DELET'].value}"
                 class="form-control m-font inline-block" id="due" readonly [formControlName]="inputs['rec.DUE_DOCGROUP_NAME'].key" type="text">
                 <span class="icon eos-icon small icon-add-department"></span>
             </div>

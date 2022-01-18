@@ -122,7 +122,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -195,7 +195,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -272,7 +272,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -318,7 +318,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -402,7 +402,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -483,7 +483,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -543,7 +543,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }
@@ -585,7 +585,7 @@ export class EosSevRulesService {
                 });
             });
         }
-        return new Promise<any>((resolve) => {
+        return new Promise<void>((resolve) => {
             resolve();
         });
     }

@@ -94,6 +94,11 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             title: 'Группа документов',
         },
         {
+            key: 'DUE_DOCGROUP_DELET',
+            type: 'string',
+            title: '',
+        },
+        {
             key: 'DUE_DEP',
             type: 'select',
             options: [{value: null, title: 'Все организации'}],
@@ -713,7 +718,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
         'signatureDate', 'signatureDays', 'visaForward', 'signatureForward', 'VisaKindTake', 'signatureKindTake', 'forwardingVisaKind',
         'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign', 'progectRegistration', 'fileAccessListRk',
         'NotificationConfigReport', 'controllerMission', 'OrganizationFolderInput', 'reportExecution', 'filterConfig', 'linkTypeListInput', 'executiveInput',
-        'groupDocument', 'fileDocument', 'FileRK', 'departmentReceive', 'departmentReceiveInput', 'organizationNow'
+        'groupDocument', 'fileDocument', 'FileRK', 'departmentReceive', 'departmentReceiveInput', 'organizationNow', 'DUE_DOCGROUP_DELET'
     ],
     listFields: ['CLASSIF_NAME', 'NAME_RULE_KIND', 'NOTE'],
     allVisibleFields: [],

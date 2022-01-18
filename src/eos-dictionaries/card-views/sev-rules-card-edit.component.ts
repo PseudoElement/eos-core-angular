@@ -726,7 +726,7 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent implements 
                 if (newDue) {
                     this.form.controls['rec.DUE_DOCGROUP'].patchValue(newDue);
                 }
-                this.deleteLogName = this.getDeletElem(docGroup);
+                this.form.controls['rec.DUE_DOCGROUP_DELET'].patchValue(this.getDeletElem(docGroup));
                 this.form.controls['rec.DUE_DOCGROUP_NAME'].patchValue(docGroup ? docGroup.CLASSIF_NAME : '');
                 this.form.controls['rec.RC_TYPE'].patchValue(rcType, { eventEmit: false });
             }).catch(e => {
