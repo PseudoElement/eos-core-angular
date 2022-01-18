@@ -340,28 +340,39 @@ export class RtUserSelectService {
     getInfoCabinet(isn_cl, due?): Promise<any> {
         let cab_list = '';
         this.UserCabinetInfo = [];
+        const arrayCabList = [];
         return this.getUserCabinets(isn_cl).then(resultCabinet => {
             if (resultCabinet.length > 0) {
-                const leng = resultCabinet.length;
-                for (let i = 0; i < leng; i += 1) {
-                    cab_list += (resultCabinet as any)[i].ISN_CABINET + '|';
+                resultCabinet.forEach((elem) => {
+                    cab_list +=  elem.ISN_CABINET + '|';
                     // i === length - 1 ? cab_list += (resultCabinet as any)[i].ISN_CABINET
                     //     : cab_list += (resultCabinet as any)[i].ISN_CABINET + '||';
-                }
-                return this.getCabinetName(cab_list).then(resultCabName => {
-                    const lengt = resultCabinet.length;
-                    for (let i = 0; i < lengt; i += 1) {
-                        this.UserCabinetInfo[i] = resultCabinet[i];
-                        this.UserCabinetInfo[i].CABINET_LIST = resultCabName[i];
-                        // ищем кабинет , вадельцем которого является пользователь
-                        if (due) {
-                            if (due === resultCabName[i]['ISN_CABINET']) {
-                                this.UserCabinetInfo[i]['CUSTOM_FIELD_MAIN'] = true;
-                            } else {
-                                this.UserCabinetInfo[i]['CUSTOM_FIELD_MAIN'] = false;
-                            }
-                        }
+                    if (cab_list.length > 1500) { // заполняем запрос, небольшим количеством символов, если их больше то разделяем на несколько запросов
+                        arrayCabList.push(cab_list);
+                        cab_list = '';
                     }
+                });
+                arrayCabList.push(cab_list); // если запрос был маленьким то добавляем его в массив и тем самым делаем всего один запрос
+                const allQuery = [];
+                arrayCabList.forEach((cabL) => {
+                    allQuery.push(this.getCabinetName(cabL));
+                });
+                return Promise.all(allQuery)
+                .then((resultCabName) => {
+                    resultCabName.forEach((elem) => {
+                        elem.forEach(element => {
+                            const newUserCab = element;
+                            newUserCab.CABINET_LIST = element;
+                            if (due) {
+                                if (due === element['ISN_CABINET']) {
+                                    newUserCab['CUSTOM_FIELD_MAIN'] = true;
+                                } else {
+                                    newUserCab['CUSTOM_FIELD_MAIN'] = false;
+                                }
+                            }
+                            this.UserCabinetInfo.push(newUserCab);
+                        });
+                    });
                     return this.UserCabinetInfo;
                 });
             }
