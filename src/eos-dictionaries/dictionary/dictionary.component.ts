@@ -882,7 +882,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     }
     private openClassifGopRc(openEdit, params) {
-        const node = this._dictSrv.listNode;
+        const node = this.dictionary.getNode(this._nodeId);
         const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId, params);
         this._waitClassif.openClassif(config).then(() => {
             this.updateRigthFields(node);
