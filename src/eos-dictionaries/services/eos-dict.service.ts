@@ -72,6 +72,7 @@ export class EosDictService {
 
     public editFromForm: boolean;
     public updateRigth = new BehaviorSubject(null);
+    public redactNodeId;
     // private dictionary: EosDictionary;
     private paginationConfig: IPaginationConfig;
     private _treeNode: EosDictionaryNode; // record selected in tree
@@ -790,6 +791,7 @@ export class EosDictService {
             }
             if (!this._listNode || this._listNode.id !== nodeId) {
                 this.updateViewParameters({ updatingInfo: false });
+                this.redactNodeId = nodeId;
                 return dictionary.getFullNodeInfo(nodeId).then((node) => {
                     if (node) {
                         this._openNode(node);
