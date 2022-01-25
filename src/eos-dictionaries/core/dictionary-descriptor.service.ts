@@ -32,7 +32,7 @@ import { SevParticipantDictionaryDescriptor } from './sev/sev-participant-dictio
 import { ADDR_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/addr-category.consts';
 import { AddrCategoryDictionaryDescriptor } from './addr-category-dictionary-descriptor';
 import { SevDictionaryDescriptor } from './sev/sev-dictionary-descriptor';
-// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -44,7 +44,7 @@ export class DictionaryDescriptorService {
         private _channelSrv: EosBroadcastChannelService,
         private _rulesSrv: EosSevRulesService,
         private _injector: Injector,
-        // private _confirmSrv: ConfirmWindowService,
+        private _confirmSrv: ConfirmWindowService,
 
 
     ) {
@@ -120,7 +120,7 @@ export class DictionaryDescriptorService {
                         res = new SevRulesDictionaryDescriptor(descr, this.apiSrv, this._rulesSrv);
                         break;
                     case 'cabinet':
-                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv, /*this._confirmSrv*/);
+                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv, this._confirmSrv);
                         break;
                     case CA_CATEGORY_CL.id:
                         res = new CaCategoryDictionaryDescriptor(descr, this.apiSrv);

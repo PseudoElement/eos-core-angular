@@ -9,6 +9,8 @@ import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { DictionaryComponent } from '../dictionary/dictionary.component';
 import { DANGER_EDIT_ON_ROOT } from '../consts/messages.consts';
 import { IMessage } from '../../eos-common/core/message.interface';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_HARD_DELET_CABINET } from 'app/consts/confirms.const';
 
 export class CabinetRecordDescriptor extends RecordDescriptor {
     constructor(dictionary: CabinetDictionaryDescriptor, data: IDictionaryDescriptor) {
@@ -22,6 +24,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     constructor(
         descriptor: IDictionaryDescriptor,
         apiSrv: PipRX,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         super(descriptor, apiSrv);
     }
@@ -203,20 +206,53 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
 
     _checkDeletion(isn): Promise<any> {
         // OData.svc/CanChangeClassif?type=%27CABINET%27&oper=%27DELETE_CABINET%27&id=%273780%27
-        const query = { args: { type: 'CABINET', oper: 'DELETE_CABINET', id: String(isn) } };
-        const req = { CanChangeClassif: query };
-        return this.apiSrv.read(req);
+        return this.apiSrv.read<DEPARTMENT>({ 'DEPARTMENT': PipRX.criteries({ 'IS_NODE': '1', ISN_CABINET: isn }) })
+        .then((owners) => {
+            const queryAnswer = [];
+            owners.forEach((own) => {
+                const query = { args: { type: 'DEPARTMENT', oper: 'DELETE_FROM_CABINET', id: own['DUE'] } };
+                const req = { CanChangeClassif: query };
+                queryAnswer.push(this.apiSrv.read(req));
+            });
+            return Promise.all(queryAnswer)
+            .then((arrayPromise) => {
+                const notDeletDL = [];
+                if (arrayPromise) {
+                    arrayPromise.forEach((result, index) => {
+                        if (
+                            result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
+                            result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY' ||
+                            result === 'NP_FOLDER_NOT_EMPTY_BY_NP_ACL'
+                        ) {
+                            notDeletDL.push(owners[index]);
+                        }
+                    });
+                }
+                return Promise.resolve(notDeletDL);
+            });
+        });
     }
 
     protected deleteRecord(record: CABINET): Promise<IRecordOperationResult> {
-        return this._checkDeletion(record.ISN_CABINET).then(check => {
-            if (check === 'DOC_FOLDER_NOT_EMPTY' || check === 'PRJ_FOLDER_NOT_EMPTY') {
-                return Promise.resolve(<IRecordOperationResult> {
-                    record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
-                    success: false,
-                    error: {
-                        code: 0,
-                        message: 'Папки кабинета не пусты'
+        return this._checkDeletion(record.ISN_CABINET)
+        .then((check: any[]) => {
+            if (check.length > 0) {
+                const confirm = CONFIRM_HARD_DELET_CABINET;
+                CONFIRM_HARD_DELET_CABINET.bodyList = [];
+                check.forEach((item) => {
+                    confirm.bodyList.push(item['CLASSIF_NAME']);
+                });
+                return this._confirmSrv.confirm2(CONFIRM_HARD_DELET_CABINET).then((button) => {
+                    if (button['result'] === 2) {
+                        record._State = _ES.Deleted;
+                        const changes = this.apiSrv.changeList([record]);
+                        return this.apiSrv.batch(changes, '')
+                        .then(() => {
+                            return <IRecordOperationResult>{
+                                record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
+                                success: true
+                            };
+                        });
                     }
                 });
             } else {

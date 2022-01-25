@@ -1029,6 +1029,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
 
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
+        if (this.dictionaryId === 'cabinet') {
+            confirmDelete.bodyAfterList = '';
+        }
         if (slicedNode) {
             confirmDelete.body = 'Вы действительно хотите навсегда удалить копируемые записи:';
         }

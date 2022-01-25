@@ -339,3 +339,13 @@ export const CONFIRM_REPLACE_SAME_FILE: IConfirmWindow2 = {
         {title: 'Нет', result: 1, isDefault: true, },
     ],
 };
+export const CONFIRM_HARD_DELET_CABINET: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Для владельцев кабинета:',
+    bodyAfterList: 'существуют записи в папках. Удалить кабинет вместе с папками?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Удалить',  result: 2, },
+    ],
+};
