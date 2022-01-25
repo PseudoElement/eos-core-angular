@@ -243,11 +243,13 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         .then((due: string) => {
             const queryDue: string[] = [];
             due.split('|').forEach((el) => {
-                const notNew = this.possibleOwners.findIndex((own: ICabinetOwner)  => own.data['DUE'] === el);
-                if (notNew > -1) {
-                    this.add(this.possibleOwners[notNew]);
-                } else if (selected.indexOf(el) === -1) {
-                    queryDue.push(el);
+                if (el) {
+                    const notNew = this.possibleOwners.findIndex((own: ICabinetOwner)  => own.data['DUE'] === el);
+                    if (notNew > -1) {
+                        this.add(this.possibleOwners[notNew]);
+                    } else if (selected.indexOf(el) === -1) {
+                        queryDue.push(el);
+                    }
                 }
             });
             if (queryDue.length === 0) {
