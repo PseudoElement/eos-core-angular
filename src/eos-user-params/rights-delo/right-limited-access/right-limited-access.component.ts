@@ -136,7 +136,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this._userServices.submitSave = this.saveAllForm('');
+            this._userServices.submitSave = this.saveAllForm(true);
         });
     }
 
@@ -251,16 +251,20 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         }
         return Promise.all([...promise_all])
             .then(result => {
-                this._userServices.ProtocolService(this._userServices.userContextId, 5);
-                this._limitservise.getDataGrifs()
-                .then(res => {
-                    this.grifInput[0] = res[0]['USERSECUR_List'];
-                    // this.checkGrifs = res[0]['USERSECUR_List'];
-                    if (res[0]['USER_FILESECUR_List']) {
-                        this.grifsFiles[0] = res[0]['USER_FILESECUR_List'];
-                    }
-                });
-                this._limitservise.getAccessCode()
+                if ($event) {
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    return this._userServices.ProtocolService(this._userServices.userContextId, 5);
+                } else {
+                    this._userServices.ProtocolService(this._userServices.userContextId, 5);
+                    this._limitservise.getDataGrifs()
+                    .then(res => {
+                        this.grifInput[0] = res[0]['USERSECUR_List'];
+                        // this.checkGrifs = res[0]['USERSECUR_List'];
+                        if (res[0]['USER_FILESECUR_List']) {
+                            this.grifsFiles[0] = res[0]['USER_FILESECUR_List'];
+                        }
+                    });
+                    this._limitservise.getAccessCode()
                     .then((params) => {
                         if (params) {
                             this.flagFileGrifs = true;
@@ -301,6 +305,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                         }
                     });
+                }
             }).catch(error => {
                 this._errorSrv.errorHandler(error);
                 this.backForm();
