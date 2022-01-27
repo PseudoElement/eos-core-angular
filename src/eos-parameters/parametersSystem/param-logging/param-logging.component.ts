@@ -13,19 +13,19 @@ import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared/consts/eos-para
 export class ParamLoggingComponent extends BaseParamComponent implements OnInit {
     @Input() btnError;
     public masDisable: any[] = [];
-    constructor( injector: Injector, private pip: PipRX
+    constructor(injector: Injector, private pip: PipRX
     ) {
-        super( injector, LOGGINGS_PARAM);
+        super(injector, LOGGINGS_PARAM);
     }
     ngOnInit() {
-       this.initProt();
+        this.initProt();
     }
 
     initProt(): Promise<any> {
         this.prepareDataParam();
-        return  this.pip.read<USER_PARMS>({
-            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT|VIEWPROT' })
-          })
+        return this.pip.read<USER_PARMS>({
+            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'VIEWPROT' })
+        })
             .then(data => {
                 this.prepareData = this.convData(data);
                 this.inputs = this.dataSrv.getInputs(this.prepInputs, this.parseDataInit(this.prepareData));
@@ -71,14 +71,14 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
         }
     }
     parseDataInit(data: any) {
-        const dataInput = {rec: {}};
-        if (data.rec.USER_EDIT_AUDIT === 'NO') {
+        const dataInput = { rec: {} };
+        /* if (data.rec.USER_EDIT_AUDIT === 'NO') {
             dataInput.rec['USER_EDIT_AUDIT'] = false;
         } else {
             dataInput.rec['USER_EDIT_AUDIT'] = true;
-        }
+        } */
         for (let i = 0; i <= 12; i++) {
-            data.rec.VIEWPROT[i] === '1' ?  dataInput.rec[`VIEWPROT${i}`] = true : dataInput.rec[`VIEWPROT${i}`] = false;
+            data.rec.VIEWPROT[i] === '1' ? dataInput.rec[`VIEWPROT${i}`] = true : dataInput.rec[`VIEWPROT${i}`] = false;
         }
         return dataInput;
     }
@@ -106,9 +106,9 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
             }
         }
 
-        if (this.updateData['USER_EDIT_AUDIT']) {
+        /* if (this.updateData['USER_EDIT_AUDIT']) {
             resObj['USER_EDIT_AUDIT'] = this.updateData['USER_EDIT_AUDIT'];
-        }
+        } */
 
         if (isViewprot) {
             resObj['VIEWPROT'] = viewprotStr.join('');
@@ -145,10 +145,10 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
 
         this.paramApiSrv.setData(query)
             .then(() => {
-                    this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                    this.formChanged.emit(false);
-                })
+                this.prepareData.rec = Object.assign({}, this.newData.rec);
+                this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                this.formChanged.emit(false);
+            })
             .catch(data => {
                 this.formChanged.emit(true);
                 this.isChangeForm = false;

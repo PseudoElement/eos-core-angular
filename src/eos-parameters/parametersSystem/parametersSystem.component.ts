@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -120,13 +120,13 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             return false;
         }
         // проверяем право доступа "Текущая организация"
-        if (param.url === 'now-organiz' && (!techRights || (techRights && techRights.charAt(1) === '0' ))) {
+        if (param.url === 'now-organiz' && (!techRights || (techRights && techRights.charAt(1) === '0'))) {
             return false;
         }
         // проверяем право доступа к Протоколированию и проверяем ограниченность технолога
         const protocolAndUsers = techRights && techRights.charAt(29) === '0' && techRights.charAt(0) === '0';
-        const protocolAndLimitUsers = techRights && techRights.charAt(29) === '0' && this._appContext.limitCardsUser.length;
-        if (param.url === 'logging' && (!techRights || protocolAndUsers || protocolAndLimitUsers)) {
+        // const protocolAndLimitUsers = techRights && techRights.charAt(29) === '0' && this._appContext.limitCardsUser.length;
+        if (param.url === 'logging' && (!techRights || protocolAndUsers/*  || protocolAndLimitUsers */)) {
             return false;
         }
         if (this._appContext.cbBase) {

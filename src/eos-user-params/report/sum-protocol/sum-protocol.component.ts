@@ -8,6 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { USER_PARMS } from 'eos-rest/interfaces/structures';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -58,10 +60,19 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   public config: IPaginationConfig;
   public markedNodes = [];
+  public protocolUser: boolean;
+  public checkboxLoad: boolean = false;
   private ngUnsubscribe: Subject<any> = new Subject();
-
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _storageSrv: EosStorageService,
-    private _msgSrv: EosMessageService, public _user_pagination: UserPaginationService) {
+  get userTech() {
+    return Boolean(this._appContext.limitCardsUser.length);
+  }
+  constructor(
+    public _user_pagination: UserPaginationService,
+    private _pipeSrv: PipRX,
+    private _errorSrv: ErrorHelperServices,
+    private _storageSrv: EosStorageService,
+    private _appContext: AppContext,
+    private _msgSrv: EosMessageService) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -72,7 +83,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
             if (this.config.current > this.config.start && this.clearResult !== true) {
               this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
-              (this.config.length * this.config.start - this.config.length).toString());
+                (this.config.length * this.config.start - this.config.length).toString());
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
               this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
@@ -90,14 +101,25 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this._user_pagination.typeConfig = 'sum-protocol';
-      const confSumPr = this._storageSrv.getItem('sum-protocol');
-      this._user_pagination.paginationConfig = confSumPr;
-      this._user_pagination._initPaginationConfig();
-      this._user_pagination.paginationConfig.current = 1;
-      this._user_pagination.paginationConfig.start = 1;
-      this.PaginateData(this.config.length, this.orderByStr);
-      this._user_pagination.totalPages = undefined;
+    this._user_pagination.typeConfig = 'sum-protocol';
+    const confSumPr = this._storageSrv.getItem('sum-protocol');
+    this._user_pagination.paginationConfig = confSumPr;
+    this._user_pagination._initPaginationConfig();
+    this._user_pagination.paginationConfig.current = 1;
+    this._user_pagination.paginationConfig.start = 1;
+    this.PaginateData(this.config.length, this.orderByStr);
+    this._user_pagination.totalPages = undefined;
+    return this._pipeSrv.read<USER_PARMS>({
+      USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
+    })
+      .then(data => {
+        if (data[0]) {
+          this.protocolUser = data[0].PARM_VALUE === 'YES' ? true : false;
+        }
+      })
+      .catch(err => {
+        throw err;
+      });
   }
 
   GetSortData() {
@@ -196,16 +218,16 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       });
   }
 
-//   GetCountPosts(posts: string): number {
-//     if (posts !== undefined) {
-//       posts = posts.split('').reverse().join('');
-//       posts = posts.split(',')[0];
-//       posts = posts.split('').reverse().join('');
-//       let data;
-//       data = parseInt(posts, 10);
-//       return data;
-//     }
-//   }
+  //   GetCountPosts(posts: string): number {
+  //     if (posts !== undefined) {
+  //       posts = posts.split('').reverse().join('');
+  //       posts = posts.split(',')[0];
+  //       posts = posts.split('').reverse().join('');
+  //       let data;
+  //       data = parseInt(posts, 10);
+  //       return data;
+  //     }
+  //   }
   SortPageList(crit: number) {
     if (this._user_pagination.totalPages > 1) {
       let critSearch;
@@ -305,7 +327,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       this.flagChecked = null;
     }
     if (usersCheck.length === this.config.length) {
-     this.flagChecked = true;
+      this.flagChecked = true;
     }
   }
 
@@ -416,15 +438,15 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       //   }
       //   this.flagChecked = false;
       // } else {
-        this.frontData.push({
-          checked: this.checkUser,
-          date: date,
-          eventUser: eventUser,
-          isnWho: this.getUserName(user.ISN_WHO),
-          isnUser: this.getUserName(user.ISN_USER),
-          isnEvent: user.ISN_EVENT
-        });
-   //   }
+      this.frontData.push({
+        checked: this.checkUser,
+        date: date,
+        eventUser: eventUser,
+        isnWho: this.getUserName(user.ISN_WHO),
+        isnUser: this.getUserName(user.ISN_USER),
+        isnEvent: user.ISN_EVENT
+      });
+      //   }
     });
 
 
@@ -450,13 +472,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     if (evnt['rec.USEREDITISN'] === '' || evnt['rec.USEREDITISN'] === null) {
       isnUser = undefined;
     } else {
-      isnUser = evnt['rec.USEREDITISN'].replace(/,/g , '|');
+      isnUser = evnt['rec.USEREDITISN'].replace(/,/g, '|');
     }
 
     if (evnt['rec.USERWHOISN'] === '' || evnt['rec.USERWHOISN'] === null) {
       isnWho = undefined;
     } else {
-      isnWho = evnt['rec.USERWHOISN'].replace(/,/g , '|');
+      isnWho = evnt['rec.USERWHOISN'].replace(/,/g, '|');
     }
 
 
@@ -616,7 +638,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-        window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
     }, 0);
   }
 
@@ -637,6 +659,27 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this._user_pagination.paginationConfig.current = 1;
     this.PaginateData(this.config.length, this.orderByStr, '0');
     this.clearResult = false;
+  }
+
+  markProtocol(event) {
+    this.protocolUser = event.target.checked;
+    this.checkboxLoad = true;
+    this.isLoading = true;
+    return this._pipeSrv.batch([{
+      method: 'MERGE',
+      requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 USER_EDIT_AUDIT')`,
+      data: {
+        PARM_VALUE: this.protocolUser ? 'YES' : 'NO'
+      }
+    }], '')
+      .then(() => {
+        this.isLoading = false;
+        this.checkboxLoad = false;
+      })
+      .catch(() => {
+        this.isLoading = false;
+        this.checkboxLoad = false;
+      });
   }
   private _getMarkedNodes() {
     if (this.frontData.length) {

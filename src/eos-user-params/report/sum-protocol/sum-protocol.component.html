@@ -45,6 +45,16 @@
                             </button>
                         </div>
                     </div>
+                    <div class="protocol-user-tech">
+                        <div class="protocol-checkbox-user-tech">
+                            <label class="checkbox">
+                                <input type="checkbox" [checked]="protocolUser" [disabled]="userTech || checkboxLoad"
+                                (change)="markProtocol($event)">
+                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                            </label>
+                        </div>
+                        <span>Протоколирование работы со справочником 'Пользователи'</span>
+                    </div>
                     <eos-filter-protocol (filterProtocol)="filterProtocol($event)"></eos-filter-protocol>
                 </div>
                 <div class="table-header">

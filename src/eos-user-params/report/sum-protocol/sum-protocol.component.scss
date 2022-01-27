@@ -1,51 +1,51 @@
-.sum-protocol{
-    .sum-report-wrapper{
+.sum-protocol {
+    .sum-report-wrapper {
         min-height: 700px;
     }
-    .contain-span{
+    .contain-span {
         display: flex;
         justify-content: space-around;
     }
-    .contain-span{
+    .contain-span {
         display: flex;
         justify-content: space-around;
     }
-    .contain-span-header{
+    .contain-span-header {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         padding-left: 10px;
     }
-    .item-table{
+    .item-table {
         line-height: 46px;
         cursor: pointer;
     }
-    .width-title1{
+    .width-title1 {
         width: 200px;
     }
-    .width-title2{
+    .width-title2 {
         width: 400px;
     }
-    .width-title3{
+    .width-title3 {
         width: 300px;
     }
-    .sum-report-list{
+    .sum-report-list {
         background-color: white;
     }
-    .header-pos-sum{
+    .header-pos-sum {
         display: flex;
         justify-content: space-between;
     }
-    .btn-group-sum{
+    .btn-group-sum {
         position: relative;
         display: inline-flex;
         vertical-align: middle;
     }
-    .bth-size-sum{
+    .bth-size-sum {
         height: 48px;
-        width: 48px;;
+        width: 48px;
     }
-    .item-count-content-sum{
+    .item-count-content-sum {
         padding: 0 20px;
         line-height: 24px;
         font-size: 16px;
@@ -58,7 +58,7 @@
         border-left-style: solid;
         grid-column: 4;
     }
-    
+
     .usual-border-sum {
         border-color: #e6e6e6;
         border-width: 1px;
@@ -67,20 +67,20 @@
         line-height: 20px;
         font-size: 14px;
     }
-    .counter-sum{
+    .counter-sum {
         margin-left: 20px;
         padding: 6.5px 10px;
         background: #bababa;
         border-radius: 2px;
         color: #fff;
     }
-    .likeLink-sum{
+    .likeLink-sum {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         cursor: pointer;
         color: #2196f3;
-    } 
+    }
     .sum-check-label {
         padding-left: 0;
     }
@@ -90,18 +90,18 @@
             width: 24px;
         }
     }
-    .check-sum{
+    .check-sum {
         margin: 0;
         padding-top: 3px;
     }
-    .mar-check{
+    .mar-check {
         margin-right: 12px;
     }
-    .sum-list-prot{
+    .sum-list-prot {
         overflow: auto;
         max-height: calc(100vh - 410px);
     }
-    .table-sum-wraper{
+    .table-sum-wraper {
         display: flex;
         justify-content: space-between;
         padding-left: 20px;
@@ -115,14 +115,14 @@
         grid-column: 2;
         max-height: 74px;
     }
-    .btn-s{
+    .btn-s {
         height: 48px;
         width: 48px;
     }
     .mar-edit-span-start {
         margin-right: 0px;
     }
-    .table-wrapper-head{
+    .table-wrapper-head {
         width: 100%;
         border-width: 1px;
         border-style: solid;
@@ -131,5 +131,11 @@
     .spinner-prot {
         display: flex;
         justify-content: center;
+    }
+    .protocol-checkbox-user-tech {
+        padding-top: 7px;
+    }
+    .protocol-user-tech {
+        display: flex;
     }
 }
