@@ -105,8 +105,15 @@
                 </button>
                 <ul *ngIf="dropdown.isOpen" class="dropdown-menu user-sort-menu" role="menu">
                     <li>
-                        <button [disabled]="!isTop" (click)="userSort(1)" class="btn action-btn btn-primary-light">
-                            <span
+                        <button 
+                        [disabled]="!isTop"
+                        (click)="userSort(1)"
+                        class="btn action-btn btn-primary-light"
+                        tooltip="Поднять строку"
+                        placement="bottom"
+                        container="body"
+                        containerClass="tooltip-info"><!--  -->
+                            <span 
                                 [ngClass]="{
                                     'eos-icon': true,
                                     small: true,
@@ -117,7 +124,14 @@
                         </button>
                     </li>
                     <li>
-                        <button [disabled]="!isBot" (click)="userSort(2)" class="btn action-btn btn-primary-light">
+                        <button 
+                            [disabled]="!isBot"
+                            (click)="userSort(2)"
+                            class="btn action-btn btn-primary-light"
+                            tooltip="Опустить строку"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info">
                             <span
                                 [ngClass]="{
                                     'eos-icon': true,
