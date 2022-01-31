@@ -30,7 +30,7 @@ import { LS_EDIT_CARD } from '../consts/common';
 
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
 import { EosDepartmentsService } from '../services/eos-department-service';
-import {EosUtils} from '../../eos-common/core/utils';
+import { EosUtils } from '../../eos-common/core/utils';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
@@ -145,12 +145,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             });
         if (this.dictionaryId === 'nomenkl') {
             this._dictSrv.visibleList$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
-            .subscribe((nodes) => {
-                this.nodes = nodes;
-            });
+                .pipe(
+                    takeUntil(this.ngUnsubscribe)
+                )
+                .subscribe((nodes) => {
+                    this.nodes = nodes;
+                });
         }
         this._apiSrv.cancelFormChanges$
             .pipe(
@@ -275,21 +275,21 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this.disableSave = true;
                     this._save(_data)
                         .then((node: EosDictionaryNode) => this._afterSaving(node))
-                        .catch ((err) => {
+                        .catch((err) => {
                             if (err.code && err.code === 434) {
                                 this.cardEditRef.isChanged = false;
                                 this.isChanged = false;
                                 this._errSrv.errorHandler(err);
                             } else {
-                                this._windowInvalidSave ([err.message]);
+                                this._windowInvalidSave([err.message]);
                                 this.disableSave = false;
                                 this.cardEditRef.resetData();
                             }
                         });
-                }   else {
-                   this.cardEditRef.resetData();
+                } else {
+                    this.cardEditRef.resetData();
                 }
-             }).catch(e => {
+            }).catch(e => {
                 this.isChanged = false;
                 this.cardEditRef.isChanged = false;
                 this._errSrv.errorHandler(e);
@@ -512,7 +512,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
 
     private _confirmSave(data, isNewRecord): Promise<boolean> {
-        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord).then( res => {
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord).then(res => {
             if (res && this.cardEditRef) {
                 return this.cardEditRef.confirmSave();
             }
@@ -538,7 +538,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     return null;
                 } else if (err && err.error instanceof RestError) {
                     return Promise.reject(err.error);
-                }   else {
+                } else {
                     return Promise.reject(err);
                 }
 
@@ -554,6 +554,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this.isChanged = false;
             if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length <= 1)) {
                 this.close();
+            } else {
+                this.cancel();
             }
         }
         this.disableSave = false;
@@ -616,8 +618,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         if (this.isChanged) {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
             confirmParams.body = '';
-            confirmParams.bodyList = [ ... errors, ... EosUtils.getValidateMessages(this.cardEditRef.inputs)];
-
+            confirmParams.bodyList = [...errors, ...EosUtils.getValidateMessages(this.cardEditRef.inputs)];
             return this._confirmSrv.confirm2(confirmParams, )
                 .then((doSave) => {
                     return true;
