@@ -1,4 +1,4 @@
-<div class="eos-dictionaries">
+<div class="eos-dictionaries eos-dictionaries-padding">
     <button *ngFor="let dictionary of dictionariesList" class="dictionary btn block xl-font"
         [disabled]="!isAccessEnabled(dictionary) || !isAccessLicense(dictionary.id) " [routerLink]="routeForDict(dictionary.id)">
         <span class="icon-wrapper">

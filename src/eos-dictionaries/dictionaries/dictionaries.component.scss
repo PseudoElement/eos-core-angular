@@ -5,7 +5,9 @@
     width: calc(100vw - 30px);
     overflow-y: auto;
     max-height: calc(100vh - 130px);
-
+    &.eos-dictionaries-padding {
+        padding: 20px 20px 0 20px;
+    }
     .dictionary {
         height: 102px;
         // flex-basis: calc((100% - 4*10px) / 4);

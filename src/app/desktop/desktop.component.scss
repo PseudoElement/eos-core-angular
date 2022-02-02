@@ -1,4 +1,7 @@
 .eos-desktop {
+    &.eos-desctop-padding {
+        padding: 20px 20px 0 20px;
+    }
     .sortable-wrapper {
         display: flex;
         flex-wrap: wrap;
