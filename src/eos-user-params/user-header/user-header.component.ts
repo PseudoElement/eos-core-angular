@@ -8,8 +8,8 @@ import { saveAs } from 'file-saver';
     templateUrl: 'user-header.component.html'
 })
 export class UserHeaderComponent implements OnInit {
-    selfLink: any;
-    link: any;
+    /* selfLink: any;
+    link: any; */
     @Input() editMode: boolean = false;
     @Input() title: string;
     @Input() disableBtn: boolean;
@@ -41,12 +41,22 @@ export class UserHeaderComponent implements OnInit {
         }
         return false;
     }
+    get upSelfLink() {
+        return this._router.url.split('?')[0];
+    }
+    get upLink() {
+        return this._userServices.userContextId;
+    }
     constructor(
         private _userServices: UserParamsService,
         private _router: Router
     ) {
-        this.selfLink = this._router.url.split('?')[0];
-        this.link = this._userServices.userContextId;
+        /*
+        * сделал вместо записи одиночной get методы upSelfLink и upLink
+        * так как сервис не умирает и переход по ссылке будет для первого пользователя которого мы редактирвали а не текущего
+        */
+        /* this.selfLink = this._router.url.split('?')[0];
+        this.link = this._userServices.userContextId; */
     }
     @HostListener('document:keydown', ['$event'])
     /** Сохранение настроек пользователя в файл */
