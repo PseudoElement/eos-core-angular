@@ -65,7 +65,9 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     get anyMarkedOwners(): boolean {
         return this.updateOwnersMarks();
     }
-
+    get localUserSort(): boolean {
+        return Boolean(JSON.parse(localStorage.getItem('userSortCabinet')));
+    }
     get folderListControls(): AbstractControl[] {
         const controls = [];
         Object.keys(this.form.controls).forEach((key) => {
@@ -488,6 +490,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     }
 
     isOpenChange(dropdown: BsDropdownDirective) {
+        localStorage.setItem('userSortCabinet', String(dropdown.isOpen));
         this.isUserSorted = dropdown.isOpen;
         this.resort(dropdown.isOpen);
     }
@@ -543,7 +546,11 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                 owner.orderNum = owner.data.ORDER_NUM || this.getMaxOrderNum();
             });
             console.log(this.getCabinetsOwners());
-            this.reorderCabinetOwners();
+            if (this.localUserSort) {
+                this.reorderNum();
+            } else {
+                this.reorderCabinetOwners();
+            }
         });
 
         this.cabinetFolders = CABINET_FOLDERS;
