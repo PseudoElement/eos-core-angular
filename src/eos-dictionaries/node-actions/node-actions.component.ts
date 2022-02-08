@@ -146,7 +146,7 @@ export class NodeActionsComponent implements OnDestroy {
 
         // делаем то что надо
         if (item.enabled) {
-            this.action.emit({action: item.type, params: params});
+            this.action.emit({ action: item.type, params: params });
             this._update();
         } else {
             e.stopPropagation();
@@ -160,7 +160,7 @@ export class NodeActionsComponent implements OnDestroy {
     }
 
     visibleButtonsCount() {
-        return this.buttons.filter (b => b.show).length;
+        return this.buttons.filter(b => b.show).length;
     }
 
     private _initButtons() {
@@ -295,9 +295,25 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 }
                 case E_RECORD_ACTIONS.CloseSelected:
+                    let CloseSelectedFlag = false;
+                    this._markedNodes
+                        .forEach((node) => {
+                            if (node.data && node.data.rec && node.data.rec['CLOSED'] === 0) {
+                                CloseSelectedFlag = true;
+                            }
+                        });
+                    _enabled = CloseSelectedFlag;
+                    break;
                 case E_RECORD_ACTIONS.OpenSelected:
-                        _enabled = _enabled && opts.listHasItems;
-                        break;
+                    let OpenSelectedFlag = false;
+                    this._markedNodes
+                        .forEach((node) => {
+                            if (node.data && node.data.rec && node.data.rec['CLOSED'] === 1) {
+                                OpenSelectedFlag = true;
+                            }
+                        });
+                    _enabled = OpenSelectedFlag;
+                    break;
                 case E_RECORD_ACTIONS.AdvancedCardRK:
                 case E_RECORD_ACTIONS.additionalFields:
                     _enabled = _enabled && opts.listHasItems && opts.listHasOnlyOne;
@@ -350,11 +366,11 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && opts.listHasSelected && opts.listHasOnlyOne;
                     break;
                 case E_RECORD_ACTIONS.departmentCalendar:
-                        if (this._dictSrv && this._dictSrv.listNode) {
-                            _enabled = _enabled && this._dictSrv.listNode.isNode;
-                        } else {
-                            _enabled = false;
-                        }
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = _enabled && this._dictSrv.listNode.isNode;
+                    } else {
+                        _enabled = false;
+                    }
                     _enabled = _enabled && opts.listHasSelected && opts.listHasOnlyOne;
                     break;
                 case E_RECORD_ACTIONS.counterDocgroupRKPD:
@@ -415,7 +431,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.cut:
                     _enabled = _enabled && opts.listHasItems;
-                 //   _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
+                    //   _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
                     break;
                 case E_RECORD_ACTIONS.combine:
                     /* _enabled = _enabled && opts.listHasItems;
