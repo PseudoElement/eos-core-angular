@@ -22,7 +22,7 @@ import { /* Router, */ RouterStateSnapshot } from '@angular/router';
     styleUrls: ['auntefication.component.scss'],
     templateUrl: 'auntefication.component.html'
 })
-export class AutenteficationComponent  implements OnInit, OnDestroy {
+export class AutenteficationComponent implements OnInit, OnDestroy {
 
     /* @Input() checkedParams: string; */
     /* @Input() code: Map<string, string>; */
@@ -105,21 +105,24 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
 
     getUserExternal(): Promise<any> {
-        return  this.apiSrvRx.read<any>({
+        return this.apiSrvRx.read<any>({
             USER_AUTH_EXTERNAL_ID: {
                 criteries: {
                     ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
-                }},
+                }
+            },
         });
     }
 
-    getUserParams(): Promise<any>  {
+    getUserParams(): Promise<any> {
         const req = {
             USER_PARMS: {
                 criteries: {
                     ISN_USER_OWNER: '-99',
                     PARM_NAME: 'SUPPORTED_USER_TYPES||CHANGE_PASS||PASS_DATE||EXTERNAL_AUTH_ADD||ALLOWED_EXTERNAL_AUTH'
-                }}};
+                }
+            }
+        };
 
         return this.apiSrvRx.read<USER_PARMS>(req);
     }
@@ -132,55 +135,55 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             if (data) {
                 this.curentUser = this._userParamSrv.curentUser;
                 this.getUserParams()
-                .then((param) => {
-                    param.forEach(elem => {
-                        if (elem.PARM_NAME === 'SUPPORTED_USER_TYPES') {
-                            this.masDisabled = elem.PARM_VALUE.split(',');
-                        }
-                        if (elem.PARM_NAME === 'CHANGE_PASS') {
-                            this.paramsChengePass = elem.PARM_VALUE === 'YES' ? true : false;
-                        }
-                        if (elem.PARM_NAME === 'PASS_DATE') {
-                            this.passDate = Number(elem.PARM_VALUE);
-                        }
-                        if (elem.PARM_NAME === 'ALLOWED_EXTERNAL_AUTH' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf(ESIA_AUTH_PARM_VALUE) !== -1) {
-                            this.esiaExternalAuth++;
-                        }
-                        const d = new Date();
-                    let check_date;
-                    if (this.paramsChengePass) {
-                        if (this.passDate !== 0) {
-                            check_date = new Date(d.setDate(d.getDate() + this.passDate));
-                        } else {
-                            check_date = '';
-                        }
-                    } else {
-                        check_date =  new Date(d.setDate(d.getDate() - 1));
-                    }
-                    const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
-                        this.curentUser.IS_PASSWORD === 0 ? check_date : '';
-                    this.form.controls['PASSWORD_DATE'].setValue( date_new, { emitEvent: false });
-                    });
-                    if (this.esiaExternalAuth) {
-                        this.getUserExternal()
-                            .then((external) => {
-                                if (external.length) {
-                                    this.externalOrig = external[0];
-                                    this.form.controls['EXTERNAL_ID'].setValue(this.externalOrig['EXTERNAL_ID'], {emitEvent: false});
-                                    this.form.controls['EXTERNAL_TYPE'].setValue(this.externalOrig['EXTERNAL_TYPE'], {emitEvent: false});
+                    .then((param) => {
+                        param.forEach(elem => {
+                            if (elem.PARM_NAME === 'SUPPORTED_USER_TYPES') {
+                                this.masDisabled = elem.PARM_VALUE.split(',');
+                            }
+                            if (elem.PARM_NAME === 'CHANGE_PASS') {
+                                this.paramsChengePass = elem.PARM_VALUE === 'YES' ? true : false;
+                            }
+                            if (elem.PARM_NAME === 'PASS_DATE') {
+                                this.passDate = Number(elem.PARM_VALUE);
+                            }
+                            if (elem.PARM_NAME === 'ALLOWED_EXTERNAL_AUTH' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf(ESIA_AUTH_PARM_VALUE) !== -1) {
+                                this.esiaExternalAuth++;
+                            }
+                            const d = new Date();
+                            let check_date;
+                            if (this.paramsChengePass) {
+                                if (this.passDate !== 0) {
+                                    check_date = new Date(d.setDate(d.getDate() + this.passDate));
+                                } else {
+                                    check_date = '';
                                 }
-                            });
-                    }
+                            } else {
+                                check_date = new Date(d.setDate(d.getDate() - 1));
+                            }
+                            const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
+                                this.curentUser.IS_PASSWORD === 0 ? check_date : '';
+                            this.form.controls['PASSWORD_DATE'].setValue(date_new, { emitEvent: false });
+                        });
+                        if (this.esiaExternalAuth) {
+                            this.getUserExternal()
+                                .then((external) => {
+                                    if (external.length) {
+                                        this.externalOrig = external[0];
+                                        this.form.controls['EXTERNAL_ID'].setValue(this.externalOrig['EXTERNAL_ID'], { emitEvent: false });
+                                        this.form.controls['EXTERNAL_TYPE'].setValue(this.externalOrig['EXTERNAL_TYPE'], { emitEvent: false });
+                                    }
+                                });
+                        }
 
-                })
-                .catch(er => {
-                    console.log('ER', er);
-                });
+                    })
+                    .catch(er => {
+                        console.log('ER', er);
+                    });
                 this.originAutent = '' + this.curentUser.USERTYPE;
                 if (this.originAutent) {
-                    this.form.controls['SELECT_AUTENT'].setValue( this.originAutent, { emitEvent: false });
+                    this.form.controls['SELECT_AUTENT'].setValue(this.originAutent, { emitEvent: false });
                 } else {
-                    this.form.controls['SELECT_AUTENT'].setValue( '-1', { emitEvent: false });
+                    this.form.controls['SELECT_AUTENT'].setValue('-1', { emitEvent: false });
                 }
                 this.form.controls['pass'].setValue('', { emitEvent: false });
                 this.form.controls['passRepeated'].setValue('', { emitEvent: false });
@@ -209,17 +212,17 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.getLoginChenge(!this.editMode);
         });
         this.form.get('pass').valueChanges
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        ).subscribe(() => {
-            this.dateDisable();
-        });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            ).subscribe(() => {
+                this.dateDisable();
+            });
         this.form.get('passRepeated').valueChanges
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        ).subscribe(() => {
-            this.dateDisable();
-        });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            ).subscribe(() => {
+                this.dateDisable();
+            });
         /* this.form.get('CLASSIF_NAME').valueChanges
         .pipe(
             takeUntil(this._ngUnsubscribe)
@@ -227,12 +230,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this.getErrorSave();
         }); */
         this._userParamSrv.canDeactivateSubmit$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
             )
-        .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamSrv.submitSave = this.preSubmit(true);
-        });
+            .subscribe((rout: RouterStateSnapshot) => {
+                this._userParamSrv.submitSave = this.preSubmit(true);
+            });
     }
     getEditDate(): boolean {
         const provElem = !this.form.controls['PASSWORD_DATE'].value;
@@ -246,7 +249,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         return true;
     }
     checkUpdate() {
-        if (this.originAutent !== this.form.get('SELECT_AUTENT').value || ( this.form.controls['pass'].value || this.form.controls['pass'].value)) {
+        if (this.originAutent !== this.form.get('SELECT_AUTENT').value ||
+            (this.form.controls['pass'].value || this.form.controls['pass'].value) ||
+            (this.curentUser.CLASSIF_NAME !== this.form.controls['CLASSIF_NAME'].value)) {
             this._pushState(true);
             this.updateData = true;
         } else {
@@ -310,12 +315,12 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         if (flag) {
             Object.keys(this.form.controls).forEach(key => {
                 if (this.form.get(key)) {
-                    this.form.get(key).disable({emitEvent: false});
+                    this.form.get(key).disable({ emitEvent: false });
                 }
             });
         } else {
             Object.keys(this.form.controls).forEach(key => {
-                this.form.get(key).enable({emitEvent: false});
+                this.form.get(key).enable({ emitEvent: false });
             });
         }
         this.getLoginChenge(flag);
@@ -338,9 +343,9 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         this.cancelValues(this.inputs, this.form);
         this.autentif.nativeElement.disabled = true;
         if (this.originAutent) {
-            this.form.controls['SELECT_AUTENT'].setValue( this.originAutent, { emitEvent: false });
+            this.form.controls['SELECT_AUTENT'].setValue(this.originAutent, { emitEvent: false });
         } else {
-            this.form.controls['SELECT_AUTENT'].setValue( '-1', { emitEvent: false });
+            this.form.controls['SELECT_AUTENT'].setValue('-1', { emitEvent: false });
         }
         this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
         // this.form.get('SELECT_AUTENT').patchValue(this.originAutent);
@@ -351,10 +356,10 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
     getLoginChenge(flag) {
         if (/* this.curentUser.IS_PASSWORD === 0 ||  */flag) {
-            this.form.controls['CLASSIF_NAME'].disable({emitEvent: false});
+            this.form.controls['CLASSIF_NAME'].disable({ emitEvent: false });
             return true;
         } else {
-            this.form.controls['CLASSIF_NAME'].enable({emitEvent: false});
+            this.form.controls['CLASSIF_NAME'].enable({ emitEvent: false });
         }
         return false;
     }
@@ -384,7 +389,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         if (this.externalOrig) {
             return this.externalOrig['EXTERNAL_ID'] !== curId || this.externalOrig['EXTERNAL_TYPE'] !== curType;
         } else {
-            return  !!curId && !!curType;
+            return !!curId && !!curType;
         }
 
     }
@@ -418,12 +423,13 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         }
     }
     /**Сохранение полей ESIA*/
-    saveExternal(flagRout?) {
+    saveExternal(flagRout?): Promise<any> {
         if (this.externalIsChanged()) {
-            this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
+            return this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
                 this.afterSuccessSubmit(flagRout);
             }).catch(er => {
-                this._errorSrv.errorHandler(er); });
+                this._errorSrv.errorHandler(er);
+            });
         } else {
             this.afterSuccessSubmit(flagRout);
         }
@@ -441,112 +447,114 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             alert(`Поле "${field}" обязательно для заполнения`);
             return Promise.resolve('error');
         }
-        return this.apiSrvRx.read({ USER_CL: {
-            criteries: {
-                CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value // isnull(выборка по null), isnotnull(не null)
-            },
-        }
+        return this.apiSrvRx.read({
+            USER_CL: {
+                criteries: {
+                    CLASSIF_NAME: this.form.controls['CLASSIF_NAME'].value // isnull(выборка по null), isnotnull(не null)
+                },
+            }
         })
-        .then(ans => {
-            const full = ans.filter(elem =>
-                elem['CLASSIF_NAME'].toUpperCase() === this.form.controls['CLASSIF_NAME'].value.toUpperCase() &&
-                elem['ISN_LCLASSIF'] !== this.curentUser['ISN_LCLASSIF']
+            .then(ans => {
+                const full = ans.filter(elem =>
+                    elem['CLASSIF_NAME'].toUpperCase() === this.form.controls['CLASSIF_NAME'].value.toUpperCase() &&
+                    elem['ISN_LCLASSIF'] !== this.curentUser['ISN_LCLASSIF']
                 );
-            if (full.length > 0) {
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: 'Сохранение:',
-                    msg: 'Пользователь с идентификатором \"' + this.form.controls['CLASSIF_NAME'].value + '\" уже существует.',
-                    dismissOnTimeout: 6000,
-                });
-                return Promise.resolve('error');
-            }
-            const userType = this.form.get('SELECT_AUTENT') &&
-                String(this.form.get('SELECT_AUTENT').value || '-1') || '-1';
-            const userPassword = this.form.get('pass') &&
-                String(this.form.get('pass').value || '');
-            const userLogin = this.form.get('CLASSIF_NAME') &&
-                String(this.form.get('CLASSIF_NAME').value || '');
-            if (this._newDataCheck(userType, userPassword, userLogin)) {
-                switch (userType) {
-                    case '0': {
-                        this.saveZeroType(userType, userPassword, userLogin, $event);
-                        break;
-                    }
-                    case '-1': {
-                      //  this.saveMinusFirstType(userType, userLogin);
-                      // this.ngOnDestroy();
-                        if (!$event) {
-                            this.ngOnInit();
-                        }
-                        break;
-                    }
-                    case '1': {
-                        this.saveFirstType(userType, userLogin, $event);
-                        break;
-                    }
-                    case '2': {
-                        this.saveSecondType(userType, userLogin, $event);
-                        break;
-                    }
-                    case '3': {
-                        this.saveThirdType(userType, userPassword, userLogin, $event);
-                        break;
-                    }
-                    case '4': {
-                        this.saveFourthType(userType, userLogin, $event);
-                        break;
-                    }
+                if (full.length > 0) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Сохранение:',
+                        msg: 'Пользователь с идентификатором \"' + this.form.controls['CLASSIF_NAME'].value + '\" уже существует.',
+                        dismissOnTimeout: 6000,
+                    });
+                    return Promise.resolve('error');
                 }
-            } else if (this.externalIsChanged()) {
-                this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
-                    this.afterSuccessSubmit($event);
-                }).catch(er => {
-                    this._errorSrv.errorHandler(er); });
-            } else {
-                this.editMode = false;
-                this.formUpdate(!this.editMode);
-            }
-        })
-        .catch(er => {
-            this._errorSrv.errorHandler(er);
-        });
+                const userType = this.form.get('SELECT_AUTENT') &&
+                    String(this.form.get('SELECT_AUTENT').value || '-1') || '-1';
+                const userPassword = this.form.get('pass') &&
+                    String(this.form.get('pass').value || '');
+                const userLogin = this.form.get('CLASSIF_NAME') &&
+                    String(this.form.get('CLASSIF_NAME').value || '');
+                if (this._newDataCheck(userType, userPassword, userLogin)) {
+                    switch (userType) {
+                        case '0': {
+                            return this.saveZeroType(userType, userPassword, userLogin, $event);
+                            /* break; */
+                        }
+                        case '-1': {
+                            //  this.saveMinusFirstType(userType, userLogin);
+                            // this.ngOnDestroy();
+                            if (!$event) {
+                                this.ngOnInit();
+                            }
+                            break;
+                        }
+                        case '1': {
+                            this.saveFirstType(userType, userLogin, $event);
+                            break;
+                        }
+                        case '2': {
+                            this.saveSecondType(userType, userLogin, $event);
+                            break;
+                        }
+                        case '3': {
+                            this.saveThirdType(userType, userPassword, userLogin, $event);
+                            break;
+                        }
+                        case '4': {
+                            this.saveFourthType(userType, userLogin, $event);
+                            break;
+                        }
+                    }
+                } else if (this.externalIsChanged()) {
+                    this.writeOrDeleteExternalId(this.curentUser.ISN_LCLASSIF).then(() => {
+                        this.afterSuccessSubmit($event);
+                    }).catch(er => {
+                        this._errorSrv.errorHandler(er);
+                    });
+                } else {
+                    this.editMode = false;
+                    this.formUpdate(!this.editMode);
+                }
+            })
+            .catch(er => {
+                this._errorSrv.errorHandler(er);
+            });
     }
 
-    saveZeroType(userType, userPassword, userLogin, flagRout) {
+    saveZeroType(userType, userPassword, userLogin, flagRout): Promise<any> {
         if (!userPassword) {
             this._alertMessage('Необходимо ввести пароль');
-            return;
+            return Promise.resolve('error');
         }
         if (this.provUpdateDate()) {
             this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
-            return;
+            return Promise.resolve('error');
         }
-        this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
+        return this._createUrlChangeLOgin({ userType, userPassword, userLogin }).then(() => {
             if (this.checkUpdateDate()) {
                 // сохранить дату
                 let date = this.getNewDate();
                 if (date instanceof Date) {
                     date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
                 }
-                this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
-                    this.saveExternal(flagRout);
+                return this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                    return this.saveExternal(flagRout);
                 });
             } else {
-                this.saveExternal(flagRout);
+                return this.saveExternal(flagRout);
             }
         }).catch(() => { });
     }
 
     saveMinusFirstType(userType, userLogin) {
-        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+        this._createUrlChangeLOgin({ userType, userLogin }).then(() => {
             this.saveExternal();
-        }).catch(() => {});
+        }).catch(() => { });
     }
 
     saveFirstType(userType, userLogin, flagRout) {
         if (userLogin.indexOf('\\') >= 0) {
-            this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+            this._createUrlChangeLOgin({ userType, userLogin }).then(() => {
                 this.saveExternal(flagRout);
             }).catch(() => { });
         } else {
@@ -555,7 +563,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
 
     saveSecondType(userType, userLogin, flagRout) {
-        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+        this._createUrlChangeLOgin({ userType, userLogin }).then(() => {
             this.saveExternal(flagRout);
         }).catch(() => { });
     }
@@ -569,7 +577,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
             this._alertMessage('Необходимо ввести пароль');
             return;
         }
-        this._createUrlChangeLOgin({userType, userPassword, userLogin}).then(() => {
+        this._createUrlChangeLOgin({ userType, userPassword, userLogin }).then(() => {
             if (this.checkUpdateDate()) {
                 // сохранить дату
                 let date = this.getNewDate();
@@ -589,7 +597,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     }
 
     saveFourthType(userType, userLogin, flagRout) {
-        this._createUrlChangeLOgin({userType, userLogin}).then(() => {
+        this._createUrlChangeLOgin({ userType, userLogin }).then(() => {
             this.saveExternal(flagRout);
         }).catch(() => { });
     }
@@ -632,14 +640,14 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
     updateDataSysParam(flag?: boolean) {
         const d = new Date();
         if (this.paramsChengePass) {
-            if (this.passDate !== 0 ) {
-                this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
+            if (this.passDate !== 0) {
+                this.form.controls['PASSWORD_DATE'].setValue(new Date(d.setDate(d.getDate() + this.passDate)), { emitEvent: false });
             } else {
                 // this.form.controls['PASSWORD_DATE'].setValue(' ', { emitEvent: false });
             }
         } else {
             this.newLogin = true;
-            this.form.controls['PASSWORD_DATE'].setValue( new Date(d.setDate(d.getDate() - 1)), { emitEvent: false });
+            this.form.controls['PASSWORD_DATE'].setValue(new Date(d.setDate(d.getDate() - 1)), { emitEvent: false });
         }
         if (!flag) {
             this.curentUser.PASSWORD_DATE = this.form.controls['PASSWORD_DATE'].value;
@@ -656,7 +664,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
                     check_date = '';
                 }
             } else {
-                check_date =  new Date(d.setDate(d.getDate() - 1));
+                check_date = new Date(d.setDate(d.getDate() - 1));
             }
             const date_new = this.curentUser.PASSWORD_DATE ? new Date(this.curentUser.PASSWORD_DATE) :
                 this.curentUser.IS_PASSWORD === 0 ? check_date : '';
@@ -757,7 +765,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         });
     }
     private _createUrlChangeLOgin(userData: any): Promise<any> {
-        const {userType = '', userPassword = '', userLogin = ''} = userData;
+        const { userType = '', userPassword = '', userLogin = '' } = userData;
         const id = +this._userParamSrv.userContextId;
 
         let url = 'ChangeLogin?';
@@ -773,7 +781,7 @@ export class AutenteficationComponent  implements OnInit, OnDestroy {
         return this.apiSrvRx.batch([request], '').then(() => {
             this._userParamSrv.ProtocolService(this.curentUser['ISN_LCLASSIF'], 4);
         }).catch(e => {
-        //    this.cancel(null);
+            // this.cancel(null);
             this._errorSrv.errorHandler(e);
             return Promise.reject();
         });
