@@ -636,6 +636,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this.AfterSubmit(accessStr, route);
             }
         }).catch(error => {
+            if (route) {
+                this._errorSrv.errorHandler(error);
+                this.isLoading = false;
+                return 'error';
+            }
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
