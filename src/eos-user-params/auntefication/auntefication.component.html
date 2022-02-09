@@ -69,7 +69,7 @@
             <!-- что бы не вставлялся логин в поле даты -->
             <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
             <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
-            <div [formGroup]="form" class="dynamic-input-wrapper base-text-input">
+            <div [formGroup]="form" class="dynamic-input-wrapper base-text-input pass-width">
                 <label [hidden]="inputs['pass'].hideLabel" [attr.for]="inputs['pass'].key">{{inputs['pass'].label}}</label>
                 <div class="vision" [ngClass]="{'disabled': inputs['pass'].disabled}">
                     <input class="form-control m-font" maxlength="30"
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div  [formGroup]="form" class="dynamic-input-wrapper base-text-input text-pass-input">
+            <div  [formGroup]="form" class="dynamic-input-wrapper base-text-input text-pass-input pass-width">
                 <label [hidden]="inputs['passRepeated'].hideLabel" [attr.for]="inputs['passRepeated'].key">{{inputs['passRepeated'].label}}</label>
                 <div class="vision" [ngClass]="{'disabled': inputs['passRepeated'].disabled}">
                     <input class="form-control m-font" maxlength="30" [formControlName]="inputs['passRepeated'].key"
