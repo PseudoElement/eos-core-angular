@@ -105,7 +105,7 @@ export class EosDictService {
     private _currentMarkInfo: MarkedInformation = new MarkedInformation();
     private _treeNodeId: string;
     private _reloadDopRecvizites$: Subject<any>;
-
+    private _resetSerch$: Subject<any>;
 
     /* Observable dictionary for subscribing on updates in components */
     get dictionary$(): Observable<EosDictionary> {
@@ -159,6 +159,10 @@ export class EosDictService {
     }
     get reloadDopRec$(): Observable<any> {
         return this._reloadDopRecvizites$.asObservable();
+    }
+
+    get resetSerchError$(): Observable<any> {
+        return this._resetSerch$.asObservable();
     }
 
     get userOrdered(): boolean {
@@ -285,6 +289,7 @@ export class EosDictService {
         this._initPaginationConfig();
         this._weightOrdered = !!this._storageSrv.getItem(STORAGE_WEIGHTORDER);
         this._reloadDopRecvizites$ = new Subject();
+        this._resetSerch$ = new Subject();
     }
 
     getDescr(dictionaryId: string): IDictionaryDescriptor {
@@ -1487,6 +1492,9 @@ export class EosDictService {
     public updateDopRec(): void {
         this._reloadDopRecvizites$.next(null);
     }
+    public updateResetSerch(): void {
+        this._resetSerch$.next(null);
+    }
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -1845,7 +1853,10 @@ export class EosDictService {
 
         return pResult
             .then((list) => this._setCurrentList(dictionary, list, true))
-            .catch((err) => this._errHandler(err));
+            .catch((err) => {
+                this.updateResetSerch(); // если произошла ошибка при использовании фильтра то сбрасываем фильтр
+                this._errHandler(err);
+            });
     }
 
     private _selectTreeNode(node: EosDictionaryNode) {

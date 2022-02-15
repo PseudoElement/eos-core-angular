@@ -382,6 +382,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     this.doAction(action);
                 }
             });
+        _dictSrv.resetSerchError$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(() => {
+            this.resetSearch();
+        });
+
     }
 
     ngOnInit(): void {
@@ -1579,10 +1587,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         config.id = this.dictionary.id !== 'citizens' ? 'organiz_cl' : 'citizen';
         this._waitClassif.openClassif(config).then(() => {
             this._dictSrv.updateDopRec();
-            this.resetSearch();
+            // this.resetSearch();
         }).catch(e => {
             this._dictSrv.updateDopRec();
-            this.resetSearch();
+            // this.resetSearch();
             console.warn(e);
         });
     }
