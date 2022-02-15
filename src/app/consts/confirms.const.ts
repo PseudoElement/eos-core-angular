@@ -74,6 +74,14 @@ export const CONFIRM_CABINET_NON_EMPTY: IConfirmWindow2 = {
         {title: 'Отмена', result: 3, },
     ]
 };
+export const CONFIRM_ADD_DL_UPDATE_CAB: IConfirmWindow2 = {
+    title: 'Подтверждение переноса',
+    body: '',
+    buttons: [
+        {title: 'Да', result: 1, },
+        {title: 'Нет', result: 2, isDefault: true},
+    ]
+};
 
 export const RK_SELECTED_LIST_IS_EMPTY: IConfirmWindow2 = {
     title: 'Внимание',

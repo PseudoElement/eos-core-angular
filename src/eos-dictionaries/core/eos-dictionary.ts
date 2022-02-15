@@ -67,7 +67,9 @@ export class EosDictionary {
     get canMarkItems(): boolean {
         return this.descriptor.record.canDo(E_RECORD_ACTIONS.markRecords);
     }
-
+    get getAllOwners() {
+        return this.descriptor.getAllOwners();
+    }
     constructor(dictId: string, private dictDescrSrv: DictionaryDescriptorService) {
         const descriptor = dictDescrSrv.getDescriptorClass(dictId);
         if (descriptor) {
@@ -792,6 +794,7 @@ export class EosDictionary {
                             //     node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]});
                             // } else {
                             node.data = Object.assign(node.data, related);
+                            node.data.allOwner = this.getAllOwners;
                             // }
                             node.relatedLoaded = true;
                             return node;

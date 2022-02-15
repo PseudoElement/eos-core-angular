@@ -108,7 +108,9 @@ export abstract class AbstractDictionaryDescriptor {
     getParentFor(arg0: any): any {
         return null;
     }
-
+    getAllOwners() {
+        return undefined;
+    }
     public PKForEntity(v: string): string {
         const et = this.metadata;
         return this.apiInstance + ((et.properties[et.pk] === _T.s) ? ('(\'' + v + '\')') : ('(' + v + ')'));

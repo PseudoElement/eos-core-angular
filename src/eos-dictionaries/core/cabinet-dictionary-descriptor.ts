@@ -20,7 +20,7 @@ export class CabinetRecordDescriptor extends RecordDescriptor {
 }
 
 export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
-
+    private allOwners: DEPARTMENT[];
     constructor(
         descriptor: IDictionaryDescriptor,
         apiSrv: PipRX,
@@ -30,7 +30,9 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     }
 
 
-
+    getAllOwners() {
+        return this.allOwners;
+    }
     addRecord(data: any, _parent: any, isProtected = false, isDeleted = false): Promise<any> {
         this.apiSrv.entityHelper.prepareAdded<CABINET>(data.rec, this.apiInstance);
         data.rec['FOLDER_List'].forEach((folder, idx) => {
@@ -167,10 +169,17 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     updateRecord(originalData: any, updates: any): Promise<IRecordOperationResult[]> {
         const changeData = [];
         const results: IRecordOperationResult[] = [];
+        const updateFolder = [];
         Object.keys(updates).forEach((key) => {
             switch (key) {
                 case 'owners':
                     updates[key].forEach((item, idx) => {
+                        if (item._orig['ISN_CABINET'] !== null && item['ISN_CABINET'] && item._orig['ISN_CABINET'] !== item['ISN_CABINET']) {
+                            updateFolder.push({
+                                method: 'POST',
+                                requestUri: `DepartmentCabinet_TRule?due=${item['DUE']}&ClearCabinet=0&MoveCabinet=1`,
+                            });
+                        }
                         changeData.push(EosUtils.deepUpdate(originalData[key][idx], item));
                     });
                     break;
@@ -183,6 +192,9 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         let changes = this.apiSrv.changeList(changeData);
         if (updates['updateTrules']) {
             changes = changes.concat(updates['updateTrules']);
+        }
+        if (updateFolder && updateFolder.length) {
+            changes = changes.concat(updateFolder);
         }
         if (changes && changes.length) {
             return this.apiSrv.batch(changes, '')
@@ -198,82 +210,82 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     getOwners(depDue: string, cabinet: number): Promise<DEPARTMENT[]> {
         return this.apiSrv.read<DEPARTMENT>({ 'DEPARTMENT': PipRX.criteries({ 'IS_NODE': '1', DEPARTMENT_DUE: depDue }) })
             .then((owners) => {
-                owners =   owners.filter(item => (!item.ISN_CABINET && item.ISN_HIGH_NODE && !item.DELETED) || item.ISN_CABINET === cabinet);
-                this.prepareForEdit(owners);
-                return owners;
+                this.allOwners = owners;
+                const ownersAnswer = owners.filter(item => (!item.ISN_CABINET && item.ISN_HIGH_NODE && !item.DELETED) || item.ISN_CABINET === cabinet);
+                this.prepareForEdit(ownersAnswer);
+                return ownersAnswer;
             });
     }
 
     _checkDeletion(isn): Promise<any> {
         // OData.svc/CanChangeClassif?type=%27CABINET%27&oper=%27DELETE_CABINET%27&id=%273780%27
         return this.apiSrv.read<DEPARTMENT>({ 'DEPARTMENT': PipRX.criteries({ 'IS_NODE': '1', ISN_CABINET: isn }) })
-        .then((owners) => {
-            const queryAnswer = [];
-            owners.forEach((own) => {
-                const query = { args: { type: 'DEPARTMENT', oper: 'DELETE_FROM_CABINET', id: own['DUE'] } };
-                const req = { CanChangeClassif: query };
-                queryAnswer.push(this.apiSrv.read(req));
-            });
-            return Promise.all(queryAnswer)
-            .then((arrayPromise) => {
-                const notDeletDL = [];
-                if (arrayPromise) {
-                    arrayPromise.forEach((result, index) => {
-                        if (
-                            result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
-                            result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY' ||
-                            result === 'NP_FOLDER_NOT_EMPTY_BY_NP_ACL'
-                        ) {
-                            notDeletDL.push(owners[index]);
+            .then((owners) => {
+                const queryAnswer = [];
+                owners.forEach((own) => {
+                    const query = { args: { type: 'DEPARTMENT', oper: 'DELETE_FROM_CABINET', id: own['DUE'] } };
+                    const req = { CanChangeClassif: query };
+                    queryAnswer.push(this.apiSrv.read(req));
+                });
+                return Promise.all(queryAnswer)
+                    .then((arrayPromise) => {
+                        const notDeletDL = [];
+                        if (arrayPromise) {
+                            arrayPromise.forEach((result, index) => {
+                                if (
+                                    result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
+                                    result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY' ||
+                                    result === 'NP_FOLDER_NOT_EMPTY_BY_NP_ACL'
+                                ) {
+                                    notDeletDL.push(owners[index]);
+                                }
+                            });
                         }
+                        return Promise.resolve(notDeletDL);
                     });
-                }
-                return Promise.resolve(notDeletDL);
             });
-        });
     }
 
     protected deleteRecord(record: CABINET): Promise<IRecordOperationResult> {
         return this._checkDeletion(record.ISN_CABINET)
-        .then((check: any[]) => {
-            if (check.length > 0) {
-                const confirm = CONFIRM_HARD_DELET_CABINET;
-                CONFIRM_HARD_DELET_CABINET.bodyList = [];
-                check.forEach((item) => {
-                    confirm.bodyList.push(item['CLASSIF_NAME']);
-                });
-                return this._confirmSrv.confirm2(CONFIRM_HARD_DELET_CABINET).then((button) => {
-                    if (button['result'] === 2) {
-                        record._State = _ES.Deleted;
-                        const changes = this.apiSrv.changeList([record]);
-                        return this.apiSrv.batch(changes, '')
+            .then((check: any[]) => {
+                if (check.length > 0) {
+                    const confirm = CONFIRM_HARD_DELET_CABINET;
+                    CONFIRM_HARD_DELET_CABINET.bodyList = [];
+                    check.forEach((item) => {
+                        confirm.bodyList.push(item['CLASSIF_NAME']);
+                    });
+                    return this._confirmSrv.confirm2(CONFIRM_HARD_DELET_CABINET).then((button) => {
+                        if (button['result'] === 2) {
+                            record._State = _ES.Deleted;
+                            const changes = this.apiSrv.changeList([record]);
+                            return this.apiSrv.batch(changes, '')
+                                .then(() => {
+                                    return <IRecordOperationResult>{
+                                        record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
+                                        success: true
+                                    };
+                                });
+                        }
+                    });
+                } else {
+                    record._State = _ES.Deleted;
+                    const changes = this.apiSrv.changeList([record]);
+                    return this.apiSrv.batch(changes, '')
                         .then(() => {
                             return <IRecordOperationResult>{
                                 record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
                                 success: true
                             };
                         });
-                    }
-                });
-            } else {
-                record._State = _ES.Deleted;
-                const changes = this.apiSrv.changeList([record]);
-                return this.apiSrv.batch(changes, '')
-                    .then(() => {
-                        return <IRecordOperationResult>{
-                            record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
-                            success: true
-                        };
-                    });
-            }
-
-        }).catch((err) => {
-            return <IRecordOperationResult>{
-                record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
-                success: false,
-                error: err
-            };
-        });
+                }
+            }).catch((err) => {
+                return <IRecordOperationResult>{
+                    record: Object.assign(record, { CLASSIF_NAME: record['CABINET_NAME'] }),
+                    success: false,
+                    error: err
+                };
+            });
 
         // TODO: bug-93710 refactor, может понадобится.
         // return this.getOwners(record.DUE)

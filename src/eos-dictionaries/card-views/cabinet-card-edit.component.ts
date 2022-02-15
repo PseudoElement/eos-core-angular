@@ -5,7 +5,7 @@ import { CABINET_FOLDERS } from 'eos-dictionaries/consts/dictionaries/cabinet.co
 import { DEPARTMENT, PipRX, CABINET } from 'eos-rest';
 import { IOrderBy } from '../interfaces';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
+import { CONFIRM_ADD_DL_UPDATE_CAB, CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
@@ -165,14 +165,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                 this.form.controls['rec.CABINET_NAME'].setAsyncValidators((control: AbstractControl) => {
                     if (control && control.value && control.value.length) {
                         return this.appctx['pip']
-                            ['read']({
-                                CABINET: {
-                                    criteries: {
-                                        DUE: this.data.rec.DUE,
-                                        CABINET_NAME: '="' + control.value + '"',
-                                    },
+                        ['read']({
+                            CABINET: {
+                                criteries: {
+                                    DUE: this.data.rec.DUE,
+                                    CABINET_NAME: '="' + control.value + '"',
                                 },
-                            })
+                            },
+                        })
                             .then((date: CABINET[]) => {
                                 if (date && date.length) {
                                     const filteredDate = date.filter((_d) => {
@@ -228,8 +228,12 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     addUserDepartment() {
         const selected: string[] = [];
         const cabinets: ICabinetOwner[] = this.getCabinetsOwners();
+        const ownersT: any = [];
         cabinets.forEach(dep => {
             selected.push(dep.data['DUE']);
+        });
+        this.data.owners.forEach((own) => {
+            ownersT.push(own['DUE']);
         });
         const OPEN_CLASSIF_ORGANIZ_DEP: IOpenClassifParams = {
             classif: 'DEPARTMENT',
@@ -237,76 +241,96 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             selected: selected.join('|'),
             curdue: this.data.rec['DUE'],
             skipDeleted: true,
-            selectMulty: true,
+            selectMulty: false,
             selectLeafs: true,
             selectNodes: false,
         };
         return this._classifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_DEP)
-        .then((due: string) => {
-            const queryDue: string[] = [];
-            due.split('|').forEach((el) => {
-                if (el) {
-                    const notNew = this.possibleOwners.findIndex((own: ICabinetOwner)  => own.data['DUE'] === el);
-                    if (notNew > -1) {
-                        this.add(this.possibleOwners[notNew]);
-                    } else if (selected.indexOf(el) === -1) {
-                        queryDue.push(el);
-                    }
-                }
-            });
-            if (queryDue.length === 0) {
-                return;
-            }
-            this._apiSrv.read({
-                DEPARTMENT: {
-                    criteries: {
-                        DUE: queryDue.join('|'),
-                    }
-                }
-            })
-            .then((ans: DEPARTMENT[]) => {
-                let startIndex = this.data.owners.length;
-                let cabinetsView = cabinets.length;
-                const notAdd: string[] = [];
-                ans.forEach((dep) => {
-                    if (dep['DEPARTMENT_DUE'] === this.data.department['DEPARTMENT_DUE']) {
-                        dep._orig = JSON.parse(JSON.stringify(dep));
-                        dep['ISN_CABINET'] = this.data.rec['ISN_CABINET'];
-                        dep['ORDER_NUM'] = cabinetsView + 1;
-                        this.data.owners.push(dep);
-                        const path = 'owners[' + startIndex + '].ISN_CABINET';
-                        const orderNum = 'owners[' + startIndex + '].ORDER_NUM';
-                        this.form.addControl(path, new FormControl(dep['ISN_CABINET']));
-                        this.form.addControl(orderNum, new FormControl(dep['ORDER_NUM']));
-                        const newCabinet = <ICabinetOwner>{
-                            index: startIndex,
-                            marked: false,
-                            data: dep,
-                            orderNum: dep['ORDER_NUM'],
-                            get isOwnerView() {
-                                return dep['ISN_CABINET'] === this.data['ISN_CABINET'];
-                            },
-                        };
-                        this.cabinetOwners.push(newCabinet);
-                        this.add(newCabinet);
-                        cabinetsView++;
-                        startIndex++;
-                    } else {
-                        notAdd.push(dep['CLASSIF_NAME']);
+            .then((due: string) => {
+                const queryDue: string[] = [];
+                due.split('|').forEach((el) => {
+                    if (el) {
+                        const notNew = this.possibleOwners.findIndex((own: ICabinetOwner) => own.data['DUE'] === el);
+                        if (notNew > -1) {
+                            this.add(this.possibleOwners[notNew]);
+                        } else if (selected.indexOf(el) === -1) {
+                            queryDue.push(el);
+                        }
                     }
                 });
-                if (notAdd.length > 0) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: notAdd.length === 1 ? `Должностное лицо \'${notAdd.join(', ')}\' не принадлежит текущей картотеке` : `Должностные лица \'${notAdd.join(', ')}\' не принадлежит текущей картотеке`
+                if (queryDue.length === 0) {
+                    return;
+                }
+                const updateCab: any[] = [];
+                const updateCabIsn: string[] = [];
+                const ans: DEPARTMENT[] = this.data.allOwner.filter((data) => {
+                    if (queryDue.indexOf(data['DUE']) !== -1) {
+                        if (data['ISN_CABINET']) {
+                            updateCab.push(data);
+                            updateCabIsn.push('' + data['ISN_CABINET']);
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                const cabUserCount = new Map();
+                if (updateCabIsn.length > 0) {
+                    this.data.allOwner.forEach((own) => {
+                        if (cabUserCount.has(own['ISN_CABINET'])) {
+                            cabUserCount.set(own['ISN_CABINET'], cabUserCount.get(own['ISN_CABINET']) + 1);
+                        } else {
+                            cabUserCount.set(own['ISN_CABINET'], 1);
+                        }
                     });
                 }
+                if (updateCab.length > 0) {
+                    this._apiSrv.read({
+                        CABINET: {
+                            criteries: {
+                                ISN_CABINET: updateCabIsn.join('|'),
+                            }
+                        }
+                    })
+                        .then((cab: CABINET[]) => {
+                            const testc: IConfirmWindow2 = Object.assign({}, CONFIRM_ADD_DL_UPDATE_CAB);
+                            const cabMap = new Map();
+
+                            cab.forEach((c) => {
+                                cabMap.set(c['ISN_CABINET'], c['CABINET_NAME']);
+                            });
+                            const mesageAr: string[] = [];
+                            updateCab.forEach((c) => {
+                                let flag = false;
+                                if (cabUserCount.get(c['ISN_CABINET']) === 1) {
+                                    mesageAr.push(`В кабинете ${cabMap.get(c['ISN_CABINET']) || ''} ${c['SURNAME']} является единственным владельцем. Продолжить операцию?`);
+                                    flag = true;
+                                } else {
+                                    mesageAr.push(
+                                        `Должносное лицо "${c['SURNAME']}" является ${flag ? 'ПОСЛЕДНИМ' : ''} владельцем кабинета ${cabMap.get(c['ISN_CABINET']) || ''}.
+                                         Хотите сделать его владельцем данного кабинета (с переносом «его» документов)?`
+                                        );
+                                    cabUserCount.set(c['ISN_CABINET'], cabUserCount.get(c['ISN_CABINET']) - 1);
+                                }
+
+                            });
+                            testc.bodyList = mesageAr;
+                            return this._confirmSrv.confirm2(testc)
+                                .then((button) => {
+                                    if (button && button.result === 1) {
+                                        this.getNewDepartUserDepartment(ans, cabinets);
+                                    } else {
+                                        this.getNewDepartUserDepartment(ans.filter(us => !us['ISN_CABINET']), cabinets);
+                                    }
+                                });
+                        });
+                } else {
+                    this.getNewDepartUserDepartment(ans, cabinets);
+                }
+            })
+            .catch(() => {
+                console.log('window closed');
             });
-        })
-        .catch(() => {
-            console.log('window closed');
-        });
     }
     getMaxOrderNum(): number {
         const maxOrder = this.getCabinetsOwners().sort((o1, o2) => {
@@ -319,7 +343,45 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             return 1;
         }
     }
-
+    getNewDepartUserDepartment(ans: DEPARTMENT[], cabinets) {
+        let startIndex = this.data.owners.length;
+        let cabinetsView = cabinets.length;
+        const notAdd: string[] = [];
+        ans.forEach((dep) => {
+            if (dep['DEPARTMENT_DUE'] === this.data.department['DEPARTMENT_DUE']) {
+                dep._orig = JSON.parse(JSON.stringify(dep));
+                dep['ISN_CABINET'] = this.data.rec['ISN_CABINET'];
+                dep['ORDER_NUM'] = cabinetsView + 1;
+                this.data.owners.push(dep);
+                const path = 'owners[' + startIndex + '].ISN_CABINET';
+                const orderNum = 'owners[' + startIndex + '].ORDER_NUM';
+                this.form.addControl(path, new FormControl(dep['ISN_CABINET']));
+                this.form.addControl(orderNum, new FormControl(dep['ORDER_NUM']));
+                const newCabinet = <ICabinetOwner>{
+                    index: startIndex,
+                    marked: false,
+                    data: dep,
+                    orderNum: dep['ORDER_NUM'],
+                    get isOwnerView() {
+                        return dep['ISN_CABINET'] === this.data['ISN_CABINET'];
+                    },
+                };
+                this.cabinetOwners.push(newCabinet);
+                this.add(newCabinet);
+                cabinetsView++;
+                startIndex++;
+            } else {
+                notAdd.push(dep['CLASSIF_NAME']);
+            }
+        });
+        if (notAdd.length > 0) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: notAdd.length === 1 ? `Должностное лицо \'${notAdd.join(', ')}\' не принадлежит текущей картотеке` : `Должностные лица \'${notAdd.join(', ')}\' не принадлежит текущей картотеке`
+            });
+        }
+    }
     endScroll() {
         window.clearInterval(this._interval);
     }
