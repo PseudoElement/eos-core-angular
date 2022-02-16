@@ -190,6 +190,7 @@
             [isInformer]="isInformer"
             [isnClassif]="isnClassif"
             (pushState)="emitInformerChanges($event)"
+            (formError)="emitErrorInformer($event)"
         ></eos-cabinets-informer>
     </div>
     <div class="informer-container clearfix" [hidden]="currTab !== 3 || appMode.arm" *ngIf="defaultTitle">
@@ -200,6 +201,7 @@
             [isInformer]="false"
             [isnClassif]="isnClassif"
             (pushState)="emitNotificatorChanges($event)"
+            (formError)="emitErrorInformer($event)"
         ></eos-cabinets-informer>
     </div>
 </div>

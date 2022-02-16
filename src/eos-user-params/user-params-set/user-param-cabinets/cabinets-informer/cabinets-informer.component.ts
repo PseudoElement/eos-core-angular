@@ -22,7 +22,7 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
     @Input() isInformer: boolean;
     @Input() isnClassif;
     @Output() pushState: EventEmitter<any> = new EventEmitter();
-
+    @Output() formError: EventEmitter<any> = new EventEmitter();
     public prepareData;
     public prepareInputs;
     public inputs;
@@ -131,6 +131,7 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
         this.ngOnDestroy();
         this.init();
         this.newDataMap.clear();
+        this.formError.emit(this.form.invalid);
         this.pushState.emit({
             data: this.newDataMap,
         });
@@ -147,6 +148,7 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
             this.compareFormValues(this.form.controls[inputKey].value, inputKey);
         });
         this.updateIncrementRelatedValues();
+        this.formError.emit(this.form.invalid);
         this.pushState.emit({
             data: this.newDataMap,
         });
@@ -240,6 +242,7 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
                 this.compareFormValues(changes[inputKey], inputKey);
             });
             this.updateIncrementRelatedValues();
+            this.formError.emit(this.form.invalid);
             this.pushState.emit({
                 data: this.newDataMap,
             });

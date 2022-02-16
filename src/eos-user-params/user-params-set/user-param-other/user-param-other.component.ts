@@ -197,6 +197,14 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this.remaster.editEmit.next();
     }
     submit($event) {
+        if (!this.flagIncrementError) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: '',
+                msg: `Нельзя сохранить некорректные даные.`,
+            });
+            return Promise.resolve('error');
+        }
         return this._pipRx.batch(this.createObjRequest(), '').then(response => {
             if (this.defaultTitle) {
                 this.defaultUserSubmit();

@@ -73,6 +73,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
 
     private newInformerData: Map<string, any> = new Map();
     private newNotificatorData: Map<string, any> = new Map();
+    private formInformerError: boolean = false;
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -345,7 +346,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         const val3 = this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].value;
         const bool1 = this.changeIncrementAttach(val1, val2);
         const bool2 = this.changeIncrementForm(val3);
-        if (bool1 && bool2) {
+        /* this.formInformerError ошибки в форме информера и оповещения true если есть ошибки, false если ошибок нет */
+        if (!this.formInformerError && (bool1 && bool2) ) {
             return false;
         } else {
             return true;
@@ -452,6 +454,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this._ngUnsubscribe.complete();
     }
     submit(): Promise<any> {
+        if (this.MaxIncrement) {
+            this._msg.addNewMessage(this.createMessage('warning', '', 'Нельзя сохранить некорректные даные.'));
+            return Promise.resolve('error');
+        }
         if (this.mapChanges.size || this.newInformerData.size || (this.newNotificatorData.size && this.defaultTitle)) {
             const query = this.parseMapForCreate();
             return this._pipRx.batch(query, '').then(() => {
@@ -650,7 +656,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 return CABINETS_USER_ASSIGMENTS;
             }
             case 2: {
-                return  this.isInformer && CABINETS_USER_INFORMER;
+                return this.fieldGroupsForCabinets[2] === 'Информер' ?
+                            this.isInformer && CABINETS_USER_INFORMER :
+                            CABINETS_USER_NOTIFICATOR;
             }
             case 3: {
                 return CABINETS_USER_NOTIFICATOR;
@@ -735,6 +743,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
         const emptyObj = {};
         this.checkTouch(emptyObj);
+    }
+    public emitErrorInformer($event: boolean) {
+        this.formInformerError = $event;
     }
     onResize(event?) {
         if (this.isCurrentSettings) {
