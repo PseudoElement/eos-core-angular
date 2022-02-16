@@ -274,7 +274,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 return Promise.resolve(true);
             }
         }
-        return this._userParamsSetSrv.getSysTechUser({oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser}).then((limited: boolean) => {
+        return this._userParamsSetSrv.getSysTechUser({oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser})
+        .then((limited: boolean) => {
             this.limitUserTech = limited;
             //  false : this.checkChangeToLimitUser();
             if (this.limitUserTech === false) {
@@ -351,10 +352,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     });
                     this.groupDelRK = [];
                 }
-                this.apiSrv.setData(this.queryForSave)
+                return this.apiSrv.setData(this.queryForSave)
                     .then(() => {
                         const contentProp = this.selectedNode.contentProp;
-                        this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
                         this.queryForSave = [];
                         this.listRight = [];
                         this.selectedNode = null;
@@ -379,7 +379,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                                 if (this._appContext.CurrentUser.ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
                                     this._appContext.updateLimitCardsUser(this.curentUser.USER_TECH_List.filter(card => card.FUNC_NUM === 1).map(card => card.DUE));
                                 }
+                                this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
                             });
+                        } else {
+                            return this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
                         }
                     }).catch((e) => {
                         this._errorSrv.errorHandler(e);
