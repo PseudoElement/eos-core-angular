@@ -201,7 +201,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: '',
-                msg: `Нельзя сохранить некорректные даные.`,
+                msg: `Нельзя сохранить некорректные данные.`,
             });
             return Promise.resolve('error');
         }

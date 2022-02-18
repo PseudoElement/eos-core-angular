@@ -455,7 +455,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     submit(): Promise<any> {
         if (this.MaxIncrement) {
-            this._msg.addNewMessage(this.createMessage('warning', '', 'Нельзя сохранить некорректные даные.'));
+            this._msg.addNewMessage(this.createMessage('warning', '', 'Нельзя сохранить некорректные данные.'));
             return Promise.resolve('error');
         }
         if (this.mapChanges.size || this.newInformerData.size || (this.newNotificatorData.size && this.defaultTitle)) {
