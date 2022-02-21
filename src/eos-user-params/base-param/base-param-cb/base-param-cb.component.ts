@@ -799,6 +799,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.patchCbRoles();
             this.queryRoles = [];
         } else {
+            this.controls['teсhUser'].value = this._userParamSrv.isTechUser;
             this.cancelValues(this.controls, this.formControls);
         }
         this.clearMap();
