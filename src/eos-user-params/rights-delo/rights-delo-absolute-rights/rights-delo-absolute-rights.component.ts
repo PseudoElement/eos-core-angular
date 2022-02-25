@@ -252,7 +252,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     submit(flag?): Promise<any> {
         if (this.listRight[0].value && !/[1]+/g.test(this.listRight[0]['_curentUser'].TECH_RIGHTS)) {
             this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Не заданы настройки для права "Системный технолог"`, type: 'warning' });
-            return Promise.reject(true);
+            return Promise.resolve('error');
         }
 
         this.isLoading = false;
@@ -271,7 +271,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.editMode = true;
                 this.isLoading = true;
                 this.btnDisabled = false;
-                return Promise.resolve(true);
+                return Promise.resolve('error');
             }
         }
         return this._userParamsSetSrv.getSysTechUser({oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser})
