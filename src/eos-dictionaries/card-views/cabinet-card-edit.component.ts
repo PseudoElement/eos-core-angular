@@ -228,17 +228,17 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     addUserDepartment() {
         const selected: string[] = [];
         const cabinets: ICabinetOwner[] = this.getCabinetsOwners();
-        const ownersT: any = [];
+        // const ownersT: any = [];
         cabinets.forEach(dep => {
             selected.push(dep.data['DUE']);
         });
-        this.data.owners.forEach((own) => {
+        /* this.data.owners.forEach((own) => {
             ownersT.push(own['DUE']);
-        });
+        }); */
         const OPEN_CLASSIF_ORGANIZ_DEP: IOpenClassifParams = {
             classif: 'DEPARTMENT',
             return_due: true,
-            selected: selected.join('|'),
+            // selected: selected.join('|'),
             curdue: this.data.rec['DUE'],
             skipDeleted: true,
             selectMulty: false,
@@ -255,6 +255,12 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                             this.add(this.possibleOwners[notNew]);
                         } else if (selected.indexOf(el) === -1) {
                             queryDue.push(el);
+                        } else if (selected.indexOf(el) > -1) {
+                            this._msgSrv.addNewMessage({ // 154357 если выбранный пользователь уже является владельцем кабинета
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: `Должностное лицо ${cabinets[selected.indexOf(el)].data['SURNAME']} уже является владельцем этого кабинета`
+                            });
                         }
                     }
                 });
@@ -325,7 +331,24 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                                 });
                         });
                 } else {
-                    this.getNewDepartUserDepartment(ans, cabinets);
+                    if (ans.length > 0) { // уведомдение для пользователей которые не принадлежать текущей картотеке
+                        return this.getNewDepartUserDepartment(ans, cabinets);
+                    } else {
+                        return this._apiSrv.read({
+                            DEPARTMENT: {
+                                criteries: {
+                                    DUE: due,
+                                }
+                            }
+                        })
+                        .then((depar) => {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: `Должностное лицо \'${depar[0]['SURNAME']}\' не принадлежит текущей картотеке`
+                            });
+                        });
+                    }
                 }
             })
             .catch(() => {
@@ -374,13 +397,6 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                 notAdd.push(dep['CLASSIF_NAME']);
             }
         });
-        if (notAdd.length > 0) {
-            this._msgSrv.addNewMessage({
-                type: 'warning',
-                title: 'Предупреждение',
-                msg: notAdd.length === 1 ? `Должностное лицо \'${notAdd.join(', ')}\' не принадлежит текущей картотеке` : `Должностные лица \'${notAdd.join(', ')}\' не принадлежит текущей картотеке`
-            });
-        }
     }
     endScroll() {
         window.clearInterval(this._interval);
