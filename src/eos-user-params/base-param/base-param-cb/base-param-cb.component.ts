@@ -27,6 +27,7 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT } from 'eos-dictionaries/consts/confirm.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { KIND_ROLES_CB } from 'eos-user-params/shared/consts/user-param.consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -57,6 +58,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     dueDepName: string = '';
     dueDepSurname: string = '';
     singleOwnerCab: boolean = true;
+    initSingleOwnerCab: boolean = true;
     currentCbFields: IRoleCB[] = [];
     startRolesCb: IRoleCB[] = [];
     isPhoto: boolean | number = false;
@@ -206,7 +208,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         if (this.curentUser.DUE_DEP) {
-            this.getPhotoUser(this.curentUser.DUE_DEP, true);
+            this.getPhotoUser(this.curentUser.DUE_DEP, true)
+            .then(() => {
+                this.initSingleOwnerCab = this.singleOwnerCab;
+            });
         }
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS_CB, !this.editMode);
         this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
@@ -735,7 +740,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.currentCbFields = [];
             }
             if (this.curentUser.DUE_DEP) {
-                return this.getPhotoUser(this.curentUser.DUE_DEP, true);
+                return this.getPhotoUser(this.curentUser.DUE_DEP, true)
+                .then(() => {
+                    this.initSingleOwnerCab = this.singleOwnerCab;
+                });
             }
         });
     }
@@ -799,9 +807,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.patchCbRoles();
             this.queryRoles = [];
         } else {
-            this.controls['teсhUser'].value = this._userParamSrv.isTechUser;
-            this.cancelValues(this.controls, this.formControls);
+            if (this.startRolesCb.length) {
+                const str = this.startRolesCb.length > 1 ? this.startRolesCb[0].role + ' ...' : this.startRolesCb[0].role;
+                this.controls['SELECT_ROLE'].options = [{
+                    title: str,
+                    value: str
+                }];
+                this.controls['SELECT_ROLE'].value = str;
+            }
+            this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
         }
+        this.singleOwnerCab = this.initSingleOwnerCab;
+        this.controls['teсhUser'].value = this._userParamSrv.isTechUser;
+        this.cancelValues(this.controls, this.formControls);
         this.clearMap();
         this._pushState();
         this.editModeF();
@@ -1123,8 +1141,20 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
-                                // this.formControls.controls['SELECT_ROLE'].patchValue('');
-                                // this.formControls.controls['SELECT_ROLE'].disable();
+                                const selRol = ('' + this.formControls.controls['SELECT_ROLE'].value).replace(' ...', '');
+                                if (KIND_ROLES_CB.indexOf(selRol) > -1) {
+                                    this.formControls.controls['SELECT_ROLE'].patchValue('');
+                                    const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
+                                    this.controls['SELECT_ROLE'].options = [];
+                                    standartRole.forEach((role) => {
+                                        this.controls['SELECT_ROLE'].options.push({
+                                            title: role,
+                                            value: role
+                                        });
+                                    });
+                                    // this.formControls.controls['SELECT_ROLE'].patchValue('');
+                                    // this.formControls.controls['SELECT_ROLE'].disable();
+                                }
                             } else {
                                 this.curentUser.isTechUser = data;
                                 f.get('teсhUser').setValue(false);
