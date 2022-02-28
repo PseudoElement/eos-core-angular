@@ -438,6 +438,9 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 this.node.data.rec['DUE_DOCGROUP_NAME'] = this.node.data['DOCGROUP_Ref'][0]['CLASSIF_NAME'];
                 this.node.data.rec['DUE_DOCGROUP_DELET'] = this.node.data['DOCGROUP_Ref'][0]['DUE'] !== '0.' && Boolean(this.node.data['DOCGROUP_Ref'][0]['DELETED']);
             }
+            if (this.dictionaryId === 'ca-category' && Boolean(this.node.data)) {
+                this.node.data.rec['CA_SUBJECT'] = this.node.data.rec['CA_SUBJECT'].trim();
+            }
         } else {
             this.nodeData = {
                 rec: {}
