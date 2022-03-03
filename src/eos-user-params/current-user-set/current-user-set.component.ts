@@ -231,6 +231,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                 ['visualization', true],
                 ['external-application', true],
                 ['patterns', true],
+                ['el-signature', true] // для ВИБР убираю вкладку Электронная подпись
             ]);
             redirectToRegistration(hiddenUrls);
         }
