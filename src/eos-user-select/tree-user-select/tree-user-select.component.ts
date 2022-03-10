@@ -97,23 +97,31 @@ export class TreeUserSelectComponent implements OnInit {
     }
 
     updateTree() {
-            let due;
-            const url = this._router.url.split('/');
-            if (url[url.length - 1] === 'user_param') {
-                due = '0.';
-            } else {
-                due = url[url.length - 1];
-            }
-            let str = '0.';
-            const mas = due.replace('0.', '').split('.');
+        let due;
+        const url = this._router.url.split('/');
+        if (url[url.length - 1] === 'user_param') {
+            due = '0.';
+        } else {
+            due = url[url.length - 1];
+        }
+        let str = '0.';
+        const mas = due.replace('0.', '').split('.');
+        let ind = 0;
+        const selfs = this;
+        loadNodes(selfs);
+
+        async function loadNodes(self: any) {
             for (let index = 0; index + 2 < mas.length; index++) {
-                this.treeSrv.expandNode(str + mas[index] + '.')
-                .then(dat => {
-                    dat.isExpanded = true;
-                    dat.updating = false;
+                await self.treeSrv.expandNode(str + mas[ind] + '.').then((dat) => {
+                    if (dat) {
+                        dat.isExpanded = true;
+                        dat.updating = false;
+                    }
+                    str = str + mas[ind] + '.';
+                    ++ind;
                 });
-                str = str + mas[index] + '.';
             }
+        }
     }
 
     onExpand(evt: Event, node: TreeUserNode/*, isDeleted: boolean*/) {
