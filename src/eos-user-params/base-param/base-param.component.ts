@@ -483,7 +483,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     uncheckedAvSystems(): boolean {
         if (this._newDataformAccess.size) {
             const accessStr = this._createAccessSystemsString(this.formAccess.controls);
-            if (accessStr === '0000000000000000000000000000') {
+            if (!/1/.test(accessStr)) {
                 return true;
             }
         }
@@ -885,7 +885,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         arr[0] = '0';
         arr[1] = '0';
         arr[27] = '0';
-        const newArr = [].concat(new Array(28).fill(0), new Array(12).fill(''));
+        const newArr = [].concat(new Array(42).fill(0), new Array(13).fill(''), new Array(1).fill(0));
         arr.forEach((val, index) => {
             switch (index) {
                 case 0:

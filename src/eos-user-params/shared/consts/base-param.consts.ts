@@ -193,6 +193,11 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
         key: '21',
         label: 'EOS Desktop Service',
     },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '41',
+        label: 'Редактор файлов МО',
+    },
 ];
 
 export const BASE_PARAM_REG_EXP: IPassRegExp[] = [

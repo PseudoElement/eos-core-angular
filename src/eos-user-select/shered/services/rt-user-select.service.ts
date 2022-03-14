@@ -130,6 +130,14 @@ export class RtUserSelectService {
             Users: 0,
             ActualUsers: 0,
             Expired: '-',
+        },
+        EDITORMO: {
+            id: 42,
+            label: 'Редактор файлов МО',
+            checked: false,
+            Users: 0,
+            ActualUsers: 0,
+            Expired: '-',
         }
     };
     ArrayServerHelper = {

@@ -225,6 +225,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         split[17] === '1' ? this._selectedUser.ArraySystemHelper.Search_code.checked = true : this._selectedUser.ArraySystemHelper.Search_code.checked = false;
         // split[23] === '1' ? this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
         split[26] === '1' ? this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
+        split[41] === '1' ? this._selectedUser.ArraySystemHelper.EDITORMO.checked = true : this._selectedUser.ArraySystemHelper.EDITORMO.checked = false;
         this.flagSustem = true;
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean): void {
