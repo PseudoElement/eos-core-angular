@@ -1051,6 +1051,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         }
+        const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
+        if (this.currentCbFields.length === 0 && standartRole.indexOf(this.formControls.controls['SELECT_ROLE'].value) > -1) {
+            this.controlField[1].value = this.formControls.controls['SELECT_ROLE'].value;
+        }
         this.controlField[0].value = false;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.cancelValues(this.controls, this.formControls);
