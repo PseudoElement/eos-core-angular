@@ -90,6 +90,7 @@
                 <div class="tree-card-node">
                     <eos-list-doc-tree
                         *ngIf="!node.isLoading; else loaderSm"
+                        [minusIcon]="true"
                         [listNode]="node.listNodes"
                         [editMode]="editMode && node?.allowed"
                         (select)="node.select($event)"

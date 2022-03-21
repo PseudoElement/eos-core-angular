@@ -10,6 +10,7 @@ export class ListDocsTreeComponent implements OnChanges {
     @Input() listNode: NodeDocsTree[];
     @Input() systemTech: number;
     @Input() hideExpand?: boolean;
+    @Input() minusIcon?: boolean = false; // если указать данный параметр то вместо путых чекбокосв будут красные минусы
     @Output() select = new EventEmitter();
     @Output() checkedNode = new EventEmitter();
     list: NodeDocsTree[] = [];

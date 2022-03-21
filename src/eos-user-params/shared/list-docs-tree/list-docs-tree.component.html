@@ -33,7 +33,7 @@
             </div>
 
             <!-- checkbox and label -->
-            <label *ngIf="node.isviewAllowed && systemTech!==1" class="checkbox tree-checkbox" [ngClass]="{'color-delet-elem': node.logDelete}" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
+            <label *ngIf="node.isviewAllowed && systemTech!==1" class="checkbox tree-checkbox" [ngClass]="{'color-delet-elem': node.logDelete, 'minus-checkbox redUnchecked': minusIcon }" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
                 <span style="width:60px; display:inline-block;" *ngIf = "node.flagCheckNode">{{node.isAllowed ? '(С вл.)' : '(Без вл.)'}}</span>
                 <input type="checkbox"
                     [disabled]="!editMode || !node.isOwnDepartment"
