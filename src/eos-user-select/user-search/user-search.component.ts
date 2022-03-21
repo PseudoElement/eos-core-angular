@@ -321,7 +321,7 @@ export class UserSearchComponent implements OnInit  {
     }
 
     GetStrAvSystems(): string {
-        let avSystemsStr = '___________________________';
+        let avSystemsStr = '__________________________________________';
         if (this.form.controls['rec.0'].value) {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 0, '1');
         } else {
@@ -381,6 +381,11 @@ export class UserSearchComponent implements OnInit  {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 26, '1');
         } else {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 26, '_');
+        }
+        if (this.form.controls['rec.41'].value) {
+            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 41, '1');
+        } else {
+            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 41, '_');
         }
         if (avSystemsStr.indexOf('1') === -1) {
             avSystemsStr = '0000_0_________000___0_0_00';
