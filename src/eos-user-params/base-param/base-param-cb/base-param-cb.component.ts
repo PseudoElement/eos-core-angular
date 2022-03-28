@@ -814,6 +814,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     value: str
                 }];
                 this.controls['SELECT_ROLE'].value = str;
+            } else {
+                this.controls['SELECT_ROLE'].value = this._userParamSrv.hashUserContext['CATEGORY'];
             }
             this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
         }
