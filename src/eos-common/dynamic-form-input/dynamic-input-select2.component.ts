@@ -66,7 +66,19 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         }
         return value;
     }
-
+    get currentTooltip(): string {
+        let optValue;
+        const ctrl = this.control;
+        if (ctrl) {
+            optValue = this.input.options.find((option) => option.value === ctrl.value);
+        }
+        if (this.textInputSelect && optValue && optValue.tooltip) {
+            const tooltip = this.textInputSelect.nativeElement.clientWidth < this.textInputSelect.nativeElement.scrollWidth ? this.currentValue : undefined;
+            return tooltip;
+        } else {
+            return undefined;
+        }
+    }
     controlIsValid() {
         return this.control.valid;
     }
@@ -84,6 +96,14 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         return { 'min-width.px': w, 'max-width.px': w, 'max-height.px': this.height ? this.height : 500};
     }
 
+    getItemTooltip(event, item): string {
+        if (event && item.tooltip) {
+            const tooltip = event.clientWidth < event.scrollWidth ? item.title : undefined;
+            return tooltip;
+        } else {
+            return undefined;
+        }
+    }
     getMenuWidth(): number {
         const w = this.textInputSelect.nativeElement.clientWidth;
         if (w === this._lastWrapperWidth) {

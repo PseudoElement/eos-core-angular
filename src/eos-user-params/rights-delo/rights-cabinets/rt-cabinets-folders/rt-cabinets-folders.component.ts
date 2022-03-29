@@ -202,7 +202,8 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     private _updateSelect(flag?): void {
         const opts = this.card.cabinets.map((c, i) => ({
             value: i, title: c.name, cabinet: c,
-            style: { color: c.data.HOME_CABINET ? 'red' : 'black' }
+            style: { color: c.data.HOME_CABINET ? 'red' : 'black' },
+            tooltip: true
         }));
         this.selectCabinetInput.options = opts;
         if (!flag && opts.length) {
