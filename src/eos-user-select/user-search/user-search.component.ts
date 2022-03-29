@@ -21,6 +21,7 @@ export class UserSearchComponent implements OnInit  {
     @Output() search = new EventEmitter<any>();
     @Output() quickSearchKey = new EventEmitter<any>();
     @ViewChild('full') fSearchPop;
+    @ViewChild('quickSearchField') quickSearchField;
     @Input() quickSearchOpen;
     @Input() flagDeep;
     readonly fieldGroupsForSearch: string[] = ['Общий поиск', 'Поиск удаленных', 'Поиск по системам', 'Поиск по правам'];
@@ -403,6 +404,13 @@ export class UserSearchComponent implements OnInit  {
             if (this.fastSearch === true && objSearch.quickForm) {
                 this.srchString = objSearch.quickForm;
             }
+        }
+        if (this.fastSearch) {
+            setTimeout(() => {
+                if (this.quickSearchField) {
+                    this.quickSearchField.nativeElement.focus();
+                }
+            }, 0);
         }
     }
     clickKey($event) {
