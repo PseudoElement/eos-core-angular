@@ -21,6 +21,7 @@ export class UserSearchComponent implements OnInit  {
     @Output() search = new EventEmitter<any>();
     @Output() quickSearchKey = new EventEmitter<any>();
     @ViewChild('full') fSearchPop;
+    @ViewChild('quickSearchField') quickSearchField;
     @Input() quickSearchOpen;
     @Input() flagDeep;
     readonly fieldGroupsForSearch: string[] = ['Общий поиск', 'Поиск удаленных', 'Поиск по системам', 'Поиск по правам'];
@@ -321,7 +322,7 @@ export class UserSearchComponent implements OnInit  {
     }
 
     GetStrAvSystems(): string {
-        let avSystemsStr = '___________________________';
+        let avSystemsStr = '__________________________________________';
         if (this.form.controls['rec.0'].value) {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 0, '1');
         } else {
@@ -382,6 +383,11 @@ export class UserSearchComponent implements OnInit  {
         } else {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 26, '_');
         }
+        if (this.form.controls['rec.41'].value) {
+            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 41, '1');
+        } else {
+            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 41, '_');
+        }
         if (avSystemsStr.indexOf('1') === -1) {
             avSystemsStr = '0000_0_________000___0_0_00';
         }
@@ -398,6 +404,13 @@ export class UserSearchComponent implements OnInit  {
             if (this.fastSearch === true && objSearch.quickForm) {
                 this.srchString = objSearch.quickForm;
             }
+        }
+        if (this.fastSearch) {
+            setTimeout(() => {
+                if (this.quickSearchField) {
+                    this.quickSearchField.nativeElement.focus();
+                }
+            }, 0);
         }
     }
     clickKey($event) {

@@ -234,6 +234,11 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this.subsystem.delowebKL.ActualUsers = elem.ActualUsers;
                 this.subsystem.delowebKL.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
             }
+            if (elem.Id === 42) {
+                this.subsystem.EDITORMO.Users = elem.Users;
+                this.subsystem.EDITORMO.ActualUsers = elem.ActualUsers;
+                this.subsystem.EDITORMO.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
+            }
             // server
             if (elem.Id === 32) {
                 this.serverSystem.server_web.Trial = '+'; // elem.Trial;

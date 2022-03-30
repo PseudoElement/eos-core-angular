@@ -159,6 +159,12 @@ export const USER_SEARCH = {
             title: 'Подразделение / Должностное лицо',
             value: '0'
         },
+        {
+            type: 'boolean',
+            key: '41',
+            title: 'Редактор файлов МО',
+            value: '0'
+        }
     ]
 };
 

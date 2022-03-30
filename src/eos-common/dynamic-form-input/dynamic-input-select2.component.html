@@ -33,6 +33,11 @@
                 (blur)="onBlur()"
                 (input)="onInput($event)"
                 autocomplete="off"
+                tooltip="{{currentTooltip || undefined}}"
+                placement="bottom"
+                triggers="hover"
+                container="body"
+                containerClass="tooltip-info word-break tooltip-z-index"
             />
 
             <div class="textareacounter" *ngIf="viewOpts.selectionEditable && isFocused">
@@ -69,11 +74,17 @@
                     (mouseleave)="elementMouseLeave(item);"
                 >
                     <a
+                        #compartmentOpen
                         class="dropdown-item eos-select2"
                         [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item }"
                         [ngStyle]="item.style"
                         (click)="!item.disabled ? selectAction($event, item) : null"
-                    >
+                        tooltip="{{getItemTooltip(compartmentOpen, item) || undefined}}"
+                        placement="bottom"
+                        container="body"
+                        triggers="hover"
+                        containerClass="tooltip-info word-break tooltip-z-index"
+                    ><!--  -->
                         <span
                             class="eos-icon x-small"
                             [ngClass]="{ 'eos-icon-checkbox-blue': isItemSelected(item), disabled: item.disabled }"

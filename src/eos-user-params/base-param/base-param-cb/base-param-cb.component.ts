@@ -533,7 +533,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     uncheckedAvSystems(): boolean {
         if (this._newDataformAccess.size) {
             const accessStr = this._createAccessSystemsString(this.formAccess.controls);
-            if (accessStr === '0000000000000000000000000000') {
+            if (!/1/.test(accessStr)) {
                 return true;
             }
         }
@@ -814,6 +814,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     value: str
                 }];
                 this.controls['SELECT_ROLE'].value = str;
+            } else {
+                this.controls['SELECT_ROLE'].value = this._userParamSrv.hashUserContext['CATEGORY'];
             }
             this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
         }
@@ -1051,6 +1053,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         }
+        const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
+        if (this.currentCbFields.length === 0 && standartRole.indexOf(this.formControls.controls['SELECT_ROLE'].value) > -1) {
+            this.controlField[1].value = this.formControls.controls['SELECT_ROLE'].value;
+        }
         this.controlField[0].value = false;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.cancelValues(this.controls, this.formControls);
@@ -1089,7 +1095,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         arr[0] = '0';
         arr[1] = '0';
         arr[27] = '0';
-        const newArr = [].concat(new Array(28).fill(0), new Array(12).fill(''));
+        const newArr = [].concat(new Array(42).fill(0), new Array(13).fill(''), new Array(1).fill(0));
         arr.forEach((val, index) => {
             switch (index) {
                 case 0:
