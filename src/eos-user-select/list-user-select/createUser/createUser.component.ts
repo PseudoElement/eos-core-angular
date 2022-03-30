@@ -320,23 +320,27 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     afterCreate(isn: number) {
         const copyId = (this.data['ISN_USER_COPY'] || this.data['USER_TEMPLATES']);
+        let promise: Promise<any> = Promise.resolve();
         if (copyId && isn) {
-            const  request = {
+            const request = {
                 method: 'POST',
                 requestUri: this._createUrlForCopySop(isn, +copyId)
             };
-            this._pipeSrv.batch([request], '');
+            promise = this._pipeSrv.batch([request], '');
         }
-        this.password = '';
-        this.repitedPassword = '';
-        this.isn_prot = isn;
-        this._userParamSrv.ProtocolService(this.isn_prot, 3);
-        this.btnDisabled = false;
-        this.isLoading = false;
-        this.closedModal.emit();
-        this._router.navigate(['user-params-set'], {
-            queryParams: { isn_cl: isn, is_create: true }
+        promise.then(() => {
+            this.password = '';
+            this.repitedPassword = '';
+            this.isn_prot = isn;
+            this._userParamSrv.ProtocolService(this.isn_prot, 3);
+            this.btnDisabled = false;
+            this.isLoading = false;
+            this.closedModal.emit();
+            this._router.navigate(['user-params-set'], {
+                queryParams: { isn_cl: isn, is_create: true }
+            });
         });
+
     }
     unsubscribe() {
         this.subscriptions.forEach((subscription: Subscription) => {
