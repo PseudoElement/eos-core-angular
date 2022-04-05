@@ -168,6 +168,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
+        this.inputChoice.nativeElement.value = this.form.controls['rec.DOCVID_NAME'].value;
     }
 
     ngOnInit(): void {

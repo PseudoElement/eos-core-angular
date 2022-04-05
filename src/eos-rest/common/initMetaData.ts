@@ -631,11 +631,12 @@ const commonMeta = {
         ],
         relations: [
             { name: 'AR_DOCGROUP_List', __type: 'AR_DOCGROUP', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
+            { name: 'DOCVID_CL_List', __type: 'DOCVID_CL', sf: 'ISN_DOCVID', tf: 'ISN_LCLASSIF'},
             // { name: 'DOC_RC_List', __type: 'DOC_RC', sf: 'DUE', tf: 'DUE_DOCGROUP' },
             { name: 'DG_FILE_CONSTRAINT_List', __type: 'DG_FILE_CONSTRAINT', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
             { name: 'DOC_DEFAULT_VALUE_List', __type: 'DOC_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_NODE', noDirectRead: true},
             { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
-            { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' }
+            { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' },
         ]
     },
     EDS_CATEGORY_CL: {
