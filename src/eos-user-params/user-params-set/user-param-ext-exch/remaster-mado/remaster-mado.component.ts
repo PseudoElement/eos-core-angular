@@ -95,6 +95,7 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         this.prepareInputs = this.formHelp.getObjectInputFields(REMASTER_MADO.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, {rec: this.prapareData});
         this.inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK'].value = this.userData['MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY'] !== '0';
+        this.inputs['rec.ARM_MEDO_DLG'].value = true;
     }
     subscribeChange() {
         this.form.valueChanges
