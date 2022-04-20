@@ -111,8 +111,10 @@ import { ResolutionCategoryEditComponent } from './card-views/resolution-categor
 import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.component';
 import { FormatEditComponent } from './card-views/format-edit.component';
 import { MedoNodeCardComponent } from './card-views/medo-node-card-edit.component';
+import { CardFromComponent } from './card-from/card-from.component';
 @NgModule({
     declarations: [
+        CardFromComponent,
         CardComponent,
         CardEditComponent,
         DictFormComponent,
@@ -243,6 +245,9 @@ import { MedoNodeCardComponent } from './card-views/medo-node-card-edit.componen
         CalendarFormComponent,
         EosDatepickerInlineComponent,
         TooltipErrorFixDirective,
+        CardComponent,
+        CardEditComponent,
+        CardFromComponent
     ],
     providers: [
         DictionaryDescriptorService,

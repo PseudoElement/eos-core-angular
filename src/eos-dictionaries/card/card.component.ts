@@ -110,17 +110,17 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
-        private _storageSrv: EosStorageService,
-        private _confirmSrv: ConfirmWindowService,
-        private _dictSrv: EosDictService,
-        private _deskSrv: EosDeskService,
-        private _msgSrv: EosMessageService,
-        private _route: ActivatedRoute,
-        private _router: Router,
-        private departmentsSrv: EosDepartmentsService,
-        private _eaps: EosAccessPermissionsService,
-        private _errSrv: ErrorHelperServices,
-        private _apiSrv: PipRX,
+        protected _storageSrv: EosStorageService,
+        protected _confirmSrv: ConfirmWindowService,
+        protected _dictSrv: EosDictService,
+        protected _deskSrv: EosDeskService,
+        protected _msgSrv: EosMessageService,
+        protected _route: ActivatedRoute,
+        protected _router: Router,
+        protected departmentsSrv: EosDepartmentsService,
+        protected _eaps: EosAccessPermissionsService,
+        protected _errSrv: ErrorHelperServices,
+        protected _apiSrv: PipRX,
     ) {
         let tabNum = 0;
 
@@ -349,6 +349,79 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         return this._askForSaving();
     }
 
+    protected _confirmSave(data, isNewRecord): Promise<boolean> {
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord).then(res => {
+            if (res && this.cardEditRef) {
+                return this.cardEditRef.confirmSave();
+            }
+            return res;
+        });
+    }
+
+    protected _save(data: any): Promise<any> {
+        if (!this.isChanged) {
+            return Promise.resolve(this.node);
+        }
+
+        return this._dictSrv.updateNode(this.node, data)
+            .then((node) => this._afterUpdating(node))
+            .catch((err) => {
+                if (err === 'cancel' && this.cardEditRef.dictionaryId === 'reestrtype') {
+                    const oldDelivery = this.cardEditRef.data.rec._orig['ISN_DELIVERY'];
+                    this.cardEditRef.inputs['rec.ISN_DELIVERY'].value = oldDelivery;
+                    this.cardEditRef.newData.rec['ISN_DELIVERY'] = oldDelivery;
+                    this.cardEditRef.form.controls['rec.ISN_DELIVERY'].setValue(oldDelivery, this.cardEditRef.inputs['rec.ISN_DELIVERY'].options);
+                    return null;
+                } else if (err === 'cancel') {
+                    return null;
+                } else if (err && err.error instanceof RestError) {
+                    return Promise.reject(err.error);
+                } else {
+                    return Promise.reject(err);
+                }
+
+                // this._errHandler(err); // данная ошибка обрабатывается на уровень выше убираю чтобы не было 2 сообщений
+            });
+    }
+
+    protected _windowInvalidSave(errors: string[] = []): Promise<boolean> {
+        if (this.isChanged) {
+            const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
+            confirmParams.body = '';
+            confirmParams.bodyList = [...errors, ...EosUtils.getValidateMessages(this.cardEditRef.inputs)];
+            if (confirmParams.bodyList.length) {
+                confirmParams.bodyList.forEach((body) => {
+                    if (body.indexOf('Обязательное поле') >= 0) {
+                        confirmParams.body = 'Не заполнены обязательные поля';
+                    }
+                });
+            }
+            return this._confirmSrv.confirm2(confirmParams, )
+                .then((doSave) => {
+                    let key = '';
+                    for (const inputKey of Object.keys(this.cardEditRef.inputs)) {
+                        const input = this.cardEditRef.inputs[inputKey];
+                        const inputDib = input.dib;
+                        if (!inputDib) {
+                            continue;
+                        }
+                        const control = inputDib.control;
+                        if (control.invalid) {
+                            key = inputDib.input.key;
+                            break;
+                        }
+                    }
+                    BaseCardEditComponent.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
+                    return true;
+                })
+                .catch(() => {
+                    return false;
+                });
+        } else {
+            return Promise.resolve(true);
+        }
+    }
+
     private _askForSaving(): Promise<boolean> {
         if (this.isChanged) {
             return new Promise((res, rej) => {
@@ -518,43 +591,6 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         return _url.join('/');
     }
 
-
-
-    private _confirmSave(data, isNewRecord): Promise<boolean> {
-        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord).then(res => {
-            if (res && this.cardEditRef) {
-                return this.cardEditRef.confirmSave();
-            }
-            return res;
-        });
-    }
-
-    private _save(data: any): Promise<any> {
-        if (!this.isChanged) {
-            return Promise.resolve(this.node);
-        }
-
-        return this._dictSrv.updateNode(this.node, data)
-            .then((node) => this._afterUpdating(node))
-            .catch((err) => {
-                if (err === 'cancel' && this.cardEditRef.dictionaryId === 'reestrtype') {
-                    const oldDelivery = this.cardEditRef.data.rec._orig['ISN_DELIVERY'];
-                    this.cardEditRef.inputs['rec.ISN_DELIVERY'].value = oldDelivery;
-                    this.cardEditRef.newData.rec['ISN_DELIVERY'] = oldDelivery;
-                    this.cardEditRef.form.controls['rec.ISN_DELIVERY'].setValue(oldDelivery, this.cardEditRef.inputs['rec.ISN_DELIVERY'].options);
-                    return null;
-                } else if (err === 'cancel') {
-                    return null;
-                } else if (err && err.error instanceof RestError) {
-                    return Promise.reject(err.error);
-                } else {
-                    return Promise.reject(err);
-                }
-
-                // this._errHandler(err); // данная ошибка обрабатывается на уровень выше убираю чтобы не было 2 сообщений
-            });
-    }
-
     private _afterSaving(node: EosDictionaryNode) {
         if (node) {
             this._initNodeData(node);
@@ -623,41 +659,4 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         });
         return null;
     } */
-    private _windowInvalidSave(errors: string[] = []): Promise<boolean> {
-        if (this.isChanged) {
-            const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
-            confirmParams.body = '';
-            confirmParams.bodyList = [...errors, ...EosUtils.getValidateMessages(this.cardEditRef.inputs)];
-            if (confirmParams.bodyList.length) {
-                confirmParams.bodyList.forEach((body) => {
-                    if (body.indexOf('Обязательное поле') >= 0) {
-                        confirmParams.body = 'Не заполнены обязательные поля';
-                    }
-                });
-            }
-            return this._confirmSrv.confirm2(confirmParams, )
-                .then((doSave) => {
-                    let key = '';
-                    for (const inputKey of Object.keys(this.cardEditRef.inputs)) {
-                        const input = this.cardEditRef.inputs[inputKey];
-                        const inputDib = input.dib;
-                        if (!inputDib) {
-                            continue;
-                        }
-                        const control = inputDib.control;
-                        if (control.invalid) {
-                            key = inputDib.input.key;
-                            break;
-                        }
-                    }
-                    BaseCardEditComponent.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
-                    return true;
-                })
-                .catch(() => {
-                    return false;
-                });
-        } else {
-            return Promise.resolve(true);
-        }
-    }
 }

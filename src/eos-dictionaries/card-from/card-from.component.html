@@ -1,0 +1,98 @@
+<div class="eos-card">
+    <div class="eos-card-wrapper">
+        <header>
+            <div class="edit-header"
+                [ngClass]="{'edited': editMode}">
+                <div class="name-wrapper"
+                    [ngClass]="{'edited': editMode}">
+                    <span *ngIf="node"
+                        class="edit-title primary-text long-title"
+                        [ngClass]="{'deleted': node.isDeleted}">{{getCardTitle()}}</span>
+                </div>
+                <div class="buttons-wrapper"
+                    *ngIf="editMode">
+                    <div>
+                        <button class="btn btn-primary upper"
+                            (click)="cancel()">Отменить</button>
+                        <button class="btn btn-primary-full upper"
+                            (click)="save()">Сохранить</button>
+                    </div>
+                </div>
+                <div class="action-wrapper"
+                    *ngIf="!editMode">
+                    <div class="pull-right">
+                        <button class="btn btn-primary-light"
+                            aria-hidden="true"
+                            [disabled]="!isEditEnabled()"
+                            (click)="edit()"
+                            tooltip="Редактировать"
+                            [delay]="tooltipDelay"
+                            placement="bottom"
+                            containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
+                        <button class="btn btn-primary-light"
+                            aria-hidden="true"
+                            [disabled]="!node || node.updating"
+                            (click)="close()"
+                            tooltip="Закрыть"
+                            [delay]="tooltipDelay"
+                            placement="bottom"
+                            containerClass="tooltip-info">
+                    <span class="eos-icon eos-icon-close-blue small"></span>
+                </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div *ngIf="!node || node.updating"
+            class="spinner-wrapper secondary-block">
+            <eos-spinner [size]="'lg'"></eos-spinner>
+        </div>
+        <div class="edit-card-body">
+            <eos-card-edit #cardEditEl
+                [dictionaryId]="dictionaryId"
+                [data]="nodeData"
+                [fieldsDescription]="fieldsDescription"
+                [editMode]="editMode"
+                [isNewRecord]="false"
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [dutysList]="dutysList"
+                [fullNamesList]="fullNamesList"></eos-card-edit>
+        </div>
+        <div bsModal
+            #onlyEdit="bs-modal"
+            [config]="{ show: false }"
+            class="modal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+            (onHide)="forceView()">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title pull-left">Предупреждение</h4>
+                        <button type="button"
+                            class="close pull-right"
+                            aria-label="Close"
+                            (click)="modalOnlyRef.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="warning-wrapper">
+                            <div class="warning">
+                                В настоящее время в режиме редактирования находится карточка
+                                <br>
+                                <p class="text-center">
+                                    <a href="/#/{{ lastEditedCard?.link }}"
+                                        (click)="modalOnlyRef.hide()">{{ lastEditedCard?.title }}</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

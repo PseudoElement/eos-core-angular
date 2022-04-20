@@ -1,0 +1,17 @@
+:host {
+    margin-top: 50px;
+    display: block;
+    .eos-card {
+        .edit-header {
+            grid-template-columns: 20px 1fr 153px;
+            .action-wrapper {
+                grid-column: 4;
+            }
+            .buttons-wrapper {
+                grid-column: 4;
+                margin-right: 10px;
+            }
+            
+        }
+    }
+}

@@ -1,5 +1,5 @@
 <div class="main-container main-theme" [ngClass]="{'hide': !firstLoadAuth || !isLoadedPlugins, 'login-fon': !isAuthorized || !isLoadedPlugins}">
-    <eos-header *ngIf="isAuthorized"></eos-header>
+    <eos-header *ngIf="!isHideHeader && isAuthorized"></eos-header>
     <div class="content-wrapper">
         <div class="content-outlet">
             <router-outlet></router-outlet>
