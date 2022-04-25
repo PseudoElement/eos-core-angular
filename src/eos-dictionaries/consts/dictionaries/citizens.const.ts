@@ -198,7 +198,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     treeFields: ['CITIZEN_SURNAME'],
     searchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE'],
     listFields: ['CITIZEN_SURNAME'],
-    fullSearchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW', 'DOP_REC'],
+    fullSearchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW', 'DOP_REC', 'E_MAIL'],
     quickViewFields: ['CITIZEN_SURNAME', 'DUE_REGION'],
     shortQuickViewFields: [],
     editFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ISN_REGION', 'ZIPCODE', 'CITIZEN_ADDR',
