@@ -291,7 +291,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
-    initView(param?, cabinet?) {
+    initView(param?, cabinet?): Promise<any> {
         if (!cabinet && this.form.controls['USER_CABINET'].value !== '.') {
             cabinet = this.form.controls['USER_CABINET'].value;
         }
@@ -320,7 +320,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         // this.flagScan = null; убираю из-за сканирования
         this.flagChecked = null;
         this.isLoading = true;
-        this._apiSrv.getUsers(param || '0.', cabinet)
+        return this._apiSrv.getUsers(param || '0.', cabinet)
             .then((data: UserSelectNode[]) => {
                 this.listUsers = this._pagSrv.UsersList;
                 this.flagScan = null;
@@ -498,6 +498,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this.buttons.moreButtons[3].isActive = false;
             this._apiSrv.stateTehUsers = false;
             this._apiSrv.flagTehnicalUsers = false;
+            this.buttons.moreButtons[4].isActive = false;
+            this._apiSrv.flagDisableUser = false;
         }
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
@@ -540,6 +542,27 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         /* Если мы показываем технических пользователей то меняем заголовок в пользователях */
         if (this._apiSrv.flagTehnicalUsers) {
             this.titleCurrentDue = 'Технические пользователи';
+        }
+    }
+    ViewDisableUser() {
+        const id = this._route.params['value'].nodeId;
+        this._apiSrv.flagDisableUser = !this._apiSrv.flagDisableUser;
+        if (this._apiSrv.flagDisableUser === true && this._apiSrv.configList.shooseTab === 0) {
+            localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
+        }
+        this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
+        this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
+        if (this._apiSrv.flagDisableUser) {
+            this.buttons.moreButtons[2].isActive = false;
+            this._apiSrv.stateDeleteUsers = false;
+            this._apiSrv.flagDelitedPermanantly = false;
+        }
+        this.upsavePagConfig();
+        this._pagSrv.resetConfig();
+        if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
+            this._router.navigate(['user_param/0.']);
+        } else {
+            this.initView(id ? id : '0.');
         }
     }
     upsavePagConfig() {
@@ -850,7 +873,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                         this.rtUserService._updateBtn.next(this.optionsBtn); // обновляем кнопки
                         this.rtUserService.subjectFlagBtnHeader.next(false); // обновляем кнопки
                         this.updateFlafListen(); // обновить флаги
-                        this.isLoading = false;
+                        this.initView(this.currentDue)
+                        .then(() => {
+                            this.isLoading = false;
+                        })
+                        .catch(() => {
+                            this.isLoading = false;
+                        });
                     }).catch(error => {
                         error.message = error.message ? error.message : error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
                         this.isLoading = false;

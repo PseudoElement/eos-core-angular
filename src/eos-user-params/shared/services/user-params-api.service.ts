@@ -19,6 +19,7 @@ export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
     flagOnlyThisDepart: boolean = true;
+    flagDisableUser: boolean = false;
     sysParam: any;
     dueDep: any = '0.';
     srtConfig: IUserSort = {};
@@ -36,6 +37,7 @@ export class UserParamApiSrv {
     searchState: boolean = false;
     stateTehUsers: boolean = false;
     stateDeleteUsers: boolean = false;
+    stateDisableUser: boolean = false;
     stateOnlyThisDepart: boolean = false;
     public sortDelUsers = false;
     // private helpersClass;
@@ -141,6 +143,9 @@ export class UserParamApiSrv {
                 if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
                     ob1['DUE_DEP'] = 'isnull';
                     ob1['USER_CL.Removed'] = 'false';
+                }
+                if (!this.flagDelitedPermanantly && !this.flagDisableUser) { // вот тут должно быть обновление
+                    ob1['DELETED'] = 0;
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';

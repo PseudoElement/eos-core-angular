@@ -17,6 +17,7 @@ import {
     SettingsManagement,
     UserLists,
     Unlock,
+    ViewDisableUser,
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
@@ -39,6 +40,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'RedactUser',
         'ViewDeletedUsers',
         'ViewTechicalUsers',
+        'ViewDisableUser',
         'BlockUser',
         'Unlock',
         'OpenAddressManagementWindow',
@@ -167,6 +169,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             case 'SettingsManagement':
                 this.checkBtnSettingsManagement();
                 break;
+            case 'ViewDisableUser':
+                this.checkBtnViewDisableUser();
+                break;
             case 'UserSession':
             default:
                 console.log('not Action');
@@ -225,6 +230,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     checkBtnSharingLists() {
         this.checkWithUsersList(UserLists);
+    }
+    checkBtnViewDisableUser() {
+        ViewDisableUser.disabled = false;
     }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {

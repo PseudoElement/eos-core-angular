@@ -245,6 +245,17 @@ export const USER_SESSION: BtnActionFields = {
     activeBtnClass: '',
     isActive: false,
 };
+export const ViewDisableUser: BtnActionFields = {
+    name: 'ViewDisableUser',
+    title: 'Отображать заблокированных пользователей',
+    disabledClass: 'eos-icon eos-icon-show-grey small',
+    enableClass: 'eos-icon eos-icon-show-blue small',
+    tooltip: 'Включить/выключить режим отображения  технических пользователей',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-show-white small',
+    activeBtnClass: 'activeShow',
+    isActive: false,
+};
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -274,6 +285,7 @@ export const Allbuttons: BtnAction = {
         RedactUser,
         ViewDeletedUsers,
         ViewTechicalUsers,
+        ViewDisableUser,
         BlockUser,
         Unlock,
         OpenAddressManagementWindow,
