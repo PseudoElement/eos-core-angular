@@ -48,12 +48,15 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         }
     }
     constructor(
-        _router: Router,
+        private _router: Router,
         private _route: ActivatedRoute,
         private _eiCl: ExportImportClService,
         private _appcontext: AppContext,
     ) {
         this.width = window.innerWidth;
+        if (localStorage.getItem('lastUrl')) {
+            this._router.navigateByUrl(localStorage.getItem('lastUrl'));
+        }
         this.update();
         _router.events
             .pipe(
@@ -179,6 +182,26 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     }
     private update() {
         let _actRoute = this._route.snapshot;
+        if (_actRoute && _actRoute.children[0]) {
+            switch (_actRoute.children[0].routeConfig.path) {
+                case 'user-params-set':
+                case 'user_param':
+                    localStorage.setItem('lastUrl', 'user_param');
+                    break;
+                case 'parameters':
+                    localStorage.setItem('lastUrl', 'parameters');
+                    break;
+                case 'spravochniki':
+                    localStorage.setItem('lastUrl', 'spravochniki');
+                    break;
+                case 'desk':
+                    localStorage.setItem('lastUrl', this._router.url);
+                    break;
+                default:
+                    localStorage.setItem('lastUrl', _actRoute.children[0].routeConfig.path);
+                    break;
+            }
+        }
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
         this.breadcrumbView = _actRoute.data && _actRoute.data.showBreadcrumb;
         this.navParamView = _actRoute.data && _actRoute.data.showNav;

@@ -12,6 +12,7 @@
             <span class="selected-desktop m-font" tooltip="{{selectedDesk.name}}"
                 placement="bottom" [isDisabled]="dropDown.isOpen" #hint="bs-tooltip"
                 [delay]="tooltipDelay"
+                (click)="openDeskDefault($event)"
                 containerClass="tooltip-info" container="body">
                 {{selectedDesk.name}}
             </span>

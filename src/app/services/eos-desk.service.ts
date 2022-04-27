@@ -27,6 +27,16 @@ export const DEFAULT_DESKTOP = {
     references: [],
     edited: false,
 };
+const DEFAULT_DESKTOP_LIST = [
+    '/spravochniki/type-docum',
+    '/spravochniki/docgroup',
+    '/spravochniki/departments',
+    '/spravochniki/security',
+    '/spravochniki/delivery',
+    '/spravochniki/link',
+    '/spravochniki/organization',
+    '/spravochniki/citizens'
+];
 export const DEFAULT_DESKS: EosDesk[] = [DEFAULT_DESKTOP];
 
 @Injectable()
@@ -329,7 +339,8 @@ export class EosDeskService {
                                     this._currentReferences$.next(this._currentReferences);
                                 });
                         } else {
-                            this._currentReferences$.next(this._currentReferences);
+                            const updateList = this._currentReferences.filter((ref) => DEFAULT_DESKTOP_LIST.indexOf(ref.url) !== -1);
+                            this._currentReferences$.next(updateList);
                         }
                     });
 

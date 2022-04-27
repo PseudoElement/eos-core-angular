@@ -38,4 +38,11 @@ export class DesktopSwitcherComponent implements OnInit, OnDestroy {
         this._router.navigate(['/desk', desk.id]);
         this._dropDown.toggle(false);
     }
+    /* Открывать уже выбранный рабочий стол */
+    openDeskDefault($evt) {
+        $evt.preventDefault();
+        $evt.stopPropagation();
+        this._router.navigate(['/desk', this.selectedDesk.id]);
+        this._dropDown.toggle(false);
+    }
 }
