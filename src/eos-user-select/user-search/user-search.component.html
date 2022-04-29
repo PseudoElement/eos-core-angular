@@ -76,6 +76,9 @@
             </div>
         </div>
         <div  class="search-input-wr-av" *ngIf="currTab === 2">
+            <div class="search-input-wr block-user">
+                <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
             <div class="av-container">
                 <div class="av-pos">
                     <eos-dynamic-input [input]="inputs['rec.0']" [form]="form" [readonly]="false"></eos-dynamic-input>

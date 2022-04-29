@@ -192,6 +192,10 @@ export class SearchServices {
             case 2:
                 query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
                 query.USER_CL.criteries['USER_CL.Removed'] = `false`;
+                if (params.BLOCK_USER) {
+                    query.USER_CL.criteries['DELETED'] = `${params.BLOCK_USER}`;
+                    query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
+                }
                 break;
             case 3:
                 if (params.USERDEP_List) {
