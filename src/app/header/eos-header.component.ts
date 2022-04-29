@@ -54,7 +54,8 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         private _appcontext: AppContext,
     ) {
         this.width = window.innerWidth;
-        if (localStorage.getItem('lastUrl')) {
+        /* Делать переход к последнему открытому только если открываем приложение заного */
+        if (localStorage.getItem('lastUrl') && this._router.url === '/desk/system') {
             this._router.navigateByUrl(localStorage.getItem('lastUrl'));
         }
         this.update();
