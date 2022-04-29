@@ -41,11 +41,19 @@
                     <div>
                         <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.DOC_RC_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.DOC_RC_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    <span>С расширением</span>
-                    <div>
-                        <eos-dynamic-input class="inline-block wer pad-left" [input]="inputAttach['rec.DOC_RC_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.DOC_RC_EXTENSIONS'].readonly"></eos-dynamic-input>
-                    </div>
+                    
                 </div>
+                <span>С расширением</span>
+                    <div>
+                        <eos-dynamic-input
+                            style="padding-left: 0; width: 100%"
+                            class="inline-block wer pad-left"
+                            [input]="inputAttach['rec.DOC_RC_EXTENSIONS']"
+                            [form]="formAttach"
+                            [readonly]="inputAttach['rec.DOC_RC_EXTENSIONS'].readonly"
+                            >
+                        </eos-dynamic-input>
+                    </div>
                 <hr>
             </div>
             <div class="formAttach" *ngIf="!hiddenFieldAttach">
@@ -57,12 +65,20 @@
                     <div>
                     <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.RESOLUTION_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.RESOLUTION_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    <span>С расширением</span>
-                    <div>
-                    <eos-dynamic-input class="inline-block wer pad-left " [input]="inputAttach['rec.RESOLUTION_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.RESOLUTION_EXTENSIONS'].readonly"></eos-dynamic-input>
-                    </div>
+                    
                     <hr>
                 </div>
+                <span>С расширением</span>
+                    <div>
+                        <eos-dynamic-input
+                            style="padding-left: 0; width: 100%"
+                            class="inline-block wer pad-left "
+                            [input]="inputAttach['rec.RESOLUTION_EXTENSIONS']"
+                            [form]="formAttach"
+                            [readonly]="inputAttach['rec.RESOLUTION_EXTENSIONS'].readonly"
+                            >
+                        </eos-dynamic-input>
+                    </div>
                 <div class="formAttach" *ngIf="!hiddenFieldAttach">
                     <div class="l-font">Файлы отчетов исполнителей</div>
                     <div class="contain">
@@ -70,12 +86,19 @@
                         <eos-dynamic-input class="inline-block mar-right" [input]="inputAttach['rec.REPLY_MAX_SIZE']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_MAX_SIZE'].readonly"></eos-dynamic-input>
                         <span>Мбайт</span>
                         <div>
-                        <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.REPLY_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_ONE_FILE'].readonly"></eos-dynamic-input>
+                            <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.REPLY_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_ONE_FILE'].readonly"></eos-dynamic-input>
                         </div>
-                        <span>С расширением</span>
-                        <div>
-                            <eos-dynamic-input class="inline-block wer pad-left" [input]="inputAttach['rec.REPLY_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_EXTENSIONS'].readonly"></eos-dynamic-input>
-                        </div>
+                        
+                    </div>
+                    <span>С расширением</span>
+                    <div>
+                        <eos-dynamic-input
+                            style="padding-left: 0; width: 100%"
+                            class="inline-block wer pad-left"
+                            [input]="inputAttach['rec.REPLY_EXTENSIONS']"
+                            [form]="formAttach"
+                            [readonly]="inputAttach['rec.REPLY_EXTENSIONS'].readonly">
+                        </eos-dynamic-input>
                     </div>
                 </div>
             </div>
@@ -88,10 +111,17 @@
                     <div>
                         <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.PRJ_RC_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.PRJ_RC_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    <span>С расширением</span>
-                    <div>
-                        <eos-dynamic-input class="inline-block wer pad-left" [input]="inputAttach['rec.PRJ_RC_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.PRJ_RC_EXTENSIONS'].readonly"></eos-dynamic-input>
-                    </div>
+                    
+                </div>
+                <span>С расширением</span>
+                <div>
+                    <eos-dynamic-input
+                        style="padding-left: 0; width: 100%"
+                        class="inline-block wer pad-left"
+                        [input]="inputAttach['rec.PRJ_RC_EXTENSIONS']"
+                        [form]="formAttach" 
+                        [readonly]="inputAttach['rec.PRJ_RC_EXTENSIONS'].readonly">
+                    </eos-dynamic-input>
                 </div>
                 <hr>
             </div>
@@ -104,12 +134,16 @@
                     <div>
                         <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.PRJ_VISA_SIGN_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.PRJ_VISA_SIGN_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    
-                    <span>С расширением</span>
-                    <div>
-                        <eos-dynamic-input class="inline-block wer pad-left" [input]="inputAttach['rec.PRJ_VISA_SIGN_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.PRJ_VISA_SIGN_EXTENSIONS'].readonly"></eos-dynamic-input>
-                    </div>
-                    
+                </div>
+                <span>С расширением</span>
+                <div>
+                    <eos-dynamic-input
+                        style="padding-left: 0; width: 100%"
+                        class="inline-block wer pad-left"
+                        [input]="inputAttach['rec.PRJ_VISA_SIGN_EXTENSIONS']"
+                        [form]="formAttach"
+                        [readonly]="inputAttach['rec.PRJ_VISA_SIGN_EXTENSIONS'].readonly">
+                    </eos-dynamic-input>
                 </div>
             </div>
         </form>
