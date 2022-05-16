@@ -239,7 +239,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 masEl.push('' + (elem.Id - 1));
             }
         });
-        if (masEl.indexOf('0') !== -1 && masEl.indexOf('1') !== -1) {
+        if (masEl.indexOf('0') !== -1 && (masEl.indexOf('1') !== -1 || masEl.indexOf('31') !== -1)) {
             this.actualLicenz.push('0-1');
         }
         if (masEl.indexOf('1') !== -1 || masEl.indexOf('27') !== -1) {

@@ -239,7 +239,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 masEl.push('' + (elem.Id - 1));
             }
         });
-        if (masEl.indexOf('0') !== -1 && masEl.indexOf('1') !== -1) {
+        if (masEl.indexOf('0') !== -1 && (masEl.indexOf('1') !== -1 || masEl.indexOf('31') !== -1)) {
             this.actualLicenz.push('0-1');
         }
         if (masEl.indexOf('1') !== -1 || masEl.indexOf('27') !== -1) {
@@ -658,7 +658,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._pushState();
         if (!route) { // если сохранение происходило перед переходом, то отменить запрос новых данных
             this.unSubscribe();
-            this.init();
+            // после сохранения обновляем лицензии
+            this._getLicenseInfo()
+            .then(() => {
+                this.init();
+            })
+            .catch(err => {
+                this.init();
+                this.LicenzeInfo = [];
+            });
         }
     }
 
