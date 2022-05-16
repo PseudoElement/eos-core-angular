@@ -49,6 +49,7 @@ import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { isArray } from 'util';
+import { INSTRUMENTS_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/instruments/instruments.const';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\'!]', 'g');
@@ -308,6 +309,12 @@ export class EosDictService {
 
         for (let i = 0; i < SEV_DICTIONARIES.length; i++) {
             const dict = SEV_DICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+        for (let i = 0; i < INSTRUMENTS_DICTIONARIES.length; i++) {
+            const dict = INSTRUMENTS_DICTIONARIES[i];
             if (dict.id === dictionaryId) {
                 return dict;
             }
@@ -635,6 +642,9 @@ export class EosDictService {
 
     getSevDictionariesList(): Promise<IDictionaryDescriptor[]> {
         return Promise.resolve(this._descrSrv.visibleSevDictionaries());
+    }
+    getInstrumentsList(): Promise<IDictionaryDescriptor[]> {
+        return Promise.resolve(this._descrSrv.visibleInstrumentsDictionaries());
     }
 
     defaultOrder() {

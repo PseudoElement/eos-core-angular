@@ -334,6 +334,12 @@ const routes: Routes = [{
     ]
 },
 {
+    path: 'instruments',
+    data: { title: 'Инструменты', showInBreadcrumb: false },
+    canActivate: [AuthorizedGuard],
+    children: childrenDictionariesComponent,
+},
+{
     path: '',
     redirectTo: '/desk/system',
     pathMatch: 'full',

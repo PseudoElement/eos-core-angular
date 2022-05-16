@@ -6,6 +6,12 @@
         </span>
         <span class="text">{{dictionary.title}}</span>
     </button>
+    <button *ngFor="let dictionary of instrumentsList" class="dictionary btn block xl-font" (click)="openModalInsrtument(dictionary)" [disabled]="isDisabled">
+        <span class="icon-wrapper">
+            <span class="icon disabled eos-icon {{dictionary.iconName}}"></span>
+        </span>
+        <span class="text">{{dictionary.title}}</span>
+    </button>
     <button *ngIf="path === '/spravochniki/SEV'" class="dictionary btn block xl-font" (click)="openModalSynchro()" [disabled]="!isAccessEnabled({id:'SEV'}) || !isAccessLicense('SEV') ">
         <span class="icon-wrapper">
             <span class="icon disabled eos-icon eos-icon-synchro-blue"></span>
