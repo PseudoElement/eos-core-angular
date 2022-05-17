@@ -22,7 +22,9 @@ export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     ngAfterViewInit(): void {
       const w: any = window;
-      w.pluginManager.loadPlugins();
+      if (w.pluginManager && w.pluginManager.loadPlugins) {
+          w.pluginManager.loadPlugins();
+      }
     }
 
     ngOnDestroy(): void {
