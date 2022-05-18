@@ -11,10 +11,10 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 // }
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
-import { AR_DESCRIPT } from 'eos-rest';
+import { AR_DESCRIPT, PipRX } from 'eos-rest';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { DOP_REC } from 'eos-dictionaries/consts/dictionaries/_common';
+import { DOP_REC, SEV_PARTIPANT } from 'eos-dictionaries/consts/dictionaries/_common';
 import { FormGroup, Validators } from '@angular/forms';
 // import { PipRX } from 'eos-rest';
 
@@ -63,11 +63,13 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         srchMode: ''
     };
     private searchValueDopRec = null;
+    private sevChanelAllToSelect = [];
     constructor(
         private _dictSrv: EosDictService,
         private _classif: WaitClassifService,
         private _inputCtrlSrv: InputControlService,
         private _dataSrv: EosDataConvertService,
+        private _pipRX: PipRX,
     ) {
     }
 
@@ -79,6 +81,19 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.searchInfo$.subscribe((_d) => this.clearForm()));
         this.subscriptions.push(this._dictSrv.reloadDopRec$.subscribe(() => this.updateDopRec()));
+        if (this.dictionary.descriptor.id === 'sev-participant') {
+            this._pipRX.read({
+                SEV_CHANNEL: {
+                    criteries: {
+                        ISN_LCLASSIF: 'isnotnull'
+                    }
+                }
+            })
+            .then((data) => {
+                this.sevChanelAllToSelect = data;
+                this.initFormSevPartishion(this.dictionary.descriptor.record.getFullSearchFields);
+            });
+        }
     }
     get dictId(): string {
         return this.dictionary ? this.dictionary.id : null; // может придти null в этом случае просто передаём null
@@ -265,6 +280,47 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             }
         });
     }
+    public initFormSevPartishion(allField: any[]) {
+        this.inputs = this._dataSrv.getInputs(SEV_PARTIPANT as any, { rec: { CLASSIF_NAME: '', ADDRESS: '', rules: '', ISN_CHANNEL: '' }});
+        this.sevChanelAllToSelect.forEach((chan) => {
+            this.inputs['rec.ISN_CHANNEL'].options.push({
+                value: chan['ISN_LCLASSIF'],
+                title: chan['CLASSIF_NAME'],
+                isDeleted: chan['DELETED'] === 0 ? undefined : true
+            });
+        });
+        this.formSearch = this._inputCtrlSrv.toFormGroup(this.inputs);
+        this.formSearch.valueChanges.subscribe(_d => {
+            this.searchModel['ISN_CHANNEL'] = this.formSearch.controls['rec.ISN_CHANNEL'].value;
+            this.searchModel['CLASSIF_NAME'] = this.formSearch.controls['rec.CLASSIF_NAME'].value;
+            this.searchModel['ADDRESS'] = this.formSearch.controls['rec.ADDRESS'].value;
+        });
+    }
+    public openDictSevPArtipant() {
+        const OPEN_CLASSIF_SEV_RULE: IOpenClassifParams = {
+            classif: 'SEV_RULE',
+            selectMulty: true,
+            selectLeafs: true,
+            skipDeleted: false,
+            id: '0.',
+        };
+        this._classif.openClassif(OPEN_CLASSIF_SEV_RULE)
+        .then(data => {
+            return this.dictionary['dictDescrSrv']['apiSrv']
+                .read({
+                    SEV_RULE: {
+                        criteries: {
+                            ISN_LCLASSIF: data
+                        }
+                    }
+                }).then(d => {
+                    if (d) {
+                        this.searchModel['rules_name'] = d[0]['CLASSIF_NAME'];
+                        this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'] = d[0]['ISN_LCLASSIF'];
+                    }
+                });
+        });
+    }
     public initFormRule(allField: any[]) {
         let type: any = {};
         let kind: any = {};
@@ -335,6 +391,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         }
         if (this.formSelect && this.dictId === 'sev-rules') {
             this.formSelect.reset();
+        }
+        if (this.formSearch && this.dictId === 'sev-participant') {
+            this.formSearch.reset();
         }
         this.mode = 0;
         this.settings.opts.deleted = false;

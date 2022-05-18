@@ -109,6 +109,9 @@ eos-dynamic-input {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            &.option-is-deleted {
+                color: #b5b5b5;
+            }
         }
     }
     .input-button-container {

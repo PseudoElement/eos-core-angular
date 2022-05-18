@@ -10,6 +10,7 @@ import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_ORGANIZ_CL_PARTIC } from 'eos-user-select/shered/consts/create-user.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { IOpenClassifParams } from 'eos-common/interfaces/interfaces';
 
 @Component({
     selector: 'eos-sev-participant-card-edit',
@@ -21,9 +22,9 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     _orgName: any;
     modalWindow: BsModalRef;
     private _flagSetOrigin: boolean = true;
-    private _usedRulesString;
-    private _usedRules;
-    private _listRules;
+    private _usedRulesString; // правила которые мы будем отображать
+    private _usedRules; // правила которые есть у пользователя
+    private _listRules; // тут лежат все правила. Можно не делать доп запросов
     private _originSrules: Map<number, SEV_PARTICIPANT_RULE> = new Map();
     private _changes: Map<number, any> = new Map();
 
@@ -64,12 +65,13 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         this.data.SEV_PARTICIPANT_RULE_CHANGES_LIST = [];
         const i = this.inputs['rec.ISN_CHANNEL'];
         i.options = [];
-
         const req_ch = { 'SEV_CHANNEL': [] };
         this._apiSrv.read(req_ch)
             .then((rdata: any[]) => {
                 rdata.forEach((d) => {
-                    i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF'] });
+                    if (d['DELETED'] === 0) {
+                        i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF'] });
+                    }
                 });
             });
         this._readDBLists();
@@ -87,6 +89,9 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     }
 
     chooseOrganiz() {
+        if (!this.editMode) { // проверка на то есть ли режим редактирования
+            return;
+        }
         const config = this.dictSrv.getApiConfig();
         if (config) {
             this._waitClassif.openClassif(OPEN_CLASSIF_ORGANIZ_CL_PARTIC)
@@ -178,7 +183,49 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         }
         return '...';
     }
-
+    openClassiSecurity(value) {
+        if (!this.editMode) { // проверка на то есть ли режим редактирования
+            return;
+        }
+        const allSevRule = [];
+        if (this._usedRules && this._usedRules.length) {
+            this._usedRules.forEach((rul) => {
+                allSevRule.push(rul['ISN_LCLASSIF']);
+            });
+        }
+        const OPEN_CLASSIF_SEV_RULE: IOpenClassifParams = {
+            classif: 'SEV_RULE',
+            selectMulty: true,
+            selectLeafs: true,
+            skipDeleted: false,
+            id: '0.',
+            selected: allSevRule.join('|')
+        };
+        this._waitClassif.openClassif(OPEN_CLASSIF_SEV_RULE)
+        .then(data => {
+            const selectRule = data.split('|'); // разбиваем строки на элементы
+            if (this._listRules && this._listRules.length && selectRule.length) {
+                this._usedRules = this._listRules.filter((rule) => {
+                    if (selectRule.indexOf('' + rule['ISN_LCLASSIF']) !== -1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+            this._usedRulesString = this._updateUsedRules(this._listRules, this._usedRules);
+            this.changesRrules(this._listRules, this._usedRules);
+        }).catch(e => {
+            if (e) {
+                this._errorHelper.errorHandler(e);
+            }
+        });
+    }
+    deleteAllRule() {
+        this._usedRules = [];
+        this._usedRulesString = this._updateUsedRules(this._listRules, this._usedRules);
+        this.changesRrules(this._listRules, this._usedRules);
+    }
     private _readDBLists(): any {
         const query_list = ALL_ROWS;
         const req_list = { 'SEV_RULE': query_list };

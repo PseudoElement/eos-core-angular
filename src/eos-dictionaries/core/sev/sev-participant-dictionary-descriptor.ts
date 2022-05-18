@@ -2,12 +2,20 @@ import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { EosDictionaryNode } from '../eos-dictionary-node';
 import { BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE } from 'eos-rest';
-import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
-
+import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE, PipRX } from 'eos-rest';
+import { IDictionaryDescriptor, IRecordOperationResult } from 'eos-dictionaries/interfaces';
 
 
 export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor {
+    constructor(
+        descriptor: IDictionaryDescriptor,
+        apiSrv: PipRX
+    ) {
+        super(descriptor, apiSrv);
+        this.record.sevFieldFullSearch([
+            'fullSearchFields',
+        ], descriptor);
+    }
     addRecord(data: any, _useless: any, appendToChanges: any = null, isProtected = false, isDeleted = false): Promise<any> {
         return super.addRecord(data, _useless, appendToChanges = null, isProtected = false, isDeleted = false).then(ID => {
             return this.UpdateSaveParticipantRule(data, ID);

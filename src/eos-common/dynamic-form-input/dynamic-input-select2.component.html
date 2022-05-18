@@ -76,7 +76,7 @@
                     <a
                         #compartmentOpen
                         class="dropdown-item eos-select2"
-                        [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item }"
+                        [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item, 'option-is-deleted': item.isDeleted }"
                         [ngStyle]="item.style"
                         (click)="!item.disabled ? selectAction($event, item) : null"
                         tooltip="{{getItemTooltip(compartmentOpen, item) || undefined}}"

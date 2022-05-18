@@ -4,6 +4,7 @@ import { NOT_EMPTY_STRING } from '../../input-validation';
 import { COMMON_FIELD_NAME } from '../_common';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
+import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
 
 export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
     id: 'sev-participant',
@@ -17,6 +18,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     keyField: 'ISN_LCLASSIF',
     defaultOrder: 'CLASSIF_NAME',
     showDeleted: true,
+    searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE_ORGANIZ',
         title: 'Организация',
@@ -60,12 +62,22 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         title: 'Наименования правил',
 
     },
-
-
+    {
+        key: 'SEV_PARTICIPANT_RULE.ISN_RULE',
+        title: 'Правила',
+        type: 'dictionary',
+        dictionaryId: 'SEV_PARTICIPANT_RULE',
+        dictionaryLink: {
+            pk: 'ISN_PARTICIPANT',
+            fk: 'ISN_RULE',
+            label: 'CLASSIF_NAME',
+        },
+    },
     ]),
     editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME', 'sev_partisipant', 'sev_rule'],
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS'],
+    fullSearchFields: ['CLASSIF_NAME', 'ADDRESS', 'rules', 'ISN_CHANNEL', 'SEV_PARTICIPANT', 'SEV_PARTICIPANT_RULE.ISN_RULE'],
     quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'sev_partisipant', 'sev_rule'],
     searchFields: ['CLASSIF_NAME'],
 });

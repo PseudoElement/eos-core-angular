@@ -113,3 +113,30 @@ export const DOP_REC = {
         }
     }
 };
+export const SEV_PARTIPANT = {
+    rec: {
+        CLASSIF_NAME:  {
+            foreignKey: 'CLASSIF_NAME',
+            title: '',
+            type: 0,
+            length: 255,
+        },
+        ADDRESS: {
+            foreignKey: 'ADDRESS',
+            type: 0,
+            title: '',
+            length: 255,
+        },
+        rules: {
+            foreignKey: 'rules',
+            title: '',
+            type: 0,
+        },
+        ISN_CHANNEL:  {
+            foreignKey: 'ISN_CHANNEL',
+            title: '',
+            type:  17,
+            options: [],
+        }
+    }
+};
