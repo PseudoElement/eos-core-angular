@@ -5,7 +5,7 @@ import { LINEAR_TEMPLATE } from '../_linear-template';
 export const EXPORT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'EXPORT',
     isFolder: true,
-    title: 'Экспорт',
+    title: 'Экспорт справочника',
     visible: true,
     apiInstance: 'SEV',
     iconName: 'eos-icon-share-blue',
@@ -14,7 +14,7 @@ export const EXPORT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, 
 export const IMPORT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'IMPORT',
     isFolder: true,
-    title: 'Импорт',
+    title: 'Импорт справочника',
     visible: true,
     apiInstance: 'INSTRUMENTS',
     iconName: 'eos-icon-download',
