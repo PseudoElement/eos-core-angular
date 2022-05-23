@@ -1,29 +1,36 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+<!-- переделываю окно под новые реалии -->
+<div style="display: flex;border-bottom: 1px solid #e6e6e6;">
+    <div class="alert-icon-confirm-window2"
+    [ngStyle]="{ 'background-color': getColor()}">
+        <!-- <span [ngClass]="'eos-icon eos-icon-close-white'"></span> -->
+        <span class="eos-icon small icon-alert-window"
+            [ngClass]="getIcon()"></span>
+    </div>
+    <div  style="padding: 11px 15px;">
+        <h5 class="modal-title pull-left"> {{body}}</h5> <!-- {{title}} -->
+    </div>
+    <div class="modal-footer buttoms-alert">
+        <div> 
+            <span *ngFor="let button of buttons">
+                <button 
+                    style="margin-right: 10px;"
+                    type="button"
+                    [ngClass]="{'btn-primary-full': button.isDefault, 'btn-primary': !button.isDefault}"
+                    class="btn"
+                    (click)="click(button)">{{button.title}}</button>
+            </span>
+        </div>
+    </div>
 </div>
 <div class="modal-body"
     [ngClass]="{manualCR: manualCR}"
+    *ngIf="bodyBeforeList || (bodyList && bodyList.length) || bodyAfterList"
 >
-
-<!-- [style]="(true ? 'white-space: pre;': '')" -->
-<p>{{body}}</p>
-<p *ngIf="bodyBeforeList">{{bodyBeforeList}}</p>
-<ul *ngIf="bodyList">
-    <li *ngFor="let item of bodyList">{{item}}</li>
-</ul>
-<p *ngIf="bodyAfterList">{{bodyAfterList}}</p>
+    <!-- <p>{{body}}</p> -->
+    <p *ngIf="bodyBeforeList">{{bodyBeforeList}}</p>
+    <ul *ngIf="bodyList">
+        <li *ngFor="let item of bodyList">{{item}}</li>
+    </ul>
+    <p *ngIf="bodyAfterList">{{bodyAfterList}}</p>
 </div>
-<div class="modal-footer">
-    <span *ngFor="let button of buttons">
-        <button type="button"
-            [ngClass]="{'btn-primary-full': button.isDefault, 'btn-primary': !button.isDefault}"
-            class="btn"
-            (click)="click(button)">{{button.title}}</button>
-    </span>
 
-    <!-- <button type="button" class="btn btn-primary" (click)="click()">{{cancelTitle}}</button>
-    <button type="button" class="btn btn-primary-full" [disabled]="confirmDisabled" (click)="confirm()">{{okTitle}}</button> -->
-</div>

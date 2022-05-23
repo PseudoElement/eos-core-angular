@@ -15,9 +15,10 @@ export interface IConfirmWindow2 {
     bodyBeforeList?: string;
     bodyList?: string[]; // if set, add <ul>/<li> list with array of string
     bodyAfterList?: string;
-    buttons: IConfirmButton [];
+    buttons: IConfirmButton[];
     confirmDisabled?: boolean;
     manualCR?: boolean;
+    typeIcon?: string;
 }
 
 export interface IConfirmWindow2Content extends IConfirmWindow2 {
@@ -40,6 +41,7 @@ export class ConfirmWindow2Component implements IConfirmWindow2Content {
     cancelTitle: string;
     manualCR?: boolean;
     confirmDisabled: boolean;
+    typeIcon?: string;
 
     readonly confirmEvent: EventEmitter<IConfirmButton> = new EventEmitter<IConfirmButton>();
 
@@ -49,6 +51,30 @@ export class ConfirmWindow2Component implements IConfirmWindow2Content {
         });
     }
 
+    getColor() {
+        switch (this.typeIcon) {
+            case 'success':
+                return '#8bc34a';
+            case 'warning':
+                return '#fdc309';
+            case 'danger':
+                return '#f44336';
+            default:
+                return '#fdc309';
+        }
+    }
+    getIcon() {
+        switch (this.typeIcon) {
+            case 'success':
+                return 'eos-icon-checkbox-white';
+            case 'warning':
+                return 'eos-icon-alert-white';
+            case 'danger':
+                return 'eos-icon-close-white';
+            default:
+                return 'eos-icon-alert-white';
+        }
+    }
     click(button: IConfirmButton) {
         this.confirmEvent.emit(button);
         this._hide();

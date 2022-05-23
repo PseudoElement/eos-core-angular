@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot/* , Router  */} from '@angular/router';
 import { EosUserProfileService } from '../services/eos-user-profile.service';
-import { BsModalService } from 'ngx-bootstrap/modal';
+// import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { LoginFormComponent } from '../login-form/login-form.component';
+// import { LoginFormComponent } from '../login-form/login-form.component';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
 export class AuthorizedGuard implements CanActivate {
@@ -11,8 +13,9 @@ export class AuthorizedGuard implements CanActivate {
 
     constructor(
         private _profileSrv: EosUserProfileService,
-        private _router: Router,
-        private _modalSrv: BsModalService
+        // private _router: Router,
+        // private _modalSrv: BsModalService,
+        private _confirmSrv: ConfirmWindowService,
     ) { }
 
     canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> {
@@ -23,8 +26,16 @@ export class AuthorizedGuard implements CanActivate {
         return this._profileSrv.checkAuth()
             .then((auth) => {
                 if (!auth) {
+                    this._confirmSrv
+                    .confirm2(ERROR_LOGIN)
+                    .then((confirmed) => {
+                        if (confirmed) {
+                            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                        }
+                        return auth;
+                    });
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
-                    if (this._profileSrv.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
+                    /* if (this._profileSrv.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
                         document.location.assign('../terminate.aspx');
                         return auth;
                     }
@@ -41,7 +52,7 @@ export class AuthorizedGuard implements CanActivate {
                                 this.modalRef.hide();
                             }
                         });
-                    }
+                    } */
                 }
                 return auth;
             });

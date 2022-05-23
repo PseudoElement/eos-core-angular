@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
@@ -13,6 +13,8 @@ import { SortsList } from '../../../eos-user-select/shered/interfaces/user-selec
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
 import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
@@ -46,10 +48,11 @@ export class UserParamApiSrv {
     }
     constructor(
         private apiSrv: PipRX,
-        private _router: Router,
+        // private _router: Router,
         private users_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
-        private _appContext: AppContext
+        private _appContext: AppContext,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this.initConfigTitle();
         this.flagTehnicalUsers = false;
@@ -72,14 +75,21 @@ export class UserParamApiSrv {
             })
             .catch(err => {
                 if (err.code === 434) {
-                    this._router.navigate(
+                    this._confirmSrv
+                    .confirm2(ERROR_LOGIN)
+                    .then((confirmed) => {
+                        if (confirmed) {
+                            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                        }
+                    });
+                    /* this._router.navigate(
                         ['/login'],
                         {
                             queryParams: {
                                 returnUrl: this._router.url
                             }
                         }
-                    );
+                    ); */
                 }
                 throw err;
             });

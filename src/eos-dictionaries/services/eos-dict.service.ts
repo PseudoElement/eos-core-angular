@@ -50,6 +50,8 @@ import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folde
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { isArray } from 'util';
 import { INSTRUMENTS_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/instruments/instruments.const';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\'!]', 'g');
@@ -271,6 +273,7 @@ export class EosDictService {
         private _eaps: EosAccessPermissionsService,
         private _apiSrv: PipRX,
         private _errorHelper: ErrorHelperServices,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -1963,7 +1966,13 @@ export class EosDictService {
             // });
             /* let url = document.location.href.split('#')[0];
             url = url.slice(0, url.lastIndexOf('Classif')) + 'login.aspx'; */
-            document.location.assign('../login.aspx');
+            this._confirmSrv
+            .confirm2(ERROR_LOGIN)
+            .then((confirmed) => {
+                if (confirmed) {
+                    document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                }
+            });
 
             return undefined;
         } else {
