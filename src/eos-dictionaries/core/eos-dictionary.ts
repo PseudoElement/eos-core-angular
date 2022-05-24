@@ -584,6 +584,9 @@ export class EosDictionary {
         this.root.isExpanded = true;
     }
 
+    public sortRegion(a: EosDictionaryNode, b: EosDictionaryNode, ask: boolean) {
+        return String(a.data.rec._region ? a.data.rec._region['CLASSIF_NAME'] : '').localeCompare(b.data.rec._region ? b.data.rec._region['CLASSIF_NAME'] : '') * (ask ? 1 : -1);
+    }
     public orderNodesByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
         let key: string = _orderBy.fieldKey;
@@ -591,6 +594,9 @@ export class EosDictionary {
             key = 'NOM_NUMBER_SORT';
         }
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
+            if (_orderBy.fieldKey === 'DUE_REGION') {
+                return this.sortRegion(a, b, _orderBy.ascend);
+            }
             let _a = a.getFieldValueByName(key) || 0; // /*|| Number(a.id)*/ || '';
             let _b = b.getFieldValueByName(key) || 0; // /*|| Number(b.id)*/ || '';
 

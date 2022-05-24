@@ -4,7 +4,7 @@ import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { AR_DESCRIPT } from 'eos-rest';
+import { AR_DESCRIPT, CITIZEN, REGION_CL } from 'eos-rest';
 // interface search {
 //     CITIZEN_SURNAME?: string;
 //     CITIZEN_CITY?: string;
@@ -145,9 +145,60 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
 
         return this.apiSrv
             .read(req)
-            .then((data: any[]) => {
-                this.prepareForEdit(data);
-                return data;
+            .then((data: CITIZEN[]) => {
+                const REG_DUE = data.filter(cit => cit.DUE_REGION).map(d => d.DUE_REGION);
+                return this.queryForRegion(REG_DUE).then(dataRagion => {
+                    this.prepareForEdit(data);
+                    this.updateData(data, dataRagion);
+                    return data;
+                });
+            });
+    }
+
+    updateData(citizen: CITIZEN[], regions: REGION_CL[]) {
+        if (regions.length) {
+            citizen.map(cit => {
+                const findRegion = regions.find((region: REGION_CL) => region.DUE === cit.DUE_REGION);
+                if (findRegion) {
+                    cit['_region'] = findRegion;
+                }
+            });
+        }
+
+    }
+
+    queryForRegion(ids: string[]): Promise<REGION_CL[]> {
+        let ids_list = '';
+        const arrayIdsList = [];
+        const query_list = [];
+        ids.forEach((elem) => {
+            ids_list += elem + '|';
+            if (ids_list.length > 1500) { // заполняем запрос, небольшим количеством символов, если их больше то разделяем на несколько запросов
+                arrayIdsList.push(ids_list);
+                ids_list = '';
+            }
+        });
+        arrayIdsList.push(ids_list);
+        arrayIdsList.forEach(l => {
+            query_list.push(this.getRegionName(l));
+        });
+        return Promise.all(query_list).then(data => {
+            const list_region = [];
+            data.forEach((d: any[]) => list_region.push(...d));
+            return list_region;
+        });
+    }
+    getRegionName(region): Promise<any> {
+        const queryRegion = {
+            REGION_CL: {
+                criteries: {
+                    DUE: String(region)
+                }
+            }
+        };
+        return this.apiSrv.read(queryRegion)
+            .then(result => {
+                return result;
             });
     }
     ar_Descript(): Promise<any> {
