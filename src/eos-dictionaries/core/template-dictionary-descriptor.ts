@@ -233,14 +233,18 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public extendCritery(critery, { mode, deleted }, selectedNode) {
         if (mode && mode === 2 && this.top) {
             critery['CATEGORY'] = `${this.hash().get(this.top)}`;
-        } else if (mode && mode === 0) {
+            critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
+            critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'] + '%';
+        } else if (mode === 0) {
             if (critery['NAME_TEMPLATE']) {
                 critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
+                critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'] + '%';
             }
         }
         if (!mode) {
             if (critery['NAME_TEMPLATE']) {
                 critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
+                critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'] + '%';
             }
             if (critery['DESCRIPTION']) {
                 critery['DESCRIPTION'] = critery['DESCRIPTION'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
@@ -348,8 +352,8 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     private _createLink(node: any, data: Blob): void {
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveBlob(data, node.title);
+        if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
+            window.navigator['msSaveBlob'](data, node.title);
         } else {
             const elem = window.document.createElement('a');
             elem.href = `../getdoctemplate.ashx/${node.id}`;
