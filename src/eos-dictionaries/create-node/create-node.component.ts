@@ -10,7 +10,7 @@ import { EosDepartmentsService } from '../services/eos-department-service';
 import { SUCCESS_SAVE } from '../consts/messages.consts';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
-import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
+import { CONFIRM_SAVE_INVALID, ERROR_LOGIN } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { EosUtils } from 'eos-common/core/utils';
 import { RestError } from 'eos-rest/core/rest-error';
@@ -97,7 +97,13 @@ export class CreateNodeComponent {
                 this.cardEditRef.isChanged = false;
                 if (e.code && e.code === 434) {
                     this.cardEditRef.isChanged = false;
-                    document.location.assign('../login.aspx');
+                    this._confirmSrv
+                    .confirm2(ERROR_LOGIN)
+                    .then((confirmed) => {
+                        if (confirmed) {
+                            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                        }
+                    });
                 }   else {
                        this._errHandler(e);
                 }
@@ -123,7 +129,13 @@ export class CreateNodeComponent {
             .catch((err) => {
                 if (err.code && err.code === 434) {
                     this.cardEditRef.isChanged = false;
-                    document.location.assign('../login.aspx');
+                    this._confirmSrv
+                    .confirm2(ERROR_LOGIN)
+                    .then((confirmed) => {
+                        if (confirmed) {
+                            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                        }
+                    });
                 }
 
                 if (err && err.error instanceof RestError) {

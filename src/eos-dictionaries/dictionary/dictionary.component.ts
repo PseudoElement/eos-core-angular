@@ -219,12 +219,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
 
-                            if (this.searchSettings.entity_dict !== this._dictSrv.currentDictionary.id) {
+                            if (this._dictSrv.currentDictionary && this.searchSettings.entity_dict !== this._dictSrv.currentDictionary.id) {
                                 this.clearFindSettings();
                             }
 
                             this._dictSrv.setMarkAllNone();
-                            if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                            if (this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 if (this.dictionary.id === 'templates') {
                                     this.dictionary.descriptor['top'] = this._nodeId;
                                 }
@@ -236,7 +236,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                 this._dictSrv.setCustomNodeId(this._nodeId);
                                 this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
                                 });
-                            } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
+                            } else if ( this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.') {
                                     this._nodeId = '';
                                 }

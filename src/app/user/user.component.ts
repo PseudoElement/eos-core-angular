@@ -1,10 +1,12 @@
 import { Component, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 import { EosUserProfileService } from '../services/eos-user-profile.service';
 import { ISettingsItem } from '../core/settings-item.interface';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Component({
     selector: 'eos-user',
@@ -21,7 +23,8 @@ export class UserComponent {
     constructor(
         private _profileSrv: EosUserProfileService,
         private _modalSrv: BsModalService,
-        private _router: Router,
+        // private _router: Router,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this.fullname = this._profileSrv.shortName;
         this._profileSrv.authorized$.subscribe((auth) => this.isAuthorized = auth);
@@ -29,7 +32,13 @@ export class UserComponent {
     }
 
     logout() {
-        this._router.navigate(['/login']);
+        this._confirmSrv
+        .confirm2(ERROR_LOGIN)
+        .then((confirmed) => {
+            if (confirmed) {
+                document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+            }
+        });
     }
 
     public openModal(template: TemplateRef<any>) {

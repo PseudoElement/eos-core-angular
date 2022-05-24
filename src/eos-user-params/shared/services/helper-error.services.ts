@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
+// import { Router } from '@angular/router';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
+// import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
 @Injectable()
 export class ErrorHelperServices {
     constructor(
         private _msgSrv: EosMessageService,
-        private _userProfiler: EosUserProfileService
+        // private _router: Router,
+        private _confirmSrv: ConfirmWindowService,
     ) {
 
     }
@@ -33,7 +37,7 @@ export class ErrorHelperServices {
             this.sendMessage('danger', 'Ошибка', error.message);
         }
     }
- private   sendMessage(type: string, tittle: string, msg: string) {
+ private sendMessage(type: string, tittle: string, msg: string) {
         this._msgSrv.addNewMessage({
             type: type as any,
             title: tittle,
@@ -41,13 +45,20 @@ export class ErrorHelperServices {
         });
     }
 
- private   razLogin() {
+ private razLogin() {
+     this._confirmSrv
+    .confirm2(ERROR_LOGIN)
+    .then((confirmed) => {
+        if (confirmed) {
+            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+        }
+    });
     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
-     if (this._userProfiler.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
-         document.location.assign('../terminate.aspx');
+     /* if (this._userProfiler.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
+        document.location.assign('../login.aspx?ReturnUrl=classif/#/spravochniki/citizens/0.');
      } else {
-         document.location.assign('../login.aspx');
-     }
+         document.location.assign('../login.aspx?ReturnUrl=classif/#/spravochniki/citizens/0.');
+     } */
         /*
         this._router.navigate(['login'], {
             queryParams: {

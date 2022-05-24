@@ -187,7 +187,7 @@ export const CONFIRM_NOT_CONSLITE: IConfirmWindow2 = {
 export const CONFIRM_OPERATION_LOGICDELETE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
-    body: 'Вы действительно хотите логически удалить записи:',
+    body: 'Вы действительно хотите логически удалить записи',
     bodyAfterList: 'Продолжить?',
     buttons: [
         {title: 'Отменить', result: 1, isDefault: true, },
@@ -356,4 +356,14 @@ export const CONFIRM_HARD_DELET_CABINET: IConfirmWindow2 = {
         {title: 'Отменить', result: 1, isDefault: true, },
         {title: 'Удалить',  result: 2, },
     ],
+};
+export const ERROR_LOGIN: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Невозможно выполнить запрос. Вход в приложение не был осуществлен, либо сессия прекращена сервером, т.к. была неактивна в течение длительного времени.',
+    bodyAfterList: '',
+    buttons: [
+        {title: 'Войти', result: 1, isDefault: true, },
+    ],
+    typeIcon: 'danger'
 };

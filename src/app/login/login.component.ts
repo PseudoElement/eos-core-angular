@@ -4,6 +4,8 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 import { IMessage } from '../../eos-common/core/message.interface';
 import { Subscription } from 'rxjs';
 import {environment} from '../../environments/environment';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Component({
     selector: 'eos-login',
@@ -18,9 +20,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _router: Router,
         private _route: ActivatedRoute,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         if (environment.production) {
-            window.location.href = '../login.aspx';
+            this._confirmSrv
+            .confirm2(ERROR_LOGIN)
+            .then((confirmed) => {
+                if (confirmed) {
+                    document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                }
+            });
         }
         this._subscription = this._msgSrv.messages$.subscribe((messages: IMessage[]) => {
             const _i = messages.length - 1;

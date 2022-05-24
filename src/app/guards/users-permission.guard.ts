@@ -6,6 +6,8 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { ERROR_LOGIN } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
 export class UsersPermissionGuard implements CanActivate {
@@ -14,6 +16,7 @@ export class UsersPermissionGuard implements CanActivate {
         private _msgSrv: EosMessageService,
         private _pipSrv: PipRX,
         private _apCtx: AppContext,
+        private _confirmSrv: ConfirmWindowService,
     ) { }
 
     canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> {
@@ -51,7 +54,13 @@ export class UsersPermissionGuard implements CanActivate {
             if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
                 // если нас открыли с настроек пользователя, то редиректим на завершение сессии
                 if (state.url.indexOf('/user_param/current-settings') !== -1) {
-                    document.location.assign('../terminate.aspx');
+                    this._confirmSrv
+                    .confirm2(ERROR_LOGIN)
+                    .then((confirmed) => {
+                        if (confirmed) {
+                            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                        }
+                    });
                 } else {
                     document.location.assign('../');
                 }

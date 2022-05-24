@@ -20,9 +20,32 @@
             }
         }
     }
+    .buttoms-alert {
+        margin-left: auto;
+        margin-right: 0;
+        min-width: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 .modal-open {
     .custom-modal {
         width: 700px;
     }
+}
+.alert-icon-confirm-window2 {
+    display: table-cell;
+    width: 48px;
+    text-align: center;
+    vertical-align: middle;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.title-alert-window{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

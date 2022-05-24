@@ -8,6 +8,7 @@ export interface IConfirmWindow {
     okTitle: string;
     cancelTitle: string;
     confirmDisabled?: boolean;
+    typeIcon?: string;
 }
 
 export interface IConfirmWindowContent extends IConfirmWindow {
@@ -24,6 +25,7 @@ export class ConfirmWindowComponent implements IConfirmWindowContent {
     cancelTitle: string;
     manualCR?: boolean;
     confirmDisabled: boolean;
+    typeIcon?: string;
 
     readonly confirmEvt: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -32,7 +34,30 @@ export class ConfirmWindowComponent implements IConfirmWindowContent {
             this.confirmEvt.emit(undefined);
         });
     }
-
+    getColor() {
+        switch (this.typeIcon) {
+            case 'success':
+                return '#8bc34a';
+            case 'warning':
+                return '#fdc309';
+            case 'danger':
+                return '#f44336';
+            default:
+                return '#fdc309';
+        }
+    }
+    getIcon() {
+        switch (this.typeIcon) {
+            case 'success':
+                return 'eos-icon-checkbox-white';
+            case 'warning':
+                return 'eos-icon-alert-white';
+            case 'danger':
+                return 'eos-icon-close-white';
+            default:
+                return 'eos-icon-alert-white';
+        }
+    }
     confirm() {
         this.confirmEvt.emit(true);
         this._hide();

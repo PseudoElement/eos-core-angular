@@ -1,17 +1,19 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+<div style="display: flex;border-bottom: 1px solid #e6e6e6;">
+    <div class="alert-icon-confirm-window2"
+    [ngStyle]="{ 'background-color': getColor()}">
+        <!-- <span [ngClass]="'eos-icon eos-icon-close-white'"></span> -->
+        <span class="eos-icon small icon-alert-window"
+            [ngClass]="getIcon()"></span>
+    </div>
+    <div class="title-alert-window" style="padding: 11px 15px;">
+        <h5 class="modal-title pull-left"> {{body}}</h5> <!-- {{title}} -->
+    </div>
+    <div class="modal-footer buttoms-alert">
+        <div>
+            <button type="button" class="btn btn-primary" (click)="cancel()">{{cancelTitle}}</button>
+            <button type="button" class="btn btn-primary-full" [disabled]="confirmDisabled" (click)="confirm()">{{okTitle}}</button>
+        </div>
+    </div>
 </div>
-<div class="modal-body"
-    [ngClass]="{manualCR: manualCR}"
->
 
-<!-- [style]="(true ? 'white-space: pre;': '')" -->
-<p style="white-space: pre-line;">{{body}}</p>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="cancel()">{{cancelTitle}}</button>
-    <button type="button" class="btn btn-primary-full" [disabled]="confirmDisabled" (click)="confirm()">{{okTitle}}</button>
-</div>
+
