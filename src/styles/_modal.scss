@@ -24,6 +24,10 @@
         margin-left: auto;
         margin-right: 0;
         min-width: fit-content;
+        display: block;
+    }
+    .position-button-alert {
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;

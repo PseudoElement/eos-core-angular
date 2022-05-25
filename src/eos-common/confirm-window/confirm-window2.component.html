@@ -6,11 +6,11 @@
         <span class="eos-icon small icon-alert-window"
             [ngClass]="getIcon()"></span>
     </div>
-    <div  style="padding: 11px 15px;">
+    <div *ngIf="body" style="padding: 11px 15px;">
         <h5 class="modal-title pull-left"> {{body}}</h5> <!-- {{title}} -->
     </div>
     <div class="modal-footer buttoms-alert">
-        <div> 
+        <div class="position-button-alert"> 
             <span *ngFor="let button of buttons">
                 <button 
                     style="margin-right: 10px;"

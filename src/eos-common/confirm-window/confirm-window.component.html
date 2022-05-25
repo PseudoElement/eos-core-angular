@@ -5,11 +5,11 @@
         <span class="eos-icon small icon-alert-window"
             [ngClass]="getIcon()"></span>
     </div>
-    <div class="title-alert-window" style="padding: 11px 15px;">
+    <div *ngIf="body" class="title-alert-window" style="padding: 11px 15px;">
         <h5 class="modal-title pull-left"> {{body}}</h5> <!-- {{title}} -->
     </div>
     <div class="modal-footer buttoms-alert">
-        <div>
+        <div class="position-button-alert">
             <button type="button" class="btn btn-primary" (click)="cancel()">{{cancelTitle}}</button>
             <button type="button" class="btn btn-primary-full" [disabled]="confirmDisabled" (click)="confirm()">{{okTitle}}</button>
         </div>
