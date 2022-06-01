@@ -7,8 +7,8 @@ import { IAppCfg } from 'eos-common/interfaces';
 export class ApiCfg implements IAppCfg {
     webBaseUrl = '../';
     apiBaseUrl = '../';
-    authApi = '/Services/ApiSession.asmx/';
-    dataApi = '/OData.ashx/';
+    authApi = 'Services/ApiSession.asmx/';
+    dataApi = 'CoreHost/OData/';
 
     metaMergeFuncList?: any[] = [];
     authApiUrl?: string = this.apiBaseUrl + this.authApi;

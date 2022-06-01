@@ -82,8 +82,8 @@ export class PipRX extends PipeUtils {
         this._cfg = Object.assign({
             webBaseUrl: '../',
             apiBaseUrl: '../',
-            authApi: '/Services/ApiSession.asmx/',
-            dataApi: '/OData.ashx/',
+            authApi: 'Services/ApiSession.asmx/',
+            dataApi: 'CoreHost/OData/',
         }, config);
         this._cfg.dataApiUrl = this._cfg.apiBaseUrl + this._cfg.dataApi;
         this._cfg.authApiUrl = this._cfg.apiBaseUrl + this._cfg.authApi;
@@ -107,7 +107,7 @@ export class PipRX extends PipeUtils {
 
     batchVariant(changeSet: any[], vc: string): Promise<any[]> {
         // return this._batch(changeSet, vc, this._cfg.dataApiUrl).toPromise();
-        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + '/OData.ashx/').toPromise();
+        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + '/CoreHost/OData/').toPromise();
     }
 
     private makeArgs(args: IKeyValuePair): string {
