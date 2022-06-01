@@ -398,6 +398,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.mode = 0;
         this.settings.opts.deleted = false;
         this.settings.opts.onlyNew = false;
+        this.settings.opts.closed = false;
         const model = this.searchData[modelName];
         if (model) {
             Object.keys(model).forEach((prop) => model[prop] = null);

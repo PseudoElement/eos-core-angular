@@ -3,12 +3,14 @@ import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_ICONS, COMMON_FIELD_NAME } from './_common';
 import { YEAR_PATTERN/* , VALID_REQ_MULTIPLE_STRING */ } from 'eos-common/consts/common.consts';
 import { SECURITY_DICT } from './security.consts';
+import { SEARCH_TYPES } from '../search-types';
 
 export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: DID_NOMENKL_CL,
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
+    searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'uniqueIndexDel', 'userOrder', 'printNomenc',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization', 'removeHard',
@@ -136,6 +138,19 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         //     default: null,
         //     // isNoDBInput: true,
     },
+    {
+        key: 'deepName',
+        title: 'Подразделение',
+        type: 'dictionary',
+        options: [],
+        foreignKey: 'deepName',
+        dictionaryId: 'DEPARTMENT',
+        dictionaryLink: {
+            pk: 'DUE',
+            fk: 'DUE',
+            label: 'CLASSIF_NAME',
+        },
+    },
         COMMON_FIELD_ICONS,
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Заголовок',
@@ -152,11 +167,11 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'SHELF_LIFE', 'NOM_NUMBER',
         'END_YEAR', 'ARTICLE', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER'],
-    fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
+    fullSearchFields: ['CLASSIF_NAME', 'ARTICLE', 'deepName', 'NOM_NUMBER', 'NOTE'],
     quickViewFields: ['NOM_NUMBER', 'SHELF_LIFE', 'SECURITY', 'E_DOCUMENT', 'CLOSED', 'YEAR_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'ARCH_FLAG', 'ARCH_DATE', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['ICONS_TYPE', 'NOM_NUMBER', 'CLASSIF_NAME'],
+    listFields: ['ICONS_TYPE', 'NOM_NUMBER', 'CLASSIF_NAME', 'deepName'],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'SHELF_LIFE', 'YEAR_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT'/* , 'ICONS_TYPE' */],
 

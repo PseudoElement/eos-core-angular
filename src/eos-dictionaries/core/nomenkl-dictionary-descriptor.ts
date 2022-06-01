@@ -1,8 +1,7 @@
-import { IDictionaryDescriptor, ISearchSettings, ITreeDictionaryDescriptor, } from 'eos-dictionaries/interfaces';
+import { E_FIELD_SET, E_FIELD_TYPE, IDictionaryDescriptor, ISearchSettings, ITreeDictionaryDescriptor, } from 'eos-dictionaries/interfaces';
 
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { FieldDescriptor } from './field-descriptor';
-import { ModeFieldSet } from './record-mode';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { DEPARTMENT } from '../../eos-rest';
 import { CustomTreeNode } from '../tree2/custom-tree.component';
@@ -19,12 +18,15 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
     dictionary: NomenklDictionaryDescriptor;
 
     parentField: FieldDescriptor;
-    fullSearchFields: ModeFieldSet | any;
+
 
     constructor(dictionary: NomenklDictionaryDescriptor, descriptor: IDictionaryDescriptor,
     ) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
+        this._initFieldSets([
+            'fullSearchFields',
+        ], descriptor);
     }
 
     filterBy(filters: any, data: any): boolean {
@@ -56,6 +58,37 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
             }
         }
         return super.filterBy(filters, data);
+    }
+    getFieldDescription(aSet: E_FIELD_SET): any {
+        const _description = super.getFieldDescription(aSet);
+        const _descs = this.getFieldSet(aSet);
+        const _f = _descs.find(_v => _v.type === E_FIELD_TYPE.dictionary);
+        if (_f) {
+            _description._list.push(_f.key);
+            _description.rec[_f.key] = {
+                title: _f.title,
+                length: _f.length,
+                pattern: _f.pattern,
+                required: _f.required,
+                isUnique: _f.isUnique,
+                uniqueInDict: _f.uniqueInDict,
+                type: _f.type,
+                options: _f.options,
+                height: _f.height,
+                foreignKey: _f.foreignKey,
+                forNode: _f.forNode,
+                vistype: _f.vistype,
+                dictionaryId: _f.dictionaryId,
+                default: _f.default,
+                password: _f.password,
+                groupLabel: _f.groupLabel,
+                maxValue: _f.maxValue,
+                minValue: _f.minValue,
+                readonly: _f.readonly,
+            };
+        }
+        return _description;
+
     }
 }
 
@@ -188,6 +221,20 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {
         if (params.mode === 2) {
             critery['DUE'] = this._filterDUE + '%';
+        }
+
+        critery['CLOSED'] = params.closed ? '0|1' : '0';
+
+        if (params.mode === 0) {
+            critery['DEPARTMENT.DUE'] = '0.%';
+        } else if (params.mode === 1) {
+            critery['DEPARTMENT.DUE'] = this.getActive().id;
+        } else {
+            critery['DEPARTMENT.DUE'] = this.getActive().id + '%';
+        }
+        if (critery['deepName']) {
+            critery['DEPARTMENT.CLASSIF_NAME'] = critery['deepName'];
+            delete critery['deepName'];
         }
     }
 

@@ -14,6 +14,7 @@ export interface ISearchSettings {
     mode: SEARCH_MODES;
     deleted: boolean;
     onlyNew?: boolean;
+    closed?: boolean;
 }
 
 
@@ -26,7 +27,7 @@ export class SearchFormSettings {
     lastSearch: SEARCHTYPE = SEARCHTYPE.none;
     entity: string = '';
     entity_dict: string = '';
-    opts: ISearchSettings = { mode: SEARCH_MODES.currentAndSubbranch, deleted: false, onlyNew: false};
+    opts: ISearchSettings = { mode: SEARCH_MODES.currentAndSubbranch, deleted: false, onlyNew: false, closed: false};
 
     full = {
         data: null,
