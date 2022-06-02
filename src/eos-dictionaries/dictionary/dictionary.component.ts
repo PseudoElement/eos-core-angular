@@ -1041,7 +1041,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             confirmDelete.bodyAfterList = '';
         }
         if (slicedNode) {
-            confirmDelete.body = 'Вы действительно хотите навсегда удалить копируемые записи:';
+            confirmDelete.body = 'Вставка элемента. Удалить копируемые записи:';
+            confirmDelete.buttons[0].title = 'Нет';
+            confirmDelete.buttons[1].title = 'Да';
         }
 
         if (this.dictionaryId === 'sev-rules') {
