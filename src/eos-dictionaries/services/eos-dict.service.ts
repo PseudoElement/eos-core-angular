@@ -109,8 +109,15 @@ export class EosDictService {
     private _treeNodeId: string;
     private _reloadDopRecvizites$: Subject<any>;
     private _resetSerch$: Subject<any>;
+    private _setNomenklFilterClose$: BehaviorSubject<boolean>;
 
     /* Observable dictionary for subscribing on updates in components */
+    get nomenklFilterClose$(): Observable<boolean> {
+        return this._setNomenklFilterClose$.asObservable();
+    }
+    set setNomenklFilterClose$(value: boolean) {
+        this._setNomenklFilterClose$.next(value);
+    }
     get dictionary$(): Observable<EosDictionary> {
         return this._dictionary$.asObservable();
     }
@@ -294,6 +301,7 @@ export class EosDictService {
         this._weightOrdered = !!this._storageSrv.getItem(STORAGE_WEIGHTORDER);
         this._reloadDopRecvizites$ = new Subject();
         this._resetSerch$ = new Subject();
+        this._setNomenklFilterClose$ = new BehaviorSubject(null);
     }
 
     getDescr(dictionaryId: string): IDictionaryDescriptor {

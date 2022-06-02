@@ -85,10 +85,13 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
     ngOnInit(): void {
         this.subscriptions.push(this._dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
-
+        this.subscriptions.push(this._dictSrv.nomenklFilterClose$.subscribe(value => {
+            this.searchForm.controls['filter.closed'].patchValue(value);
+        }));
         this.searchForm.valueChanges.subscribe((data) => {
             this.applyFilters();
-    });
+        });
+
 
 
     }
@@ -174,14 +177,14 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
                 const cv2 = this._dictSrv.getFilterValue('closed');
                 this.hasYear = true;
                 if (yv || yv === '') {
-                    yearFilter.setValue(yv, {emit: false});
+                    yearFilter.setValue(yv, { emit: false });
                 }
 
                 if (cv) {
-                    cb1.setValue(cv, {emit: false});
+                    cb1.setValue(cv, { emit: false });
                 }
                 if (cv2) {
-                    cb2.setValue(cv2, {emit: false});
+                    cb2.setValue(cv2, { emit: false });
                 }
 
             }

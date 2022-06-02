@@ -137,6 +137,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         }  else {
             delete this.searchModel['DOP_REC'];
         }
+
+
+        this._dictSrv.setNomenklFilterClose$ = this.settings.opts.closed;
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
     }
