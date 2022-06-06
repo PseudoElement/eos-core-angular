@@ -306,25 +306,33 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                                 cabMap.set(c['ISN_CABINET'], c['CABINET_NAME']);
                             });
                             const mesageAr: string[] = [];
+                            const mesageAr2: string[] = [];
                             updateCab.forEach((c) => {
-                                let flag = false;
                                 if (cabUserCount.get(c['ISN_CABINET']) === 1) {
-                                    mesageAr.push(`В кабинете ${cabMap.get(c['ISN_CABINET']) || ''} ${c['SURNAME']} является единственным владельцем. Продолжить операцию?`);
-                                    flag = true;
-                                } else {
-                                    mesageAr.push(
-                                        `Должносное лицо "${c['SURNAME']}" является ${flag ? 'ПОСЛЕДНИМ' : ''} владельцем кабинета ${cabMap.get(c['ISN_CABINET']) || ''}.
-                                         Хотите сделать его владельцем данного кабинета (с переносом «его» документов)?`
-                                        );
-                                    cabUserCount.set(c['ISN_CABINET'], cabUserCount.get(c['ISN_CABINET']) - 1);
+                                    mesageAr2.push(`В кабинете ${cabMap.get(c['ISN_CABINET']) || ''} ${c['SURNAME']} является единственным владельцем. Продолжить операцию?`);
                                 }
-
+                                mesageAr.push(
+                                    `Должносное лицо "${c['SURNAME']}" является владельцем кабинета ${cabMap.get(c['ISN_CABINET']) || ''}.
+                                     Хотите сделать его владельцем данного кабинета (с переносом «его» документов)?`
+                                    );
+                                cabUserCount.set(c['ISN_CABINET'], cabUserCount.get(c['ISN_CABINET']) - 1);
                             });
                             testc.bodyList = mesageAr;
                             return this._confirmSrv.confirm2(testc)
                                 .then((button) => {
                                     if (button && button.result === 1) {
-                                        this.getNewDepartUserDepartment(ans, cabinets);
+                                        if (mesageAr2.length > 0) {
+                                            const testc2: IConfirmWindow2 = Object.assign({}, CONFIRM_ADD_DL_UPDATE_CAB);
+                                            testc2.bodyList = mesageAr2;
+                                            this._confirmSrv.confirm2(testc2)
+                                            .then((button2) => {
+                                                if (button2 && button2.result === 1) {
+                                                    this.getNewDepartUserDepartment(ans, cabinets);
+                                                }
+                                            });
+                                        } else {
+                                            this.getNewDepartUserDepartment(ans, cabinets);
+                                        }
                                     } else {
                                         this.getNewDepartUserDepartment(ans.filter(us => !us['ISN_CABINET']), cabinets);
                                     }
