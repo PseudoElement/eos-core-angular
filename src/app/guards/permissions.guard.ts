@@ -86,7 +86,7 @@ export class PermissionsGuard implements CanActivate {
                         .confirm2(ERROR_LOGIN)
                         .then((confirmed) => {
                             if (confirmed) {
-                                document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                                document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
                             }
                         });
                     } else {

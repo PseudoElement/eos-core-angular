@@ -27,7 +27,7 @@ export class EosErrorHandler implements ErrorHandler {
                     .confirm2(ERROR_LOGIN)
                     .then((confirmed) => {
                         if (confirmed) {
-                            document.location.assign('../login.aspx?ReturnUrl=' + document.location.href);
+                            document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
                         }
                     });
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
