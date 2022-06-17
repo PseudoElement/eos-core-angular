@@ -89,20 +89,26 @@
 <ng-template #templatePassword tabindex="1" role="dialog" aria-labelledby="dialog-nested-name2">
     <div class="modal-header">
         <h4 class="modal-title pull-left">Введите пароль</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="closeSubModal()">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="btn btn-primary" (click)="closeSubModal()">
+            <span >отменить</span>
         </button>
+        <button [disabled]="!validPassword" type="button" (click)="modalRef.hide()" class="btn btn-primary-full ">записать</button>
     </div>
     <div class="modal-body">
-        <form  (ngSubmit)="modalRef.hide()">
-            <input name="pass" id="inpPass" class="passInput" type="password" [(ngModel)]="password">
-            <div>
-                <input name="repPass" [ngStyle]="{'border-color': !validPassword ? 'red' : '#2196f3'}" class="passInput" style="margin-top: 5px;" type="password"[(ngModel)]="repitedPassword">
-                <alert *ngIf="!validPassword && (password.length || repitedPassword.length)" type="danger">
-                    Пароли не совпадают
-                </alert>
-            </div>
-            <button [disabled]="!validPassword" type="submit" class="btn btn-primary-full ">ок</button>
+        <form autocomplete="off" aria-autocomplete="none" (ngSubmit)="modalRef.hide()">
+            <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
+            <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
+            <label> 
+                <span>Пароль</span>
+                <input aria-autocomplete="none" [type]="type" name="pass" id="inpPass" class="passInput" [(ngModel)]="password" autocomplete="off">
+                <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small oko-vision oko-vision-l1" [ngClass]="'eos-icon-show-blue'"></span>
+            </label>
+           
+               <label>
+                <span>Повторите пароль</span>
+                <input aria-autocomplete="none" placement="bottom" [type]="type_repeat" autocomplete="off" [containerClass]="'tooltip-error'" [tooltip]="!validPassword && (password.length || repitedPassword.length) ? 'Пароли не совпадают' : ''" name="repPass" [ngStyle]="{'border-color': !validPassword && (password.length || repitedPassword.length) ? 'red' : '#2196f3'}" class="passInput" style="margin-top: 5px;" [(ngModel)]="repitedPassword">
+                <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small oko-vision" [ngClass]="'eos-icon-show-blue'"></span>   
+            </label>
         </form>
     </div>
 </ng-template>

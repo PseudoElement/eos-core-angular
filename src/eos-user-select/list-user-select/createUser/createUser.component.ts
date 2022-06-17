@@ -51,6 +51,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     cbBase: boolean;
     loginMaxLength: number = 64;
     techUserTooltip: string = 'К техническим пользователям невозможно привязать должностное лицо';
+    type = 'password';
+    type_repeat = 'password';
     private ngUnsubscribe: Subject<any> = new Subject();
     private subscriptions: Subscription[] = [];
     private typesUsers = new Map()
@@ -397,6 +399,20 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 .catch(() => {
                     this.isShell = false;
                 });
+        }
+    }
+    setVision(flag?) {
+        if (flag) {
+            this.type = 'text';
+        } else {
+            this.type_repeat = 'text';
+        }
+    }
+    resetVision(flag?) {
+        if (flag) {
+            this.type = 'password';
+        } else {
+            this.type_repeat = 'password';
         }
     }
     private _urlSegment(): string {

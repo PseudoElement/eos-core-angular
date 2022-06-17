@@ -1,6 +1,7 @@
 .param-create-user {
     margin-top: 100px;
-    width: 800px;
+    width: 800px!important;
+    height: 342px;
     .log {
         display: inline-block;
     }
@@ -92,16 +93,51 @@
     }
 }
 
+
 .passModal {
+    width: 384px;
     top: 20%;
-    .btn {
-        width: 92px;
-        position: relative;
-        top: 5px;
+
+    form {
+        display: flex;
+        flex-direction: column;
     }
 
-    .passInput{
-        border-color: #e6e6e6;
+    .btn {
+        width: 88px;
+        height: 32px;
+        position: relative;
+        text-transform: uppercase;
+    }
+
+    .modal-header {
+        padding: 11px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-body {
+        padding-top: 1px;
+        background-color: #fff;
+    }
+
+    label {
+        display: flex;
+        flex-direction: column;
+        color: #969696;
+        font-size: 12px;
+        font-weight: 400;
+        font-style: normal;
+        text-transform: uppercase;
+        mix-blend-mode: normal;
+        position: relative;
+        span {
+            height: 25px;
+        }
+    }
+
+    .passInput {
         outline: none;
         color: #000000;
         border-radius: 0;
@@ -109,12 +145,27 @@
         border-width: 1px;
         box-shadow: none;
         height: 32px;
+        width: 355px;
+        background-color: #f5f5f5;
+        border: 1px solid #C8C8C8;
+
         &:focus {
             border-color: #2196f3;
         }
-    .error {
+
+        .error {
             border-color: red;
         }
+    }
+
+    .oko-vision {
+        position: absolute;
+        left: 324px;
+        top: 35px;
+    }
+
+    .oko-vision-l1 {
+        top: 30px;
     }
 
 }
