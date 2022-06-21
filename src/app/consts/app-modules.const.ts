@@ -15,6 +15,10 @@ export const APP_MODULES = [
         title: 'Инструменты',
         url: '/instruments',
     },
+    {
+        title: 'Фоновые задачи',
+        url: '/background-tasks',
+    },
 ];
 
 export const APP_MODULES_DROPDOWN = [

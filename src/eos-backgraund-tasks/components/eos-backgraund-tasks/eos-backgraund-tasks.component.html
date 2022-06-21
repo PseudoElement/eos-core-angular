@@ -1,0 +1,8 @@
+<div class="eos-backgraund eos-backgraund-padding">
+  <button *ngFor="let list of backgr_lists" class="backgraund btn block xl-font" [routerLink]="['/background-tasks', list.id]">
+    <span class="icon-wrapper">
+      <span class="icon disabled eos-icon {{list.icon}}"></span>
+    </span>
+    <span class="text">{{list.title}}</span>
+  </button>
+</div>

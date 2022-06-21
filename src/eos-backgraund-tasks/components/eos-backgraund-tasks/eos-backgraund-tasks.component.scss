@@ -1,0 +1,82 @@
+.eos-backgraund {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    width: calc(100vw - 30px);
+    overflow-y: auto;
+    max-height: calc(100vh - 130px);
+    &.eos-backgraund-padding {
+        padding: 20px 20px 0 20px;
+    }
+    .backgraund {
+        height: 102px;
+        // flex-basis: calc((100% - 4*10px) / 4);
+        flex-basis: calc((100% - 4*10px) / 1);
+        margin-right: 10px;
+        margin-bottom: 10px;
+        border-radius: 0;
+        text-align: left;
+        overflow: hidden;
+        &.btn {
+            &.fict {
+                cursor: auto;
+                max-height: 1px;
+            }
+            &:disabled {
+                opacity: 0.4;
+                background-color: #eeeeee;
+                color: #000000;
+            }
+
+            min-width: 400px;
+            max-width: 490px;
+            padding: 0;
+            position: relative;
+            flex-grow: 1;
+            flex-basis: 400px;
+            flex-shrink: 1;
+
+            .text {
+                display: table-cell;
+                vertical-align: middle;
+                width: 100%;
+                // max-height: 52px;
+                // position: absolute;
+                // display: inline-block;
+                // top: 38px;
+                // left: 112px;
+                // width: calc(100% - 120px);
+                // overflow: hidden;
+                white-space: normal;
+            }
+        }
+
+
+        .text {
+            display: table-cell;
+            vertical-align: middle;
+            width: 100%;
+            // position: relative;
+            // top: -8px;
+            // left: -6px;
+            // width: calc(100% - 120px);
+            // overflow: hidden;
+            // display: inline-block;
+            // text-overflow: ellipsis;
+        }
+
+        .icon {
+            height: 48px;
+            width: 48px;
+        }
+
+        .icon-wrapper {
+            display: table-cell;
+            // height: 98px;
+            width: 100px;
+            // padding: 0 26px 0 26px;
+            padding: 26px;
+            line-height: 0;
+        }
+    }
+}

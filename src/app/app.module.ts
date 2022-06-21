@@ -60,6 +60,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
 import { StaticHelper } from './app.static';
 import { CarmaHttp2Service } from './services/camaHttp2.service';
 import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
+import { EosBackgraundTasksModule } from '../eos-backgraund-tasks/eos-backgraund-tasks.module';
 /* end guards */
 
 @NgModule({
@@ -97,6 +98,7 @@ import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
         EosParametersModule,
         EosUserParamsModule,
         EosUserSelectModule,
+        EosBackgraundTasksModule,
     ],
     entryComponents: [
         LoginFormComponent,

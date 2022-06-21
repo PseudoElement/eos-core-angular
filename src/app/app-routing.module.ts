@@ -340,6 +340,12 @@ const routes: Routes = [{
     children: childrenDictionariesComponent,
 },
 {
+    path: 'background-tasks',
+    data: { title: 'Фоновые задачи', showInBreadcrumb: true },
+    canActivate: [AuthorizedGuard],
+    loadChildren: () => import('eos-backgraund-tasks/eos-backgraund-tasks.module').then(i => i.EosBackgraundTasksModule),
+},
+{
     path: '',
     redirectTo: '/desk/system',
     pathMatch: 'full',
