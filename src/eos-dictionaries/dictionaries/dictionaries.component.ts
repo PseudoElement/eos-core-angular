@@ -137,6 +137,9 @@ export class DictionariesComponent implements OnInit, OnDestroy {
             case 'IMPORT_1C':
                 this.import1CView(dict.openURL);
                 break;
+            case 'CHANGE_DL':
+                this.changeDl(dict.openURL);
+                break;
             default:
                 break;
         }
@@ -181,6 +184,10 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         }
     }
     import1CView(url) {
+        this.windowView = window.open(url, '_blank', 'width=900,height=700');
+        this.windowView.blur();
+    }
+    changeDl(url) {
         this.windowView = window.open(url, '_blank', 'width=900,height=700');
         this.windowView.blur();
     }

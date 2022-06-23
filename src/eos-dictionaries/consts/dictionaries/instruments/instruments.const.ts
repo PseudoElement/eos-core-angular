@@ -65,6 +65,15 @@ export const IMPORT_1C: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     iconName: 'eos-icon-directory-settings-blue',
     openURL: '../AChRF.Cadres/Pages/AChRFCadres.html'
 });
+export const CHANGE_DL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+    id: 'CHANGE_DL',
+    isFolder: true,
+    title: 'Передача документов',
+    visible: true,
+    apiInstance: 'INSTRUMENTS',
+    iconName: 'eos-icon-directory-settings-blue',
+    openURL: '../WebRC/Pages/ChangeDl.html'
+});
 export const INSTRUMENTS_DICTIONARIES = [
     EXPORT,
     IMPORT,
@@ -72,6 +81,7 @@ export const INSTRUMENTS_DICTIONARIES = [
     PROTOCOL_CHANGE,
     PROTOCOL_VIEW,
     PROTOCOL_SCAN,
-    IMPORT_1C
+    IMPORT_1C,
+    CHANGE_DL
     // SEV_ASSOCIATION_DICT,
 ];
