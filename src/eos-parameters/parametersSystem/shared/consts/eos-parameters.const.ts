@@ -36,7 +36,12 @@ export const EOS_PARAMETERS_TAB = [{
 }, {
     title: 'Служба конвертации',
     url: 'conversion'
-}];
+},
+{
+    title: 'Выгрузка в Архивное хранилище',
+    url: 'unloading-arch'
+}
+];
 
 
 export const PARM_SUCCESS_SAVE: IMessage = {

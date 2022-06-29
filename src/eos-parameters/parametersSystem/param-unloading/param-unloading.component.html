@@ -1,0 +1,22 @@
+<div *ngIf="inputs" class="input-param-wrapper input-param-search-wrapper">
+    <eos-param-header
+      [title]="titleHeader"
+      (submitForm)="btnDisabled ? cancel() : submit()"
+      (cancelForm)="cancel()"
+      [statusBtnSub]="btnError"
+      [editBtn]="true"
+      (editForm)="edit()"
+  ></eos-param-header>
+  <div class="param-input-group">
+    <eos-dynamic-input
+      [input]="inputs['rec.ArhStoreUrl']"
+      [form]="form"
+     
+    ></eos-dynamic-input>
+      <eos-dynamic-input
+        [input]="inputs['rec.ArhExportPath']"
+        [form]="form"
+       
+    ></eos-dynamic-input>
+  </div>
+</div>

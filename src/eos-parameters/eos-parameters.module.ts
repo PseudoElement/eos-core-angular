@@ -33,6 +33,7 @@ import { CollectionService } from './parametersSystem/param-authentication/colle
 import { ParamDictionariesComponent } from './parametersSystem/param-dictionaries/param-dictionaries.component';
 import { ParamLoggingComponent } from './parametersSystem/param-logging/param-logging.component';
 import {ParamConversionComponent} from './parametersSystem/param-conversion/param-conversion.component';
+import { ParamUnloadingComponent } from './parametersSystem/param-unloading/param-unloading.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import {ParamConversionComponent} from './parametersSystem/param-conversion/para
         AddCertStoresComponent,
         ParamLoggingComponent,
         ParamOrganizNowComponent,
-        ParamConversionComponent
+        ParamConversionComponent,
+        ParamUnloadingComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent
