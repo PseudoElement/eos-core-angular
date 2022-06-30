@@ -15,8 +15,8 @@ const routes: Routes = [
     path: ':taskId',
     component: EosBackgraundSingleComponent,
     data: {
-      title: 'Задачи', showBreadcrumb: true,
-      showInBreadcrumb: true,
+      showBreadcrumb: false,
+      showInBreadcrumb: false,
       showSandwichInBreadcrumb: false,
       showPushpin: false
   },

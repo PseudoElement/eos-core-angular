@@ -12,13 +12,14 @@ export const APP_MODULES = [
         url: '/parameters',
     },
     {
-        title: 'Инструменты',
-        url: '/instruments',
-    },
-    {
         title: 'Фоновые задачи',
         url: '/background-tasks',
     },
+    {
+        title: 'Инструменты',
+        url: '/instruments',
+    },
+
 ];
 
 export const APP_MODULES_DROPDOWN = [

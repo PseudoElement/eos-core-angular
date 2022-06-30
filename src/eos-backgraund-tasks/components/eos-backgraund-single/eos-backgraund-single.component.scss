@@ -1,6 +1,10 @@
-.eos-bacgr-single {
+:host {
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 100%;
     height: calc(100vh - 151px);
     background-color: #fff;
+    display: block;
+    #eos-admin-fon-tasks {
+        height: 100%;
+    }
 }
