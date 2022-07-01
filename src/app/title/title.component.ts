@@ -11,7 +11,7 @@ export class TitleComponent {
     @Input() tooltip: String;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     /* todo: define it or remove. Mocked now*/
-    title = 'Администрирование системы';
+    title = 'Настройка системы';
     openDelo() {
         try {
             document.location.assign('../main.aspx');
