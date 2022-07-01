@@ -14,7 +14,7 @@ export class TitleComponent {
     title = 'Настройка системы';
     openDelo() {
         try {
-            document.location.assign('../main.aspx');
+            document.location.assign('../ArmSite/Site/ArmMain.html');
         } catch (e) {
             // IE fix if user click 'stay in page'
             console.error('openDelo failed', e);
