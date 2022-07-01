@@ -8,7 +8,7 @@ import { environment } from './environments/environment';
 if (environment.production) {
     enableProdMode();
 }
-RuntimePluginsManager.loadPlugins({ target: 'FonTasks', registryFolder: '..' }).then(() => {
+RuntimePluginsManager.loadPlugins({ target: 'tech_tasks', registryFolder: '..' }).then(() => {
     platformBrowserDynamic().bootstrapModule(AppModule);
 });
 
