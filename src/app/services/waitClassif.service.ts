@@ -177,25 +177,28 @@ export class WaitClassifService {
         }
         return url;
     }
+    private getSymbol(url: string) {
+        return url.indexOf('?') === -1 ? '?' : '&';
+    }
     private stdTextUrl(url, params: IOpenClassifParams) {
-        // if (params.id_std !== undefined && params.id_std !== null) {
-        //     url += `?id=${params.id_std}`;
-        // }
-        // if (params.name !== undefined && params.name !== null) {
-        //     url += `&name=${params.name}`;
-        // }
+        if (params.isn_user !== undefined && params.isn_user !== null) {
+            url += this.getSymbol(url) + `isn_user=${params.isn_user}`;
+        }
+        if (params.clUser === true) {
+            url += this.getSymbol(url) + `clUser=${params.isn_user}`;
+        }
         // if (params.form !== undefined && params.form !== null) {
         //     url += `&form=${params.form}`;
         // }
         if (params.idText !== undefined && params.idText !== null) {
-            url += `?id=${params.idText}`;
-            url += `&name=${params.idText}`;
+            url += this.getSymbol(url) + `id=${params.idText}`;
+            url += this.getSymbol(url) + `name=${params.idText}`;
         }
         if (params.formText !== undefined && params.formText !== null) {
-            url += `&form=${params.formText}`;
+            url += this.getSymbol(url) + `form=${params.formText}`;
         }
         if (params.selected !== undefined && params.selected !== null) {
-            url += `&select=${params.selected}`;
+            url += this.getSymbol(url) + `select=${params.selected}`;
         }
         return url;
     }
