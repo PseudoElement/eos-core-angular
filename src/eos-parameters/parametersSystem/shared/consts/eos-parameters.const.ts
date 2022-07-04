@@ -38,7 +38,7 @@ export const EOS_PARAMETERS_TAB = [{
     url: 'conversion'
 },
 {
-    title: 'Выгрузка в Архивное хранилище',
+    title: 'Архивное хранилище',
     url: 'unloading-arch'
 }
 ];
