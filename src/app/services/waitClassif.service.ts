@@ -185,7 +185,7 @@ export class WaitClassifService {
             url += this.getSymbol(url) + `isn_user=${params.isn_user}`;
         }
         if (params.clUser === true) {
-            url += this.getSymbol(url) + `clUser=${params.isn_user}`;
+            url += this.getSymbol(url) + `clUser=${params.clUser}`;
         }
         // if (params.form !== undefined && params.form !== null) {
         //     url += `&form=${params.form}`;
