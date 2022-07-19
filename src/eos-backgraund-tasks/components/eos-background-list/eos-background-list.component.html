@@ -1,4 +1,4 @@
-<button [disabled]="!disabled" class="backgraund btn block xl-font" (click)="setCurentTask(list)">
+<button [disabled]="!disabled" class="backgraund btn block xl-font" (click)="setCurentTask(list)" [title]="getHint()" >  
   <span class="icon-wrapper">
     <span class="icon disabled eos-icon {{list.icon}}"
       [ngStyle]="{'background-image': 'url(' + list.icon + ')'}"></span>

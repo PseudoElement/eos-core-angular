@@ -99,7 +99,7 @@
             <span class="icon-wrapper">
                 <span class="icon eos-icon {{ item.value.iconName }}"></span>
             </span>
-        <span [hidden]="editing(item.value)" class="text">
+        <span [hidden]="editing(item.value)" class="text" [title]="getHint(item)">
             {{ item.value.title }}
         </span>
         <!-- <button

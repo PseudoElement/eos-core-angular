@@ -10,6 +10,7 @@ import {NOT_EMPTY_STRING} from 'eos-common/consts/common.consts';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {RECENT_URL} from 'app/consts/common.consts';
 import { skip } from 'rxjs/operators';
+import { DISABLED_LIST_ITEM } from 'app/consts/messages.consts';
 
 @Component({
     templateUrl: 'desktop.component.html',
@@ -217,5 +218,9 @@ export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
     rttlink(item) {
         return item.value.linkType === 1 ? null : [item.value.url];
+    }
+
+    getHint(item): string {
+        return item.value.linkType === 1 ? DISABLED_LIST_ITEM : '';
     }
 }

@@ -106,3 +106,5 @@ export const EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS: IMessage = {
     msg: 'Пользователю дано право на регистрацию документов, но нет разрешения ни на одну группу документов!\nУкажите группу документов для регистрации.',
     type: 'warning'
 };
+
+export const DISABLED_LIST_ITEM = 'Недостаточно прав';

@@ -9,6 +9,7 @@ import { TYPE_DOCUM_DICT } from '../consts/dictionaries/type-docum.const';
 import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
+import {DISABLED_LIST_ITEM} from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-dictionaries',
@@ -196,5 +197,9 @@ export class DictionariesComponent implements OnInit, OnDestroy {
             this.modalWindow.close();
             this.modalWindow = null;
         }
+    }
+
+    getHint(isDisabled: boolean): string {
+        return isDisabled ? DISABLED_LIST_ITEM : '';
     }
 }
