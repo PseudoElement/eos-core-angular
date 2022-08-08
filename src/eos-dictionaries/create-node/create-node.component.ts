@@ -157,9 +157,29 @@ export class CreateNodeComponent {
 
         confirmParams.body = '';
         confirmParams.bodyList = [ ... errors, ... EosUtils.getValidateMessages(this.cardEditRef.inputs)];
-
+        if (confirmParams.bodyList.length) {
+            confirmParams.bodyList.forEach((body) => {
+                if (body.indexOf('Обязательное поле') >= 0) {
+                    confirmParams.body = 'Не заполнены обязательные поля';
+                }
+            });
+        }
         return this._confirmSrv.confirm2(confirmParams, )
             .then((doSave) => {
+                let key = '';
+                for (const inputKey of Object.keys(this.cardEditRef.inputs)) {
+                    const input = this.cardEditRef.inputs[inputKey];
+                    const inputDib = input.dib;
+                    if (!inputDib) {
+                        continue;
+                    }
+                    const control = inputDib.control;
+                    if (control.invalid) {
+                        key = inputDib.input.key;
+                        break;
+                    }
+                }
+                BaseCardEditComponent.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
                 return true;
             })
             .catch(() => {

@@ -92,7 +92,25 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
             }
         }, 500);
     }
-
+    public static setElementOnValidate(key: string, component: BaseCardEditComponent) {
+        if (key) {
+            if (component.tabOptions.length > 0) {
+                let ind = -1;
+                component.tabOptions.forEach((tab, index) => {
+                    if (!tab.isValid) {
+                        ind = index;
+                    }
+                });
+                component.currTab = ind === -1 ? 0 : ind;
+            }
+            setTimeout(() => {
+                const parents = document.getElementById(key);
+                if (parents) {
+                    parents.focus();
+                }
+            }, 0);
+        }
+    }
     public confirmSave(): Promise<boolean> {
         return Promise.resolve(true);
     }
