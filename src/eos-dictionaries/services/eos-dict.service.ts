@@ -1072,10 +1072,10 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         let fixedString;
         // для полнотекстового поиска кавычки не убираем, экранируем
-        if (['departments', 'rubricator'].indexOf(this.currentDictionary.id) !== -1) {
-            fixedString = settings.quick.data;
+        if (['departments', 'rubricator', 'docgroup', 'cabinet'].indexOf(this.currentDictionary.id) !== -1) {
+            fixedString = settings.quick.data.replace(/^%$/, '');
         }   else {
-            fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
+            fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '').replace(/^%$/, '');
         }
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
