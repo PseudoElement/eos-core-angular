@@ -28,8 +28,8 @@ export class InputParamControlService {
                     set[input.key] = new DateInput(input);
                     break;
                 case E_FIELD_TYPE.select:
-                    set[input.key] = new DropdownInput(Object.assign({options: []}, input));
-                    break;
+                     set[input.key] = new DropdownInput(Object.assign({options: []}, input));
+                     break;
                 case E_FIELD_TYPE.radio:
                     set[input.key] = new RadioInput(input);
                     break;

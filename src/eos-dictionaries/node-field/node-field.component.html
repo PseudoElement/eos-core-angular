@@ -15,10 +15,21 @@
             ></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
+            
+            <!-- костыль для участников СЭВ, отображение иконки типа передачи сообщений -->
+            <label  *ngIf="!isSevChannelType(); else sevChannelType" class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}
             </label>
+            <ng-template #sevChannelType> <!-- отображение иконки типа канала сообщений СЭВ -->
+                <div class="table-field-ico" *ngFor="let icon of iconsArray;">
+                    <span class="folder small eos-icon"
+                        [ngClass]="icon.class"
+                        [tooltip]="icon.tooltip"
+                        placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
+                </div>
+            </ng-template>
         </ng-container>
+
         <ng-container *ngSwitchCase="types.buttons">
             <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}

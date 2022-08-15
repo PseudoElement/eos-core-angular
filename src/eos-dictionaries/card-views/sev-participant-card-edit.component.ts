@@ -11,7 +11,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_ORGANIZ_CL_PARTIC } from 'eos-user-select/shered/consts/create-user.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { IOpenClassifParams } from 'eos-common/interfaces/interfaces';
-
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-sev-participant-card-edit',
     templateUrl: 'sev-participant-card-edit.component.html',
@@ -28,6 +28,9 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     private _originSrules: Map<number, SEV_PARTICIPANT_RULE> = new Map();
     private _changes: Map<number, any> = new Map();
 
+    get isCbBase(): boolean {
+       return this._appCtx.cbBase;
+    }
 
     constructor(
         injector: Injector,
@@ -37,6 +40,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         private _modalSrv: BsModalService,
         private _waitClassif: WaitClassifService,
         private _errorHelper: ErrorHelperServices,
+        private _appCtx: AppContext
     ) {
         super(injector);
     }

@@ -107,6 +107,7 @@ import { CheckIndexNomenclaturComponent } from './check-index-nomenclatur/check-
 import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.component';
 import { PrintTemplateComponent } from './print-template/print-template.component';
 import { ResolutionCategoryEditComponent } from './card-views/resolution-category-edit.component';
+import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -179,6 +180,7 @@ import { ResolutionCategoryEditComponent } from './card-views/resolution-categor
         PrintTemplateComponent,
         TooltipErrorFixDirective,
         ResolutionCategoryEditComponent,
+        SevSyncDictsComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -201,6 +203,7 @@ import { ResolutionCategoryEditComponent } from './card-views/resolution-categor
         StampBlobFormComponent,
         DictionaryPasteComponent,
         PrintTemplateComponent,
+        SevSyncDictsComponent
     ],
     imports: [
         BrowserModule,

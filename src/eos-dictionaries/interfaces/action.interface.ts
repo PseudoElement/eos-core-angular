@@ -7,6 +7,8 @@ export enum E_RECORD_ACTIONS {
     removeHard,
     showDeleted,
     userOrder,
+    sevSyncDicts,
+    sevClearIdentityCodes,
     moveUp,
     moveDown,
     import,

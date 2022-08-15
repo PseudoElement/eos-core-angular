@@ -32,6 +32,7 @@
         [ngClass]="{'open-tree': currentState[0] && !hideTree }">
         <div class="relative-wrapper">
                 <div class="node-actions" id="node-actions">
+
                     <div *ngIf="treeNode"
                         class="selected-node xl-font"
                         [ngClass]="{'has-custom': hasCustomTable, 'adapt': dictionaryId === 'departments' && stylesFlex === 'xl', 'adapt-middle': dictionaryId === 'departments' && stylesFlex === 'xs' }">
@@ -113,6 +114,7 @@
                             </ng-template>
                         </div>
                     </div>
+
                     <div class="first-line" [hidden]="params.hideTopMenu || accessDenied">
                         <div class="controller pull-left">
                             <eos-node-actions (action)="doAction($event)"></eos-node-actions>

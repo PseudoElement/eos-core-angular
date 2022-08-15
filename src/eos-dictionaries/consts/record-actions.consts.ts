@@ -565,6 +565,33 @@ export const RECORD_ACTION_COPY: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+export const RECORD_ACTION_SEV_SYNC_DICTS: IAction = {
+    type: E_RECORD_ACTIONS.sevSyncDicts,
+    group: E_ACTION_GROUPS.item,
+    title: 'Синхронизировать справочники',
+    hint: 'Синхронизировать справочники',
+    iconClass: 'eos-icon eos-icon-synchro-blue small',
+    disabledIconClass: 'eos-icon eos-icon-synchro-grey small',
+    hoverIconClass: 'eos-icon eos-icon-synchro-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
+export const RECORD_ACTION_SEV_CLEAR_IDENTITY_CODES: IAction = {
+    type: E_RECORD_ACTIONS.sevClearIdentityCodes,
+    group: E_ACTION_GROUPS.item,
+    title: 'Очистить коды синхронизации',
+    hint: 'Очистить коды синхронизации',
+    iconClass: 'eos-icon eos-icon-eraser-blue small',
+    disabledIconClass: 'eos-icon eos-icon-eraser-grey small',
+    hoverIconClass: 'eos-icon eos-icon-eraser-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
+
 export const RENAME_BASE_DIRECTORY: IAction = {
     type: E_RECORD_ACTIONS.renameBaseDepartment,
     group: E_ACTION_GROUPS.group,
@@ -585,6 +612,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_DELETE,
     RECORD_ACTION_RESTORE,
     RECORD_ACTION_USER_SORT,
+    RECORD_ACTION_SEV_SYNC_DICTS,
+    RECORD_ACTION_SEV_CLEAR_IDENTITY_CODES,
     RECORD_ACTION_TO_UP,
     RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,

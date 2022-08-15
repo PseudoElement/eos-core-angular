@@ -21,7 +21,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE_ORGANIZ',
-        title: 'Организация',
+        title: 'Участник СЭВ',
         type: 'string',
         required: true,
         pattern: NOT_EMPTY_STRING,
@@ -73,11 +73,27 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
             label: 'CLASSIF_NAME',
         },
     },
-    ]),
+    {
+        key: 'SEV_PARTICIPANT_RULE.ISN_RULE',
+        title: 'Правила',
+        type: 'dictionary',
+        dictionaryId: 'SEV_PARTICIPANT_RULE',
+        dictionaryLink: {
+            pk: 'ISN_PARTICIPANT',
+            fk: 'ISN_RULE',
+            label: 'CLASSIF_NAME',
+        },
+    },
+    {
+        key: 'FILE_SYNC_DATE',
+        title: 'Дата формирования файла синхронизации',
+        type: 'number'
+    },
+   ]),
     editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME', 'sev_partisipant', 'sev_rule'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS'],
+    allVisibleFields: ['ISN_CHANNEL', 'CRYPT', 'NOTE', 'ADDRESS', 'FILE_SYNC_DATE'],
     fullSearchFields: ['CLASSIF_NAME', 'ADDRESS', 'rules', 'ISN_CHANNEL', 'SEV_PARTICIPANT', 'SEV_PARTICIPANT_RULE.ISN_RULE'],
-    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'sev_partisipant', 'sev_rule'],
+    quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'sev_partisipant', 'sev_rule', 'FILE_SYNC_DATE' ],
     searchFields: ['CLASSIF_NAME'],
 });

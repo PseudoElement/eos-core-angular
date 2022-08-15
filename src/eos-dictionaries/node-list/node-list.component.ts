@@ -26,6 +26,7 @@ import { ExportImportClService } from 'app/services/export-import-cl.service';
 import {CopyNodeComponent} from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 @Component({
@@ -37,7 +38,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
     @ViewChild('eosNodeList') eosNodeList;
     @ViewChild('nodeListElement') nodeListElement;
-
 
     customFields: IFieldView[] = [];
     length = {};
@@ -61,8 +61,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     private _dictId: string;
     private _repaintFlag: any;
 
-
-
     constructor(
         // @Inject(DOCUMENT) document,
         private _dictSrv: EosDictService,
@@ -71,6 +69,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private _zone: NgZone,
         private _eiCl: ExportImportClService,
         private _store: EosStorageService,
+        private _apCtx: AppContext
+
     ) {
         this.firstColumnIndex = 0;
         _dictSrv.visibleList$
@@ -131,7 +131,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.allMarked = false;
             }
         });
-
     }
 
     highlightNewNode(): void {
@@ -205,13 +204,25 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     /**
      * @description Open modal with ColumnSettingsComponent, fullfill ColumnSettingsComponent data
      */
+
+    // костыль, не показываем CRYPT для ЦБ в участниках СЭВ
     configColumns() {
         this.modalWindow = this._modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
         this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields.filter (c => !(c.preferences && c.preferences.inline)));
         this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this._dictSrv.customTitles);
-        this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields.filter (c => !(c.preferences && c.preferences.inline)));
-        this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([],
-            this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
+
+        // костыль, не показываем CRYPT для ЦБ в участниках СЭВ
+        let currentFields = this.customFields.filter (c => !(c.preferences && c.preferences.inline));
+        if (this._isCbBase()) {
+            currentFields = currentFields.filter(item => item.key !== 'CRYPT');
+        }
+        this.modalWindow.content.currentFields = EosUtils.deepUpdate([], currentFields);
+
+        let dictionaryFields = this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible);
+        if (this._isCbBase()) {
+            dictionaryFields = dictionaryFields.filter(item => item.key !== 'CRYPT');
+        }
+        this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([], dictionaryFields);
 
         const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
             this.modalWindow = null;
@@ -637,6 +648,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         if (!this._cdr['destroyed']) {
             this._cdr.detectChanges();
         }
+    }
+
+    private _isCbBase(): boolean {
+        return this._dictSrv.currentDictionary.descriptor.apiInstance === 'SEV_PARTICIPANT' && this._apCtx.cbBase;
     }
 
 }

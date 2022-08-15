@@ -146,6 +146,7 @@ export class NodeActionsComponent implements OnDestroy {
 
         // делаем то что надо
         if (item.enabled) {
+
             this.action.emit({ action: item.type, params: params });
             this._update();
         } else {
@@ -347,6 +348,14 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     _active = this._viewParams.userOrdered;
                     _isWriteAction = false;
+                    break;
+                case E_RECORD_ACTIONS.sevSyncDicts:
+                    _show = this.dictionary.id === 'sev-participant';
+                    _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
+                    break;
+                case E_RECORD_ACTIONS.sevClearIdentityCodes:
+                    _show = this.dictionary.id === 'sev-participant';
+                    _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     break;
                 case E_RECORD_ACTIONS.showAllSubnodes:
                     _isWriteAction = false;

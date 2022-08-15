@@ -68,10 +68,11 @@
                             [readonly]="!editMode"
                             
                             ></eos-dynamic-input>
-        <eos-dynamic-input *ngIf="inputs['rec.CRYPT'] && !isCBBase"
+        <eos-dynamic-input *ngIf="inputs['rec.CRYPT'] && (!isCbBase)"
                             [input]="inputs['rec.CRYPT']"
                             [form]="form"
-                            [readonly]="!editMode"></eos-dynamic-input>
+                            [readonly]="!editMode"
+                            ></eos-dynamic-input> 
         <eos-dynamic-input *ngIf="inputs['rec.ADDRESS']"
                             [input]="inputs['rec.ADDRESS']"
                             [form]="form"
