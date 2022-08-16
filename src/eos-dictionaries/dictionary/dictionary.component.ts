@@ -1698,8 +1698,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
       }
     }
 
-    // тут должен быть вызов бэка для очистки идентификационных кодов
-    // СЭВ операции
     private _clearIdentityCodes() {
         const MSG: IMessage = {
             type: 'success',
@@ -1709,15 +1707,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._msgSrv.addNewMessage(MSG);
         const changes = [];
         const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
-        const ORGS_DUES_STR = ORGS_DUES_AR.join('|');
-        const DATA = {
-          'context': '',
+        const ORGS_DUES_STR: string = ORGS_DUES_AR.join(',');
+        const body = {
           'orgsDue': ORGS_DUES_STR
         };
-
-        console.log(DATA);
-
-        PipRX.invokeSop(changes, 'ClearIdentityCodes', DATA);
+        console.log('СЭВ = тело запроса на очистку идент. кодов  = ', body);
+        PipRX.invokeSop(changes, 'ClearIdentityCodes', body, 'POST', true);
         this._api.batch(changes, '').then((response: any) => {
             const MSG2: IMessage = {
                 type: 'success',

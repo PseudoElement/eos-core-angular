@@ -199,14 +199,16 @@ export class SevSyncDictsComponent implements OnInit {
     private _sendDepartmentsSyncInfo(isAddressOrgs: any[]) {
         const changes = [];
         const ORGS_DUES_AR = isAddressOrgs.map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
-        const ORGS_DUES_STR = ORGS_DUES_AR.join('|');
-        const DATA = {
+        const ORGS_DUES_STR = ORGS_DUES_AR.join(',');
+        const body = {
           'ownerDue': this._mainOrgDue,
-          'orgsDue': ORGS_DUES_STR
+          'orgsDue':  ORGS_DUES_STR
         };
-        console.log(DATA);
-        PipRX.invokeSop(changes, 'SendDepartmentsSyncInfo', DATA);
-        this._api.batch(changes, '').then((response: any) => { console.log(response); });
+        console.log('СЭВ = тело запроса на отправку сообщений = ', body);
+        PipRX.invokeSop(changes, 'SendDepartmentsSyncInfo', body, 'POST', true);
+        this._api.batch(changes, '').then((response: any) => {
+                        console.log(response);
+                    });
         this.bsModalRef.hide();
     }
 
