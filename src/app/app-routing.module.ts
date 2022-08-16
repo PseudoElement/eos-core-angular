@@ -31,6 +31,7 @@ import { CurrentUserSetComponent } from 'eos-user-params/current-user-set/curren
 import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 import { PluginReactComponent } from 'eos-rest/plugin-react/plugin-react.component';
 import { EosBackgraundTasksComponent } from 'eos-backgraund-tasks/components/eos-backgraund-tasks/eos-backgraund-tasks.component';
+import { EosBackgraundSingleComponent } from 'eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -344,7 +345,24 @@ const routes: Routes = [{
     path: 'background-tasks',
     data: { title: 'Фоновые задачи', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
-    component: EosBackgraundTasksComponent
+    children: [
+        {
+            path: '',
+            component: EosBackgraundTasksComponent,
+            pathMatch: 'full',
+            canActivate: [AuthorizedGuard],
+        },
+        {
+            path: ':taskId',
+            component: EosBackgraundSingleComponent,
+            data: {
+                showBreadcrumb: false,
+                showInBreadcrumb: false,
+                showSandwichInBreadcrumb: false,
+                showPushpin: false
+            },
+        },
+    ]
 },
 {
     path: '',
