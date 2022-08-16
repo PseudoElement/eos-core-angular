@@ -1707,7 +1707,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._msgSrv.addNewMessage(MSG);
         const changes = [];
         const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
-        const ORGS_DUES_STR: string = ORGS_DUES_AR.join(',');
+        const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');
         const body = {
           'orgsDue': ORGS_DUES_STR
         };

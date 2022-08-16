@@ -199,7 +199,7 @@ export class SevSyncDictsComponent implements OnInit {
     private _sendDepartmentsSyncInfo(isAddressOrgs: any[]) {
         const changes = [];
         const ORGS_DUES_AR = isAddressOrgs.map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
-        const ORGS_DUES_STR = ORGS_DUES_AR.join(',');
+        const ORGS_DUES_STR = ORGS_DUES_AR.join('|');
         const body = {
           'ownerDue': this._mainOrgDue,
           'orgsDue':  ORGS_DUES_STR
