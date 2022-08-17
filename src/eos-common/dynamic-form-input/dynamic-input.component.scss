@@ -45,7 +45,7 @@ eos-dynamic-input {
             background-image: none;
             background-color: inherit;
             box-shadow: none;
-            border: 0 none transparent;
+            border: 1px solid $border-color-main-theme;
         }
         &.placeholder {
             color: $placeholder-color;
@@ -73,7 +73,8 @@ eos-dynamic-input {
                     background-image: none;
                     background-color: inherit;
                     box-shadow: none;
-                    border: 0 none transparent;
+                    border-width: 0 none transparent;
+                    
                 }
             }
             &.placeholder {
@@ -147,7 +148,6 @@ eos-dynamic-input {
         color: $secondary-font-color-main-theme;
         border-radius: 0;
         padding: 6px 8px;
-        // background-color: $light-grey-1;
         border-width: 1px;
         box-shadow: none;
         min-height: 32px;
@@ -160,9 +160,8 @@ eos-dynamic-input {
         height: 120px;
     }
     .form-control-static {
-        padding-left: 0;
-        padding-right: 0;
-        // background-color: #eeeeee;
+        padding: 6px 8px;
+        border: 1px solid $border-color-main-theme;
     }
     .static-date {
         padding-left: 10px;
@@ -170,7 +169,6 @@ eos-dynamic-input {
     .form-control {
         display: inline-block;
         border-color: $border-color-main-theme;
-
         &.link-input {
             background-color: #fafafa;
             cursor: default;
@@ -203,7 +201,7 @@ eos-dynamic-input {
         // }
         &.readonly,
         &.readonly:focus {
-            border-color: transparent;
+            border-color: $border-color-main-theme;
             background-color: transparent;
             &[disabled] {
                 cursor: text;
@@ -289,7 +287,8 @@ eos-dynamic-input {
         }
     }
     .readonly {
-        padding: 0;
+        //padding: 0;
+        padding: 6px 8px;
     }
     .eos-switch {
         display: flex;
