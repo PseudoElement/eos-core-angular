@@ -4,7 +4,7 @@
     </div>
     <div *ngIf="!isCurrentSettings || appMode.arm || appMode.cbr || appMode.tk" class="user-group-form">
         <div [ngStyle]="{'margin-bottom': '10px'}">
-            <span>Показывать для документа (проекта документа):</span>
+            <span>Показывать для документа:</span>
         </div>
         <eos-dynamic-input
                 [input]="inputs['rec.LINKS_SHOW_DG']"
