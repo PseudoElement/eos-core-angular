@@ -37,6 +37,8 @@ import { CustomTreeNode } from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { takeUntil } from 'rxjs/operators';
+import { SevSyncDictsComponent } from '../sev-modals/sev-sync-dicts/sync-dicts.component';
+import {PipRX} from 'eos-rest/services/pipRX.service';
 
 import {
     DANGER_ACCESS_DENIED_DICT,
@@ -84,7 +86,6 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     templateUrl: 'dictionary.component.html',
 })
-
 
 export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, OnInit {
     @ViewChild('nodeList') nodeList: NodeListComponent;
@@ -193,6 +194,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         private _appContext: AppContext,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
+        private _api: PipRX
     ) {
         this.accessDenied = false;
 
@@ -621,6 +623,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.renameBaseDepartment:
                 this._renameBaseDepartment();
                 break;
+            case E_RECORD_ACTIONS.sevSyncDicts:
+                this._showSyncDictsModal();
+                break;
+            case E_RECORD_ACTIONS.sevClearIdentityCodes:
+                this._clearIdentityCodes();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -759,6 +767,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.clearFindSettings();
         this.nodeList.updateViewFields([], []);
     }
+
     uniqueIndex() {
         const config = { ignoreBackdropClick: true };
         this.modalWindow = this._modalSrv.show(CheckIndexNomenclaturComponent, config);
@@ -804,6 +813,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this.modalWordRef.hide();
         }
     }
+
     cancelModalWord() {
         this.newNameBaseDepartment = this._dictSrv.getCardName();
         this.modalWordRef.hide();
@@ -1667,14 +1677,52 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const checkYear = this._dictSrv.getFilterValue('YEAR');
         this._openPrintTemplate(dues, checkYear, this._checkIncludeDepartment(dues));
     }
+
     /* Меняем имя базового Подразделения */
     private _renameBaseDepartment() {
         this._openModal();
     }
+
     private _openModal() {
         if (!this.newNameBaseDepartment) {
             this.newNameBaseDepartment = this._dictSrv.getCardName();
         }
         this.modalWordRef = this._modalSrv.show(this.modalWord, { ignoreBackdropClick: true });
     }
+
+    private _showSyncDictsModal() {
+      const node = this._dictSrv.listNode;
+      if (node) {
+        this.modalWindow = null;
+        this.modalWindow = this._modalSrv.show(SevSyncDictsComponent, { class: 'sev-sync-dicts modal-lg' });
+      }
+    }
+
+    private _clearIdentityCodes() {
+        const MSG: IMessage = {
+            type: 'success',
+            title: 'Очистка идентификационных кодов ...',
+            msg: ''
+        };
+        this._msgSrv.addNewMessage(MSG);
+        const changes = [];
+        const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
+        const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');
+        const body = {
+          'orgsDue': ORGS_DUES_STR
+        };
+        console.log('СЭВ = тело запроса на очистку идент. кодов  = ', body);
+        PipRX.invokeSop(changes, 'ClearIdentityCodes', body, 'POST', true);
+        this._api.batch(changes, '').then((response: any) => {
+            const MSG2: IMessage = {
+                type: 'success',
+                title: 'Очистка идентификационных кодов завершена',
+                msg: ''
+            };
+            this._msgSrv.addNewMessage(MSG2);
+        });
+
+
+     }
+
 }

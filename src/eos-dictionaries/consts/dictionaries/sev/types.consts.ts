@@ -2,6 +2,7 @@ export interface OptionDiscription {
     value: any;
     title: string;
     selected?: boolean;
+    iconClass?: any;
 }
 
 export const ENCRYPTION_TYPE: Array<OptionDiscription> = [{
@@ -17,11 +18,22 @@ export const ENCRYPTION_TYPE: Array<OptionDiscription> = [{
 
 export const CHANNEL_TYPE: Array<OptionDiscription> = [{
     value: 'email',
-    title: 'E-mail'
+    title: 'E-mail',
+    iconClass: {
+      standard: 'eos-icon-A-Black',
+      tooltip: 'электронная почта',
+      deleted:  'eos-icon-A-Grey'
+    }
 }, {
     value: 'FileSystem',
-    title: 'FileSystem'
-}];
+    title: 'FileSystem',
+    iconClass: {
+        standard: 'eos-icon-folder-black',
+        tooltip: 'файловая система',
+        deleted:  'eos-icon-folder-grey'
+    }
+  }
+ ];
 
 export const AUTH_METHOD: Array<OptionDiscription> = [
     { value: 0, title: 'Авторизация не требуется', },

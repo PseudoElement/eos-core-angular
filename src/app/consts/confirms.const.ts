@@ -367,3 +367,25 @@ export const ERROR_LOGIN: IConfirmWindow2 = {
     ],
     typeIcon: 'danger'
 };
+
+export const SEV_SYNCHRO_CHECK_CRYPT_SOME: IConfirmWindow2 = {
+    title: 'Синхронизация справочников',
+    bodyList: [],
+    body: 'Не определен сертификат шифрования, отправка сообщения не будет выполнена следующим участникам СЭВ: ',
+    buttons: [
+        {title: 'Продолжить', result: 1 },
+        {title: 'Отменить',  result: 2, isDefault: true },
+
+
+    ],
+};
+
+export const SEV_SYNCHRO_CHECK_ADDRESSES_SOME: IConfirmWindow2 = {
+    title: 'Синхронизация справочников',
+    bodyList: [],
+    body: 'Не заполнены параметры доставки сообщений у участников СЭВ: ',
+    buttons: [
+        {title: 'Продолжить', result: 1 },
+        {title: 'Отменить',  result: 2, isDefault: true },
+    ],
+};

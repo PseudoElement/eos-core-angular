@@ -1,0 +1,40 @@
+<form [formGroup]="form" >
+    <div class="modal-header">
+        <h4 class="xl-font primary-text pull-left">Синхронизация справочников</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <input class="form-control m-font"  size="40" id="operationKind" type="text" value="Синхронизация справочника &quot;Подразделения&quot;" />
+        </div>
+        <div class="form-group" [formGroup]="form" [tooltip]="!form.controls['ORG'].valid?'Поле должно быть заполнено':''" container="body" placement="bottom" containerClass="tooltip-error" >
+            <div class="eos-select" >
+                <label  [attr.for]="inputs[0].key">{{inputs[0].label}}</label >
+                <select  class="form-control m-font" id="orgs" [formControlName]="inputs[0].key" autocomplete="off" >
+                    <option *ngFor="let item of orgs" [value]="item.value" [selected]="getSelected(item.value)">
+                        {{item.label}}
+                    </option>
+                </select>
+            </div>
+         </div>
+      </div>
+    <div class="modal-footer">
+        <span class="pull-right">
+            <button [ngStyle]="{'width': '100px', 'height': '40px', 'display': 'block'}" type="button" type="submit" class="btn btn-primary btn-margin" [disabled]="!form.valid||isProgress" (click)="handleClick()">
+                <div>
+                   <span *ngIf="!isProgress" class="eos-icon eos-icon-save-send-blue small" aria-hidden="true" >
+                    </span>
+                    <eos-spinner *ngIf="isProgress" size="md" ></eos-spinner>
+                </div>    
+          </button>
+        </span>
+    </div>  
+</form>    
+
+
+
+
+
+
+
+
+

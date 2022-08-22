@@ -53,7 +53,6 @@ export enum E_FIELD_TYPE {
     select2, // Select by angular component
     new,
 }
-
 export interface IDictionaryLink {
     pk: string;
     fk: string;

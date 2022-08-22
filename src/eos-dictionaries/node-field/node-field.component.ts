@@ -5,6 +5,7 @@ import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { RESOLVE_DESCRIPTIONS } from 'eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
+import { CHANNEL_TYPE } from 'eos-dictionaries/consts/dictionaries/sev/types.consts';
 
 interface ISpecialIcon {
     class: string;
@@ -15,7 +16,6 @@ interface ISpecialIcon {
     selector: 'eos-node-field',
     templateUrl: 'node-field.component.html'
 })
-
 
 export class NodeFieldComponent implements OnInit {
     @Input() field: IFieldView;
@@ -67,23 +67,36 @@ export class NodeFieldComponent implements OnInit {
                     tooltip: 'Закрыто',
                 });
             }
-
-
-        } else if (this.field.type === E_FIELD_TYPE.icon_sev) {
-            if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
-                this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-shared-folder-grey' : 'eos-icon-shared-folder-black',
-                    tooltip: 'Индекс СЭВ',
-                });
-            }
-            if (this.node.data.rec['CONFIDENTIONAL']) {
-                this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
-                    tooltip: 'ДСП файлы',
-                });
-            }
+        } else
+           if (this.field.type === E_FIELD_TYPE.icon_sev) {
+              if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
+                    this.iconsArray.push({
+                        class: this.node.isDeleted ? 'eos-icon-shared-folder-grey' : 'eos-icon-shared-folder-black',
+                        tooltip: 'Индекс СЭВ',
+                    });
+                }
+                if (this.node.data.rec['CONFIDENTIONAL']) {
+                    this.iconsArray.push({
+                        class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
+                        tooltip: 'ДСП файлы',
+                    });
+                }
         }
+        // костыль для участников СЭВ, отображение иконки типа передачи сообщений
+        if (this.isSevChannelType()) {
+            const ITEMS = this.field.options[0].data;
+            const NEED_ITEM = ITEMS.filter(x => x.ISN_LCLASSIF === this.field.value);
+            const CHANNEL_TYPE_VALUE: string = NEED_ITEM[0].CHANNEL_TYPE;
+            const CHANNNEL_OBJ = (CHANNEL_TYPE.filter( item =>  item.value === CHANNEL_TYPE_VALUE))[0];
+            this.iconsArray.push({
+                class: !this.node.isDeleted ? CHANNNEL_OBJ.iconClass.standard : CHANNNEL_OBJ.iconClass.deleted,
+                tooltip: CHANNNEL_OBJ.iconClass.tooltip
+            });
+       }
+    }
 
+    isSevChannelType(): boolean {
+       return this.field.dictionaryId === 'SEV_CHANNEL';
     }
 
     currentValue(): string {

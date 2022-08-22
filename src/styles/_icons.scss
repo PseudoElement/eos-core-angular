@@ -413,6 +413,9 @@
     &.eos-icon-on-grey {
         background-image: url("../assets/icons/On-Grey.svg");
     }
+    &.eos-icon-close-folder-black {
+        background-image: url("../assets/icons/Open-Close-Folder-Black.svg");
+    }
     &.eos-icon-close-folder-blue {
         background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
     }
@@ -964,7 +967,13 @@
         background-image: url("../assets/icons/Techuser-Grey.svg")
     }
     &.eos-icon-Techman-Blue{
-       background-image: url("../assets/icons/Techman-Blue.svg") 
+        background-image: url("../assets/icons/Techman-Blue.svg") 
+    }
+    &.eos-icon-eraser-blue{
+        background-image: url("../assets/icons/Eraser-Blue.svg") 
+    }
+    &.eos-icon-eraser-grey{
+        background-image: url("../assets/icons/Eraser-Grey.svg") 
     }
     &.eos-icon-share-blue{
         background-image: url("../assets/icons/dict/Share-Blue.svg")
@@ -1181,6 +1190,9 @@
     }
     &.eos-icon-synchro-blue {
         background-image: url("../assets/icons/Synchro-Blue.svg")
+    }
+    &.eos-icon-synchro-grey {
+        background-image: url("../assets/icons/Synchro-Grey.svg")
     }
     &.eos-icon-restricted-grey {
         background-image: url("../assets/icons/Restricted-Doc-Grey.svg")

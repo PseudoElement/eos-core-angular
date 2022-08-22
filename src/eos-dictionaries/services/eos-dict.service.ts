@@ -606,7 +606,6 @@ export class EosDictService {
                 }
             }
         }
-
         let changes = false;
         for (const key in updates) {
             if (updates.hasOwnProperty(key)) {

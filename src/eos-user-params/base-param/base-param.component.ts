@@ -137,6 +137,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
         this.subscription.unsubscribe();
     }
+
     get validClassif() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
         if (val !== null) {
@@ -150,6 +151,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return null;
     }
+
     get getValidDate() {
         return this.form.controls['NOTE2'].valid && this.form.controls['CLASSIF_NAME'].valid;
     }
@@ -197,10 +199,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
                 this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
                 this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
+
                 this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
                 this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
                 this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
                 this.isLoading = false;
+
                 setTimeout(() => {
                     this.editModeF();
                     this.setValidators();

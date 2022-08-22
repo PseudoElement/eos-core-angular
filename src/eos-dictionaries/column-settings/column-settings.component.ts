@@ -53,6 +53,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         // value[3] - src
         // value[2] - dst
         // value[1] - droped elem
+
         this._subscriptionDrop = dragulaService.drop.subscribe((value) => {
             if (value[2].id !== value[3].id) {
                 if (value[3].id === 'selected') {
