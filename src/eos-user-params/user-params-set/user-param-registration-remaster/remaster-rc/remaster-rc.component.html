@@ -11,9 +11,26 @@
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        [input]="inputs['rec.SHOW_PRJ_FILE_VERSIONS']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.SHOW_PRJ_VISA_FILES']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.SHOW_PRJ_SIGN_FILES']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
         *ngIf="checkItArmOrWeb || this.appMode.tk"
         [input]="inputs['rec.CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
 </div>
+
+

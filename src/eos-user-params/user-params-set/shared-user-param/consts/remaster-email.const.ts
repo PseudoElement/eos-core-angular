@@ -1759,6 +1759,21 @@ export const REGISTRATION_RC: IBaseUsers =  {
         title: 'Не показывать скрытые файлы'
     },
     {
+        key: 'SHOW_PRJ_FILE_VERSIONS',
+        type: 'boolean',
+        title: 'Показывать версии файлов'
+    },
+    {
+        key: 'SHOW_PRJ_VISA_FILES',
+        type: 'boolean',
+        title: 'Показывать файлы визы'
+    },
+    {
+        key: 'SHOW_PRJ_SIGN_FILES',
+        type: 'boolean',
+        title: 'Показывать файлы подписи'
+    },
+    {
         key: 'CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA',
         type: 'boolean',
         title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы в АРМ «ДелоWeb»'
