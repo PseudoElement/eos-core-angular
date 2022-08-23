@@ -1,4 +1,4 @@
-// import { AppContext } from './../../eos-rest/services/appContext.service';
+import { AppContext } from './../../eos-rest/services/appContext.service';
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 import { PipRX } from 'eos-rest';
@@ -14,9 +14,9 @@ declare function openPopup(url: string, callback?: Function): boolean;
 //     'SECURITY_CL',
 //     'DOCVID_CL'
 // ];
-// const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
-// const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
-const URL_PATH = '../classifChoose/cl?';
+const OLD_VIEW_URL: string = '../Pages/Classif/ChooseClassif.aspx?';
+const NEW_VIEW_URL: string = '../classifChoose/cl?';
+// const URL_PATH = '../classifChoose/cl?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
 const StdText: string = '../WebRC/Pages/StdText.html';
@@ -28,9 +28,9 @@ const SharingLists: string = '../WebRC/Pages/SharingLists.html';
 
 @Injectable()
 export class WaitClassifService {
-    // private isCtrl = null;
+    private isCtrl = null;
 
-    constructor(private _apiSrv: PipRX, /* private _appContext: AppContext */) {
+    constructor(private _apiSrv: PipRX, private _appContext: AppContext) {
         window['Rootpath'] = function () {
             return 'classif';
         };
@@ -46,7 +46,7 @@ export class WaitClassifService {
     }
 
     ctrlClickHandler(isCtrl: boolean) {
-       // this.isCtrl = isCtrl;
+       this.isCtrl = isCtrl;
     }
 
     chooseDocGroup(): Promise<string | void> {
@@ -203,18 +203,17 @@ export class WaitClassifService {
         return url;
     }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
-      // const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
-        let url = URL_PATH;
-        // if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
-        //     url += OLD_VIEW_URL;
-        // } else {
-        //     if (clickMode === '1') {
-        //         url += this.isCtrl ? OLD_VIEW_URL :  NEW_VIEW_URL;
-        //     } else {
-        //         url += this.isCtrl ?  NEW_VIEW_URL : OLD_VIEW_URL;
-        //     }
-        // }
-
+        const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
+        let url: string = '';
+        /* if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
+            url += OLD_VIEW_URL;
+        } else {
+        } */
+        if (clickMode === '1') {
+            url += this.isCtrl ? OLD_VIEW_URL : NEW_VIEW_URL;
+        } else {
+            url += this.isCtrl ?  NEW_VIEW_URL : OLD_VIEW_URL;
+        }
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';
