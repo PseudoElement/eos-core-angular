@@ -8,8 +8,7 @@ import { RECENT_URL } from 'app/consts/common.consts';
 import { TYPE_DOCUM_DICT } from '../consts/dictionaries/type-docum.const';
 import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 import { AppContext } from '../../eos-rest/services/appContext.service';
-import { ExportImportClService } from 'app/services/export-import-cl.service';
-import {DISABLED_LIST_ITEM} from 'app/consts/messages.consts';
+import { DISABLED_LIST_ITEM } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-dictionaries',
@@ -21,10 +20,6 @@ export class DictionariesComponent implements OnInit, OnDestroy {
     r: number = 0;
     modalWindow: Window;
     curUserHasDocGroup: boolean;
-    private windowRemove: Window;
-    private windowChange: Window;
-    private windowView: Window;
-    private windowScan: Window;
     get path() {
         return this._router.url;
     }
@@ -41,7 +36,6 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         private _appCtx: AppContext,
         private _eaps: EosAccessPermissionsService,
         private _storageSrv: EosStorageService,
-        private _eiCl: ExportImportClService,
     ) {
         this._dictSrv.closeDictionary();
         let dictList;
@@ -51,18 +45,12 @@ export class DictionariesComponent implements OnInit, OnDestroy {
             dictList = this._dictSrv.getNadzorDictionariesList();
         } else if (this._router.url === '/spravochniki/SEV') {
             dictList = this._dictSrv.getSevDictionariesList();
-        } else if (this._router.url === '/instruments') {
-            dictList = this._dictSrv.getInstrumentsList();
         }
 
         this._storageSrv.setItem(RECENT_URL, this._router.url);
         if (dictList) {
             dictList.then((list) => {
-                if (this._router.url === '/instruments') {
-                    this.instrumentsList = list;
-                } else {
-                    this.dictionariesList = list;
-                }
+                this.dictionariesList = list;
             });
         }
     }
@@ -90,9 +78,9 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
         if (dict.id === TYPE_DOCUM_DICT.id) {
             if (!this.curUserHasDocGroup) {
-                return  APS_DICT_GRANT.denied;
+                return APS_DICT_GRANT.denied;
             } else {
-                return  this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+                return this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
             }
         }
         return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
@@ -117,81 +105,7 @@ export class DictionariesComponent implements OnInit, OnDestroy {
             this.modalWindow.blur();
         }
     }
-    openModalInsrtument(dict: any): void {
-        switch (dict.id) {
-            case 'EXPORT':
-            case 'IMPORT':
-                this.eiCl(dict.id);
-                break;
-            case 'PROTOCOL_REMOVE':
-                this.openProtocolRemove(dict.openURL);
-                break;
-            case 'PROTOCOL_CHANGE':
-                this.openProtocolChange(dict.openURL);
-                break;
-            case 'PROTOCOL_VIEW':
-                this.openProtocolView(dict.openURL);
-                break;
-            case 'PROTOCOL_SCAN':
-                this.openProtocolScan(dict.openURL);
-                break;
-            case 'IMPORT_1C':
-                this.import1CView(dict.openURL);
-                break;
-            case 'CHANGE_DL':
-                this.changeDl(dict.openURL);
-                break;
-            default:
-                break;
-        }
-    }
-    eiCl(id: any) {
-        if (id === 'EXPORT') {
-            this._eiCl.openExport('all').then().catch(err => { });
-        } else {
-            this._eiCl.openImport('all', 'all').then().catch(err => { });
-        }
-    }
-    openProtocolScan(url) {
-        if (this.windowScan && !this.windowScan.closed) {
-            this.windowScan.focus();
-        } else {
-            this.windowScan = window.open(url, '_blank', 'width=900,height=700');
-            this.windowScan.blur();
-        }
-    }
-    openProtocolRemove(url) {
-        if (this.windowRemove && !this.windowRemove.closed) {
-            this.windowRemove.focus();
-        } else {
-            this.windowRemove = window.open(url, '_blank', 'width=900,height=700');
-            this.windowRemove.blur();
-        }
-    }
-    openProtocolChange(url) {
-        if (this.windowChange && !this.windowChange.closed) {
-            this.windowChange.focus();
-        } else {
-            this.windowChange = window.open(url, '_blank', 'width=900,height=700');
-            this.windowChange.blur();
-        }
-    }
-    openProtocolView(url) {
-        if (this.windowView && !this.windowView.closed) {
-            this.windowView.focus();
-        } else {
-            this.windowView = window.open(url, '_blank', 'width=900,height=700');
-            this.windowView.blur();
-        }
-    }
-    import1CView(url) {
-        this.windowView = window.open(url, '_blank', 'width=900,height=700');
-        this.windowView.blur();
-    }
-    changeDl(url) {
-        this.windowView = window.open(url, '_blank', 'width=900,height=700');
-        this.windowView.blur();
-    }
+
     ngOnDestroy() {
         if (this.modalWindow) {
             this.modalWindow.close();

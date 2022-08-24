@@ -20,7 +20,6 @@ export interface IFonLists {
 }
 
 export enum ETypeFon {
-  frame,
   popUp,
   js
 }

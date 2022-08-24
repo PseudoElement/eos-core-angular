@@ -33,8 +33,6 @@ import { ADDR_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/addr-ca
 import { AddrCategoryDictionaryDescriptor } from './addr-category-dictionary-descriptor';
 import { SevDictionaryDescriptor } from './sev/sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { INSTRUMENTS_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/instruments/instruments.const';
-
 @Injectable()
 export class DictionaryDescriptorService {
     private _mDicts: Map<string, IDictionaryDescriptor>;
@@ -96,23 +94,6 @@ export class DictionaryDescriptorService {
 
     visibleSevDictionaries(): IDictionaryDescriptor[] {
         return SEV_DICTIONARIES.filter((dict) => dict.visible);
-    }
-    visibleInstrumentsDictionaries(): IDictionaryDescriptor[] {
-        const globalW: any = window;
-        const notVisiblePlagin = []; // все плитки которые нужно скрывать
-        /* Вот тут проверяем доступность и если недоступна то убираем плитку
-        * ошибка означает что данной функции ещё нет
-        */
-        try {
-            if (!(globalW.hasSPImport())) {
-                notVisiblePlagin.push('IMPORT_1C');
-            }
-        } catch (error) {
-            notVisiblePlagin.push('IMPORT_1C');
-        }
-        return INSTRUMENTS_DICTIONARIES.filter((dict) => {
-            return dict.visible && (notVisiblePlagin.indexOf(dict.id) === -1);
-        });
     }
 
     getDescriptorData(name: string): IDictionaryDescriptor {

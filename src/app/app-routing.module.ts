@@ -32,6 +32,8 @@ import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 import { PluginReactComponent } from 'eos-rest/plugin-react/plugin-react.component';
 import { EosBackgraundTasksComponent } from 'eos-backgraund-tasks/components/eos-backgraund-tasks/eos-backgraund-tasks.component';
 import { EosBackgraundSingleComponent } from 'eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
+import { EosInstrumentsListsComponent } from 'eos-instruments/components/eos-instruments-lists/eos-instruments-lists.component';
+import { EosInstrumentsSingleComponent } from 'eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -339,7 +341,24 @@ const routes: Routes = [{
     path: 'instruments',
     data: { title: 'Инструменты', showInBreadcrumb: false },
     canActivate: [AuthorizedGuard],
-    children: childrenDictionariesComponent,
+    children: [
+        {
+            path: '',
+            component: EosInstrumentsListsComponent,
+            pathMatch: 'full',
+            canActivate: [AuthorizedGuard],
+        },
+        {
+            path: ':taskId',
+            component: EosInstrumentsSingleComponent,
+            data: {
+                showBreadcrumb: false,
+                showInBreadcrumb: false,
+                showSandwichInBreadcrumb: false,
+                showPushpin: false
+            },
+        },
+    ],
 },
 {
     path: 'background-tasks',

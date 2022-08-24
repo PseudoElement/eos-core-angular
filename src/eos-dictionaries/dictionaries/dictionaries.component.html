@@ -1,21 +1,13 @@
 <div class="eos-dictionaries eos-dictionaries-padding">
     <button *ngFor="let dictionary of dictionariesList" class="dictionary btn block xl-font"
-        [disabled]="!isAccessEnabled(dictionary) || !isAccessLicense(dictionary.id) " [routerLink]="routeForDict(dictionary.id)" 
+        [disabled]="!isAccessEnabled(dictionary) || !isAccessLicense(dictionary.id) " [routerLink]="routeForDict(dictionary.id)"
         [title]="getHint(!isAccessEnabled(dictionary) || !isAccessLicense(dictionary.id))" >
         <span class="icon-wrapper">
             <span class="icon disabled eos-icon {{dictionary.iconName}}"></span>
         </span>
         <span class="text">{{dictionary.title}}</span>
     </button>
-    <button *ngFor="let dictionary of instrumentsList" class="dictionary btn block xl-font" (click)="openModalInsrtument(dictionary)" [disabled]="isDisabled"
-      [title]="getHint(isDisabled)" >
-        <span class="icon-wrapper">
-            <span class="icon disabled eos-icon {{dictionary.iconName}}"></span>
-        </span>
-        <span class="text">{{dictionary.title}}</span>
-    </button>
-
-    <!-- пока коммментим 
+    <!-- пока коммментим
     <button *ngIf="path === '/spravochniki/SEV'" class="dictionary btn block xl-font" (click)="openModalSynchro()" [disabled]="!isAccessEnabled({id:'SEV'}) || !isAccessLicense('SEV') "
      [title]="getHint(!isAccessEnabled({id:'SEV'})||!isAccessLicense('SEV'))" >
         <span class="icon-wrapper">
@@ -24,7 +16,7 @@
         <span class="text">Синхронизация</span>
     </button>
     -->
-    
+
     <div *ngFor="let i of [1,2,3,4,5]" disabled class="dictionary btn fict"></div>
     </div>
-    
+
