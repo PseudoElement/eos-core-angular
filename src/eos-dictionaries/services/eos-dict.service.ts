@@ -500,11 +500,14 @@ export class EosDictService {
                 this._errHandler(er);
             });
     }
-    getCabinetOwners(departmentDue: string, cabinet: number): Promise<any[]> {
+    getCabinetOwners(departmentDue: string, cabinet: number): Promise<{owners: any[], allOwners: any[]}> {
         return this.getDictionaryById('cabinet')
             .then((dictionary) => {
                 const descriptor: CabinetDictionaryDescriptor = <CabinetDictionaryDescriptor>dictionary.descriptor;
-                return descriptor.getOwners(departmentDue, cabinet);
+                return descriptor.getOwners(departmentDue, cabinet)
+                .then((owners) => {
+                    return Promise.resolve({owners: owners, allOwners: descriptor.getAllOwners()});
+                });
             })
             .catch((err) => this._errHandler(err));
     }

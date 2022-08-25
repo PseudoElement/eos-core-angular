@@ -155,13 +155,20 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             this.subscriptions.push(this.form.valueChanges
                 .subscribe((newVal) => {
                     let changed = false;
+                    const allOwners = [];
                     Object.keys(newVal).forEach((path) => {
                         if (this.changeByPath(path, newVal[path])) {
                             // console.warn('changed by', path);
                             changed = true;
                             this.isChanged = true;
                         }
+                        if (path.indexOf('owners[') !== -1) {
+                            allOwners.push(this.newData.owners[+path[7]]);
+                        }
                     });
+                    if (this.dictionaryId === 'cabinet') {
+                        this.newData.owners = allOwners;
+                    }
                     this.formChanged.emit(changed);
                 }));
 
