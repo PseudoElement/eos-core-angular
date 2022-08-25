@@ -54,6 +54,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     isLoading: boolean = false;
     public hasOverflowedColumns: boolean;
     public firstColumnIndex: number;
+    isSevClearCodesProgress: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     private _recalcW: number;
     private _recalcSW: number;
@@ -131,6 +132,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.allMarked = false;
             }
         });
+        _dictSrv.sevClearIdentCodesSubscription.pipe(takeUntil(this.ngUnsubscribe)).subscribe(resp => this.isSevClearCodesProgress = resp);
     }
 
     highlightNewNode(): void {

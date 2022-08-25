@@ -9,9 +9,9 @@
         <div class="form-group" [formGroup]="form" [tooltip]="!form.controls['ORG'].valid?'Поле должно быть заполнено':''" container="body" placement="bottom" containerClass="tooltip-error" >
             <div class="eos-select" >
                 <label  [attr.for]="inputs[0].key">{{inputs[0].label}}</label >
-                <select  class="form-control m-font" id="orgs" [formControlName]="inputs[0].key" autocomplete="off" >
-                    <option *ngFor="let item of orgs" [value]="item.value" [selected]="getSelected(item.value)">
-                        {{item.label}}
+                  <select  class="form-control m-font" id="selectOrgs" [formControlName]="inputs[0].key" autocomplete="off" >
+                  <option *ngFor="let item of selectOrgs" [value]="item.value" [selected]="getSelected(item.value)">
+                      {{item.label}}
                     </option>
                 </select>
             </div>
@@ -29,12 +29,3 @@
         </span>
     </div>  
 </form>    
-
-
-
-
-
-
-
-
-

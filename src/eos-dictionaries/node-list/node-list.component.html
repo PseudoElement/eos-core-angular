@@ -73,14 +73,14 @@
         (scroll)="onListScroll($event)">
         <div class="block list"
              [ngStyle]="{'width.%': 100}">
-            <p *ngIf="params.updatingList || !recalcDone"
+            <p *ngIf="params.updatingList || !recalcDone || isSevClearCodesProgress"
                class="spinner-container text-center">
                 <eos-spinner size="lg"></eos-spinner>
             </p>
             <p *ngIf="!nodes?.length && !params.updatingList"
                class="text-center text-info node-list-info">Нет записей.</p>
             <!--Simple list-->
-            <ng-container *ngIf="nodes?.length && !params.updatingList && recalcDone || params.searchResults && !params.updatingList && recalcDone">
+            <ng-container *ngIf="nodes?.length && !params.updatingList && recalcDone && !isSevClearCodesProgress || params.searchResults && !params.updatingList && recalcDone">
                 <eos-node-list-item *ngFor="let item of nodes"
                                     [ngStyle]="{'width.%': 100}"
                                     [length]="length"

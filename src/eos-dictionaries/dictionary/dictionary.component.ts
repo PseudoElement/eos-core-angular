@@ -39,6 +39,7 @@ import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionari
 import { takeUntil } from 'rxjs/operators';
 import { SevSyncDictsComponent } from '../sev-modals/sev-sync-dicts/sync-dicts.component';
 import {PipRX} from 'eos-rest/services/pipRX.service';
+import { SEV_CLEAR_IDENT_CODES } from 'eos-dictionaries/consts/messages.consts';
 
 import {
     DANGER_ACCESS_DENIED_DICT,
@@ -163,7 +164,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     hasCustomTree: boolean;
 
     accessDenied: boolean;
-
+    sevClearIdentCodesProgress: boolean = false;
 
     fonConf = {
         width: 0 + 'px',
@@ -1698,31 +1699,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
       }
     }
 
-    private _clearIdentityCodes() {
-        const MSG: IMessage = {
-            type: 'success',
-            title: 'Очистка идентификационных кодов ...',
-            msg: ''
-        };
-        this._msgSrv.addNewMessage(MSG);
+     private _clearIdentityCodes() {
         const changes = [];
         const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
         const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');
         const body = {
-          'orgsDue': ORGS_DUES_STR
+            'orgsDue': ORGS_DUES_STR
         };
-        console.log('СЭВ = тело запроса на очистку идент. кодов  = ', body);
+        this._dictSrv.sevClearIdentCodesSubject.next(true);
         PipRX.invokeSop(changes, 'ClearIdentityCodes', body, 'POST', true);
         this._api.batch(changes, '').then((response: any) => {
-            const MSG2: IMessage = {
-                type: 'success',
-                title: 'Очистка идентификационных кодов завершена',
-                msg: ''
-            };
-            this._msgSrv.addNewMessage(MSG2);
+            setTimeout(() => {
+                this._dictSrv.sevClearIdentCodesSubject.next(false);
+                this._msgSrv.addNewMessage(SEV_CLEAR_IDENT_CODES);
+            }, 3000);
+
         });
-
-
-     }
+    }
 
 }
