@@ -225,3 +225,34 @@ export const DANGER_SAVE_FILE: IMessage = {
     title: 'Предупреждение',
     msg: 'Файл шаблона отсутсвует, сохранение невозможно',
 };
+
+export const SEV_DANGER_CHECK_ADDRESS: IMessage = {
+    type: 'danger',
+    title: 'У выбранных участников СЭВ не заполнены параметры доставки сообщения. Отправка сообщения невозможна.',
+    msg: ''
+};
+
+export const SEV_SUCCESS_SEND: IMessage = {
+    type: 'success',
+    title: 'Сообщения СЭВ отправлены успешно',
+    msg: ''
+};
+
+export const SEV_WARN_CHECK_CRYPT_CERTS_ALL: IMessage = {
+    type: 'danger',
+    title: 'У выбранных участников СЭВ не определен сертификат шифрования. Отправка сообщения невозможна',
+    msg: ''
+};
+
+export const SEV_WARN_CHECK_SEV_DEPARTMENTS: IMessage = {
+    type: 'info',
+    title: '',
+    msg: ''
+};
+
+export const SEV_CLEAR_IDENT_CODES: IMessage = {
+    type: 'success',
+    title: 'Очистка идентификационных кодов завершена успешно',
+    msg: ''
+};
+

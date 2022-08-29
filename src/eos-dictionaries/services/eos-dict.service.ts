@@ -76,6 +76,8 @@ export class EosDictService {
     public updateRigth = new BehaviorSubject(null);
     public redactNodeId;
     // private dictionary: EosDictionary;
+    sevClearIdentCodesSubject: Subject<boolean> = new Subject<boolean>();
+    sevClearIdentCodesSubscription: Observable<boolean> = this.sevClearIdentCodesSubject.asObservable();
     private paginationConfig: IPaginationConfig;
     private _treeNode: EosDictionaryNode; // record selected in tree
     private _listNode: EosDictionaryNode; // record selected in list
