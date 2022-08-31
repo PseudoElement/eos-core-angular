@@ -132,6 +132,15 @@
                                      [data]="data"
                                      [isNewRecord]="isNewRecord"
                                      [editMode]="editMode"></eos-resolution-category-edit>
+                 <eos-file-category-card-edit *ngSwitchCase="'file-category'"
+                                    #cardEditEl
+                                    class="nomenkl-card simple-card-edit"
+                                    [form]="form"
+                                    [inputs]="inputs"
+                                    [data]="data"
+                                    [isNewRecord]="isNewRecord"
+                                    [editMode]="editMode">
+                             </eos-file-category-card-edit>
                 <eos-link-card *ngSwitchCase="'link'"
                                #cardEditEl
                                class="simple-card-edit"

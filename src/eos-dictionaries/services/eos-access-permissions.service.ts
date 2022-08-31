@@ -31,6 +31,7 @@ import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.con
 import { SEV_FOLDER, SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { TYPE_DOCUM_DICT } from 'eos-dictionaries/consts/dictionaries/type-docum.const';
 import { FILE_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/file-type.const';
+// import { FILE_CATEGORIES_DICT } from 'eos-dictionaries/consts/dictionaries/file-categories.consts';
 
 const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
     // Рубрикатор
@@ -183,8 +184,11 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         listedUT: false
     },
 
-    { id: FILE_TYPE_DICT.id,    tech: E_TECH_RIGHT.FileType,
+    { id: FILE_TYPE_DICT.id, tech: E_TECH_RIGHT.FileType,
         listedUT: false },
+
+    // { id: FILE_CATEGORIES_DICT.id, tech: E_TECH_RIGHT.FileCategories,
+   //     listedUT: false }
 ];
 
 const LicenseTech = {
@@ -208,6 +212,7 @@ export class EosAccessPermissionsService {
         const dt = dictsTechs.find(d => dictId === d.id);
         if (dt) {
             const grant = this.checkAccessTech(dt.tech);
+
             // Если к кабинетам есть доступ, а подразделениям - нет, то подразделения отдаем в readonly
             if (dt.id === DEPARTMENTS_DICT.id && !grant) {
                 const cab_grant = this.isAccessGrantedForDictionary(CABINET_DICT.id, due);
@@ -238,7 +243,6 @@ export class EosAccessPermissionsService {
             if (grant && dt.listedUT && due) {
                 return this._userTechListGranted(dt.tech, due);
             }
-
             return grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
 
@@ -284,6 +288,10 @@ export class EosAccessPermissionsService {
         if (!r) {
             return false;
         }
+        // @stub157113 для обхода проверки прав для категорий файлов
+        // if (tr === E_TECH_RIGHT.FileCategories) {
+        // return true;
+        // }
         return (r[tr - 1] === '1');
     }
 

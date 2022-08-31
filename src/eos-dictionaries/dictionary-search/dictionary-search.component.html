@@ -49,15 +49,15 @@
         </div>
     </div>
     <div class="full-search-settings-container usual-border">
-        <div *ngIf="dictId !=='cabinet' && dictId !=='templates' && dictId !== 'citizens' && dictId !== 'sev-rules' && dictId !== 'sev-participant'">
+        <div *ngIf="visibleBranchOptions()">
             <label class="radio-inline"><input type="radio" name="full-space" [value]="0" [(ngModel)]="mode"><span></span><span class="m-font">Во всём справочнике</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="1" [(ngModel)]="mode"><span></span><span class="m-font">В текущей ветке</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="2" [(ngModel)]="mode"><span></span><span class="m-font">Текущая и подчиненные</span></label>
         </div>
-        <div class="line" *ngIf="dictId !== 'nomenkl' && dictId !== 'templates' && dictId !== 'citizens' && dictId !== 'organization' && dictId !== 'sev-rules' && dictId !== 'sev-participant'">
+        <div class="line" *ngIf="visibleDeletedOption()">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
         </div>
-        <div class="line" *ngIf="dictId !== 'departments' && dictId !== 'templates' && dictId !== 'citizens' && dictId !== 'organization' && dictId !== 'sev-rules' && dictId !== 'sev-participant'">
+        <div class="line" *ngIf="visibleClosedDealsOption()">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.closed"><span></span><span class="m-font">С закрытыми делами</span></label>
         </div>
     </div>
@@ -425,6 +425,7 @@
             </form>
         </div>
     </div>
+
     <!--FOR Docgroups-->
     <div [hidden]="dictId !== 'docgroup'"
         *ngIf="searchModel"
@@ -501,6 +502,7 @@
                 </div>
         </form>
     </div>
+
     <!--FOR Nomenkl-->
     <div [hidden]="dictId !== 'nomenkl'"
         *ngIf="searchModel"
@@ -1170,6 +1172,7 @@
             </div>
     </form>
 </div>
+
 <div [hidden]="dictId !== 'sev-participant'"
     *ngIf="searchModel && dictId === 'sev-participant'"
     class="row full-search-form">
@@ -1228,6 +1231,127 @@
                 [height]="200"
                 [readonly]="false">
             </eos-dynamic-input>
+        </div>
+    </form>
+</div>
+
+<div [hidden]="dictId !== 'sev-participant'" *ngIf="searchModel && dictId === 'sev-participant'"
+    class="row full-search-form">
+    <form id="sev-participant">
+        <div class="search-field-sev">
+            <span class="label-select-rec">Наименование</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.CLASSIF_NAME']"
+                [form]="formSearch"
+                [height]="200"
+                [readonly]="false">
+            </eos-dynamic-input>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="region-name">ИСПОЛЬЗУЕМЫЕ ПРАВИЛА</label>
+            <div class="search-fld">
+                <input id="region-name"
+                    onfocus="this.blur()"
+                    readonly
+                    name="region-name"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['rules_name']"
+                    placeholder="...">
+                <span 
+                    class="action eos-icon eos-icon-directory-book-blue"
+                    style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
+                    container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    triggers="hover"
+                    eosClickMode
+                    tooltip="Выбрать" (click)="openDictSevPArtipant()">
+                </span>
+                <a style="right: 30px;"
+                    class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['rules_name']}"
+                    (click)="[searchModel['rules_name'] = '', searchModel['rules'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="search-field-sev">
+            <span class="label-select-rec">Адрес</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.ADDRESS']"
+                [form]="formSearch"
+                [height]="200"
+                [readonly]="false">
+            </eos-dynamic-input>
+        </div>
+        <div>
+            <span class="label-select-rec">Канал передачи сообщений</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.ISN_CHANNEL']"
+                [form]="formSearch"
+                [height]="200"
+                [readonly]="false">
+            </eos-dynamic-input>
+        </div>
+    </form>
+</div>
+
+<div [hidden]="dictId !== 'file-category'" *ngIf="searchModel && dictId === 'file-category'" class="row full-search-form">
+    <form id="file-category">
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="desc">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+            <div class="search-fld">
+                <input id="file-category-name"
+                    name="file-category-name"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['CLASSIF_NAME']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                    (click)="searchModel['CLASSIF_NAME']=''">
+                    <span class="eos-icon eos-icon-close-blue"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="desc">{{fieldsDescription.rec['DG_NAMES']?.title}}</label>
+            <div class="search-fld">
+                <input id="file-category-dg-names"
+                    name="file-category-dg-names"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['DG_NAMES']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['DG_NAMES']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['DG_NAMES']}"
+                    (click)="searchModel['DG_NAMES']=''">
+                    <span class="eos-icon eos-icon-close-blue"></span>
+                </a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="desc">{{fieldsDescription.rec['NOTE']?.title}}</label>
+            <div class="search-fld">
+                <input id="file-category-note"
+                    name="file-category-note"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['NOTE']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['NOTE']}"
+                    (click)="searchModel['NOTE']=''">
+                    <span class="eos-icon eos-icon-close-blue"></span>
+                </a>
+            </div>
         </div>
     </form>
 </div>

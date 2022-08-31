@@ -1,0 +1,29 @@
+.input-style {
+    background-color: #fafafa;
+    color: #000000;
+    padding: 6px 8px;
+    min-height: 32px;
+    border: 1px solid #e6e6e6;
+    width: 100%;
+    outline: none;
+}
+.grif-icon-directory {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background-size: cover;
+    vertical-align: inherit;
+}
+.delet-icon-directory {
+    position: absolute;
+    right: 30px;
+    top: 5px;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background-size: cover;
+    vertical-align: inherit;
+}

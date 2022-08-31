@@ -14,6 +14,7 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 
 import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
+import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
 import { EosUtils } from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
 import { SECURITY_DICT } from 'eos-dictionaries/consts/dictionaries/security.consts';
@@ -21,6 +22,8 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 import { ICONS_CONTAINER_SEV } from 'eos-dictionaries/consts/dictionaries/_common';
 import { _ES } from 'eos-rest/core/consts';
 import { EntityHelper } from 'eos-rest/core/entity-helper';
+import { PipRX } from 'eos-rest';
+
 
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -70,6 +73,7 @@ export class EosDictionary {
     get getAllOwners() {
         return this.descriptor.getAllOwners();
     }
+
     constructor(dictId: string, private dictDescrSrv: DictionaryDescriptorService) {
         const descriptor = dictDescrSrv.getDescriptorClass(dictId);
         if (descriptor) {
@@ -114,6 +118,16 @@ export class EosDictionary {
         } else {
             return Promise.resolve(null);
         }
+    }
+
+    bindDocGroups(dues: string): Promise<any> {
+        const CRIT = PipRX.criteries({ 'DUE': dues});
+        const DESCRIPTOR = <DocgroupDictionaryDescriptor>this.dictDescrSrv.getDescriptorClass('docgroup');
+        return DESCRIPTOR.getData(CRIT).then(resp => resp);
+    }
+
+    unbindDocGroups() {
+        // todo: решить с data.__relfield
     }
 
     canDo(action: E_RECORD_ACTIONS): boolean {

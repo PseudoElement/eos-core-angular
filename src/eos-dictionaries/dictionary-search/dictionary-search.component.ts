@@ -64,6 +64,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     };
     private searchValueDopRec = null;
     private sevChanelAllToSelect = [];
+
     constructor(
         private _dictSrv: EosDictService,
         private _classif: WaitClassifService,
@@ -76,6 +77,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     ngOnChanges() {
 
     }
+
     ngOnInit(): void {
         this.subscriptions.push(this._dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
@@ -95,36 +97,45 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             });
         }
     }
+
     get dictId(): string {
         return this.dictionary ? this.dictionary.id : null; // может придти null в этом случае просто передаём null
     }
+
     get noSearchData(): boolean {
         return Object.keys(this.searchModel).findIndex((prop) => this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
     }
+
     get searchActive(): boolean {
         return this._dictSrv.viewParameters.searchResults;
     }
+
     get arDescript(): AR_DESCRIPT[] {
         if (this.dictionary) {
             return this.dictionary.descriptor['dopRec'];
         }
     }
+
     isActiveButton(): boolean {
         return (this.fSearchPop.isOpen || this.settings.lastSearch === SEARCHTYPE.full /*|| (!this.noSearchData && this.searchActive) || this.searchActive*/);
     }
+
     setTab(key: string) {
         this.currTab = key;
         this.searchData.srchMode = key;
         this.searchModel = this.getSearchModel();
     }
+
     ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
+
     autoFocus() {
         BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container');
         this.settings.lastSearch = SEARCHTYPE.none;
         this.switchFastSrch.emit(false);
     }
+
     fullSearch() {
         this.settings.entity = this.getModelName();
         this.settings.entity_dict = this.dictId;
@@ -143,9 +154,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
     }
+
     clearForm() {
         this.clearModel(this.getModelName());
     }
+
     showFastSrch() {
         if ( this.settings.lastSearch !== SEARCHTYPE.quick) {
             this.settings.lastSearch = SEARCHTYPE.quick;
@@ -158,18 +171,21 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         }
         this.fSearchPop.hide();
     }
+
     close() {
     }
 
     get isQuickOpened(): boolean {
         return this.settings && this.settings.lastSearch === SEARCHTYPE.quick;
     }
+
     get validFormSearch() {
         if (this.formSearch) {
             return this.formSearch.valid;
         }
         return true;
     }
+
     get arType(): AR_DESCRIPT {
         if (this.formSelect && this.formSelect.controls['rec.select'].value) {
             return this.mapAr_Descr.get(this.formSelect.controls['rec.select'].value);
@@ -195,6 +211,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             console.log(e);
         });
     }
+
     public openDictDocgroup() {
         const params: IOpenClassifParams = {
             classif: 'DOCGROUP_CL',
@@ -220,6 +237,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             return { data: [], isnNode: null };
         });
     }
+
     public updateDopRec() {
         this.dictionary.descriptor.ar_Descript().then(() => {
             this.clearDopRecAfterChange();
@@ -228,6 +246,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             console.warn(e);
         });
     }
+
    public initFormDopRec() {
         const options = [];
         const validityReg = new RegExp(/^\-?(\d+\.?\d*|\d*\.?\d+)$/);
@@ -299,6 +318,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             this.searchModel['ADDRESS'] = this.formSearch.controls['rec.ADDRESS'].value;
         });
     }
+
     public openDictSevPArtipant() {
         const OPEN_CLASSIF_SEV_RULE: IOpenClassifParams = {
             classif: 'SEV_RULE',
@@ -324,6 +344,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 });
         });
     }
+
     public initFormRule(allField: any[]) {
         let type: any = {};
         let kind: any = {};
@@ -379,6 +400,21 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         });
     }
 
+    visibleBranchOptions(): boolean {
+        const ITEMS = ['cabinet', 'templates', 'citizens', 'sev-rules', 'sev-participant', 'file-category'];
+        return !ITEMS.includes(this.dictId);
+     }
+
+     visibleDeletedOption(): boolean {
+         const ITEMS = ['nomenkl', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category'];
+         return !ITEMS.includes(this.dictId);
+     }
+
+     visibleClosedDealsOption() {
+         const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category'];
+         return !ITEMS.includes(this.dictId);
+     }
+
     // принудительное очищение поисковых критериев для доп реквизитов после работы в окне с допами.
     private clearDopRecAfterChange(): void {
         this.mapAr_Descr.clear();
@@ -387,6 +423,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             this.searchValueDopRec = null;
         }
     }
+
     private clearModel(modelName: string) {
         if (this.formSearch && (this.dictId === 'organization' || this.dictId === 'citizens') && modelName !== 'medo') {
             this.formSearch.reset();
@@ -398,6 +435,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         if (this.formSearch && this.dictId === 'sev-participant') {
             this.formSearch.reset();
         }
+        // if (this.formSearch && this.dictId === 'file-category') {
+        //    this.formSearch.reset();
+        // }
         this.mode = 0;
         this.settings.opts.deleted = false;
         this.settings.opts.onlyNew = false;
@@ -409,9 +449,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             this.searchData[modelName] = {};
         }
     }
+
     private getModelName(): string {
         return (this.dictId === 'departments' || this.dictId === 'organization') ? this.currTab || 'department' : this.dictId;
     }
+
     private getSearchModel() {
         const prop = this.getModelName();
         if (!this.searchData[prop]) {
@@ -419,6 +461,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         }
         return this.searchData[prop];
     }
+
     private initSearchForm() {
         this.dictionary = this._dictSrv.currentDictionary;
         if (this.dictionary) {
@@ -429,20 +472,15 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                         this.setTab(this.searchData.srchMode);
                     } else {
                         this.searchData[this.settings.entity] = this.settings.full.data;
-
                     }
-
                     this.mode = this.settings.opts.mode;
                 } else {
                     ['department', 'data', 'person', 'cabinet', 'common', 'medo'].forEach((model) => this.clearModel(model));
                 }
             }
-
             this.fieldsDescription = this.dictionary.descriptor.record.getFieldDescription(E_FIELD_SET.fullSearch);
             this.type = this.dictionary.descriptor.dictionaryType;
             this.modes = this.dictionary.descriptor.record.getModeList();
-
-
             if (this.modes) {
                 const i = this.modes.findIndex(m => m.key === (this.settings && this.settings.entity));
                 this.setTab(this.modes[i >= 0 ? i : 0].key);
@@ -463,6 +501,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             }
         }
     }
+
     private openRubricCL(classif: string, skipDeleted?: boolean): Promise<any> {
         const params: IOpenClassifParams = {
             classif: classif,
@@ -495,4 +534,5 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             return { data: [], isnNode: null };
         });
     }
+
 }

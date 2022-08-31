@@ -256,3 +256,10 @@ export const SEV_CLEAR_IDENT_CODES: IMessage = {
     msg: ''
 };
 
+export const WARN_NO_BINDED_DOCGROUP: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение:',
+    msg: 'Не указана группа документов. Удаление невозможно'
+};
+
+

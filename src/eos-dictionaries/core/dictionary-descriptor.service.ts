@@ -33,6 +33,9 @@ import { ADDR_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/addr-ca
 import { AddrCategoryDictionaryDescriptor } from './addr-category-dictionary-descriptor';
 import { SevDictionaryDescriptor } from './sev/sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { FILE_CATEGORIES_DICT } from 'eos-dictionaries/consts/dictionaries/file-categories.consts';
+import { FileCategoryDictionaryDescriptor } from './file-category-dictionary-descriptor';
+
 @Injectable()
 export class DictionaryDescriptorService {
     private _mDicts: Map<string, IDictionaryDescriptor>;
@@ -60,6 +63,7 @@ export class DictionaryDescriptorService {
                 }
             })
             .forEach((dict) => this._mDicts.set(dict.id, dict));
+
         NADZOR_DICTIONARIES
             .sort((a, b) => {
                 if (a.title > b.title) {
@@ -154,6 +158,8 @@ export class DictionaryDescriptorService {
                     case 'citizens':
                         res = new CitizensDictionaryDescriptor(descr, this.apiSrv);
                         break;
+                    case FILE_CATEGORIES_DICT.id:
+                        res = new FileCategoryDictionaryDescriptor(descr, this.apiSrv);
                 }
 
                 // Added for parent be a Nadzor

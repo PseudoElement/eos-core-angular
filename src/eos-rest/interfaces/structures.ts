@@ -3902,6 +3902,20 @@ export interface FILE_TYPE_CL {
     UPD_DATE: string;
 }
 
+export interface FILE_CATEGORY_CL {
+    ISN_LCLASSIF: number;
+    NAME: string;
+    NOTE: string;
+    PROTECTED: number;
+    WEIGHT: number;
+    ISN_NODE_DG: string;
+    ISN_PERSON: string;
+    ISN_WHO: number;
+    ISN_DATE: number;
+    UPD_WHO: string;
+    UPD_DATE: string;
+    DELETED: number;
+}
 export interface MEDO_PARTICIPANT {
     ISN_ORGANIZ: number;
     GATE: string;
