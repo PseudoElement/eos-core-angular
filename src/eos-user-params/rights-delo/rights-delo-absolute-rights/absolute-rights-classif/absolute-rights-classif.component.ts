@@ -315,7 +315,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string = '11111111111111111111001111111111111110001';
+            const techRights: string = '1111111111111111111100111111111111111000';
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,

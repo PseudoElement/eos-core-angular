@@ -637,6 +637,7 @@ const commonMeta = {
             { name: 'DOC_DEFAULT_VALUE_List', __type: 'DOC_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_NODE', noDirectRead: true},
             { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
             { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' },
+            { name: 'DG_FILE_CATEGORY_List', __type: 'DG_FILE_CATEGORY', sf: 'ISN_NODE', tf: 'ISN_NODE_DG' }
         ]
     },
     EDS_CATEGORY_CL: {
@@ -2544,6 +2545,49 @@ const commonMeta = {
         readonly: [
         ],
         relations: [
+        ]
+    },
+    DG_FILE_CATEGORY: {
+        pk: 'ISN_NODE_DG',
+        properties: {
+          ISN_NODE_DG: _t.i,
+          ISN_FILE_CATEGORY: _t.s,
+        },
+        readonly: [
+          'ISN_NODE_DG',
+          'ISN_FILE_CATEGORY'
+        ],
+        relations: [
+            { name: 'DOCGROUP_CL_List', __type: 'DOCGROUP_CL', sf: 'ISN_NODE_DG', tf: 'ISN_NODE' },
+            { name: 'FILE_CATEGORY_CL_List', __type: 'FILE_CATEGORY_CL', sf: 'ISN_FILE_CATEGORY', tf: 'ISN_LCLASSIF' }
+        ]
+    },
+    FILE_CATEGORY_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            CLASSIF_NAME: _t.s,
+            NOTE: _t.s,
+            WEIGHT: _t.i,
+            ISN_NODE_DG: _t.i,
+            ISN_PERSON: _t.s,
+            PROTECTED: _t.i,
+            INS_DATE: _t.i,
+            INS_WHO: _t.s,
+            UPD_DATE: _t.i,
+            UPD_WHO: _t.s,
+            DELETED: _t.i,
+        },
+        readonly: [
+            'ISN_LCLASSIF',
+            'WEIGHT',
+            'INS_DATE',
+            'UPD_DATE',
+            'INS_WHO',
+            'UPD_WHO'
+        ],
+        relations: [
+          { name: 'DG_FILE_CATEGORY_List', __type: 'DG_FILE_CATEGORY', sf: 'ISN_NODE' , tf: 'ISN_NODE_DG' },
         ]
     },
     NTFY_OPERATION: {

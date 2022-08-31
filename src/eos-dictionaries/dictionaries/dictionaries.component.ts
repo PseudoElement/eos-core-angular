@@ -40,7 +40,7 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         this._dictSrv.closeDictionary();
         let dictList;
         if (this._router.url === '/spravochniki') {
-            dictList = this._dictSrv.getDictionariesList();
+           dictList = this._dictSrv.getDictionariesList();
         } else if (this._router.url === '/spravochniki/nadzor') {
             dictList = this._dictSrv.getNadzorDictionariesList();
         } else if (this._router.url === '/spravochniki/SEV') {
@@ -75,16 +75,18 @@ export class DictionariesComponent implements OnInit, OnDestroy {
     }
 
     isAccessEnabled(dict: any) {
-        // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
-        if (dict.id === TYPE_DOCUM_DICT.id) {
-            if (!this.curUserHasDocGroup) {
-                return APS_DICT_GRANT.denied;
-            } else {
-                return this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
+            if (dict.id === TYPE_DOCUM_DICT.id) {
+                if (!this.curUserHasDocGroup) {
+                    return APS_DICT_GRANT.denied;
+                } else {
+                    return this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+                }
             }
-        }
-        return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
+            return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
+
     }
+
     isAccessLicense(id) {
         return this._eaps.isAssessSev(id);
     }

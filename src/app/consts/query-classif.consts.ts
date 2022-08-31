@@ -56,3 +56,13 @@ export const OPEN_CLASSIF_CARDINDEX: IOpenClassifParams = {
     selectMulty: true,
     skipDeleted: false,
 };
+
+export const OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT: IOpenClassifParams = {
+    classif: 'DOCGROUP_CL',
+    selectMulty: true,
+    selectLeafs: true,
+    skipDeleted: false,
+    return_due: true
+};
+
+

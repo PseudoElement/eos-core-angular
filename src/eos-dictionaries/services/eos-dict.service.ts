@@ -271,7 +271,6 @@ export class EosDictService {
         return this._bufferNodes;
     }
 
-
     constructor(
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
@@ -422,6 +421,18 @@ export class EosDictService {
     bindOrganization(orgDue: string) {
         if (orgDue && this.currentDictionary) {
             return this.currentDictionary.bindOrganization(orgDue);
+        } else {
+            return Promise.resolve(null);
+        }
+    }
+
+    unbindDocGroups() {
+        this.currentDictionary.unbindDocGroups();
+    }
+
+    bindDocGroups(dues: string) {
+        if (dues && this.currentDictionary) {
+            return this.currentDictionary.bindDocGroups(dues);
         } else {
             return Promise.resolve(null);
         }
@@ -1588,6 +1599,7 @@ export class EosDictService {
         if (!_p) {
             // this._dictMode = 0;
             try {
+
                 this._dictionaries[0] = new EosDictionary(dictionaryId, this._descrSrv);
             } catch (e) {
                 return Promise.reject(e);

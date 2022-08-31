@@ -64,6 +64,7 @@ import { DictionariesQuickSearchComponent } from './dictionary-quick-search/dict
 import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { LinkCardComponent } from './card-views/link-card.component';
 import { NadzorCardEditComponent } from './card-views/nadzor-card-edit.component';
+import { FileCategoryCardEditComponent } from './card-views/file-categories-card-edit.component';
 import { PrjDefaultValuesComponent } from './prj-default-values/prj-default-values.component';
 
 /* services */
@@ -167,6 +168,7 @@ import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.co
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        FileCategoryCardEditComponent,
         CalendarFormComponent,
         EosDatepickerInlineComponent,
         CopyPropertiesComponent,

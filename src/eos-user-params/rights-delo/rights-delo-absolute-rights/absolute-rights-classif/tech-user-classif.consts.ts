@@ -196,6 +196,12 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         label: 'Статусы проекта поручения',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     }, */
+    // @stub157113 открыть при наличии бэка
+    // {
+    //    key: 43,
+    //    label: 'Категории файлов',
+    //    expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    // }
 ];
 
 export const E_CLASSIF_ID = {
