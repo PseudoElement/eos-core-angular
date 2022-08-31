@@ -210,9 +210,9 @@ export class WaitClassifService {
         } else {
         } */
         if (clickMode === '1') {
-            url += this.isCtrl ? OLD_VIEW_URL : NEW_VIEW_URL;
+            url += this.isCtrl ? NEW_VIEW_URL : OLD_VIEW_URL;
         } else {
-            url += this.isCtrl ?  NEW_VIEW_URL : OLD_VIEW_URL;
+            url += this.isCtrl ?  OLD_VIEW_URL : NEW_VIEW_URL;
         }
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
