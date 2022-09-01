@@ -1,13 +1,11 @@
 import { Component, Input } from '@angular/core';
-
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
-import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
+import { IPaginationConfig } from 'eos-common/interfaces';
 import { UserPaginationService } from '../../eos-user-params/shared/services/users-pagination.service';
-
+import { EosUtils } from 'eos-common/core/utils';
 
 @Component({
     selector: 'eos-user-list-pagination',
@@ -15,7 +13,7 @@ import { UserPaginationService } from '../../eos-user-params/shared/services/use
 })
 export class UserSelectPaginationComponent {
     @Input() currentState: boolean[];
-    public config: IPaginationUserConfig;
+    public config: IPaginationConfig;
     readonly pageLengths = PAGES_SELECT;
 
     pageCount = 1;
@@ -32,7 +30,7 @@ export class UserSelectPaginationComponent {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((config: IPaginationUserConfig) => {
+            .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.config = config;
                     this._update();
@@ -64,24 +62,22 @@ export class UserSelectPaginationComponent {
         }
     }
 
-    private _update() {
-        let total = Math.ceil(this.config.itemsQty / this.config.length);
-        if (total === 0) { total = 1; }
-        const firstSet = this._buttonsTotal - this.config.current;
-        const lastSet = total - this._buttonsTotal + 1;
-        const middleSet = this._buttonsTotal - 3;
-
-        this.pageCount = total;
-        this.pages = [];
-        for (let i = 1; i <= this.pageCount; i++) {
-            if (
-                i === 1 || i === this.pageCount || // first & last pages
-                (1 < firstSet && i < this._buttonsTotal) || // first 4 pages
-                (1 < this.config.current - lastSet && i - lastSet > 0) || // last 4 pages
-                (middleSet > this.config.current - i && i - this.config.current < middleSet)  // middle pages
-            ) {
-                this.pages.push(i);
-            }
-        }
+    isPageCountAll(): boolean {
+      return this.config ? this.config.length === 0 : false;
     }
+
+    getShowLabel(): string {
+        let ret: string = '';
+        if (this.config) {
+           ret = this.config.length > 0 ? `Показывать по ${this.config.length}` : 'Показывать все';
+        }
+        return ret;
+    }
+
+    private _update() {
+        const { pageCount, pages } = EosUtils.updatePagination(this.config, this._buttonsTotal);
+        this.pageCount = pageCount;
+        this.pages = pages;
+    }
+
 }

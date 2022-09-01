@@ -1,6 +1,6 @@
 import { AbstractControl } from '@angular/forms';
 import { INPUT_ERROR_MESSAGES } from '../consts/common.consts';
-
+import { IPaginationUpdate } from 'eos-common/interfaces/interfaces';
 export class EosUtils {
     static pad(n: number): string {
         return n < 10 ? '0' + n : '' + n;
@@ -211,5 +211,31 @@ export class EosUtils {
         return true;
     }
 
+    static updatePagination(config, buttonsTotal: number): IPaginationUpdate {
+        let pageCount: number = 0;
+        const pages: number[] = [];
+        if (config.length > 0) { // включена пагинация
+            let total = Math.ceil(config.itemsQty / config.length);
+            if (total === 0) { total = 1; }
+            const firstSet = buttonsTotal - config.current;
+            const lastSet = total - buttonsTotal + 1;
+            const middleSet = buttonsTotal - 3;
+            pageCount = total;
+            for (let i = 1; i <= pageCount; i++) {
+                if (
+                    i === 1 || i === pageCount || // first & last pages
+                    (1 < firstSet && i < buttonsTotal) || // first 4 pages
+                    (1 < config.current - lastSet && i - lastSet > 0) || // last 4 pages
+                    (middleSet > config.current - i && i - config.current < middleSet)  // middle pages
+                ) {
+                    pages.push(i);
+                }
+            }
+        } else { // включено отображение всех элементов
+            pageCount = 1;
+            pages.push(1);
+        }
+        return { pageCount, pages};
+    }
 
 }

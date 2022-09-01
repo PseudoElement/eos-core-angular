@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { EosStorageService } from '../../app/services/eos-storage.service';
-import { IPaginationConfig } from './node-list-pagination.interfaces';
+import { IPaginationConfig } from 'eos-common/interfaces/interfaces';
 import { LS_PAGE_LENGTH, PAGES } from './node-list-pagination.consts';
 import { EosDictService } from '../services/eos-dict.service';
 import { takeUntil } from 'rxjs/operators';
+import { EosUtils } from 'eos-common/core/utils';
 
 @Component({
     selector: 'eos-node-list-pagination',
@@ -67,28 +68,10 @@ export class NodeListPaginationComponent {
     }
 
     private _update() {
-        if (this.config.length > 0) { // включена пагинация
-            let total = Math.ceil(this.config.itemsQty / this.config.length);
-            if (total === 0) { total = 1; }
-            const firstSet = this._buttonsTotal - this.config.current;
-            const lastSet = total - this._buttonsTotal + 1;
-            const middleSet = this._buttonsTotal - 3;
-            this.pageCount = total;
-            this.pages = [];
-            for (let i = 1; i <= this.pageCount; i++) {
-                if (
-                    i === 1 || i === this.pageCount || // first & last pages
-                    (1 < firstSet && i < this._buttonsTotal) || // first 4 pages
-                    (1 < this.config.current - lastSet && i - lastSet > 0) || // last 4 pages
-                    (middleSet > this.config.current - i && i - this.config.current < middleSet)  // middle pages
-                ) {
-                    this.pages.push(i);
-                }
-            }
-        } else { // включено отображение всех элементов
-            this.pageCount = 1;
-            this.pages = [1];
-        }
+        const { pageCount, pages } = EosUtils.updatePagination(this.config, this._buttonsTotal);
+        this.pageCount = pageCount;
+        this.pages = pages;
     }
+
 
 }

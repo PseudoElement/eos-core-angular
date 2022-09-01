@@ -67,3 +67,20 @@ export interface ICertificateInit {
     // выделенный идентификатор
     cert_id?: string;
 }
+
+export interface IPaginationConfig {
+    start: number;
+    length: number;
+    current: number;
+    itemsQty: number;
+    showMore?: boolean;
+}
+
+export interface IPaginationUpdate {
+    pageCount: number;
+    pages: number[];
+  }
+
+
+
+
