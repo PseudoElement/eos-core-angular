@@ -1826,11 +1826,9 @@ export class EosDictService {
             }
 
             this._visibleListNodes = this._visibleListNodes.filter((node) => node.filterBy(this.filters));
-
             this._fixCurrentPage();
-
             const page = this.paginationConfig;
-            const pageList = this._visibleListNodes.slice((page.start - 1) * page.length, page.current * page.length);
+            const pageList = (page.length > 0) ? this._visibleListNodes.slice((page.start - 1) * page.length, page.current * page.length) : this._visibleListNodes;
             const lastTimeMarked = pageList.find(n => n === this._listNode);
             if (!lastTimeMarked || !lastTimeMarked.isMarked) {
                 const firstMarkedIndex = pageList.findIndex((node) => node.isMarked);
