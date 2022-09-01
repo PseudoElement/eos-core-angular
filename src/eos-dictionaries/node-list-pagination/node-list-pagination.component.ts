@@ -26,9 +26,9 @@ export class NodeListPaginationComponent {
         private _storageSrv: EosStorageService,
     ) {
         _dictSrv.paginationConfig$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.config = config;
@@ -58,24 +58,37 @@ export class NodeListPaginationComponent {
         }
     }
 
-    private _update() {
-        let total = Math.ceil(this.config.itemsQty / this.config.length);
-        if (total === 0) { total = 1; }
-        const firstSet = this._buttonsTotal - this.config.current;
-        const lastSet = total - this._buttonsTotal + 1;
-        const middleSet = this._buttonsTotal - 3;
+    isPageCountAll(): boolean {
+        return this.config.length === 0;
+    }
 
-        this.pageCount = total;
-        this.pages = [];
-        for (let i = 1; i <= this.pageCount; i++) {
-            if (
-                i === 1 || i === this.pageCount || // first & last pages
-                (1 < firstSet && i < this._buttonsTotal) || // first 4 pages
-                (1 < this.config.current - lastSet && i - lastSet > 0) || // last 4 pages
-                (middleSet > this.config.current - i && i - this.config.current < middleSet)  // middle pages
-            ) {
-                this.pages.push(i);
+    getShowLabel(): string {
+        return (this.config.length > 0) ? `Показывать по ${this.config.length}` : 'Показывать все';
+    }
+
+    private _update() {
+        if (this.config.length > 0) { // включена пагинация
+            let total = Math.ceil(this.config.itemsQty / this.config.length);
+            if (total === 0) { total = 1; }
+            const firstSet = this._buttonsTotal - this.config.current;
+            const lastSet = total - this._buttonsTotal + 1;
+            const middleSet = this._buttonsTotal - 3;
+            this.pageCount = total;
+            this.pages = [];
+            for (let i = 1; i <= this.pageCount; i++) {
+                if (
+                    i === 1 || i === this.pageCount || // first & last pages
+                    (1 < firstSet && i < this._buttonsTotal) || // first 4 pages
+                    (1 < this.config.current - lastSet && i - lastSet > 0) || // last 4 pages
+                    (middleSet > this.config.current - i && i - this.config.current < middleSet)  // middle pages
+                ) {
+                    this.pages.push(i);
+                }
             }
+        } else { // включено отображение всех элементов
+            this.pageCount = 1;
+            this.pages = [1];
         }
     }
+
 }
