@@ -46,6 +46,7 @@
             <div class="create-user-wr" style="width: 363px">
                 <input class="form-control m-font inline-block name-limitation-max" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label">
                 <span 
+                    eosClickMode
                     class="icon eos-icon small icon-add-department" 
                     [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}" 
                     [ngStyle]="{'margin-right': !form.value['DUE_DEP_NAME'] ? '0px' : '28px'}"
@@ -61,6 +62,7 @@
         <div class="create-user-wr" style="width: 363px">
             <input class="form-control m-font inline-block  name-limitation-max" (keyup)="delSelectUser($event)" readonly [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text" [placeholder]="inputs['USER_COPY'].label" autocomplete="off">
             <span
+                eosClickMode
                 class="icon eos-icon  small icon-add-department"
                 [ngClass]="{'eos-icon-avatar-blue': !form.get('USER_TEMPLATES').value, 'eos-icon-avatar-grey': form.get('USER_TEMPLATES').value}"
                 [ngStyle]="{'margin-right': !form.value['USER_COPY'] ? '0px' : '28px'}"
