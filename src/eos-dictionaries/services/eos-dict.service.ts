@@ -20,7 +20,7 @@ import {
 } from 'eos-dictionaries/interfaces';
 import { EosUtils } from 'eos-common/core/utils';
 import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
-import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
+import { IPaginationConfig } from 'eos-common/interfaces/interfaces';
 import { IImage } from 'eos-dictionaries/interfaces/image.interface';
 import { LS_PAGE_LENGTH, PAGES } from '../node-list-pagination/node-list-pagination.consts';
 import {

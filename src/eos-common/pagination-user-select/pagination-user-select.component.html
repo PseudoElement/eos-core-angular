@@ -5,7 +5,7 @@
         'tree': currentState[0] && !currentState[1]}">
     <div class="pagination">
         <button class="pag-btn btn-default prev"
-            [disabled]="config?.current === 1"
+            [disabled]="config?.current === 1||isPageCountAll()"
             (click)="showPage(config.current - 1)">
             <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-left"
                 [ngClass]="{'eos-icon-arrow-v-grey-left':config?.current === 1}"></span>
@@ -15,7 +15,7 @@
             [ngClass]="{'btn-primary-full': config.current === page}"
             (click)="showPage(page)">{{page}}</button>
         <button class="pag-btn btn-default next"
-            [disabled]="config?.current === pageCount"
+            [disabled]="config?.current === pageCount||isPageCountAll()"
             (click)="showPage(config.current + 1)">
             <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"
                 [ngClass]="{'eos-icon-arrow-v-grey-left': config?.current === pageCount}"></span>
@@ -23,7 +23,7 @@
     </div>
 
     <button class="btn show-more selected-text"
-        [disabled]="config?.current*config?.length >= config?.itemsQty"
+        [disabled]="config?.current*config?.length >= config?.itemsQty||isPageCountAll()"
         (click)="showMore()">Показать еще</button>
 
     <div dropdown
@@ -35,7 +35,7 @@
             dropdownToggle
             class="drop-btn btn btn-transparent selected-text"
         >
-            <span>Показывать по {{config?.length}}</span>
+            <span>{{getShowLabel()}}</span>
             <div class="arrow">
                 <span class="icon-btn eos-icon small"
                     [ngClass]="{'eos-icon-arrow-v-blue-top': !dd.isOpen, 'eos-icon-arrow-v-blue-bottom': dd.isOpen}"></span>
@@ -50,6 +50,13 @@
                 class="menuitem">
                 <a class="dropdown-item text-center">
                     <span class="l-font">Показывать по {{item.title}}</span>
+                </a>
+            </li>
+            <li role="menuitem"
+                (click)="setPageLength(0)"
+                class="menuitem">
+                <a class="dropdown-item text-center">
+                    <span class="l-font">Показывать все</span>
                 </a>
             </li>
         </ul>

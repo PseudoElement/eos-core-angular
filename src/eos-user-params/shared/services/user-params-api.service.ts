@@ -11,7 +11,7 @@ import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-selec
 import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
-import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
+import { IPaginationConfig } from 'eos-common/interfaces';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
@@ -104,7 +104,7 @@ export class UserParamApiSrv {
         let q: any = {};
         let skip, top;
         const ob1 = {};
-        const conf: IPaginationUserConfig = this._storageSrv.getItem('users');
+        const conf: IPaginationConfig = this._storageSrv.getItem('users');
         if (conf) {
             if (conf.showMore) {
                 if (conf.current !== 2 && conf.start !== 1) {

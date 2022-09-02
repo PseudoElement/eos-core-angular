@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
-import { IPaginationConfig } from 'eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
+import { IPaginationConfig } from 'eos-common/interfaces/interfaces';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { takeUntil } from 'rxjs/operators';

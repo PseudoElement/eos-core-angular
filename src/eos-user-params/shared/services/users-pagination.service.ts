@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { USER_CL } from 'eos-rest';
 import { Subject, Observable } from 'rxjs';
-import { IPaginationConfig } from '../../../eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
+import { IPaginationConfig } from 'eos-common/interfaces/interfaces';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
 // import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
 
@@ -122,7 +122,7 @@ export class UserPaginationService {
 
     private _fixCurrentPage() {
         this.paginationConfig.itemsQty = this._getCountPage();
-        const maxPage = Math.max(1, Math.ceil(this.paginationConfig.itemsQty / this.paginationConfig.length));
+        const maxPage = this.paginationConfig.length > 0 ? Math.max(1, Math.ceil(this.paginationConfig.itemsQty / this.paginationConfig.length)) : 1;
         this.paginationConfig.start = Math.min(this.paginationConfig.start, maxPage);
         this.paginationConfig.current = Math.min(this.paginationConfig.current, maxPage);
         this._paginationConfig$.next(this.paginationConfig);
