@@ -5,15 +5,16 @@ import { PipRX } from 'eos-rest';
 
 declare function openPopup(url: string, callback?: Function): boolean;
 
-// const LIST_OLD_PAGES: string[] = [
-//     'CARDINDEX',
-//     'USER_CL',
-//     'ORGANIZ_CL',
-//     // 'CONTACT',
-//     'LINK_CL',
-//     'SECURITY_CL',
-//     'DOCVID_CL'
-// ];
+const LIST_OLD_PAGES: string[] = [
+    'CARDINDEX',
+    'USER_CL',
+    'ORGANIZ_CL',
+    // 'CONTACT',
+    'LINK_CL',
+    'SECURITY_CL',
+    'DOCVID_CL'
+];
+// const OLD_VIEW_URL: string = '../Pages/Classif/ChooseClassif.aspx?';
 const OLD_VIEW_URL: string = '../Eos.Delo.JSControls/Classif/ChooseClassif.html?';
 const NEW_VIEW_URL: string = '../classifChoose/cl?';
 // const URL_PATH = '../classifChoose/cl?';
@@ -205,14 +206,14 @@ export class WaitClassifService {
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url: string = '';
-        /* if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
-            url += OLD_VIEW_URL;
+        if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
+            url += NEW_VIEW_URL;
         } else {
-        } */
-        if (clickMode === '1') {
-            url += this.isCtrl ? NEW_VIEW_URL : OLD_VIEW_URL;
-        } else {
-            url += this.isCtrl ?  OLD_VIEW_URL : NEW_VIEW_URL;
+            if (clickMode === '1') {
+                url += this.isCtrl ? NEW_VIEW_URL : OLD_VIEW_URL;
+            } else {
+                url += this.isCtrl ? OLD_VIEW_URL : NEW_VIEW_URL;
+            }
         }
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
