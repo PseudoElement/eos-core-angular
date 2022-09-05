@@ -179,7 +179,13 @@
         <div class="description-input-group-rep">
             <eos-dynamic-input (onControlBlur)="replaceBlur($event)" (keydown)="chenge($event)" [input]="inputs['rec.FILE_DESCRIPTION_REPLACE']" [form]="form" [readonly]="!form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value"></eos-dynamic-input>
         </div>
-
+        <div *ngIf="sreamScaneContext">
+            <span class="l-font">Служба поточного сканирования</span><br/><br/>
+            <div class="description-input-group-aps-scan">
+                <eos-dynamic-input [readonly]="strimScan" [input]="inputs['rec.STREAM_SCAN_URL']" [form]="form"></eos-dynamic-input>
+            </div>
+        </div>
+        
     </div>
     <!-- <div *ngIf="inputs" bsModal #infoAttachFilesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
         <div class="modal-dialog">

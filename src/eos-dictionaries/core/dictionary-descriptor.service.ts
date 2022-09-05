@@ -37,6 +37,7 @@ import { FILE_CATEGORIES_DICT } from 'eos-dictionaries/consts/dictionaries/file-
 import { FileCategoryDictionaryDescriptor } from './file-category-dictionary-descriptor';
 import { FormatDictionaryDescriptor } from './format-dictionary-descriptor';
 import { MedoNodeDictionaryDescriptor } from './medo-node-dictionary-descriptor';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -49,11 +50,18 @@ export class DictionaryDescriptorService {
         private _rulesSrv: EosSevRulesService,
         private _injector: Injector,
         private _confirmSrv: ConfirmWindowService,
-
+        private _appContext: AppContext,
 
     ) {
         this._mDicts = new Map<string, IDictionaryDescriptor>();
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
+        if (!this._appContext.sreamScane) {
+            DICTIONARIES.forEach((item) => {
+                if (item.id === 'format') {
+                    item.visible = false;
+                }
+            });
+        }
         DICTIONARIES
             .sort((a, b) => {
                 if (a.title > b.title) {

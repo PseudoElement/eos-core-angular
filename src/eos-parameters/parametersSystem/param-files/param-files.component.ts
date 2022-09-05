@@ -48,6 +48,16 @@ export class ParamFielsComponent extends BaseParamComponent {
     queryFileConstraint = {
         'DOCGROUP_CL(\'0.\')/DG_FILE_CONSTRAINT_List': ALL_ROWS
     };
+    get strimScan() {
+        if (this._appContext.CurrentUser.STREAM_SCAN_RIGHTS) {
+            return this._appContext.CurrentUser.STREAM_SCAN_RIGHTS[1] !== '1';
+        } else {
+            return true;
+        }
+    }
+    get sreamScaneContext() {
+        return this._appContext.sreamScane;
+    }
     constructor(injector: Injector) {
         super(injector, FILES_PARAM);
         this.init()
