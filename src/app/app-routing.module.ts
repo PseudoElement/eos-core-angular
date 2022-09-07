@@ -34,6 +34,7 @@ import { EosBackgraundTasksComponent } from 'eos-backgraund-tasks/components/eos
 import { EosBackgraundSingleComponent } from 'eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
 import { EosInstrumentsListsComponent } from 'eos-instruments/components/eos-instruments-lists/eos-instruments-lists.component';
 import { EosInstrumentsSingleComponent } from 'eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
+import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -363,7 +364,7 @@ const routes: Routes = [{
 {
     path: 'background-tasks',
     data: { title: 'Фоновые задачи', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, BackgroundTaskGuard],
     children: [
         {
             path: '',

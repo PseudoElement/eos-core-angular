@@ -203,6 +203,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     }
     */
+    {
+        key: 48,
+        label: 'Фоновые задачи',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
 ];
 
 export const E_CLASSIF_ID = {
