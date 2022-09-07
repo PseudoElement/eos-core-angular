@@ -18,4 +18,8 @@ export const KEY_RIGHT_TECH = {
         key: E_TECH_RIGHT.Users,
         name: 'Пользователи'
     },
+    'background-tasks': {
+        key: E_TECH_RIGHT.BackgroundTasks,
+        name: 'Фоновые задачи'
+    },
 };

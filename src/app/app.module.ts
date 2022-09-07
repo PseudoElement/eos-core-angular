@@ -62,6 +62,7 @@ import { CarmaHttp2Service } from './services/camaHttp2.service';
 import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 import { EosBackgraundTasksModule } from '../eos-backgraund-tasks/eos-backgraund-tasks.module';
 import { EosInstrumentsModule } from 'eos-instruments/eos-instruments.module';
+import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /* end guards */
 
 @NgModule({
@@ -130,6 +131,7 @@ import { EosInstrumentsModule } from 'eos-instruments/eos-instruments.module';
         WaitClassifService,
         CertificateService,
         ExportImportClService,
+        BackgroundTaskGuard,
     ],
     bootstrap: [AppComponent],
 })
