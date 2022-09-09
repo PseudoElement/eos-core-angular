@@ -331,9 +331,14 @@ export class PipRX extends PipeUtils {
     }
 
     private parseBatchResponse(response: any, answer: any[]): any[] {
-        const dd = response.body.split('--changesetresponse');
-        dd.shift();
-        dd.pop();
+        let dd;
+        if (response.body.indexOf('--changesetresponse') !== -1) {
+            dd = response.body.split('--changesetresponse');
+            dd.shift();
+            dd.pop();
+        } else {
+            dd = response.body.split('--');
+        }
         for (let i = 0; i < dd.length; i++) {
             if (dd[i].indexOf('{') !== -1) {
                 dd[i] = dd[i].substr(dd[i].indexOf('{'));
