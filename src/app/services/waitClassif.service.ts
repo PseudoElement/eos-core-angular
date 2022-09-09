@@ -15,7 +15,7 @@ const LIST_OLD_PAGES: string[] = [
     'DOCVID_CL'
 ];
 // const OLD_VIEW_URL: string = '../Pages/Classif/ChooseClassif.aspx?';
-const OLD_VIEW_URL: string = '../Eos.Delo.JSControls/Classif/ChooseClassif.html?';
+const OLD_VIEW_URL: string = '../Eos.Delo.JsControls/Classif/ChooseClassif.html?';
 const NEW_VIEW_URL: string = '../classifChoose/cl?';
 // const URL_PATH = '../classifChoose/cl?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
