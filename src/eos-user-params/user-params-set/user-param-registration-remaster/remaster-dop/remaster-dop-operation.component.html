@@ -46,7 +46,7 @@
         ></eos-dynamic-input>
     </div>
 </div>
-<div [hidden]="appMode.cbr" class="user-group-form">
+<div [hidden]="appMode.cbr || appMode.arm" class="user-group-form">
     <span>Присваивать гриф доступа:</span>
     <eos-dynamic-input
         class="input-right"
