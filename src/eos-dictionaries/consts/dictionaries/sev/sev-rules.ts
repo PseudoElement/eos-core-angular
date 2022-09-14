@@ -209,7 +209,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'fileMaxLength',
             title: 'Max размер',
             type: 'number',
-            pattern: /^[1-9]{1}[1-9]{0,8}$/,
+            pattern: /^[1-9]{1}[0-9]{0,8}$/,
             default: ''
         }, {
             key: 'item',
@@ -260,7 +260,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
             key: 'taskFileMaxLength',
             title: 'Max размер',
             type: 'number',
-            pattern: /^[1-9]{1}[1-9]{0,8}$/,
+            pattern: /^[1-9]{1}[0-9]{0,8}$/,
             default: '',
         }, {
             key: 'reception',
