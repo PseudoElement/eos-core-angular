@@ -523,15 +523,30 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
 
     saveZeroType(userType, userPassword, userLogin, flagRout): Promise<any> {
         if (!userPassword) {
-            this._alertMessage('Необходимо ввести пароль');
-            return Promise.resolve('error');
-        }
-        if (this.provUpdateDate()) {
-            this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
-            return Promise.resolve('error');
+            if (this.checkUpdateDate()) {
+                if (this.provUpdateDate()) { // Имя/пароль в БД
+                    this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
+                    return Promise.resolve('error');
+                }
+                // сохранить дату
+                let date = this.getNewDate();
+                if (date instanceof Date) {
+                    date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
+                }
+                return this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                     return this.saveExternal(flagRout);
+                }).catch(e => {
+                    this.cancel(null);
+                    this._errorSrv.errorHandler(e);
+                });
+            } else {
+                this._alertMessage('Необходимо ввести пароль');
+                return Promise.resolve('error');
+            }
         }
         return this._createUrlChangeLOgin({ userType, userPassword, userLogin }).then(() => {
-            if (this.checkUpdateDate()) {
+            return this.saveExternal(flagRout);
+            /* if (this.checkUpdateDate()) {
                 // сохранить дату
                 let date = this.getNewDate();
                 if (date instanceof Date) {
@@ -542,7 +557,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
                 });
             } else {
                 return this.saveExternal(flagRout);
-            }
+            } */
         }).catch(() => { });
     }
 
@@ -569,16 +584,31 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
     }
 
     saveThirdType(userType, userPassword, userLogin, flagRout) {
-        if (this.provUpdateDate()) {
-            this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
-            return;
-        }
         if (!userPassword) {
-            this._alertMessage('Необходимо ввести пароль');
-            return;
-        }
-        this._createUrlChangeLOgin({ userType, userPassword, userLogin }).then(() => {
             if (this.checkUpdateDate()) {
+                if (this.provUpdateDate()) { // Имя/пароль
+                    this._alertMessage('Дату смены пароля, установленного пользователем, можно только уменьшить');
+                    return;
+                }
+                // сохранить дату
+                let date = this.getNewDate();
+                if (date instanceof Date) {
+                    date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toJSON();
+                }
+                return this.updateUser(this._userParamSrv.userContextId, { 'PASSWORD_DATE': date }).then(() => {
+                    return this.saveExternal(flagRout);
+                }).catch(e => {
+                    this.cancel(null);
+                    this._errorSrv.errorHandler(e);
+                });
+            } else {
+                this._alertMessage('Необходимо ввести пароль');
+                return Promise.resolve('error');
+            }
+        }
+        return this._createUrlChangeLOgin({ userType, userPassword, userLogin }).then(() => {
+            return this.saveExternal(flagRout);
+            /* if (this.checkUpdateDate()) {
                 // сохранить дату
                 let date = this.getNewDate();
                 if (date instanceof Date) {
@@ -592,7 +622,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
                 });
             } else {
                 this.saveExternal(flagRout);
-            }
+            } */
         }).catch(() => { });
     }
 
