@@ -109,7 +109,7 @@ function changeDl(url) {
 export const EXPORT: IFonLists = {
     id: 'EXPORT',
     title: 'Экспорт справочника',
-    icon: 'Share-Blue.svg',
+    icon: 'eos-icon-share-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: (mountPoint: string) => {
@@ -124,7 +124,7 @@ export const EXPORT: IFonLists = {
 export const IMPORT: IFonLists = {
     id: 'IMPORT',
     title: 'Импорт справочника',
-    icon: 'Download-Blue.svg',
+    icon: 'eos-icon-download',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
@@ -140,7 +140,7 @@ export const IMPORT: IFonLists = {
 export const PROTOCOL_REMOVE: IFonLists = {
     id: 'PROTOCOL_REMOVE',
     title: 'Протокол удалание РК',
-    icon: 'Rules-Blue.svg',
+    icon: 'eos-icon-rules-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
@@ -157,7 +157,7 @@ export const PROTOCOL_REMOVE: IFonLists = {
 export const PROTOCOL_CHANGE: IFonLists = {
     id: 'PROTOCOL_CHANGE',
     title: 'Протокол изменений',
-    icon: 'Rules-Blue.svg',
+    icon: 'eos-icon-rules-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
@@ -175,7 +175,7 @@ export const PROTOCOL_CHANGE: IFonLists = {
 export const PROTOCOL_VIEW: IFonLists = {
     id: 'PROTOCOL_VIEW',
     title: 'Протокол просмотра',
-    icon: 'Rules-Blue.svg',
+    icon: 'eos-icon-rules-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
@@ -192,7 +192,7 @@ export const PROTOCOL_SCAN: IFonLists = {
     id: 'PROTOCOL_SCAN',
     title: 'Протокол поточного сканирования',
     type: ETypeFon.popUp,
-    icon: 'Rules-Blue.svg',
+    icon: 'eos-icon-rules-blue',
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
         openModalInsrtument({
@@ -207,7 +207,7 @@ export const PROTOCOL_SCAN: IFonLists = {
 export const IMPORT_1C: IFonLists = {
     id: 'IMPORT_1C',
     title: 'Интеграция 1С',
-    icon: 'Directory-Settings-Blue.svg',
+    icon: 'eos-icon-directory-settings-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
@@ -223,7 +223,7 @@ export const IMPORT_1C: IFonLists = {
 export const CHANGE_DL: IFonLists = {
     id: 'CHANGE_DL',
     title: 'Передача документов',
-    icon: 'Directory-Settings-Blue.svg',
+    icon: 'eos-icon-directory-settings-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {
