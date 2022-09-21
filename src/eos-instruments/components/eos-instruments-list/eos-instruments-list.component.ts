@@ -36,7 +36,9 @@ export class EosInstrumentsListComponent implements OnDestroy, OnInit {
       list.loadPlugin('eos-admin-instruments');
     }
   }
-
+  getIcon(list) {
+    return list.icon.indexOf('.svg') === -1 ? '' : `url('${list.icon}')`;
+  }
   getHint(): string {
     return this.disabled ? DISABLED_LIST_ITEM : '';
   }
