@@ -635,7 +635,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
     provUpdateDate() {
         // проверка можно ли изменить дату
         if (this.curentUser.IS_PASSWORD === 2 && this.passDate !== 0) {
-            if (new Date(this.form.controls['PASSWORD_DATE'].value) > new Date(this.curentUser.PASSWORD_DATE) || !this.form.controls['PASSWORD_DATE'].value) {
+            if (this.curentUser.PASSWORD_DATE && (new Date(this.form.controls['PASSWORD_DATE'].value) > new Date(this.curentUser.PASSWORD_DATE) || !this.form.controls['PASSWORD_DATE'].value)) {
                 return true;
             } else {
                 return false;
