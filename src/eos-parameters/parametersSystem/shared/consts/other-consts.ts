@@ -54,6 +54,12 @@ export const OTHER_PARAM_CB: IBaseParameters = {
     title: 'Прочие',
     fields: [
         {
+            type: 'string',
+            key: 'СЕРВЕР_ПРИЛОЖЕНИЙ',
+            readonly: false,
+            title: 'Сервер приложений и сервер «ДелоWEB»',
+        },
+        {
             key: 'SEV_SERVER',
             type: 'string',
             readonly: true,
