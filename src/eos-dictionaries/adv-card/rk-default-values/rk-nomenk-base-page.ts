@@ -12,7 +12,7 @@ export abstract class RKNomenkBasePage extends RKBasePage {
 
     protected doCardSelectView(path: string) {
         const config = this.dataController.getApiConfig();
-        const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
+        const pageUrl = config.webBaseUrl + 'classifChoose/cl?';
         const params = 'Classif=CARDINDEX&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=False&select_multy=False';
         const url = pageUrl + params;
 
@@ -39,7 +39,7 @@ export abstract class RKNomenkBasePage extends RKBasePage {
 
         } else {
             const config = this.dataController.getApiConfig();
-            const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL&select_multy=False';
+            const url = config.webBaseUrl + 'classifChoose/cl?Classif=NOMENKL_CL&select_multy=False';
             openPopup(url, ((event, str) => {
                 this.dataController.zone.run(() => {
                     this.setDictLinkValue(path, str);
