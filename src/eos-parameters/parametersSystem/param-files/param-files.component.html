@@ -9,14 +9,13 @@
         (mousedown)="cancelDown($event)"
         (mouseup)="cancelUp($event)"
     ></eos-param-header>
-    <div class="param-input-group">
+    <!-- <div class="param-input-group">
         <span class="l-font">Параметры хранения прикрепленных файлов</span>
         <div class="info-icon-wrap" (click)="showInfoAttachFiles()">
-            <!-- <span class="info-icon eos-icon eos-icon-info-blue x-small" [ngClass]="{'eos-icon-info-blue': editMode, 'eos-icon-info-grey': !editMode}"></span> -->
             <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
         </div>
     </div>
-    <hr>
+    <hr> -->
     <div class="param-input-group">
         <span>Ограничения на прикрепляемые файлы</span>
         <form [formGroup]="formAttachChoice" class="inline-block">
@@ -182,7 +181,7 @@
         </div>
         
     </div>
-    <div *ngIf="inputs" bsModal #infoAttachFilesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+    <!-- <div *ngIf="inputs" bsModal #infoAttachFilesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -200,5 +199,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>

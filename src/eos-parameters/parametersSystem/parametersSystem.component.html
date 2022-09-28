@@ -104,6 +104,14 @@
                 [btnError] = "disableSave"
             ></eos-param-unloading>
         </ng-container>
+        <ng-container *ngSwitchCase="'param-lib'">
+            <eos-param-lib
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-param-lib>
+        </ng-container>
     </ng-container>
 </div>
 

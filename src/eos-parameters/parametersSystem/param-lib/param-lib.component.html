@@ -1,0 +1,26 @@
+<div *ngIf="inputs" class="input-param-wrapper input-param-search-wrapper">
+    <eos-param-header
+      [title]="titleHeader"
+      (submitForm)="btnDisabled ? cancel() : submit()"
+      (cancelForm)="cancel()"
+      [statusBtnSub]="btnError"
+      [editBtn]="true"
+      (editForm)="edit()"
+  ></eos-param-header>
+  <div class="param-input-group">
+    <eos-dynamic-input class="margin-bottom" [input]="inputs['rec.EDMSNAME']" [form]="form" [readonly]="inputs['rec.EDMSNAME'].readonly"></eos-dynamic-input>
+    <span class="s-font">Место хранения:</span>
+    <eos-dynamic-input class="input-radio-files" [input]="inputs['rec.EDMSPARM']" [form]="form" [readonly]="inputs['rec.EDMSPARM'].readonly"></eos-dynamic-input>
+    <eos-dynamic-input  [input]="inputs['rec.GATEPATH']" [form]="form"  [readonly]="inputs['rec.GATEPATH'].readonly"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.STORAGEPATH']" [form]="form"  [readonly]="inputs['rec.STORAGEPATH'].readonly"></eos-dynamic-input>
+    <span class="mar-right-select">Прямой доступ к папке</span>
+    <eos-dynamic-input class="eos-dynamic-input-select-files" [input]="inputs['rec.DIRECTSTORAGE']" [form]="form"></eos-dynamic-input>
+    <br>
+    <span class="mar-right-first">Максимальный размер файлов (МБ):</span>
+    <eos-dynamic-input class="inline-block " [input]="inputs['rec.MAX_FILESIZE']" [form]="form"></eos-dynamic-input>
+    <br>
+    <span class="mar-right-second">Время хранения временных файлов (мин.):</span>
+    <eos-dynamic-input class="inline-block" [input]="inputs['rec.EXPIRATION']" [form]="form"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.gate']" [form]="form"></eos-dynamic-input>
+  </div>
+</div>

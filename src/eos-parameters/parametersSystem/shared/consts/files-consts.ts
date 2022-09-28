@@ -6,10 +6,10 @@ export const ONE_FILE = 'Один файл';
 export const REG_MAX_SIZE: RegExp = /^([1-9]\d{0,7}?|\s)$/; // '', 1 - 99999999
 export const FILES_PARAM: IBaseParameters = {
     id: 'files',
-    title: 'Файлы',
+    title: 'Работа с файлами',
     apiInstance: 'USER_PARMS',
     fields: [
-        {
+        /* {
             key: 'EDMSNAME',
             type: 'select',
             title: 'Система хранения',
@@ -41,7 +41,7 @@ export const FILES_PARAM: IBaseParameters = {
             type: 'string',
             readonly: true,
             title: 'Папка хранения файлов'
-        },
+        }, */
         {
             key: 'EDS_DELETE_DENIED', // в базе значение 1/0
             type: 'boolean',
