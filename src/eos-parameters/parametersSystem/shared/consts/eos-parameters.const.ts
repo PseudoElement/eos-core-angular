@@ -10,8 +10,11 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Аутентификация',
     url: 'authentication'
 }, {
-    title: 'Файлы',
+    title: 'Работа с файлами',
     url: 'files'
+}, {
+    title: 'Хранение файлов',
+    url: 'param-lib'
 }, {
     title: 'Поиск',
     url: 'search'
@@ -92,3 +95,5 @@ export const REG_RANGE_0_12 = /^\d$|^1[0-2]$/;
 export const REG_RANGE_0_60_2 = /^([1-5][0-9]|[1-9]?|60)$/;
 export const REG_RANGE_0_10_2 = /^([1-9]|10)$/;
 export const REG_RANGE_0_24_2 = /^([1-9]|[1][0-9]|[2][0-4])$/;
+export const REG_RANGE_0_1440_2 = /^\b(\b[0-9]{1,3}\b)|(1(([0-3]?[0-9]{2})|(4(([0-3]?[0-9]?)|40))))\b$/;
+export const FILES_UNS = /^(\\\\[^/\\\]\[":;|<>+=,?* _]+\\[^/\\\]\[":;|<>+=,?*]+)((?:\\[^\\/:*?"<>|]+)*\\?)|(\/\/[^/\\\]\[":;|<>+=,?* _]+\/[^/\\\]\[":;|<>+=,?*]+)((?:\/[^\\/:*?"<>|]+)*\/?)$/;

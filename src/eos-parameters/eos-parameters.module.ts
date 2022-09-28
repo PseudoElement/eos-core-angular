@@ -34,6 +34,7 @@ import { ParamDictionariesComponent } from './parametersSystem/param-dictionarie
 import { ParamLoggingComponent } from './parametersSystem/param-logging/param-logging.component';
 import {ParamConversionComponent} from './parametersSystem/param-conversion/param-conversion.component';
 import { ParamUnloadingComponent } from './parametersSystem/param-unloading/param-unloading.component';
+import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { ParamUnloadingComponent } from './parametersSystem/param-unloading/para
         ParamLoggingComponent,
         ParamOrganizNowComponent,
         ParamConversionComponent,
-        ParamUnloadingComponent
+        ParamUnloadingComponent,
+        ParamLibComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent
