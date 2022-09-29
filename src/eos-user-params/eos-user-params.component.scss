@@ -256,6 +256,14 @@
         border-top: 1px solid #e6e6e6;
     }
 }
+
+.right-search-panel{
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 96px);
+    max-width: 400px;
+    overflow-y: auto;
+}
+
 .right-accordion-email {
     min-width: $dictionary-block-width;
     height: 100vh;
@@ -275,6 +283,13 @@
         font-family: Roboto, sans-serif;
         background-color: #fafafa;
         width: 383px;
+        margin-left: -31px;
+        padding: 10px 0px 0 30px;
+    }
+    .modal-title-search{
+        font-family: Roboto, sans-serif;
+        width: 383px;
+        font-size: 14px;
         margin-left: -31px;
         padding: 10px 0px 0 30px;
     }

@@ -8,7 +8,7 @@ export const VISUALIZATION_USER: IBaseUsers = {
         {
             key: 'COLLAGE_SHOW_MODE',
             type: 'select',
-            title: '',
+            title: 'Режим отображения основного файла документа',
             options: [
                 {value: '-1', title: 'Ассоциированное приложение'},
                 {value: '0', title: 'Оригинальный файл'},

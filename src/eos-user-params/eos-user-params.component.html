@@ -1,7 +1,8 @@
 <div *ngIf="!isLoading" class="user-params-set" [ngClass]="{'user-show-right': isShowRightAccordion}">
     <ng-container [ngSwitch]="pageId">
         <ng-container *ngSwitchCase="'email-address'">
-            <eos-params-email-address (emailAddres)="myFuntion($event)" (redactEmail)="redactEmailAddres($event)" #emailChenge></eos-params-email-address>
+            <eos-params-email-address (emailAddres)="myFuntion($event)" (redactEmail)="redactEmailAddres($event)"
+                #emailChenge></eos-params-email-address>
         </ng-container>
         <ng-container *ngSwitchCase="'base-param'">
             <ng-container *ngIf="this._appContext.cbBase; else baseP">
@@ -14,7 +15,7 @@
         <ng-container *ngSwitchCase="'inline-scaning'">
             <eos-inline-scaning></eos-inline-scaning>
         </ng-container>
-         <ng-container *ngSwitchCase="'protocol'">
+        <ng-container *ngSwitchCase="'protocol'">
             <eos-protocol></eos-protocol>
         </ng-container>
         <ng-container *ngSwitchCase="'auntefication'">
@@ -35,120 +36,83 @@
             <eos-right-limited-access></eos-right-limited-access>
         </ng-container>
         <ng-container *ngSwitchCase="'card-files'">
-                <eos-card-files></eos-card-files>
+            <eos-card-files></eos-card-files>
         </ng-container>
 
         <!-- components in user-params-set -->
         <div class="user-set">
             <ng-container *ngSwitchCase="'registration'">
-                <eos-registration-remaster
-                    [mainUser]="editingUserIsn"
-                    [openingTab]="openingOptionalTab"
+                <eos-registration-remaster [mainUser]="editingUserIsn" [openingTab]="openingOptionalTab"
                     [appMode]="appMode">
                 </eos-registration-remaster>
             </ng-container>
             <ng-container *ngSwitchCase="'cabinets'">
-                <eos-user-param-cabinets
-                    [mainUser]="editingUserIsn"
-                    [openingTab]="openingOptionalTab"
+                <eos-user-param-cabinets [mainUser]="editingUserIsn" [openingTab]="openingOptionalTab"
                     [appMode]="appMode">
                 </eos-user-param-cabinets>
             </ng-container>
             <ng-container *ngSwitchCase="'rc'">
-                <eos-user-param-rc
-                    [mainUser]="editingUserIsn"
-                    [appMode]="appMode">
+                <eos-user-param-rc [mainUser]="editingUserIsn" [appMode]="appMode">
                 </eos-user-param-rc>
             </ng-container>
             <ng-container *ngSwitchCase="'dictionary'">
-                <eos-user-param-directories
-                    [mainUser]="editingUserIsn"
-                    [appMode]="appMode">
+                <eos-user-param-directories [mainUser]="editingUserIsn" [appMode]="appMode">
                 </eos-user-param-directories>
             </ng-container>
             <ng-container *ngSwitchCase="'ext-exch'">
-                <eos-ext-exch
-                    [mainUser]="editingUserIsn"
-                    [openingTab]="openingOptionalTab"
-                    [appMode]="appMode">
+                <eos-ext-exch [mainUser]="editingUserIsn" [openingTab]="openingOptionalTab" [appMode]="appMode">
                 </eos-ext-exch>
             </ng-container>
             <ng-container *ngSwitchCase="'el-signature'">
-                <eos-user-param-el-signature
-                    [mainUser]="editingUserIsn"
-                    [appMode]="appMode">
+                <eos-user-param-el-signature [mainUser]="editingUserIsn" [appMode]="appMode">
                 </eos-user-param-el-signature>
             </ng-container>
             <ng-container *ngSwitchCase="'prof-sert'">
-                <eos-prof-sert
-                    [mainUser]="editingUserIsn">
+                <eos-prof-sert [mainUser]="editingUserIsn">
                 </eos-prof-sert>
             </ng-container>
             <ng-container *ngSwitchCase="'visualization'">
-                <eos-user-param-visualization
-                    [mainUser]="editingUserIsn">
+                <eos-user-param-visualization [mainUser]="editingUserIsn">
                 </eos-user-param-visualization>
             </ng-container>
             <ng-container *ngSwitchCase="'external-application'">
-                <eos-user-param-external-application
-                    [hidden]="appMode.arm"
-                    [mainUser]="editingUserIsn"
-                    [openingTab]="openingOptionalTab"
-                    [appMode]="appMode">
+                <eos-user-param-external-application [hidden]="appMode.arm" [mainUser]="editingUserIsn"
+                    [openingTab]="openingOptionalTab" [appMode]="appMode">
                 </eos-user-param-external-application>
             </ng-container>
             <ng-container *ngSwitchCase="'other'">
-                <eos-user-param-other
-                    [mainUser]="editingUserIsn"
-                    [openingTab]="openingOptionalTab"
-                    [appMode]="appMode">
+                <eos-user-param-other [mainUser]="editingUserIsn" [openingTab]="openingOptionalTab" [appMode]="appMode">
                 </eos-user-param-other>
             </ng-container>
             <ng-container *ngSwitchCase="'patterns'">
-                <eos-user-param-shablony
-                    [hidden]="appMode.arm"
-                    [mainUser]="editingUserIsn">
+                <eos-user-param-shablony [hidden]="appMode.arm" [mainUser]="editingUserIsn">
                 </eos-user-param-shablony>
             </ng-container>
         </div>
     </ng-container>
 </div>
 
-<nav
-    class="nav-accordion"
-    [ngClass]="{'show-accordion': isShowAccordion}"
->
+<nav class="nav-accordion" [ngClass]="{'show-accordion': isShowAccordion}">
     <ng-template ngFor let-list [ngForOf]="accordionList">
         <ng-container *ngTemplateOutlet="list.subList ? itemListTree : itemList; context: {item: list}"></ng-container>
     </ng-template>
 </nav>
+
 <div class="spinner-wrapper" *ngIf="isLoading">
     <eos-spinner [size]="'lg'"></eos-spinner>
 </div>
 
 <ng-template #itemListTree let-item="item">
     <accordion>
-        <accordion-group
-            class="param-field-wrap"
-            panelClass="param-field"
-            [isDisabled]="!item.subList"
-            [(isOpen)]="item.isOpen"
-            [ngClass] = "item.disabled ? 'disable' : ''"
-        >
+        <accordion-group class="param-field-wrap" panelClass="param-field" [isDisabled]="!item.subList"
+            [(isOpen)]="item.isOpen" [ngClass]="item.disabled ? 'disable' : ''">
             <div accordion-heading>
                 {{item.title}}
-                <span *ngIf="!hideIcon"
-                    class="icon eos-icon small float-right pull-right"
-                    [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"
-                ></span>
+                <span *ngIf="!hideIcon" class="icon eos-icon small float-right pull-right"
+                    [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"></span>
             </div>
-            <div
-                *ngFor="let subItem of item.subList"
-                class="subItem"
-                [ngClass] = "subItem.disabled ? 'disable' : ''"
-                [routerLink]="['/user-params-set', subItem.url]"
-                routerLinkActive="active-link"
-            >
+            <div *ngFor="let subItem of item.subList" class="subItem" [ngClass]="subItem.disabled ? 'disable' : ''"
+                [routerLink]="['/user-params-set', subItem.url]" routerLinkActive="active-link">
                 {{subItem.title}}
             </div>
         </accordion-group>
@@ -157,38 +121,65 @@
 
 <ng-template #itemList let-item="item">
     <accordion>
-        <accordion-group
-            class="param-field-wrap"
-            panelClass="param-field"
-            [isDisabled]="!item.subList"
-            [(isOpen)]="item.isOpen"
-            [ngClass] = "item.disabled ? 'disable' : ''"
-            [routerLink]="['/user-params-set', item.url]"
-            routerLinkActive="active-link"
-        >
+        <accordion-group class="param-field-wrap" panelClass="param-field" [isDisabled]="!item.subList"
+            [(isOpen)]="item.isOpen" [ngClass]="item.disabled ? 'disable' : ''"
+            [routerLink]="['/user-params-set', item.url]" routerLinkActive="active-link">
             <div accordion-heading>
                 {{item.title}}
             </div>
         </accordion-group>
     </accordion>
 </ng-template>
-<nav
-    class="right-accordion-email"
-    [ngClass]="{'show-accordion': isShowRightAccordion}"
->
-    <div class="right-email-stage">
-            <div class="modal-r">
-                <div class="modal-title-cust-right">
-                    <div class="modal-title-cust">События, включённые в рассылку <br> ({{email}})</div>
-                    <div class="code-list" *ngFor="let list of codeList">
-                        <label class="checkbox  minus-checkbox">
+
+<nav class="right-accordion-email" [ngClass]="{'show-accordion': isShowRightAccordion}">
+    <ng-container [ngSwitch]="kindRightPanel">
+        <ng-container *ngSwitchCase="'EMAIL'">
+            <div class="right-email-stage">
+                <div class="modal-r">
+                    <div class="modal-title-cust-right">
+                        <div class="modal-title-cust">События, включённые в рассылку <br> ({{email}})</div>
+                        <div class="code-list" *ngFor="let list of codeList">
+                            <label class="checkbox  minus-checkbox">
                                 <!-- group.controls.checkbox ? 1 : 0 -->
-                            <input  [checked]="list.check" [disabled]="!flagEdit"  type="checkbox" readonly="readonly" class="readonly" (change)="emailChenge.saveParamsCode($event, list.name)"><!--emailChenge.saveParamsCode($event, list.name);  -->
-                            <span class="eos-icon eos-icon-checkbox-black"></span>
-                            <span>  {{list.name}}</span>
-                        </label>
+                                <input [checked]="list.check" [disabled]="!flagEdit" type="checkbox" readonly="readonly"
+                                    class="readonly" (change)="emailChenge.saveParamsCode($event, list.name)">
+                                <!--emailChenge.saveParamsCode($event, list.name);  -->
+                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                                <span> {{list.name}}</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-    </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'SEARCH_PARAMS'">
+            <div class="right-search-panel">
+                <div class="modal-r">
+                    <div class="modal-title-cust-right">
+                        <div class="modal-title-search">Поиск настроек пользователя</div>
+
+                        <div style="display: flex; align-items: flex-start; font-size: 12px; position: relative;">
+                            <div class="dynamic-input-wrapper">
+                                <input #inputChoice placeholder="..." class="form-control m-font pull-left"
+                                    (keyup.enter)="searchSectionsByLexem()" style="width: 300px; padding: 6px 8px;"
+                                    [(ngModel)]="searchLexem">
+                            </div>
+                            <div style="height: 100%;">
+                                <span class="action eos-icon" style="margin-left: 10px"
+                                    [ngClass]="inputChoice.value ? 'eos-icon-close-blue' : 'eos-icon-close-grey'"
+                                    container="body" placement="bottom" containerClass="tooltip-info" triggers="hover"
+                                    tooltip="Удалить" (click)="deleteSearchSections()"></span>
+                            </div>
+                        </div>
+                        <div class="modal-title-search">{{searchLabel}}</div>
+                        <div *ngIf="foundSectionList.length > 0">
+                            <div *ngFor="let item of foundSectionList">
+                                <a (click)="goSection(item.link, item.shifter)">{{item.label}}</a>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>  
+        </ng-container>
+    </ng-container>
 </nav>

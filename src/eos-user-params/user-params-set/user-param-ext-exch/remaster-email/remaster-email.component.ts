@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -11,9 +11,8 @@ import { FormHelperService } from '../../../shared/services/form-helper.services
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
 import { IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
-
-
-
+import { AccordionPanelComponent } from 'ngx-bootstrap';
+import { SearchService } from '../.././shared-user-param/services/search-service';
 export interface TreeItem {
     title: string;
     key: string;
@@ -29,12 +28,11 @@ export interface Accordion {
 
 @Component({
     selector: 'eos-remaster-email',
-
     templateUrl: 'remaster-email.component.html',
     providers: [FormHelperService],
 })
 
-export class RemasterEmailComponent implements OnInit, OnDestroy {
+export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit {
     fieldsConst = REGISTRATION_REMASTER_USER;
     fieldsConstMailResive = REGISTRATION_MAILRESIVE;
     public preparedItemForInputs: any;
@@ -77,11 +75,16 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     private setMailResive = new Set()
         .add('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO')
         .add('MAILRECEIVE_TAKE_RUBRICS_RK_RADIO');
+
+    private _arPanels: AccordionPanelComponent[];
+    @ViewChildren(AccordionPanelComponent) private _panels: QueryList<AccordionPanelComponent>;
+
     constructor(
         private formHelp: FormHelperService,
         private dataSrv: EosDataConvertService,
         private inputCtrlSrv: InputControlService,
-        private _RemasterService: RemasterService
+        private _RemasterService: RemasterService,
+        private _searchService: SearchService,
     ) {
         this._RemasterService.cancelEmit
             .pipe(
@@ -120,6 +123,19 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                 this.alwaysDisabledMethod();
             });
     }
+
+    ngAfterViewInit() {
+        this._arPanels = this._panels.toArray();
+        this._searchService.emailExtChangeObservable.pipe( // открытие панели
+            takeUntil(this.ngUnsubscribe)
+        )
+            .subscribe(panelIndex => {
+                setTimeout(() => {
+                    this._arPanels[panelIndex].isOpen = true;
+                }, 100);
+            });
+    }
+
     ngOnInit() {
         this.initEmail();
         this.initMailResive();
@@ -157,9 +173,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.inputs = this.dataSrv.getInputs(this.prepareInputs, { rec: this.preparedItemForInputs });
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         if (this.isCurrentSettings) {
-            this.form.enable({emitEvent: false});
+            this.form.enable({ emitEvent: false });
         } else {
-            this.form.disable({emitEvent: false});
+            this.form.disable({ emitEvent: false });
         }
         this.templRender = this.createTree(this.fieldsConst.fields);
         this.sliceArrayForTemplate();
@@ -172,9 +188,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.inputsMailResive = this.dataSrv.getInputs(this.prepareInputsMailREsive, { rec: this.preparedItemForInputsMailREsive });
         this.formMailResuve = this.inputCtrlSrv.toFormGroup(this.inputsMailResive);
         if (this.isCurrentSettings) {
-            this.formMailResuve.enable({emitEvent: false});
+            this.formMailResuve.enable({ emitEvent: false });
         } else {
-            this.formMailResuve.disable({emitEvent: false});
+            this.formMailResuve.disable({ emitEvent: false });
         }
         this.templRenderMailResive = this.createTree(this.fieldsConstMailResive.fields);
         this.subscriberFormMailResive();
@@ -559,7 +575,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.updateStringRcSend(+position[2], bool3, 'stringMailResive');
     }
     emitChange() {
-        const obj =  {
+        const obj = {
             'rec.RCSEND': this.stringRCSEND,
             'rec.MAILRECEIVE': this.stringMailResive,
             'rec.RECEIP_EMAIL': this.form.controls['rec.RECEIP_EMAIL'].value,

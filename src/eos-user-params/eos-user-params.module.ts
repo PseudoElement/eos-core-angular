@@ -81,6 +81,8 @@ import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/rem
 import { CurrentUserSetComponent } from './current-user-set/current-user-set.component';
 import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.module';
 import { UserParamDispatchComponent } from './user-params-set/user-param-other/user-param-dispatch/user-param-dispatch.component';
+import { SearchService } from './user-params-set/shared-user-param/services/search-service';
+
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -174,7 +176,8 @@ import { UserParamDispatchComponent } from './user-params-set/user-param-other/u
         RigthsCabinetsServices,
         CardRightSrv,
         ErrorHelperServices,
-        FormHelperService
+        FormHelperService,
+        SearchService
     ]
 })
 export class EosUserParamsModule { }

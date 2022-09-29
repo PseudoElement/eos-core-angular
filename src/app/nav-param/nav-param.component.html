@@ -16,9 +16,16 @@
     <!--<span class="pull-right">
         <eos-pushpin [infoOpened]="false"></eos-pushpin>
     </span>-->
-    <span *ngIf="emeilUrl === 'email-address' && showRigth" class="eos-sandwich pull-right">
-        <button class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
+
+    <span *ngIf="showRigth" class="eos-sandwich pull-right">
+        <button *ngIf="!isSearchRightSandwich  else searchRightSandwich" class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
             <span class="icon eos-icon small button-sandwich" [ngClass]="{'eos-icon-menu-white': isRighSendwich, 'eos-icon-menu-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
         </button>
     </span>
 </div>
+
+<ng-template #searchRightSandwich>
+    <button class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
+        <span class="icon eos-icon small button-sandwich" [ngClass]="{'eos-icon-search-white': isRighSendwich, 'eos-icon-search-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
+    </button>
+  </ng-template>
