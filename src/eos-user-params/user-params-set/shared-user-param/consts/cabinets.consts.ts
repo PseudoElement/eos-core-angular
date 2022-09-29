@@ -304,7 +304,7 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         {
             key: 'RESOLUTION_CONTROLLER',
             type: 'string',
-            title: '',
+            title: 'Контролер поручения по умолчанию:',
         },
         {
             key: 'PLAN_DATE_PARENT',
@@ -715,7 +715,7 @@ export const CABINETS_USER_INFORMER: IBaseUsers = {
         {
             key: 'INFORMER_CTRL_OVER_CHECK',
             type: 'numberIncrement',
-            title: '',
+            title: 'Максимальное количество записей:',
             pattern: REG_ONE_HUNDRED_SIZE,
         },
         {
@@ -753,7 +753,7 @@ export const CABINETS_USER_INFORMER: IBaseUsers = {
         {
             key: 'INFORMER_TIMER',
             type: 'numberIncrement',
-            title: '',
+            title: 'Проверять состояние каждые:',
             pattern: REG_ONE_THOUSAND_SIZE,
         },
         {

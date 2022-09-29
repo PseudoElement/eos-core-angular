@@ -437,6 +437,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
 
     showNav(): void {
         if (this.myForm.controls['groupForm'].value.length === 1) {
+
+            console.log(444444444444444444444444);
+
             this._navSrv.showRightSandwich(true);
             this._navSrv.changeStateRightSandwich(true);
             this._navSrv.blockChangeStateRightSandwich(false);

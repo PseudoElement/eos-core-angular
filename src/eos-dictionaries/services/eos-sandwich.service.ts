@@ -9,6 +9,7 @@ export class EosSandwichService {
     private _currentDictState: boolean[];
     // [true, true] - both is opened
     private _currentDictState$: BehaviorSubject<boolean[]> = new BehaviorSubject<boolean[]>(null);
+    private _searchMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
     private _treeIsBlocked = false;
 
     private _treeScrollTop = 0;
@@ -39,6 +40,10 @@ export class EosSandwichService {
         return this._currentDictState$.asObservable();
     }
 
+    get searchMode$(): Observable<boolean> {
+        return this._searchMode$.asObservable();
+    }
+
     get treeIsBlocked(): boolean {
         return this._treeIsBlocked;
     }
@@ -58,6 +63,10 @@ export class EosSandwichService {
             this._currentDictState[1] = state;
         }
         this._currentDictState$.next(this._currentDictState);
+    }
+
+    changeSearchMode(state: boolean) {
+        this._searchMode$.next(state);
     }
 
     resize() {

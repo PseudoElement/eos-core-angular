@@ -46,4 +46,5 @@ export class NavParamService {
     scanObserver(flag: boolean): void {
         this._subscribeScan.next(flag);
     }
+
 }

@@ -1365,7 +1365,7 @@ export const REGISTRATION_ADDRESSES: IBaseUsers = {
         },
         {
             key: 'ORGGROUP',
-            title: '',
+            title: 'Помещать новые организации в вершину справочника "Организации"',
             type: 'string'
         },
     ]
@@ -1392,7 +1392,7 @@ export const REGISTRATION_SCAN: IBaseUsers = {
         {
             key: 'SAVEFORMAT',
             type: 'select',
-            title: '',
+            title: 'Формат сохранения документа:',
             options: [
 
             ]
@@ -1439,7 +1439,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKED_SEARCHPARAM',
             type: 'select',
-            title: '',
+            title: 'Искать по:',
             options: [
                 {value: '1', title: 'Рег. № всех видов документов'},
                 {value: '2', title: 'Рег. № входящих документов'},
@@ -1466,7 +1466,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKED_SEARCHYEAR',
             type: 'select',
-            title: '',
+            title: 'Год регистрации:',
             options: [
                 {value: '1', title: 'Нет'},
                 {value: '2', title: 'Текущий'},
@@ -1476,7 +1476,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKED_LINKTYPE',
             type: 'select',
-            title: '',
+            title: 'Создавать связку с типом:',
             options: [
                 {value: '0', title: ''},
                 // {value: '1', title: 'Исполнено'},
@@ -1541,7 +1541,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKS_SORT',
             type: 'radio',
-            title: '',
+            title: 'Сортировать связки:',
             options: [
                 {value: 'ORDERNUM', title: 'по порядку'},
                 {value: 'DOC_DATE', title: 'по дате регистрации документа (проекта)'}

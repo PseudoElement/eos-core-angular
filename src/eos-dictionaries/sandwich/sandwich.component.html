@@ -1,6 +1,6 @@
 <span *ngIf="show && (!hideTree || !isLeft)" class="eos-sandwich">
     <button class="btn sandwich" (click)="changeState()" [ngClass]="{'active': isWide }">
         <span class="icon eos-icon small"
-        [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide}"></span>
+        [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide, 'eos-icon-search-blue': searchMode }"></span>
     </button>
 </span>

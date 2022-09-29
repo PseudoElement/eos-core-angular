@@ -4,7 +4,6 @@ import { EosSandwichService } from '../services/eos-sandwich.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 
-
 @Component({
     selector: 'eos-sandwich',
     templateUrl: 'sandwich.component.html',
@@ -12,8 +11,8 @@ import { takeUntil, filter } from 'rxjs/operators';
 export class SandwichComponent implements OnDestroy {
     @Input() isLeft: boolean;
     isWide: boolean;
-
     show = false;
+    searchMode: boolean = false;
 
     get hideTree() {
         return this._sandwichSrv.treeIsBlocked;
@@ -41,6 +40,9 @@ export class SandwichComponent implements OnDestroy {
             } else {
                 this.isWide = state[1];
             }
+        });
+        this._sandwichSrv.searchMode$.subscribe((state) => {
+           this.searchMode = state;
         });
     }
 
