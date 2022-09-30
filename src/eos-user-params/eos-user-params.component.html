@@ -153,15 +153,13 @@
             </div>
         </ng-container>
         <ng-container *ngSwitchCase="'SEARCH_PARAMS'">
-            <div class="right-search-panel">
+            <div class="right-email-stage">
                 <div class="modal-r">
                     <div class="modal-title-cust-right">
                         <div class="modal-title-search">Поиск настроек пользователя</div>
-
-                        <div style="display: flex; align-items: flex-start; font-size: 12px; position: relative;">
                             <div class="dynamic-input-wrapper">
                                 <input #inputChoice placeholder="..." class="form-control m-font pull-left"
-                                    (keyup.enter)="searchSectionsByLexem()" style="width: 300px; padding: 6px 8px;"
+                                    (keyup.enter)="searchSectionsByLexem()" style="width: 80%; padding: 6px 8px;"
                                     [(ngModel)]="searchLexem">
                             </div>
                             <div style="height: 100%;">
@@ -170,7 +168,6 @@
                                     container="body" placement="bottom" containerClass="tooltip-info" triggers="hover"
                                     tooltip="Удалить" (click)="deleteSearchSections()"></span>
                             </div>
-                        </div>
                         <div class="modal-title-search">{{searchLabel}}</div>
                         <div *ngIf="foundSectionList.length > 0">
                             <div *ngFor="let item of foundSectionList">
