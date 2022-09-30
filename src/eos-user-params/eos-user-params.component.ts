@@ -36,6 +36,7 @@ import {
 } from 'eos-user-params/user-params-set/shared-user-param/consts/search.consts';
 import { UserParamExtendExchComponent } from 'eos-user-params/user-params-set/user-param-ext-exch/user-param-ext-exch.component';
 import { SearchService } from './user-params-set/shared-user-param/services/search-service';
+import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 
 const REGISTRATION_DOP_OPERATION_FIELDS = REGISTRATION_DOP_OPERATION.fields;
 const REGISTRATION_ADDRESSES_FIELDS = REGISTRATION_ADDRESSES.fields;
@@ -104,7 +105,7 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
         private _appContext: AppContext,
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
-        //  private _sandwichService: EosSandwichService
+        private _sandwichService: EosSandwichService,
         private _searchService: SearchService
     ) {
         this._route.params
@@ -119,7 +120,9 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
                 if (this.accordionList[4].disabled === true && this.pageId === 'inline-scaning') {
                     this._router.navigate(['user_param']);
                 }
-                this.kindRightPanel = 'SEARCH_PARAMS';
+                const IS_SEARCH_PANEL = this._navSrv.searchPages.includes(this.pageId);
+                this.kindRightPanel = IS_SEARCH_PANEL ? 'SEARCH_PARAMS' : '';
+                this._sandwichService.changeSearchMode(IS_SEARCH_PANEL);
             });
         this._route.queryParams
             .pipe(
