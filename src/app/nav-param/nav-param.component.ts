@@ -99,12 +99,10 @@ export class NavParamComponent implements OnDestroy, OnInit {
         while (snapshot.firstChild) { snapshot = snapshot.firstChild; }
         if (snapshot.url[0]) {
             this.emeilUrl = snapshot.url[0].path;
-            this._navSrv.showRightSandwich(true);
-            this._navSrv.changeStateRightSandwich(true);
-            const SEARCH_MODE_SANDWICH = this.emeilUrl !== 'email-address';
-            this._sandwichSrv.changeSearchMode(SEARCH_MODE_SANDWICH);
-        } else {
-            this._sandwichSrv.changeSearchMode(false);
+            const IS_SEARCH_PANEL = this._navSrv.searchPages.includes(this.emeilUrl);
+            this._navSrv.showRightSandwich(IS_SEARCH_PANEL);
+            this._navSrv.changeStateRightSandwich(IS_SEARCH_PANEL);
+            this._sandwichSrv.changeSearchMode(IS_SEARCH_PANEL);
         }
         if (snapshot.data.title) {
             this.title = snapshot.data.title;
