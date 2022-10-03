@@ -423,7 +423,12 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
 
     openSertService(): void {
         const openSerts: ICertificateInit = {
+            OnlyWithPrivateKey: true,
+            add_cert: true
         };
+        if (this.selectList) {
+            openSerts.cert_id = this.selectList.selected[0].id;
+        }
         this._certService.openCerts(openSerts).then((data: string) => {
             if (data) {
                 this.carma2Srv.GetCertInfoP(data).then(result => {

@@ -71,7 +71,11 @@ export class CertificateService {
             connector = '&';
         }
         if (params.cert_id) {
-            url += `${connector}cert_id=${params.cert_id}`;
+            url += `${connector}cert_id=${encodeURIComponent(params.cert_id)}`;
+            connector = '&';
+        }
+        if (params.add_cert) {
+            url += `${connector}add_cert=${params.add_cert}`;
             connector = '&';
         }
         return url;

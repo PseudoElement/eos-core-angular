@@ -66,6 +66,7 @@ export interface ICertificateInit {
     FilterBlockVisible?: any;
     // выделенный идентификатор
     cert_id?: string;
+    add_cert?: boolean;
 }
 
 export interface IPaginationConfig {
