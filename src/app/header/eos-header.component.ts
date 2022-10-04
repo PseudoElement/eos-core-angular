@@ -94,7 +94,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         this.ngUnsubscribe.complete();
     }
     logOut() {
-        document.location.assign('../logoff');
+        document.location.assign('../CoreHost/auth/Login');
         sessionStorage.removeItem('fromclassif');
     }
     eiCl(id: any) {
