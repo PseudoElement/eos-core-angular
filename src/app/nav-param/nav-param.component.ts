@@ -97,12 +97,19 @@ export class NavParamComponent implements OnDestroy, OnInit {
     private _update() {
         let snapshot = this._route.snapshot;
         while (snapshot.firstChild) { snapshot = snapshot.firstChild; }
+        const isURLforSearchPanel: boolean = snapshot.parent.url[0].path ? snapshot.parent.url[0].path === 'user-params-set' : false;
         if (snapshot.url[0]) {
             this.emeilUrl = snapshot.url[0].path;
-            const IS_SEARCH_PANEL = this._navSrv.searchPages.includes(this.emeilUrl);
-            this._navSrv.showRightSandwich(IS_SEARCH_PANEL);
-            this._navSrv.changeStateRightSandwich(IS_SEARCH_PANEL);
-            this._sandwichSrv.changeSearchMode(IS_SEARCH_PANEL);
+            if (isURLforSearchPanel) {
+                const IS_SEARCH_PANEL = this._navSrv.searchPages.includes(this.emeilUrl);
+                this._navSrv.showRightSandwich(IS_SEARCH_PANEL);
+                this._navSrv.changeStateRightSandwich(IS_SEARCH_PANEL);
+                this._sandwichSrv.changeSearchMode(IS_SEARCH_PANEL);
+            } else {
+                this._navSrv.showRightSandwich(false);
+                this._navSrv.changeStateRightSandwich(false);
+                this._sandwichSrv.changeSearchMode(false);
+            }
         }
         if (snapshot.data.title) {
             this.title = snapshot.data.title;
