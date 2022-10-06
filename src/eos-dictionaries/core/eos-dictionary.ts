@@ -24,8 +24,6 @@ import { _ES } from 'eos-rest/core/consts';
 import { EntityHelper } from 'eos-rest/core/entity-helper';
 import { PipRX } from 'eos-rest';
 
-
-
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 

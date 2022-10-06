@@ -34,7 +34,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
     iconName: 'eos-icon-folder-group-blue',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'counterDocgroup',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'counterDocgroup',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'counterDocgroupRKPD',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields',
         'AdvancedCardRK', 'prjDefaultValues', 'copyPropertiesFromParent', 'copyProperties', 'export', 'import', 'protViewSecurity'],

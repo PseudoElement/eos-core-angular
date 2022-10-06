@@ -6,7 +6,7 @@ export const STATUS_EXEC_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_
     id: 'status-exec',
     apiInstance: 'STATUS_EXEC_CL',
     actions: [
-        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'cut', 'combine',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import', 'protViewSecurity'],

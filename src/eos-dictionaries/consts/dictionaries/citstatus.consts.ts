@@ -10,7 +10,7 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
     iconName: 'eos-icon-applicant-status-blue',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes',
         'export', 'import', 'protViewSecurity'],

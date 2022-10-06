@@ -10,22 +10,22 @@ import {
     HostListener,
 
 } from '@angular/core';
-import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {Subject} from 'rxjs';
+import { SortableComponent, BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { Subject } from 'rxjs';
 
 
-import {EosDictionaryNode} from '../core/eos-dictionary-node';
-import {EosDictService, MarkedInformation} from '../services/eos-dict.service';
-import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET, E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
-import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
-import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
-import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
-import {EosUtils} from 'eos-common/core/utils';
+import { EosDictionaryNode } from '../core/eos-dictionary-node';
+import { EosDictService, MarkedInformation } from '../services/eos-dict.service';
+import { IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET, E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { LongTitleHintComponent } from '../long-title-hint/long-title-hint.component';
+import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
+import { ColumnSettingsComponent } from '../column-settings/column-settings.component';
+import { EosUtils } from 'eos-common/core/utils';
 import { takeUntil, } from 'rxjs/operators';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
-import {CopyNodeComponent} from '../copy-node/copy-node.component';
+import { CopyNodeComponent } from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
-import {EosStorageService} from 'app/services/eos-storage.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
@@ -62,6 +62,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     private _dictId: string;
     private _repaintFlag: any;
 
+    private _cacheCutNodes: string[];
+
     constructor(
         // @Inject(DOCUMENT) document,
         private _dictSrv: EosDictService,
@@ -75,10 +77,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     ) {
         this.firstColumnIndex = 0;
         _dictSrv.visibleList$
-        .pipe(
-            // skip(1),
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                // skip(1),
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (_dictSrv.currentDictionary) {
                     this._repaintFlag = true;
@@ -147,9 +149,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     updateViewFields(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         // also customFields for update
-        return this._dictSrv.currentDictionary.getListViewWithRelated(customFields, nodes).then ( (fields) => {
+        return this._dictSrv.currentDictionary.getListViewWithRelated(customFields, nodes).then((fields) => {
             this.viewFields = fields;
-        } );
+        });
     }
 
     ngOnInit() {
@@ -187,7 +189,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         return this.nodes.filter(n => n.isMarked);
     }
 
-    onClickSelect (item) {
+    onClickSelect(item) {
         const selectedItems = this.markedNodes();
         const selectedCount = selectedItems.length;
 
@@ -199,7 +201,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
-    onClickMark (item, isMarked) {
+    onClickMark(item, isMarked) {
         this._dictSrv.setMarkForNode(item, isMarked, true);
     }
 
@@ -209,12 +211,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     // костыль, не показываем CRYPT для ЦБ в участниках СЭВ
     configColumns() {
-        this.modalWindow = this._modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
-        this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields.filter (c => !(c.preferences && c.preferences.inline)));
+        this.modalWindow = this._modalSrv.show(ColumnSettingsComponent, { class: 'column-settings-modal modal-lg' });
+        this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields.filter(c => !(c.preferences && c.preferences.inline)));
         this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this._dictSrv.customTitles);
 
         // костыль, не показываем CRYPT для ЦБ в участниках СЭВ
-        let currentFields = this.customFields.filter (c => !(c.preferences && c.preferences.inline));
+        let currentFields = this.customFields.filter(c => !(c.preferences && c.preferences.inline));
         if (this._isCbBase()) {
             currentFields = currentFields.filter(item => item.key !== 'CRYPT');
         }
@@ -276,7 +278,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     openCopyNode(nodes: EosDictionaryNode[]) {
         this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
-            class: 'copy-node-modal moodal-lg'});
+            class: 'copy-node-modal moodal-lg'
+        });
         this.modalWindow.content.init(nodes);
 
         const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
@@ -338,11 +341,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             return 'eos-icon-checkbox-square-blue';
         }
-      }
+    }
 
-      /**
-     * Toggle checkbox checked all
-     */
+    /**
+   * Toggle checkbox checked all
+   */
     toggleAllMarks(): void {
 
         if (this.allMarked) {
@@ -354,7 +357,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         // TODO: move to info?
         const selectedItems = this.markedNodes();
         const selectedCount = selectedItems.length;
-        this._dictSrv.openNode(selectedCount ? selectedItems[0].id : '').then(() => {});
+        this._dictSrv.openNode(selectedCount ? selectedItems[0].id : '').then(() => { });
     }
 
     toggleItem() {
@@ -370,7 +373,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     getWeigthForItem(item: EosDictionaryNode, index: number): number {
         let w = item.data.rec['WEIGHT'];
         if (!w && w !== 0) {
-            w = Number (item.id);
+            w = Number(item.id);
         }
         if (!w && w !== 0) {
             w = item.data.rec['ISN_LCLASSIF'];
@@ -413,13 +416,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.nodes[i2] = item1;
     }
 
-    moveUp(): void {
+    moveUp(isFormingWeights: boolean = true, isCut: boolean = false): any { // веса не формируем в случае буферного обмена
         const changeList = {};
 
         if (!this._dictSrv.viewParameters.showAllSubnodes) {
             for (let i = 0; i < this.nodes.length; i++) {
                 const item1 = this.nodes[i];
-                if (item1.isMarked) {
+                if (isCut ? item1.isCut : item1.isMarked) {
                     if (i > 0) {
                         const item2 = this.nodes[i - 1];
                         if (!item2.isMarked) {
@@ -431,7 +434,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             for (let m = 0; m < this.nodes.length; m++) {
                 const element = this.nodes[m];
-                if (element.isMarked) {
+                if (isCut ? element.isCut : element.isMarked) {
                     let targ_idx = m - 1;
                     for (let i = targ_idx; i >= 0; i--) {
                         if (element.originalParentId === this.nodes[i].originalParentId) {
@@ -448,17 +451,17 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 }
             }
         }
-        if ( changeList !== {} ) {
+        if (isFormingWeights && changeList !== {}) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
                 this.userOrdered(this.nodes);
             });
         }
+        return changeList;
     }
 
-    moveDown(): void {
+    moveDown(): any { // веса не формируем в случае буферного обмена
         const changeList = {};
-
-        if (!this._dictSrv.viewParameters.showAllSubnodes) {
+        if (!this._dictSrv.viewParameters.showAllSubnodes) { // для операции вставки используем флаг вырезанности
             for (let i = this.nodes.length - 1; i >= 0; i--) {
                 const element = this.nodes[i];
                 if (element.isMarked) {
@@ -490,10 +493,60 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 }
             }
         }
-        if ( changeList !== {} ) {
+        if (changeList !== {}) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList);
             this.userOrdered(this.nodes);
         }
+        return changeList;
+    }
+
+    userOrderCut(): void {
+        this._dictSrv.changeUserOrderCutMode(true);
+        const SELECTED = this.nodes.filter(n => n.isMarked);
+        this._cacheCutNodes = SELECTED.map(item => item.id);
+        this._dictSrv.parentIdForPasteOperation = SELECTED[0].parentId ? SELECTED[0].parentId : '';
+        for (let i = 0; i < this.nodes.length; i++) {
+            if (this.nodes[i].isMarked) {
+                this.nodes[i].isMarked = false;
+                this.nodes[i].isCut = true;
+            }
+        }
+    }
+
+    getIndexForOperationPaste(id: string): number {
+        let needIndex: number = 0;
+        for (let index: number = 0; index < this.nodes.length; index++) {
+            if (this.nodes[index].id === id) {
+                needIndex = index;
+                break;
+            }
+        }
+        return needIndex;
+    }
+
+    unselectNodesAfterPaste() {
+        this.nodes.forEach(node => { node.isMarked = false; node.isCut = false; });
+        this._cacheCutNodes = [];
+    }
+
+    userOrderPaste(): void {
+        this._dictSrv.changeUserOrderCutMode(false);
+        const START_INDEX = this.getIndexForOperationPaste(this._cacheCutNodes[0]);
+        const FINISH_INDEX = this.getIndexForOperationPaste(this.markedInfo.nodes[0].id);
+        const changes: any[] = [];
+        const DELTA = FINISH_INDEX - START_INDEX > 0 ? FINISH_INDEX - START_INDEX : START_INDEX - FINISH_INDEX - 1;
+        const isCut = FINISH_INDEX < START_INDEX;
+        for (let i = 0; i < DELTA; i++) {
+            changes.push(this.moveUp(false, isCut));
+        }
+        let changeList = {};
+        changes.forEach(item => changeList = { ...changeList, ...item });
+        if (changeList !== {}) {
+            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
+                this.userOrdered(this.nodes);
+            });
+        }
+        this.unselectNodesAfterPaste();
     }
 
     export(dictionaryId: string): void {
@@ -507,19 +560,19 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             })
             .catch(err => {
                 this._dictSrv.resetSearch().then().catch(e => { console.log(e); });
-             });
+            });
     }
     userOrdered(nodes: EosDictionaryNode[]) {
         this._dictSrv.setUserOrder(nodes);
     }
 
     openNodeNavigate(backward = false): void {
-        const markList = this.nodes.filter( n => n.isMarked);
+        const markList = this.nodes.filter(n => n.isMarked);
         if (markList.length <= 1) {
             return;
         }
 
-        const currentNode =  this._dictSrv.listNode;
+        const currentNode = this._dictSrv.listNode;
 
         for (let i = 0; i < markList.length; i++) {
             const element = markList[i];
@@ -564,7 +617,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     onRightClick() {
         if (this.customFields.length > this.firstColumnIndex + 1) {
-            this.firstColumnIndex ++;
+            this.firstColumnIndex++;
             this._countColumnWidth();
         }
     }
@@ -574,7 +627,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     onLeftClick() {
-        if (this.firstColumnIndex > 0 ) {
+        if (this.firstColumnIndex > 0) {
             this.firstColumnIndex--;
             this._countColumnWidth();
         }
@@ -617,7 +670,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
                 if (_f.preferences && _f.preferences.minColumnWidth) {
                     if (_i === fields.length - 1) {
-                        itemWidth = Math.max (_f.preferences.minColumnWidth, itemWidth);
+                        itemWidth = Math.max(_f.preferences.minColumnWidth, itemWidth);
                     } else {
                         itemWidth = _f.preferences.minColumnWidth;
                     }

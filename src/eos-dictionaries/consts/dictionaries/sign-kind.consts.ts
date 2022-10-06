@@ -14,7 +14,7 @@ export const SIGN_KIND_DICT: IDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-signature-blue',
     actions: [
-        'quickSearch', 'fullSearch', 'order', 'userOrder',
+        'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization', 'edit', 'view',
         'markRecords', 'protViewSecurity'
     ],

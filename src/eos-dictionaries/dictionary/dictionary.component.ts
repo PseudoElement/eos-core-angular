@@ -38,7 +38,7 @@ import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/se
 import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { takeUntil } from 'rxjs/operators';
 import { SevSyncDictsComponent } from '../sev-modals/sev-sync-dicts/sync-dicts.component';
-import {PipRX} from 'eos-rest/services/pipRX.service';
+import { PipRX } from 'eos-rest/services/pipRX.service';
 import { SEV_CLEAR_IDENT_CODES } from 'eos-dictionaries/consts/messages.consts';
 
 import {
@@ -239,7 +239,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                                 this._dictSrv.setCustomNodeId(this._nodeId);
                                 this._dictSrv.selectCustomTreeNode(this._nodeId).then(() => {
                                 });
-                            } else if ( this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
+                            } else if (this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.') {
                                     this._nodeId = '';
                                 }
@@ -356,7 +356,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
 
                 if (!viewParameters.updatingList && this.treeNode) {
-                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id || this.dictionaryId === Templates.id ) {
+                    if (this.dictionaryId === NOMENKL_DICT.id || this.dictionaryId === COLLISIONS_SEV_DICT.id || this.dictionaryId === Templates.id) {
                         const n = this.dictionary.descriptor.getActive();
                         if (n) { this.title = n.title; }
                     } else {
@@ -386,12 +386,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
             });
         _dictSrv.resetSerchError$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe(() => {
-            this.resetSearch();
-        });
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(() => {
+                this.resetSearch();
+            });
 
     }
 
@@ -487,7 +487,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
                 this._dictSrv.toggleWeightOrder();
                 break;
-
+            case E_RECORD_ACTIONS.userOrderCut:
+                this.nodeList.userOrderCut();
+                this.dictionary.treeResort();
+                break;
+            case E_RECORD_ACTIONS.userOrderPaste:
+                this.nodeList.userOrderPaste();
+                this.dictionary.treeResort();
+                break;
+            case E_RECORD_ACTIONS.moveDown:
+                this.nodeList.moveDown();
+                this.dictionary.treeResort();
+                break;
             case E_RECORD_ACTIONS.moveUp:
                 this.nodeList.moveUp();
                 this.dictionary.treeResort();
@@ -802,14 +813,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     submitModalWord() {
         if (this.newNameBaseDepartment !== this._dictSrv.getCardName()) {
             this._dictSrv.updateNameDepartment(this.newNameBaseDepartment)
-            .then(() => {
-                this._appContext.nameCentralСabinet = this.newNameBaseDepartment;
-                this._dictSrv.setCardName(this.newNameBaseDepartment);
-                this.modalWordRef.hide();
-            })
-            .catch(() => {
-                this.modalWordRef.hide();
-            });
+                .then(() => {
+                    this._appContext.nameCentralСabinet = this.newNameBaseDepartment;
+                    this._dictSrv.setCardName(this.newNameBaseDepartment);
+                    this.modalWordRef.hide();
+                })
+                .catch(() => {
+                    this.modalWordRef.hide();
+                });
         } else {
             this.modalWordRef.hide();
         }
@@ -1172,7 +1183,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             const node = selectedNodes[i];
 
             if (node.isProtected) {
-                this._dictSrv.setMarkForNode(node , false, true);
+                this._dictSrv.setMarkForNode(node, false, true);
                 // node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
@@ -1692,14 +1703,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     private _showSyncDictsModal() {
-      const node = this._dictSrv.listNode;
-      if (node) {
-        this.modalWindow = null;
-        this.modalWindow = this._modalSrv.show(SevSyncDictsComponent, { class: 'sev-sync-dicts modal-lg' });
-      }
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.modalWindow = null;
+            this.modalWindow = this._modalSrv.show(SevSyncDictsComponent, { class: 'sev-sync-dicts modal-lg' });
+        }
     }
 
-     private _clearIdentityCodes() {
+    private _clearIdentityCodes() {
         const changes = [];
         const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
         const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');

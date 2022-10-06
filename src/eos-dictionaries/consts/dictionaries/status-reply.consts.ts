@@ -7,7 +7,7 @@ export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR
     id: 'status-reply',
     apiInstance: 'STATUS_REPLY_CL',
     actions: [
-        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'cut', 'combine',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import', 'protViewSecurity'],

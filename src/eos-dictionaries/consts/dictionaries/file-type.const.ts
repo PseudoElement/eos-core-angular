@@ -10,7 +10,7 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-folder-blue',
     defaultOrder: 'CLASSIF_NAME',
-    actions: ['add', 'quickSearch', 'fullSearch', 'userOrder', 'markRecords', 'moveUp', 'moveDown', 'showDeleted',
+    actions: ['add', 'quickSearch', 'fullSearch', 'userOrder', 'userOrderCut', 'userOrderPaste', 'markRecords', 'moveUp', 'moveDown', 'showDeleted',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore',
         'export', 'import', 'protViewSecurity'
     ],
