@@ -80,6 +80,11 @@
     color: $secondary-font-color-main-theme;
 }
 
+.highlighted-cut {
+    background: $light-grey;
+    color: $grey;
+}
+
 .unimportant-text {
     color: $unimportant-info-color-main-theme;
 }

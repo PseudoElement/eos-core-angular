@@ -78,6 +78,33 @@ const RECORD_ACTION_USER_SORT: IAction = {
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.read,
 };
+
+const RECORD_ACTION_USER_SORT_CUT: IAction = {
+    type: E_RECORD_ACTIONS.userOrderCut,
+    group: E_ACTION_GROUPS.group,
+    title: 'Вырезать',
+    hint: 'Вырезать',
+    iconClass: 'eos-icon eos-icon-scissors-blue small',
+    disabledIconClass: 'eos-icon eos-icon-scissors-grey small',
+    activeIconClass: 'eos-icon eos-icon-scissors-white small',
+    hoverIconClass: 'eos-icon eos-icon-scissors-white small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
+};
+
+const RECORD_ACTION_USER_SORT_PASTE: IAction = {
+    type: E_RECORD_ACTIONS.userOrderPaste,
+    group: E_ACTION_GROUPS.group,
+    title: 'Вставить после выбранной',
+    hint: 'Вставить после выбранной',
+    iconClass: 'eos-icon eos-icon-paste-blue small',
+    disabledIconClass: 'eos-icon eos-icon-paste-grey small',
+    activeIconClass: 'eos-icon eos-icon-paste-white small',
+    hoverIconClass: 'eos-icon eos-icon-paste-white small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
+};
+
 const RECORD_ACTION_TO_UP: IAction = {
     type: E_RECORD_ACTIONS.moveUp,
     group: E_ACTION_GROUPS.item,
@@ -612,6 +639,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_DELETE,
     RECORD_ACTION_RESTORE,
     RECORD_ACTION_USER_SORT,
+    RECORD_ACTION_USER_SORT_CUT,
+    RECORD_ACTION_USER_SORT_PASTE,
     RECORD_ACTION_SEV_SYNC_DICTS,
     RECORD_ACTION_SEV_CLEAR_IDENTITY_CODES,
     RECORD_ACTION_TO_UP,
@@ -651,6 +680,8 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_DELETE,
     RECORD_ACTION_RESTORE,
     RECORD_ACTION_USER_SORT,
+    RECORD_ACTION_USER_SORT_CUT,
+    RECORD_ACTION_USER_SORT_PASTE,
     RECORD_CHECK_UNIQUE_INDEX,
     RECORD_ACTION_TO_UP,
     RECORD_ACTION_TO_DOWN,

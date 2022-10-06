@@ -7,7 +7,7 @@ export const RESPRJ_PRIORITY_DICT: IDictionaryDescriptor = Object.assign({}, LIN
     apiInstance: 'RESPRJ_PRIORITY_CL',
     title: 'Приоритеты проектов резолюций',
     actions: [
-        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'cut', 'combine',
         'edit', 'view', 'remove', 'removeHard', 'export', 'import', 'protViewSecurity'],

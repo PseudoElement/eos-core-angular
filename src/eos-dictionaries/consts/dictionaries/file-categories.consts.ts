@@ -17,7 +17,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-folder-blue',
     defaultOrder: 'WEIGHT',
-    actions: ['add', 'edit', 'remove', 'showDeleted', 'restore', 'userOrder',  'view', 'tableCustomization',
+    actions: ['add', 'edit', 'remove', 'showDeleted', 'restore', 'userOrder',  'userOrderCut', 'userOrderPaste', 'view', 'tableCustomization',
               'export', 'import', 'protViewSecurity', 'removeHard', 'markRecords', 'quickSearch', 'fullSearch'],
     keyField: 'ISN_LCLASSIF',
     fields: [

@@ -74,6 +74,8 @@ export class NodeActionsComponent implements OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
+    private _userOrderCutMode: boolean = false;
+
     constructor(
         _dictSrv: EosDictService,
         private _eaps: EosAccessPermissionsService,
@@ -126,7 +128,10 @@ export class NodeActionsComponent implements OnDestroy {
             this._selectedTreeNode = treenode;
             this._update();
         });
-
+        _dictSrv.userOrderCutMode$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(flag => {
+            this._userOrderCutMode = flag;
+            this._update();
+        });
     }
 
     ngOnDestroy() {
@@ -248,9 +253,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _isWriteAction = true;
         const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
         const dueTo = this._selectedTreeNode && this._selectedTreeNode.id;
-
         if (this.dictionary && this._viewParams && this._dictSrv) {
-
             _enabled = !this._viewParams.updatingList;
             _show = this.dictionary.canDo(button.type);
             switch (button.type) {
@@ -262,11 +265,27 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = !isHighestNode;
                     }
                     break;
+                case E_RECORD_ACTIONS.userOrderCut:
+                    _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
+                    _enabled = (!this._userOrderCutMode) && this._visibleCount && opts.listHasItems;
+                    break;
+                case E_RECORD_ACTIONS.userOrderPaste:
+                    _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
+                    _enabled = this._userOrderCutMode && (this._visibleCount > 0);
+                    if (!this.isTree) {
+                        _enabled = _enabled && opts.listHasItems;
+                    }
+                    if (_enabled && _show) {
+                        if (this._dictSrv.parentIdForPasteOperation.length > 0) {
+                            const SELECTED_ITEM = this._visibleList[0];
+                            _enabled = _enabled && (this._dictSrv.parentIdForPasteOperation === SELECTED_ITEM.parentId);
+                        }
+                    }
+                    break;
                 case E_RECORD_ACTIONS.moveUp:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[0].isMarked;
                     break;
-
                 case E_RECORD_ACTIONS.moveDown:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[this._visibleCount - 1].isMarked;

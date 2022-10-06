@@ -12,7 +12,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     title: 'Номенклатура дел',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     actions: [
-        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'uniqueIndexDel', 'userOrder', 'printNomenc',
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'uniqueIndexDel', 'userOrder', 'userOrderCut', 'userOrderPaste', 'printNomenc',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization', 'removeHard',
         'edit', 'view', 'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
         'OpenSelected',

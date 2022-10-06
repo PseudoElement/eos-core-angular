@@ -78,6 +78,9 @@ export class EosDictService {
     // private dictionary: EosDictionary;
     sevClearIdentCodesSubject: Subject<boolean> = new Subject<boolean>();
     sevClearIdentCodesSubscription: Observable<boolean> = this.sevClearIdentCodesSubject.asObservable();
+
+    parentIdForPasteOperation: string = '';
+
     private paginationConfig: IPaginationConfig;
     private _treeNode: EosDictionaryNode; // record selected in tree
     private _listNode: EosDictionaryNode; // record selected in list
@@ -111,6 +114,7 @@ export class EosDictService {
     private _reloadDopRecvizites$: Subject<any>;
     private _resetSerch$: Subject<any>;
     private _setNomenklFilterClose$: BehaviorSubject<boolean>;
+    private _userOrderCutMode$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     /* Observable dictionary for subscribing on updates in components */
     get nomenklFilterClose$(): Observable<boolean> {
@@ -198,6 +202,10 @@ export class EosDictService {
 
     get dictionaryTitle(): string {
         return this._dictionaries[0].title;
+    }
+
+    get userOrderCutMode$(): Observable<boolean> {
+        return this._userOrderCutMode$.asObservable();
     }
 
     get customFields(): IFieldView[] {
@@ -1521,6 +1529,11 @@ export class EosDictService {
     public updateResetSerch(): void {
         this._resetSerch$.next(null);
     }
+
+    changeUserOrderCutMode(param: boolean): void {
+        this._userOrderCutMode$.next(param);
+    }
+
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -2001,7 +2014,6 @@ export class EosDictService {
     private _emitListDictionary() {
         this._listDictionary$.next(this.currentDictionary);
     }
-
 
 }
 
