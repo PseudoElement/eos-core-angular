@@ -4,6 +4,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
+
 // interface TreeTempl {
 //     id: string;
 //     parentId: string;
@@ -16,9 +17,12 @@ import {CustomTreeNode} from '../tree2/custom-tree.component';
 //     title: string;
 //     path: string;
 // }
+
+
 export class TemplateDescriptor extends RecordDescriptor {
     dictionary: TemplateDictionaryDescriptor;
     fullSearchFields: any;
+
     constructor(dictionary: TemplateDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
@@ -117,6 +121,8 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             visibleFilter: true, children: []
         },
     ];
+
+    templateUrl: string = this.apiSrv.getConfig().templateApiUrl;
 
     addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
         let _newRec = {};
@@ -325,7 +331,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     private _ft(node: any): Promise<any> {
-        return this.apiSrv.getHttp_client().get(`../getdoctemplate.ashx/${node.id}`, { responseType: 'blob' }).toPromise().then((data: Blob) => {
+        return this.apiSrv.getHttp_client().get(`${this.templateUrl}${node.id}`, { responseType: 'blob' }).toPromise().then((data: Blob) => {
             return new Promise((resolve, reject) => {
                 if (data.size) {
                     if (data.size === 14) {
@@ -356,7 +362,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             window.navigator['msSaveBlob'](data, node.title);
         } else {
             const elem = window.document.createElement('a');
-            elem.href = `../getdoctemplate.ashx/${node.id}`;
+            elem.href = `${this.templateUrl}${node.id}`;
             elem.download = node.title;
             document.body.appendChild(elem);
             elem.click();
