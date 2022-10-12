@@ -363,7 +363,7 @@ const routes: Routes = [{
 },
 {
     path: 'background-tasks',
-    data: { title: 'Фоновые задачи', showInBreadcrumb: true },
+    data: { title: 'Сервисы', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard, BackgroundTaskGuard],
     children: [
         {

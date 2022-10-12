@@ -12,7 +12,7 @@ export const APP_MODULES = [
         url: '/parameters',
     },
     {
-        title: 'Фоновые задачи',
+        title: 'Сервисы',
         url: '/background-tasks',
     },
     {
