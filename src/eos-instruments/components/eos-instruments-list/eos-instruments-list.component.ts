@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DISABLED_LIST_ITEM } from 'app/consts/messages.consts';
 import { ETypeFon, IFonLists } from 'eos-backgraund-tasks/interface';
 import { OPENED_WINDOW } from 'eos-dictionaries/consts/dictionaries/instruments/instruments.const';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 
 
@@ -16,13 +17,23 @@ export class EosInstrumentsListComponent implements OnDestroy, OnInit {
   @Input() list: IFonLists;
   disabled: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private _appContext: AppContext,
+    ) {
 
   }
   ngOnInit() {
     if (this.list.checkAccess) {
       this.list.checkAccess().then(access => {
-        this.disabled = access;
+        switch (this.list.id) {
+          case 'CHANGE_DL':
+            this.disabled = access && this._appContext.CurrentUser['TECH_RIGHTS'][28] === '1';
+            break;
+          default:
+            this.disabled = access;
+            break;
+        }
       });
     } else {
       this.disabled = true;
