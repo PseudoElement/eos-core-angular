@@ -223,7 +223,7 @@ export const IMPORT_1C: IFonLists = {
 export const CHANGE_DL: IFonLists = {
     id: 'CHANGE_DL',
     title: 'Передача документов',
-    icon: 'eos-icon-directory-settings-blue',
+    icon: 'eos-icon-accept-doc-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
     loadPlugin: () => {

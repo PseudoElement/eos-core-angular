@@ -19,21 +19,24 @@ export class EosBackgraundSingleComponent implements OnInit {
       this._navSrv._subscriBtnTree.next(true);
     });
     this.route.params.subscribe(data => {
-      const id = data['taskId'];
-      const currentPlugin = this._fonTasks.getCurrentTaskList(id);
-      if (!currentPlugin) {
-        this.router.navigate(['./background-tasks']);
-        return;
-      }
-      if (this._fonTasks.loadedPlugins.has(id) && currentPlugin) {
-        currentPlugin.render(this.MOUNT_POINT);
-
-        return;
-      } else {
-        this._fonTasks.loadedPlugins.add(id);
-        currentPlugin.loadPlugin(this.MOUNT_POINT).then(() => {
+      try {
+        const id = data['taskId'];
+        const currentPlugin = this._fonTasks.getCurrentTaskList(id);
+        if (!currentPlugin) {
+          this.router.navigate(['./background-tasks']);
+          return;
+        }
+        if (this._fonTasks.loadedPlugins.has(id) && currentPlugin) {
           currentPlugin.render(this.MOUNT_POINT);
-        });
+          return;
+        } else {
+          this._fonTasks.loadedPlugins.add(id);
+          currentPlugin.loadPlugin(this.MOUNT_POINT).then(() => {
+            currentPlugin.render(this.MOUNT_POINT);
+          });
+        }
+      } catch (error) {
+        console.log('Ошибка при загрузке', error);
       }
     });
   }
