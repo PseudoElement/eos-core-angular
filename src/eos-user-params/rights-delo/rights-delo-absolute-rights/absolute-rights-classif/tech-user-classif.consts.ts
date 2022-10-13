@@ -205,7 +205,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     */
     {
         key: 48,
-        label: 'Фоновые задачи',
+        label: 'Управление фоновыми задачами',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
 ];
