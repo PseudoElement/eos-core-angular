@@ -15,13 +15,21 @@ export class FonTasksService {
   }
 
   loadTaskLists(): any {
-    this.tasksList = RuntimePluginsManager.getArray<IFonLists>('eos-admin-fon-tasks');
+    try {
+      this.tasksList = RuntimePluginsManager.getArray<IFonLists>('eos-admin-fon-tasks');
+    } catch (error) {
+      console.log('Ошибка получения getArray', error);
+    }
     return this.tasksList;
   }
 
   getCurrentTaskList(id: string): IFonLists | null {
-    if (this.tasksList.length) {
-      return this.tasksList.find(list => list.id === id);
+    try {
+      if (this.tasksList.length) {
+        return this.tasksList.find(list => list.id === id);
+      }
+    } catch (error) {
+      console.log('Ошибка получение плагина id', error);
     }
     return null;
   }

@@ -16,7 +16,11 @@ export class EosBackgraundTasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    try {
       this.lists = this._fonTasksSrv.loadTaskLists();
+    } catch (error) {
+      console.log('Ошибка получения всех плагинов', error);
+    }
   }
 
 
