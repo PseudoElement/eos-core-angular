@@ -2626,6 +2626,29 @@ const commonMeta = {
             'PROTECTED'
         ],
         relations: []
+    },
+    MEDO_NODE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _T.i,
+            NAME: _T.s,
+            DIRECTORY: _T.s,
+            PASSWORD: _T.s,
+            NOTE: _T.s,
+            WEIGHT: _T.i,
+            DELETED: _T.i,
+            PROTECTED: _T.i,
+            INS_DATE: _t.d,
+            INS_WHO: _t.i,
+            UPD_DATE: _t.d,
+            UPD_WHO: _t.i,
+        },
+        readonly: [
+            /* 'ISN_LCLASSIF', */
+            'PROTECTED',
+            'PASSWORD'
+        ],
+        relations: []
     }
 };
 

@@ -36,6 +36,7 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { FILE_CATEGORIES_DICT } from 'eos-dictionaries/consts/dictionaries/file-categories.consts';
 import { FileCategoryDictionaryDescriptor } from './file-category-dictionary-descriptor';
 import { FormatDictionaryDescriptor } from './format-dictionary-descriptor';
+import { MedoNodeDictionaryDescriptor } from './medo-node-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -161,6 +162,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'format':
                         res = new FormatDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'medo-node-cl':
+                        res = new MedoNodeDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case FILE_CATEGORIES_DICT.id:
                         res = new FileCategoryDictionaryDescriptor(descr, this.apiSrv);

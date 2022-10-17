@@ -1,0 +1,58 @@
+<div class="card-content-wrapper" #root>
+    <eos-dynamic-input [input]="inputs['rec.NAME']"
+        [form]="form"
+        [readonly]="!editMode"
+        autocomplete="off"
+        ></eos-dynamic-input>
+    
+    
+        <eos-dynamic-input [input]="inputs['rec.DIRECTORY']"
+        [form]="form"
+        [readonly]="!editMode"
+        
+        ></eos-dynamic-input>
+    <div class="dynamic-input-wrapper base-text-input text-pass-input pass-width">
+        <label>ПАРОЛЬ</label>
+        <div class="vision" [ngClass]="{'disabled': !editMode}">
+            <input class="form-control m-font" maxlength="64"
+            [(ngModel)]="medoPass"
+            [ngClass]="{'error-focus': errorPass, 'readonly': false}"
+            [type]="typeInput"
+            [readonly]="!editMode"
+            [placeholder]="data.rec['ISN_LCLASSIF'] ? '*******' : ''"
+            [tooltip]="errorPass ? 'Обязательное поле' : ''"
+            placement="bottom"
+            containerClass="tooltip-error"
+            (keyup)="onKeyUp($event)"
+            [autocomplete]="'off'">
+            <eos-dynamic-input
+                hidden="true"
+                [input]="inputs['rec.PASSWORD']"
+                [form]="form"
+                [readonly]="!editMode"
+                autocomplete="off">
+            </eos-dynamic-input>
+            <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
+        </div>
+    </div>
+        
+    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+        [form]="form"
+        [readonly]="!editMode"
+        ></eos-dynamic-input>
+        <div class="doc_card_wrapper"> 
+            <div *ngIf="showDocOrgList" class="doc-wr">
+                <div class="doc-list">
+                    <span class="doc-item" (click)="openDoc()">Используется в группах документов<span
+                            class="eos-icon small" [ngClass]="showClass"></span></span>
+                </div>
+                <div *ngIf="showDoc">
+                    <ul>
+                        <span class="sort-name" (click)="sortDoc()">Название<span class="eos-icon small"
+                                [ngClass]="classSort"></span></span>
+                        <li class="show_doc_list" *ngFor="let doc of showDocOrgList">{{doc.CLASSIF_NAME}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+</div>

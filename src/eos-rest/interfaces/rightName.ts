@@ -42,7 +42,8 @@ export enum E_TECH_RIGHT {
     FileType = 41, // Типы файлов
     // @stub157113 открыть при готовности бэка
     FileCategories = 42, // Категории файлов
-    BackgroundTasks = 48 // Фоновые задачи
+    BackgroundTasks = 48, // Фоновые задачи
+    MedoNode = 50, // Справочники МЭДО
 }
 
 export enum E_CARD_RIGHT {

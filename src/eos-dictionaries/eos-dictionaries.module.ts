@@ -110,6 +110,7 @@ import { PrintTemplateComponent } from './print-template/print-template.componen
 import { ResolutionCategoryEditComponent } from './card-views/resolution-category-edit.component';
 import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.component';
 import { FormatEditComponent } from './card-views/format-edit.component';
+import { MedoNodeCardComponent } from './card-views/medo-node-card-edit.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -184,7 +185,8 @@ import { FormatEditComponent } from './card-views/format-edit.component';
         PrintTemplateComponent,
         TooltipErrorFixDirective,
         ResolutionCategoryEditComponent,
-        SevSyncDictsComponent
+        SevSyncDictsComponent,
+        MedoNodeCardComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,

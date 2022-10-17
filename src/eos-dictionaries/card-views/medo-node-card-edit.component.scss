@@ -1,0 +1,108 @@
+.doc_card_wrapper {
+    padding:  0 20px;
+    .addFile {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+    }
+    .btn{
+        min-width: 88px;
+    }
+    .upload-file {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-top: 30px;
+        > span {
+            line-height: 29px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            > span {
+                position: relative;
+                top: 6px;
+            }
+        }
+    }
+    .doc-wr {
+        margin-bottom: 50px;
+        max-height: 200px;
+        .doc-list{
+            .doc-item {
+                display: flex;
+                align-items: center;
+                font-size: 16px;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        }
+        ul{
+            padding-left: 17px;
+        }
+        .sort-name{
+            display: flex;
+            align-items: center;
+            width: 80%;
+            border-bottom: 1px solid #ededed;
+            cursor: pointer;
+        }
+        .show_doc_list {
+            list-style-type: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+    }
+}
+.doc-list-items{
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 160px;
+}
+.divlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -48px;
+    bottom: -49px;
+    background-color: #000;
+    opacity: 0.3;
+   // opacity: .8;
+    z-index: 1000;
+    #waitmessage {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 19px;
+    }
+}
+
+.vision {
+    position: relative;
+    >span {
+        position: absolute;
+        top: 5px;
+        right: 9px;
+        cursor: pointer;
+    }
+    .vision-close {
+        right: 32px;
+    }
+}
+:host {
+    .text-pass-input {
+        margin-bottom: 20px;
+    }
+    .error-focus {
+        border-color: #f44336 !important; 
+        border-width: 2px; 
+        box-shadow: none !important;
+    }
+}
+

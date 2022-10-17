@@ -206,6 +206,14 @@
                                       [data]="data"
                                       [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-format-edit>
+                <eos-medo-node-card *ngSwitchCase="'medo-node-cl'"
+                                      #cardEditEl
+                                      class="docgroup-card simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [isNewRecord]="isNewRecord"
+                                      [editMode]="editMode"></eos-medo-node-card>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
                                       class="simple-card-edit"

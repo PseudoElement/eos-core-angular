@@ -172,6 +172,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
+        key: 50,
+        label: 'Справочники МЭДО',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
+    {
         key: 35,
         label: 'Буфер электронных сообщений',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
