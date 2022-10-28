@@ -293,6 +293,7 @@ eos-dynamic-input {
     .eos-switch {
         display: flex;
         display: -webkit-flex;
+        background-color: transparent !important; 
         .switch-item {
             flex: 1 1 auto;
         }
