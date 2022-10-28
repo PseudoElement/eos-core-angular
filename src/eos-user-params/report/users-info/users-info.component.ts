@@ -64,7 +64,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
         this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info', ignoreBackdropClick: true }, ));
     }
     getHtmlStr(id: number): any {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(`../UserInfo/UserRights.ashx?uisn=${id}`);
+        return this.sanitizer.bypassSecurityTrustResourceUrl(`../CoreHost/FOP/UserRights/${id}`);
     }
     prev() {
         if (this.nodeIndex > 0) {
@@ -158,10 +158,10 @@ export class EosReportUsersInfoComponent implements OnChanges {
                 strId += user.id + ';';
             });
             title = 'Полные сведения по всем пользователям';
-            url = `../UserInfo/UserRights.ashx?uisn=${strId}`;
+            url = `../CoreHost/FOP/UserRights/${strId}`;
         } else {
             title = `Полные сведения ${this.selectUser.login}`;
-            url = `../UserInfo/UserRights.ashx?uisn=${this.selectUser.id}`;
+            url = `../CoreHost/FOP/UserRights/${this.selectUser.id}`;
         }
         this._userParamSrv.createFullReportHtml(url, title);
     }
