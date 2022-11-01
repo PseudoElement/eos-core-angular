@@ -8,7 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import {
-    CABINETS_USER_INFORMER,
+    // @task163710
+    // CABINETS_USER_INFORMER,
     CABINETS_USER_NOTIFICATOR,
     SEND_ORDER_TO_FOR_ARM,
     CABINETS_USER_FOLDERS, CABINETS_USER_ASSIGMENTS
@@ -655,6 +656,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             case 1: {
                 return CABINETS_USER_ASSIGMENTS;
             }
+            /* @task163710
             case 2: {
                 return this.fieldGroupsForCabinets[2] === 'Информер' ?
                             this.isInformer && CABINETS_USER_INFORMER :
@@ -663,6 +665,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             case 3: {
                 return CABINETS_USER_NOTIFICATOR;
             }
+           */
         }
     }
 
@@ -757,6 +760,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
 
     }
+
     private defineLastTab() {
         if (!this.appMode || this.appMode.arm || this.appMode.cbr) {
             return;
@@ -768,12 +772,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
         } else {
             this.isInformer = this.currentUser['AV_SYSTEMS'][26] === '1';
+            /* @task163710
             if (this.fieldGroupsForCabinets.length < 3) {
                 const tabName = this.isInformer ? this.lastTabs[0] : this.lastTabs[1];
                 this.fieldGroupsForCabinets.push(tabName);
+                console.log(this.fieldGroupsForCabinets);
             }
+            */
         }
     }
+
     private _pushState() {
         this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement });
     }

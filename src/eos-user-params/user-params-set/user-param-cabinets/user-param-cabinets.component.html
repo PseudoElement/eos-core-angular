@@ -182,6 +182,7 @@
         </div>
         <eos-dynamic-input [hidden]="appMode.arm || appMode.cbr" [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
     </div>
+    <!-- @task163710
     <div class="informer-container clearfix" [hidden]="currTab !== 2 || appMode.arm">
         <eos-cabinets-informer
             #informerTabEl
@@ -204,5 +205,6 @@
             (formError)="emitErrorInformer($event)"
         ></eos-cabinets-informer>
     </div>
+    -->
 </div>
 <div *ngIf="bacgHeader" class="bacgrFixed"></div>
