@@ -765,6 +765,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         if (!this.appMode || this.appMode.arm || this.appMode.cbr) {
             return;
         }
+        /* @task163710
         if (this.defaultTitle) {
             this.isInformer = true;
             if (this.fieldGroupsForCabinets.length < 4) {
@@ -780,6 +781,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
             */
         }
+         */
+
     }
 
     private _pushState() {
