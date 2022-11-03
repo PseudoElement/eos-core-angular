@@ -779,9 +779,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.fieldGroupsForCabinets.push(tabName);
                 console.log(this.fieldGroupsForCabinets);
             }
-            */
         }
-         */
+     */
 
     }
 
