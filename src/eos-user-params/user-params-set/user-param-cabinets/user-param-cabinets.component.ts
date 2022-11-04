@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter/* , ViewChild */ } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
@@ -22,7 +22,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
-import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer.component';
+// import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer.component';
 import { IUserSettingsModes } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-user-param-cabinets',
@@ -39,8 +39,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    @ViewChild('informerTabEl') informerTabRef: CabinetsInformerComponent;
-    @ViewChild('defaultNotificatorEl') defaultNotificatorRef: CabinetsInformerComponent;
+    // @ViewChild('informerTabEl') informerTabRef: CabinetsInformerComponent;
+    // @ViewChild('defaultNotificatorEl') defaultNotificatorRef: CabinetsInformerComponent;
     userId: string;
     isChanged: boolean;
     prepInputsAttach;
@@ -471,10 +471,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                         this.btnDisable = true;
                         this.flagEdit = false;
                     }
-                    this.informerTabRef.submit(this.flagEdit);
-                    if (this.defaultTitle) {
-                        this.defaultNotificatorRef.submit(this.flagEdit);
-                    }
+                    // this.informerTabRef.submit(this.flagEdit);
+                    // if (this.defaultTitle) {
+                    //     this.defaultNotificatorRef.submit(this.flagEdit);
+                    // }
                     // this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                     this.editMode();
                     this._pushState();
@@ -617,10 +617,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             this.mapChanges.clear();
             this.btnDisable = true;
             this.flagEdit = false;
-            this.informerTabRef.cancel(this.flagEdit);
-            if (this.defaultTitle) {
-                this.defaultNotificatorRef.cancel(this.flagEdit);
-            }
+            // this.informerTabRef.cancel(this.flagEdit);
+            // if (this.defaultTitle) {
+            //     this.defaultNotificatorRef.cancel(this.flagEdit);
+            // }
             this.editMode();
             this._pushState();
         });
@@ -633,10 +633,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     edit($event) {
         this.flagEdit = $event;
-        this.informerTabRef.edit(this.flagEdit);
-        if (this.defaultTitle) {
-            this.defaultNotificatorRef.edit(this.flagEdit);
-        }
+        // this.informerTabRef.edit(this.flagEdit);
+        // if (this.defaultTitle) {
+        //     this.defaultNotificatorRef.edit(this.flagEdit);
+        // }
         this.editMode();
         this.checkDataToDisabled();
     }
@@ -701,7 +701,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                         return;
                     }
                     case 2: {
-                        this.informerTabRef.default(this.creatchesheDefault);
+                        // this.informerTabRef.default(this.creatchesheDefault);
                         return;
                     }
                     case 3: {
