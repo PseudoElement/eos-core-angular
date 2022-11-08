@@ -209,9 +209,8 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
             },
         });
         // debug on linux
-        console.log(window['Uploader']);
-        console.log(window['Uploader'].Current());
-        this.frDatas = window['Uploader'].Current();
+        console.log(window['uploader'].Current());
+        this.frDatas = window['uploader'].Current();
         this.frDatas.promise = new window['$']['Deferred']();
         const ds = new window['D']['DataSource']();
         ds.pipe = new window['D']['Pipe']('../OData.svc/');
