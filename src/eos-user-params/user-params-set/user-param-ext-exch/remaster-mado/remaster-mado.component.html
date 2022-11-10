@@ -23,11 +23,13 @@
         [readonly]="false"
         (change)="checkRadio($event)"
     ></eos-dynamic-input>
-    <eos-dynamic-input
-        [input]="inputs['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY']"
-        [form]="form"
-        [readonly]="false"
-    ></eos-dynamic-input>
+    <div class="radio-button-merge">
+        <eos-dynamic-input
+            [input]="inputs['rec.MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
     <!-- <div>
         <eos-dynamic-input
             [input]="inputs['rec.MEDO_RECEIVE_RUBRIC_CHECK']"
