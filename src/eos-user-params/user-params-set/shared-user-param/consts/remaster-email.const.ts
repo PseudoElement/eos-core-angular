@@ -1392,7 +1392,7 @@ export const REGISTRATION_SCAN: IBaseUsers = {
         {
             key: 'SAVEFORMAT',
             type: 'select',
-            title: 'Формат сохранения документа:',
+            title: '',
             options: [
 
             ]
