@@ -639,6 +639,12 @@ bs-dropdown-container {
                             @include set-margin-for-dynamic-ipnputs;
                         }
                     }
+                    .user-group-form-radio-vertical {
+                        eos-dynamic-input-radio > div {
+                            display: flex !important;
+                            flex-direction: column;
+                        }
+                    }
                 }
 
                 eos-remaster-addresses {
