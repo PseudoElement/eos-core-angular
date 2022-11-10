@@ -16,7 +16,7 @@
         в вершину справочника "Организации":</span>
     <span class="get-new-org" [ngClass]="{'text-log-deleted': logDeletOrg}">
         <span *ngIf='logDeletOrg' class="icon eos-icon small eos-icon-bin-grey address-log-delet"></span>
-        <input readonly type="text" [(ngModel)]="orgName">
+        <input style="outline: none;" readonly type="text" [(ngModel)]="orgName">
     </span>
     <div
         tooltip="Выбор из справочника"
