@@ -73,6 +73,7 @@
                 <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
+       <!-- @task165408 убрать настройки для толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{paddingBottom: '10px'}">
             <div class="inputs-inline">
                 <span class="input-title">Сортировать записи в кабинете приложения Документы по:</span>
@@ -85,8 +86,10 @@
                 <eos-dynamic-input [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"   ></eos-dynamic-input>
             </div>
         </div>
+      -->
     </div>
     <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
+       <!-- @task165408 убрать настройки для толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title">Дата поручения в приложении Документы:</span>
@@ -102,6 +105,7 @@
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
+       -->
         <div class="user-group-form">
             <span>Контролер поручения по умолчанию:</span>
             <div class="classifDep">
@@ -167,6 +171,8 @@
                 <eos-dynamic-input [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
+
+         <!-- @@task165408 убираем настройки толстяка 
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title" [ngStyle]="{'padding-bottom': '5px'}">При снятии с контроля в приложении Документы:</span>
@@ -181,6 +187,7 @@
             </div>
         </div>
         <eos-dynamic-input [hidden]="appMode.arm || appMode.cbr" [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
+        -->
     </div>
     <!-- @task163710
     <div class="informer-container clearfix" [hidden]="currTab !== 2 || appMode.arm">

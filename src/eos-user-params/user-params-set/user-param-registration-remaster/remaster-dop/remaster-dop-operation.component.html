@@ -1,7 +1,9 @@
+<!-- @task165408 убрать настройки для толстяка
 <div [hidden]="appMode.arm || appMode.cbr">
     <div class="set-header">
         <span>При регистрации автоматически:</span>
     </div>
+    
     <div  class="user-group-form">
         <eos-dynamic-input
             class="registration-boolean-automatically-call-function-forwarded-RC"
@@ -10,7 +12,9 @@
             [readonly]="false"
         ></eos-dynamic-input>
     </div>
+    
 </div>
+-->
 <div class="user-group-form">
     <span>Записывать документ в папку текущего кабинета:</span>
     <div class="inputs-inline">
@@ -29,6 +33,7 @@
         ></eos-dynamic-input>
     </div>
 </div>
+<!-- @task165408 убрать настройки для толстяка
 <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
     <span>Печатать регистрационный штамп в приложении Документы:</span>
     <div class="inputs-inline">
@@ -46,6 +51,7 @@
         ></eos-dynamic-input>
     </div>
 </div>
+-->
 <div [hidden]="appMode.cbr || appMode.arm" class="user-group-form">
     <span>Присваивать гриф доступа:</span>
     <eos-dynamic-input
@@ -74,6 +80,8 @@
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
+
+    <!-- @task165408 убрать настройки для толстяка
     <eos-dynamic-input
         *ngIf="!appMode.arm"
         class="input-right"
@@ -81,6 +89,8 @@
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
+    -->
+
 </div>
 <div [hidden]="appMode.cbr" class="user-group-form">
     <span>Регистрировать РК из РКПД:</span><br>

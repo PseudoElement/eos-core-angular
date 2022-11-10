@@ -18,12 +18,15 @@
             <span class="input-title">Дата передачи документов не позднее ( дней ):</span>
             <eos-dynamic-input  [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div><br>
+        <!-- @task165408 удаление настроек толстяка
         <div class="inputs-inline">
             <span [hidden]="appMode.arm" class="input-title">Количество копий:</span>
             <eos-dynamic-input [hidden]="appMode.arm" [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
+        -->
     </div>
     <div *ngIf="!appMode.arm" class="user-content-wr ">
+        <!-- @task165408 удаление настроек толстяка
         <span class="title-user-content ">Ограничить группами документов:</span>
         <div class="user-input-group fl ">
             <div class="user-input-group-wr ">
@@ -50,6 +53,7 @@
                 </button>
             </div>
         </div>
+     -->
     </div>
 </div>
 <!-- <div *ngIf="flagBacground " class="bacgrFixed "></div> -->

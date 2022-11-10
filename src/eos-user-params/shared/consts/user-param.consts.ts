@@ -37,18 +37,22 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         title: 'Визуализация',
         url: 'visualization'
     },
+    /* @task165408 удаление настроек толстяка
     {
         title: 'Приложение Документы',
         url: 'external-application'
     },
+    */
     {
         title: 'Передача',
         url: 'other'
     },
+    /* @task165408 удаление настроек толстяка
     {
         title: 'Шаблоны',
         url: 'patterns'
     }
+    */
 ];
 export const SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO: IParamAccordionList[] = [
     {

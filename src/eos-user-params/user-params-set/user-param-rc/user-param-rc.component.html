@@ -16,6 +16,7 @@
             <eos-dynamic-input *ngIf="!appMode.cbr" [input]="inputs['rec.DONT_SHOW_DOC_HIDDEN_FILES']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [hidden]="appMode.tkDoc" [input]="inputs['rec.CLOSE_RC_AFTER_SAVE_RESOLUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
+        <!-- @task165408 убрать настройки толстяка
         <div [hidden]="appMode.arm" class="user-group-form">
             <span>Открывать РК в приложении Документы на закладке дополнительные реквизиты для групп документов:</span>
             <div class="btn-controll">
@@ -44,6 +45,7 @@
                 <eos-dynamic-input [input]="inputs['rec.SHOW_ALL_RES']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
+        
         <div [hidden]="appMode.arm" class="user-group-form" [ngStyle]="{'margin': '0px'}">
             <span>В перечне поручений в приложении Документы</span>
             <div class="inputs-inline input-right">
@@ -51,7 +53,8 @@
                 <eos-dynamic-input [input]="inputs['rec.SHOW_ALL_RESLIST']" [form]="form" [readonly]="false" (change)='checRcShowRes()'></eos-dynamic-input>
             </div>
         </div>  
-        <eos-dynamic-input [hidden]="appMode.arm" [input]="inputs['rec.RES_LIST_ALL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+       <eos-dynamic-input [hidden]="appMode.arm" [input]="inputs['rec.RES_LIST_ALL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        -->
     </div>
 
     <!-- Для режима "mode=ARMCBR" необходим только 1 чекбокс на данной вкладке -->

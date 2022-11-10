@@ -314,7 +314,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     sliceArrayForTemplate(): void {
         this.listForAccordion.splice(0, this.listForAccordion.length);
-        this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(0, 8) });
+        // @task165408 убирание настроек толстяка
+        // изначально this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(0, 8) });
+        this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, 8) });
         this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(8, 13) });
         this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(13) });
     }

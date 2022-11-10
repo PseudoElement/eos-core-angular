@@ -12,9 +12,11 @@
             <span>Передавать</span><br>
             <eos-dynamic-input [input]="inputs['rec.MARKDOCKND']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <div [hidden]="appMode.arm" class="user-group-form">
-            <span>Пересылать в приложении Документы</span><br>
-            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>
+        <!-- 
+            <div [hidden]="appMode.arm" class="user-group-form">
+                <span>Пересылать в приложении Документы</span><br>
+                <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        -->
     </div>
 </div>

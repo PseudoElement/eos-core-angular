@@ -21,6 +21,7 @@
             <span [ngStyle]="{'margin-right': '10px'}">Вызов окна списков:</span><span>{{getValueWindowList()}}</span>
         </div>
         <div [hidden]="appMode.arm">
+            <!-- @task165408 удаление настройек толстяка
             <div class="user-group-form">
                 <span>Поиск представителей организаций в приложении Документы по полю:</span>
                 <div class="user-input-group-section">
@@ -37,6 +38,7 @@
                 <span>Сортировка результатов поиска по справочникам в приложении Документы</span>
                 <eos-dynamic-input [input]="inputs['rec.SORT']" class="input-mar-right" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
+            -->
         </div>
         <hr>
         <div class="show_deep" *ngIf="allData['CL_SHOW_DEP_REPLACE_BEFORE']">
