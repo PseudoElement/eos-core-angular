@@ -1439,7 +1439,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKED_SEARCHPARAM',
             type: 'select',
-            title: 'Искать по:',
+            title: '', // 'Искать по:',
             options: [
                 {value: '1', title: 'Рег. № всех видов документов'},
                 {value: '2', title: 'Рег. № входящих документов'},
@@ -1466,7 +1466,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKED_SEARCHYEAR',
             type: 'select',
-            title: 'Год регистрации:',
+            title: '', // 'Год регистрации:',
             options: [
                 {value: '1', title: 'Нет'},
                 {value: '2', title: 'Текущий'},
@@ -1476,7 +1476,7 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         {
             key: 'LINKED_LINKTYPE',
             type: 'select',
-            title: 'Создавать связку с типом:',
+            title: '', // 'Создавать связку с типом:',
             options: [
                 {value: '0', title: ''},
                 // {value: '1', title: 'Исполнено'},

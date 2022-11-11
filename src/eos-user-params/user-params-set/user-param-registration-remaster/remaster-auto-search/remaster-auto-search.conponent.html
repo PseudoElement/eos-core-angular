@@ -77,17 +77,18 @@
     </div>
     <div class="user-group-form search-link-wrapper">
         <div class="inputs-inline">
-            <span class="input-title">Искать по:</span>
-            <eos-dynamic-input [ngStyle]="{'width': '50%', 'margin-right': '10px'}" [input]="inputs['rec.LINKED_SEARCHPARAM']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <span  [ngStyle]="{ 'padding-top':'5px' }" >Искать по:</span> 
+            <eos-dynamic-input [ngStyle]="{'width': '55%', 'margin-right': '10px', 'margin-left': '20px' }" [input]="inputs['rec.LINKED_SEARCHPARAM']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [ngStyle]="{'width': '180px'}" [input]="inputs['rec.LINKED_SEARCHVALUE']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div><br>
         <div class="right-input-pos">
-            <span>Год регистрации:</span>
-            <eos-dynamic-input  [ngStyle]="{'width': '180px'}" [input]="inputs['rec.LINKED_SEARCHYEAR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <span>Год регистрации:</span> 
+            <eos-dynamic-input  [ngStyle]="{'width': '220'}" [input]="inputs['rec.LINKED_SEARCHYEAR']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <div class="right-input-pos">
-            <span>Создавать связку с типом:</span>
-            <eos-dynamic-input [ngStyle]="{'width': '452px'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <div class="inputs-inline">
+            <span [ngStyle]="{ 'padding-top':'5px' }" >Создавать связку с типом:</span> 
+            <!-- <eos-dynamic-input [ngStyle]="{'width': '452px'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
+            <eos-dynamic-input [ngStyle]="{'width': '67%', 'margin-left': '20px' }" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input> 
         </div>
         <eos-dynamic-input [hidden]="!appMode.tkDoc" [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
