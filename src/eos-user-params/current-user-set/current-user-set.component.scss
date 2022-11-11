@@ -1996,7 +1996,9 @@ bs-dropdown-container {
             hr {
                 display: none;
             }
-
+            eos-dynamic-input-select2 > div > label {
+                display: none;
+            }
             div.eos-select2 {
                 width: 500px;
                 margin: 0 10px;
