@@ -38,8 +38,8 @@
         </div>
         <div class="user-input-group btn-hov">
             <div class="input-flex">
-                <button [disabled]="!editFlag" (click)="openPopup(template, 'CERT_USER_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" container="body" trigger="hover">Хранилища сертификатов пользователя</button>
-                <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag">Хранилища прочих сертификатов</button>
+                <button [disabled]="!editFlag" (click)="openPopup(template, 'CERT_USER_STORES')" >Хранилища сертификатов пользователя</button>
+                <button (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag">Хранилища прочих сертификатов</button>
             </div>
         </div>
         <div class="user-input-group">
@@ -66,11 +66,6 @@
             <button
                 [disabled]="!editFlag || !disablebtnCarma"
                 (click)="openPopup(template, 'CERT_DIFF_CHECK_STORES')"
-                tooltip="Открыть"
-                #itemTooltip="bs-tooltip"
-                placement="bottom"
-                containerClass="tooltip-info"
-                trigger="hover"
             >
                 Хранилища сертификатов для проверки
             </button>
@@ -81,7 +76,7 @@
         <eos-dynamic-input class="inline-block" [input]="inputs['WEB_EDS_VERIFY_ON_SERVER']" [form]="form" [readonly]="false"></eos-dynamic-input>
         <hr>
     </div>-->
-    <div *ngIf="isWebAndArm && !isCb" class="user-input-group">
+    <div *ngIf="isWebAndArm && !isCb" class="user-input-group signature-wr-server">
         <eos-dynamic-input
             class="inline-block"
             [input]="inputs['WEB_EDS_VERIFY_ON_SERVER']"

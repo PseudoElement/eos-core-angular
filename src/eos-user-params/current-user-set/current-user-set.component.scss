@@ -1867,7 +1867,9 @@ bs-dropdown-container {
                     span.l-font {
                         @include style-title-bookmarks;
                     }
-
+                    &.btn-hov {
+                        margin-bottom: 0;
+                    }
                     &:first-child {
                         div.signature-wr:last-child {
                             eos-dynamic-input {
@@ -1895,6 +1897,12 @@ bs-dropdown-container {
                         button {
                             margin-top: 0;
                         }
+                    }
+                    .signature-wr {
+                        margin-top: 10px;
+                    }
+                    &.signature-wr-server {
+                        margin-top: 10px;
                     }
                 }
             }
