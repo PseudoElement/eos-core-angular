@@ -192,6 +192,9 @@ bs-dropdown-container {
 }
 
 .current-settings {
+    eos-spinner > i {
+        content: url("assets/icons/Spiner-Curent.svg");
+    }
     display: flex;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: $text-color;
@@ -2110,6 +2113,9 @@ bs-dropdown-container {
                 }
 
                 eos-user-param-addresses {
+                    & > div button {
+                        @include style-other-button;
+                    }
                     & > div {
                         position: relative;
 
