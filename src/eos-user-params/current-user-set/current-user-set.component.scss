@@ -2144,14 +2144,16 @@ bs-dropdown-container {
                         & > div:nth-child(3) {
                             & > p {
                                 @include style-title-bookmarks;
+                                
                             }
 
                             & > span {
                                 @include reset-style-title-bookmarks;
                                 margin-bottom: 0 !important;
                                 padding-left: 20px !important;
+                                
                             }
-
+                            
                             eos-dynamic-input {
                                 margin-left: 15px;
                             }
@@ -2186,11 +2188,19 @@ bs-dropdown-container {
                                 margin-bottom: 0;
                             }                           
                         }
-
+                        & > div:nth-child(4) { 
+                            border-bottom: 1px solid #E9E6DF;
+                            margin-bottom: 5px;
+                            .margin-curent-input { 
+                                margin-bottom: 5px;
+                            }
+                        }
                         & > div:nth-child(n + 3) > span {
                             @include style-title-bookmarks;
-                            margin-left: -10px;
-                            margin-bottom: 15px;
+                            margin-left: 10px;
+                            margin-bottom: 0px;
+                            background-color: #FAF8F5;
+                            font-weight: 400;
                         }
                     }
                 }
