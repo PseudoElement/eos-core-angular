@@ -12,8 +12,8 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: 'NO', title: 'без диалога'},
-                {value: 'YES', title: 'с диалогом'}
+                {value: 'NO', title: 'Без диалога'},
+                {value: 'YES', title: 'С диалогом'}
             ]
         },
         {
@@ -22,8 +22,8 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'да'},
-                {value: '1', title: 'нет'}
+                {value: '0', title: 'Да'},
+                {value: '1', title: 'Нет'}
             ]
         },
         {
@@ -32,9 +32,9 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '1', title: 'не добавлять'},
-                {value: '0', title: 'для всех документов'},
-                {value: '2', title: 'только для документов с оригиналом на бумажном носителе'}
+                {value: '1', title: 'Не добавлять'},
+                {value: '0', title: 'Для всех документов'},
+                {value: '2', title: 'Только для документов с оригиналом на бумажном носителе'}
             ]
         },
         {
@@ -43,10 +43,10 @@ export const OTHER_USER_TRANSFER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'оригинал(ы)'},
-                {value: '1', title: 'копию(и)'},
-                {value: '2', title: 'первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'вручную'}
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Вручную'}
             ]
         },
     ],
@@ -70,8 +70,8 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'централизовано'},
-                {value: '1', title: 'в департаменте'}
+                {value: '0', title: 'Централизовано'},
+                {value: '1', title: 'В департаменте'}
             ]
         },
         {
@@ -81,10 +81,10 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             readonly: false,
             options: [
                 {value: '4', title: 'Эл. экземпляр(ы)'},
-                {value: '0', title: 'оригинал(ы)'},
-                {value: '1', title: 'копию(и)'},
-                {value: '2', title: 'первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'не отмечать'}
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Не отмечать'}
             ]
         },
         {
@@ -93,10 +93,10 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'оригинал(ы)'},
-                {value: '1', title: 'копию(и)'},
-                {value: '2', title: 'первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'вручную'}
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Вручную'}
             ]
         },
         {
@@ -120,8 +120,8 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             title: '',
             type: 'radio',
             options: [
-                {value: '1', title: 'централизовано'},
-                {value: '2', title: 'в департаменте'},
+                {value: '1', title: 'Централизовано'},
+                {value: '2', title: 'В департаменте'},
             ],
             readonly: false,
         },
@@ -187,8 +187,8 @@ export const OTHER_USER_REESTR: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'по всему журналу передачи документа'},
-            {value: '1', title: 'по записям текущего кабинета'}
+            {value: '0', title: 'По всему журналу передачи документа'},
+            {value: '1', title: 'По записям текущего кабинета'}
         ]
     },
     {
@@ -212,9 +212,9 @@ export const OTHER_USER_REESTR: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'оригиналам'},
-            {value: '1', title: 'копиям'},
-            {value: '2', title: 'всем'}
+            {value: '0', title: 'Оригиналам'},
+            {value: '1', title: 'Копиям'},
+            {value: '2', title: 'Всем'}
         ]
     },
     {
@@ -253,8 +253,8 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'по всему журналу передачи документа'},
-            {value: '1', title: 'по записям текущего кабинета'}
+            {value: '0', title: 'По всему журналу передачи документа'},
+            {value: '1', title: 'По записям текущего кабинета'}
         ]
     },
     {
@@ -278,9 +278,9 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         title: '',
         readonly: false,
         options: [
-            {value: '0', title: 'оригиналам'},
-            {value: '1', title: 'копиям'},
-            {value: '2', title: 'всем'}
+            {value: '0', title: 'Оригиналам'},
+            {value: '1', title: 'Копиям'},
+            {value: '2', title: 'Всем'}
         ]
     },
     {
@@ -608,10 +608,10 @@ export const OTHER_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'оригинал(ы)'},
-                {value: '1', title: 'копию(и)'},
-                {value: '2', title: 'первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'вручную'}
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Вручную'}
             ]
         },
         {
@@ -621,10 +621,10 @@ export const OTHER_USER: IBaseUsers = {
             readonly: false,
             options: [
                 {value: '4', title: 'Эл. экземпляр(ы)'},
-                {value: '0', title: 'оригинал(ы)'},
-                {value: '1', title: 'копию(и)'},
-                {value: '2', title: 'первому оригинал(ы), остальным копии'},
-                {value: '3', title: 'не отмечать'}
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Не отмечать'}
             ]
         },
         {
@@ -648,8 +648,8 @@ export const OTHER_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'по всему журналу передачи документа'},
-                {value: '1', title: 'по записям текущего кабинета'}
+                {value: '0', title: 'По всему журналу передачи документа'},
+                {value: '1', title: 'По записям текущего кабинета'}
             ]
         },
         {
@@ -673,9 +673,9 @@ export const OTHER_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'оригиналам'},
-                {value: '1', title: 'копиям'},
-                {value: '2', title: 'всем'}
+                {value: '0', title: 'Оригиналам'},
+                {value: '1', title: 'Копиям'},
+                {value: '2', title: 'Всем'}
             ]
         },
         {

@@ -28,7 +28,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public fieldGroupsForRegistration: Map<number, string> = new Map([
         [0, 'Документ (РК)'],
-        [1, 'Корр./адресаты'],
+        [1, 'Корр./Адресаты'],
         [2, 'Сканирование и печать штрих-кода'],
         [3, 'Связки и автопоиск'],
         [4, 'Проект документа (РКПД)'],

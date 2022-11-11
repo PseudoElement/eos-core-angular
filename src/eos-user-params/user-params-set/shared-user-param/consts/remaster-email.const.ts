@@ -79,8 +79,8 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '0', title: 'весь документ'},
-                {value: '1', title: 'выписку'}
+                {value: '0', title: 'Весь документ'},
+                {value: '1', title: 'Выписку'}
             ],
             keyPosition: 7.8,
             parent: null,
@@ -98,8 +98,8 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             title: '',
          //   readonly: true,
             options: [
-                {value: '0', title: 'где адресат - исполнитель'},
-                {value: '1', title: 'все'}
+                {value: '0', title: 'Где адресат - исполнитель'},
+                {value: '1', title: 'Все'}
             ],
             keyPosition: 10.11,
             parent: null,
@@ -117,8 +117,8 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             title: '',
            // readonly: true,
             options: [
-                {value: '0', title: 'адресату - информация о себе'},
-                {value: '1', title: 'все'}
+                {value: '0', title: 'Адресату - информация о себе'},
+                {value: '1', title: 'Все'}
             ],
             keyPosition: '169.170',
             parent: null,
@@ -1288,12 +1288,12 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'AUTOSTAMP',
             type: 'boolean',
-            title: 'входящий'
+            title: 'Входящий'
         },
         {
             key: 'AUTOSTAMP1',
             type: 'boolean',
-            title: 'исходящий'
+            title: 'Исходящий'
         },
         {
             key: 'SECURLEVEL',
@@ -1301,8 +1301,8 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'от предыдущего документа'},
-                {value: '1', title: 'первый из справочника'}
+                {value: '0', title: 'От предыдущего документа'},
+                {value: '1', title: 'Первый из справочника'}
             ]
         },
         {
@@ -1311,8 +1311,8 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'от предыдущего документа'},
-                {value: '1', title: 'первый из справочника'}
+                {value: '0', title: 'От предыдущего документа'},
+                {value: '1', title: 'Первый из справочника'}
             ]
         },
         {
@@ -1338,12 +1338,12 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'FILELOCK',
             type: 'boolean',
-            title: 'на редактирование прикрепляемых файлов'
+            title: 'На редактирование прикрепляемых файлов'
         },
         {
             key: 'FILE_DONTDEL',
             type: 'boolean',
-            title: 'на удаление прикрепляемых файлов'
+            title: 'На удаление прикрепляемых файлов'
         },
     ]
 };
@@ -1408,9 +1408,9 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'документе'},
-                {value: '2', title: 'обороте документа'},
-                {value: '1', title: 'чистом листе'}
+                {value: '0', title: 'Документе'},
+                {value: '2', title: 'Обороте документа'},
+                {value: '1', title: 'Чистом листе'}
             ]
         },
         {
@@ -1532,9 +1532,9 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '3', title: 'по началу'},
-                {value: '1', title: 'на вхождение'},
-                {value: '2', title: 'на равенство'}
+                {value: '3', title: 'По началу'},
+                {value: '1', title: 'На вхождение'},
+                {value: '2', title: 'На равенство'}
             ],
             keyPosition: 0,
         },
@@ -1543,8 +1543,8 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: 'Сортировать связки:',
             options: [
-                {value: 'ORDERNUM', title: 'по порядку'},
-                {value: 'DOC_DATE', title: 'по дате регистрации документа (проекта)'}
+                {value: 'ORDERNUM', title: 'По порядку'},
+                {value: 'DOC_DATE', title: 'По дате регистрации документа (проекта)'}
             ],
             keyPosition: 0,
         },
@@ -1587,9 +1587,9 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '3', title: 'по началу'},
-                {value: '1', title: 'на вхождение'},
-                {value: '2', title: 'на равенство'}
+                {value: '3', title: 'По началу'},
+                {value: '1', title: 'На вхождение'},
+                {value: '2', title: 'На равенство'}
             ],
             keyPosition: 1,
         },
@@ -1604,9 +1604,9 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '3', title: 'по началу'},
-                {value: '1', title: 'на вхождение'},
-                {value: '2', title: 'на равенство'}
+                {value: '3', title: 'По началу'},
+                {value: '1', title: 'На вхождение'},
+                {value: '2', title: 'На равенство'}
             ],
             keyPosition: 2
         },
@@ -1621,9 +1621,9 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '3', title: 'по началу'},
-                {value: '1', title: 'на вхождение'},
-                {value: '2', title: 'на равенство'}
+                {value: '3', title: 'По началу'},
+                {value: '1', title: 'На вхождение'},
+                {value: '2', title: 'На равенство'}
             ],
             keyPosition: 3
         },
@@ -1638,8 +1638,8 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '1', title: 'на вхождение'},
-                {value: '2', title: 'на равенство'}
+                {value: '1', title: 'На вхождение'},
+                {value: '2', title: 'На равенство'}
             ],
             keyPosition: 4
         },
@@ -1654,9 +1654,9 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '3', title: 'по началу'},
-                {value: '1', title: 'на вхождение'},
-                {value: '2', title: 'на равенство'}
+                {value: '3', title: 'По началу'},
+                {value: '1', title: 'На вхождение'},
+                {value: '2', title: 'На равенство'}
             ],
             keyPosition: 10,
         },
@@ -1683,8 +1683,8 @@ export const REGISTRATION_SEB: IBaseUsers =  {
         title: '',
         readonly: false,
         options: [
-            {value: 'YES', title: 'с диалогом'},
-            {value: 'NO', title: 'без диалога'}
+            {value: 'YES', title: 'С диалогом'},
+            {value: 'NO', title: 'Без диалога'}
         ]
     },
     ]
@@ -1720,9 +1720,9 @@ export const REMASTER_MADO: IBaseUsers =  {
         title: '',
         readonly: false,
         options: [
-            {value: '1', title: 'коду'},
-            {value: '2', title: 'наименованию'},
-            {value: '3', title: 'коду и наименованию'}
+            {value: '1', title: 'Коду'},
+            {value: '2', title: 'Наименованию'},
+            {value: '3', title: 'Коду и наименованию'}
         ],
         parent: 'MEDO_RECEIVE_RUBRIC_CHECK'
     },

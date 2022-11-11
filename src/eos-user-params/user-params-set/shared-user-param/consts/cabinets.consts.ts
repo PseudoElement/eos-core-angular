@@ -27,7 +27,7 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
         {
             key: 'HILITE_RESOLUTION_BOOLEAN',
             type: 'boolean',
-            title: 'с поручениями, срок исполнения которых истекает через'
+            title: 'С поручениями, срок исполнения которых истекает через'
         },
         {
             key: 'HILITE_PRJ_RC',
@@ -38,32 +38,32 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
         {
             key: 'HILITE_PRJ_RC_BOOLEAN',
             type: 'boolean',
-            title: 'с проектами документов, срок которых истекает через '
+            title: 'С проектами документов, срок которых истекает через '
         },
         {
             key: 'SCRATCH_RC',
             type: 'boolean',
-            title: 'при вводе резолюции по документу без поручений'
+            title: 'При вводе резолюции по документу без поручений'
         },
         {
             key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
             type: 'boolean',
-            title: 'при вводе отчета'
+            title: 'При вводе отчета'
         },
         {
             key: 'SCRATCH_RESOL',
             type: 'boolean',
-            title: 'при вводе резолюции по неконтрольному документу с проставлением даты отчета'
+            title: 'При вводе резолюции по неконтрольному документу с проставлением даты отчета'
         },
         {
             key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
             type: 'boolean',
-            title: 'удалять документы без поручений из кабинета '
+            title: 'Удалять документы без поручений из кабинета '
         },
         {
             key: 'OZN_FILL_REPLY',
             type: 'boolean',
-            title: 'вводить отчет об исполнении поручения с текстом:'
+            title: 'Вводить отчет об исполнении поручения с текстом:'
         },
         {
             key: 'OZN_FILL_REPLY_TEXT',
@@ -271,20 +271,20 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             type: 'radio',
             title: 'Дата поручения в приложении Документы:',
             options: [
-                {value: 'TODAY', title: 'сегодня'},
-                {value: 'LAST', title: 'от предыдущей резолюции'},
-                {value: 'EMPTY', title: 'не заполнять'}
+                {value: 'TODAY', title: 'Сегодня'},
+                {value: 'LAST', title: 'От предыдущей резолюции'},
+                {value: 'EMPTY', title: 'Не заполнять'}
             ]
         },
         {
             key: 'RESOLUTION_AUTHOR',
             type: 'boolean',
-            title: 'от предыдущей резолюции'
+            title: 'От предыдущей резолюции'
         },
         {
             key: 'RESOLUTION_SELECT_AUTHOR',
             type: 'boolean',
-            title: 'вручную'
+            title: 'Вручную'
         },
         {
             key: 'CONTROLL_AUTHOR',
@@ -296,9 +296,9 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             type: 'radio',
             title: 'Контроль поручения',
             options: [
-                {value: 'YES', title: 'на контроле'},
-                {value: 'NO', title: 'не контрольное'},
-                {value: 'PARENT', title: 'от документа (родительского поручения)'}
+                {value: 'YES', title: 'На контроле'},
+                {value: 'NO', title: 'Не контрольное'},
+                {value: 'PARENT', title: 'От документа (родительского поручения)'}
             ]
         },
         {
@@ -314,17 +314,17 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         {
             key: 'PARENT_RESOLUTION_TEXT',
             type: 'boolean',
-            title: 'текст'
+            title: 'Текст'
         },
         {
             key: 'INTERIM_DATE_PARENT',
             type: 'boolean',
-            title: 'промежуточную дату'
+            title: 'Промежуточную дату'
         },
         {
             key: 'STATUS_EXEC_PARENT',
             type: 'boolean',
-            title: 'состояние исполнения'
+            title: 'Состояние исполнения'
         },
         {
             key: 'CORRECT_CTRL_DATE',
@@ -356,9 +356,9 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             type: 'radio',
             title: '',
             options: [
-                {value: '2', title: 'всем фигурантам'},
-                {value: '1', title: 'контролеру и исполнителям'},
-                {value: '0', title: 'не рассылать'},
+                {value: '2', title: 'Всем фигурантам'},
+                {value: '1', title: 'Контролеру и исполнителям'},
+                {value: '0', title: 'Не рассылать'},
             ]
         },
         {
@@ -369,26 +369,26 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         {
             key: 'ADD_JOURNAL_4DOC',
             type: 'radio',
-            title: 'для',
+            title: 'Для',
             options: [
-                {value: '0', title: 'всех документов'},
-                {value: '1', title: 'только с "бумажным" оригиналом'},
+                {value: '0', title: 'Всех документов'},
+                {value: '1', title: 'Только с "бумажным" оригиналом'},
             ]
         },
         {
             key: 'ADD_JOURNAL_RESOL_AUTHOR',
             type: 'boolean',
-            title: 'автора',
+            title: 'Автора',
         },
         {
             key: 'ADD_JOURNAL_CONTROLLER',
             type: 'boolean',
-            title: 'контролера',
+            title: 'Контролера',
         },
         {
             key: 'ADD_JOURNAL_RESOL_REPLY',
             type: 'boolean',
-            title: 'исполнителей',
+            title: 'Исполнителей',
         },
         {
             key: 'ADD_ADRESS_REPORGANIZ',
@@ -404,7 +404,7 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         {
             key: 'CHECK_RESOL_REPORT',
             type: 'boolean',
-            title: 'проверять наличие отчетов исполнителей'
+            title: 'Проверять наличие отчетов исполнителей'
         },
         {
             key: 'SHOW_REPLY_NOTE',
