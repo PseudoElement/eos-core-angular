@@ -2200,6 +2200,15 @@ bs-dropdown-container {
                             .margin-curent-input { 
                                 margin-bottom: 5px;
                             }
+                            p {
+                                font-weight: bold;
+                                padding: 6px 10px;
+                                font-size: 14px;
+                                background-color: #f1eee8;
+                                width: 100%;
+                                line-height: 90%;
+                                margin-top: 20px;
+                            }
                         }
                         & > div:nth-child(n + 3) > span {
                             @include style-title-bookmarks;
