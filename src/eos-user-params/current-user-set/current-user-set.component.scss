@@ -2255,7 +2255,29 @@ bs-dropdown-container {
                         }
                     }
                 }
-
+                eos-user-param-dispatch {
+                    .pad-other-set {
+                        .inputs-inline {
+                            display: flex;
+                            width: 510px;
+                            justify-content: right;
+                            eos-dynamic-input {
+                                width: 330px !important;
+                            }
+                        }
+                        .user-group-form > div {
+                            &:last-child {
+                                margin-top: 15px;
+                                margin-left: 20px;
+                                display: block;
+                                eos-dynamic-input {
+                                    margin-left: -5px;
+                                    margin-top: 10px;
+                                }
+                            }
+                        }
+                    }
+                }
                 eos-user-param-reestr {
                     & > div {
                         br {
