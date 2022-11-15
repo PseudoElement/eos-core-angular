@@ -14,7 +14,7 @@ $list-border: #c1c1c1;
 $button-border: #d7d7d2;
 $button-save-bg: #e4dfd2;
 $header-form-bg: #f1eee8;
-$active-field-color-main-theme: #646464;
+$active-field-color-main-theme: #95958D;
 
 //цвета для CB
 $title-color-CB: #373737;
@@ -163,17 +163,21 @@ $horizontal-line-color-CB: #c4c4c4;
 //перекрашиваем тултип
 .tooltip-info,
 .tooltip-error {
+    .tooltip-inner {
+        box-shadow: 0 0 0 1px $active-field-color-main-theme, 5px 5px 20px 0 rgb(0 0 0 / 30%) !important;
+        border-color: $active-field-color-main-theme;
+    }
     &.tooltip.right .tooltip-arrow {
-        border-right-color: $active-field-color-main-theme;
+        border-right-color: $active-field-color-main-theme !important;
     }
     &.tooltip.left .tooltip-arrow {
-        border-left-color: $active-field-color-main-theme;
+        border-left-color: $active-field-color-main-theme !important;
     }
     &.tooltip.top .tooltip-arrow {
-        border-top-color: $active-field-color-main-theme;
+        border-top-color: $active-field-color-main-theme !important;
     }
     &.tooltip.bottom .tooltip-arrow {
-        border-bottom-color: $active-field-color-main-theme;
+        border-bottom-color: $active-field-color-main-theme !important;
     }
 }
 
@@ -1092,7 +1096,16 @@ bs-dropdown-container {
                 br {
                     display: none;
                 }
-
+                div.classifDep {
+                    padding: 15px 0 15px 20px !important;
+                    @include style-other-button;
+                    & > span:not(:last-child) {
+                        margin-left: 4px;
+                    }
+                    .wr-input {
+                        width: 90%;
+                    }
+                }
                 div.user-group-form {
                     position: relative;
 
