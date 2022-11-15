@@ -53,6 +53,7 @@
                 <eos-dynamic-input class="reply-input" [input]="inputs['rec.OZN_FILL_REPLY_TEXT']" [form]="form" [readonly]="false" [disabled]="!form.controls['rec.OZN_FILL_REPLY'].value"></eos-dynamic-input>
             </div>
         </div>
+        <!-- @task163710 убрать настройки для толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="cab-mar-span">
                 <span>Подсвечивать новые записи в папке приложения Документы:</span>
@@ -73,6 +74,7 @@
                 <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
+        -->
        <!-- @task165408 убрать настройки для толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form" [ngStyle]="{paddingBottom: '10px'}">
             <div class="inputs-inline">
@@ -139,6 +141,8 @@
 			<eos-dynamic-input [hidden]="!appMode.arm && !appMode.tk" [input]="inputs['rec.APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>        
         <div [hidden]="appMode.cbr" class="send-res">
+
+            <!-- @task163710 удаление настроек толстяка 
             <div class="send-oreder-no-arm" *ngIf="!appMode.arm">
                 <span>Рассылать поручения в приложении Документы:</span>
                 <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -147,10 +151,13 @@
                 <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <br>
+            -->
+            
             <div class="resolution-cicle">
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div><br>
+
         <div [hidden]="appMode.cbr" class="user-group-form">
             <span>Добавлять в журнал передачи документа для:</span>
             <div class="add-to-juornal-radio">
