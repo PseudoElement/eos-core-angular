@@ -925,9 +925,13 @@ bs-dropdown-container {
                                     margin-right: -25px;
                                     background-color: $application-bg;
                                     font-weight: 400;
+                                    width: auto;
+                                }
+                                & > eos-dynamic-input:nth-child(2) {
+                                    margin-left: 22px !important;
                                 }
                                 & > eos-dynamic-input {
-                                    width: 385px !important;
+                                    width: calc(50% - 47px) !important;
                                 }
 
                                 &:first-of-type {
@@ -940,9 +944,11 @@ bs-dropdown-container {
                                 margin-right: 0;
 
                                 &:nth-child(3) {
-                                    margin-left: 355px;
+                                    display: flex;
+                                    justify-content: end;
+                                    width: 100%;
                                     & > eos-dynamic-input {
-                                        width: 385px !important;
+                                        width: calc(50% - 47px) !important;
                                     }
                                 }
 
