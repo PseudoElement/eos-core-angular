@@ -124,8 +124,16 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         });
         Promise.all([query1, query2])
             .then(([data, list]) => {
-                const roles = data[0] ? data[0]['PARM_VALUE'].split(';') : [];
-                const types: string[] = data[0] ? data[1]['PARM_VALUE'].split(',') : [];
+                let roles = [];
+                let types: string[] = [];
+                data.forEach((d) => {
+                    if (d['PARM_NAME'] === 'CATEGORIES_FOR_USER') {
+                        roles = d['PARM_VALUE'].split(';');
+                    }
+                    if (d['PARM_NAME'] === 'SUPPORTED_USER_TYPES') {
+                        types = d['PARM_VALUE'].split(',');
+                    }
+                });
                 const index = types.indexOf('-1');
                 if (index !== -1) {
                     types.splice(index, 1);
