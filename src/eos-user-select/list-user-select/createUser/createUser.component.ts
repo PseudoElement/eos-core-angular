@@ -349,6 +349,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._router.navigate(['user-params-set'], {
                 queryParams: { isn_cl: isn, is_create: true }
             });
+        })
+        .catch((e) => {
+            this.checkError(e);
+            this._userParamSrv.ProtocolService(this.isn_prot, 3);
+            this.closedModal.emit();
+            this._router.navigate(['user-params-set'], {
+                queryParams: { isn_cl: isn, is_create: true }
+            });
         });
 
     }
