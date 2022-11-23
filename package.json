@@ -5,7 +5,7 @@
     "scripts": {
         "ng": "ng",
         "update-build": "node ./build-version.js",
-        "start": "ng serve",
+        "start": "ng serve --host 0.0.0.0 --disable-host-check",
         "build": "ng build",
         "dev": "ng build --watch",
         "postinstall": "node ./postinstall.js && node ./build-version",

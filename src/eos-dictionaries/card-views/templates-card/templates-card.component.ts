@@ -15,6 +15,7 @@ import { DANGER_SAVE_FILE } from 'eos-dictionaries/consts/messages.consts';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
 
+declare const Uploader: any;
 @Component({
     selector: 'eos-templates-card',
     templateUrl: './templates-card.component.html',
@@ -208,13 +209,12 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
                 ]
             },
         });
-        // debug on linux
-        console.log(window['uploader'].Current());
-        this.frDatas = window['uploader'].Current();
-        this.frDatas.promise = new window['$']['Deferred']();
-        const ds = new window['D']['DataSource']();
-        ds.pipe = new window['D']['Pipe']('../OData.svc/');
-        window['ds'] = ds;
+       // this.frDatas = window['uploader'].Current(); @task164108
+       this.frDatas = Uploader.Current();
+       this.frDatas.promise = new window['$']['Deferred']();
+       const ds = new window['D']['DataSource']();
+       ds.pipe = new window['D']['Pipe']('../OData.svc/');
+       window['ds'] = ds;
     }
 
 }
