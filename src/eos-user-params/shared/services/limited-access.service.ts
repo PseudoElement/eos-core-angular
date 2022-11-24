@@ -156,7 +156,7 @@ preAddNewDocument(form) {
 
         });
     });
-   return this.addNewDocument(data);
+   return data; // this.addNewDocument(data);
 }
 
     edit(data) {
@@ -178,7 +178,7 @@ preAddNewDocument(form) {
                 }
             });
         });
-        return this.edit(data);
+        return data; // this.edit(data);
     }
 
     delite(data): Promise<any> {
@@ -198,7 +198,7 @@ preAddNewDocument(form) {
                 requestUri: `USER_CL(${this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.userContextId} ${element.due}\')`,
             });
         });
-        return this.delite(dataDelite);
+        return dataDelite; // this.delite(dataDelite);
     }
 
 
@@ -238,7 +238,7 @@ preAddNewDocument(form) {
                 }
             });
         });
-        return   this._pipSrv.setData(data);
+        return data; // this._pipSrv.setData(data);
     }
 
     postGrifsFiles(dataInput) {
@@ -256,7 +256,7 @@ preAddNewDocument(form) {
                 }
             });
         });
-        return   this._pipSrv.setData(data);
+        return data; // this._pipSrv.setData(data);
     }
     deliteGrifsFiles(dataInput) {
         const data = [];
@@ -269,7 +269,7 @@ preAddNewDocument(form) {
                 requestUri: `USER_CL(${ this._userServices.userContextId})/USER_FILESECUR_List(\'${element.key} ${this._userServices.userContextId}\')`,
             });
         });
-        return   this._pipSrv.setData(data);
+        return data; // this._pipSrv.setData(data);
     }
 
     deliteGrifs(dataInput) {
@@ -283,9 +283,11 @@ preAddNewDocument(form) {
                 requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List(\'${element.key} ${this._userServices.userContextId}\')`,
             });
         });
-        return   this._pipSrv.setData(data);
+        return  data; // this._pipSrv.setData(data);
     }
-
+    allElementBatchData(data: any[]) {
+        return this._pipSrv.setData(data);
+    }
     getLinksFromTableLINK_CL(): Promise<any> {
         const query = {
             LINK_CL: ALL_ROWS

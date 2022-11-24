@@ -242,14 +242,32 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         const promise_all = [];
         sessionStorage.removeItem(String(this._userServices.userContextId));
         sessionStorage.removeItem(String('links'));
-        promise_all.push(this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore), this._limitservise.preEdit(this.ArrayForm));
+        this._limitservise.preAddNewDocument(this.ArrayForm).forEach((d) => {
+            promise_all.push(d);
+        });
+        this._limitservise.preDelite(this.delitedSetStore).forEach((d) => {
+            promise_all.push(d);
+        });
+        this._limitservise.preEdit(this.ArrayForm).forEach((d) => {
+            promise_all.push(d);
+        });
         if (this.myElem.length > 0) {
-            promise_all.push(this._limitservise.postGrifs(this.myElem), this._limitservise.deliteGrifs(this.myElem));
+            this._limitservise.postGrifs(this.myElem).forEach((d) => {
+                promise_all.push(d);
+            });
+            this._limitservise.deliteGrifs(this.myElem).forEach((d) => {
+                promise_all.push(d);
+            });
         }
         if (this.myElemFiles.length > 0) {
-            promise_all.push(this._limitservise.postGrifsFiles(this.myElemFiles), this._limitservise.deliteGrifsFiles(this.myElemFiles));
+            this._limitservise.postGrifsFiles(this.myElemFiles).forEach((d) => {
+                promise_all.push(d);
+            });
+            this._limitservise.deliteGrifsFiles(this.myElemFiles).forEach((d) => {
+                promise_all.push(d);
+            });
         }
-        return Promise.all([...promise_all])
+        return this._limitservise.allElementBatchData(promise_all)
             .then(result => {
                 if ($event) {
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
