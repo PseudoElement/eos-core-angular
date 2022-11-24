@@ -1032,7 +1032,73 @@ bs-dropdown-container {
             div.scrollWrapper {
                 padding: 0 20px;
             }
-
+            .instructions.scrollWrapper {
+                position: relative;
+                eos-dynamic-input-radio {
+                    & > div {
+                        color: red;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+                eos-dynamic-input {
+                    label.checkbox {
+                        padding-left: 30px;
+                        padding-bottom: 10px !important;
+                        & > input {
+                            width: 95%;
+                        }
+                        & > span {
+                            position: absolute;
+                            top: -4px;
+                            left: 0;
+                        }
+                    }
+                }
+                .resolution {
+                    border-top: 1px solid $list-border;
+                    & > span {
+                        background-color: $application-bg !important;
+                        width: 180px !important;
+                        padding: 6px 0px 6px 10px !important;
+                        font-weight: 400 !important;
+                    }
+                    & > div > eos-dynamic-input {
+                        padding-top: 4px !important;
+                    }
+                }
+                & > div:nth-child(2) {
+                    .control-state {
+                        margin-left: 15px;
+                    }
+                }
+                & > div:nth-child(3) {
+                    & > div {
+                        & > span {
+                            display: inline-block;
+                            width: 100%;
+                            padding: 6px 10px;
+                            line-height: 90%;
+                            font-size: 14px;
+                            font-weight: bold;
+                            background-color: #f1eee8;
+                            margin-bottom: 15px;
+                        }
+                        & > eos-dynamic-input {
+                            margin-left: 15px;
+                        }
+                    }
+                    & > eos-dynamic-input {
+                        margin-left: 15px;
+                    }
+                }
+                & > div:nth-child(7) {
+                    margin-left: 15px;
+                    .form-group {
+                        margin: 10px 0 10px 0;
+                    }
+                }
+            }
             .input-user-cabinets-rk-forwarding-wrapper {
                 div.user-group-form {
                     span.input-title {
@@ -1082,7 +1148,9 @@ bs-dropdown-container {
 
                     &:nth-child(5),
                     &:nth-child(6) {
-                        margin-left: 20px;
+                        & > div {
+                            margin-left: 15px;
+                        }
 
                         div.inputs-inline {
                             display: flex;
