@@ -381,8 +381,30 @@ const routes: Routes = [{
                 showSandwichInBreadcrumb: false,
                 showPushpin: false
             },
-        },
-    ]
+            children: [
+                {
+                    path: '**',
+                    component: EosBackgraundSingleComponent,
+                    data: {
+                        showBreadcrumb: false,
+                        showInBreadcrumb: false,
+                        showSandwichInBreadcrumb: false,
+                        showPushpin: false
+                    },
+
+                }
+            ]
+        }, {
+            path: '**',
+            component: EosBackgraundTasksComponent,
+            data: {
+                showBreadcrumb: false,
+                showInBreadcrumb: false,
+                showSandwichInBreadcrumb: false,
+                showPushpin: false
+            },
+
+        }]
 },
 {
     path: '',

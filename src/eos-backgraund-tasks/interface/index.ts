@@ -16,7 +16,7 @@ export interface IFonLists {
   /* метод загрузки плагина, если js то загрузка скрипта на страницу, если popup, открытие окна плагина */
   loadPlugin: (mountPoint: string) => any;
   /* вызов отрисовки плагина, если плагин на реакте, то нужно врапнуть рендер в ф-цию */
-  render: (mountPoint: string) => void;
+  render: (mountPoint: string, scriptAppend: string) => void;
 }
 
 export enum ETypeFon {

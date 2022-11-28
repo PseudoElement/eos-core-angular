@@ -20,21 +20,14 @@ export class EosBackgraundSingleComponent implements OnInit {
     });
     this.route.params.subscribe(data => {
       try {
-        const id = data['taskId'];
+        const id = data['taskId'] || this._fonTasks.saveTaskId;
         const currentPlugin = this._fonTasks.getCurrentTaskList(id);
         if (!currentPlugin) {
           this.router.navigate(['./background-tasks']);
           return;
         }
-        if (this._fonTasks.loadedPlugins.has(id) && currentPlugin) {
-          currentPlugin.render(this.MOUNT_POINT);
-          return;
-        } else {
-          this._fonTasks.loadedPlugins.add(id);
-          currentPlugin.loadPlugin(this.MOUNT_POINT).then(() => {
-            currentPlugin.render(this.MOUNT_POINT);
-          });
-        }
+        currentPlugin.render(this.MOUNT_POINT, 'scriptAppend');
+        this._fonTasks.saveTaskId = id;
       } catch (error) {
         console.log('Ошибка при загрузке', error);
       }

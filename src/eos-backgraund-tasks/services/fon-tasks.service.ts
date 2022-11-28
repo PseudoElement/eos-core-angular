@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import RuntimePluginsManager from '@eos/jsplugins-manager';
+import { Manager } from '@eos/jsplugins-manager';
 import { IFonLists } from 'eos-backgraund-tasks/interface';
 
 @Injectable({
@@ -9,6 +9,7 @@ export class FonTasksService {
   tasksList: IFonLists[] = [];
   activeTask: IFonLists | null = null;
   loadedPlugins: Set<any> = new Set();
+  saveTaskId: string;
   constructor() {
     this.loadTaskLists();
 
@@ -16,7 +17,7 @@ export class FonTasksService {
 
   loadTaskLists(): any {
     try {
-      this.tasksList = RuntimePluginsManager.getArray<IFonLists>('eos-admin-fon-tasks');
+      this.tasksList = Manager.getArray<IFonLists>('eos-admin-fon-tasks');
     } catch (error) {
       console.log('Ошибка получения getArray', error);
     }
