@@ -135,18 +135,8 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
             pattern: REG_MIN_VAL,
             minValue: 1,
         },
-        {
-            key: 'RESOLUTION_CONTROLLER',
-            type: 'text',
-            title: ''
-        },
     ],
     fieldsDefaultValue: [
-        {
-            key: 'RESOLUTION_CONTROLLER',
-            type: '',
-            title: ''
-        },
         {
             key: 'HILITE_RESOLUTION_BOOLEAN',
             type: '',
