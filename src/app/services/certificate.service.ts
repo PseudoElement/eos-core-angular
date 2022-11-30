@@ -16,6 +16,9 @@ export class CertificateService {
         return new Promise((resolve, reject) => {
             const url = this.getUrl(params);
             let w;
+            if (window['dontCheckExistPopUp'] === undefined) {
+                window['dontCheckExistPopUp'] = true;
+            }
             setTimeout(() => {
                 w = openPopup(url, function (event, str) {
                     if (str !== '') {
