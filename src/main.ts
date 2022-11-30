@@ -7,8 +7,14 @@ import { environment } from './environments/environment';
 if (environment.production) {
     enableProdMode();
 }
+
+function bootstrap(event: unknown) {
+    platformBrowserDynamic().bootstrapModule(AppModule);
+    window.removeEventListener('error', bootstrap);
+}
+
+window.addEventListener('error', bootstrap);
+
 Manager.loadPlugins({ targets: ['tech_tasks', 'DictionariesMetadata'] }).then(() => {
     platformBrowserDynamic().bootstrapModule(AppModule);
 });
-
-
