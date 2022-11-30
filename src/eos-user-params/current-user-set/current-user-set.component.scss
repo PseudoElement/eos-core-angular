@@ -913,7 +913,7 @@ bs-dropdown-container {
 
                         &.search-link-wrapper {
                             padding: 15px 20px;
-
+                            max-width: 690px;
                             br {
                                 display: none;
                             }
@@ -927,18 +927,31 @@ bs-dropdown-container {
                                     font-weight: 400;
                                     width: auto;
                                 }
-                                & > eos-dynamic-input:nth-child(2) {
-                                    margin-left: 22px !important;
-                                }
-                                & > eos-dynamic-input {
-                                    width: calc(50% - 47px) !important;
-                                }
-
                                 &:first-of-type {
                                     margin-bottom: 20px;
                                 }
+                                & > eos-dynamic-input {
+                                    width: calc(100% - 183px) !important;
+                                }
                             }
-
+                            div.inputs-inline:nth-child(1) {
+                                & > eos-dynamic-input {
+                                    width: calc(30% - 47px) !important;
+                                }
+                                & > eos-dynamic-input:nth-child(2) {
+                                    margin-left: 22px !important;
+                                    width: calc(70% - 47px) !important;
+                                }
+                            }
+                            div.inputs-inline:nth-child(3) {
+                                & > span {
+                                    color: red !important;
+                                }
+                                & > eos-dynamic-input {
+                                    margin-left: 22px !important;
+                                    width: calc(100% - 190px) !important;
+                                }
+                            }
                             div.right-input-pos {
                                 justify-content: flex-start;
                                 margin-right: 0;
