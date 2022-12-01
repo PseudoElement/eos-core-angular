@@ -138,7 +138,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     const defUser = this.formHelp.createhash(data);
                     this.currentUser = defUser;
                     this.allData = defUser;
-                    return this.initForm();
+                    return this.initForm(reload);
                 });
             }
             return this.initForm();
@@ -151,12 +151,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         .then(() => {
             this.currentUser = this._userParamsSetSrv.curentUser;
             this.allData = this._userParamsSetSrv.hashUserContext;
-            return this.initForm();
+            return this.initForm(reload);
         });
     }
-    initForm(): Promise<any> {
+    initForm(reload?): Promise<any> {
         this.defineLastTab();
-        if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
+        if (!reload && this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForCabinets.length) {
             this.currTab = Number(this.openingTab) - 1;
         }
         this.pretInputs();
