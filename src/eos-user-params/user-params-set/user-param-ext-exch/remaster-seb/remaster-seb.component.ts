@@ -50,8 +50,10 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.ngUnsub)
         )
-        .subscribe(() => {
-            this.default();
+        .subscribe((tab) => {
+            if (tab === 'СЭВ') {
+                this.default();
+            }
         });
         this._RemasterService.submitEmit
         .pipe(

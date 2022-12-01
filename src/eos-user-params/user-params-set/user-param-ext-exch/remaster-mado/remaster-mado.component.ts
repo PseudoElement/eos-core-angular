@@ -47,8 +47,10 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.ngUnsub)
         )
-        .subscribe(() => {
-            this.default();
+        .subscribe((tab) => {
+            if (tab === 'МЭДО') {
+                this.default();
+            }
         });
         this._RemasterService.submitEmit
         .pipe(

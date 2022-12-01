@@ -97,8 +97,10 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(() => {
-                this.default();
+            .subscribe((tab) => {
+                if (tab === 'Эл. почта') {
+                    this.default();
+                }
             });
         this._RemasterService.submitEmit
             .pipe(
