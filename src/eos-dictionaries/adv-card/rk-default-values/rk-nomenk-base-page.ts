@@ -15,8 +15,15 @@ export abstract class RKNomenkBasePage extends RKBasePage {
         const pageUrl = config.webBaseUrl + 'classifChoose/cl?';
         const params = 'Classif=CARDINDEX&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=False&select_multy=False';
         const url = pageUrl + params;
-
+        let flag = false;
+        if (window['dontCheckExistPopUp'] === undefined) {
+            flag = true;
+            window['dontCheckExistPopUp'] = true;
+        }
         openPopup(url, ((event, str) => {
+            if (flag) {
+                delete window['dontCheckExistPopUp'];
+            }
             this.dataController.zone.run(() => {
                 this.setDictLinkValue(path, str);
             });
@@ -40,7 +47,15 @@ export abstract class RKNomenkBasePage extends RKBasePage {
         } else {
             const config = this.dataController.getApiConfig();
             const url = config.webBaseUrl + 'classifChoose/cl?Classif=NOMENKL_CL&select_multy=False';
+            let flag = false;
+            if (window['dontCheckExistPopUp'] === undefined) {
+                flag = true;
+                window['dontCheckExistPopUp'] = true;
+            }
             openPopup(url, ((event, str) => {
+                if (flag) {
+                    delete window['dontCheckExistPopUp'];
+                }
                 this.dataController.zone.run(() => {
                     this.setDictLinkValue(path, str);
                 });

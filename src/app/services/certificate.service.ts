@@ -16,11 +16,16 @@ export class CertificateService {
         return new Promise((resolve, reject) => {
             const url = this.getUrl(params);
             let w;
+            let flag = false;
             if (window['dontCheckExistPopUp'] === undefined) {
+                flag = true;
                 window['dontCheckExistPopUp'] = true;
             }
             setTimeout(() => {
                 w = openPopup(url, function (event, str) {
+                    if (flag) {
+                        delete window['dontCheckExistPopUp'];
+                    }
                     if (str !== '') {
                         return resolve(str);
                     }
@@ -34,9 +39,15 @@ export class CertificateService {
                 try {
                     if (!w || w['closed']) {
                         clearInterval(checkDialClosed);
+                        if (flag) {
+                            delete window['dontCheckExistPopUp'];
+                        }
                         reject();
                     }
                 } catch (e) {
+                    if (flag) {
+                        delete window['dontCheckExistPopUp'];
+                    }
                     reject();
                 }
             }, 500);

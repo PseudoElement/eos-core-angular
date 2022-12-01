@@ -31,8 +31,16 @@ export class ExportImportClService {
 
     private openWindow(dictionaryId: string, operation: string, nodeID?: string): Promise<String> {
         const url: string = this._prepareUrl(dictionaryId, operation, nodeID);
+        let flag = false;
+        if (window['dontCheckExistPopUp'] === undefined) {
+            flag = true;
+            window['dontCheckExistPopUp'] = true;
+        }
         return new Promise((resolve, reject) => {
             const w = openPopup(url, function (event, str) {
+                if (flag) {
+                    delete window['dontCheckExistPopUp'];
+                }
                 if (str !== '') {
                     return resolve(str);
                 }

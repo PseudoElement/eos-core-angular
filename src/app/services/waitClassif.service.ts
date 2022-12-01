@@ -115,9 +115,16 @@ export class WaitClassifService {
         }
         return new Promise((resolve, reject) => {
             let w;
-
+            let flagPar = false;
+            if (window['dontCheckExistPopUp'] === undefined) {
+                flagPar = true;
+                window['dontCheckExistPopUp'] = true;
+            }
             setTimeout(() => {
                 w = openPopup(url, function (event, str) {
+                    if (flagPar) {
+                        delete window['dontCheckExistPopUp'];
+                    }
                     if (str !== '') {
                         return resolve(str);
                     }
@@ -136,9 +143,15 @@ export class WaitClassifService {
                 try {
                     if (!w || w['closed']) {
                         clearInterval(checkDialClosed);
+                        if (flagPar) {
+                            delete window['dontCheckExistPopUp'];
+                        }
                         reject();
                     }
                 } catch (e) {
+                    if (flagPar) {
+                        delete window['dontCheckExistPopUp'];
+                    }
                     reject();
                 }
             }, 500);
