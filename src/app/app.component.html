@@ -1,4 +1,4 @@
-<div class="main-container main-theme" [ngClass]="{'hide': !firstLoadAuth, 'login-fon': !isAuthorized}">
+<div class="main-container main-theme" [ngClass]="{'hide': !firstLoadAuth || !isLoadedPlugins, 'login-fon': !isAuthorized || !isLoadedPlugins}">
     <eos-header *ngIf="isAuthorized"></eos-header>
     <div class="content-wrapper">
         <div class="content-outlet">
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div id="loadblock" *ngIf="!firstLoadAuth">
+<div id="loadblock" *ngIf="!firstLoadAuth || !isLoadedPlugins">
     <div id="loading">
         <i class="fa fa-spinner fa-pulse fa-fw selected-text lg bl"></i>
     </div>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Manager } from '@eos/jsplugins-manager';
 import { environment } from '../environments/environment';
 import { EosUserProfileService } from './services/eos-user-profile.service';
 
@@ -11,6 +12,7 @@ export class AppComponent {
     version: string;
     isAuthorized = false;
     firstLoadAuth = true;
+    isLoadedPlugins = false;
     isMode: boolean = false;
     constructor(
         private _profileSrv: EosUserProfileService,
@@ -36,6 +38,21 @@ export class AppComponent {
         if (!environment.production) {
             this.version = environment.version;
         }
+        /* заглушка на загрузку плагинов , убрать когда плагины переведут на новый сборщик */
+        new Promise((resolve, reject) => {
+            Manager.loadPlugins({ targets: ['tech_tasks', 'DictionariesMetadata'] }).then(() => {
+                resolve(true);
+            });
+            setTimeout(() => {
+                reject('not loaded some plugins');
+            }, 3000);
+        }).then(() => {
+            this.isLoadedPlugins = true;
+        }).catch((e) => {
+            console.log(e || e.message);
+            this.isLoadedPlugins = true;
+        });
+
     }
     checkQueryParams() {
         if (this.isMode) {
