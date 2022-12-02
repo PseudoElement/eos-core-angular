@@ -31,7 +31,7 @@ import { NADZOR_FOLDER } from './dictionaries/nadzor/nadzor.consts';
 import { SEV_FOLDER } from './dictionaries/sev/folder-sev.consts';
 import { TYPE_DOCUM_DICT } from './dictionaries/type-docum.const';
 import { FILE_TYPE_DICT } from './dictionaries/file-type.const';
-// import { FILE_CATEGORIES_DICT } from './dictionaries/file-categories.consts';
+import { FILE_CATEGORIES_DICT } from './dictionaries/file-categories.consts';
 
 export const DICTIONARIES = [
 
@@ -66,7 +66,7 @@ export const DICTIONARIES = [
     FILE_TYPE_DICT,
 
     // @stub157113 открыть при наличии бэка
-    // FILE_CATEGORIES_DICT,
+    FILE_CATEGORIES_DICT,
 
     ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR_FOLDER, ] : [CITIZENS_DICT, ],
     ... Features.cfg.SEV.isDictsEnabled ? [SEV_FOLDER] : [],

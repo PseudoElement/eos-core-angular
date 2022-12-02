@@ -27,7 +27,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
             title: 'Идентификатор'
         },
         {
-            key: 'CLASSIF_NAME',
+            key: 'NAME',
             type: 'string',
             title: 'Название',
             length: 200,
@@ -119,12 +119,12 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
         },
    ],
    searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'DG_NAMES'],
-    searchFields: ['CLASSIF_NAME'],
-    quickViewFields: ['CLASSIF_NAME', 'DG_NAMES', 'NOTE'],
+    editFields: ['NAME', 'NOTE', 'DG_NAMES'],
+    searchFields: ['NAME'],
+    quickViewFields: ['NAME', 'DG_NAMES', 'NOTE'],
     shortQuickViewFields: ['ISN_LCLASSIF'],
-    listFields: ['CLASSIF_NAME',  'DG_NAMES', 'NOTE'],
-    allVisibleFields: ['CLASSIF_NAME', 'NOTE', 'WEIGHT', 'DG_NAMES', 'INS_PERSON', 'PROTECTED', 'INS_DATE', 'INS_WHO', 'UPD_DATE', 'UPD_WHO', 'DELETED'],
+    listFields: ['NAME',  'DG_NAMES', 'NOTE'],
+    allVisibleFields: ['NAME', 'NOTE', 'WEIGHT', 'DG_NAMES', 'INS_PERSON', 'PROTECTED', 'INS_DATE', 'INS_WHO', 'UPD_DATE', 'UPD_WHO', 'DELETED'],
     treeFields: ['ISN_LCLASSIF'],
-    fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'DG_NAMES']
+    fullSearchFields: ['NAME', 'NOTE', 'DG_NAMES']
 };

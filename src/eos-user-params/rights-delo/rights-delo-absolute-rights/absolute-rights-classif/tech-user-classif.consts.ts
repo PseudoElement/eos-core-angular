@@ -204,6 +204,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     }
     */
     {
+        key: 43,
+        label: 'Категории файлов',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
+    {
         key: 48,
         label: 'Управление фоновыми задачами',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none

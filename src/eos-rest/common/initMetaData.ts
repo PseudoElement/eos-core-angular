@@ -638,7 +638,7 @@ const commonMeta = {
             { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
             { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' },
             // @stub157113 открыть после бэка на таску 157113 - добавление справочника КАТЕГОРИИ ФАЙЛОВ
-            // { name: 'DG_FILE_CATEGORY_List', __type: 'DG_FILE_CATEGORY', sf: 'ISN_NODE', tf: 'ISN_NODE_DG' }
+             { name: 'DG_FILE_CATEGORY_List', __type: 'DG_FILE_CATEGORY', sf: 'ISN_NODE', tf: 'ISN_NODE_DG' }
         ]
     },
     EDS_CATEGORY_CL: {
@@ -2552,11 +2552,9 @@ const commonMeta = {
         pk: 'ISN_NODE_DG',
         properties: {
           ISN_NODE_DG: _t.i,
-          ISN_FILE_CATEGORY: _t.s,
+          ISN_FILE_CATEGORY: _t.i,
         },
         readonly: [
-          'ISN_NODE_DG',
-          'ISN_FILE_CATEGORY'
         ],
         relations: [
             { name: 'DOCGROUP_CL_List', __type: 'DOCGROUP_CL', sf: 'ISN_NODE_DG', tf: 'ISN_NODE' },
@@ -2567,7 +2565,7 @@ const commonMeta = {
         pk: 'ISN_LCLASSIF',
         properties: {
             ISN_LCLASSIF: _t.i,
-            CLASSIF_NAME: _t.s,
+            NAME: _t.s,
             NOTE: _t.s,
             WEIGHT: _t.i,
             ISN_NODE_DG: _t.i,
@@ -2580,8 +2578,6 @@ const commonMeta = {
             DELETED: _t.i,
         },
         readonly: [
-            'ISN_LCLASSIF',
-            'WEIGHT',
             'INS_DATE',
             'UPD_DATE',
             'INS_WHO',

@@ -3908,8 +3908,8 @@ export interface FILE_CATEGORY_CL {
     NOTE: string;
     PROTECTED: number;
     WEIGHT: number;
-    ISN_NODE_DG: string;
-    ISN_PERSON: string;
+    ISN_NODE_DG: number;
+    ISN_PERSON: number;
     ISN_WHO: number;
     ISN_DATE: number;
     UPD_WHO: string;

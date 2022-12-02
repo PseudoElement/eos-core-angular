@@ -17,6 +17,10 @@ import { ILinearCL } from 'eos-rest';
 
 // моки для эмуляции таблицы DG_FILE_CATEGORY
 // нет поддержки бэка
+
+interface IFieldName extends ILinearCL {
+    NAME: string;
+}
 const DG_FILE_CATEGORY_MOCKS = [
     { ISN_NODE_DG: 4057024, ISN_FILE_CATEGORY: 1 },
     { ISN_NODE_DG: 4057032, ISN_FILE_CATEGORY: 1 },
@@ -96,11 +100,30 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
             .then((resp: any[]) => {
                 changeData.length = 0;
                 if (resp && resp[0]) {
-                    return resp[0].ID;
+                    return this.dgFileCategoryCreate(data, resp[0].ID).then(() => {
+                        return resp[0].ID;
+                    });
+
                 } else {
                     return null;
                 }
             });
+    }
+
+    dgFileCategoryCreate(data: any, idFileCategory: number): Promise<any> {
+        const ISN_NODE_DG = data['__relfield'] && data['__relfield']['ISN_NODE_DG'];
+        if (ISN_NODE_DG && idFileCategory) {
+            const Dg_File_Prepared = this.apiSrv.entityHelper.prepareAdded<any>(
+                {
+                    ISN_NODE_DG: +ISN_NODE_DG,
+                    ISN_FILE_CATEGORY: idFileCategory
+                }, 'DG_FILE_CATEGORY');
+            const changesList = this.apiSrv.changeList([Dg_File_Prepared]);
+            return this.apiSrv.batch(changesList, '').then(res => {
+                return res;
+            });
+        }
+        return Promise.resolve();
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<FILE_CATEGORY_CL[]> {
@@ -186,13 +209,13 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
         return FILE_CAT_ISNS;
     }
 
-    protected preCreate(isProtected = false, isDeleted = false): ILinearCL {
+    protected preCreate(isProtected = false, isDeleted = false): any {
         const _isn = this.apiSrv.sequenceMap.GetTempISN();
-        const _res: ILinearCL = {
+        const _res: any = {
             ISN_LCLASSIF: _isn,
             PROTECTED: (isProtected ? 1 : 0),
             DELETED: (isDeleted ? 1 : 0),
-            CLASSIF_NAME: '',
+            NAME: '',
             NOTE: null,
         };
         return _res;
