@@ -131,43 +131,52 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         this.setNameFile(prevValue, { stopPropagation: () => { } });
         this._ref.detectChanges();
     }
+
     getGocGroupForTemplates() {
         this.showDocGrList = false;
-        if (this.inputs && (this.inputs['rec.CATEGORY'].value === 'Файлы документов' || this.inputs['rec.CATEGORY'].value === 'Основной файл документа')) {
-            const crit1 = this._pipRx.read({
-                DOCGROUP_CL: {
-                    criteries: {
-                        'DOC_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
-                        'DOC_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
+        this._dictSrv.currentDictionary.descriptor.getCustomTreeData().then(tree => {
+            const CATEGORIES = [];
+            CATEGORIES.push({ value: '', title: '' });
+            tree[0].children.forEach(x => CATEGORIES.push({ value: x.title, title: x.title }));
+            CATEGORIES.push({ value: 'opis_arh.exe', title: 'opis_arh.exe' });
+            this.inputs['rec.CATEGORY'].options = CATEGORIES;
+            if (this.inputs && (this.inputs['rec.CATEGORY'].value === 'Файлы документов' || this.inputs['rec.CATEGORY'].value === 'Основной файл документа')) {
+                const crit1 = this._pipRx.read({
+                    DOCGROUP_CL: {
+                        criteries: {
+                            'DOC_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
+                            'DOC_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
+                        }
                     }
-                }
-            });
-            const crit2 = this._pipRx.read({
-                DOCGROUP_CL: {
-                    criteries: {
-                        'PRJ_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
-                        'PRJ_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
+                });
+                const crit2 = this._pipRx.read({
+                    DOCGROUP_CL: {
+                        criteries: {
+                            'PRJ_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
+                            'PRJ_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
+                        }
                     }
-                }
-            });
-            Promise.all([crit1, crit2]).then((data: Array<any>) => {
-                const d = [...data[0], ...data[1]];
-                if (d.length) {
-                    const map = new Map();
-                    d.forEach((f: DOCGROUP_CL) => {
-                        map.set(f.ISN_NODE, f);
-                    });
-                    this.showDocGrList = true;
-                    this.docGroupList = Array.from(map).map(v => v[1]);
-                    this.sortDoc(false);
-                }
-                return;
-            }).catch(error => {
-                this.showDocGrList = false;
-                this._dictSrv.errHandler(error);
-            });
-        }
+                });
+                Promise.all([crit1, crit2]).then((data: Array<any>) => {
+                    const d = [...data[0], ...data[1]];
+                    if (d.length) {
+                        const map = new Map();
+                        d.forEach((f: DOCGROUP_CL) => {
+                            map.set(f.ISN_NODE, f);
+                        });
+                        this.showDocGrList = true;
+                        this.docGroupList = Array.from(map).map(v => v[1]);
+                        this.sortDoc(false);
+                    }
+                    return;
+                }).catch(error => {
+                    this.showDocGrList = false;
+                    this._dictSrv.errHandler(error);
+                });
+            }
+        });
     }
+
     ngOnDestroy() {
         if (this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor['dataNewFile']) {
             this._dictSrv.currentDictionary.descriptor.deleteTempRc();
@@ -209,12 +218,12 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
                 ]
             },
         });
-       // this.frDatas = window['uploader'].Current(); @task164108
-       this.frDatas = Uploader.Current();
-       this.frDatas.promise = new window['$']['Deferred']();
-       const ds = new window['D']['DataSource']();
-       ds.pipe = new window['D']['Pipe']('../OData.svc/');
-       window['ds'] = ds;
+        // this.frDatas = window['uploader'].Current(); @task164108
+        this.frDatas = Uploader.Current();
+        this.frDatas.promise = new window['$']['Deferred']();
+        const ds = new window['D']['DataSource']();
+        ds.pipe = new window['D']['Pipe']('../OData.svc/');
+        window['ds'] = ds;
     }
 
 }
