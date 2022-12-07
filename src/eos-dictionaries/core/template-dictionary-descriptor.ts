@@ -40,7 +40,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     hashTree: Map<string, string> = new Map()
         .set('0.', '%_%|isnull');
     head: CustomTreeNode[] = [];
-    dataForTree: CustomTreeNode[] = [];
+    tree: CustomTreeNode[] = [];
     templateUrl: string = this.apiSrv.getConfig().templateApiUrl;
 
     addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
@@ -60,7 +60,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
 
     setRootNode(_nodeId: string): CustomTreeNode {
         this._filterDUE = _nodeId;
-        this.checkActiveTreeNode(this.dataForTree, this._filterDUE);
+        this.checkActiveTreeNode(this.tree, this._filterDUE);
         this.checkActiveTreeNode(this.head, this._filterDUE);
         return this._activeTreeNode;
     }
@@ -181,7 +181,16 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         //  super.extendCritery(critery, { mode, deleted }, selectedNode);
     }
 
-    public getCustomTreeData()   {
+    public getCustomTreeData() {
+
+        const setAllNodesInactive = (root) => {
+            root[0].isActive = false;
+            const ITEMS = root[0].children;
+            ITEMS.forEach(x => x.isActive = false);
+        };
+
+        this.head = [];
+        this.tree = [];
         const CRIT = { DOC_TEMPLATES: { criteries: { CATEGORY: 'isnotnull' } } };
         return this.apiSrv.read<DOC_TEMPLATES>(CRIT).then((nodes) => {
             const CATEGORIES: string[] = nodes.map(item => item.CATEGORY);
@@ -193,6 +202,8 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             }
             let index: number = 0;
             const step: number = 0.1;
+            this.hashTree.clear();
+            this.hashTree.set('0.', '%_%|isnull');
             for (const item of UNIQUE_CATEGORIES) {
                 const TEMPLATE_NAME = item;
                 index = index + step;
@@ -202,7 +213,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                     expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', TEMPLATE_ID],
                     visibleFilter: true, children: []
                 };
-                this.dataForTree.push(NODE_TEMPLATE);
+                this.tree.push(NODE_TEMPLATE);
                 this.hashTree.set(TEMPLATE_ID, TEMPLATE_NAME);
             }
             const newHead = [{
@@ -210,19 +221,28 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 expandable: true, isExpanded: true, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.'],
                 visibleFilter: true, children: []
             }];
-            this.dataForTree.sort((el1: CustomTreeNode, el2: CustomTreeNode) => {
+            this.tree.sort((el1: CustomTreeNode, el2: CustomTreeNode) => {
                 return el1.title.localeCompare(el2.title);
             }).forEach((element) => {
                 newHead[0].children.push(element);
             });
             this.head = newHead;
-            this._activeTreeNode = newHead[0].children[0];
+            if (this.top !== '0.') {
+                setAllNodesInactive(newHead); // @task163304 возврат на нужную вершину
+                const ITEMS = newHead[0].children;
+                const ITEM = ITEMS.filter(x => x.id === this.top);
+                if (ITEM.length > 0) {
+                    ITEM[0].isActive = true;
+                    this._activeTreeNode = ITEM[0];
+                }
+            } else {
+                this._activeTreeNode = this.head[0];
+            }
             return Promise.resolve(newHead);
         });
     }
 
     public getChildren(params?: string): Promise<any[]> {
-
         let crit = this.hash().get(this.top);
         if (crit) {
             crit = this.top === '0.' ? `${crit}|isnull` : crit;
