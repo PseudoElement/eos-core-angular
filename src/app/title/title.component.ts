@@ -14,11 +14,20 @@ export class TitleComponent {
     title = 'Настройка системы';
     openDelo() {
         try {
+            this.clearCK();
             document.location.assign('../ArmSite/Site/ArmMain.html');
         } catch (e) {
             // IE fix if user click 'stay in page'
             console.error('openDelo failed', e);
         }
 
+    }
+    clearCK() {
+        const keys = Object.keys(localStorage);
+        for (const key of keys) {
+            if (key.startsWith('ck ')) {
+                localStorage.removeItem(key);
+            }
+        }
     }
 }
