@@ -9,7 +9,7 @@ import { DOCGROUP_CL, FILE_CATEGORY_CL } from 'eos-rest';
 import {
     IDictionaryDescriptor
 } from 'eos-dictionaries/interfaces';
-import { ILinearCL } from 'eos-rest';
+// import { ILinearCL } from 'eos-rest';
 
 // при готовновности бэка подправить, есть в системе =>
 // const techRights: string = '11111111111111111111001111111111111110000'; //  старый вариант - 41 символ
@@ -18,9 +18,9 @@ import { ILinearCL } from 'eos-rest';
 // моки для эмуляции таблицы DG_FILE_CATEGORY
 // нет поддержки бэка
 
-interface IFieldName extends ILinearCL {
-    NAME: string;
-}
+// interface IFieldName extends ILinearCL {
+//     NAME: string;
+// }
 const DG_FILE_CATEGORY_MOCKS = [
     { ISN_NODE_DG: 4057024, ISN_FILE_CATEGORY: 1 },
     { ISN_NODE_DG: 4057032, ISN_FILE_CATEGORY: 1 },
