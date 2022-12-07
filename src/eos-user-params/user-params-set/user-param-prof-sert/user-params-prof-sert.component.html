@@ -87,7 +87,7 @@
                 triggers="hover:click"
                 [tooltip]="!editFlag ? '' : 'Добавить сертификат'"
                 placement="bottom"
-                containerClass="tooltip-info"
+                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                 container="body"
             >
                 <button class="btn btn-primary-light" [disabled]='!editFlag' (click)='chooseSertificate()'>
@@ -97,8 +97,8 @@
             <div
                 triggers="hover:click"
                 [tooltip]="!editFlag ? '' : 'Удалить сертификат' "
-                placement="bottom"
-                containerClass="tooltip-info"
+                placement="left"
+                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                 container="body"
             >
                 <button class="btn btn-primary-light" [disabled]="!listsSertInfo.length || flagHideBtn || !editFlag" (click)='deleteSertificate()'>
@@ -108,8 +108,8 @@
             <div
                 triggers="hover:click"
                 [tooltip]="!editFlag ? '' : 'Показать сертификат'"
-                placement="bottom"
-                containerClass="tooltip-info"
+                placement="left"
+                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                 container="body"
             >
                 <button class="btn btn-primary-light" [disabled]="!editFlag || (!selectedFromAllList && !selectList ) || selectList.notFound" (click)='showSert()'>
@@ -129,9 +129,33 @@
                 </div>
                 <div class="item-container" *ngFor='let listSert of listsSertInfo'>
                     <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
-                        <span tooltip="{{listSert.whom}}" placement="bottom" container="body" containerClass="tooltip-info" class="whom" boundary="scrollParent">{{listSert.whom}}</span>
-                        <span tooltip="{{listSert.sn}}" placement="bottom" container="body" containerClass="tooltip-info" class="serial" boundary="scrollParent">{{listSert.sn}}</span>
-                        <span tooltip="{{listSert.who}}" placement="bottom" container="body" containerClass="tooltip-info" boundary="scrollParent" class="who">{{listSert.who}}</span>
+                        <span 
+                            tooltip="{{listSert.whom}}" 
+                            placement="bottom" 
+                            container="body" 
+                            [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" 
+                            class="whom"
+                            boundary="scrollParent">
+                            {{listSert.whom}}
+                        </span>
+                        <span 
+                            tooltip="{{listSert.sn}}" 
+                            placement="bottom" 
+                            container="body" 
+                            [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" 
+                            class="serial" 
+                            boundary="scrollParent">
+                            {{listSert.sn}}
+                        </span>
+                        <span 
+                            tooltip="{{listSert.who}}" 
+                            placement="bottom" 
+                            container="body" 
+                            [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" 
+                            boundary="scrollParent" 
+                            class="who">
+                            {{listSert.who}}
+                        </span>
                     </div>
                 </div>
             </div>

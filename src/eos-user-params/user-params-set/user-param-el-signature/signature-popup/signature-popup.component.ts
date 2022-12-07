@@ -20,6 +20,7 @@ export class SignaturePopupComponent implements OnInit {
     @Input() inputName: string;
     @Input() input: FormControl;
     @Input() form: FormGroup;
+    @Input() isCurrentSettings?: boolean;
     public CurrentSelect: IListCertStotes;
     public InfoSert: Array<string> = [];
     public currentName: string;

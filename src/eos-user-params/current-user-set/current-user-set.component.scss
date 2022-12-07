@@ -159,27 +159,85 @@ $horizontal-line-color-CB: #c4c4c4;
 .main-container div.content-wrapper > div.navbar-current-settings {
     display: none;
  }
-
-//перекрашиваем тултип
-.tooltip-info,
-.tooltip-error {
+ // тултип для current нужно делать особым
+.tooltip-info-current,
+.tooltip-error-current {
+    &.tooltip.bottom .tooltip-inner::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        top: 0;
+        left: calc(50% - 7px);
+        transform: rotate(45deg);
+        background: #fff;
+    }
+    &.tooltip.top .tooltip-inner::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        left: calc(50% - 7px);
+        bottom: 0;
+        transform: rotate(45deg);
+        background: #fff;
+    }
+    &.tooltip.left .tooltip-inner::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        right: 0;
+        top: calc(50% - 6px);
+        transform: rotate(45deg);
+        background: #fff;
+    }
+    &.tooltip.right .tooltip-inner::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        left: 0;
+        top: calc(50% - 6px);
+        transform: rotate(45deg);
+        background: #fff;
+    }
     .tooltip-inner {
         box-shadow: 0 0 0 1px $active-field-color-main-theme, 5px 5px 20px 0 rgb(0 0 0 / 30%) !important;
-        border-color: $active-field-color-main-theme;
+        border-color: $active-field-color-main-theme !important;
     }
     &.tooltip.right .tooltip-arrow {
+        top: calc(50% - 12px) !important;
+        left: -13px;
         border-right-color: $active-field-color-main-theme !important;
+        border-width: 9px 9px 9px;
     }
     &.tooltip.left .tooltip-arrow {
+        top: calc(50% - 12px) !important;
+        right: -13px;
         border-left-color: $active-field-color-main-theme !important;
+        border-width: 9px 9px 9px;
     }
     &.tooltip.top .tooltip-arrow {
+        bottom: -4px;
+        left: calc(50% - 8px)!important;
+        margin-left: -10px;
         border-top-color: $active-field-color-main-theme !important;
+        border-width: 9px 9px 0;
     }
     &.tooltip.bottom .tooltip-arrow {
+        top: -4px;
+        left: 50% !important;
+        margin-left: -10px;
         border-bottom-color: $active-field-color-main-theme !important;
+        border-width: 0 9px 9px;
     }
 }
+
 
 //сбрасываем margin вокруг рамки
 .content-wrapper,

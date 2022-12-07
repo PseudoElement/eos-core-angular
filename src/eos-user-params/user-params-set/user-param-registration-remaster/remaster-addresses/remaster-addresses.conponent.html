@@ -22,7 +22,7 @@
         tooltip="Выбор из справочника"
         triggers="hover"
         placement="auto"
-        containerClass="tooltip-info">
+        [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"> <!--  -->
         <button
             [disabled] = "!flagEdit"
             class="btn btn-primary-light add-storage"
@@ -34,7 +34,7 @@
     <div
         tooltip="Очистить поле"
         placement="auto"
-        containerClass="tooltip-info"
+        [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
         triggers="hover">
         <button
             [disabled] = "!flagEdit"

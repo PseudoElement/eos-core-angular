@@ -26,7 +26,7 @@
                 class="btn btn-primary-light "
                 tooltip="Выбор из справочника "
                 triggers="hover "
-                containerClass="tooltip-info "
+                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                 (click)="sendFromChoose() ">
                 <span class="eos-icon eos-icon-folder-blue small "></span>
             </button>
@@ -36,7 +36,7 @@
                 [disabled]="!flagEdit"
                 tooltip="Очистить "
                 #tooltipTemp = 'bs-tooltip'
-                containerClass="tooltip-info "
+                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                 class="btn btn-primary-light "
                 (click)="clearSendFrom() ">
                 <span class="eos-icon eos-icon-close-blue small "></span>
