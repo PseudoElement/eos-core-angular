@@ -14,6 +14,7 @@ import { DANGER_SAVE_FILE } from 'eos-dictionaries/consts/messages.consts';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
+import { TemplateDictionaryDescriptor } from 'eos-dictionaries/core/template-dictionary-descriptor';
 
 declare const Uploader: any;
 @Component({
@@ -134,47 +135,45 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
 
     getGocGroupForTemplates() {
         this.showDocGrList = false;
-        this._dictSrv.currentDictionary.descriptor.getCustomTreeData().then(tree => {
-            const CATEGORIES = [];
-            CATEGORIES.push({ value: '', title: '' });
-            tree[0].children.forEach(x => CATEGORIES.push({ value: x.title, title: x.title }));
-            CATEGORIES.push({ value: 'opis_arh.exe', title: 'opis_arh.exe' });
-            this.inputs['rec.CATEGORY'].options = CATEGORIES;
-            if (this.inputs && (this.inputs['rec.CATEGORY'].value === 'Файлы документов' || this.inputs['rec.CATEGORY'].value === 'Основной файл документа')) {
-                const crit1 = this._pipRx.read({
-                    DOCGROUP_CL: {
-                        criteries: {
-                            'DOC_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
-                            'DOC_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
-                        }
+        const DICT = this._dictSrv.currentDictionary.descriptor as TemplateDictionaryDescriptor;
+        const CATEGORIES = [];
+        CATEGORIES.push({ value: '', title: '' });
+        DICT.tree.forEach(x => CATEGORIES.push({ value: x.title, title: x.title }));
+        this.inputs['rec.CATEGORY'].options = CATEGORIES;
+        if (this.inputs && (this.inputs['rec.CATEGORY'].value === 'Файлы документов' || this.inputs['rec.CATEGORY'].value === 'Основной файл документа')) {
+            const crit1 = this._pipRx.read({
+                DOCGROUP_CL: {
+                    criteries: {
+                        'DOC_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
+                        'DOC_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
                     }
-                });
-                const crit2 = this._pipRx.read({
-                    DOCGROUP_CL: {
-                        criteries: {
-                            'PRJ_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
-                            'PRJ_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
-                        }
+                }
+            });
+            const crit2 = this._pipRx.read({
+                DOCGROUP_CL: {
+                    criteries: {
+                        'PRJ_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
+                        'PRJ_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
                     }
-                });
-                Promise.all([crit1, crit2]).then((data: Array<any>) => {
-                    const d = [...data[0], ...data[1]];
-                    if (d.length) {
-                        const map = new Map();
-                        d.forEach((f: DOCGROUP_CL) => {
-                            map.set(f.ISN_NODE, f);
-                        });
-                        this.showDocGrList = true;
-                        this.docGroupList = Array.from(map).map(v => v[1]);
-                        this.sortDoc(false);
-                    }
-                    return;
-                }).catch(error => {
-                    this.showDocGrList = false;
-                    this._dictSrv.errHandler(error);
-                });
-            }
-        });
+                }
+            });
+            Promise.all([crit1, crit2]).then((data: Array<any>) => {
+                const d = [...data[0], ...data[1]];
+                if (d.length) {
+                    const map = new Map();
+                    d.forEach((f: DOCGROUP_CL) => {
+                        map.set(f.ISN_NODE, f);
+                    });
+                    this.showDocGrList = true;
+                    this.docGroupList = Array.from(map).map(v => v[1]);
+                    this.sortDoc(false);
+                }
+                return;
+            }).catch(error => {
+                this.showDocGrList = false;
+                this._dictSrv.errHandler(error);
+            });
+        }
     }
 
     ngOnDestroy() {
