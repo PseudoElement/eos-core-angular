@@ -109,9 +109,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
                 this.currentCabinet.data['HIDE_INACCESSIBLE'] = 0;
                 this.currentCabinet.data['HIDE_INACCESSIBLE_PRJ'] = 0;
                 this.currentCabinet.data.HOME_CABINET = 0;
-                this.alertWarning();
+                this.checkHomeCard();
             } else {
                 this.currentCabinet.data.FOLDERS_AVAILABLE = '123456789';
+                this.checkHomeCard();
             }
             this.changes.emit();
         }
@@ -121,6 +122,20 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         this._updateSelect();
     }
     ngOnChanges() {
+    }
+    /* Если у картотеки нет главного кабинета то показывать предупреждение */
+    checkHomeCard() {
+        if (this.card.cabinets) {
+            let flag = true;
+            this.card.cabinets.forEach((cab) => {
+                if (cab.data['HOME_CABINET'] === 1) {
+                    flag = false;
+                }
+            });
+            if (flag) {
+                this.alertWarning();
+            }
+        }
     }
     updateCardLimit(newCabinets) {
         if (this._appContext.limitCardsUser.indexOf(newCabinets.cardDue) === -1) {
