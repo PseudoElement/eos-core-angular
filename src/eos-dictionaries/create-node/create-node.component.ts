@@ -14,6 +14,7 @@ import { CONFIRM_SAVE_INVALID, ERROR_LOGIN } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { EosUtils } from 'eos-common/core/utils';
 import { RestError } from 'eos-rest/core/rest-error';
+import { URL_LOGIN } from 'app/consts/common.consts';
 
 @Component({
     selector: 'eos-create-node',
@@ -101,7 +102,7 @@ export class CreateNodeComponent {
                     .confirm2(ERROR_LOGIN)
                     .then((confirmed) => {
                         if (confirmed) {
-                            document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+                            document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
                         }
                     });
                 }   else {
@@ -133,7 +134,7 @@ export class CreateNodeComponent {
                     .confirm2(ERROR_LOGIN)
                     .then((confirmed) => {
                         if (confirmed) {
-                            document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+                            document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
                         }
                     });
                 }

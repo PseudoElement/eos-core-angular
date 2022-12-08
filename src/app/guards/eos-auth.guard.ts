@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 // import { LoginFormComponent } from '../login-form/login-form.component';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { URL_LOGIN } from 'app/consts/common.consts';
 
 @Injectable()
 export class AuthorizedGuard implements CanActivate {
@@ -30,7 +31,7 @@ export class AuthorizedGuard implements CanActivate {
                     .confirm2(ERROR_LOGIN)
                     .then((confirmed) => {
                         if (confirmed) {
-                            document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+                            document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
                         }
                         return auth;
                     });

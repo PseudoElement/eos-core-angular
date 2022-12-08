@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import {environment} from '../../environments/environment';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { URL_LOGIN } from 'app/consts/common.consts';
 
 @Component({
     selector: 'eos-login',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .confirm2(ERROR_LOGIN)
             .then((confirmed) => {
                 if (confirmed) {
-                    document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+                    document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
                 }
             });
         }
