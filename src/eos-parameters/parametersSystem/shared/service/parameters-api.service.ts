@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { URL_LOGIN } from 'app/consts/common.consts';
 
 @Injectable()
 export class ParamApiSrv {
@@ -24,7 +25,7 @@ export class ParamApiSrv {
                 .confirm2(ERROR_LOGIN)
                 .then((confirmed) => {
                     if (confirmed) {
-                        document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+                        document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
                     }
                 });
                 /* this._router.navigate(

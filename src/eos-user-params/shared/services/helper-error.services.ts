@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { URL_LOGIN } from 'app/consts/common.consts';
 // import { Router } from '@angular/router';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
@@ -50,7 +51,7 @@ export class ErrorHelperServices {
     .confirm2(ERROR_LOGIN)
     .then((confirmed) => {
         if (confirmed) {
-            document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+            document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
         }
     });
     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела

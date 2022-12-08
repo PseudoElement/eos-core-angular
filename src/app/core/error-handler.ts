@@ -4,6 +4,7 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { EosUserProfileService } from '../services/eos-user-profile.service';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { URL_LOGIN } from 'app/consts/common.consts';
 
 @Injectable()
 export class EosErrorHandler implements ErrorHandler {
@@ -27,7 +28,7 @@ export class EosErrorHandler implements ErrorHandler {
                     .confirm2(ERROR_LOGIN)
                     .then((confirmed) => {
                         if (confirmed) {
-                            document.location.assign('../CoreHost/auth/login?ReturnUrl=' + document.location.href);
+                            document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
                         }
                     });
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
