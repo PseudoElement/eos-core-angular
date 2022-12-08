@@ -1130,12 +1130,12 @@ bs-dropdown-container {
                     border-top: 1px solid $list-border;
                     & > span {
                         background-color: $application-bg !important;
-                        width: 180px !important;
-                        padding: 6px 0px 6px 10px !important;
+                        width: 160px !important;
+                        padding: 35px 0px 6px 6px !important;
                         font-weight: 400 !important;
                     }
                     & > div > eos-dynamic-input {
-                        padding-top: 4px !important;
+                        padding-top: 20px !important;
                     }
                 }
                 & > div:nth-child(2) {
@@ -1153,7 +1153,7 @@ bs-dropdown-container {
                             font-size: 14px;
                             font-weight: bold;
                             background-color: #f1eee8;
-                            margin-bottom: 15px;
+                            margin-bottom: 20px;
                         }
                         & > eos-dynamic-input {
                             margin-left: 15px;
@@ -1250,7 +1250,7 @@ bs-dropdown-container {
                     display: none;
                 }
                 div.classifDep {
-                    padding: 15px 0 15px 20px !important;
+                    padding: 20px 0 15px 20px !important;
                     @include style-other-button;
                     & > span:not(:last-child) {
                         margin-left: 4px;
@@ -1284,7 +1284,7 @@ bs-dropdown-container {
 
                     &:nth-child(3) {
                         div.classifDep {
-                            padding: 15px 0 15px 20px !important;
+                            padding: 20px 0 15px 20px !important;
                             @include style-other-button;
 
                             & > span:not(:last-child) {

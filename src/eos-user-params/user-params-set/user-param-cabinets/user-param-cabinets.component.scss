@@ -124,6 +124,7 @@
         margin-right: 20px;
     }
     .add-to-juornal-radio {
+        padding-top: 20px; 
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -132,6 +133,7 @@
         }
     }
     .add-to-juornal {
+        padding-top: 20px; 
         display: flex;
         justify-content: flex-start;
         .form-group {
@@ -175,7 +177,7 @@
         justify-content: flex-start;
         align-items: center;
         >div {
-            margin-left: 20px;
+            margin-left: 0px;
             width: 40%;
             height: 34px;
         }
@@ -198,6 +200,7 @@
         }
     }
     .control-state {
+        padding-top: 20px;
         .elem-input-radio {
             display: inline-block;
             margin-right: 20px;
