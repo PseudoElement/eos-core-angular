@@ -178,10 +178,17 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
     }
 
     checkLinkSort(data, key) {
-        if (this.userData['LINKS_SORT_ORDER'] !== data['rec.' + key]) {
+        if (this.form.controls['rec.LINKS_SORT'].value === 'ORDERNUM' &&
+            key === 'LINKS_SORT_ORDER1' &&
+            this.userData['LINKS_SORT_ORDER'] !== data['rec.' + key]
+        ) {
             this.newDataMap.set('LINKS_SORT_ORDER', data['rec.' + key]);
-        } else {
-            this.newDataMap.delete('LINKS_SORT_ORDER');
+        }
+        if (this.form.controls['rec.LINKS_SORT'].value === 'DOC_DATE' &&
+            key === 'LINKS_SORT_ORDER2' &&
+            this.userData['LINKS_SORT_ORDER'] !== data['rec.' + key]
+        ) {
+            this.newDataMap.set('LINKS_SORT_ORDER', data['rec.' + key]);
         }
     }
 
