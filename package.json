@@ -14,8 +14,9 @@
         "lint": "ng lint --type-check",
         "e2e": "ng e2e",
         "build-stage": "node ./build-version.js && ng build -dev -pr=false -ec",
-        "build-prod": "node ./build-version.js && ng build --prod",
-        "dev-server": "web-dev-server --port 37010 --root-dir ./dist --base-path /classif"
+        "build-prod": "node ./build-version.js && ng build --prod && npm run copy-plugin-scripts",
+        "dev-server": "web-dev-server --port 37010 --root-dir ./dist --base-path /classif",
+        "copy-plugin-scripts": "node ./scripts/copy.js"
     },
     "pre-commit": [
         "lint"

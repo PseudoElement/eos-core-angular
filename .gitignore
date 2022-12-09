@@ -30,3 +30,4 @@ debug.log
 remote-profile/*
 src/app/app.config.local.ts
 .tfignore
+!scripts/*

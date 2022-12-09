@@ -1,0 +1,9 @@
+{
+    "path": "Classif/",
+    "modules": [
+        {"src": "regMainMenu.js", "target": "mainmenu"}
+    ],
+    "packageName": "Classif",
+    "version": "22.8.0",
+    "description": "Справочники"
+}
