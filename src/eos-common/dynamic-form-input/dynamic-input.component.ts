@@ -49,6 +49,8 @@ export class DynamicInputComponent {
     @Input() notStandartText: boolean; // параметр для text принимает boolean по дефолту undefined, если true то прячет иконку
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onClickDict: EventEmitter<any> = new EventEmitter<any>();
+
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
 

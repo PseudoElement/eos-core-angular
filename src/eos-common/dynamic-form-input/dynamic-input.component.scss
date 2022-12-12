@@ -23,7 +23,6 @@ eos-dynamic-input {
         }
     }
 
-
 }
 
 .form-group {
@@ -330,7 +329,13 @@ eos-dynamic-input {
         .inbutton {
             float: right;
             position: absolute;
-            right: 2px;
+            right: 5px;
+            top: 5px;
+        }
+        .inbutton2 {
+            float: right;
+            position: absolute;
+            right: 28px;
             top: 5px;
         }
         vertical-align: middle;

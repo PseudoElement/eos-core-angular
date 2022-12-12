@@ -10,6 +10,7 @@ import {TextInput} from '../core/inputs/text-input';
 import {CheckboxInput} from '../core/inputs/checkbox-input';
 import {DateInput} from '../core/inputs/date-input';
 import {DropdownInput} from '../core/inputs/select-input';
+import {AutoSearchInput} from '../core/inputs/autosearch-input';
 import {ButtonsInput} from '../core/inputs/buttons-input';
 import {E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
 import {EosUtils} from '../core/utils';
@@ -40,6 +41,11 @@ export class InputControlService {
                 case E_FIELD_TYPE.select:
                     set.push(new DropdownInput(<ISelectInput>input));
                     break;
+                case E_FIELD_TYPE.autosearch:
+                    const ii = new AutoSearchInput(<ISelectInput>input);
+                    ii.controlType = E_FIELD_TYPE.autosearch;
+                    set.push(ii);
+                    break;
                 case E_FIELD_TYPE.buttons:
                     set.push(new ButtonsInput(<ISelectInput>input));
                     break;
@@ -47,7 +53,6 @@ export class InputControlService {
                     const i = new DropdownInput(<ISelectInput>input);
                     i.controlType = E_FIELD_TYPE.select2;
                     set.push(i);
-
                     break;
                 default:
                     set.push(new StringInput(input));

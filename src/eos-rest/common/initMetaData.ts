@@ -638,7 +638,7 @@ const commonMeta = {
             { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
             { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' },
             // @stub157113 открыть после бэка на таску 157113 - добавление справочника КАТЕГОРИИ ФАЙЛОВ
-             { name: 'DG_FILE_CATEGORY_List', __type: 'DG_FILE_CATEGORY', sf: 'ISN_NODE', tf: 'ISN_NODE_DG' }
+             // { name: 'DG_FILE_CATEGORY_List', __type: 'DG_FILE_CATEGORY', sf: 'ISN_NODE', tf: 'ISN_NODE_DG' }
         ]
     },
     EDS_CATEGORY_CL: {

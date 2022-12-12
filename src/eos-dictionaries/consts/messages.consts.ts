@@ -262,4 +262,11 @@ export const WARN_NO_BINDED_DOCGROUP: IMessage = {
     msg: 'Не указана группа документов. Удаление невозможно'
 };
 
+export const WARN_DUP_USER_DL: IMessage = {
+    type: 'info',
+    title: 'Предупреждение:',
+    msg: 'ДЛ уже ассоциировано с другим пользователем.'
+};
+
+
 

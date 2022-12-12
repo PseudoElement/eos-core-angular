@@ -18,10 +18,11 @@ export const CREATE_USER_INPUTS = [
         value: false,
     },
     {
-        controlType: E_FIELD_TYPE.string,
+        controlType: E_FIELD_TYPE.autosearch,
         key: 'DUE_DEP_NAME',
         label: 'ДОЛЖНОСТНОЕ ЛИЦО',
         value: '',
+        options: []
     },
     {
         controlType: E_FIELD_TYPE.select,
@@ -57,7 +58,7 @@ export const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {
     return_due: true,
     id: '0.',
     skipDeleted: false,
-    selectMulty: false,
+    selectMulty: true,
     selectLeafs: true,
     selectNodes: false,
 };

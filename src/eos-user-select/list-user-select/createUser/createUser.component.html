@@ -1,83 +1,50 @@
-<eos-param-header [title]="titleHeader" (submitForm)="startSubmit()" (cancelForm)="cancel()" [statusBtnSub]="disabledSubmit"></eos-param-header>
+<eos-param-header [title]="titleHeader" (submitForm)="startSubmit()" (cancelForm)="cancel()"
+    [statusBtnSub]="disabledSubmit"></eos-param-header>
 <main *ngIf="!isLoading; else spiner">
     <div>
         <div class="form-group create-user-login-input log">
             <label>ЛОГИН</label>
             <div class="type-user">
-                <div class = 'required-emptiness'[ngClass]="{'required' : !this.form.get('classifName').value}">
+                <div class='required-emptiness' [ngClass]="{'required' : !this.form.get('classifName').value}">
                     <form [formGroup]="form">
-                        <input
-                            #classifName="bs-tooltip"
-                            placement="bottom"
-                            containerClass="tooltip-error"
+                        <input #classifName="bs-tooltip" placement="bottom" containerClass="tooltip-error"
                             [tooltip]="'Максимальная длина поля ' + loginMaxLength +' символов'"
                             [ngClass]="{'error': form.controls['classifName'].value.length === loginMaxLength}"
-                            class=" form-control"
-                            triggers=""
-                            [maxlength]="loginMaxLength"
-                            type="text"
-                            [formControlName]="inputs['classifName'].key"
-                            [readonly]="false"
-                        />
+                            class=" form-control" triggers="" [maxlength]="loginMaxLength" type="text"
+                            [formControlName]="inputs['classifName'].key" [readonly]="false" />
                     </form>
                 </div>
-                <eos-dynamic-input
-                    class="base-multiply-input base-template-input type-input"
-                    [input]="inputs['USER_TYPE']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
+                <eos-dynamic-input class="base-multiply-input base-template-input type-input"
+                    [input]="inputs['USER_TYPE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
         <!-- <eos-dynamic-input class="create-user-login-input" [input]="inputs['classifName']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
-        <eos-dynamic-input
-            style="display: inline-block;"
-            *ngIf="!cbBase"
-            [input]="inputs['teсhUser']"
-            [form]="form"
-            [readonly]="false"
-            [tooltip]="techUserTooltip"
-            placement="top"
-        ></eos-dynamic-input>
+        <eos-dynamic-input style="display: inline-block;" *ngIf="!cbBase" [input]="inputs['teсhUser']" [form]="form"
+            [readonly]="false" [tooltip]="techUserTooltip" placement="top"></eos-dynamic-input>
     </div>
     <div [ngClass]="{'flex-wr': !cbBase}">
-        <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
-            <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
-            <div class="create-user-wr" style="width: 363px">
-                <input class="form-control m-font inline-block name-limitation-max" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label">
-                <span 
-                    eosClickMode
-                    class="icon eos-icon small icon-add-department" 
-                    [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}" 
-                    [ngStyle]="{'margin-right': !form.value['DUE_DEP_NAME'] ? '0px' : '28px'}"
-                    (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
-                <a [ngClass]="{'hide': !form.value['DUE_DEP_NAME']}" (click)="cleanDue()"><span class="eos-icon eos-icon-close-blue small"></span></a>
-            </div>
-        </div>
-        <!-- <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']" [form]="form" [readonly]="form.get('SELECT_ROLE').disabled"></eos-dynamic-input> -->
-         <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['DUE_DEP_NAME']"
+            [form]="form" [disabled]="isTechUser" (onClickDict)="handleShowDepartment()"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']"
+            [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
     <div *ngIf="!cbBase" [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
         <label [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
         <div class="create-user-wr" style="width: 363px">
-            <input class="form-control m-font inline-block  name-limitation-max" (keyup)="delSelectUser($event)" readonly [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text" [placeholder]="inputs['USER_COPY'].label" autocomplete="off">
-            <span
-                eosClickMode
-                class="icon eos-icon  small icon-add-department"
+            <input class="form-control m-font inline-block  name-limitation-max" (keyup)="delSelectUser($event)"
+                readonly [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text"
+                [placeholder]="inputs['USER_COPY'].label" autocomplete="off">
+            <span eosClickMode class="icon eos-icon  small icon-add-department"
                 [ngClass]="{'eos-icon-avatar-blue': !form.get('USER_TEMPLATES').value, 'eos-icon-avatar-grey': form.get('USER_TEMPLATES').value}"
                 [ngStyle]="{'margin-right': !form.value['USER_COPY'] ? '0px' : '28px'}"
-                (click)="selectUser(form.get('USER_TEMPLATES').value)"
-            ></span>
-            <a [ngClass]="{'hide': !form.value['USER_COPY']}" (click)="cleanDueCopy()"><span class="eos-icon eos-icon-close-blue small"></span></a>
+                (click)="selectUser(form.get('USER_TEMPLATES').value)"></span>
+            <a [ngClass]="{'hide': !form.value['USER_COPY']}" (click)="cleanDueCopy()"><span
+                    class="eos-icon eos-icon-close-blue small"></span></a>
         </div>
     </div>
-    <eos-dynamic-input
-        *ngIf="!cbBase"
-        class="base-multiply-input base-template-input"
-        [input]="inputs['USER_TEMPLATES']"
-        [form]="form"
-        [readonly]="form.get('USER_COPY').value || checkUnreadFlag"
-    ></eos-dynamic-input>
+    <eos-dynamic-input *ngIf="!cbBase" class="base-multiply-input base-template-input"
+        [input]="inputs['USER_TEMPLATES']" [form]="form" [readonly]="form.get('USER_COPY').value || checkUnreadFlag">
+    </eos-dynamic-input>
 </main>
 
 <div *ngIf="isShell" class="shell"></div>
@@ -92,24 +59,33 @@
     <div class="modal-header">
         <h4 class="modal-title pull-left">Введите пароль</h4>
         <button type="button" class="btn btn-primary" (click)="closeSubModal()">
-            <span >отменить</span>
+            <span>отменить</span>
         </button>
-        <button [disabled]="!validPassword" type="button" (click)="modalRef.hide()" class="btn btn-primary-full ">записать</button>
+        <button [disabled]="!validPassword" type="button" (click)="modalRef.hide()"
+            class="btn btn-primary-full ">записать</button>
     </div>
     <div class="modal-body">
         <form autocomplete="off" aria-autocomplete="none" (ngSubmit)="modalRef.hide()">
             <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
             <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
-            <label> 
+            <label>
                 <span>Пароль</span>
-                <input aria-autocomplete="none" [type]="type" name="pass" id="inpPass" class="passInput" [(ngModel)]="password" autocomplete="off">
-                <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small oko-vision oko-vision-l1" [ngClass]="'eos-icon-show-blue'"></span>
+                <input aria-autocomplete="none" [type]="type" name="pass" id="inpPass" class="passInput"
+                    [(ngModel)]="password" autocomplete="off">
+                <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)'
+                    class="eos-icon small oko-vision oko-vision-l1" [ngClass]="'eos-icon-show-blue'"></span>
             </label>
-           
-               <label>
+
+            <label>
                 <span>Повторите пароль</span>
-                <input aria-autocomplete="none" placement="bottom" [type]="type_repeat" autocomplete="off" [containerClass]="'tooltip-error'" [tooltip]="!validPassword && (password.length || repitedPassword.length) ? 'Пароли не совпадают' : ''" name="repPass" [ngStyle]="{'border-color': !validPassword && (password.length || repitedPassword.length) ? 'red' : '#2196f3'}" class="passInput" style="margin-top: 5px;" [(ngModel)]="repitedPassword">
-                <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small oko-vision" [ngClass]="'eos-icon-show-blue'"></span>   
+                <input aria-autocomplete="none" placement="bottom" [type]="type_repeat" autocomplete="off"
+                    [containerClass]="'tooltip-error'"
+                    [tooltip]="!validPassword && (password.length || repitedPassword.length) ? 'Пароли не совпадают' : ''"
+                    name="repPass"
+                    [ngStyle]="{'border-color': !validPassword && (password.length || repitedPassword.length) ? 'red' : '#2196f3'}"
+                    class="passInput" style="margin-top: 5px;" [(ngModel)]="repitedPassword">
+                <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small oko-vision"
+                    [ngClass]="'eos-icon-show-blue'"></span>
             </label>
         </form>
     </div>

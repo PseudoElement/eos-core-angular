@@ -50,6 +50,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { EosTooltipService } from './services/eos-tooltip.service';
 import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input-select2.component';
+import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-input-autosearch.component ';
 
 @NgModule({
     declarations: [
@@ -74,6 +75,7 @@ import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input
         DynamicInputRadioComponent,
         DynamicInputLinkButtonComponent,
         DynamicInputSelect2Component,
+        DynamicInputAutoSearchComponent,
         EosDateMaskDirective,
         EosDatePipe,
         UserSelectPaginationComponent,

@@ -17,6 +17,7 @@ import { ApiCfg } from './core/api-cfg';
 
 /* services */
 import { PipRX } from './services/pipRX.service';
+import { UserSettingsService } from './services/user-settings.service';
 import { AuthService } from './services/auth.service';
 // import { ContextService } from './services/appContext.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
@@ -48,6 +49,7 @@ import { PluginReactComponent } from './plugin-react/plugin-react.component';
     ],
     providers: [
         PipRX,
+        UserSettingsService,
         AuthService,
         AppContext,
         ViewManager,
