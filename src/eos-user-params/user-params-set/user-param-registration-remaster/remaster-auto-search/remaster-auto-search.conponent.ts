@@ -84,6 +84,11 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         Object.keys(this.form.controls).forEach(inp => {
             this.inputs[inp].value = this.form.controls[inp].value;
         });
+        if (this.form.controls['rec.LINKS_SORT'].value === 'ORDERNUM') {
+            this.userData['LINKS_SORT_ORDER'] = '' + this.form.controls['rec.LINKS_SORT_ORDER1'].value;
+        } else {
+            this.userData['LINKS_SORT_ORDER'] = '' + this.form.controls['rec.LINKS_SORT_ORDER2'].value;
+        }
     }
     ngOnInit() {
         this.searchString = this.userData['DEF_SEARCH_CITIZEN'];
