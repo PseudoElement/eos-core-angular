@@ -12,6 +12,7 @@
                             containerClass="tooltip-info"
                             [tooltip]="editMode ? 'Выбрать' : null"
                             triggers="hover"
+                            eosClickMode
                             class="action eos-icon grif-icon-directory"
                             [ngClass]="{'eos-icon-directory-book-blue': editMode, 'eos-icon-directory-book-grey': !editMode}"
                             (click)="chooseOrganiz()">
