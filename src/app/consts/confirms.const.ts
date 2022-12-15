@@ -188,7 +188,7 @@ export const CONFIRM_OPERATION_LOGICDELETE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
     body: 'Вы действительно хотите логически удалить записи',
-    bodyAfterList: 'Продолжить?',
+    // bodyAfterList: 'Продолжить?',
     buttons: [
         {title: 'Отменить', result: 1, isDefault: true, },
         {title: 'Удалить',  result: 2, },
@@ -208,7 +208,7 @@ export const CONFIRM_OPERATION_HARDDELETE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
     body: 'Вы действительно хотите навсегда удалить записи:',
-    bodyAfterList: 'Продолжить?',
+    // bodyAfterList: 'Продолжить?',
     buttons: [
         {title: 'Отменить', result: 1, isDefault: true, },
         {title: 'Удалить',  result: 2, },
@@ -229,7 +229,7 @@ export const CONFIRM_OPERATION_RESTORE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
     body: 'Вы действительно хотите восстановить записи:',
-    bodyAfterList: 'Продолжить?',
+    // bodyAfterList: 'Продолжить?',
     buttons: [
         {title: 'Отменить', result: 1, isDefault: true, },
         {title: 'Восстановить',  result: 2, },

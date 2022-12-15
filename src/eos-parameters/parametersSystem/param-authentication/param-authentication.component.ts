@@ -164,8 +164,9 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     private _handleExternalAuth() {
         const extAuthValue: string = this.prepareData.rec[this.externalAuth.commonKey];
         const extAuthValues: string[] = (extAuthValue && extAuthValue.split(',')) || [];
-        this.externalAuthHide = !extAuthValue;
-
+        if (extAuthValue.split(',').indexOf('1') !== -1) {
+            this.externalAuthHide = !extAuthValue;
+        }
         this.externalAuth.auths.forEach((extAuth) => {
             const hasAuth = extAuthValues.indexOf(extAuth.parmValue) !== -1;
             extAuth.originValue = hasAuth;
