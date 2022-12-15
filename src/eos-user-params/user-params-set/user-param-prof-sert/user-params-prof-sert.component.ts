@@ -426,7 +426,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             OnlyWithPrivateKey: true,
             add_cert: true
         };
-        if (this.selectList) {
+        if (this.selectList && this.selectList.selected[0]) {
             openSerts.cert_id = this.selectList.selected[0].id;
         }
         this._certService.openCerts(openSerts).then((data: string) => {
