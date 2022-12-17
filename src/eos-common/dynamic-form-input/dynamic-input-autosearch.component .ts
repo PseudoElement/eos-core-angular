@@ -141,11 +141,11 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         this.focusedItem = null;
     }
 
-    onMenuShown() {
+    onMenuShown(event) {
         this.inputTooltip.visible = false;
     }
 
-    onMenuHidden() {
+    onMenuHidden(event) {
         setTimeout(() => {
             this.updateMessage();
         }, 100);
