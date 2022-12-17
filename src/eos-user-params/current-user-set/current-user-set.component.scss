@@ -1131,7 +1131,7 @@ bs-dropdown-container {
                     & > span {
                         background-color: $application-bg !important;
                         width: 160px !important;
-                        padding: 35px 0px 6px 6px !important;
+                        padding: 25px 0px 6px 6px !important;
                         font-weight: 400 !important;
                     }
                     & > div > eos-dynamic-input {
@@ -1250,7 +1250,7 @@ bs-dropdown-container {
                     display: none;
                 }
                 div.classifDep {
-                    padding: 20px 0 15px 20px !important;
+                    padding: 20px 0 20px 20px !important;
                     @include style-other-button;
                     & > span:not(:last-child) {
                         margin-left: 4px;
