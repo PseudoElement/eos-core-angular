@@ -74,7 +74,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
     private _defaultDepDue: string;
-    private _sysParamsDueOrganiz: string;
+    private _sysParamsDueOrganiz: string = undefined;
+    private _depDueLinkOrg: string = undefined;
+    private _dueDepNameSubscription: Subscription;
+    private _searchLexem: string = '';
 
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -107,6 +110,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         }
         return this.btnDisabled || this.form.get('classifName').invalid;
     }
+
     get checkUnreadFlag(): boolean {
         if (this.departmentData) {
             return !!this.departmentData.UNREAD_FLAG;
@@ -204,7 +208,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this._pipeSrv.read({
                     DELO_OWNER: -99
                 }).then(org => {
-                    this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                    if (org.length > 0) { // задана организация по умолчанию
+                        this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                        this._readSysParamsOrg();
+                    }
                 });
             }
         });
@@ -233,6 +240,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             });
         });
     }
+
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -458,15 +466,16 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     searchDL() {
-        const empLexem: string = this.form.get(this.inputs['DUE_DEP_NAME'].key).value;
+        this._searchLexem = this.form.get(this.inputs['DUE_DEP_NAME'].key).value;
         if (this._defaultDepDue.length > 0) {
-            this._searchEmpInDep(empLexem, this._defaultDepDue);
+            this._searchEmpInDep(this._searchLexem, this._defaultDepDue);
         } else {
             this._searchDLinSysParamsOrg();
         }
     }
 
     handleShowDepartment() {
+        this._dueDepNameSubscription.unsubscribe();
         if (this._idsForModalDictDep.length >= 1) {
             this._showDepartment(this._idsForModalDictDep.join('|'));
         } else {
@@ -499,19 +508,35 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     private _searchDLinSysParamsOrg() {
-        const empLexem: string = this.form.get(this.inputs['DUE_DEP_NAME'].key).value;
+        this._searchLexem = this.form.get(this.inputs['DUE_DEP_NAME'].key).value;
+        this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
+    }
+
+    private _readSysParamsOrg() {
         this._pipeSrv.read<any>({ DEPARTMENT: PipRX.criteries({ DUE_LINK_ORGANIZ: this._sysParamsDueOrganiz }) }).then(items => {
-            let due: string = items[0].DEPARTMENT_DUE;
-            if (due.length <= 2) {
-                due = undefined;
-            }
-            this._searchEmpInDep(empLexem, due);
+            const DUE = items[0].DEPARTMENT_DUE;
+            this._depDueLinkOrg = DUE.length <= 2 ? undefined : DUE;
         });
+    }
+
+    private _isSymbolsCorrect(value): boolean {
+        const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
+        return REGEXP.test(value);
+    }
+
+    private _getSafeQueryLexem(lexem): string {
+        const AR = lexem.split('');
+        for (let i = 0; i < AR.length; i++) {
+            if (!this._isSymbolsCorrect(AR[i])) {
+                AR[i] = '%';
+            }
+        }
+        return AR.join('');
     }
 
     private _searchEmpInDep(empLexem, due) {
         empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
-        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${empLexem}%` };
+        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
         let VALUES;
         if (due) {
             const ADD = { ISN_HIGH_NODE: due };
@@ -521,25 +546,32 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         }
         const CRIT = { DEPARTMENT: { criteries: VALUES } };
         this._pipeSrv.read<DEPARTMENT>(CRIT).then(empItems => {
-            if (empItems.length > 1) {
+            if (empItems.length > 0) {
                 const DEP_IDS = empItems.map(x => x.DEPARTMENT_DUE);
                 VALUES = { DUE: DEP_IDS.join('|'), DELETED: 0, IS_NODE: 0 };
                 const DEP_CRIT = { DEPARTMENT: { criteries: VALUES } };
                 this._pipeSrv.read<DEPARTMENT>(DEP_CRIT).then(depItems => {
-                    empItems.forEach(empItem => {// формируем список выпадашки
+                    this.inputs['DUE_DEP_NAME'].options = [];
+                    empItems.forEach(empItem => {// формируем список выпадашки @task161934
                         const { CLASSIF_NAME } = depItems.filter(({ DUE }) => empItem.DEPARTMENT_DUE === DUE)[0];
-                        const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
-                        this.inputs['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this._searchLexem.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
+                            const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
+                            this.inputs['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        }
                     });
-
+                    // ставим активную первую запись @task161934
+                    if (this.inputs['DUE_DEP_NAME'].options.length > 0) {
+                        this.inputs['DUE_DEP_NAME'].dib.setFirstFocusedItem();
+                    }
+                    this._idsForModalDictDep = [];
+                    this._idsForModalDictDep = empItems.map(x => x.DUE);
+                    if (this.inputs['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
+                        this._setDepartment(empItems[0].DUE);
+                    }
                 });
-                this._idsForModalDictDep = [];
-                this._idsForModalDictDep = empItems.map(x => x.DUE);
-            } else { // нашелся всего один ДЛ
-                if (empItems.length === 1) {
-                    this._setDepartment(empItems[0].DUE);
-                }
-
+            } else {
+                this._setDueDeNameSubscription();
+                this.inputs['DUE_DEP_NAME'].options = [];
             }
         }).catch(err => { throw err; });
     }
@@ -581,14 +613,18 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.isShell = false;
                 this.departmentData = dep;
                 this.data['dueDL'] = dep['DUE'];
+                this._dueDepNameSubscription.unsubscribe();
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 if (!!this.departmentData.UNREAD_FLAG) {
                     this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
                     this.form.controls['USER_COPY'].patchValue('', { emitEvent: false });
                 }
+                this._setDueDeNameSubscription();
             }).catch(() => {
                 this.isShell = false;
-                this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue('');
+                this._dueDepNameSubscription.unsubscribe();
+                this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue(this._searchLexem);
+                this._setDueDeNameSubscription();
             });
     }
 
@@ -707,33 +743,34 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 }
                 this.loginMaxLength = this.form.get('USER_TYPE') && `${this.form.get('USER_TYPE').value}` === '0' ? 12 : 64;
             });
+        this._setDueDeNameSubscription();
+    }
 
-        this.form.get(this.inputs['DUE_DEP_NAME'].key).valueChanges
+    private _setDueDeNameSubscription() {
+        this._dueDepNameSubscription = this.form.get(this.inputs['DUE_DEP_NAME'].key).valueChanges
             .pipe(
-                debounceTime(1000), takeUntil(this.ngUnsubscribe)
+                debounceTime(1200), takeUntil(this.ngUnsubscribe)
             )
             .subscribe(value => this._setDueDepName(value));
     }
 
-    private _isSymbolsCorrect(value) {
-        const REGEXP = new RegExp(/^[а-яА-ЯёЁ ]+$/);
-        return REGEXP.test(value);
-    }
-
     private _setDueDepName(value) {
-        if (value.length >= 3 && this._idsForModalDictDep.length === 0 && this._isSymbolsCorrect(value)) {
-            this.searchDL();
+        if (value.length < 3) { // нет поиска
+            this.inputs['DUE_DEP_NAME'].options = [];
+            this._idsForModalDictDep = [];
         } else {
-            if (this.inputs['DUE_DEP_NAME'].options.length >= 1) {
+            if (this.inputs['DUE_DEP_NAME'].options.length > 0) {
                 const VALUE_FROM_LIST: boolean = this.inputs['DUE_DEP_NAME'].options.some(x => value === x.value);
-                if (VALUE_FROM_LIST) {
+                if (!VALUE_FROM_LIST) { // запуск поиска по лексеме
+                    this.searchDL();
+                } else { // выбрали из выпадашки значение
                     const ITEM = this.inputs['DUE_DEP_NAME'].options.filter(item => item.value === value);
                     const DUE: string = ITEM[0].due;
                     this._setDepartment(DUE);
                 }
+            } else {
+                this.searchDL();
             }
-            this._idsForModalDictDep = [];
-            this.inputs['DUE_DEP_NAME'].options = [];
         }
     }
 

@@ -22,8 +22,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
     @ViewChild('textInputSelect') private textInputSelect: ElementRef;
     private _lastWrapperWidth: number;
     private _calcItemWidth: number;
-    private _filterString: string = '';
-    private _filterTimer: NodeJS.Timer;
 
     constructor() {
         super();
@@ -68,12 +66,23 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         event.stopPropagation();
         this.delayedTooltip();
         this.control.setValue(event.target.value);
+        this.showDropDown();
+    }
 
+    showDropDown() {
+       if (!this._dropDown.isOpen) {
+            this._dropDown.show();
+            if (!this.focusedItem) {
+                if (this.input.options.length > 0) {
+                    this.setFirstFocusedItem();
+                }
+            }
+        }
     }
 
     getMenuWidthStyle(): any {
         const w = this.getMenuWidth();
-        return { 'min-width.px': w, 'max-width.px': w, 'max-height.px': this.height ? this.height : 500 };
+        return { 'min-width.px': w, 'max-width.px': w, 'max-height.px': this.height ? this.height : 400 };
     }
 
     getItemTooltip(event, item): string {
@@ -99,23 +108,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         evt.stopImmediatePropagation();
         evt.stopPropagation();
         evt.preventDefault();
-    }
-
-    filterKeyDown(event) {
-        this._filterString += String(event.key).toLowerCase();
-        if (this._filterTimer) {
-            clearTimeout(this._filterTimer);
-        }
-        this._filterTimer = setTimeout(() => {
-            this._filterTimer = null;
-            this._filterString = '';
-        }, 500);
-        const i = this.input.options.findIndex((o) => String(o.title).toLowerCase().indexOf(this._filterString) === 0);
-        if (i !== -1) {
-            this.focusedItem = this.input.options[i];
-            this._scrollTo(this.focusedItem);
-            // this.dropdownElement.nativeElement.scrollTop = i * LI_HEIGHT;
-        }
     }
 
     selectAction(e: MouseEvent, item: any, params?: any) {
@@ -159,18 +151,72 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         }, 100);
     }
 
-    onButtonClick() {
+    onEraseClick() {
         this.control.setValue('');
+        this.input.options = [];
+    }
+
+    filterKeyDown(event) {
+        this.showDropDown();
+        const code = event.code /* !IE */ || event.key /* IE */;
+        switch (code) {
+            case 'ArrowDown':
+            case 'Down':  this._hoverNext(); break;
+            case 'ArrowUp':
+            case 'Up':  this._hoverPrev(); break;
+            case 'Enter' : if (this._dropDown.isOpen) {
+                                this.selectAction(null, this.focusedItem);
+                                this._dropDown.hide();
+                            }
+        }
+    }
+
+    setFirstFocusedItem() {
+        this.focusedItem = this.input.options[0];
+        this._scrollTo(this.focusedItem);
+    }
+
+    private _hoverNext(): any {
+        if (!this.input.options || !this.input.options.length) {
+            return;
+        }
+        if (!this.focusedItem) {
+            this.focusedItem = this.input.options[0];
+        } else {
+            const i = this.input.options.findIndex( (o) => o === this.focusedItem);
+            if (i === -1 || i === this.input.options.length - 1) {
+                this.focusedItem = this.input.options[0];
+            } else {
+                this.focusedItem = this.input.options[i + 1];
+            }
+        }
+        this._scrollTo(this.focusedItem);
+    }
+
+    private _hoverPrev(): any {
+        if (!this.input.options || !this.input.options.length) {
+            return;
+        }
+        if (!this.focusedItem) {
+            this.focusedItem = this.input.options[this.input.options.length - 1];
+        } else {
+            const i = this.input.options.findIndex( (o) => o === this.focusedItem);
+            if (i === -1 || i === 0) {
+                this.focusedItem = this.input.options[this.input.options.length - 1];
+            } else {
+                this.focusedItem = this.input.options[i - 1];
+            }
+        }
+        this._scrollTo(this.focusedItem);
     }
 
     private _scrollTo(item: any): any {
-        const i = this.input.options.findIndex((o) => o === item);
+        const i = this.input.options.findIndex( (o) => o === item);
         if (i !== -1) {
             const pos = i * LI_HEIGHT;
-            console.log(this.dropdownElement);
             const isVisible = this.dropdownElement.nativeElement.scrollTop < pos
                 && (this.dropdownElement.nativeElement.scrollTop +
-                    this.dropdownElement.nativeElement.clientHeight) > pos;
+                this.dropdownElement.nativeElement.clientHeight) > pos;
             if (!isVisible) {
                 this.dropdownElement.nativeElement.scrollTop = i * LI_HEIGHT;
             }

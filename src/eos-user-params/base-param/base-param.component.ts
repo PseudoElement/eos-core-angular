@@ -33,7 +33,6 @@ import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_RED
     templateUrl: './base-param.component.html'
 })
 
-
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     editMode = false;
     curentUser: IParamUserCl;
@@ -75,7 +74,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
     private _defaultDepDue: string;
-    private _sysParamsDueOrganiz: string;
+    private _sysParamsDueOrganiz: string = undefined;
+    private _dueDepNameSubscription: Subscription;
+    private _searchLexem: string = '';
+    private _depDueLinkOrg: string = undefined;
 
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
@@ -141,7 +143,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.apiSrvRx.read({
                     DELO_OWNER: -99
                 }).then(org => {
-                    this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                    if (org.length > 0) { // задана организация по умолчанию
+                        this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                        this._readSysParamsOrg();
+                    }
                 });
             }
         });
@@ -859,24 +864,24 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     searchDL() {
-        const empLexem: string = this.formControls.get('DUE_DEP_NAME').value;
+        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
         if (this._defaultDepDue.length > 0) {
-            this._searchEmpInDep(empLexem, this._defaultDepDue);
+            this._searchEmpInDep(this._searchLexem, this._defaultDepDue);
         } else {
             this._searchDLinSysParamsOrg();
         }
     }
 
     private _searchDLinSysParamsOrg() {
-        const empLexem: string = this.formControls.get('DUE_DEP_NAME').value;
+        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
+        this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
+    }
+
+    private _readSysParamsOrg() {
         this.apiSrvRx.read<any>({ DEPARTMENT: PipRX.criteries({ DUE_LINK_ORGANIZ: this._sysParamsDueOrganiz }) }).then(items => {
-            let due: string = items[0].DEPARTMENT_DUE;
-            if (due.length <= 2) {
-                due = undefined;
-            }
-            this._searchEmpInDep(empLexem, due);
+            const DUE = items[0].DEPARTMENT_DUE;
+            this._depDueLinkOrg = DUE.length <= 2 ? undefined : DUE;
         });
-        this._setDueDepNameSubscription();
     }
 
     private _setDepartment(due: string) {
@@ -911,15 +916,19 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     });
                 }
                 this.dueDepName = dep['CLASSIF_NAME'];
+                this._dueDepNameSubscription.unsubscribe();
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.formControls.get('DUE_DEP_NAME').setValue(dep['CLASSIF_NAME']); // @task161934 - изменение значения в поле
                 this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE']; // @task161934 - данные для записи в БД
+                this._setDueDepNameSubscription();
                 return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
                 this.isShell = false;
-                this.formControls.get('DUE_DEP_NAME').patchValue('');
+                this._dueDepNameSubscription.unsubscribe();
+                this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem);
+                this._setDueDepNameSubscription();
             });
     }
 
@@ -953,9 +962,24 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
 
+    private _isSymbolsCorrect(value): boolean {
+        const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
+        return REGEXP.test(value);
+    }
+
+    private _getSafeQueryLexem(lexem): string {
+        const AR = lexem.split('');
+        for (let i = 0; i < AR.length; i++) {
+            if (!this._isSymbolsCorrect(AR[i])) {
+                AR[i] = '%';
+            }
+        }
+        return AR.join('');
+    }
+
     private _searchEmpInDep(empLexem, due) {
         empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
-        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${empLexem}%` };
+        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
         let VALUES;
         if (due) {
             const ADD = { ISN_HIGH_NODE: due };
@@ -965,26 +989,36 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         const CRIT = { DEPARTMENT: { criteries: VALUES } };
         this.apiSrvRx.read<DEPARTMENT>(CRIT).then(empItems => {
-            if (empItems.length > 1) {
+            if (empItems.length > 0) {
                 const DEP_IDS = empItems.map(x => x.DEPARTMENT_DUE);
                 VALUES = { DUE: DEP_IDS.join('|'), DELETED: 0, IS_NODE: 0 };
                 const DEP_CRIT = { DEPARTMENT: { criteries: VALUES } };
-
-                this.controls['DUE_DEP_NAME'].options = [];
                 this.apiSrvRx.read<DEPARTMENT>(DEP_CRIT).then(depItems => {
+                    this.controls['DUE_DEP_NAME'].options = [];
                     empItems.forEach(empItem => {// формируем список выпадашки
                         const { CLASSIF_NAME } = depItems.filter(({ DUE }) => empItem.DEPARTMENT_DUE === DUE)[0];
-                        const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
-                        this.controls['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this._searchLexem.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
+                            const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
+                            this.controls['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        }
                     });
+                    if (this.controls['DUE_DEP_NAME'].options.length > 1) { // нашелся всего один ДЛ
+                        this.controls['DUE_DEP_NAME'].dib.setFirstFocusedItem();
+                    }
+                    this._idsForModalDictDep = [];
+                    this._idsForModalDictDep = empItems.map(x => x.DUE);
+                    if (this.controls['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
+                        if (this.curentUser.DUE_DEP !== empItems[0].DUE) {
+                            this._setDepartment(empItems[0].DUE);
+                        } else {
+                            this._dueDepNameSubscription.unsubscribe();
+                            this.formControls.get('DUE_DEP_NAME').patchValue(this.curentUser.DUE_DEP_NAME);
+                            this._setDueDepNameSubscription();
+                        }
+                    }
                 });
-                this._idsForModalDictDep = [];
-                this._idsForModalDictDep = empItems.map(x => x.DUE);
-            } else { // нашелся всего один ДЛ
-                if (empItems.length === 1) {
-                    this._setDepartment(empItems[0].DUE);
-                }
-
+            } else {
+                this.controls['DUE_DEP_NAME'].options = [];
             }
         }).catch(err => { throw err; });
     }
@@ -994,6 +1028,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
         });
     }
+
     private disableAccessSyst(flag) {
         if (flag) {
             ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
@@ -1017,6 +1052,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     private _createAccessSystemsString(data: Object) {
         const arr = this.curentUser['ACCESS_SYSTEMS'].concat();
         arr[0] = '0';
@@ -1093,37 +1129,34 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.tf();
                 }
             });
-
-        this.formControls.get('DUE_DEP_NAME').valueChanges
-            .pipe(
-                debounceTime(1000), takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(value => this._setDueDepName(value));
-
+        this._setDueDepNameSubscription();
     }
 
     private _setDueDepNameSubscription() {
-    }
-
-    private _isSymbolsCorrect(value) {
-        const REGEXP = new RegExp(/^[а-яА-ЯёЁ ]+$/);
-        return REGEXP.test(value);
+        this._dueDepNameSubscription = this.formControls.get('DUE_DEP_NAME').valueChanges
+            .pipe(
+                debounceTime(1200), takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(value => this._setDueDepName(value));
     }
 
     private _setDueDepName(value) {
-        if (value.length >= 3 && this._idsForModalDictDep.length === 0 && this._isSymbolsCorrect(value)) {
-            this.searchDL();
+        if (value.length < 3) { // нет поиска
+            this.controls['DUE_DEP_NAME'].options = [];
+            this._idsForModalDictDep = [];
         } else {
-            if (this.controls['DUE_DEP_NAME'].options.length >= 1) {
+            if (this.controls['DUE_DEP_NAME'].options.length > 0) {
                 const VALUE_FROM_LIST: boolean = this.controls['DUE_DEP_NAME'].options.some(x => value === x.value);
-                if (VALUE_FROM_LIST) {
+                if (!VALUE_FROM_LIST) { // запуск поиска по лексеме
+                    this.searchDL();
+                } else { // выбрали из выпадашки значение
                     const ITEM = this.controls['DUE_DEP_NAME'].options.filter(item => item.value === value);
                     const DUE: string = ITEM[0].due;
                     this._setDepartment(DUE);
                 }
+            } else {
+                this.searchDL();
             }
-            this._idsForModalDictDep = [];
-            this.controls['DUE_DEP_NAME'].options = [];
         }
     }
 
@@ -1140,9 +1173,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
+
     private SEARCH_INCORRECT_SYMBOLS() {
         return new RegExp('["|\']', 'g');
     }
+
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
             /* if (!this.curentUser['IS_PASSWORD']) {
@@ -1224,4 +1259,5 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return Promise.resolve(true);
     }
+
 }

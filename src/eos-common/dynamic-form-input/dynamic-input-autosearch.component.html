@@ -1,14 +1,5 @@
 <div [formGroup]="form">
     <label [hidden]="input.hideLabel || hideLabel" [attr.for]="input.key">{{ input.label }}</label>
-
-    <!-- 
-    <p *ngIf="readonly || form.disabled" class="form-control-static m-font" [ngClass]="{ placeholder: !hasValue() }">
-        {{ currentValue }}
-    </p>
-    -->
-
-    <!-- *ngIf="!readonly && !disabled && !form.disabled" -->
-
     <div class="eos-select" [ngClass]="{ 'required': isRequired, 'disabled': disabled, 'readonly': readonly }">
         <div
             dropdownToggle
@@ -46,7 +37,7 @@
             </div>
 
             <div class="inbutton2" *ngIf="!form.disabled">
-                <span class="eos-icon eos-icon-close-blue small" (click)="onButtonClick()"></span>
+                <span class="eos-icon eos-icon-close-blue small" (click)="onEraseClick()"></span>
             </div>
             <div class="inbutton" *ngIf="!form.disabled">
                 <span class="eos-icon eos-icon-directory-book-blue small" (click)="onClickDict.emit($event)"></span>
@@ -55,7 +46,7 @@
             <ul
                 *dropdownMenu
                 #dropdownElement
-                class="dropdown-menu eos-select2"
+                class="dropdown-menu eos-select2" 
                 role="menu"
                 autofocus
                 aria-labelledby="button-container"
