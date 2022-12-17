@@ -175,7 +175,7 @@
     .resolution {
         display: flex;
         justify-content: flex-start;
-        align-items: center;
+        //align-items: center;  //@bag166916 основательно мешает в Кабинеты - Поручения 
         >div {
             margin-left: 0px;
             width: 40%;
