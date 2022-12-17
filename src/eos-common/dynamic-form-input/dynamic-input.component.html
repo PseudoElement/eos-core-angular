@@ -48,9 +48,8 @@
                 (onControlFocus)="onControlFocus.emit($event)"
                 [inputTooltip]="tooltip"
             ></eos-dynamic-input-select2>
-
-            <eos-dynamic-input-select2
-                *ngSwitchCase="types.select2"
+            <eos-dynamic-input-autosearch
+                *ngSwitchCase="types.autosearch"
                 [form]="form"
                 [input]="input"
                 [viewOpts]="viewOpts"
@@ -58,11 +57,11 @@
                 [disabled]="disabled"
                 [hideLabel]="hideLabel"
                 [height]="height"
+                [inputTooltip]="tooltip"
                 (onControlBlur)="onControlBlur.emit($event)"
                 (onControlFocus)="onControlFocus.emit($event)"
-                [inputTooltip]="tooltip"
-            ></eos-dynamic-input-select2>
-
+                (onClickDict)="onClickDict.emit($event)"
+            ></eos-dynamic-input-autosearch>
             <eos-dynamic-input-checkbox
                 *ngSwitchCase="types.boolean"
                 [form]="form"

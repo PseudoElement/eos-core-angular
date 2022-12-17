@@ -12,6 +12,7 @@ import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { EosUtils } from 'eos-common/core/utils';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
+import { AutoSearchInput } from 'eos-common/core/inputs/autosearch-input';
 
 export class InputParamControlService {
     generateInputs(inputs: IInputParamControl[]) {
@@ -36,6 +37,9 @@ export class InputParamControlService {
                 // case E_FIELD_TYPE.buttons:
                 //     set[input.key] = new ButtonsInput(<ISelectInput>input);
                 //     break;
+                case E_FIELD_TYPE.autosearch:
+                    set[input.key] = new AutoSearchInput(Object.assign({options: []}, input));
+                    break;
                 default:
                     set[input.key] = new StringInput(input);
                     break;
@@ -66,6 +70,9 @@ export class InputParamControlService {
                 // case E_FIELD_TYPE.buttons:
                 //     set[input.key] = new ButtonsInput(<ISelectInput>input);
                 //     break;
+                case E_FIELD_TYPE.autosearch:
+                    set[input.key] = new AutoSearchInput(Object.assign({options: []}, input));
+                    break;
                 default:
                     set[input.key] = new StringInput(input);
                     break;

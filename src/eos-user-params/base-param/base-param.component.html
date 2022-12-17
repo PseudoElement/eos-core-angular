@@ -31,38 +31,25 @@
         </div>
         <!-- технический пользователь -->
         <eos-dynamic-input class="base-login-input" [input]="controls['teсhUser']" [form]="formControls" tooltip="Технический пользователь" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
+
         <!-- должностное лицо и роль -->
-        <div class="base-login-input row-department-role">
-            <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
-                <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
-                <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required, 'department-role-flex': true}" style="width: 550px">
-                    <span *ngIf="curentUser['DEPARTMENT_DELETE']" class="icon eos-icon small icon-bin-due-dep-base eos-icon-bin-grey"></span>
-                    <input 
-                        class="form-control m-font inline-block" 
-                        [ngClass]="{'delete-department': curentUser['DEPARTMENT_DELETE']}" 
-                        readonly 
-                        [formControlName]="inputs['DUE_DEP_NAME'].key" 
-                        [id]="inputs['DUE_DEP_NAME'].key" 
-                        type="text" 
-                        [placeholder]="inputs['DUE_DEP_NAME'].label" 
-                        autocomplete="off">
-                    <span 
-                        class="icon eos-icon small icon-add-department span-avatar-icon" 
-                        [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" 
-                        (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)" 
-                        eosClickMode>
-                    </span>
-                </div>
-            </div>
+        <div class="wrapper-password">
+            <eos-dynamic-input style="width: 530px" class="base-text-input base-input-role"
+                [input]="controls['DUE_DEP_NAME']" 
+                [form]="formControls"
+                [readonly]="!editMode"
+                [disabled]="isTechUser"
+                (onClickDict)="handleShowDepartment()"
+        ></eos-dynamic-input>
         </div>
+       
         <eos-dynamic-input class="base-text-input base-input-role"
                 [input]="controls['SELECT_ROLE']"
                 [form]="formControls"
-                
-                
                 [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
                 [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled"
         ></eos-dynamic-input><br>
+
         <!-- Доступ к системам 1-й ряд -->
         <span class="l-font">Доступ к системам</span>
         <hr>

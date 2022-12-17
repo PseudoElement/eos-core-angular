@@ -11,7 +11,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     ) {
         super();
     }
-    fillValueInputField (fields: IInputParamControl[], isDisabled: boolean = false) {
+    fillValueInputField(fields: IInputParamControl[], isDisabled: boolean = false) {
         const arrInput = [];
         fields.forEach((field: IInputParamControl) => {
             const f = Object.assign({}, field);
@@ -61,21 +61,25 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                         }
                     ];
                     // if (this._userParamSrv.curentUser['isAccessDelo']) {
-                        if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
-                            const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
-                            str.substr(1).split(';').forEach(role => {
-                                f['options'].push({
-                                    title: role,
-                                    value: role
-                                });
+                    if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
+                        const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
+                        str.substr(1).split(';').forEach(role => {
+                            f['options'].push({
+                                title: role,
+                                value: role
                             });
-                            f['value'] = this._userParamSrv.hashUserContext['CATEGORY'];
-                         }
+                        });
+                        f['value'] = this._userParamSrv.hashUserContext['CATEGORY'];
+                    }
                     /*} else {
                         f['disabled'] = true;
                         f['readonly'] = true;
                     }*/
                     break;
+                case 'DUE_DEP_NAME':
+                    f['options'] = [
+                    ];
+
             }
         });
         return arrControls;
@@ -125,7 +129,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
             }
         });
         return accessArray;
-     }
+    }
     dateToString(date: Date) {
         return this._dateToString(date);
     }

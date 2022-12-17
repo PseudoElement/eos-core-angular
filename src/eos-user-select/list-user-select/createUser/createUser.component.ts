@@ -3,12 +3,14 @@ import { FormGroup } from '@angular/forms';
 import { Router, UrlSegment } from '@angular/router';
 
 import { combineLatest, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { CREATE_USER_INPUTS, OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_USER_CL } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, DEPARTMENT, USER_CL, LIST_ITEMS } from 'eos-rest';
+import { UserSettingsService } from 'eos-rest/services/user-settings.service';
+
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
@@ -69,6 +71,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         .set(2, '2')
         .set(3, '3')
         .set(4, '4');
+
+    private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
+    private _defaultDepDue: string;
+    private _sysParamsDueOrganiz: string = undefined;
+    private _depDueLinkOrg: string = undefined;
+    private _dueDepNameSubscription: Subscription;
+    private _searchLexem: string = '';
+
     constructor(
         public _apiSrv: UserParamApiSrv,
         private _userParamSrv: UserParamsService,
@@ -81,6 +91,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private modalService: BsModalService,
         private changeDetection: ChangeDetectorRef,
+        private _userSettingsService: UserSettingsService,
         @Inject(DOCUMENT) private readonly documentRef: Document,
     ) {
     }
@@ -88,21 +99,29 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     get validPassword() {
         return this.password.length && (this.password === this.repitedPassword);
     }
+
+    get isTechUser() {
+        return this.form.get('teсhUser').value;
+    }
+
     get disabledSubmit() {
         if (this.form && (this.form.controls['classifName'].value).trim() === '') {
             this.form.get('classifName').setErrors({ errorPattern: true });
         }
         return this.btnDisabled || this.form.get('classifName').invalid;
     }
+
     get checkUnreadFlag(): boolean {
         if (this.departmentData) {
             return !!this.departmentData.UNREAD_FLAG;
         }
     }
+
     ngOnInit() {
         this.cbBase = this._appContext.cbBase;
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.inputs['SELECT_ROLE'].options = [];
+        this.inputs['DUE_DEP_NAME'].options = [];
         this.isLoading = true;
         const query1 = this._pipeSrv.read({
             USER_PARMS: {
@@ -155,7 +174,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.inputs['USER_TEMPLATES'].options = options;
                     });
                 }
-
                 roles.forEach(i => {
                     this.inputs['SELECT_ROLE'].options.push({ title: i, value: i });
                 });
@@ -183,6 +201,20 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this._errorSrv.errorHandler(e);
                 this.closedModal.emit();
             });
+        this._userSettingsService.readDepartments().then(x => { // @task157113 читаем подразделение по дефолту и организацию из параметров (если надо)
+            const { sections } = x;
+            this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
+            if (this._defaultDepDue.length === 0) {
+                this._pipeSrv.read({
+                    DELO_OWNER: -99
+                }).then(org => {
+                    if (org.length > 0) { // задана организация по умолчанию
+                        this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                        this._readSysParamsOrg();
+                    }
+                });
+            }
+        });
     }
 
     loadUsersTemplats(params: Array<number>, map: Map<number, any>): Promise<any> {
@@ -208,6 +240,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             });
         });
     }
+
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -350,14 +383,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 queryParams: { isn_cl: isn, is_create: true }
             });
         })
-        .catch((e) => {
-            this.checkError(e);
-            this._userParamSrv.ProtocolService(this.isn_prot, 3);
-            this.closedModal.emit();
-            this._router.navigate(['user-params-set'], {
-                queryParams: { isn_cl: isn, is_create: true }
+            .catch((e) => {
+                this.checkError(e);
+                this._userParamSrv.ProtocolService(this.isn_prot, 3);
+                this.closedModal.emit();
+                this._router.navigate(['user-params-set'], {
+                    queryParams: { isn_cl: isn, is_create: true }
+                });
             });
-        });
 
     }
     unsubscribe() {
@@ -431,6 +464,25 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.type_repeat = 'password';
         }
     }
+
+    searchDL() {
+        this._searchLexem = this.form.get(this.inputs['DUE_DEP_NAME'].key).value;
+        if (this._defaultDepDue.length > 0) {
+            this._searchEmpInDep(this._searchLexem, this._defaultDepDue);
+        } else {
+            this._searchDLinSysParamsOrg();
+        }
+    }
+
+    handleShowDepartment() {
+        this._dueDepNameSubscription.unsubscribe();
+        if (this._idsForModalDictDep.length >= 1) {
+            this._showDepartment(this._idsForModalDictDep.join('|'));
+        } else {
+            this._showDepartment();
+        }
+    }
+
     private _urlSegment(): string {
         const segment: UrlSegment[] = this._router.parseUrl(this._router.url).root.children.primary.segments;
         if (!segment[1]) {
@@ -438,58 +490,159 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         }
         return segment[1].path;
     }
-    private _showDepartment() {
-        this.isShell = true;
-        let dueDep = '';
-        OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
-            .then((data: string) => {
-                if (data === '') {
-                    throw new Error();
-                }
-                if (this._apiSrv.configList.shooseTab === 0) {
-                    if (this.privateParseDue(data)) {
-                        dueDep = data;
-                    } else {
-                        this._msgSrv.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение',
-                            msg: 'Должностное лицо не соответствует текущему подразделению',
-                            dismissOnTimeout: 6000,
-                        });
-                        throw new Error();
-                    }
-                } else {
-                    dueDep = data;
-                }
-                return this._userParamSrv.getDepartmentFromUser([dueDep]);
-            })
-            .then((data: DEPARTMENT[]) => {
-                if (this._apiSrv.configList.shooseTab === 1 && data[0].DEPARTMENT_DUE !== this._apiSrv.dueDep && this._apiSrv.dueDep !== '0.') {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Должностное лицо не принадлежит текущей картотеке',
-                        dismissOnTimeout: 6000,
+
+    private _getDueDepFefault(obj): string {
+        return obj.window.mainFolder;
+    }
+
+    private _existsMainFolder(obj): boolean {
+        if (obj.window) {
+            if (obj.window.mainFolder) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private _searchDLinSysParamsOrg() {
+        this._searchLexem = this.form.get(this.inputs['DUE_DEP_NAME'].key).value;
+        this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
+    }
+
+    private _readSysParamsOrg() {
+        this._pipeSrv.read<any>({ DEPARTMENT: PipRX.criteries({ DUE_LINK_ORGANIZ: this._sysParamsDueOrganiz }) }).then(items => {
+            const DUE = items[0].DEPARTMENT_DUE;
+            this._depDueLinkOrg = DUE.length <= 2 ? undefined : DUE;
+        });
+    }
+
+    private _isSymbolsCorrect(value): boolean {
+        const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
+        return REGEXP.test(value);
+    }
+
+    private _getSafeQueryLexem(lexem): string {
+        const AR = lexem.split('');
+        for (let i = 0; i < AR.length; i++) {
+            if (!this._isSymbolsCorrect(AR[i])) {
+                AR[i] = '%';
+            }
+        }
+        return AR.join('');
+    }
+
+    private _searchEmpInDep(empLexem, due) {
+        empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
+        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
+        let VALUES;
+        if (due) {
+            const ADD = { ISN_HIGH_NODE: due };
+            VALUES = { ...BASE_VALUES, ...ADD };
+        } else {
+            VALUES = BASE_VALUES;
+        }
+        const CRIT = { DEPARTMENT: { criteries: VALUES } };
+        this._pipeSrv.read<DEPARTMENT>(CRIT).then(empItems => {
+            if (empItems.length > 0) {
+                const DEP_IDS = empItems.map(x => x.DEPARTMENT_DUE);
+                VALUES = { DUE: DEP_IDS.join('|'), DELETED: 0, IS_NODE: 0 };
+                const DEP_CRIT = { DEPARTMENT: { criteries: VALUES } };
+                this._pipeSrv.read<DEPARTMENT>(DEP_CRIT).then(depItems => {
+                    this.inputs['DUE_DEP_NAME'].options = [];
+                    empItems.forEach(empItem => {// формируем список выпадашки @task161934
+                        const { CLASSIF_NAME } = depItems.filter(({ DUE }) => empItem.DEPARTMENT_DUE === DUE)[0];
+                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this._searchLexem.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
+                            const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
+                            this.inputs['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        }
                     });
-                    throw new Error();
-                }
-                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0]);
-            })
+                    // ставим активную первую запись @task161934
+                    if (this.inputs['DUE_DEP_NAME'].options.length > 0) {
+                        this.inputs['DUE_DEP_NAME'].dib.setFirstFocusedItem();
+                    }
+                    this._idsForModalDictDep = [];
+                    this._idsForModalDictDep = empItems.map(x => x.DUE);
+                    if (this.inputs['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
+                        this._setDepartment(empItems[0].DUE);
+                    }
+                });
+            } else {
+                this._setDueDeNameSubscription();
+                this.inputs['DUE_DEP_NAME'].options = [];
+            }
+        }).catch(err => { throw err; });
+    }
+
+    private _setDepartment(due?: string) {
+        let dueDep = '';
+        if (due === '') {
+            throw new Error();
+        }
+        due = (due.split('|'))[0];
+        if (this._apiSrv.configList.shooseTab === 0) {
+            if (this.privateParseDue(due)) {
+                dueDep = due;
+            } else {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Должностное лицо не соответствует текущему подразделению',
+                    dismissOnTimeout: 6000,
+                });
+                throw new Error();
+            }
+        } else {
+            dueDep = due;
+        }
+        this._userParamSrv.getDepartmentFromUser([dueDep]).then((data: DEPARTMENT[]) => {
+            if (this._apiSrv.configList.shooseTab === 1 && data[0].DEPARTMENT_DUE !== this._apiSrv.dueDep && this._apiSrv.dueDep !== '0.') {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Должностное лицо не принадлежит текущей картотеке',
+                    dismissOnTimeout: 6000,
+                });
+                throw new Error();
+            }
+            return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
+        })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
                 this.departmentData = dep;
                 this.data['dueDL'] = dep['DUE'];
+                this._dueDepNameSubscription.unsubscribe();
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 if (!!this.departmentData.UNREAD_FLAG) {
                     this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
                     this.form.controls['USER_COPY'].patchValue('', { emitEvent: false });
                 }
+                this._setDueDeNameSubscription();
+            }).catch(() => {
+                this.isShell = false;
+                this._dueDepNameSubscription.unsubscribe();
+                this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue(this._searchLexem);
+                this._setDueDeNameSubscription();
+            });
+    }
+
+    private _showDepartment(ids?: string) {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
+        if (ids) {
+            OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
+        }
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+            .then((data: string) => {
+                this._setDepartment(data);
             })
             .catch(() => {
                 this.isShell = false;
             });
     }
+
     private privateParseDue(due): boolean {
         const dueD = this._apiSrv.dueDep.split('.').filter(el => el !== '');
         const dueDNew = due.split('.').filter(el => el !== '');
@@ -557,8 +710,9 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this.techUser = data;
                 if (data) {
-                    f.get('DUE_DEP_NAME').patchValue('');
-                    f.get('DUE_DEP_NAME').disable();
+                    this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue('');
+                    // f.get('DUE_DEP_NAME').patchValue('');
+                    // f.get('DUE_DEP_NAME').disable();
                     // f.get('SELECT_ROLE').patchValue('');
                     // f.get('SELECT_ROLE').disable();
                     delete this.data['dueDL'];
@@ -589,5 +743,35 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 }
                 this.loginMaxLength = this.form.get('USER_TYPE') && `${this.form.get('USER_TYPE').value}` === '0' ? 12 : 64;
             });
+        this._setDueDeNameSubscription();
     }
+
+    private _setDueDeNameSubscription() {
+        this._dueDepNameSubscription = this.form.get(this.inputs['DUE_DEP_NAME'].key).valueChanges
+            .pipe(
+                debounceTime(1200), takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(value => this._setDueDepName(value));
+    }
+
+    private _setDueDepName(value) {
+        if (value.length < 3) { // нет поиска
+            this.inputs['DUE_DEP_NAME'].options = [];
+            this._idsForModalDictDep = [];
+        } else {
+            if (this.inputs['DUE_DEP_NAME'].options.length > 0) {
+                const VALUE_FROM_LIST: boolean = this.inputs['DUE_DEP_NAME'].options.some(x => value === x.value);
+                if (!VALUE_FROM_LIST) { // запуск поиска по лексеме
+                    this.searchDL();
+                } else { // выбрали из выпадашки значение
+                    const ITEM = this.inputs['DUE_DEP_NAME'].options.filter(item => item.value === value);
+                    const DUE: string = ITEM[0].due;
+                    this._setDepartment(DUE);
+                }
+            } else {
+                this.searchDL();
+            }
+        }
+    }
+
 }

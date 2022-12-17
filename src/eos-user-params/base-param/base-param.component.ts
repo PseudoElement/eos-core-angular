@@ -3,10 +3,11 @@ import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { PipRX } from 'eos-rest/services/pipRX.service';
+import { UserSettingsService } from 'eos-rest/services/user-settings.service';
+import { PipRX } from 'eos-rest';
 import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB/* , USERDEP */ } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
@@ -31,7 +32,6 @@ import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_RED
     selector: 'eos-params-base-param',
     templateUrl: './base-param.component.html'
 })
-
 
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     editMode = false;
@@ -71,16 +71,31 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
     private subscription: Subscription;
+
+    private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
+    private _defaultDepDue: string;
+    private _sysParamsDueOrganiz: string = undefined;
+    private _dueDepNameSubscription: Subscription;
+    private _searchLexem: string = '';
+    private _depDueLinkOrg: string = undefined;
+
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
             return false;
         }
         return true;
     }
+
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
+
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
+
+    get isTechUser(): boolean {
+        return this.formControls.get('teсhUser').value;
+    }
+
     constructor(
         private _router: Router,
         private _msgSrv: EosMessageService,
@@ -93,12 +108,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
+        private _userSettingsService: UserSettingsService,
         private _rtUserSel: RtUserSelectService
     ) {
         this.subscription = this._userParamSrv.canDeactivateSubmit$
-        .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamSrv.submitSave = this.submit('true');
-        });
+            .subscribe((rout: RouterStateSnapshot) => {
+                this._userParamSrv.submitSave = this.submit('true');
+            });
     }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
@@ -108,24 +124,39 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (data) {
                 this.selfLink = this._router.url.split('?')[0];
                 this._getLicenseInfo()
-                .then(() => {
-                    this.afterInit();
-                })
-                .catch(err => {
-                    this.afterInit();
-                    this.LicenzeInfo = [];
-                });
+                    .then(() => {
+                        this.afterInit();
+                    })
+                    .catch(err => {
+                        this.afterInit();
+                        this.LicenzeInfo = [];
+                    });
             }
         });
         // if (localStorage.getItem('lastNodeDue') == null) {
         //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         // }
+        this._userSettingsService.readDepartments().then(x => { // @task157113 читаем подразделение по дефолту и организацию из параметров (если надо)
+            const { sections } = x;
+            this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
+            if (this._defaultDepDue.length === 0) {
+                this.apiSrvRx.read({
+                    DELO_OWNER: -99
+                }).then(org => {
+                    if (org.length > 0) { // задана организация по умолчанию
+                        this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                        this._readSysParamsOrg();
+                    }
+                });
+            }
+        });
     }
+
     afterInit() {
         this.init().then(() => {
-        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
-            this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
-        }
+            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
+                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+            }
         });
     }
     unSubscribe() {
@@ -188,6 +219,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (this.curentUser.DUE_DEP) {
                     this.getPhotoUser(this.curentUser.DUE_DEP);
                 }
+
                 this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
                 this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
                 this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
@@ -200,7 +232,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
                 this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
 
-                this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+                // установка значения в связи с новым контролом @task161934
+                // this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+                this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
+                this.formControls.get('DUE_DEP_NAME').setValue(this.dueDepName);
+
                 this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
                 this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
                 this.isLoading = false;
@@ -260,7 +296,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (valueDate) {
             const date = new Date(valueDate);
             return new Date() < date;
-        }   else {
+        } else {
             return true;
         }
     }
@@ -286,7 +322,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     editLicenze() {
         if (this.LicenzeInfo.length === 0) {
-            return ;
+            return;
         }
         Object.keys(this.accessInputs).forEach((input, index) => {
             if (this.LicenzeInfo.length > 0 && this.actualLicenz && !this.formAccess.controls[input].value && this.actualLicenz.indexOf(input) === -1) {
@@ -381,6 +417,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return false;
     }
+
     setQueryNewData(accessStr, newD, query): void {
         const id = this._userParamSrv.userContextId;
         if (this._newDataformAccess.size || this._newData.size) {
@@ -397,7 +434,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     }
                     if (key === 'DUE_DEP_NAME') {
                         if (this.curentUser.isTechUser) {
-                            this.inputs['DUE_DEP_NAME'].data = '';
+                            this.inputs['DUE_DEP_NAME'].data = ''; // @task161934 данные для сохранения юзера в inputs!!!
                             this.form.get('NOTE').patchValue('');
                         }
                         newD['NOTE'] = '' + this.form.get('NOTE').value;
@@ -418,6 +455,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         this.setRulesForDl(id, query);
     }
+
     setRulesForDl(id, query) {
         if (this._newData.size) {
             const newDl = this._newData.get('DUE_DEP_NAME');
@@ -471,6 +509,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     setNewDataFormControl(query, id) {
         if (this._newDataformControls.size) {
             if (this._newDataformControls.has('SELECT_ROLE')) {
@@ -484,6 +523,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     uncheckedAvSystems(): boolean {
         if (this._newDataformAccess.size) {
             const accessStr = this._createAccessSystemsString(this.formAccess.controls);
@@ -503,32 +543,32 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             return Promise.resolve('error');
         }
         return this._checkLicenseInfo()
-        .then((checkResult) => {
-            if (checkResult) {
-                const id = this._userParamSrv.userContextId;
-                const newD = {};
-                const query = [];
-                const accessStr = '';
-                return this.checkDLSurname(query)
-                    .then(() => {
-                        this.setQueryNewData(accessStr, newD, query);
-                        this.setNewDataFormControl(query, id);
-                        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
-                            return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                                if (res) {
-                                    return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
-                                        this._router.navigate(['/user-params-set/auntefication']);
-                                    });
-                                } else {
-                                    return this.ConfirmAvSystems(accessStr, id, query, meta);
-                                }
-                            });
-                        } else {
-                            return this.ConfirmAvSystems(accessStr, id, query, meta);
-                        }
-                    });
-            }
-        });
+            .then((checkResult) => {
+                if (checkResult) {
+                    const id = this._userParamSrv.userContextId;
+                    const newD = {};
+                    const query = [];
+                    const accessStr = '';
+                    return this.checkDLSurname(query)
+                        .then(() => {
+                            this.setQueryNewData(accessStr, newD, query);
+                            this.setNewDataFormControl(query, id);
+                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
+                                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                                    if (res) {
+                                        return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
+                                            this._router.navigate(['/user-params-set/auntefication']);
+                                        });
+                                    } else {
+                                        return this.ConfirmAvSystems(accessStr, id, query, meta);
+                                    }
+                                });
+                            } else {
+                                return this.ConfirmAvSystems(accessStr, id, query, meta);
+                            }
+                        });
+                }
+            });
     }
 
     checkDLSurname(mas: any[]): Promise<any> {
@@ -560,10 +600,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     // "Разрешаем назначать роль пользователю без АДЛ"
                     // не имеет смысла проверка кабинета
 
-                    return this.apiSrvRx.read( {[this._createUrlForSop(`${id}`)]: ALL_ROWS})
-                    .then(() => {
-                        return this.saveData(accessStr, id, query, route);
-                    });
+                    return this.apiSrvRx.read({ [this._createUrlForSop(`${id}`)]: ALL_ROWS })
+                        .then(() => {
+                            return this.saveData(accessStr, id, query, route);
+                        });
                 } else {
                     return;
                 }
@@ -633,9 +673,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     method: 'POST',
                     requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role=${encodeURI(this.formControls.value.SELECT_ROLE)}&isn_user_copy_from=0`
                 }], '')
-                .then(() => {
-                    return this.AfterSubmit(accessStr, route);
-                });
+                    .then(() => {
+                        return this.AfterSubmit(accessStr, route);
+                    });
             } else {
                 return this.AfterSubmit(accessStr, route);
             }
@@ -650,6 +690,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
     }
+
     AfterSubmit(accessStr: string, route?: string): void {
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
@@ -664,13 +705,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.unSubscribe();
             // после сохранения обновляем лицензии
             this._getLicenseInfo()
-            .then(() => {
-                this.init();
-            })
-            .catch(err => {
-                this.init();
-                this.LicenzeInfo = [];
-            });
+                .then(() => {
+                    this.init();
+                })
+                .catch(err => {
+                    this.init();
+                    this.LicenzeInfo = [];
+                });
         }
     }
 
@@ -767,57 +808,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
-    showDepartment() {
-        this.isShell = true;
-        let dueDep = '';
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
-            .then((data: string) => {
-                if (!data || data === '') {
-                    throw new Error();
-                }
-                dueDep = data;
-                return this._userParamSrv.getDepartmentFromUser([dueDep]);
-            })
-            .then((data: DEPARTMENT[]) => {
-                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
-                    if (data) {
-                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
-                    }
-                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
-                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
-                    });
-                    return val;
-                });
-            })
-            .then((dep: DEPARTMENT) => {
-                this.isShell = false;
-                if (this.dueDepSurname !== dep['SURNAME']) {
-                    const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
-                    depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
-                    this._confirmSrv.confirm2(depConfirm).then(confirmation => {
-                        if (confirmation && confirmation['result'] === 1) {
-                            this.dueDepSurname = dep['SURNAME'];
-                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
-                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
-                        }
-                    });
-                }
-                this.dueDepName = dep['CLASSIF_NAME'];
-                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
-                this.curentUser.DUE_DEP = dep['DUE'];
-                this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
-                return this.getPhotoUser(dep['DUE']);
-            })
-            .catch(() => {
-                this.isShell = false;
-            });
-    }
-
-    selectDepartment() {
-        if (!this.curentUser.isTechUser && this.editMode) {
-            this.showDepartment();
-        }
-    }
     checRadioB() {
         if (!this.gt()['delo_web']) {
             this.formAccess.controls['1-27'].patchValue(null, { emitEvent: false });
@@ -864,11 +854,181 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.formControls.get('USER_COPY').patchValue('');
         }
     }
+
+    handleShowDepartment() {
+        if (this._idsForModalDictDep.length >= 1) {
+            this._showDepartment(this._idsForModalDictDep.join('|'));
+        } else {
+            this._showDepartment();
+        }
+    }
+
+    searchDL() {
+        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
+        if (this._defaultDepDue.length > 0) {
+            this._searchEmpInDep(this._searchLexem, this._defaultDepDue);
+        } else {
+            this._searchDLinSysParamsOrg();
+        }
+    }
+
+    private _searchDLinSysParamsOrg() {
+        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
+        this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
+    }
+
+    private _readSysParamsOrg() {
+        this.apiSrvRx.read<any>({ DEPARTMENT: PipRX.criteries({ DUE_LINK_ORGANIZ: this._sysParamsDueOrganiz }) }).then(items => {
+            const DUE = items[0].DEPARTMENT_DUE;
+            this._depDueLinkOrg = DUE.length <= 2 ? undefined : DUE;
+        });
+    }
+
+    private _setDepartment(due: string) {
+        let dueDep = '';
+        if (!due || due === '') {
+            throw new Error();
+        }
+        dueDep = (due.split('|'))[0];
+        this._userParamSrv.getDepartmentFromUser([dueDep])
+            .then((data: DEPARTMENT[]) => {
+                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
+                    if (data) {
+                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
+                    }
+                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                    });
+                    return val;
+                });
+            })
+            .then((dep: DEPARTMENT) => {
+                this.isShell = false;
+                if (this.dueDepSurname !== dep['SURNAME']) {
+                    const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
+                    depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
+                    this._confirmSrv.confirm2(depConfirm).then(confirmation => {
+                        if (confirmation && confirmation['result'] === 1) {
+                            this.dueDepSurname = dep['SURNAME'];
+                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        }
+                    });
+                }
+                this.dueDepName = dep['CLASSIF_NAME'];
+                this._dueDepNameSubscription.unsubscribe();
+                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.formControls.get('DUE_DEP_NAME').setValue(dep['CLASSIF_NAME']); // @task161934 - изменение значения в поле
+                this.curentUser.DUE_DEP = dep['DUE'];
+                this.inputs['DUE_DEP_NAME'].data = dep['DUE']; // @task161934 - данные для записи в БД
+                this._setDueDepNameSubscription();
+                return this.getPhotoUser(dep['DUE']);
+            })
+            .catch(() => {
+                this.isShell = false;
+                this._dueDepNameSubscription.unsubscribe();
+                this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem);
+                this._setDueDepNameSubscription();
+            });
+    }
+
+    private _showDepartment(ids?: string) {
+        this.isShell = true;
+        if (ids) {
+            OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
+        }
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
+    }
+
+    private _getDueDepFefault(obj): string {
+        return obj.window.mainFolder;
+    }
+
+    private _existsMainFolder(obj): boolean {
+        if (obj.window) {
+            if (obj.window.mainFolder) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private _isSymbolsCorrect(value): boolean {
+        const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
+        return REGEXP.test(value);
+    }
+
+    private _getSafeQueryLexem(lexem): string {
+        const AR = lexem.split('');
+        for (let i = 0; i < AR.length; i++) {
+            if (!this._isSymbolsCorrect(AR[i])) {
+                AR[i] = '%';
+            }
+        }
+        return AR.join('');
+    }
+
+    private _searchEmpInDep(empLexem, due) {
+        empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
+        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
+        let VALUES;
+        if (due) {
+            const ADD = { ISN_HIGH_NODE: due };
+            VALUES = { ...BASE_VALUES, ...ADD };
+        } else {
+            VALUES = BASE_VALUES;
+        }
+        const CRIT = { DEPARTMENT: { criteries: VALUES } };
+        this.apiSrvRx.read<DEPARTMENT>(CRIT).then(empItems => {
+            if (empItems.length > 0) {
+                const DEP_IDS = empItems.map(x => x.DEPARTMENT_DUE);
+                VALUES = { DUE: DEP_IDS.join('|'), DELETED: 0, IS_NODE: 0 };
+                const DEP_CRIT = { DEPARTMENT: { criteries: VALUES } };
+                this.apiSrvRx.read<DEPARTMENT>(DEP_CRIT).then(depItems => {
+                    this.controls['DUE_DEP_NAME'].options = [];
+                    empItems.forEach(empItem => {// формируем список выпадашки
+                        const { CLASSIF_NAME } = depItems.filter(({ DUE }) => empItem.DEPARTMENT_DUE === DUE)[0];
+                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this._searchLexem.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
+                            const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
+                            this.controls['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        }
+                    });
+                    if (this.controls['DUE_DEP_NAME'].options.length > 1) { // нашелся всего один ДЛ
+                        this.controls['DUE_DEP_NAME'].dib.setFirstFocusedItem();
+                    }
+                    this._idsForModalDictDep = [];
+                    this._idsForModalDictDep = empItems.map(x => x.DUE);
+                    if (this.controls['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
+                        if (this.curentUser.DUE_DEP !== empItems[0].DUE) {
+                            this._setDepartment(empItems[0].DUE);
+                        } else {
+                            this._dueDepNameSubscription.unsubscribe();
+                            this.formControls.get('DUE_DEP_NAME').patchValue(this.curentUser.DUE_DEP_NAME);
+                            this._setDueDepNameSubscription();
+                        }
+                    }
+                });
+            } else {
+                this.controls['DUE_DEP_NAME'].options = [];
+            }
+        }).catch(err => { throw err; });
+    }
+
     private patchVal() {
         ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
         });
     }
+
     private disableAccessSyst(flag) {
         if (flag) {
             ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
@@ -892,6 +1052,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     private _createAccessSystemsString(data: Object) {
         const arr = this.curentUser['ACCESS_SYSTEMS'].concat();
         arr[0] = '0';
@@ -946,8 +1107,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
-                                this.form.get('DUE_DEP_NAME').patchValue('');
-                                this.form.get('DUE_DEP_NAME').disable();
+                                this.formControls.get('DUE_DEP_NAME').patchValue(''); // @task161934
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
                                 // this.formControls.controls['SELECT_ROLE'].patchValue('');
                                 // this.formControls.controls['SELECT_ROLE'].disable();
@@ -969,7 +1129,37 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.tf();
                 }
             });
+        this._setDueDepNameSubscription();
     }
+
+    private _setDueDepNameSubscription() {
+        this._dueDepNameSubscription = this.formControls.get('DUE_DEP_NAME').valueChanges
+            .pipe(
+                debounceTime(1200), takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(value => this._setDueDepName(value));
+    }
+
+    private _setDueDepName(value) {
+        if (value.length < 3) { // нет поиска
+            this.controls['DUE_DEP_NAME'].options = [];
+            this._idsForModalDictDep = [];
+        } else {
+            if (this.controls['DUE_DEP_NAME'].options.length > 0) {
+                const VALUE_FROM_LIST: boolean = this.controls['DUE_DEP_NAME'].options.some(x => value === x.value);
+                if (!VALUE_FROM_LIST) { // запуск поиска по лексеме
+                    this.searchDL();
+                } else { // выбрали из выпадашки значение
+                    const ITEM = this.controls['DUE_DEP_NAME'].options.filter(item => item.value === value);
+                    const DUE: string = ITEM[0].due;
+                    this._setDepartment(DUE);
+                }
+            } else {
+                this.searchDL();
+            }
+        }
+    }
+
     private messageAlert({ title, msg, type }: IMessage) {
         this._msgSrv.addNewMessage(
             {
@@ -983,9 +1173,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private AddUnderscore(string: string): string {
         return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
     }
+
     private SEARCH_INCORRECT_SYMBOLS() {
         return new RegExp('["|\']', 'g');
     }
+
     private setValidators() {
         this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
             /* if (!this.curentUser['IS_PASSWORD']) {
@@ -1037,34 +1229,35 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     private _getLicenseInfo() {
         return this._userParamSrv.getLicenseInfo()
-        .then((licenses) => {
-            this.LicenzeInfo = licenses;
-            if (this.LicenzeInfo.length > 0) {
-                this.createActualLicenze();
-            }
-        });
+            .then((licenses) => {
+                this.LicenzeInfo = licenses;
+                if (this.LicenzeInfo.length > 0) {
+                    this.createActualLicenze();
+                }
+            });
     }
     private _checkLicenseInfo() {
         if (this._newDataformAccess.size) {
             let hasUnavailableSystem = false;
             this.actualLicenz = [];
             return this._getLicenseInfo()
-            .then(() => {
-                if (this.LicenzeInfo.length) {
-                    this._newDataformAccess.forEach((value, key) => {
-                        if (value && (Number(key) || key === 'delo_web') && this.actualLicenz.indexOf(key) === -1) {
-                            hasUnavailableSystem = true;
-                        }
-                    });
-                    if (hasUnavailableSystem) {
-                        return this._confirmSrv.confirm2(CONFIRM_UNAVAILABLE_SYSTEMS).then(() => {
-                            return false;
+                .then(() => {
+                    if (this.LicenzeInfo.length) {
+                        this._newDataformAccess.forEach((value, key) => {
+                            if (value && (Number(key) || key === 'delo_web') && this.actualLicenz.indexOf(key) === -1) {
+                                hasUnavailableSystem = true;
+                            }
                         });
+                        if (hasUnavailableSystem) {
+                            return this._confirmSrv.confirm2(CONFIRM_UNAVAILABLE_SYSTEMS).then(() => {
+                                return false;
+                            });
+                        }
                     }
-                }
-                return Promise.resolve(true);
-            });
+                    return Promise.resolve(true);
+                });
         }
         return Promise.resolve(true);
     }
+
 }

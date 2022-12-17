@@ -27,19 +27,25 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         label: 'Департамент',
         length: 2000
     },
-
-    {
-        controlType: E_FIELD_TYPE.string,
-        key: 'DUE_DEP_NAME',
-        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
-        required: true,
-        data: '',
-    },
     {
         controlType: E_FIELD_TYPE.string,
         key: 'TECH_DUE_DEP',
         label: 'Ограничение',
     },
+    {
+        controlType: E_FIELD_TYPE.autosearch,
+        key: 'DUE_DEP_NAME',
+        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
+        disabled: false,
+        readonly: false,
+        options: [
+            {
+                title: '',
+                value: '',
+            }
+        ],
+        value: ''
+    }
 ];
 
 export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
@@ -64,6 +70,20 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         ],
         required: true,
     },
+    {
+        controlType: E_FIELD_TYPE.autosearch,
+        key: 'DUE_DEP_NAME',
+        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
+        disabled: false,
+        readonly: false,
+        options: [
+            {
+                title: '',
+                value: '',
+            }
+        ],
+        value: ''
+    }
 ];
 
 export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
@@ -94,11 +114,12 @@ export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
     },
 
     {
-        controlType: E_FIELD_TYPE.string,
+        controlType: E_FIELD_TYPE.autosearch,
         key: 'DUE_DEP_NAME',
         label: 'ДОЛЖНОСТНОЕ ЛИЦО',
         required: true,
         data: '',
+        options: []
     },
     {
         controlType: E_FIELD_TYPE.string,
