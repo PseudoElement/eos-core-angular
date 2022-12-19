@@ -1,5 +1,5 @@
 {
-    "path": "Classif/",
+    "path": "сlassif/",
     "modules": [
         {"src": "regMainMenu.js", "target": "mainmenu"}
     ],

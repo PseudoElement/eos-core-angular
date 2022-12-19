@@ -40,7 +40,7 @@ export class AppComponent {
         }
         /* заглушка на загрузку плагинов , убрать когда плагины переведут на новый сборщик */
         new Promise((resolve, reject) => {
-            Manager.loadPlugins({ targets: ['tech_tasks', 'DictionariesMetadata'] }).then(() => {
+            Manager.loadPlugins({ targets: ['tech_tasks'] }).then(() => {
                 resolve(true);
             });
             setTimeout(() => {
