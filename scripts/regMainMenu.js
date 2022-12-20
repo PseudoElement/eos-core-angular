@@ -3,5 +3,5 @@ pluginManager.registerMenuItem("mainmenu", {
     insertAt: {
         parent: "Администрирование"
     },
-    func: function () { location.href = pluginManager.basePath + "сlassif/index.html"; },
+    func: function () { location.href = pluginManager.basePath + "classif/index.html"; },
 });
