@@ -475,7 +475,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     handleShowDepartment() {
-        this._dueDepNameSubscription.unsubscribe();
         if (this._idsForModalDictDep.length >= 1) {
             this._showDepartment(this._idsForModalDictDep.join('|'));
         } else {
