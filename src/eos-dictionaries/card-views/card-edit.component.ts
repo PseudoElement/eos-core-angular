@@ -162,7 +162,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                             changed = true;
                             this.isChanged = true;
                         }
-                        if (path.indexOf('owners[') !== -1) {
+                        if (path.indexOf('owners[') !== -1 && path.indexOf('].ISN_CABINET') !== -1) {
                             allOwners.push(this.newData.owners[+path[7]]);
                         }
                     });
