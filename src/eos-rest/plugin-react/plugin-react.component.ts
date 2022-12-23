@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import { Manager } from '@eos/jsplugins-manager';
 import { NavParamService } from 'app/services/nav-param.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 
@@ -21,10 +22,9 @@ export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     ngAfterViewInit(): void {
-      const w: any = window;
-      if (w.pluginManager && w.pluginManager.loadPlugins) {
-          w.pluginManager.loadPlugins();
-      }
+      Manager.loadPlugins({'target': 'UserSessions', mountPoint: 'user_session_plug_1'}).then(() => {
+        console.log('loaded userSession');
+      })
     }
 
     ngOnDestroy(): void {
