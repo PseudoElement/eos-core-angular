@@ -475,6 +475,9 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     handleShowDepartment() {
+        if (this.inputs['DUE_DEP_NAME'].options.length === 0) {
+            this._idsForModalDictDep = [];
+        }
         if (this._idsForModalDictDep.length >= 1) {
             this._showDepartment(this._idsForModalDictDep.join('|'));
         } else {
@@ -633,6 +636,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         if (ids) {
             OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
         }
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 this._setDepartment(data);
