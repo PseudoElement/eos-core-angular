@@ -22,6 +22,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { DOCUMENT } from '@angular/common';
 // import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
+const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 @Component({
     selector: 'eos-param-create-user',
     templateUrl: 'createUser.component.html',
@@ -572,8 +573,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     }
                 });
             } else {
-                this._setDueDeNameSubscription();
-                this.inputs['DUE_DEP_NAME'].options = [];
+                this.inputs['DUE_DEP_NAME'].options = [{
+                    title: EMPTY_SEARCH_DL_RESULTS, value: EMPTY_SEARCH_DL_RESULTS, due: '-1',
+                    disabled: true
+                }];
             }
         }).catch(err => { throw err; });
     }
@@ -617,6 +620,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.data['dueDL'] = dep['DUE'];
                 this._dueDepNameSubscription.unsubscribe();
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this._searchLexem = dep['CLASSIF_NAME'];
                 if (!!this.departmentData.UNREAD_FLAG) {
                     this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
                     this.form.controls['USER_COPY'].patchValue('', { emitEvent: false });
