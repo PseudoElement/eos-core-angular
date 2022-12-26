@@ -52,6 +52,7 @@
     .cards-wr{
         width: 100%;
         cursor: pointer;
+        position: relative;
         &:hover{
             background-color: #e3f2fd;
         }
