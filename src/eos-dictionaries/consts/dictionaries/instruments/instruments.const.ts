@@ -115,7 +115,7 @@ export const EXPORT: IFonLists = {
     loadPlugin: (mountPoint: string) => {
         openModalInsrtument({
             id: 'EXPORT',
-            openURL: '../Protocol/Pages/ProtocolView.html?type=remove'
+            openURL: '../Protocol.WebPlugin/Pages/ProtocolView.html?type=remove'
         });
     },
     render(mountPoint) { },
@@ -130,7 +130,7 @@ export const IMPORT: IFonLists = {
     loadPlugin: () => {
         openModalInsrtument({
             id: 'IMPORT',
-            openURL: '../Protocol/Pages/ProtocolView.html?type=remove'
+            openURL: '../Protocol.WebPlugin/Pages/ProtocolView.html?type=remove'
         });
     },
     render(mountPoint) {
@@ -139,7 +139,7 @@ export const IMPORT: IFonLists = {
 };
 export const PROTOCOL_REMOVE: IFonLists = {
     id: 'PROTOCOL_REMOVE',
-    title: 'Протокол удалание РК',
+    title: 'Протокол удаления РК',
     icon: 'eos-icon-rules-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
@@ -147,7 +147,7 @@ export const PROTOCOL_REMOVE: IFonLists = {
         openModalInsrtument(
             {
                 id: 'PROTOCOL_REMOVE',
-                openURL: '../Protocol/Pages/ProtocolView.html?type=remove'
+                openURL: '../Protocol.WebPlugin/Pages/ProtocolView.html?type=remove'
             }
         );
     },
@@ -164,7 +164,7 @@ export const PROTOCOL_CHANGE: IFonLists = {
         openModalInsrtument(
             {
                 id: 'PROTOCOL_CHANGE',
-                openURL: '../Protocol/Pages/ProtocolView.html?type=change'
+                openURL: '../Protocol.WebPlugin/Pages/ProtocolView.html?type=change'
             }
         );
     },
@@ -181,7 +181,7 @@ export const PROTOCOL_VIEW: IFonLists = {
     loadPlugin: () => {
         openModalInsrtument({
             id: 'PROTOCOL_VIEW',
-            openURL: '../Protocol/Pages/ProtocolView.html?type=view'
+            openURL: '../Protocol.WebPlugin/Pages/ProtocolView.html?type=view'
         });
     },
     render(mountPoint) {
@@ -197,7 +197,7 @@ export const PROTOCOL_SCAN: IFonLists = {
     loadPlugin: () => {
         openModalInsrtument({
             id: 'PROTOCOL_SCAN',
-            openURL: '../Protocol/Pages/ProtocolView.html?type=scan'
+            openURL: '../Protocol.WebPlugin/Pages/ProtocolView.html?type=scan'
         });
     },
     render(mountPoint) {
