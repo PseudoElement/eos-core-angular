@@ -255,6 +255,9 @@ export class WaitClassifService {
         if (params.curdue !== undefined && params.curdue !== null) {
             url += `&curdue=${params.curdue}`;
         }
+        if (params.can_tech !== undefined && params.can_tech !== null) {
+            url += this.getSymbol(url) + `can_tech=${params.can_tech}`;
+        }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
         // if (params.criteriesSearch) {
         //     url += '&criteries=note:' +  encodeURIComponent('Руководство');
