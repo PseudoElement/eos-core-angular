@@ -66,6 +66,7 @@ export const OPEN_CLASSIF_USER_CL: IOpenClassifParams = {
     classif: 'USER_CL',
     selectMulty: false,
     criteriesSearch: true,
+    can_tech: true,
 };
 
 export const OPEN_CLASSIF_DOCGR: IOpenClassifParams = {

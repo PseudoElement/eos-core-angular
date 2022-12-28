@@ -46,6 +46,7 @@ export interface IOpenClassifParams {
     idText?: string;
     nameText?: string;
     formText?: string;
+    can_tech?: boolean; // отображение пользователей только из разрешённых картотек
 }
 
 export interface ICertificateInit {
