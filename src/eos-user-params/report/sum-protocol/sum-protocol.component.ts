@@ -345,15 +345,15 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     switch (this.flagChecked) {
       case true:
         this.checkAll = 'Снять пометки';
-        return 'eos-icon-checkbox-square-v-blue';
+        return 'eos-adm-icon-checkbox-square-v-blue';
       case false:
         this.checkAll = 'Отметить все на странице';
-        return 'eos-icon-checkbox-square-minus-blue';
+        return 'eos-adm-icon-checkbox-square-minus-blue';
       default:
         this.isnRefFile = undefined;
         this.lastUser = undefined;
         this.checkAll = 'Отметить все на странице';
-        return 'eos-icon-checkbox-square-blue';
+        return 'eos-adm-icon-checkbox-square-blue';
     }
   }
 

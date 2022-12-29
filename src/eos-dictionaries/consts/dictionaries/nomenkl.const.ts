@@ -23,7 +23,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     defaultOrder: 'NOM_NUMBER',
     visible: true,
     dictType: E_DICT_TYPE.custom,
-    iconName: 'eos-icon-deal-blue',
+    iconName: 'eos-adm-icon-deal-blue',
     keyField: 'ISN_LCLASSIF',
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE',

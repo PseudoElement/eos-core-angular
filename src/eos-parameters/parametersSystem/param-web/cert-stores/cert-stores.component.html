@@ -11,7 +11,7 @@
             containerClass="tooltip-info"
             (click)="addStores()"
         >
-                <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode}"></span>
+                <span class="eos-adm-icon small" [ngClass]="{'eos-adm-icon-plus-blue': editMode, 'eos-adm-icon-plus-grey': !editMode}"></span>
         </button>
         <button
             class="btn"
@@ -22,7 +22,7 @@
             (click)="dTolltip.hide(); deleteStores()"
             [disabled]="!this.certStoresService.isMarkNode || !editMode"
         >
-                <span class="eos-icon eos-icon-bin-forever-blue small"  [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode}"></span>
+                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"  [ngClass]="{'eos-adm-icon-bin-forever-blue': editMode, 'eos-adm-icon-bin-forever-grey': !editMode}"></span>
         </button>
         <button
             class="btn"
@@ -32,7 +32,7 @@
             (click)="showCert()"
             [disabled]="!CurrentSelect || !editMode"
         >
-                <span class="eos-icon eos-icon-show-blue small"  [ngClass]="{'eos-icon-show-blue': editMode, 'eos-icon-show-grey': !editMode}"></span>
+                <span class="eos-adm-icon eos-adm-icon-show-blue small"  [ngClass]="{'eos-adm-icon-show-blue': editMode, 'eos-adm-icon-show-grey': !editMode}"></span>
         </button>
     </div>
     <div class="cert-param">
@@ -63,8 +63,8 @@
             </span>
             <span class="order-icon">
                 <span
-                class="icon eos-icon small"
-                [ngClass]="{'eos-icon-arrow-blue-top': orderBy && editMode, 'eos-icon-arrow-blue-bottom': !orderBy && editMode, 'eos-icon-arrow-grey-top': orderBy && !editMode, 'eos-icon-arrow-grey-bottom': !orderBy && !editMode}"
+                class="icon eos-adm-icon small"
+                [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy && editMode, 'eos-adm-icon-arrow-blue-bottom': !orderBy && editMode, 'eos-adm-icon-arrow-grey-top': orderBy && !editMode, 'eos-adm-icon-arrow-grey-bottom': !orderBy && !editMode}"
                 >
                 </span>
             </span>
@@ -116,7 +116,7 @@
                 <div class="modal-header">
                     <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{CurrentSelect?.Location}}:{{CurrentSelect?.Name}}</h4>
                     <button type="button" class="close pull-right" (click)="InfoCertModal.hide()" aria-label="Close">
-                        <span class="eos-icon eos-icon-close-white small"></span>
+                        <span class="eos-adm-icon eos-adm-icon-close-white small"></span>
                     </button>
                 </div>
                 <div
@@ -135,7 +135,7 @@
                                     class="info-icon-wrap"
                                     (click)="showCertInfo(c)"
                                 >
-                                    <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
+                                    <span class="info-icon eos-adm-icon eos-adm-icon-info-blue x-small"></span>
                                 </div>
                             </li>
                         </ul>

@@ -9,7 +9,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
     apiInstance: 'REESTRTYPE_CL',
     title: 'Типы реестров',
     visible: true,
-    iconName: 'eos-icon-new-doc-blue',
+    iconName: 'eos-adm-icon-new-doc-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         length: 64,

@@ -1,4 +1,4 @@
-<div class="eos-dictionary"
+<div class="eos-adm-dictionary"
     [ngClass]="{'full': currentState[0] && currentState[1] && !hideTree,
         'only-selected': !currentState[0] && !currentState[1] || currentState[0] && !currentState[1] && hideTree,
         'info': !currentState[0] && currentState[1] || currentState[0] && currentState[1] && hideTree,
@@ -40,10 +40,10 @@
                             <button *ngIf="hasParent"
                                 class="btn btn-primary-light"
                                 (click)="goUp()">
-                                <span class="eos-icon eos-icon-arrow-blue-left"></span>
+                                <span class="eos-adm-icon eos-adm-icon-arrow-blue-left"></span>
                             </button>
                         </div>
-        
+
                         <ng-container *ngIf="this.isTitleSliced; then slicedTitle else nonSlicedTitle"></ng-container>
                         <ng-template #slicedTitle>
                             <div class="selected-node-title"
@@ -58,7 +58,7 @@
                                 (click)="goUp()">
                                 <span class="long-title xl-font vertical-align-middle">{{sliced_title}}</span>
                             </div>
-        
+
                             </div>
                         </ng-template>
                         <ng-template #nonSlicedTitle>
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                         </ng-template>
-        
+
                         <div class="tabs-wrapper usual-border m-font">
                             <ul class="tabs"
                                 *ngIf="dictionary?.id === 'departments'">
@@ -89,7 +89,7 @@
                                 </li>
                             </ul>
                         </div>
-        
+
                         <div class="item-count usual-border m-font">
                             <ng-container *ngIf="params.searchResults; then foundRecords; else records"></ng-container>
                             <ng-template #records>
@@ -109,7 +109,7 @@
                                     placement="bottom"
                                     container="body"
                                     containerClass="tooltip-info"
-                                    (click)="resetSearch()"><span class="eos-icon eos-icon-close-blue small"></span></button>
+                                    (click)="resetSearch()"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></button>
                                 </span>
                             </ng-template>
                         </div>
@@ -134,23 +134,23 @@
                         [settings]="searchSettings"
                     >
                     </eos-dictionary-quick-search>
-        
+
                     <div class="second-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
                         <div class="">
                             <eos-dictionary-filter (setFilterNomenkl)="getFilterNomenkl($event)" (setFilter)="getFilterDate($event)" (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
                         </div>
                     </div>
-        
+
                 </div>
                 <eos-node-list #nodeList
                     class="node-list-container"
                     [ngClass]="{'list-heigth-1': nlHeightType() === 1, 'list-heigth-2': nlHeightType() === 2, 'list-heigth-3': nlHeightType() === 3}"
                 ></eos-node-list>
-            
-            
+
+
             <eos-node-list-pagination *ngIf="isPaginationVisible()" [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-node-list-pagination>
         </div>
-        
+
     </div>
     <div class="opened-wrapper block"
         [ngClass]="{'open-info': currentState[1]}">

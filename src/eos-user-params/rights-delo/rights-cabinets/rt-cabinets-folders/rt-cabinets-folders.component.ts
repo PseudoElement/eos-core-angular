@@ -69,11 +69,11 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     }
     get getflagChecked() {
         if (this.currentCabinet.data.FOLDERS_AVAILABLE.length === 9) {
-            return 'eos-icon-checkbox-square-v-blue';
+            return 'eos-adm-icon-checkbox-square-v-blue';
         } else if (this.currentCabinet.data.FOLDERS_AVAILABLE.length > 0) {
-            return 'eos-icon-checkbox-square-minus-blue';
+            return 'eos-adm-icon-checkbox-square-minus-blue';
         } else {
-            return 'eos-icon-checkbox-square-blue';
+            return 'eos-adm-icon-checkbox-square-blue';
         }
     }
     private unSubscribe: Subject<any> = new Subject();

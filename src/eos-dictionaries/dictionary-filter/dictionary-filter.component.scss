@@ -1,4 +1,4 @@
-.eos-dictionary-filter {
+.eos-adm-dictionary-filter {
     margin: 2px 10px auto;
     display: inline-block;
     // height: $item-height;
@@ -11,7 +11,7 @@
     .full-search {
         position: relative;
     }
-    .eos-icon-search-blue {
+    .eos-adm-icon-search-blue {
         position: relative;
     }
     .search-btn-wraper {
@@ -81,7 +81,7 @@
             display: none;
         }
     }
-    .eos-datepicker {
+    .eos-adm-datepicker {
         display: inline-block;
         width: 125px;
         font-weight: bold;
@@ -164,7 +164,7 @@
         right: 1px;
         background-color: $modal-block-background-main-theme;
         position: absolute;
-        .eos-icon {
+        .eos-adm-icon {
             height: 20px;
             width: 20px;
         }
@@ -228,7 +228,7 @@
 }
 
 @media (max-width: 1200px) {
-    .eos-search {
+    .eos-adm-search {
         top: -19px;
         width: 30px;
     }

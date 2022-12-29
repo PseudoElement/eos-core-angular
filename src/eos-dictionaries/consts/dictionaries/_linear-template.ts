@@ -31,5 +31,5 @@ export const LINEAR_TEMPLATE: IDictionaryDescriptor = {
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['NOTE'],
-    iconName: 'eos-icon-dept-blue'
+    iconName: 'eos-adm-icon-dept-blue'
 };

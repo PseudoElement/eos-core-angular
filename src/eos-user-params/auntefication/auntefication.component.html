@@ -82,7 +82,7 @@
                     [containerClass]="form.get('pass').errors ? 'tooltip-error' : 'tooltip-info'"
                     [placeholder]="curentUser.IS_PASSWORD ? '*******' : inputs['pass'].label"
                     autocomplete="off">
-                    <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
+                    <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-adm-icon small" [ngClass]="editMode ? 'eos-adm-icon-show-blue' : 'eos-adm-icon-show-grey'"></span>
                 </div>
             </div>
 
@@ -98,7 +98,7 @@
                     placement="bottom"
                     [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'"
                     autocomplete="off">
-                    <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
+                    <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-adm-icon small" [ngClass]="editMode ? 'eos-adm-icon-show-blue' : 'eos-adm-icon-show-grey'"></span>
                 </div>
             </div>
         </div>

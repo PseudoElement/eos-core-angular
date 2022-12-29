@@ -13,7 +13,7 @@ export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import', 'protViewSecurity'],
     title: 'Состояния исполнения (исполнитель)',
     visible: true,
-    iconName: 'eos-icon-administrant-status-blue',
+    iconName: 'eos-adm-icon-administrant-status-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     COMMON_FIELD_ICONS_SEV,
     Object.assign({}, COMMON_FIELD_NAME, {

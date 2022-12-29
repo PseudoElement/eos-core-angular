@@ -20,17 +20,17 @@ export const CHANNEL_TYPE: Array<OptionDiscription> = [{
     value: 'email',
     title: 'E-mail',
     iconClass: {
-      standard: 'eos-icon-A-Black',
+      standard: 'eos-adm-icon-A-Black',
       tooltip: 'электронная почта',
-      deleted:  'eos-icon-A-Grey'
+      deleted:  'eos-adm-icon-A-Grey'
     }
 }, {
     value: 'FileSystem',
     title: 'FileSystem',
     iconClass: {
-        standard: 'eos-icon-folder-black',
+        standard: 'eos-adm-icon-folder-black',
         tooltip: 'файловая система',
-        deleted:  'eos-icon-folder-grey'
+        deleted:  'eos-adm-icon-folder-grey'
     }
   }
  ];

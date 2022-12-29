@@ -67,14 +67,14 @@ $horizontal-line-color-CB: #c4c4c4;
     padding: 0 0 0 5px;
     margin: 0;
 
-    span.eos-icon {
+    span.eos-adm-icon {
         background-size: contain;
         background-position: right;
         background-repeat: no-repeat;
     }
 
-    span.eos-icon-plus-blue,
-    span.eos-icon-folder-blue {
+    span.eos-adm-icon-plus-blue,
+    span.eos-adm-icon-folder-blue {
         width: 24px;
 
         @if $isCB {
@@ -84,10 +84,10 @@ $horizontal-line-color-CB: #c4c4c4;
         }
     }
 
-    span.eos-icon-bin-forever-blue,
-    span.eos-icon-close-blue,
-    span.eos-icon-close-grey,
-    span.eos-icon-bin-forever-grey {
+    span.eos-adm-icon-bin-forever-blue,
+    span.eos-adm-icon-close-blue,
+    span.eos-adm-icon-close-grey,
+    span.eos-adm-icon-bin-forever-grey {
         width: 18px;
 
         @if $isCB {
@@ -97,8 +97,8 @@ $horizontal-line-color-CB: #c4c4c4;
         }
     }
 
-    span.eos-icon-info-grey,
-    span.eos-icon-info-blue {
+    span.eos-adm-icon-info-grey,
+    span.eos-adm-icon-info-blue {
         width: 18px;
 
         @if $isCB {
@@ -247,7 +247,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
 //выпадака реализованная в виде портала
 bs-dropdown-container {
-    span.eos-icon.eos-icon-checkbox-blue {
+    span.eos-adm-icon.eos-adm-icon-checkbox-blue {
         background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
         transform: rotate(270deg);
     }
@@ -268,7 +268,7 @@ bs-dropdown-container {
             margin-top: 0px;
         }
     }
-    
+
     .left {
         position: absolute;
         top: 45px;
@@ -504,24 +504,24 @@ bs-dropdown-container {
 
                                     input[type="checkbox"] + span {
                                         margin: 0 8px 0 0;
-                                        line-height: initial;                                        
+                                        line-height: initial;
                                         @include settings-icon;
                                     }
 
-                                    input[type="checkbox"] + span {                                       
-                                        background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");                                        
+                                    input[type="checkbox"] + span {
+                                        background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
                                     }
 
-                                    input[type="checkbox"]:checked + span {                                      
-                                        background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");                                        
+                                    input[type="checkbox"]:checked + span {
+                                        background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
                                     }
 
-                                    input[type="checkbox"][disabled] + span {                                      
-                                        background-image: url("assets/icons/Checkbox-UserSettings-Square-Grey.svg");                                        
+                                    input[type="checkbox"][disabled] + span {
+                                        background-image: url("assets/icons/Checkbox-UserSettings-Square-Grey.svg");
                                     }
 
-                                    input[type="checkbox"][disabled]:checked + span {                                      
-                                        background-image: url("assets/icons/Checkbox-Grey.svg");                                        
+                                    input[type="checkbox"][disabled]:checked + span {
+                                        background-image: url("assets/icons/Checkbox-Grey.svg");
                                     }
                                 }
                             }
@@ -540,19 +540,19 @@ bs-dropdown-container {
 
                                     input[type="radio"] + span {
                                         margin: 0;
-                                        line-height: 0;                                       
+                                        line-height: 0;
                                         @include settings-icon;
                                     }
 
-                                    input[type="radio"] + span {                                       
+                                    input[type="radio"] + span {
                                         background-image: url("assets/icons/Radio-UserSettings-Black.svg");
                                     }
 
-                                    input[type="radio"]:checked + span {                                       
+                                    input[type="radio"]:checked + span {
                                         background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
                                     }
 
-                                    input[type="radio"][disabled] + span {                                       
+                                    input[type="radio"][disabled] + span {
                                         background-image: url("assets/icons/Radio-UserSettings-Grey.svg");
                                     }
                                 }
@@ -573,13 +573,13 @@ bs-dropdown-container {
                             top: 2px;
                         }
 
-                        span.eos-icon-checkbox-blue {
+                        span.eos-adm-icon-checkbox-blue {
                             background-image: url("assets/icons/Checkbox-UserSettings-Grey.svg");
                         }
 
-                        span.eos-icon-arrow-v-blue-bottom {
+                        span.eos-adm-icon-arrow-v-blue-bottom {
                             background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
-                        }                        
+                        }
                     }
 
                     &-increment-number {
@@ -642,17 +642,17 @@ bs-dropdown-container {
                         left: -10px;
                     }
 
-                    span.eos-icon-close-folder-grey,
-                    span.eos-icon-close-folder-blue,
-                    span.eos-icon-open-folder-grey,
-                    span.eos-icon-open-folder-blue {
+                    span.eos-adm-icon-close-folder-grey,
+                    span.eos-adm-icon-close-folder-blue,
+                    span.eos-adm-icon-open-folder-grey,
+                    span.eos-adm-icon-open-folder-blue {
                         background-image: url("assets/icons/Icon-Open-Close-UserSettings.svg") !important;
                         background-repeat: no-repeat;
                         background-size: 8px 10px;
                     }
 
-                    span.eos-icon-open-folder-grey,
-                    span.eos-icon-open-folder-blue {
+                    span.eos-adm-icon-open-folder-grey,
+                    span.eos-adm-icon-open-folder-blue {
                         left: -30px !important;
                     }
                 }
@@ -669,13 +669,13 @@ bs-dropdown-container {
                             color: $text-color;
                         }
 
-                        span.eos-icon-arrow-v-blue-bottom {
+                        span.eos-adm-icon-arrow-v-blue-bottom {
                             background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
                         }
                     }
 
-                    span.eos-icon-open-folder-blue,
-                    span.eos-icon-close-folder-blue {
+                    span.eos-adm-icon-open-folder-blue,
+                    span.eos-adm-icon-close-folder-blue {
                         background-image: url("assets/icons/Open-Close-UserSettings-Folder-Grey.svg");
                     }
                 }
@@ -942,7 +942,7 @@ bs-dropdown-container {
                                             &:last-child {
                                                 position: absolute;
                                                 bottom: 5px;
-                                                left: 305px;                                                
+                                                left: 305px;
                                             }
 
                                             p.form-control-static {
@@ -1180,7 +1180,7 @@ bs-dropdown-container {
                     &:first-child {
                         & > eos-dynamic-input {
                             width: 415px;
-                            margin-bottom: 15px;                            
+                            margin-bottom: 15px;
                         }
 
                         .user-input-increment-cabinets {
@@ -1189,7 +1189,7 @@ bs-dropdown-container {
                             & > eos-dynamic-input {
                                 width: 75px;
                             }
-                            
+
                             & > span {
                                 width: 100%;
                                 padding-top: 0;
@@ -1197,7 +1197,7 @@ bs-dropdown-container {
                             input {
                                 background-color: #fff;
                             }
-                        } 
+                        }
                     }
 
                     &:nth-child(3) {
@@ -1327,7 +1327,7 @@ bs-dropdown-container {
 
                             eos-dynamic-input {
                                 margin-left: 15px;
-                            }                           
+                            }
                          }
 
                         eos-dynamic-input {
@@ -1444,16 +1444,16 @@ bs-dropdown-container {
                         & > eos-dynamic-input {
                             margin-top: 5px;
                             margin-left: 15px;
-    
+
                             div.form-group {
                                 margin-bottom: 15px;
                             }
                         }
-                    } 
+                    }
 
                     & > div.send-oreder-with-arm {
                         margin-top: 25px;
-                        margin-bottom: -15px;                         
+                        margin-bottom: -15px;
                     }
                 }
 
@@ -1630,7 +1630,7 @@ bs-dropdown-container {
 
                             div.informer-flex {
                                 margin-top: 15px;
-                                
+
                                 & > eos-dynamic-input {
                                     display: inline-block;
                                     width: 230px;
@@ -1690,7 +1690,7 @@ bs-dropdown-container {
 
                     &:nth-child(2) {
                         margin-top: 15px;
-                        
+
                         div.btn-controll {
                             justify-content: flex-end;
                             margin: 0;
@@ -1744,7 +1744,7 @@ bs-dropdown-container {
         eos-user-param-directories {
             .wr-scroll-dict {
                 max-height: calc(100vh - 150px) !important;
-                margin-right: 0 !important;               
+                margin-right: 0 !important;
                 overflow-y: auto;
 
                 div.elem-input-radio {
@@ -1782,14 +1782,14 @@ bs-dropdown-container {
                         }
                     }
 
-                    &:nth-child(3) {                       
+                    &:nth-child(3) {
                         div.user-input-group-section {
                             eos-dynamic-input.inline-block {
                                 padding-top: 0;
                             }
 
                             @include set-margin-for-dynamic-ipnputs;
-                        }                                             
+                        }
                     }
 
                     &.show_deep {
@@ -1896,7 +1896,7 @@ bs-dropdown-container {
                                         }
 
                                         & > div {
-                                            margin-top: 0 !important;                                            
+                                            margin-top: 0 !important;
                                         }
                                     }
                                 }
@@ -1954,7 +1954,7 @@ bs-dropdown-container {
                                             margin: 15px 15px;
 
                                             & > div > div.input_wrapper {
-                                                width: 100% !important;                                                
+                                                width: 100% !important;
                                             }
 
                                             div.form-group {
@@ -1975,14 +1975,14 @@ bs-dropdown-container {
                 }
 
                 div.user-group-form {
-                    position: relative;                   
-                   
+                    position: relative;
+
                     div.elem-input-radio {
                         display: block;
                     }
 
                     eos-dynamic-input:nth-child(2) {
-                        margin-bottom: 10px;                        
+                        margin-bottom: 10px;
                     }
                 }
             }
@@ -1991,11 +1991,11 @@ bs-dropdown-container {
                 div.mado-inputs {
                     height: calc(100vh - 220px);
 
-                    div.section-title {                        
+                    div.section-title {
                         &:last-of-type {
                             margin: 15px 0;
                         }
-                    } 
+                    }
 
                     eos-dynamic-input {
                         margin-bottom: 0;
@@ -2003,8 +2003,8 @@ bs-dropdown-container {
 
                         &:nth-child(1) {
                             margin-top: 0 !important;
-                        }     
-                        
+                        }
+
                         &:last-child {
                             & > div.form-group {
                                 margin-left: 30px;
@@ -2094,7 +2094,7 @@ bs-dropdown-container {
                 & > div.sert-table-wrapper {
                     position: relative;
                     max-height: calc(100vh - 175px) !important;
-                    padding: 0;                  
+                    padding: 0;
 
                     .sert-table-nav {
                         position: absolute;
@@ -2126,8 +2126,8 @@ bs-dropdown-container {
                             line-height: 24px;
 
                             div.sert-info-wr {
-                                padding: 2px 0;                                
-                                
+                                padding: 2px 0;
+
                                 &.selected {
                                     background-color: $active-element;
                                 }
@@ -2137,15 +2137,15 @@ bs-dropdown-container {
                                 }
                             }
                         }
-                    }                    
+                    }
                 }
             }
 
             div.header-wr {
-                & > div > button.btn.btn-primary {                    
-                    left: 150px !important;                    
+                & > div > button.btn.btn-primary {
+                    left: 150px !important;
                 }
-                
+
                 button.default-btn {
                     display: none;
                 }
@@ -2168,7 +2168,7 @@ bs-dropdown-container {
             eos-dynamic-input-select2 > div > label {
                 display: none;
             }
-            div.eos-select2 {
+            div.eos-adm-select2 {
                 width: 500px;
                 margin: 0 10px;
             }
@@ -2331,16 +2331,16 @@ bs-dropdown-container {
                         & > div:nth-child(3) {
                             & > p {
                                 @include style-title-bookmarks;
-                                
+
                             }
 
                             & > span {
                                 @include reset-style-title-bookmarks;
                                 margin-bottom: 0 !important;
                                 padding-left: 20px !important;
-                                
+
                             }
-                            
+
                             eos-dynamic-input {
                                 margin-left: 15px;
                             }
@@ -2373,12 +2373,12 @@ bs-dropdown-container {
 
                             div.form-group {
                                 margin-bottom: 0;
-                            }                           
+                            }
                         }
-                        & > div:nth-child(4) { 
+                        & > div:nth-child(4) {
                             border-bottom: 1px solid #E9E6DF;
                             margin-bottom: 5px;
-                            .margin-curent-input { 
+                            .margin-curent-input {
                                 margin-bottom: 5px;
                             }
                             p {
@@ -2442,7 +2442,7 @@ bs-dropdown-container {
 
                                 div.form-group {
                                     margin-bottom: 0;
-                                }                               
+                                }
                             }
 
                             &:nth-child(4) {
@@ -2467,7 +2467,7 @@ bs-dropdown-container {
 
                         div.user-group-form:nth-child(6) {
                             position: relative;
-                            margin: 25px 0 20px 10px;                           
+                            margin: 25px 0 20px 10px;
 
                             div.inputs-inline {
                                 display: flex;
@@ -2561,7 +2561,7 @@ bs-dropdown-container {
                     }
                 }
 
-                .eos-template-list {
+                .eos-adm-template-list {
                     max-height: calc(100vh - 190px);
                     padding: 0 10px;
 
@@ -2777,7 +2777,7 @@ bs-dropdown-container {
         //вкладка Кабинеты
         eos-user-param-cabinets {
             .input-user-cabinets-rk-forwarding-wrapper {
-                div.user-group-form {                   
+                div.user-group-form {
                     &:nth-child(5) {
                         margin-bottom: 10px;
 
@@ -2809,7 +2809,7 @@ bs-dropdown-container {
 
                     &:nth-child(5) {
                         & > div > span {
-                            @include style-title-bookmarks($isCB: true);                            
+                            @include style-title-bookmarks($isCB: true);
                         }
                     }
                 }
@@ -2876,7 +2876,7 @@ bs-dropdown-container {
                             }
                         }
                     }
-                }                
+                }
             }
         }
 
@@ -2917,7 +2917,7 @@ bs-dropdown-container {
                     }
                 }
 
-                & > div.sert-table-wrapper {                    
+                & > div.sert-table-wrapper {
                     .sert-table-nav {
                         @include style-other-button($isCB: true);
                     }
@@ -2928,22 +2928,22 @@ bs-dropdown-container {
                         & > span {
                             background: none;
                         }
-                    }      
-                    
-                    .sert-table-content {                     
-                        div.item-container {                          
-                            div.sert-info-wr {                                
-                                &.colorValid {                                    
-                                    color: $tab-CB;                
+                    }
+
+                    .sert-table-content {
+                        div.item-container {
+                            div.sert-info-wr {
+                                &.colorValid {
+                                    color: $tab-CB;
                                 }
-                                
+
                                 &.selected {
                                     background-color: $active-element-CB;
-                                    color: $white;                
+                                    color: $white;
                                 }
                             }
                         }
-                    }  
+                    }
                 }
             }
         }
@@ -2995,7 +2995,7 @@ bs-dropdown-container {
 
                         & > div:nth-child(n + 3) > span {
                             @include style-title-bookmarks($isCB: true);
-                        }                        
+                        }
                     }
                 }
 

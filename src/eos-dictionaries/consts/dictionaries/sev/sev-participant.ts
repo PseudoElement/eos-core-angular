@@ -14,7 +14,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
         'removeHard', 'edit', 'view', 'protViewSecurity'],
     visible: true,
-    iconName: 'eos-icon-shared-folder-blue',
+    iconName: 'eos-adm-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
     defaultOrder: 'CLASSIF_NAME',
     showDeleted: true,

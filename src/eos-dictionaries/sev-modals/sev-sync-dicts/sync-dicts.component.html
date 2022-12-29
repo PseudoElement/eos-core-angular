@@ -7,7 +7,7 @@
             <input class="form-control m-font"  size="40" id="operationKind" type="text" value="Синхронизация справочника &quot;Подразделения&quot;" />
         </div>
         <div class="form-group" [formGroup]="form" [tooltip]="!form.controls['ORG'].valid?'Поле должно быть заполнено':''" container="body" placement="bottom" containerClass="tooltip-error" >
-            <div class="eos-select" >
+            <div class="eos-adm-select" >
                 <label  [attr.for]="inputs[0].key">{{inputs[0].label}}</label >
                   <select  class="form-control m-font" id="selectOrgs" [formControlName]="inputs[0].key" autocomplete="off" >
                   <option *ngFor="let item of selectOrgs" [value]="item.value" [selected]="getSelected(item.value)">
@@ -21,11 +21,11 @@
         <span class="pull-right">
             <button [ngStyle]="{'width': '100px', 'height': '40px', 'display': 'block'}" type="button" type="submit" class="btn btn-primary btn-margin" [disabled]="!form.valid||isProgress" (click)="handleClick()">
                 <div>
-                   <span *ngIf="!isProgress" class="eos-icon eos-icon-save-send-blue small" aria-hidden="true" >
+                   <span *ngIf="!isProgress" class="eos-adm-icon eos-adm-icon-save-send-blue small" aria-hidden="true" >
                     </span>
                     <eos-spinner *ngIf="isProgress" size="md" ></eos-spinner>
-                </div>    
+                </div>
           </button>
         </span>
-    </div>  
-</form>    
+    </div>
+</form>

@@ -55,11 +55,11 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     get getflagChecked() {
         switch (this.isCheckedSide) {
             case true:
-                return this.editMode && !this.limitedTehnologist ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-black';
+                return this.editMode && !this.limitedTehnologist ? 'eos-adm-icon-checkbox-square-v-blue' : 'eos-adm-icon-checkbox-black';
             case false:
-                return  this.editMode && !this.limitedTehnologist ? 'eos-icon-checkbox-square-minus-blue' : 'eos-icon-checkbox-square-minus-grey';
+                return  this.editMode && !this.limitedTehnologist ? 'eos-adm-icon-checkbox-square-minus-blue' : 'eos-adm-icon-checkbox-square-minus-grey';
             default:
-                return  this.editMode && !this.limitedTehnologist ?  'eos-icon-checkbox-square-blue' : 'eos-icon-checkbox-square-grey';
+                return  this.editMode && !this.limitedTehnologist ?  'eos-adm-icon-checkbox-square-blue' : 'eos-adm-icon-checkbox-square-grey';
         }
     }
 

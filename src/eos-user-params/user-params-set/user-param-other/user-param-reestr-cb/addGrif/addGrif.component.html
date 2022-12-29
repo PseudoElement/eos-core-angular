@@ -20,10 +20,10 @@
             <div class="grifs-content">
                 <div class="grifs-row" *ngFor='let field of allField'>
                     <div>
-                        <span 
-                            (click)="clikcBox(field.ISN_LCLASSIF, field.CLASSIF_NAME)" 
-                            class="eos-icon checkbox-size" 
-                            [ngClass]="{'eos-icon-checkbox-square-v-blue' : elemCheck(field.ISN_LCLASSIF), 'eos-icon-checkbox-square-blue': !elemCheck(field.ISN_LCLASSIF)}">
+                        <span
+                            (click)="clikcBox(field.ISN_LCLASSIF, field.CLASSIF_NAME)"
+                            class="eos-adm-icon checkbox-size"
+                            [ngClass]="{'eos-adm-icon-checkbox-square-v-blue' : elemCheck(field.ISN_LCLASSIF), 'eos-adm-icon-checkbox-square-blue': !elemCheck(field.ISN_LCLASSIF)}">
                         </span>
                     </div>
                     <div class="grifs-element-title">

@@ -89,7 +89,7 @@ eos-cabinet-card-edit {
         }
     }
 
-    
+
 }
 .scroll-table-body {
     max-height: 400px;
@@ -106,19 +106,19 @@ eos-cabinet-card-edit {
 .scroll-table tbody tr:nth-child(even){
 	background: #f3f3f3;
 }
- 
+
 /* Стили для скролла */
 ::-webkit-scrollbar {
 	width: 6px;
-} 
+}
 ::-webkit-scrollbar-track {
-	box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-} 
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
 ::-webkit-scrollbar-thumb {
-	box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
 
-.eos-cabinet-tab {
+.eos-adm-cabinet-tab {
     margin-bottom: 0;
     padding-top: $grid-gutter-width/2;
     .table-owners {

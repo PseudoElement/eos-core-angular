@@ -1,4 +1,4 @@
-.eos-title {
+.eos-adm-title {
     position: absolute;
     .square-img-wrapper{
         cursor: pointer;
@@ -20,7 +20,7 @@
 }
 
 @media (max-width: 1250px) {
-    .eos-title {
+    .eos-adm-title {
         .title-wrapper {
             width: $item-width;
 

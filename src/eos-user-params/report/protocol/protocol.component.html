@@ -7,12 +7,12 @@
                         <span class="long-title xl-font">Протокол редактирования пользователя {{username}}</span>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" [queryParams]="{isn_cl: link}" aria-hidden="true" tooltip="Открыть в новом окне" placement="bottom" 
-                        container="body" containerClass="tooltip-info" target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
+                        <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" [queryParams]="{isn_cl: link}" aria-hidden="true" tooltip="Открыть в новом окне" placement="bottom"
+                        container="body" containerClass="tooltip-info" target="_blank"><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span></a>
                         <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" tooltip="Закрыть" placement="bottom" containerClass="tooltip-info">
-                            <span class="eos-icon eos-icon-close-blue small"></span>
+                            <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
                         </button>
-                    </div>    
+                    </div>
                 </div>
             </div>
             <div class="table-header header-pos-prot">
@@ -20,7 +20,7 @@
                     <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
                         <button  class="btn btn-primary-light bth-size-prot" [disabled]="isnRefFile === undefined || _user_pagination.totalPages === 0"  triggers="hover" [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
                          (click)="GetRefFile()" placement="bottom" container="body" containerClass="tooltip-info">
-                         <span class="eos-icon eos-icon-open-read-only-blue small"></span>
+                         <span class="eos-adm-icon eos-adm-icon-open-read-only-blue small"></span>
                         </button>
                     </div>
                 </div>
@@ -35,15 +35,15 @@
                 <div class="table-title contain-span-header">
                     <span class=" width-title1 likeLink-prot" (click)="SortPageList(1)">
                         Дата
-                        <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[0].date, 'eos-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
+                        <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[0].date, 'eos-adm-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
                     </span>
                     <span class=" width-title2 likeLink-prot" (click)="SortPageList(2)">
                         Событие
-                        <span *ngIf="status === 'eventUser'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[1].event, 'eos-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
+                        <span *ngIf="status === 'eventUser'" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[1].event, 'eos-adm-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
                     </span>
                     <span class=" width-title3 likeLink-prot" (click)="SortPageList(3)">
                         Пользователь
-                        <span *ngIf="status === 'WHO'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
+                        <span *ngIf="status === 'WHO'" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[2].who, 'eos-adm-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
                     </span>
                 </div>
             </div>
@@ -64,10 +64,10 @@
                                     {{user.isnWho}}
                                 </div>
                             </span>
-                        </div>  
+                        </div>
                     </div>
                 </div>
-                <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination> 
+                <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
         </div>
         <div class="spinner-prot" *ngIf="isLoading">
             <eos-spinner size="lg"></eos-spinner>

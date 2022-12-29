@@ -112,10 +112,10 @@
             <span>Контролер поручения по умолчанию:</span>
             <div class="classifDep">
                 <div class="wr-input" [ngClass]="{'delete-wr-input': logDeletController}">
-                    <span *ngIf='logDeletController' class="icon eos-icon small eos-icon-bin-grey user-cabinet-log-delet"></span>
+                    <span *ngIf='logDeletController' class="icon eos-adm-icon small eos-adm-icon-bin-grey user-cabinet-log-delet"></span>
                     <eos-dynamic-input [input]="inputs['rec.CONTROLL_AUTHOR']" [form]="form" [readonly]="true"></eos-dynamic-input>
                 </div>
-                <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-folder-blue' : 'eos-icon-folder-grey'" (click)="openClassifDepartment()" tooltip='Добавить/Изменить' eosClickMode triggers="hover:click" placement="bottom" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" container="body"></span>
+                <span class="eos-adm-icon small" [ngClass]="flagEdit ? 'eos-adm-icon-folder-blue' : 'eos-adm-icon-folder-grey'" (click)="openClassifDepartment()" tooltip='Добавить/Изменить' eosClickMode triggers="hover:click" placement="bottom" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" container="body"></span>
                 <span *ngIf="!isCurrentSettings" [ngClass]="getClass" (click)="controller && flagEdit ? showInfoUser() : 'false'" tooltip='Подробная информация' (window:resize)="onResize($event)" [placement]="placementForTooltip" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" container="body"></span>
                 <span [ngClass]='getClassClearBtn' (click)="clearControlAuthor()" tooltip='Удалить' placement="bottom" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" container="body"></span>
             </div>
@@ -139,10 +139,10 @@
             <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.RESOLUTION_PLAN_DATE_ASK']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [hidden]="appMode.cbr || appMode.tkDoc" [input]="inputs['rec.CASCADE_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
 			<eos-dynamic-input [hidden]="!appMode.arm && !appMode.tk" [input]="inputs['rec.APPLY_EDS_RESOLUION_AND_PRJ_RESOLUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div>        
+        </div>
         <div [hidden]="appMode.cbr" class="send-res">
 
-            <!-- @task163710 удаление настроек толстяка 
+            <!-- @task163710 удаление настроек толстяка
             <div class="send-oreder-no-arm" *ngIf="!appMode.arm">
                 <span>Рассылать поручения в приложении Документы:</span>
                 <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -152,7 +152,7 @@
             </div>
             <br>
             -->
-            
+
             <div class="resolution-cicle">
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
@@ -179,7 +179,7 @@
             </div>
         </div>
 
-         <!-- @@task165408 убираем настройки толстяка 
+         <!-- @@task165408 убираем настройки толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title" [ngStyle]="{'padding-bottom': '5px'}">При снятии с контроля в приложении Документы:</span>

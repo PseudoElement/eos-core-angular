@@ -15,10 +15,10 @@
     <div
         [ngClass]="{'highlighted': node.isSelected}"
         [ngStyle]="{'padding-left.px': node.layer * 27 * (hideExpand ? 0 : 1) }">
-        <span 
-            *ngIf='node.logDelete' 
-            [ngClass]="{'icon-bin-tree': node.isviewAllowed && systemTech!==1, 'icon-bin-tree-only-text': !node.isviewAllowed || systemTech===1}" 
-            class="icon eos-icon small eos-icon-bin-grey"></span>
+        <span
+            *ngIf='node.logDelete'
+            [ngClass]="{'icon-bin-tree': node.isviewAllowed && systemTech!==1, 'icon-bin-tree-only-text': !node.isviewAllowed || systemTech===1}"
+            class="icon eos-adm-icon small eos-adm-icon-bin-grey"></span>
         <div class="tree-node-due">
             <!-- icon for open -->
             <div
@@ -27,8 +27,8 @@
                 (click)="onExpand($event, node)"
             >
                 <span *ngIf="node.children.length"
-                    class="eos-icon tringle-size icon"
-                    [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"
+                    class="eos-adm-icon tringle-size icon"
+                    [ngClass]="{'eos-adm-icon-open-folder-blue': node.isExpanded && editMode, 'eos-adm-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-adm-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-adm-icon-open-folder-grey': node.isExpanded && !editMode}"
                 ></span>
             </div>
 
@@ -40,7 +40,7 @@
                     hide
                     [checked]="node.isAllowed"
                 >
-                <span [ngClass]="{'text-delet-elem': node.logDelete}" class="eos-icon eos-icon-checkbox-square-blue x-small">
+                <span [ngClass]="{'text-delet-elem': node.logDelete}" class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
                 </span>
                 {{node.label}}
             </label>

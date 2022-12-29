@@ -68,7 +68,7 @@ export class EosBroadcastChannelService {
             });
         }
         return new Promise<any>((resolve, reject) => {
-           resolve();
+           resolve(true);
         });
     }
 

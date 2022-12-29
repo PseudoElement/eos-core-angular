@@ -22,7 +22,7 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
         return this.input.groupLabel && this.isGroup ? this.input.groupLabel : this.input.label;
     }
     get newClass(): string {
-        return 'eos-icon small ' + (this.iconForElem ? this.iconForElem : '');
+        return 'eos-adm-icon small ' + (this.iconForElem ? this.iconForElem : '');
     }
     onButtonClick1 () {
         if (this.viewOpts && this.viewOpts.events && this.viewOpts.events.select) {

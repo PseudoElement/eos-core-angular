@@ -7,7 +7,7 @@
                 <div [formGroup]="form">
                     <label class="checkbox" [ngClass]="{'disabled': !editMode}" (click)="[clickLable($event, item), checkRcpd($event, item)]">
                         <input type="checkbox" hide [formControlName]="item.key" [id]="item.key">
-                        <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                        <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
                         </span>
                         {{item.label}}
                     </label>

@@ -21,6 +21,6 @@ export class InputCleanerDirective implements OnInit {
             this._renderer.setElementClass(icon, 'fa-remove', true);
             this._renderer.setElementClass(icon, 'clean-icon', true);
         }
-        // const btn = this.renderer.createElement(this.el.nativeElement.parentNode, 'eos-input-cleaner');
+        // const btn = this.renderer.createElement(this.el.nativeElement.parentNode, 'eos-adm-input-cleaner');
     }
 }

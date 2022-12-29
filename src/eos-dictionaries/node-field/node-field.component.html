@@ -9,20 +9,20 @@
     <ng-container [ngSwitch]="field.type">
         <div *ngSwitchCase="types.boolean" class="node-field-checkbox">
             <span
-                class="eos-icon small"
+                class="eos-adm-icon small"
                 aria-hidden="true"
-                [ngClass]="{ 'eos-icon-checkbox-grey': field.value }"
+                [ngClass]="{ 'eos-adm-icon-checkbox-grey': field.value }"
             ></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
-            
+
             <!-- костыль для участников СЭВ, отображение иконки типа передачи сообщений -->
             <label  *ngIf="!isSevChannelType(); else sevChannelType" class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}
             </label>
             <ng-template #sevChannelType> <!-- отображение иконки типа канала сообщений СЭВ -->
                 <div class="table-field-ico" *ngFor="let icon of iconsArray;">
-                    <span class="folder small eos-icon"
+                    <span class="folder small eos-adm-icon"
                         [ngClass]="icon.class"
                         [tooltip]="icon.tooltip"
                         placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
@@ -47,7 +47,7 @@
         </ng-container>
         <ng-container *ngSwitchCase="types.icon_sev"> <!-- ICONS_CONTAINER -->
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
-                <span class="folder small eos-icon"
+                <span class="folder small eos-adm-icon"
                     [ngClass]="icon.class"
                     [tooltip]="icon.tooltip"
                     placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
@@ -55,7 +55,7 @@
         </ng-container>
         <ng-container *ngSwitchCase="types.icon"> <!-- ICONS_CONTAINER -->
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
-                <span class="folder small eos-icon"
+                <span class="folder small eos-adm-icon"
                     [ngClass]="icon.class"
                     [tooltip]="icon.tooltip"
                     placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
@@ -63,13 +63,13 @@
         </ng-container>
         <ng-container *ngSwitchCase="types.new">
             <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
-                <span *ngIf="field.value === 1" class="small eos-icon-dot-blue eos-icon small-icon-dot" (click)="viewNode($event)"> </span>
+                <span *ngIf="field.value === 1" class="small eos-adm-icon-dot-blue eos-adm-icon small-icon-dot" (click)="viewNode($event)"> </span>
             </label>
 
         </ng-container>
         <ng-container *ngSwitchDefault>
             <div class="table-field-ico" *ngIf="hasFolderIcon">
-                <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>
+                <span class="folder small eos-adm-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>
             </div><!--
             --><label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value }}

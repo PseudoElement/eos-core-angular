@@ -2,7 +2,7 @@
         <div class="accordion-position">
                 <accordion *ngIf='templRender' class="accordion-position-main">
                         <accordion-group *ngFor="let item of listForAccordion" [heading]="item.title">
-                            <span class="panel-icon eos-icon eos-icon-arrow-v-blue-bottom small" accordion-heading></span>
+                            <span class="panel-icon eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small" accordion-heading></span>
                             <div class="accord-wr">
                                 <ng-container *ngTemplateOutlet="treeTmpl; context:{items: item.tree, margin: 0}"></ng-container>
                             </div>
@@ -23,7 +23,7 @@
                                     <span>Для «многопунктовых» документов</span>
                                 </div>
                                 <span *ngIf="node.children.length"
-                                    class="eos-icon icon list-triangle"
+                                    class="eos-adm-icon icon list-triangle"
                                     (click)="triggerNode(node)"
                                     [ngClass]="returnClass(node, form)"
                                 ></span>
@@ -44,7 +44,7 @@
 
                     <accordion *ngIf="templRenderMailResive" class="accordion-position-main">
                         <accordion-group [heading]="'Параметры регистрации'"  [isOpen]="OpenParamsReg" (isOpenChange)="isOpenChangeReciveAc($event)">
-                            <span class="panel-icon eos-icon eos-icon-arrow-v-blue-bottom small" accordion-heading></span>
+                            <span class="panel-icon eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small" accordion-heading></span>
                             <div class="accord-wr" *ngFor="let item of templRenderMailResive">
                                 <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: item, m: 0}"></ng-container>
                             </div>
@@ -62,7 +62,7 @@
 
                         <div class="input_wrapper" [ngStyle]="{'margin-left.px': mar, 'width': '500px'}">
                             <span *ngIf="node.children.length"
-                                class="eos-icon icon list-triangle"
+                                class="eos-adm-icon icon list-triangle"
                                 (click)="triggerNode(node)"
                                 [ngClass]="returnClass(node, formMailResuve)"
                             ></span>

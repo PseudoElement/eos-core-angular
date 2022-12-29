@@ -73,7 +73,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     title: 'Подразделения',
     defaultOrder: 'nametitle',
     visible: true,
-    iconName: 'eos-icon-department-blue',
+    iconName: 'eos-adm-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'copy', 'paste', 'moveUp', 'moveDown', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
         'showDeleted', 'tuneFields', 'renameBaseDepartment', ...

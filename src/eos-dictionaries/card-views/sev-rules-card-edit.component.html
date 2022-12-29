@@ -5,8 +5,8 @@
         [form]="form"
         [readonly]="!editMode"
         [hideLabel]="true"
-        
-        
+
+
         ></eos-dynamic-input></div>
     <eos-dynamic-input [input]="inputs['rec.NOTE']"
                        [form]="form"
@@ -22,7 +22,7 @@
         [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
             <label [attr.for]="inputs['rec.DUE_DOCGROUP_NAME'].key">{{inputs['rec.DUE_DOCGROUP_NAME'].label}}</label>
             <div class="create-user-wr" style="width: 461px; position: relative;">
-                <span *ngIf="form.controls['rec.DUE_DOCGROUP_DELET'].value" class="icon eos-icon small icon-bin-due-dep-sev eos-icon-bin-grey" [ngClass]="{'delet-log-icon': form.controls['rec.DUE_DOCGROUP_DELET'].value}"></span>
+                <span *ngIf="form.controls['rec.DUE_DOCGROUP_DELET'].value" class="icon eos-adm-icon small icon-bin-due-dep-sev eos-adm-icon-bin-grey" [ngClass]="{'delet-log-icon': form.controls['rec.DUE_DOCGROUP_DELET'].value}"></span>
                 <input
                 [tooltip]="!form.controls['rec.DUE_DOCGROUP'].valid ? 'Обязательное поле.' : ''"
                 [placement]="'bottom'"
@@ -30,7 +30,7 @@
                 [container]=""
                 [ngClass]="{'delet-log-text': form.controls['rec.DUE_DOCGROUP_DELET'].value}"
                 class="form-control m-font inline-block" id="due" readonly [formControlName]="inputs['rec.DUE_DOCGROUP_NAME'].key" type="text">
-                <span class="icon eos-icon small icon-add-department"></span>
+                <span class="icon eos-adm-icon small icon-add-department"></span>
             </div>
         </div>
 
@@ -58,21 +58,21 @@
                 <span class="mar-right">Подразделение:</span> <!--  -->
                 <span class="pull-left" style="margin-right: 0; width: 100%;">
                     <input readonly type="text" class="input-style"  [value]="departmentReceiveInput">
-                <span 
+                <span
                 container="body"
                 placement="bottom"
                 containerClass="tooltip-info"
                 triggers="hover"
                 tooltip="Выбрать"
-                *ngIf="editMode" class="action eos-icon eos-icon-directory-book-blue grif-icon-directory"  (click)="openDepartmentCl('rec.DUE_DEP', true)"></span>
-                <span 
+                *ngIf="editMode" class="action eos-adm-icon eos-adm-icon-directory-book-blue grif-icon-directory"  (click)="openDepartmentCl('rec.DUE_DEP', true)"></span>
+                <span
                 container="body"
                 placement="bottom"
                 containerClass="tooltip-info"
                 triggers="hover"
                 tooltip="Удалить"
                 *ngIf="editMode && departmentReceiveInput.length"
-                class="action eos-icon eos-icon-close-blue delet-icon-directory small"
+                class="action eos-adm-icon eos-adm-icon-close-blue delet-icon-directory small"
                 (click)="deleteFieldsNames('rec.DUE_DEP')"></span>
                 </span>
             </div>
@@ -82,7 +82,7 @@
             [form]="form"
             [readonly]="!editMode"></eos-dynamic-input>
     </div>
-    
+
     <!--Тип документа - Документ, Вид правила – Отправка документа-->
     <span *ngIf="(typeDoc==1) && (ruleKind==1)">
         <!--Отправлять реквизиты РК-->
@@ -104,20 +104,20 @@
                     class="pull-left margin-l link-type"
                     [ngStyle]="{'width.px': 300}"
                     ><input readonly type="text" [value]="linkTypeListNames.join(';')"></span>
-                    <span container="body" 
-                    placement="bottom" 
-                    containerClass="tooltip-info" 
+                    <span container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
                     tooltip="Добавить"
                     triggers="hover"
-                    *ngIf="editMode" 
-                    class="action eos-icon eos-icon-download " (click)="openLinkCl()"></span>
-                    <span 
-                    placement="bottom" 
-                    containerClass="tooltip-info" 
+                    *ngIf="editMode"
+                    class="action eos-adm-icon eos-adm-icon-download " (click)="openLinkCl()"></span>
+                    <span
+                    placement="bottom"
+                    containerClass="tooltip-info"
                     tooltip="Удалить"
                     triggers="hover"
-                    *ngIf="editMode" 
-                    class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
+                    *ngIf="editMode"
+                    class="action eos-adm-icon eos-adm-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
                 </div>
 
                     <!-- <eos-dynamic-input class="pull-left margin-l"
@@ -185,21 +185,21 @@
                         <span class="mar-right">Грифы доступа:</span>
                         <span class="pull-left" [ngStyle]="{'width.px': 680}" style="margin-right: 0;">
                             <input class="input-style" readonly type="text" [value]="fileAccessNames.join(';')">
-                        <span *ngIf="editMode" 
-                            class="action eos-icon" 
-                            [ngClass]="{'eos-icon-directory-book-blue grif-icon-directory': file}"
-                            container="body" 
-                            placement="bottom" 
-                            containerClass="tooltip-info" 
-                            tooltip="Выбрать" 
+                        <span *ngIf="editMode"
+                            class="action eos-adm-icon"
+                            [ngClass]="{'eos-adm-icon-directory-book-blue grif-icon-directory': file}"
+                            container="body"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            tooltip="Выбрать"
                             triggers="hover"
                         (click)="openSecurityCl('rec.fileAccessList', !file)"></span>
-                        <span *ngIf="editMode && fileAccessNames.length" 
-                            class="action eos-icon delet-icon-directory"
-                            [ngClass]="{'': !file, 'eos-icon-close-blue small': file}"
-                            container="body" 
-                            placement="bottom" 
-                            containerClass="tooltip-info" 
+                        <span *ngIf="editMode && fileAccessNames.length"
+                            class="action eos-adm-icon delet-icon-directory"
+                            [ngClass]="{'': !file, 'eos-adm-icon-close-blue small': file}"
+                            container="body"
+                            placement="bottom"
+                            containerClass="tooltip-info"
                             triggers="hover"
                             tooltip="Удалить"
                             (click)="deleteFieldsNames('rec.fileAccessList', !file)"></span>
@@ -308,7 +308,7 @@
                     [input]="inputs['rec.stopDayCount']"
                     [form]="form"
                     [readonly]="!editMode"
-                    
+
                     >
                 </eos-dynamic-input>
                 <span>&nbsp;суток</span>
@@ -326,21 +326,21 @@
             <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
                 <input readonly type="text" [value]="groupDocument[0] || ''">
             </span>
-            <span 
-            container="body" 
-            placement="bottom" 
-            containerClass="tooltip-info" 
-            tooltip="Выбрать" 
+            <span
+            container="body"
+            placement="bottom"
+            containerClass="tooltip-info"
+            tooltip="Выбрать"
             triggers="hover"
-            *ngIf="editMode" 
-            class="action eos-icon eos-icon-download"  (click)="openTemplateGroup(template, 'rec.groupDocument')"></span>
-            <span 
-            container="body" 
-            placement="bottom" 
-            containerClass="tooltip-info" 
-            tooltip="Удалить" 
+            *ngIf="editMode"
+            class="action eos-adm-icon eos-adm-icon-download"  (click)="openTemplateGroup(template, 'rec.groupDocument')"></span>
+            <span
+            container="body"
+            placement="bottom"
+            containerClass="tooltip-info"
+            tooltip="Удалить"
             triggers="hover"
-            *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.groupDocument')"></span>
+            *ngIf="editMode"  class="action eos-adm-icon eos-adm-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.groupDocument')"></span>
         </div>
         <div class="clear-both">
             <eos-dynamic-input [input]="inputs['rec.cardFile']"
@@ -352,7 +352,7 @@
                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.korRuleSend']"
                            [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>        
+                           [readonly]="!editMode"></eos-dynamic-input>
         <div style="margin-bottom: 20px; position: relative" class="sev-grif">
             <span class="mar-right">Организации создавать:</span> <!--  -->
             <span class="pull-left" style="margin-right: 0;width: 100%">
@@ -365,17 +365,17 @@
                 triggers="hover"
                 *ngIf="editMode"
                 eosClickMode
-                class="action eos-icon eos-icon-directory-book-blue grif-icon-directory"  (click)="openOrganizCl('rec.OrganizationFolderInput')"></span>
-            <span 
-            container="body" 
-            placement="bottom" 
-            containerClass="tooltip-info" 
-            tooltip="Удалить" 
+                class="action eos-adm-icon eos-adm-icon-directory-book-blue grif-icon-directory"  (click)="openOrganizCl('rec.OrganizationFolderInput')"></span>
+            <span
+            container="body"
+            placement="bottom"
+            containerClass="tooltip-info"
+            tooltip="Удалить"
             triggers="hover"
-            *ngIf="editMode && organization"  
-            class="action eos-icon delet-icon-directory eos-icon-close-blue small" (click)="deleteFieldsNames('rec.OrganizationFolderInput')"></span>
+            *ngIf="editMode && organization"
+            class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" (click)="deleteFieldsNames('rec.OrganizationFolderInput')"></span>
             </span>
-            
+
         </div>
         <!--Принимать реквизиты РК-->
         <div class="margin-b">
@@ -400,22 +400,22 @@
                                         class="pull-left margin-l link-type"
                                         [ngStyle]="{'width.px': 300}"
                                         ><input readonly type="text" [value]="linkTypeListNames.join(';')"></span>
-                                        <span 
-                                        container="body" 
-                                        placement="bottom" 
-                                        containerClass="tooltip-info" 
-                                        tooltip="Выбрать" 
+                                        <span
+                                        container="body"
+                                        placement="bottom"
+                                        containerClass="tooltip-info"
+                                        tooltip="Выбрать"
                                         triggers="hover"
-                                        *ngIf="editMode" 
-                                        class="action eos-icon eos-icon-download " (click)="openLinkCl()"></span>
-                                        <span 
-                                        container="body" 
-                                        placement="bottom" 
-                                        containerClass="tooltip-info" 
-                                        tooltip="Удалить" 
+                                        *ngIf="editMode"
+                                        class="action eos-adm-icon eos-adm-icon-download " (click)="openLinkCl()"></span>
+                                        <span
+                                        container="body"
+                                        placement="bottom"
+                                        containerClass="tooltip-info"
+                                        tooltip="Удалить"
                                         triggers="hover"
-                                        *ngIf="editMode" 
-                                        class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
+                                        *ngIf="editMode"
+                                        class="action eos-adm-icon eos-adm-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
                                     </div>
                     <eos-dynamic-input class="pull-left margin-l"
                                        [ngStyle]="{'width.px': 300}"
@@ -610,7 +610,7 @@
                 </div>
                 <div class="clear-both" style="width: 100%;">
                     <eos-dynamic-input [input]="inputs['rec.NotificationConfigReport']"
-                                       [form]="form"                              
+                                       [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <div style="margin-left: 10px;">
                         <eos-dynamic-input [input]="inputs['rec.executorFile']"
@@ -627,7 +627,7 @@
                                 [disabled]="!form.controls['rec.NotificationConfigReport'].value || !form.controls['rec.executorFile'].value"
                                 [readonly]="!editMode"></eos-dynamic-input>
                         </div>
-                        
+
                     </div>
                     <eos-dynamic-input [input]="inputs['rec.redirection']"
                                        [form]="form"
@@ -643,7 +643,7 @@
                                        [form]="form"
                                        [disabled]="!form.controls['rec.address'].value"
                                        [readonly]="!editMode"></eos-dynamic-input>
-                    </div> 
+                    </div>
                     <div style="display: flex;">
                         <div style="padding-top: 7px;">
                             <label>Доклады направлять в течении:&nbsp;</label>
@@ -656,7 +656,7 @@
                         <div style="padding-top: 7px;">
                             <label>&nbsp;Суток</label>
                         </div>
-                    </div>                                 
+                    </div>
                 </div>
                 <div class="files">
                     <eos-dynamic-input [input]="inputs['rec.TaskExtensions']"
@@ -720,21 +720,21 @@
                         triggers="hover"
                         *ngIf="editMode"
                         eosClickMode
-                        class="action eos-icon grif-icon-directory"
-                        [ngClass]="{'eos-icon-directory-book-blue': reportExecution}"
+                        class="action eos-adm-icon grif-icon-directory"
+                        [ngClass]="{'eos-adm-icon-directory-book-blue': reportExecution}"
                         (click)="openOrganizCl('rec.OrganizationFolderInput', !reportExecution)"
                         eosClickMode></span>
-                    <span 
+                    <span
                         container="body"
                         placement="bottom"
                         containerClass="tooltip-info"
                         tooltip="Удалить"
                         triggers="hover"
-                        *ngIf="editMode && organization"  
-                        class="action eos-icon delet-icon-directory eos-icon-close-blue small" 
+                        *ngIf="editMode && organization"
+                        class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small"
                         (click)="deleteFieldsNames('rec.OrganizationFolderInput', !reportExecution)"></span>
                     </span>
-                                
+
                 </div>
             <div class="clear-both">
                 <eos-dynamic-input class="pull-left"
@@ -781,20 +781,20 @@
                         class="pull-left margin-l link-type"
                         [ngStyle]="{'width.px': 300}"
                         ><input readonly type="text" [value]="linkTypeListNames.join(';')"></span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Выбрать" 
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Выбрать"
                         triggers="hover"
-                        *ngIf="editMode" class="action eos-icon eos-icon-download "  (click)="openLinkCl()"></span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Удалить" 
+                        *ngIf="editMode" class="action eos-adm-icon eos-adm-icon-download "  (click)="openLinkCl()"></span>
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Удалить"
                         triggers="hover"
-                        *ngIf="editMode"  class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
+                        *ngIf="editMode"  class="action eos-adm-icon eos-adm-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
                     </div>
 
                     <!-- <eos-dynamic-input class="pull-left margin-l"
@@ -865,21 +865,21 @@
                     <span class="mar-right">Грифы доступа:</span>
                     <span class="pull-left" style="margin-right: 0; width: 100%;">
                         <input class="input-style" readonly type="text" [value]="fileAccessNames.join(';')">
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Выбрать" 
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Выбрать"
                         triggers="hover"
-                        class="action eos-icon eos-icon-directory-book-blue grif-icon-directory"  (click)="openSecurityCl('rec.fileAccessListRk')"></span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Удалить" 
+                        class="action eos-adm-icon eos-adm-icon-directory-book-blue grif-icon-directory"  (click)="openSecurityCl('rec.fileAccessListRk')"></span>
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Удалить"
                         triggers="hover"
                         *ngIf="editMode && fileAccessNames.length"
-                        class="action eos-icon delet-icon-directory eos-icon-close-blue small" (click)="deleteFieldsNames('rec.fileAccessListRk')"></span>
+                        class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" (click)="deleteFieldsNames('rec.fileAccessListRk')"></span>
                     </span>
                     </div>
                    <div style="position: relative;">
@@ -1007,77 +1007,77 @@
                     <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
                         <input readonly type="text" [value]="groupDocument[0] || ''">
                     </span>
-                    <span 
-                    container="body" 
-                    placement="bottom" 
-                    containerClass="tooltip-info" 
-                    tooltip="Выбрать" 
+                    <span
+                    container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    tooltip="Выбрать"
                     triggers="hover"
-                    *ngIf="editMode" 
-                    class="action eos-icon eos-icon-download"  (click)="openTemplateGroup(template, 'rec.groupDocument')"></span>
-                    <span 
-                    container="body" 
-                    placement="bottom" 
-                    containerClass="tooltip-info" 
-                    tooltip="Удалить" 
+                    *ngIf="editMode"
+                    class="action eos-adm-icon eos-adm-icon-download"  (click)="openTemplateGroup(template, 'rec.groupDocument')"></span>
+                    <span
+                    container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    tooltip="Удалить"
                     triggers="hover"
-                    *ngIf="editMode"  
-                    class="action eos-icon eos-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.groupDocument')"></span>
+                    *ngIf="editMode"
+                    class="action eos-adm-icon eos-adm-icon-bin-forever-blue" (click)="deleteFieldsNames('rec.groupDocument')"></span>
                 </div>
-                <div class="clear-both">   
+                <div class="clear-both">
                     <eos-dynamic-input class="pull-left"
                         [input]="inputs['rec.executor']"
                         [form]="form"
                         [readonly]="!editMode"></eos-dynamic-input>
                 </div>
-                
+
                 <div class="clear-both">
                     <div style="margin: 0 10px 20px 0; position: relative" class="sev-grif">
                         <span class="mar-right">ДЛ за "Текущую организацию":</span>
                         <span class="pull-left" style="width: 100%">
                             <input class="input-style" readonly type="text" [value]="departmentUser">
                         </span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Выбрать" 
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Выбрать"
                         triggers="hover"
-                        *ngIf="editMode" class="action eos-icon grif-icon-directory eos-icon-directory-book-blue"
+                        *ngIf="editMode" class="action eos-adm-icon grif-icon-directory eos-adm-icon-directory-book-blue"
                         (click)="openDepartmentCl('rec.executiveInput')"></span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Удалить" 
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Удалить"
                         triggers="hover"
                         *ngIf="editMode && departmentUser"
-                        class="action eos-icon delet-icon-directory eos-icon-close-blue small" 
+                        class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small"
                         (click)="deleteFieldsNames('rec.executiveInput')"></span>
                     </div>
                 </div>
-                
+
                 <div style="margin: 0 10px 20px 0; position: relative" class="sev-grif">
                     <span class="mar-right">Организации создавать:</span>
                     <span class="pull-left" style="width: 100%">
                         <input class="input-style" readonly type="text" [value]="organization">
                     </span>
-                    <span 
-                    container="body" 
-                    placement="bottom" 
-                    containerClass="tooltip-info" 
-                    tooltip="Выбрать" 
+                    <span
+                    container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    tooltip="Выбрать"
                     triggers="hover"
-                    *ngIf="editMode" class="action eos-icon grif-icon-directory eos-icon-directory-book-blue"
+                    *ngIf="editMode" class="action eos-adm-icon grif-icon-directory eos-adm-icon-directory-book-blue"
                     (click)="openOrganizCl('rec.OrganizationFolderInput')" eosClickMode></span>
-                    <span 
-                    container="body" 
-                    placement="bottom" 
-                    containerClass="tooltip-info" 
-                    tooltip="Удалить" 
+                    <span
+                    container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    tooltip="Удалить"
                     triggers="hover"
-                    *ngIf="editMode && organization"  
-                    class="action eos-icon delet-icon-directory eos-icon-close-blue small" 
+                    *ngIf="editMode && organization"
+                    class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small"
                     (click)="deleteFieldsNames('rec.OrganizationFolderInput')"></span>
                 </div>
                 <div class="clear-both">
@@ -1101,24 +1101,24 @@
                         <span class="pull-left link-type" [ngStyle]="{'width.px': 300}">
                             <input readonly type="text" [value]="linkTypeListNames.join(';')">
                         </span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Выбрать" 
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Выбрать"
                         triggers="hover"
-                        *ngIf="editMode" 
-                        class="action eos-icon eos-icon-download " (click)="openLinkCl()"></span>
-                        <span 
-                        container="body" 
-                        placement="bottom" 
-                        containerClass="tooltip-info" 
-                        tooltip="Удалить" 
+                        *ngIf="editMode"
+                        class="action eos-adm-icon eos-adm-icon-download " (click)="openLinkCl()"></span>
+                        <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        tooltip="Удалить"
                         triggers="hover"
-                        *ngIf="editMode" 
-                        class="action eos-icon eos-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
+                        *ngIf="editMode"
+                        class="action eos-adm-icon eos-adm-icon-bin-forever-blue " (click)="deleteFieldsNames('rec.linkTypeList')"></span>
                     </div>
-                </div>  
+                </div>
                 <eos-dynamic-input class="clear-both"
                                    [input]="inputs['rec.access']"
                                    [form]="form"
@@ -1130,7 +1130,7 @@
                     <eos-dynamic-input class="pull-left"
                                        [input]="inputs['rec.address']"
                                        [form]="form"
-                                       [readonly]="!editMode"></eos-dynamic-input>                                       
+                                       [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input class="pull-left margin-l"
                                        [input]="inputs['rec.adrReplace']"
                                        [form]="form"
@@ -1346,8 +1346,8 @@
                         <div style="padding-top: 7px;">
                             <label>&nbsp;Суток</label>
                         </div>
-                    </div> 
-                
+                    </div>
+
             </fieldset>
         </div>
         <div class="clear-both margin-b">
@@ -1409,7 +1409,7 @@
                 [disabled] = "false"
                 class="btn btn-primary-light add-storage"
                 (click)="addGroup()">
-                <span class="eos-icon eos-icon-plus-blue small"></span>
+                <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
             </button>
         </div>
         <div
@@ -1421,7 +1421,7 @@
                 [disabled] = "(checkItemForDelet === null)"
                 class="btn btn-primary-light add-storage"
                 (click)="deletGroup()">
-                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
             </button>
         </div>
     </div>
@@ -1430,7 +1430,7 @@
             <div (click)="clickForItem(item, i)">
                 <input class="group-document-input" [value]="item" (keyup)="onKey($event, item, i)"/> <!--  -->
             </div>
-            
+
         </div>
     </div>
     <div class="modal-footer">

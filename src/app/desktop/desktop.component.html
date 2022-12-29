@@ -1,4 +1,4 @@
-<div class="eos-desktop eos-desctop-padding">
+<div class="eos-adm-desktop eos-adm-desctop-padding">
     <div class="desktop-wrapper">
         <div class="links-container" #linkContainer>
             <bs-sortable
@@ -48,7 +48,7 @@
 <ng-template #referenceTemplate let-item="item" let-index="index">
     <div class="item-content xl-font block edited" *ngIf="editing(item.value)">
         <span class="icon-wrapper">
-            <span class="icon eos-icon {{ item.value.iconName }}"></span>
+            <span class="icon eos-adm-icon {{ item.value.iconName }}"></span>
         </span>
         <input
             id="title"
@@ -74,7 +74,7 @@
             containerClass="tooltip-info"
             container="body"
         >
-            <span class="eos-icon eos-icon-checkbox-blue small" aria-hidden="true"></span>
+            <span class="eos-adm-icon eos-adm-icon-checkbox-blue small" aria-hidden="true"></span>
         </button>
         <button
             class="icon-btn btn lefter"
@@ -84,7 +84,7 @@
             containerClass="tooltip-info"
             container="body"
         >
-            <span class="eos-icon eos-icon-close-blue small" aria-hidden="true"></span>
+            <span class="eos-adm-icon eos-adm-icon-close-blue small" aria-hidden="true"></span>
         </button>
     </div>
 
@@ -97,7 +97,7 @@
         [routerLink]="rttlink(item)"
     >
             <span class="icon-wrapper">
-                <span class="icon eos-icon {{ item.value.iconName }}"></span>
+                <span class="icon eos-adm-icon {{ item.value.iconName }}"></span>
             </span>
         <span [hidden]="editing(item.value)" class="text" [title]="getHint(item)">
             {{ item.value.title }}
@@ -133,7 +133,7 @@
             containerClass="tooltip-info"
             container="body"
         >
-            <span class="eos-icon eos-icon-edit-blue small" aria-hidden="true"></span>
+            <span class="eos-adm-icon eos-adm-icon-edit-blue small" aria-hidden="true"></span>
         </button>
         <button
             class="icon-btn btn"
@@ -144,7 +144,7 @@
             containerClass="tooltip-info"
             container="body"
         >
-            <span class="eos-icon eos-icon-bin-blue small" aria-hidden="true"></span>
+            <span class="eos-adm-icon eos-adm-icon-bin-blue small" aria-hidden="true"></span>
         </button>
     </div>
 </ng-template>

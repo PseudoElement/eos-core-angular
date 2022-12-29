@@ -1,6 +1,6 @@
 <ng-template #showMenuTooltip>Показать<br/>меню</ng-template>
 
-<div class="eos-node-actions">
+<div class="eos-adm-node-actions">
     <ng-container *ngFor="let item of buttons">
         <div class="actions"
             *ngIf="item.show">
@@ -82,7 +82,7 @@
             containerClass="tooltip-info"
             dropdownToggle
             (click)="itemTooltip.hide()">
-            <span [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
+            <span [ngClass]="dropdown.isOpen ? 'eos-adm-icon eos-adm-icon-fab-white small': 'eos-adm-icon eos-adm-icon-fab-blue small'"></span>
         </button>
         <!--MENU-->
         <ul *dropdownMenu

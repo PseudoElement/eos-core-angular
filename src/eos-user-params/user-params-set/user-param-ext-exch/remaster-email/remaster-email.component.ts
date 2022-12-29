@@ -260,15 +260,15 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         }
         if (node.isOpen) {
             if (!form.controls[key].disabled) {
-                str = 'eos-icon-open-folder-blue';
+                str = 'eos-adm-icon-open-folder-blue';
             } else {
-                str = 'eos-icon-open-folder-grey';
+                str = 'eos-adm-icon-open-folder-grey';
             }
         } else {
             if (!form.controls[key].disabled) {
-                str = 'eos-icon-close-folder-blue';
+                str = 'eos-adm-icon-close-folder-blue';
             } else {
-                str = 'eos-icon-close-folder-grey';
+                str = 'eos-adm-icon-close-folder-grey';
             }
         }
         return str;

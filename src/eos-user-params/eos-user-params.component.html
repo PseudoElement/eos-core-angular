@@ -108,8 +108,8 @@
             [(isOpen)]="item.isOpen" [ngClass]="item.disabled ? 'disable' : ''">
             <div accordion-heading>
                 {{item.title}}
-                <span *ngIf="!hideIcon" class="icon eos-icon small float-right pull-right"
-                    [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"></span>
+                <span *ngIf="!hideIcon" class="icon eos-adm-icon small float-right pull-right"
+                    [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-adm-icon-arrow-v-blue-top': item.isOpen}"></span>
             </div>
             <div *ngFor="let subItem of item.subList" class="subItem" [ngClass]="subItem.disabled ? 'disable' : ''"
                 [routerLink]="['/user-params-set', subItem.url]" routerLinkActive="active-link">
@@ -144,7 +144,7 @@
                                 <input [checked]="list.check" [disabled]="!flagEdit" type="checkbox" readonly="readonly"
                                     class="readonly" (change)="emailChenge.saveParamsCode($event, list.name)">
                                 <!--emailChenge.saveParamsCode($event, list.name);  -->
-                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                                <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                                 <span> {{list.name}}</span>
                             </label>
                         </div>
@@ -163,8 +163,8 @@
                                     [(ngModel)]="searchLexem">
                             </div>
                             <div style="height: 100%;">
-                                <span class="action eos-icon" style="margin-left: 10px"
-                                    [ngClass]="inputChoice.value ? 'eos-icon-close-blue' : 'eos-icon-close-grey'"
+                                <span class="action eos-adm-icon" style="margin-left: 10px"
+                                    [ngClass]="inputChoice.value ? 'eos-adm-icon-close-blue' : 'eos-adm-icon-close-grey'"
                                     container="body" placement="bottom" containerClass="tooltip-info" triggers="hover"
                                     tooltip="Удалить" (click)="deleteSearchSections()"></span>
                             </div>
@@ -176,7 +176,7 @@
                         </div>
                     </div>
                   </div>
-                </div>  
+                </div>
         </ng-container>
     </ng-container>
 </nav>

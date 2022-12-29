@@ -26,13 +26,13 @@ eos-dynamic-input {
 }
 
 .form-group {
-    .eos-select2 {
+    .eos-adm-select2 {
         &.required:after {
             right: 26px;
         }
     }
 }
-.eos-select2 {
+.eos-adm-select2 {
     input {
         cursor: default;
         &.editable {
@@ -73,7 +73,7 @@ eos-dynamic-input {
                     background-color: inherit;
                     box-shadow: none;
                     border-width: 0 none transparent;
-                    
+
                 }
             }
             &.placeholder {
@@ -126,7 +126,7 @@ eos-dynamic-input {
         cursor: default;
     }
 
-    .eos-icon-checkbox-blue {
+    .eos-adm-icon-checkbox-blue {
         &.disabled {
             background-image: url("../assets/icons/Checkbox-Grey.svg");
         }
@@ -232,7 +232,7 @@ eos-dynamic-input {
         opacity: 0.65;
     }
 
-    .eos-select {
+    .eos-adm-select {
 
 
 
@@ -289,10 +289,10 @@ eos-dynamic-input {
         //padding: 0;
         padding: 6px 8px;
     }
-    .eos-switch {
+    .eos-adm-switch {
         display: flex;
         display: -webkit-flex;
-        background-color: transparent !important; 
+        background-color: transparent !important;
         .switch-item {
             flex: 1 1 auto;
         }
@@ -350,7 +350,7 @@ eos-dynamic-input {
     }
 }
 
-.eos-datepicker {
+.eos-adm-datepicker {
     position: relative;
     input {
         margin-right: 5px;

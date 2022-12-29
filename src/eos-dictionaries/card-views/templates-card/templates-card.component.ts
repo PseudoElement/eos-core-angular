@@ -44,10 +44,10 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     private frDatas;
     // private _ngUnsubscribe: Subject<any> = new Subject();
     get showClass() {
-        return this.showDoc ? 'eos-icon-open-folder-blue' : 'eos-icon-close-folder-blue';
+        return this.showDoc ? 'eos-adm-icon-open-folder-blue' : 'eos-adm-icon-close-folder-blue';
     }
     get classSort() {
-        return this.flagSort ? 'eos-icon-arrow-blue-top' : 'eos-icon-arrow-blue-bottom';
+        return this.flagSort ? 'eos-adm-icon-arrow-blue-top' : 'eos-adm-icon-arrow-blue-bottom';
     }
     constructor(
         protected _dictSrv: EosDictService,

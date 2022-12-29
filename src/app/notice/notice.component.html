@@ -1,7 +1,7 @@
-<div class="btn-group eos-notice" dropdown tooltip="Уведомления" placement="bottom" containerClass="tooltip-info">
+<div class="btn-group eos-adm-notice" dropdown tooltip="Уведомления" placement="bottom" containerClass="tooltip-info">
   <button dropdownToggle type="button" class="btn dropdown-button dropdown-toggle">
-    <span *ngIf="noticesCount" class="eos-icon eos-icon-bell-blue"><span class="badge">{{noticesCount}}</span></span>
-    <span *ngIf="!noticesCount" class="eos-icon eos-icon-bell-grey"></span>
+    <span *ngIf="noticesCount" class="eos-adm-icon eos-adm-icon-bell-blue"><span class="badge">{{noticesCount}}</span></span>
+    <span *ngIf="!noticesCount" class="eos-adm-icon eos-adm-icon-bell-grey"></span>
   </button>
   <ul *dropdownMenu class="dropdown-menu" role="menu">
     <li *ngFor="let notice of notices" class="menuitem" role="menuitem">

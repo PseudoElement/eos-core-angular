@@ -23,7 +23,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
     id: 'sev-rules',
     apiInstance: 'SEV_RULE',
     visible: true,
-    iconName: 'eos-icon-rules-blue',
+    iconName: 'eos-adm-icon-rules-blue',
     title: 'Правила СЭВ',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',

@@ -1,4 +1,4 @@
-<div class="eos-dictionary"
+<div class="eos-adm-dictionary"
     [ngClass]="{'full': currentState[0] && currentState[1] && !hideTree,
         'only-selected': !currentState[0] && !currentState[1] || currentState[0] && !currentState[1] && hideTree,
         'info': !currentState[0] && currentState[1] || currentState[0] && currentState[1] && hideTree,
@@ -30,7 +30,7 @@
                     <button *ngIf="hasParent"
                         class="btn btn-primary-light"
                         (click)="goUp()">
-                        <span class="eos-icon eos-icon-arrow-blue-left"></span>
+                        <span class="eos-adm-icon eos-adm-icon-arrow-blue-left"></span>
                     </button>
                 </div>
                 <div class="selected-node-title">
@@ -69,7 +69,7 @@
                             placement="bottom"
                             container="body"
                             containerClass="tooltip-info"
-                            (click)="true"><span class="eos-icon eos-icon-close-blue small"></span></button>
+                            (click)="true"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></button>
                         </span>
                     </ng-template>
                 </div>

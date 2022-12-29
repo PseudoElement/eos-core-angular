@@ -1,14 +1,14 @@
-<div class="eos-nav-param block">
-    <span class="eos-sandwich">
+<div class="eos-adm-nav-param block">
+    <span class="eos-adm-sandwich">
         <button class="btn sandwich" (click)="changeState()" [ngClass]="{'active': isWide }">
-            <span class="icon eos-icon small" [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide}"></span>
+            <span class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-menu-white': isWide, 'eos-adm-icon-menu-blue': !isWide}"></span>
         </button>
     </span>
     <span *ngIf="title"
         tooltip="{{title}}"
         placement="bottom"
         container="body"
-        containerClass="tooltip-info word-break" 
+        containerClass="tooltip-info word-break"
         class="nav-text breadcrumb-item selected-text l-font">
         {{title}}
     </span>
@@ -17,15 +17,15 @@
         <eos-pushpin [infoOpened]="false"></eos-pushpin>
     </span>-->
 
-    <span *ngIf="showRigth" class="eos-sandwich pull-right">
+    <span *ngIf="showRigth" class="eos-adm-sandwich pull-right">
         <button *ngIf="!isSearchRightSandwich  else searchRightSandwich" class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
-            <span class="icon eos-icon small button-sandwich" [ngClass]="{'eos-icon-menu-white': isRighSendwich, 'eos-icon-menu-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
+            <span class="icon eos-adm-icon small button-sandwich" [ngClass]="{'eos-adm-icon-menu-white': isRighSendwich, 'eos-adm-icon-menu-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
         </button>
     </span>
 </div>
 
 <ng-template #searchRightSandwich>
     <button class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
-        <span class="icon eos-icon small button-sandwich" [ngClass]="{'eos-icon-search-white': isRighSendwich, 'eos-icon-search-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
+        <span class="icon eos-adm-icon small button-sandwich" [ngClass]="{'eos-adm-icon-search-white': isRighSendwich, 'eos-adm-icon-search-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
     </button>
   </ng-template>

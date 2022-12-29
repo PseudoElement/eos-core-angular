@@ -6,18 +6,18 @@
                 <div style="position: relative;">
                     <span class="pull-left" style="margin-right: 0; width: 100%;">
                         <input class="input-style" readonly type="text" [value]="this.form.controls['rec.CLASSIF_NAME'].value || ''">
-                        <span 
-                            container="body" 
-                            placement="bottom" 
+                        <span
+                            container="body"
+                            placement="bottom"
                             containerClass="tooltip-info"
                             [tooltip]="editMode ? 'Выбрать' : null"
                             triggers="hover"
                             eosClickMode
-                            class="action eos-icon grif-icon-directory"
-                            [ngClass]="{'eos-icon-directory-book-blue': editMode, 'eos-icon-directory-book-grey': !editMode}"
+                            class="action eos-adm-icon grif-icon-directory"
+                            [ngClass]="{'eos-adm-icon-directory-book-blue': editMode, 'eos-adm-icon-directory-book-grey': !editMode}"
                             (click)="chooseOrganiz()">
                         </span>
-                        <span 
+                        <span
                             container="body"
                             placement="bottom"
                             containerClass="tooltip-info"
@@ -25,7 +25,7 @@
                             triggers="hover"
                             (click)="unbindOrganization()"
                             *ngIf="editMode && hasOrganization"
-                            class="action eos-icon delet-icon-directory eos-icon-close-blue small" >
+                            class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" >
                         </span> <!-- (click)="deleteFieldsNames('rec.fileAccessListRk')" -->
                     </span>
                     <br>
@@ -61,19 +61,19 @@
                             [input]="inputs['rec.NOTE']"
                             [form]="form"
                             [readonly]="!editMode"
-                            
+
                             ></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.ISN_CHANNEL']"
                             [input]="inputs['rec.ISN_CHANNEL']"
                             [form]="form"
                             [readonly]="!editMode"
-                            
+
                             ></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.CRYPT'] && (!isCbBase)"
                             [input]="inputs['rec.CRYPT']"
                             [form]="form"
                             [readonly]="!editMode"
-                            ></eos-dynamic-input> 
+                            ></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.ADDRESS']"
                             [input]="inputs['rec.ADDRESS']"
                             [form]="form"
@@ -82,26 +82,26 @@
         <div style="position: relative;">
             <span class="pull-left" style="margin-right: 0; width: 100%;">
                 <input class="input-style" readonly type="text" [value]="getStringUsedRules()">
-                <span 
+                <span
                     eosClickMode
                     container="body"
                     placement="bottom"
                     containerClass="tooltip-info"
                     [tooltip]="editMode ? 'Выбрать' : null"
                     triggers="hover"
-                    class="action eos-icon  grif-icon-directory" 
-                    [ngClass]="{'eos-icon-directory-book-blue': editMode, 'eos-icon-directory-book-grey': !editMode}"  
+                    class="action eos-adm-icon  grif-icon-directory"
+                    [ngClass]="{'eos-adm-icon-directory-book-blue': editMode, 'eos-adm-icon-directory-book-grey': !editMode}"
                     (click)="openClassiSecurity('rec.fileAccessListRk')">
                 </span>
-                <span 
-                container="body" 
-                placement="bottom" 
-                containerClass="tooltip-info" 
+                <span
+                container="body"
+                placement="bottom"
+                containerClass="tooltip-info"
                 tooltip="Удалить"
                 (click)="deleteAllRule()"
                 triggers="hover"
                 *ngIf="editMode"
-                class="action eos-icon delet-icon-directory eos-icon-close-blue small" ></span> <!-- (click)="deleteFieldsNames('rec.fileAccessListRk')" -->
+                class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" ></span> <!-- (click)="deleteFieldsNames('rec.fileAccessListRk')" -->
             </span>
         </div>
         <!-- <label [ngClass]="{'unimportant-text': !editMode }">Используемые правила <a

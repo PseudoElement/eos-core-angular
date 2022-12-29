@@ -4,9 +4,9 @@
         class="card-node-righr">
 
         <span *ngIf="node.expandable && node.value"
-            class="eos-icon icon list-triangle small"
+            class="eos-adm-icon icon list-triangle small"
             (click)="node.expanded()"
-            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && (!editMode || !node?.allowed), 'eos-icon-open-folder-grey': node.isExpanded && (!editMode || !node?.allowed)}"
+            [ngClass]="{'eos-adm-icon-open-folder-blue': node.isExpanded && editMode, 'eos-adm-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-adm-icon-close-folder-grey': !node.isExpanded && (!editMode || !node?.allowed), 'eos-adm-icon-open-folder-grey': node.isExpanded && (!editMode || !node?.allowed)}"
         ></span>
 
         <label class="checkbox card-node-checked">
@@ -15,7 +15,7 @@
                 hide
                 [(ngModel)]="node.value"
             >
-            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+            <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
             </span>
             {{node.name}}
         </label>
@@ -33,7 +33,7 @@
                         eosClickMode
                         (click)="[node.addInstance()]"
                     >
-                        <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode || !node?.allowed}">
+                        <span class="eos-adm-icon small" [ngClass]="{'eos-adm-icon-plus-blue': editMode, 'eos-adm-icon-plus-grey': !editMode || !node?.allowed}">
                         </span>
                     </button>
                     <div style="display: inline-block"
@@ -44,7 +44,7 @@
                             class="btn"
                             [disabled]="!node.curentSelectedNode || !editMode || !node?.allowed"
                             (click)="[node.deleteInstance()]">
-                            <span class="eos-icon small"  [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode || !node?.allowed}">
+                            <span class="eos-adm-icon small"  [ngClass]="{'eos-adm-icon-bin-forever-blue': editMode, 'eos-adm-icon-bin-forever-grey': !editMode || !node?.allowed}">
                             </span>
                         </button>
                     </div>
@@ -56,7 +56,7 @@
                             class="btn"
                             [disabled]="!editMode || !node?.allowed"
                             (click)="[node.copyInstance()]">
-                            <span class="eos-icon small"  [ngClass]="{'eos-icon-copy-blue': editMode, 'eos-icon-copy-grey': !editMode}">
+                            <span class="eos-adm-icon small"  [ngClass]="{'eos-adm-icon-copy-blue': editMode, 'eos-adm-icon-copy-grey': !editMode}">
                             </span>
                         </button>
                     </div>
@@ -68,7 +68,7 @@
                             class="btn"
                             [disabled]="!editMode || !node?.allowed || !node.copyFuncNum || node.copyButton(node)"
                             (click)="[node.pasteInstance()]">
-                            <span class="eos-icon small"  [ngClass]="{'eos-icon-paste-blue': editMode, 'eos-icon-paste-grey': !editMode}">
+                            <span class="eos-adm-icon small"  [ngClass]="{'eos-adm-icon-paste-blue': editMode, 'eos-adm-icon-paste-grey': !editMode}">
                             </span>
                         </button>
                     </div>
@@ -82,7 +82,7 @@
                             hide
                             [(ngModel)]="node.limit"
                         >
-                        <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                        <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
                         </span>
                         Ограничить картотекой регистрации
                     </label>

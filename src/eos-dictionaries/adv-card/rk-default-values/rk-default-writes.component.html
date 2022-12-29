@@ -1,4 +1,4 @@
-<div class="eos-rk-writes card-content-wrapper">
+<div class="eos-adm-rk-writes card-content-wrapper">
     <!-- Срок исп. (План. дата)
     дня (дней) от исх. даты корреспондента -->
     <div class="items-group" *ngIf="rkType == 1">
@@ -195,7 +195,7 @@
         <eos-dynamic-input
             class="margin10"
             [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W']"
-            iconForElem="eos-icon-directory-book-blue"
+            iconForElem="eos-adm-icon-directory-book-blue"
             [visibleDeletElem]="form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W'].value"
             [form]="form"
             [hideLabel]="true"
@@ -228,7 +228,7 @@
                 [input]="inputs['fict.ISN_CARD_REG_W_1']"
                 class="radio-position-1"
                 [form]="form"
-                iconForElem="eos-icon-directory-book-blue"
+                iconForElem="eos-adm-icon-directory-book-blue"
                 [visibleDeletElem]="form.controls['fict.ISN_CARD_REG_W_1'].value"
                 [disabled]="enKart1Select !== '1'"
                 [viewOpts]="selOptsCARDINDEX"
@@ -252,7 +252,7 @@
                 class="radio-position-2"
                 [form]="form"
                 [disabled]="enKart1Select !== '2' || enKart2Select !== '1'"
-                iconForElem="eos-icon-directory-book-blue"
+                iconForElem="eos-adm-icon-directory-book-blue"
                 [visibleDeletElem]="form.controls['fict.ISN_CARD_REG_W_2'].value"
                 [viewOpts]="selOptsCARDINDEX"
                 [hideLabel]="true"
@@ -281,7 +281,7 @@
         <eos-dynamic-input
             [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_ISN_W']"
             [form]="form"
-            iconForElem="eos-icon-directory-book-blue"
+            iconForElem="eos-adm-icon-directory-book-blue"
             [visibleDeletElem]="form.controls['DOC_DEFAULT_VALUE_List.CARD_ISN_W'].value"
             [hideLabel]="true"
             [viewOpts]="selOptsCARDINDEX"

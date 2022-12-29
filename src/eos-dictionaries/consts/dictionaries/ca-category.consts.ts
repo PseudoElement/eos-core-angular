@@ -18,7 +18,7 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
     ],
     searchConfig: [],
     visible: false,
-    iconName: 'eos-icon-electronic-signature-blue',
+    iconName: 'eos-adm-icon-electronic-signature-blue',
     fields: [
         {
             key: 'ISN_CA_CATEGORY',

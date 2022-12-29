@@ -48,7 +48,7 @@
 }
 
 
-.eos-table {
+.eos-adm-table {
     min-width: 100%;
 }
 .node-left {
@@ -100,7 +100,7 @@
         .order-icon {
             padding: 0 3px;
         }
-        .eos-icon {
+        .eos-adm-icon {
             margin: -5px 0 0;
             vertical-align: middle;
         }
@@ -113,23 +113,23 @@
 // max-height: calc(100vh - 372px);
 .node-list-container {
     &.list-heigth-1 {
-        .eos-node-list {
+        .eos-adm-node-list {
             max-height: calc(100vh - 373px);
         }
     }
     &.list-heigth-2 {
-        .eos-node-list {
+        .eos-adm-node-list {
             max-height: calc(100vh - 510px);
         }
     }
     &.list-heigth-3 {
-        .eos-node-list {
+        .eos-adm-node-list {
             max-height: calc(100vh - 471px);
         }
     }
 }
 
-.eos-node-list {
+.eos-adm-node-list {
     position: relative;
     overflow-y: auto;
     overflow-x: auto;
@@ -191,17 +191,17 @@
 @media (min-width: 1600px) and (max-width: 1647px){
     .node-list-container {
         &.list-heigth-1 {
-            .eos-node-list {
+            .eos-adm-node-list {
                 max-height: calc(100vh - 410px);
             }
         }
         &.list-heigth-2 {
-            .eos-node-list {
+            .eos-adm-node-list {
                 max-height: calc(100vh - 460px);
             }
         }
         &.list-heigth-3 {
-            .eos-node-list {
+            .eos-adm-node-list {
                 max-height: calc(100vh - 510px);
             }
         }

@@ -5,13 +5,13 @@
             <div class="avatar-base" *ngIf="(isPhoto && !formControls.controls['teсhUser'].value) || (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP); else tech">
                 <a class="av-link-b" [routerLink]="['/spravochniki','departments', !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP, 'view' ]">
                     <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
-                    <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-icon eos-icon-Man-Blue small"></span>
+                    <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-adm-icon eos-adm-icon-Man-Blue small"></span>
                 </a>
             </div>
             <ng-template #tech>
                 <div class="avatar-base">
                     <a class="av-link-b">
-                        <span class="avatar-img-b" class="avatar-img-b eos-icon eos-icon-Techman-Grey small"></span>
+                        <span class="avatar-img-b" class="avatar-img-b eos-adm-icon eos-adm-icon-Techman-Grey small"></span>
                     </a>
                 </div>
             </ng-template>
@@ -35,14 +35,14 @@
         <!-- должностное лицо и роль -->
         <div class="wrapper-password">
             <eos-dynamic-input style="width: 530px" class="base-text-input base-input-role"
-                [input]="controls['DUE_DEP_NAME']" 
+                [input]="controls['DUE_DEP_NAME']"
                 [form]="formControls"
                 [readonly]="!editMode"
                 [disabled]="isTechUser"
                 (onClickDict)="handleShowDepartment()"
         ></eos-dynamic-input>
         </div>
-       
+
         <eos-dynamic-input class="base-text-input base-input-role"
                 [input]="controls['SELECT_ROLE']"
                 [form]="formControls"
@@ -54,7 +54,7 @@
         <span class="l-font">Доступ к системам</span>
         <hr>
         <div>
-            <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"  (change)="[tf(), checkMeinControlAccess($event, '0')]"></eos-dynamic-input> 
+            <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"  (change)="[tf(), checkMeinControlAccess($event, '0')]"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['0-1']" [form]="formAccess" [readonly]="formAccess.get('0-1').disabled" class="base-checkbox-input" (change)="[tf(), checkMeinControlAccess($event, '0-1')]"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['delo_web']" [form]="formAccess" [readonly]="formAccess.get('delo_web').disabled" (change)="[tf(), checkMeinControlAccess($event, 'delo_web')]"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['1-27']" [form]="formAccess" [readonly]="formAccess.get('1-27').disabled" class="pull-right"></eos-dynamic-input>
@@ -63,7 +63,7 @@
         <!-- Доступ к системам 2-й ряд -->
       <div class="access-syst-wr">
         <div class="access-syst-part">
-            <!-- <eos-dynamic-input [input]="accessInputs['26']" [form]="formAccess" [readonly]="formAccess.get('26').disabled" class="base-checkbox-input"></eos-dynamic-input> --> 
+            <!-- <eos-dynamic-input [input]="accessInputs['26']" [form]="formAccess" [readonly]="formAccess.get('26').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
             <!-- <eos-dynamic-input [input]="accessInputs['23']" [form]="formAccess" [readonly]="formAccess.get('23').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
             <eos-dynamic-input [input]="accessInputs['25']" [form]="formAccess" [readonly]="formAccess.get('25').disabled" class="base-checkbox-input"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['21']" [form]="formAccess" [readonly]="formAccess.get('21').disabled"></eos-dynamic-input>
@@ -80,7 +80,7 @@
             <eos-dynamic-input [input]="accessInputs['17']" [form]="formAccess" [readonly]="formAccess.get('17').disabled"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
-            <span (click)="getSerts(template)" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+            <span (click)="getSerts(template)" class="eos-adm-icon small icon-electronic" [ngClass]="{'eos-adm-icon-electronic-signature-blue pointer': editMode, 'eos-adm-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
             placement="bottom" containerClass="tooltip-info"></span>
         </div>
       </div>

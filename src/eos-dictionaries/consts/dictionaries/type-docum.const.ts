@@ -14,7 +14,7 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
     keyField: 'ISN_LCLASSIF',
     treeFields: ['CLASSIF_NAME'],
     defaultOrder: 'CLASSIF_NAME',
-    iconName: 'eos-icon-types-documents-blue',
+    iconName: 'eos-adm-icon-types-documents-blue',
     fields: [
         {
             key: 'ISN_LCLASSIF',

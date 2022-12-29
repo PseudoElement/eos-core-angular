@@ -3,8 +3,8 @@
         class="cust-style-mod" #full="bs-popover">
         <button [ngClass]="{'opened': formBol}" class="btn btn-primary-light search-btn" tooltip="Расширенный поиск"
             placement="bottom" container="body" (click)="isActiveButton()" containerClass="tooltip-info">
-            <i [hidden]="formBol" class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
-            <i [hidden]="!formBol" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
+            <i [hidden]="formBol" class="eos-adm-icon eos-adm-icon-filter-blue small" aria-hidden="true"></i>
+            <i [hidden]="!formBol" class="eos-adm-icon eos-adm-icon-filter-white small" aria-hidden="true"></i>
         </button>
     </div>
 </div>
@@ -12,7 +12,7 @@
     <div class="full-search-top usual-border">
         <span class="pull-left title xl-font">Фильтр</span>
         <div class="pull-right srch-btns">
-            <button class="btn btn-primary s-font upper" [disabled]="checkResetForm()" (click)="ClearForm()">Сбросить</button>	
+            <button class="btn btn-primary s-font upper" [disabled]="checkResetForm()" (click)="ClearForm()">Сбросить</button>
             <button class="btn btn-primary-full s-font upper" [disabled]="disableBtn" (click)="FilterUsers()">Найти</button>
         </div>
     </div>
@@ -41,10 +41,10 @@
                     [readonly]="false"
                 ></eos-dynamic-input>
                 <a class="clear-btn pos-icon" (click)="selectUserWho()" [ngClass]="{'pos-two-icon': userWhoValue, 'pos-one-icon': !userWhoValue}">
-                    <span class="icon eos-icon eos-icon-avatar-blue small icon-add-department"></span>
+                    <span class="icon eos-adm-icon eos-adm-icon-avatar-blue small icon-add-department"></span>
                 </a>
                 <a *ngIf="userWhoValue" class="clear-btn pos-icon pos-two-icon" (click)="clearInput('rec.USERWHO')">
-                    <span class="icon eos-icon eos-icon-close-blue small"></span>
+                    <span class="icon eos-adm-icon eos-adm-icon-close-blue small"></span>
                 </a>
             </div>
             <div>
@@ -63,10 +63,10 @@
                     [readonly]="false"
                 ></eos-dynamic-input>
                 <a class="clear-btn pos-icon" (click)="selectUserEdit()" [ngClass]="{'pos-two-icon': userEditValue, 'pos-one-icon': !userEditValue}">
-                    <span class="icon eos-icon eos-icon-avatar-blue small icon-add-department"></span>
+                    <span class="icon eos-adm-icon eos-adm-icon-avatar-blue small icon-add-department"></span>
                 </a>
                 <a *ngIf="userEditValue" class="clear-btn pos-icon pos-two-icon" (click)="clearInput('rec.USEREDIT')">
-                    <span class="icon eos-icon eos-icon-close-blue small"></span>
+                    <span class="icon eos-adm-icon eos-adm-icon-close-blue small"></span>
                 </a>
             </div>
         </form>

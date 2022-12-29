@@ -14,27 +14,27 @@
             </div>
             <div class="card-btn">
                 <button class="btn btn-primary-light" [disabled]="!flagEdit" (click)="addCards()" tooltip="Добавить картотеку" placement="bottom" container="body" containerClass="tooltip-info" triggers="hover:click"><span
-                        class="eos-icon  small"
-                        [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"
+                        class="eos-adm-icon  small"
+                        [ngClass]="flagEdit ? 'eos-adm-icon-plus-blue' : 'eos-adm-icon-plus-grey'"
                     ></span>
                 </button>
                 <button [disabled]="!currentCard || !flagEdit || !currentCard?.allowed" class="btn btn-primary-light" (click)="removeCards()" tooltip="Удалить картотеку" placement="bottom" containerClass="tooltip-info" triggers="hover:click" container="body"><span
-                        class="eos-icon small"
-                        [ngClass]="flagEdit && currentCard?.allowed  ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
+                        class="eos-adm-icon small"
+                        [ngClass]="flagEdit && currentCard?.allowed  ? 'eos-adm-icon-bin-forever-blue' : 'eos-adm-icon-bin-forever-grey'"></span>
                 </button>
                 <button [disabled]="!currentCard || !flagEdit || !currentCard?.allowed" class="btn btn-primary-light" (click)="homeCardMoov()" tooltip="Главная" container="body" placement="bottom" containerClass="tooltip-info" triggers="hover:click"><span
-                        class="eos-icon  small"
-                        [ngClass]="flagEdit && currentCard?.allowed ? 'eos-icon-keyfile-blue' : 'eos-icon-keyfile-grey'"
+                        class="eos-adm-icon  small"
+                        [ngClass]="flagEdit && currentCard?.allowed ? 'eos-adm-icon-keyfile-blue' : 'eos-adm-icon-keyfile-grey'"
                     ></span>
                 </button>
             </div>
             <div class="card-wrr">
                 <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
-                    <span *ngIf='card.logDelet && !card.deleted' class="icon eos-icon small eos-icon-bin-grey position-card-bin-icon"></span>
-                    <span 
+                    <span *ngIf='card.logDelet && !card.deleted' class="icon eos-adm-icon small eos-adm-icon-bin-grey position-card-bin-icon"></span>
+                    <span
                         *ngIf='!card.deleted'
-                        class="cards-item" 
-                        [ngClass]="{'homeCard': card.data.HOME_CARD, 'card-delet-elem': card.logDelet}" 
+                        class="cards-item"
+                        [ngClass]="{'homeCard': card.data.HOME_CARD, 'card-delet-elem': card.logDelet}"
                         (click)='selectCurentCard(card)'>
                         {{card.cardName}}
                     </span>

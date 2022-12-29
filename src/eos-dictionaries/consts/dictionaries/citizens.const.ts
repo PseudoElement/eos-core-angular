@@ -50,7 +50,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     defaultOrder: 'CITIZEN_SURNAME',
     title: 'Граждане',
     visible: true,
-    iconName: 'eos-icon-citizen-blue',
+    iconName: 'eos-adm-icon-citizen-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'showDeleted', 'edit',
         'view', 'restore', 'remove', 'removeHard', 'tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry', 'dopRequisites',
         'export', 'import', 'protViewSecurity'],

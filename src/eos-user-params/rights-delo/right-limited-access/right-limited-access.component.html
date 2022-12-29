@@ -11,10 +11,10 @@
         <div [hidden]="currTab !== 0">
             <div class="access-control">
                 <button [disabled]="!editFlag" type="button" class="btn btn-primary" (click)="OpenClassiv()" tooltip="Добавить" eosClickMode triggers="hover:click" containerClass="tooltip-info">
-                <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
+                <span class="eos-adm-icon small" [ngClass]="editFlag ? 'eos-adm-icon-plus-blue' : 'eos-adm-icon-plus-grey'"></span>
             </button>
                 <button [disabled]="!editFlag || currentIndex === 0" type="button" class="btn btn-primary" (click)='deliteEmailFild()' [tooltip]="!editFlag || currentIndex === 0 ? null : 'Удалить'" containerClass="tooltip-info">
-                <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey' "></span>
+                <span class="eos-adm-icon small" [ngClass]="editFlag ? 'eos-adm-icon-bin-forever-blue' : 'eos-adm-icon-bin-forever-grey' "></span>
             </button>
             </div>
 
@@ -30,10 +30,10 @@
                                         <label class="checkbox disabled minus-checkbox redUnchecked">
                                             <input formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
                                             <!-- <input *ngIf="i == 0 " [attr.disabled]="true"  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" > -->
-                                            <span class="eos-icon-checkbox-square-v-grey "></span>
+                                            <span class="eos-adm-icon-checkbox-square-v-grey "></span>
                                     </label>
                                     </span>
-                                    <span *ngIf="group.value['DELETED']" class="icon eos-icon small eos-icon-bin-grey icon-logic-bin-grifs"></span>
+                                    <span *ngIf="group.value['DELETED']" class="icon eos-adm-icon small eos-adm-icon-bin-grey icon-logic-bin-grifs"></span>
                                     <span [ngClass]="{current: currentIndex === i}" class="access-list-last">
                                         <input formControlName="name" [ngClass]="{'color-deleted': group.value['DELETED']}" type="text" readonly="readonly" class="readonly" >
                                     </span>

@@ -1,6 +1,6 @@
 $drop-menu-width: 300px;
 
-.eos-node-actions {
+.eos-adm-node-actions {
     height: $item-height;
     .actions {
         display: inline-block;
@@ -139,7 +139,7 @@ $drop-menu-width: 300px;
 
 @media (max-width: 1295px) {
 
-    .eos-node-actions {
+    .eos-adm-node-actions {
         .actions {
             display: none;
             &:last-child {

@@ -17,7 +17,7 @@
                             [disabled]="!(nodes && nodes.length)"
                             (change)="toggleAllMarks()">
                     <div>
-                    <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                    <span class="eos-adm-icon small" [ngClass]="getflagChecked"></span>
                     </div>
                 </label>
                 <!-- [checked]="allMarked || markedInfo.anyMarked" -->
@@ -36,16 +36,16 @@
                     <span class="text selected-text ng-bind-html"
                           (click)="orderByField(field.key)"
                           [tooltip]="field.title"
-                          placement="bottom"  
-                          container="body"         
-                          [delay]="tooltipDelay" 
+                          placement="bottom"
+                          container="body"
+                          [delay]="tooltipDelay"
                           containerClass="tooltip-info"
                           style="display: inline-block;"
                           >{{untrimmedValue(field.customTitle || field.title)}}</span>
                     <span class="order-icon">
                         <span *ngIf="orderBy?.fieldKey === field.key"
-                              class="icon eos-icon small"
-                              [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
+                              class="icon eos-adm-icon small"
+                              [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy?.ascend, 'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
 
                 <div *ngIf="firstColumnIndex > 0" class="arrow-left selected-text" (click)="onLeftClick()">
                     <div class="arrow-left-fix">
@@ -60,15 +60,15 @@
                     <span class="text selected-text"
                           (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span><span class="order-icon">
                     <span *ngIf="orderBy?.fieldKey === field.key"
-                          class="eos-icon small"
-                          [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
+                          class="eos-adm-icon small"
+                          [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy?.ascend, 'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
             </div>
             <div *ngIf="hasOverflowedColumns" class="arrow-right selected-text" (click)="onRightClick()">
                 <i class="fa fa-angle-right "></i>
             </div>
         </div>
     </div>
-    <div class="eos-node-list"
+    <div class="eos-adm-node-list"
         #eosNodeList
         (scroll)="onListScroll($event)">
         <div class="block list"

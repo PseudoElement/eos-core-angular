@@ -12,7 +12,7 @@ export const RESPRJ_PRIORITY_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         'cut', 'combine',
         'edit', 'view', 'remove', 'removeHard', 'export', 'import', 'protViewSecurity'],
     visible: true,
-    iconName: 'eos-icon-rating-blue',
+    iconName: 'eos-adm-icon-rating-blue',
     fields: [...LINEAR_TEMPLATE.fields,
         Object.assign({}, COMMON_FIELD_NAME, {
             isUnique: true,

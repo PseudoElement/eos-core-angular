@@ -6,7 +6,7 @@
                     (click)="sameFileCheck($event)">файл</button>
         </div>
         <div class="upload-file" *ngIf="newFile">
-            <span><span class="eos-icon small eos-icon-checkbox-blue "></span>Файл успешно загружен</span>
+            <span><span class="eos-adm-icon small eos-adm-icon-checkbox-blue "></span>Файл успешно загружен</span>
             <button class="btn btn-primary-full" (click)="deleteFile()">удалить файл</button>
         </div>
     </div>
@@ -33,12 +33,12 @@
     <div *ngIf="showDocGrList" class="doc-wr">
         <div class="doc-list">
             <span class="doc-item" (click)="(showDoc = !showDoc)">Используется в группах документов<span
-                    class="eos-icon small" [ngClass]="showClass"></span></span>
+                    class="eos-adm-icon small" [ngClass]="showClass"></span></span>
         </div>
         <div *ngIf="showDoc">
             <span class="sort-name" (click)="sortDoc( flagSort = !flagSort)">
                 Название
-                <span class="eos-icon small" [ngClass]="classSort"></span>
+                <span class="eos-adm-icon small" [ngClass]="classSort"></span>
             </span>
             <ul class="height-show-doc-list">
                 <li class="show_doc_list" *ngFor="let doc of docGroupList">{{doc.CLASSIF_NAME}}</li>

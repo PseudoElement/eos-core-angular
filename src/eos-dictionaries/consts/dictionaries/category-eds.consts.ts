@@ -8,7 +8,7 @@ export const EDS_CATEGORY_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_T
     actions: [... LINEAR_TEMPLATE.actions, 'certifUC', 'importEDS'],
     title: 'Категории ЭП',
     visible: true,
-    iconName: 'eos-icon-electronic-signature-blue',
+    iconName: 'eos-adm-icon-electronic-signature-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,

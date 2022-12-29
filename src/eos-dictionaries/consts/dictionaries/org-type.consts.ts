@@ -7,7 +7,7 @@ export const ORG_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     apiInstance: 'ORG_TYPE_CL',
     title: 'Типы организаций',
     visible: true,
-    iconName: 'eos-icon-organisation-type-blue',
+    iconName: 'eos-adm-icon-organisation-type-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,

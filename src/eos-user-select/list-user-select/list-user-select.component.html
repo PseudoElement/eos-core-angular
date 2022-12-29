@@ -14,7 +14,7 @@
                         <button *ngIf="showCloseQuickSearch" class="btn btn-primary-light btn-size"
                             tooltip="Очистить результаты" placement="bottom" container="body"
                             containerClass="tooltip-info" (click)=resetSearch()><span
-                                class="eos-icon eos-icon-close-blue small"></span></button>
+                                class="eos-adm-icon eos-adm-icon-close-blue small"></span></button>
                     </span>
                 </div>
             </div>
@@ -27,8 +27,8 @@
                 <label class="user-check-label">
                     <input [checked]="onlyView" type="checkbox" (change)="setChengeOnlyView()">
                     <div>
-                        <span class="eos-icon small"
-                            [ngClass]="{'eos-icon-checkbox-square-v-blue': onlyView, 'eos-icon-checkbox-square-blue': !onlyView}"
+                        <span class="eos-adm-icon small"
+                            [ngClass]="{'eos-adm-icon-checkbox-square-v-blue': onlyView, 'eos-adm-icon-checkbox-square-blue': !onlyView}"
                             tooltip="Показывать вложенные" containerClass="tooltip-info" placement="bottom"></span>
                     </div>
                 </label>
@@ -63,13 +63,13 @@
         <!--Быстрый поиск-->
         <div class="table-header">
             <!-- header -->
-            <!-- [ngClass]="flagChecked ? eos-icon-checkbox-square-blue : eos-icon-checkbox-square-minus-blue" -->
+            <!-- [ngClass]="flagChecked ? eos-adm-icon-checkbox-square-blue : eos-adm-icon-checkbox-square-minus-blue" -->
             <div class="table-title">
                 <div class="checkbox">
                     <label class="user-check-label">
                         <input [checked]="flagChecked" type="checkbox" (change)="setCheckedAllFlag()">
                         <div>
-                            <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
+                            <span class="eos-adm-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
                                 containerClass="tooltip-info" placement="bottom" container="body"></span>
                         </div>
                     </label>
@@ -117,30 +117,30 @@
                             <label class="checkbox">
                                 <input [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" type="checkbox"
                                     (change)="setFlagChecked($event, user)">
-                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                                <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                             </label>
                             <div class="user-select-node-t" (click)="selectedNode(user)">
                                 <span class="user-list-fourth-colomn">{{user.login}}</span>
                                 <span class="user-list-third-colomn">
-                                    <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
+                                    <span *ngIf="user.deleted" class="eos-adm-icon eos-adm-icon-bin-forever-grey small"></span>
                                     <span *ngIf="user.blockedUser && !user.deleted"
-                                        class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
+                                        class="eos-adm-icon eos-adm-icon-Blockeduser-Yellow  small"></span>
                                     <span *ngIf="user.blockedSystem && !user.deleted"
-                                        class="eos-icon eos-icon-Blockeduser-Red  small"></span>
+                                        class="eos-adm-icon eos-adm-icon-Blockeduser-Red  small"></span>
                                 </span>
                                 <span class="user-list-two-colomn" tooltip="{{user.fullDueName}}" [delay]="tooltipDelay" placement="bottom"
                                     [ngClass]="{'last-tooltip' : last }" containerClass="tooltip-info"
                                     container="body">
                                     <span *ngIf="!user.deep"
-                                        class="eos-icon eos-icon-Techuser-Grey small icon-user"></span>
+                                        class="eos-adm-icon eos-adm-icon-Techuser-Grey small icon-user"></span>
                                     <span *ngIf="user.deep"
-                                        class="eos-icon eos-icon-DeepUser-Black small icon-user"></span>
+                                        class="eos-adm-icon eos-adm-icon-DeepUser-Black small icon-user"></span>
                                     {{ user.fullDueName}}
                                 </span>
                                 <span *ngIf="user.department === 'null' || user.department === '...'; else depUser" class="user-list-first-colomn"
                                 tooltip="..." placement="auto" containerClass="tooltip-info" container="body">
                                     <span
-                                    class="eos-icon eos-icon-department-grey small icon-user"></span>...
+                                    class="eos-adm-icon eos-adm-icon-department-grey small icon-user"></span>...
                                 </span>
                                 <ng-template #depUser>
                                     <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto"

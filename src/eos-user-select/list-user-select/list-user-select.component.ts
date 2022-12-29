@@ -467,9 +467,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     getClassOrder(flag) {
         if (flag) {
-            return 'icon eos-icon small eos-icon-arrow-blue-bottom';
+            return 'icon eos-adm-icon small eos-adm-icon-arrow-blue-bottom';
         }
-        return 'icon eos-icon small eos-icon-arrow-blue-top';
+        return 'icon eos-adm-icon small eos-adm-icon-arrow-blue-top';
     }
 
     showAction(nameMethods: any) {
@@ -1085,13 +1085,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         switch (this.flagChecked) {
             case true:
                 this.checkAll = 'Снять пометки';
-                return 'eos-icon-checkbox-square-v-blue';
+                return 'eos-adm-icon-checkbox-square-v-blue';
             case false:
                 this.checkAll = 'Отметить все на странице';
-                return 'eos-icon-checkbox-square-minus-blue';
+                return 'eos-adm-icon-checkbox-square-minus-blue';
             default:
                 this.checkAll = 'Отметить все на странице';
-                return 'eos-icon-checkbox-square-blue';
+                return 'eos-adm-icon-checkbox-square-blue';
         }
     }
     searchUsers($event: IRequest): void {

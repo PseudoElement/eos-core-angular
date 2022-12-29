@@ -1,6 +1,6 @@
 <button [disabled]="!disabled" class="backgraund btn block xl-font" (click)="setCurentTask(list)" [title]="getHint()">
   <span class="icon-wrapper">
-    <span class="icon disabled eos-icon {{list.icon}}"
+    <span class="icon disabled eos-adm-icon {{list.icon}}"
       [ngStyle]="{'background-image': getIcon(list)}"></span>
   </span>
   <span class="text">{{list.title}}</span>

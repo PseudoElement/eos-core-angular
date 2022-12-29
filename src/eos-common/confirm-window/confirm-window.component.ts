@@ -49,13 +49,13 @@ export class ConfirmWindowComponent implements IConfirmWindowContent {
     getIcon() {
         switch (this.typeIcon) {
             case 'success':
-                return 'eos-icon-checkbox-white';
+                return 'eos-adm-icon-checkbox-white';
             case 'warning':
-                return 'eos-icon-alert-white';
+                return 'eos-adm-icon-alert-white';
             case 'danger':
-                return 'eos-icon-close-white';
+                return 'eos-adm-icon-close-white';
             default:
-                return 'eos-icon-alert-white';
+                return 'eos-adm-icon-alert-white';
         }
     }
     confirm() {

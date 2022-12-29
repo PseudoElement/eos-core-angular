@@ -5,7 +5,7 @@
     <div class="org_type_item"  *ngFor="let item of LIstOrgType">
         <label class="checkbox">
             <input type="checkbox" [disabled]="!editMode" [checked]="item.checked" (change) ="setChecked(item)">
-            <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+            <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
             {{item.name}}
         </label>
     </div>

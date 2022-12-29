@@ -356,11 +356,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     get getClass() {
         const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
-        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
+        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-adm-icon eos-adm-icon-info-blue small' : 'eos-adm-icon eos-adm-icon-info-grey small';
     }
     get getClassClearBtn() {
         const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
-        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
+        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-adm-icon eos-adm-icon-close-blue small' : 'eos-adm-icon eos-adm-icon-close-grey small';
     }
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this.form.controls['rec.RESOLUTION_CONTROLLER'].value;

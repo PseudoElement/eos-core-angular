@@ -6,13 +6,13 @@
                 <div class="avatar-base" *ngIf="(isPhoto && !formControls.controls['teсhUser'].value) || (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP); else tech">
                     <a class="av-link-b" [routerLink]="['/spravochniki','departments', !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP, 'view' ]">
                         <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
-                        <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-icon eos-icon-Man-Blue small"></span>
+                        <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-adm-icon eos-adm-icon-Man-Blue small"></span>
                     </a>
                 </div>
                 <ng-template #tech>
                     <div class="avatar-base">
                         <div class="av-link-b">
-                            <span class="avatar-img-b" class="avatar-img-b eos-icon eos-icon-Techman-Blue small"></span>
+                            <span class="avatar-img-b" class="avatar-img-b eos-adm-icon eos-adm-icon-Techman-Blue small"></span>
                         </div>
                     </div>
                 </ng-template>
@@ -35,19 +35,19 @@
                 <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
                     <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
                     <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required, 'department-role-flex': true}" style="width: 534px">
-                        <span *ngIf="curentUser['DEPARTMENT_DELETE']" class="icon eos-icon small icon-bin-due-dep-base-cb eos-icon-bin-grey"></span>
-                        <input 
-                            class="form-control m-font inline-block" 
-                            [ngClass]="{'delete-department': curentUser['DEPARTMENT_DELETE']}" 
-                            readonly 
-                            [formControlName]="inputs['DUE_DEP_NAME'].key" 
-                            [id]="inputs['DUE_DEP_NAME'].key" 
-                            type="text" 
-                            [placeholder]="inputs['DUE_DEP_NAME'].label" 
+                        <span *ngIf="curentUser['DEPARTMENT_DELETE']" class="icon eos-adm-icon small icon-bin-due-dep-base-cb eos-adm-icon-bin-grey"></span>
+                        <input
+                            class="form-control m-font inline-block"
+                            [ngClass]="{'delete-department': curentUser['DEPARTMENT_DELETE']}"
+                            readonly
+                            [formControlName]="inputs['DUE_DEP_NAME'].key"
+                            [id]="inputs['DUE_DEP_NAME'].key"
+                            type="text"
+                            [placeholder]="inputs['DUE_DEP_NAME'].label"
                             autocomplete="off">
-                        <span 
-                            class="icon eos-icon small icon-add-department span-avatar-icon" 
-                            [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" 
+                        <span
+                            class="icon eos-adm-icon small icon-add-department span-avatar-icon"
+                            [ngClass]="{'eos-adm-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-adm-icon-avatar-grey': curentUser.isTechUser || !editMode}"
                             (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)">
                         </span>
                     </div>
@@ -99,7 +99,7 @@
             <div class="access-syst-part">
                 <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
                 <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
-                <span *ngIf="criptoView" (click)="getTemplateUser(template, 'serts')" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+                <span *ngIf="criptoView" (click)="getTemplateUser(template, 'serts')" class="eos-adm-icon small icon-electronic" [ngClass]="{'eos-adm-icon-electronic-signature-blue pointer': editMode, 'eos-adm-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
                 placement="bottom" containerClass="tooltip-info"></span>
             </div>
           </div>

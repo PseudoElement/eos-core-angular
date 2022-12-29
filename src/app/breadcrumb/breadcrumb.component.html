@@ -1,4 +1,4 @@
-<div class="eos-breadcrumb block">
+<div class="eos-adm-breadcrumb block">
     <eos-sandwich *ngIf="treeButtonVisible()" class="left-sandwich pull-left"
                   tooltip="Навигационное дерево"
                   placement="right"
@@ -44,7 +44,7 @@
             triggers="hover"
             [delay]="tooltipDelay"
             [disabled]="!isNavigationEnabled"
-            placement="bottom"><span class="icon eos-icon eos-icon-arrow-v-blue-left small"></span></button>
+            placement="bottom"><span class="icon eos-adm-icon eos-adm-icon-arrow-v-blue-left small"></span></button>
         <button class="btn icon-btn right"
             (click)="actionHandler(actionNavigationDown.type)"
             tooltip="{{actionNavigationDown.hint}}"
@@ -53,7 +53,7 @@
             triggers="hover"
             [delay]="tooltipDelay"
             [disabled]="!isNavigationEnabled"
-            placement="bottom"><span class="icon eos-icon eos-icon-arrow-v-blue-right small"></span></button>
+            placement="bottom"><span class="icon eos-adm-icon eos-adm-icon-arrow-v-blue-right small"></span></button>
         <button class="btn icon-btn edit"
             (click)="actionHandler(actionEdit.type)"
             [disabled]="!(isEditEnabled && isEditGranted)"

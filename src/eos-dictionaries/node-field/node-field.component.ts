@@ -44,26 +44,26 @@ export class NodeFieldComponent implements OnInit {
         if (this.field.type === E_FIELD_TYPE.icon) {
             if (this.node.data.rec['CARD_FLAG']) {
                 this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-card-index-grey' : 'eos-icon-card-index-black',
+                    class: this.node.isDeleted ? 'eos-adm-icon-card-index-grey' : 'eos-adm-icon-card-index-black',
                     tooltip: 'Картотека',
                 });
             }
 
             if (this.node.data.rec['DOCNUMBER_FLAG'] || this.node.data.rec['NUMCREATION_FLAG']) {
                 this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-checkbox-grey' : 'eos-icon-checkbox-black',
+                    class: this.node.isDeleted ? 'eos-adm-icon-checkbox-grey' : 'eos-adm-icon-checkbox-black',
                     tooltip: 'Номерообразование',
                 });
             }
             if (this.node.data.rec['POST_H'] === 1) {
                 this.iconsArray.push({
-                    class: this.node.isDeleted ? 'eos-icon-user-ceo-grey' : 'eos-icon-user-ceo-black',
+                    class: this.node.isDeleted ? 'eos-adm-icon-user-ceo-grey' : 'eos-adm-icon-user-ceo-black',
                     tooltip: 'Начальник',
                 });
             }
             if (this.node.data.rec['CLOSED'] === 1) {
                 this.iconsArray.push({
-                    class: 'eos-icon-deal-close-blue',
+                    class: 'eos-adm-icon-deal-close-blue',
                     tooltip: 'Закрыто',
                 });
             }
@@ -71,13 +71,13 @@ export class NodeFieldComponent implements OnInit {
            if (this.field.type === E_FIELD_TYPE.icon_sev) {
               if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
                     this.iconsArray.push({
-                        class: this.node.isDeleted ? 'eos-icon-shared-folder-grey' : 'eos-icon-shared-folder-black',
+                        class: this.node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black',
                         tooltip: 'Индекс СЭВ',
                     });
                 }
                 if (this.node.data.rec['CONFIDENTIONAL']) {
                     this.iconsArray.push({
-                        class: this.node.isDeleted ? 'eos-icon-restricted-grey' : 'eos-icon-restricted-blue',
+                        class: this.node.isDeleted ? 'eos-adm-icon-restricted-grey' : 'eos-adm-icon-restricted-blue',
                         tooltip: 'ДСП файлы',
                     });
                 }
@@ -146,9 +146,9 @@ export class NodeFieldComponent implements OnInit {
     public getFolderIcon() {
         if (this.node.isNode) {
             if (this.node.isDeleted) {
-                    return 'eos-icon-folder-grey';
+                    return 'eos-adm-icon-folder-grey';
             } else {
-                    return 'eos-icon-folder-blue';
+                    return 'eos-adm-icon-folder-blue';
             }
         }
 
