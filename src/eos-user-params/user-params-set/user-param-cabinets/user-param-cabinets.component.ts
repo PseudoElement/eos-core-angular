@@ -477,7 +477,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     // }
                     // this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                     this.editMode();
-                    this._pushState();
+                    this._userParamsSetSrv.setChangeState({ isChange: false, disableSave: this.MaxIncrement });
+                    // this._pushState();
                 });
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
