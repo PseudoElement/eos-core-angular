@@ -1,0 +1,11 @@
+{
+  "self": {
+    "collection": "DefaultCollection",
+    "project": "Delo96",
+    "definition": {
+      "name": "classif",
+      "path": "\\"
+    },
+    "branch": "dev/22.8"
+  }
+}
