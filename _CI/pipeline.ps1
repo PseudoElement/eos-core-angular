@@ -14,7 +14,7 @@ if ("$env:AGENT_OS" -eq "") { $env:SYSTEM_DEBUG = $true }
 try {
     try {
         Invoke-Log-Command { CI-Initialize "$PipelineWorkDir\_CI\settings.json" }
-        Invoke-Log-Command { Npm-Set-Version NODEJS12 -UseAnyOnFail:$("$env:AGENT_OS" -eq "") }
+        Invoke-Log-Command { Npm-Set-Version NODEJS14 -UseAnyOnFail:$("$env:AGENT_OS" -eq "") }
 
         Invoke-Log-Command { CI-Use-PipelineBoard }
 
