@@ -17,6 +17,16 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
     public version = '';
     public organOld: ORGANIZ_CL;
     public masDisable: any[] = [];
+    private defaultOrganiz = {
+        ISN_OWNER: -99,
+        NAME: '',
+        ISN_ORGANIZ: 0,
+        DUE_ORGANIZ: '',
+        ORG_ID: '',
+        SYS_ID: '',
+        SYS_NAME: 'Дело',
+        SYS_VERSION: ''
+    };
     constructor( injector: Injector, private pip: PipRX
     ) {
         super( injector, ORGAN_PARAM);
@@ -91,6 +101,9 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
             DELO_OWNER: -99
         })
         .then(data => {
+            if (!data[0]) {
+                data[0] = this.defaultOrganiz;
+            }
             const DELO = data[0];
             this.prepareData = {rec: DELO};
             this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
