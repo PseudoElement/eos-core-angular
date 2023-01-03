@@ -1,8 +1,8 @@
 <div [formGroup]="form">
     <label [hidden]="input.hideLabel || hideLabel" [attr.for]="input.key">{{ input.label }}</label>
     <div class="eos-adm-select" [ngClass]="{ 'required': isRequired, 'disabled': disabled, 'readonly': readonly }">
+        <!-- убираем dropdownToggle -- смена стандартного поведения для div - контейнера выпадашки @167506 -->
         <div
-            dropdownToggle
             class="input-button-container eos-adm-select2"
             [container]="container"
             [dropup]="dropup"
@@ -31,12 +31,13 @@
                 triggers="hover"
                 container="body"
                 containerClass="tooltip-info word-break tooltip-z-index"
+                (click)="onClick()"
             />
             <div class="textareacounter" *ngIf="isFocused">
                 <span>{{ getCounterLabel() }}</span>
             </div>
 
-            <div class="inbutton2" *ngIf="!form.disabled">
+            <div class="inbutton2" *ngIf="!form.disabled && control.value?.length > 0">
                 <span class="eos-adm-icon eos-adm-icon-close-blue small" (click)="onEraseClick()"></span>
             </div>
             <div class="inbutton" *ngIf="!form.disabled">
