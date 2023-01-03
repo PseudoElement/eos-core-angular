@@ -64,9 +64,11 @@ export class RemasterDopOperationComponent implements OnInit, OnDestroy {
             takeUntil(this.ngUnsub)
         )
         .subscribe(() => {
-            this.setNewValInputs();
-            this.flagEdit = false;
-            this.form.disable({emitEvent: false});
+            if (!this.isCurrentSettings) {
+                this.setNewValInputs();
+                this.flagEdit = false;
+                this.form.disable({emitEvent: false});
+            }
         });
         this._RemasterService.editEmit
         .pipe(

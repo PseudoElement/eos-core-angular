@@ -74,11 +74,13 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
             takeUntil(this.ngUnsub)
         )
         .subscribe(() => {
-            this.setNewValInputs();
-            this.orgSaveName = this.orgName;
-            this.logSaveDeletOrg = this.logDeletOrg;
-            this.flagEdit = false;
-            this.form.disable({emitEvent: false});
+            if (!this.isCurrentSettings) {
+                this.setNewValInputs();
+                this.orgSaveName = this.orgName;
+                this.logSaveDeletOrg = this.logDeletOrg;
+                this.flagEdit = false;
+                this.form.disable({emitEvent: false});
+            }
         });
         this._RemasterService.editEmit
         .pipe(
