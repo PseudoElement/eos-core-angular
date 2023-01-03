@@ -570,6 +570,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this._idsForModalDictDep = [];
                     this._idsForModalDictDep = empItems.map(x => x.DUE);
                     if (this.inputs['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
+                        this._idsForModalDictDep = [empItems[0].DUE];
                         this._setDepartment(empItems[0].DUE);
                     }
                 });
@@ -775,6 +776,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 } else { // выбрали из выпадашки значение
                     const ITEM = this.inputs['DUE_DEP_NAME'].options.filter(item => item.value === value);
                     const DUE: string = ITEM[0].due;
+                    this._idsForModalDictDep = [DUE];
                     this._setDepartment(DUE);
                 }
             } else {
