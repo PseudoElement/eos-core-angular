@@ -82,6 +82,8 @@ export class UserSearchComponent implements OnInit  {
     }
 
     get disableSearchBtn() {
+        return true; // снимаем дизабл кнопки Найти @165429
+        /*
         if (this.form) {
             return this.form.status === 'VALID' && (
                 (this.form.controls['rec.DELO_RIGHTS'].value && this.form.controls['rec.DELO_RIGHTS'].value.trim().length) ||
@@ -95,6 +97,7 @@ export class UserSearchComponent implements OnInit  {
                 this.currTab === 2
             );
         }
+      */
     }
 
     get disableResetBtn() {
