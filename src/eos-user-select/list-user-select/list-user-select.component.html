@@ -75,10 +75,16 @@
                     </label>
                 </div>
                 <div class="table-title-position list-user-sel">
+                    <span *ngIf="disableLoginSearch;else fullDueNameSort"  class="user-list-fifth-column likeLink mar-left">ФИО</span>
+                   <ng-template #fullDueNameSort>
+                       <span class="user-list-fifth-column likeLink mar-left" (click)="sortPageList('fullDueName')">ФИО
+                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
+                       </span>
+                   </ng-template>
                     <span *ngIf="disableLoginSearch;else logSort"
-                     class="user-list-fourth-colomn likeLink mar-left">Логин</span>
+                     class="user-list-fourth-colomn likeLink ">Логин</span>
                     <ng-template #logSort>
-                        <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
+                        <span class="user-list-fourth-colomn likeLink" (click)="sortPageList('login')">Логин
                             <span *ngIf="_apiSrv.srtConfig.login.checked"
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
                         </span>
@@ -90,9 +96,12 @@
                     <ng-template #dueSort>
                         <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
                         (click)="sortPageList('fullDueName')">Должностное лицо
+                        <!--  @166034 убираем признак сортировки в столбце ДЛ
                         <span *ngIf="_apiSrv.srtConfig.fullDueName.checked"
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
                         </span>
+                        -->
+                    </span>
                     </ng-template>
                     <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && _apiSrv.sortDelUsers !== true); else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
                     <ng-template #depSort>
@@ -120,6 +129,7 @@
                                 <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                             </label>
                             <div class="user-select-node-t" (click)="selectedNode(user)">
+                                <span class="user-list-fifth-column">{{user.data.SURNAME_PATRON}}</span>
                                 <span class="user-list-fourth-colomn">{{user.login}}</span>
                                 <span class="user-list-third-colomn">
                                     <span *ngIf="user.deleted" class="eos-adm-icon eos-adm-icon-bin-forever-grey small"></span>
