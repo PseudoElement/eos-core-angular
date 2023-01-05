@@ -41,9 +41,9 @@ export const USER_SEARCH = {
             title: '',
             readonly: false,
             options: [
-                {value: '0', title: 'С блокированными'},
-                {value: '1', title: 'Без блокированных'},
-                {value: '2', title: 'Блокированные'}
+                {value: '0', title: 'С заблокированными'},
+                {value: '1', title: 'Без заблокированных'},
+                {value: '2', title: 'Заблокированные'}
             ]
         },
         {
