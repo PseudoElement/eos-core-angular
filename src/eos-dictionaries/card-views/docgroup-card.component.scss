@@ -27,7 +27,7 @@
     }
     .logic-delete-text {
         padding-left: 20px !important;
-        color: #BABABA;
+        //color: #BABABA;
     }
     .bittable {
         display: table;
@@ -39,14 +39,17 @@
         display: table-cell;
         min-width: 405px;
     }
-    .form-control:focus{
-        box-shadow: none;
-        border-color: #ccc;
-    }
-    .form-control.readonly{
-        box-shadow: none;
-        border-color: $border-color-main-theme;
-        
+    .form-control {
+        background-color: white !important;
+        &:focus {
+            box-shadow: none;
+            border-color: #ccc;
+        }
+        &.readonly {
+            box-shadow: none;
+            border-color: $border-color-main-theme;
+            background-color: white !important;
+        }
     }
 
 }

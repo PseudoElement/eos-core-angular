@@ -22,14 +22,13 @@
     ></eos-dynamic-input>
 
     <div style="height: 69px; display: flex; align-items: flex-start; font-size: 12px; position: relative;">
-        <div [ngClass]="{'disabled': !editMode}" class="dynamic-input-wrapper" >
+        <div class="dynamic-input-wrapper" >
             <div>{{ 'Вид документов' | uppercase }}</div>
             <span *ngIf='logDeletDoc' class="icon eos-adm-icon small eos-adm-icon-bin-grey log-bin-icon"></span>
             <input #inputChoice
                    [ngClass]="{'logic-delete-text': logDeletDoc}"
                    placeholder="..."
                    [readonly]="!editMode"
-                   [ngClass]="{'readonly': !editMode}"
                    class="form-control m-font pull-left"
                    style="width: 300px; padding: 6px 8px;">
         </div>
