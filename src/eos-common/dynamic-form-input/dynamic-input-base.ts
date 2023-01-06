@@ -4,7 +4,9 @@ import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosUtils } from 'eos-common/core/utils';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
+const ENABLED_FIELD_TYPES = [E_FIELD_TYPE.string, E_FIELD_TYPE.text];
 export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() input: InputBase<any>;
     @Input() form: FormGroup;
@@ -60,7 +62,14 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     onInput(event) {
         event.stopPropagation();
-        this.delayedTooltip();
+        // this.delayedTooltip(); @task161788 отключаем подсказку
+        this.cutLongerValue(this.control.value);
+    }
+
+    onPaste(event) {
+        event.preventDefault();
+        const PASTED_VALUE = event.clipboardData.getData('Text');
+        this.cutLongerValue(PASTED_VALUE, true);
     }
 
     delayedTooltip(): void {
@@ -86,10 +95,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
             setTimeout(() => {
                 this.toggleTooltip();
             });
-
             this.ngOnDestroy();
             this.subscriptions.push(control.statusChanges.subscribe(() => {
-                 this.inputTooltip.visible = false;
+                this.inputTooltip.visible = false;
                 if (this.inputTooltip.force) {
                     this.updateMessage();
                     setTimeout(() => { // похоже тут рассинхрон, имя не успевает обновиться и если меняется с ошибки на ошибку, то имя ангулар не меняет
@@ -114,7 +122,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
             if (control) {
                 const len = this.control.value ? String(this.control.value).length : 0;
                 const maxlen = this.input.length;
-                return String(len) + '/' + String (maxlen);
+                return String(len) + '/' + String(maxlen);
             }
         }
         return '';
@@ -128,7 +136,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         let msg = '';
         const control = this.control;
         if (control && control.errors) {
-            msg = EosUtils.getControlErrorMessage(control, {uniqueInDict: !!this.input.uniqueInDict, maxLength: this.input.length });
+            msg = EosUtils.getControlErrorMessage(control, { uniqueInDict: !!this.input.uniqueInDict, maxLength: this.input.length });
         }
 
         return msg;
@@ -153,4 +161,17 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
             this.inputTooltip.visible = false;
         }
     }
+
+    protected cutLongerValue(value: string, paste: boolean = false) {
+        if (ENABLED_FIELD_TYPES.includes(this.input.controlType) && this.input.length) {
+            if (value.length > this.input.length) { // @task161788 обрезка длинного значения
+                this.control.patchValue(value.substring(0, this.input.length));
+            } else {
+                if (paste) {
+                    this.control.patchValue(value);
+                }
+            }
+        }
+    }
+
 }
