@@ -34,7 +34,7 @@ export class UserParamApiSrv {
         .set('login', 'CLASSIF_NAME')
         .set('department', 'NOTE');
     confiList$: Subject<IConfig>;
-    currentSort: any = SortsList[3];
+    currentSort: any = SortsList[1];
     searchRequest = {};
     searchState: boolean = false;
     stateTehUsers: boolean = false;
@@ -454,11 +454,11 @@ export class UserParamApiSrv {
         };
         this.srtConfig.login = {
             upDoun: false,
-            checked: true,
+            checked: false,
         };
         this.srtConfig.fullDueName = {
             upDoun: false,
-            checked: false,
+            checked: true,
         };
         this.srtConfig.tip = {
             upDoun: false,

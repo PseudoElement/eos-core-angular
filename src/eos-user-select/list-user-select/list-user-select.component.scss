@@ -120,9 +120,16 @@
         display: inline-block;
     }
     .user-list-fourth-colomn {
-        width: 200px;
+        width: 150px;
         display: inline-block;
         /* margin-left: 20px; */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .user-list-fifth-column {
+        width: 250px;
+        display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
