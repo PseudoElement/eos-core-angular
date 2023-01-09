@@ -109,6 +109,7 @@ import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.co
 import { PrintTemplateComponent } from './print-template/print-template.component';
 import { ResolutionCategoryEditComponent } from './card-views/resolution-category-edit.component';
 import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.component';
+import { FormatEditComponent } from './card-views/format-edit.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -168,6 +169,7 @@ import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.co
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        FormatEditComponent,
         FileCategoryCardEditComponent,
         CalendarFormComponent,
         EosDatepickerInlineComponent,

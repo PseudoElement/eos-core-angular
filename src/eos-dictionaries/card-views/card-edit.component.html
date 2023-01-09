@@ -198,6 +198,14 @@
                                       [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"
                 ></eos-templates-card>
+                <eos-format-edit *ngSwitchCase="'format'"
+                                      #cardEditEl
+                                      class="docgroup-card simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [isNewRecord]="isNewRecord"
+                                      [editMode]="editMode"></eos-format-edit>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
                                       class="simple-card-edit"

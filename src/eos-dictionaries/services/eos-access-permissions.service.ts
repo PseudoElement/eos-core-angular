@@ -32,6 +32,7 @@ import { SEV_FOLDER, SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionari
 import { TYPE_DOCUM_DICT } from 'eos-dictionaries/consts/dictionaries/type-docum.const';
 import { FILE_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/file-type.const';
 import { FILE_CATEGORIES_DICT } from 'eos-dictionaries/consts/dictionaries/file-categories.consts';
+import { FORMAT_DICT } from 'eos-dictionaries/consts/dictionaries/format.const';
 
 const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
     // Рубрикатор
@@ -246,7 +247,11 @@ export class EosAccessPermissionsService {
             }
             return grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
-
+        if (dictId === FORMAT_DICT.id) {
+            if (this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'][1] === '1') {
+                return APS_DICT_GRANT.readwrite;
+            }
+        }
         let dict;
 
         dict = NADZOR_DICTIONARIES.find(n => n.id === dictId);

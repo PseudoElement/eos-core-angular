@@ -1,0 +1,37 @@
+<div class="card-content-wrapper" #root>
+    <eos-dynamic-input [input]="inputs['rec.NOTE']" [form]="form" [readonly]="!(this.editMode)">
+    </eos-dynamic-input>
+    <div  style="width: 150px;">
+        <eos-dynamic-input 
+            [tooltip]="getTooltip"
+            placement="bottom"
+            container="body"
+            containerClass="tooltip-info"
+            [input]="inputs['rec.PRIORITET']"
+            [form]="form"
+            [readonly]="getDisablePrioritet">
+        </eos-dynamic-input>
+    </div>
+    <div  style="display: flex;">
+        <div style="width: 50%; margin-right: 5px;">
+            <eos-dynamic-input [input]="inputs['rec.FORMAT_GNAME']" [form]="form" [readonly]="!(this.editMode)">
+            </eos-dynamic-input>
+        </div>
+        <div style="width: 50%; margin-left: 5px;">
+            <eos-dynamic-input [input]="inputs['rec.FORMAT_TNAME']" [form]="form" [readonly]="!(this.editMode)">
+            </eos-dynamic-input>
+        </div>
+    </div>
+    <div style="display: flex; height: 220px;">
+        <div *ngIf="getCheckColor" style="margin-left: 15px;">
+            <label>ЦВЕТОВАЯ ГАММА</label><br>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.COLOR']" [form]="form" [readonly]="!(this.editMode)">
+            </eos-dynamic-input>
+        </div>
+        <div *ngIf="getCheckCompr" style="margin-left: 30px;">
+            <label>МЕТОД СЖАТИЯ</label><br>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.COMPR']" [form]="form" [readonly]="!(this.editMode)">
+            </eos-dynamic-input>
+        </div>
+    </div>
+</div>

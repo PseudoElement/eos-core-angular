@@ -1007,7 +1007,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 return p.then((confirmed: IConfirmButton) => {
                     if (confirmed) {
                         const needInclude = confirmed.result === 2;
-                        this._dictSrv.setFlagForMarked('DELETED', needInclude, false)
+                        let deletedLogickItem: string = 'DELETED';
+                        if (this.dictionaryId === 'format') {
+                            deletedLogickItem = 'DEL_COL';
+                        }
+                        this._dictSrv.setFlagForMarked(deletedLogickItem, needInclude, false)
                             .then(() => {
                                 this._dictSrv.setMarkAllNone();
                                 const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
@@ -1207,8 +1211,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                         message.msg = message.msg
                             .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
                             .replace('{{OPERATION}}', 'удалены логически.');
-
-                        return this._dictSrv.setFlagForMarked('DELETED', true, true).then((flag) => {
+                        let deletedLogickItem: string = 'DELETED';
+                        if (this.dictionaryId === 'format') {
+                            deletedLogickItem = 'DEL_COL';
+                        }
+                        return this._dictSrv.setFlagForMarked(deletedLogickItem, true, true).then((flag) => {
                             this._dictSrv.setMarkAllNone();
                             this._msgSrv.addNewMessage(message);
                         });

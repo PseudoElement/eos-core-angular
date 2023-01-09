@@ -2605,6 +2605,28 @@ const commonMeta = {
 
         ]
     },
+    FORMAT_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _T.i,
+            FORMAT_TNAME: _T.i,
+            KIND_ADJ: _T.s,
+            FILE_ADJ: _T.s,
+            FORMAT_GNAME: _T.s,
+            COLOR: _T.i,
+            COMPR: _T.i,
+            WEIGHT: _T.i,
+            PROTECTED: _T.i,
+            DEL_COL: _T.i,
+            NOTE: _T.s,
+            PRIORITET: _T.i
+        },
+        readonly: [
+            'ISN_LCLASSIF',
+            'PROTECTED'
+        ],
+        relations: []
+    }
 };
 
 export function commonMergeMeta(meta: any) {

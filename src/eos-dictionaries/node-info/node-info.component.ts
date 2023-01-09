@@ -46,7 +46,7 @@ export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestro
         let res = this.nodeDataFull.rec[key];
 
         const field = this.fieldsDescriptionFull.rec[key];
-        if ((field.type === E_FIELD_TYPE.select || field.type === E_FIELD_TYPE.buttons)) {
+        if ((field.type === E_FIELD_TYPE.select || field.type === E_FIELD_TYPE.buttons || field.type === E_FIELD_TYPE.radio)) {
             let f = null;
             if (field.options.length) {
                 f = field.options.find((op) => op.value === res);

@@ -35,6 +35,7 @@ import { SevDictionaryDescriptor } from './sev/sev-dictionary-descriptor';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { FILE_CATEGORIES_DICT } from 'eos-dictionaries/consts/dictionaries/file-categories.consts';
 import { FileCategoryDictionaryDescriptor } from './file-category-dictionary-descriptor';
+import { FormatDictionaryDescriptor } from './format-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -157,6 +158,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'citizens':
                         res = new CitizensDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'format':
+                        res = new FormatDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case FILE_CATEGORIES_DICT.id:
                         res = new FileCategoryDictionaryDescriptor(descr, this.apiSrv);
