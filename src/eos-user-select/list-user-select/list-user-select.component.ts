@@ -489,7 +489,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
         this.flagScan = true;
-        /* @163034
+        /* @166034 старое поведение
         if (this._apiSrv.flagDelitedPermanantly === true) {
             this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         } else {
@@ -528,8 +528,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this._apiSrv.flagTehnicalUsers === true && this._apiSrv.configList.shooseTab === 0) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         }
-         // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); @166034
-        this._storage.setItem('SortPageList', { 'sort': 'fullFueName', 'upDoun': false });
+        // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); // @166034 - старая сортировка
+        this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.stateTehUsers === true) {
             this.buttons.moreButtons[2].isActive = false;
@@ -555,7 +555,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this._apiSrv.flagDisableUser === true && this._apiSrv.configList.shooseTab === 0) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         }
-        // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); @166034
+        // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); @166034 - старая сортировка
         this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.flagDisableUser) {
