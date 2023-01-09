@@ -1085,6 +1085,22 @@
                         (click)="searchModel['CONTACT.MEDO_ID'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="organization-inn">{{fieldsDescription.rec['CONTACT.MEDO_GLOBAL_ID']?.title}}</label>
+                <div class="search-fld">
+                    <input id="organization-inn"
+                        name="organization-inn"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['CONTACT.MEDO_GLOBAL_ID']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['CONTACT.MEDO_GLOBAL_ID']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['CONTACT.MEDO_GLOBAL_ID']}"
+                        (click)="searchModel['CONTACT.MEDO_GLOBAL_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
         </form>
     </div>
 
