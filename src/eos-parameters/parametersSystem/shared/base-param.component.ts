@@ -15,6 +15,7 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.c
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -40,6 +41,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     prepareData;
     _currentFormStatus;
     _errorSrv: ErrorHelperServices;
+    confirmSrv;
     private _fieldsType = {};
     constructor(
         injector: Injector,
@@ -54,7 +56,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.msgSrv = injector.get(EosMessageService);
         this._waitClassifSrv = injector.get(WaitClassifService);
         this._errorSrv = injector.get(ErrorHelperServices);
-
+        this.confirmSrv = injector.get(ConfirmWindowService);
     }
     ngOnDestroy() {
         this.unsubscribe();

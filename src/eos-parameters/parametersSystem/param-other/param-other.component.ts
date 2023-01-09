@@ -129,7 +129,8 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                 field.key === 'SDS_ISN_DELIVERY' ||
                 field.key === 'LK_ISN_DELIVERY' ||
                 field.key === 'EPVV_ISN_DELIVERY' ||
-                field.key === 'MEDO_ISN_DELIVERY'
+                field.key === 'MEDO_ISN_DELIVERY' ||
+                field.key === 'DIADOC_ISN_DELIVERY'
             ) {
                 if (opts) {
                     field.options = opts;

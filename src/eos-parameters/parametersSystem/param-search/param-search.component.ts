@@ -1,24 +1,37 @@
-import { Component, Injector, Input } from '@angular/core';
+import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-parameters.const';
 import { SEARCH_PARAM } from './../shared/consts/search-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, Validators } from '@angular/forms';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
+const UPDATE_INDEXKIND: IConfirmWindow2 = {
+    title: 'Предупреждение',
+    bodyList: [],
+    body: 'Для настройки полнотекстового поиска средствами СУБД или внешней службы необходимо выполнить конфигурирование серверной части системы Дело (см. Руководство администратора)',
+    buttons: [
+        {title: 'Продолжить ', result: 1, isDefault: true, },
+        {title: 'Отменить',  result: 2, },
+    ],
+};
 @Component({
     selector: 'eos-param-search',
     templateUrl: 'param-search.component.html'
 })
 export class ParamSearchComponent extends BaseParamComponent {
+    @ViewChild('headerElement') headerElement;
     @Input() btnError;
     public masDisable: any[] = [];
+    private indexKing; // тут храниться значение INDEXKIND чтобы после изменения знать что за значение было до этого
     constructor(injector: Injector) {
         super(injector, SEARCH_PARAM);
         this.init()
             .then(() => {
                 this.afterInitRC();
                 this.setValidators();
+                this.indexKing = this.form.controls['rec.INDEXKIND'].value;
             });
     }
     cancel() {
@@ -32,6 +45,7 @@ export class ParamSearchComponent extends BaseParamComponent {
                     // this.cancelEdit();
                     this.afterInitRC();
                     this.setValidators();
+                    this.indexKing = this.form.controls['rec.INDEXKIND'].value;
                 })
                 .catch(err => {
                     if (err.code !== 434) {
@@ -55,9 +69,35 @@ export class ParamSearchComponent extends BaseParamComponent {
                 } else {
                     this.formChanged.emit(false);
                 }
+            }),
+            this.form.controls['rec.INDEXKIND'].valueChanges
+            .subscribe(value => {
+                if (this.indexKing === 'ES') {
+                    this.confirmSrv.confirm2(Object.assign({}, UPDATE_INDEXKIND)).then((button) => {
+                        if (button && button['result'] === 1) {
+                            this.updateEsSettings(value);
+                        } else {
+                            this.form.controls['rec.INDEXKIND'].setValue(this.indexKing, { emitEvent: false });
+                        }
+                    });
+                } else {
+                    this.updateEsSettings(value);
+                }
             })
         );
         this.cancelEdit();
+    }
+    updateEsSettings(value) {
+        if (value === 'ES') {
+            this.form.controls['rec.ES_SETTINGS'].setValidators([Validators.required]);
+            this.inputs['rec.ES_SETTINGS'].required = true;
+        } else {
+            this.form.controls['rec.ES_SETTINGS'].setValidators(null);
+            this.inputs['rec.ES_SETTINGS'].required = false;
+        }
+        /* Данное действие нужно для того чтобы отрабатывала проверка и ставился или убирался tooltip об ошибке */
+        this.form.controls['rec.ES_SETTINGS'].setValue(this.form.controls['rec.ES_SETTINGS'].value);
+        this.indexKing = this.form.controls['rec.INDEXKIND'].value;
     }
     edit() {
         Object.keys(this.form.controls).forEach(key => {
@@ -66,7 +106,19 @@ export class ParamSearchComponent extends BaseParamComponent {
             }
         });
     }
-
+    preSubmit() {
+        if (this.updateData['INDEXKIND'] === 'ES' || this.updateData['ES_SETTINGS']) {
+            const message = Object.assign({}, UPDATE_INDEXKIND);
+            message.body = 'Для работы полнотекстового поиска необходимо выполнить настройку службы Elasticsearch (см. Руководство администратора)';
+            this.confirmSrv.confirm2(message).then((button) => {
+                if (button && button['result'] === 1) {
+                    this.submit();
+                } else {
+                    this.headerElement.editMode = true;
+                }
+            });
+        }
+    }
     submit() {
         if (this.newData) {
             this.formChanged.emit(false);

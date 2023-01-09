@@ -2,8 +2,9 @@
 *ngIf="inputs"
 class="input-param-wrapper input-param-search-wrapper">
     <eos-param-header
+        #headerElement
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit()"
+        (submitForm)="btnDisabled ? cancel() : preSubmit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnError"
         [editBtn]="true"
@@ -15,12 +16,19 @@ class="input-param-wrapper input-param-search-wrapper">
         <eos-dynamic-input
             [input]="inputs['rec.INDEXKIND']"
             [form]="form"
-            [readonly]="inputs['rec.INDEXKIND'].readonly"
+            [disabled]="inputs['rec.INDEXKIND'].readonly"
         ></eos-dynamic-input>
         <eos-dynamic-input
+            *ngIf="checkValueElements && this.form.controls['rec.INDEXKIND'].value !== 'DBMS'"
+            [input]="inputs['rec.ES_SETTINGS']"
+            [form]="form"
+            [readonly]="form.controls['rec.INDEXKIND'].value !== 'ES'"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            *ngIf="checkValueElements || this.form.controls['rec.INDEXKIND'].value === 'MSINDEXSERVER'"
             [input]="inputs['rec.INDEX_URL']"
             [form]="form"
-            [readonly]="inputs['rec.INDEX_URL'].readonly"
+            [readonly]="form.controls['rec.INDEXKIND'].value !== 'ES' && form.controls['rec.INDEXKIND'].value !== 'MSINDEXSERVER'"
         ></eos-dynamic-input>
         <div>
             <span>{{inputs['rec.INDEXTIMEOUT'].label}}</span>
