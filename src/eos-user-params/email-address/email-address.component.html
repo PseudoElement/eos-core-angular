@@ -5,11 +5,11 @@
     <div class="email-control">
         <button [disabled]="!flagEdit" type="button" class=" email-create btn btn-primary" (click)="openModal(template)"
             tooltip="Добавить E-MAIL" placement="top" containerClass="tooltip-info">
-            <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
+            <span class="eos-adm-icon small" [ngClass]="flagEdit ? 'eos-adm-icon-plus-blue' : 'eos-adm-icon-plus-grey'"></span>
         </button>
         <button [disabled]="getaccess || !flagEdit" type="button" class=" email-create btn btn-primary" (click)="itemTooltip.hide(); openModalRedact(template)"
             tooltip="Редактировать E-MAIL" placement="top" containerClass="tooltip-info">
-            <span class="eos-icon small" [ngClass]="getaccess || !flagEdit ? 'eos-icon-edit-grey' : 'eos-icon-edit-blue'"></span>
+            <span class="eos-adm-icon small" [ngClass]="getaccess || !flagEdit ? 'eos-adm-icon-edit-grey' : 'eos-adm-icon-edit-blue'"></span>
         </button>
 
         <!-- <div class="btn-group">
@@ -17,7 +17,7 @@
                 <button [disabled]="getaccess || !flagEdit" type="button" class=" email-edit btn btn-primary "
                     (click)="itemTooltip.hide(); openModal(template, true)">
                     <span
-                        [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
+                        [ngClass]="getaccess || !flagEdit ? 'eos-adm-icon eos-adm-icon-edit-grey small' : 'eos-adm-icon eos-adm-icon-edit-blue small'"></span>
                 </button>
             </div>
         </div> -->
@@ -26,7 +26,7 @@
                 <button [disabled]="getaccess || !flagEdit" class="email-delite  btn btn-primary"
                     (click)="itemTooltip.hide(); deliteEmailFild()">
                     <span
-                        [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-bin-forever-grey small' : 'eos-icon eos-icon-bin-forever-blue small'"></span>
+                        [ngClass]="getaccess || !flagEdit ? 'eos-adm-icon eos-adm-icon-bin-forever-grey small' : 'eos-adm-icon eos-adm-icon-bin-forever-blue small'"></span>
                 </button>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 <button [disabled]="currentIndex == 0 || getaccess || !flagEdit" class="stepTop btn btn-primary-light"
                     (click)="itemTooltip.hide(); upWeight()">
                     <span
-                        [ngClass]="(currentIndex == 0 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-top small' : 'eos-icon eos-icon-arrow-v-blue-top small'"></span>
+                        [ngClass]="(currentIndex == 0 || getaccess || !flagEdit) ? 'eos-adm-icon eos-adm-icon-arrow-v-grey-top small' : 'eos-adm-icon eos-adm-icon-arrow-v-blue-top small'"></span>
                 </button>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <button [disabled]="currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit"
                     class="stepBottom btn btn-primary-light" (click)="itemTooltip.hide(); downWeight()">
                     <span
-                        [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-bottom small' : 'eos-icon eos-icon-arrow-v-blue-bottom small'"></span>
+                        [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit) ? 'eos-adm-icon eos-adm-icon-arrow-v-grey-bottom small' : 'eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small'"></span>
                 </button>
             </div>
         </div>
@@ -69,7 +69,7 @@
                                 <label class="checkbox disabled minus-checkbox ">
                                     <input formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"
                                         type="checkbox" readonly="readonly" class="readonly">
-                                    <span class="eos-icon eos-icon-checkbox-black"></span>
+                                    <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                                 </label>
                             </span>
                             <!-- <span [tooltip]="group.controls['params'].value ? 'Имеются ограничения': ''"

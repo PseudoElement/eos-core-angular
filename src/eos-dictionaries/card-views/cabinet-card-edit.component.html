@@ -16,7 +16,7 @@
     </ul>
 </div>
 <div class="card-content-wrapper" [ngClass]="{ 'main-data': currTab === 0 }" #root>
-    <div *ngIf="currTab === 0" class="eos-cabinet-tab tab" id="tab0">
+    <div *ngIf="currTab === 0" class="eos-adm-cabinet-tab tab" id="tab0">
         <!-- <div class="clearfix"> -->
         <eos-dynamic-input
             #intupString
@@ -39,7 +39,7 @@
                     containerClass="tooltip-info"
                     class="btn action-btn btn-primary-light"
                 >
-                    <span class="eos-icon eos-icon-plus-blue small" aria-hidden="true"></span>
+                    <span class="eos-adm-icon eos-adm-icon-plus-blue small" aria-hidden="true"></span>
                 </button>
                 <ul *dropdownMenu class="dropdown-menu owners-menu" role="menu">
                     <li
@@ -64,7 +64,7 @@
                 containerClass="tooltip-info"
                 (click)="addUserDepartment()"
             >
-                <span class="eos-icon small eos-icon-avatar-blue"></span>
+                <span class="eos-adm-icon small eos-adm-icon-avatar-blue"></span>
             </button>
             <button
                 class="btn action-btn btn-primary-light"
@@ -73,7 +73,7 @@
                 containerClass="tooltip-info"
                 (click)="remove()"
             >
-                <span class="eos-icon eos-icon-bin-blue small" aria-hidden="true"></span>
+                <span class="eos-adm-icon eos-adm-icon-bin-blue small" aria-hidden="true"></span>
             </button>
             <div
                 class="btn-group"
@@ -99,14 +99,14 @@
                     <span
                         [ngClass]="
                             dropdown.isOpen
-                                ? 'eos-icon eos-icon-custom-list-white small'
-                                : 'eos-icon eos-icon-custom-list-blue small'
+                                ? 'eos-adm-icon eos-adm-icon-custom-list-white small'
+                                : 'eos-adm-icon eos-adm-icon-custom-list-blue small'
                         "
                     ></span>
                 </button>
                 <ul *ngIf="dropdown.isOpen" class="dropdown-menu user-sort-menu" role="menu">
                     <li>
-                        <button 
+                        <button
                         [disabled]="!isTop"
                         (click)="userSort(1)"
                         class="btn action-btn btn-primary-light"
@@ -114,18 +114,18 @@
                         placement="bottom"
                         container="body"
                         containerClass="tooltip-info"><!--  -->
-                            <span 
+                            <span
                                 [ngClass]="{
-                                    'eos-icon': true,
+                                    'eos-adm-icon': true,
                                     small: true,
-                                    'eos-icon-arrow-v-blue-top': isTop,
-                                    'eos-icon-arrow-v-grey-top': !isTop
+                                    'eos-adm-icon-arrow-v-blue-top': isTop,
+                                    'eos-adm-icon-arrow-v-grey-top': !isTop
                                 }"
                             ></span>
                         </button>
                     </li>
                     <li>
-                        <button 
+                        <button
                             [disabled]="!isBot"
                             (click)="userSort(2)"
                             class="btn action-btn btn-primary-light"
@@ -135,10 +135,10 @@
                             containerClass="tooltip-info">
                             <span
                                 [ngClass]="{
-                                    'eos-icon': true,
+                                    'eos-adm-icon': true,
                                     small: true,
-                                    'eos-icon-arrow-v-blue-bottom': isBot,
-                                    'eos-icon-arrow-v-grey-bottom': !isBot
+                                    'eos-adm-icon-arrow-v-blue-bottom': isBot,
+                                    'eos-adm-icon-arrow-v-grey-bottom': !isBot
                                 }"
                             ></span>
                         </button>
@@ -153,7 +153,7 @@
                         <th class="td-checkbox secondary-block">
                             <ng-container *ngIf="editMode">
                                 <div>
-                                    <label class="checkbox checkbox-inline" 
+                                    <label class="checkbox checkbox-inline"
                                     [ngClass]="getflagChecked"
                                     >
                                         <input
@@ -173,10 +173,10 @@
                             Фамилия И.О.
                             <span
                                 [hidden]="orderBy.fieldKey !== 'SURNAME'"
-                                class="icon eos-icon small"
+                                class="icon eos-adm-icon small"
                                 [ngClass]="{
-                                    'eos-icon-arrow-blue-top': orderBy?.ascend,
-                                    'eos-icon-arrow-blue-bottom': !orderBy?.ascend
+                                    'eos-adm-icon-arrow-blue-top': orderBy?.ascend,
+                                    'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend
                                 }"
                             ></span>
                         </th>
@@ -184,10 +184,10 @@
                             Должность
                             <span
                                 [hidden]="orderBy.fieldKey !== 'DUTY'"
-                                class="icon eos-icon small"
+                                class="icon eos-adm-icon small"
                                 [ngClass]="{
-                                    'eos-icon-arrow-blue-top': orderBy?.ascend,
-                                    'eos-icon-arrow-blue-bottom': !orderBy?.ascend
+                                    'eos-adm-icon-arrow-blue-top': orderBy?.ascend,
+                                    'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend
                                 }"
                             ></span>
                         </th>
@@ -259,17 +259,17 @@
             </div>
         </div>
     </div>
-    <div *ngIf="currTab === 1" class="cabinet-access eos-cabinet-tab tab" id="tab1">
+    <div *ngIf="currTab === 1" class="cabinet-access eos-adm-cabinet-tab tab" id="tab1">
         <div class="table-wrapper row" [ngClass]="{ scrollable: showScroll }">
             <button class="btn btn-primary-light scroll-btn" (mousedown)="startScrollToLeft()" (mouseup)="endScroll()">
-                <span class="eos-icon eos-icon-arrow-v-blue-left small" aria-hidden="true"></span>
+                <span class="eos-adm-icon eos-adm-icon-arrow-v-blue-left small" aria-hidden="true"></span>
             </button>
             <button
                 class="btn btn-primary-light scroll-btn right"
                 (mousedown)="startScrollToRight()"
                 (mouseup)="endScroll()"
             >
-                <span class="eos-icon eos-icon-arrow-v-blue-right small" aria-hidden="true"></span>
+                <span class="eos-adm-icon eos-adm-icon-arrow-v-blue-right small" aria-hidden="true"></span>
             </button>
             <div class="table-responsive" #tableEl>
                 <table class="table table-hover usual-border">
@@ -290,11 +290,11 @@
                             <th class="usual-border border-right headcol l-font primary-text">{{ row.title }}</th>
                             <td *ngFor="let person of cabinetUsers" class="cell" align="center">
                                 <span
-                                    class="eos-icon small"
+                                    class="eos-adm-icon small"
                                     aria-hidden="true"
                                     [ngClass]="{
-                                        'eos-icon-checkbox-grey': person[row.key],
-                                        'eos-icon-minus-grey': !person[row.key]
+                                        'eos-adm-icon-checkbox-grey': person[row.key],
+                                        'eos-adm-icon-minus-grey': !person[row.key]
                                     }"
                                 ></span>
                             </td>
@@ -313,11 +313,11 @@
                             <th class="usual-border border-right headcol l-font primary-text">{{ row.title }}</th>
                             <td *ngFor="let person of cabinetUsers" class="cell" align="center">
                                 <span
-                                    class="eos-icon small"
+                                    class="eos-adm-icon small"
                                     aria-hidden="true"
                                     [ngClass]="{
-                                        'eos-icon-checkbox-grey': person[row.key],
-                                        'eos-icon-minus-grey': !person[row.key]
+                                        'eos-adm-icon-checkbox-grey': person[row.key],
+                                        'eos-adm-icon-minus-grey': !person[row.key]
                                     }"
                                 ></span>
                             </td>

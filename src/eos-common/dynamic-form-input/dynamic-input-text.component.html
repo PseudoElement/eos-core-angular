@@ -5,15 +5,15 @@
             [ngClass]="{'readonly': readonly}" placeholder="..." (focus)="onFocus()" (blur)="onBlur()"
             (input)="onInput($event)" triggers="">
         </textarea>
-        <div 
+        <div
             *ngIf="!readonly && (form.controls[input.key] && !form.controls[input.key].disabled)"
             (click)="openClassif()"
             [ngClass]="{'spanScrol': !getOverflou}"
-            class="textareabutton" 
+            class="textareabutton"
             tooltip="Стандартные тексты"
             containerClass="tooltip-info"
             container="body">
-            <span *ngIf="!notStandartText" class="eos-icon eos-icon-text-blue small span"></span>
+            <span *ngIf="!notStandartText" class="eos-adm-icon eos-adm-icon-text-blue small span"></span>
         </div>
         <div class="textareacounter" *ngIf="isFocused && !readonly">
             <span>{{getCounterLabel()}}</span>

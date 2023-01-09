@@ -33,7 +33,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     title: 'Группы документов',
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
-    iconName: 'eos-icon-folder-group-blue',
+    iconName: 'eos-adm-icon-folder-group-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'counterDocgroup',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'counterDocgroupRKPD',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields',

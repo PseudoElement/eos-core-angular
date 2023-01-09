@@ -56,17 +56,17 @@
             </div>
             <div style="display: inline " class="btn-action "> <!--  -->
                 <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheDep() " placement="left">
-                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                    <span class="eos-adm-icon eos-adm-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="listDep">
                 <button [disabled]="listDep.length===0 || !flagEdit " #pop1="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteDep();pop1.hide()" placement="left">
-                    <span class="eos-icon eos-icon-close-blue small "></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue small "></span>
                 </button>
             </div>
         </div>
     </div>
-    
+
     <div [hidden]="appMode.arm" class="user-content-wr ">
         <span class="title-user-content ">Ограничить грифами доступа:</span>
         <div class="user-input-group fl ">
@@ -77,12 +77,12 @@
             </div>
             <div style="display: inline " class="btn-action ">
                 <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheSecure() " placement="left">
-                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                    <span class="eos-adm-icon eos-adm-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " ><!-- *ngIf="listSecur" -->
                 <button [disabled]="listSecur.length===0 || !flagEdit "  #pop3="bs-tooltip" tooltip="Очистить" tooltipAnimation="false" triggers="hover" #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteSecure();pop3.hide()" placement="left">
-                    <span class="eos-icon eos-icon-close-blue small "></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue small "></span>
                 </button>
             </div>
         </div>
@@ -94,19 +94,19 @@
             <div class="user-input-group-wr ">
                 <div class="user-input-group-hi " *ngIf='list && list.length > 0'>
                     <span *ngFor="let node of list" style="position: relative;">
-                        <span *ngIf="node.data['DELETED']" class="icon eos-icon small eos-icon-bin-grey" style="position: absolute;"></span>
+                        <span *ngIf="node.data['DELETED']" class="icon eos-adm-icon small eos-adm-icon-bin-grey" style="position: absolute;"></span>
                         <span style="height: 25px; padding-top: 4px;" [ngClass]="{'text-log-delet': node.data['DELETED']}">{{node.label}}</span>
                     </span>
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">
                 <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheDirectory() " placement="left">
-                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                    <span class="eos-adm-icon eos-adm-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="list">
                 <button [disabled]="list.length===0 || !flagEdit " #pop2="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteDirectory();pop2.hide() " placement="left">
-                    <span class="eos-icon eos-icon-close-blue small "></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue small "></span>
                 </button>
             </div>
         </div>

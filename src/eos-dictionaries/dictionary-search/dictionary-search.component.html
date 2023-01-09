@@ -1,4 +1,4 @@
-<div class="eos-dictionary-search">
+<div class="eos-adm-dictionary-search">
     <div [popover]="searchModal"
         containerClass="full-search-popover"
         class="search-btn-wraper"
@@ -14,8 +14,8 @@
             [container]="'body'"
             containerClass="tooltip-info"
             (click)="autoFocus()">
-            <i [hidden]="isActiveButton()" class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
-            <i [hidden]="!isActiveButton()" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
+            <i [hidden]="isActiveButton()" class="eos-adm-icon eos-adm-icon-filter-blue small" aria-hidden="true"></i>
+            <i [hidden]="!isActiveButton()" class="eos-adm-icon eos-adm-icon-filter-white small" aria-hidden="true"></i>
         </button>
     </div>
     <div class="search-btn-wraper"
@@ -31,8 +31,8 @@
             containerClass="quick-search-popover"
             placement="left"
             (click)="showFastSrch()">
-            <i class="eos-icon small" aria-hidden="true"
-                [ngClass]="{'eos-icon-search-blue': !isQuickOpened, 'eos-icon-search-white': isQuickOpened }"
+            <i class="eos-adm-icon small" aria-hidden="true"
+                [ngClass]="{'eos-adm-icon-search-blue': !isQuickOpened, 'eos-adm-icon-search-white': isQuickOpened }"
             ></i>
         </button>
     </div>
@@ -79,7 +79,7 @@
                         maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
@@ -95,7 +95,7 @@
                         maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['NOTE']}"
-                        (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['NOTE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
         </form>
@@ -137,7 +137,7 @@
                                 maxlength="{{fieldsDescription.rec['CODE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CODE']}"
-                                (click)="searchModel['CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['CODE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -153,7 +153,7 @@
                                 maxlength="{{fieldsDescription.rec['PHONE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['PHONE_LOCAL']}"
-                                (click)="searchModel['PHONE_LOCAL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['PHONE_LOCAL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -169,7 +169,7 @@
                                 maxlength="{{fieldsDescription.rec['E_MAIL']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['E_MAIL']}"
-                                (click)="searchModel['E_MAIL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['E_MAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                                    placeholder="...">
                             <a class="clear-btn"
                                [ngClass]="{'hide': !searchModel['SURNAME']}"
-                               (click)="searchModel['SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                               (click)="searchModel['SURNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -201,7 +201,7 @@
                                 maxlength="64">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['printInfo.SURNAME']}"
-                                (click)="searchModel['printInfo.SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['printInfo.SURNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -218,7 +218,7 @@
                                     maxlength="64">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['printInfo.NAME']}"
-                                    (click)="searchModel['printInfo.NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                    (click)="searchModel['printInfo.NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                             </div>
                         </div>
                         <div class="form-group unimportant-text col-250">
@@ -234,7 +234,7 @@
                                     maxlength="64">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['printInfo.PATRON']}"
-                                    (click)="searchModel['printInfo.PATRON'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                    (click)="searchModel['printInfo.PATRON'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                             </div>
                         </div>
                     </div>
@@ -252,7 +252,7 @@
                                     maxlength="{{fieldsDescription.rec['DUTY']?.length}}">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['DUTY']}"
-                                    (click)="searchModel['DUTY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                    (click)="searchModel['DUTY'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                             </div>
                         </div>
                         <!-- <div class="form-group unimportant-text col-250">
@@ -268,7 +268,7 @@
                                     maxlength="{{fieldsDescription.rec['fullPosition']?.length}}">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                                    (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                    (click)="searchModel['FULLNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                             </div>
                         </div> -->
                     </div>
@@ -285,7 +285,7 @@
                                 maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['NOTE']}"
-                                (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['NOTE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                 </div>
@@ -311,7 +311,7 @@
                             placeholder="...">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CABINET_NAME']}"
-                            (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <!-- <div class="form-group unimportant-text">
@@ -326,7 +326,7 @@
                                placeholder="...">
                         <a class="clear-btn"
                            [ngClass]="{'hide': !searchModel['fullCabinet']}"
-                           (click)="searchModel['fullCabinet'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                           (click)="searchModel['fullCabinet'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div> -->
             </form>
@@ -352,7 +352,7 @@
                                 maxlength="{{fieldsDescription.rec['CODE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CODE']}"
-                                (click)="searchModel['CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['CODE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -368,7 +368,7 @@
                                 maxlength="{{fieldsDescription.rec['indexDep']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['DEPARTMENT_INDEX']}"
-                                (click)="searchModel['DEPARTMENT_INDEX'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['DEPARTMENT_INDEX'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                 </div>
@@ -386,7 +386,7 @@
                                 maxlength="{{fieldsDescription.rec['nametitleDep']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                                (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -402,7 +402,7 @@
                                 maxlength="{{fieldsDescription.rec['fullTitle']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                                (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['FULLNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -418,7 +418,7 @@
                                 maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['NOTE']}"
-                                (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                (click)="searchModel['NOTE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
                 </div>
@@ -449,7 +449,7 @@
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
 
@@ -466,7 +466,7 @@
                             maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                            (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['FULLNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -481,7 +481,7 @@
                                maxlength="{{fieldsDescription.rec['DOCGROUP_INDEX']?.length}}">
                         <a class="clear-btn"
                            [ngClass]="{'hide': !searchModel['DOCGROUP_INDEX']}"
-                           (click)="searchModel['DOCGROUP_INDEX'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                           (click)="searchModel['DOCGROUP_INDEX'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -497,7 +497,7 @@
                             maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOTE']}"
-                            (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['NOTE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
         </form>
@@ -526,7 +526,7 @@
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
 
@@ -543,7 +543,7 @@
                             maxlength="{{fieldsDescription.rec['NOM_NUMBER']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOM_NUMBER']}"
-                            (click)="searchModel['NOM_NUMBER'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['NOM_NUMBER'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -558,7 +558,7 @@
                                maxlength="{{fieldsDescription.rec['deepName']?.length}}">
                         <a class="clear-btn"
                            [ngClass]="{'hide': !searchModel['deepName']}"
-                           (click)="searchModel['deepName'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                           (click)="searchModel['deepName'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -574,7 +574,7 @@
                             maxlength="{{fieldsDescription.rec['ARTICLE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['ARTICLE']}"
-                            (click)="searchModel['ARTICLE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['ARTICLE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -590,7 +590,7 @@
                             maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOTE']}"
-                            (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['NOTE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
         </form>
@@ -617,7 +617,7 @@
                             maxlength="{{fieldsDescription.rec['RUBRIC_CODE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['RUBRIC_CODE']}"
-                            (click)="searchModel['RUBRIC_CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['RUBRIC_CODE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
             </div>
@@ -635,7 +635,7 @@
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
 
@@ -652,7 +652,7 @@
                             maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                            (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['FULLNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -668,7 +668,7 @@
                             maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOTE']}"
-                            (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['NOTE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
             </div>
@@ -719,7 +719,7 @@
                         maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <!--
@@ -755,7 +755,7 @@
                         maxlength="{{fieldsDescription.rec['CABINET_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CABINET_NAME']}"
-                        (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <!-- <div class="form-group unimportant-text">
@@ -771,7 +771,7 @@
                         maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                        (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['FULLNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div> -->
         </form>
@@ -799,7 +799,7 @@
                         maxlength="{{fieldsDescription.rec['NAME_TEMPLATE']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['NAME_TEMPLATE']}"
-                        (click)="searchModel['NAME_TEMPLATE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['NAME_TEMPLATE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
@@ -815,7 +815,7 @@
                         maxlength="{{fieldsDescription.rec['DESCRIPTION']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['DESCRIPTION']}"
-                        (click)="searchModel['DESCRIPTION'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['DESCRIPTION'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
@@ -831,7 +831,7 @@
                         maxlength="{{fieldsDescription.rec['CATEGORY']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CATEGORY']}"
-                        (click)="searchModel['CATEGORY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['CATEGORY'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
     </form>
@@ -857,7 +857,7 @@
                     autofocus>
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['CITIZEN_SURNAME']}"
-                    (click)="searchModel['CITIZEN_SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="searchModel['CITIZEN_SURNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="form-group unimportant-text">
@@ -873,7 +873,7 @@
                     maxlength="{{fieldsDescription.rec['CITIZEN_CITY']?.length}}">
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['CITIZEN_CITY']}"
-                    (click)="searchModel['CITIZEN_CITY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="searchModel['CITIZEN_CITY'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="form-group unimportant-text">
@@ -889,7 +889,7 @@
                     maxlength="{{fieldsDescription.rec['CITIZEN_ADDR']?.length}}">
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['CITIZEN_ADDR']}"
-                    (click)="searchModel['CITIZEN_ADDR'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="searchModel['CITIZEN_ADDR'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="form-group unimportant-text">
@@ -905,8 +905,8 @@
                     [(ngModel)]="searchModel['REGION_NAME']"
                     placeholder="..."
                     maxlength="{{fieldsDescription.rec['REGION_NAME']?.length}}">
-                    <span 
-                        class="action eos-icon eos-icon-directory-book-blue"
+                    <span
+                        class="action eos-adm-icon eos-adm-icon-directory-book-blue"
                         style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
                         container="body"
                         placement="bottom"
@@ -917,7 +917,7 @@
                 <a style="right: 30px;"
                     class="clear-btn"
                     [ngClass]="{'hide': !searchModel['REGION_NAME']}"
-                    (click)="[searchModel['REGION_NAME'] = '', searchModel['ISN_REGION'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="[searchModel['REGION_NAME'] = '', searchModel['ISN_REGION'] = '']"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="form-group unimportant-text">
@@ -933,7 +933,7 @@
                     maxlength="{{fieldsDescription.rec['ZIPCODE']?.length}}">
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['ZIPCODE']}"
-                    (click)="searchModel['ZIPCODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="searchModel['ZIPCODE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="form-group unimportant-text">
@@ -949,7 +949,7 @@
                     maxlength="{{fieldsDescription.rec['E_MAIL']?.length}}">
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['E_MAIL']}"
-                    (click)="searchModel['E_MAIL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="searchModel['E_MAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <ng-content *ngTemplateOutlet="doprec"></ng-content>
@@ -992,7 +992,7 @@
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -1008,7 +1008,7 @@
                             maxlength="{{fieldsDescription.rec['EMAIL']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['EMAIL']}"
-                            (click)="searchModel['EMAIL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['EMAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
@@ -1024,7 +1024,7 @@
                             maxlength="{{fieldsDescription.rec['INN']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['INN']}"
-                            (click)="searchModel['INN'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['INN'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
                 <ng-content *ngTemplateOutlet="doprec"></ng-content>
@@ -1050,7 +1050,7 @@
                         maxlength="{{fieldsDescription.rec['GATE']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['GATE']}"
-                        (click)="searchModel['GATE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['GATE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
@@ -1066,7 +1066,7 @@
                         maxlength="{{fieldsDescription.rec['GATE_ID']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['GATE_ID']}"
-                        (click)="searchModel['GATE_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['GATE_ID'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
@@ -1082,7 +1082,7 @@
                         maxlength="{{fieldsDescription.rec['CONTACT.MEDO_ID']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CONTACT.MEDO_ID']}"
-                        (click)="searchModel['CONTACT.MEDO_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['CONTACT.MEDO_ID'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
         </form>
@@ -1112,7 +1112,7 @@
                         maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
             <div style="display: flex;">
@@ -1126,7 +1126,7 @@
                             [readonly]="false">
                         </eos-dynamic-input>
                     </div>
-                    
+
                 </div>
                 <div class="type-sev-right">
                     <span class="label-select-rec">Вид правила</span>
@@ -1138,10 +1138,10 @@
                         [readonly]="false">
                     </eos-dynamic-input>
                     </div>
-                    
+
                 </div>
             </div>
-            
+
             <div class="form-group unimportant-text">
                 <label class="s-font"
                     for="region-name">Группа документов</label>
@@ -1155,8 +1155,8 @@
                         [(ngModel)]="searchModel['DOCGROUP_NAME']"
                         placeholder="..."
                         maxlength="{{fieldsDescription.rec['DOCGROUP_NAME']?.length}}">
-                        <span 
-                            class="action eos-icon eos-icon-directory-book-blue"
+                        <span
+                            class="action eos-adm-icon eos-adm-icon-directory-book-blue"
                             style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
                             container="body"
                             placement="bottom"
@@ -1167,7 +1167,7 @@
                     <a style="right: 30px;"
                         class="clear-btn"
                         [ngClass]="{'hide': !searchModel['DOCGROUP_NAME']}"
-                        (click)="[searchModel['DOCGROUP_NAME'] = '', searchModel['DUE_DOCGROUP'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        (click)="[searchModel['DOCGROUP_NAME'] = '', searchModel['DUE_DOCGROUP'] = '']"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                 </div>
             </div>
     </form>
@@ -1198,8 +1198,8 @@
                     class="form-control light"
                     [(ngModel)]="searchModel['rules_name']"
                     placeholder="...">
-                <span 
-                    class="action eos-icon eos-icon-directory-book-blue"
+                <span
+                    class="action eos-adm-icon eos-adm-icon-directory-book-blue"
                     style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
                     container="body"
                     placement="bottom"
@@ -1211,7 +1211,7 @@
                 <a style="right: 30px;"
                     class="clear-btn"
                     [ngClass]="{'hide': !searchModel['rules_name']}"
-                    (click)="[searchModel['rules_name'] = '', searchModel['rules'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="[searchModel['rules_name'] = '', searchModel['rules'] = '']"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="search-field-sev">
@@ -1259,8 +1259,8 @@
                     class="form-control light"
                     [(ngModel)]="searchModel['rules_name']"
                     placeholder="...">
-                <span 
-                    class="action eos-icon eos-icon-directory-book-blue"
+                <span
+                    class="action eos-adm-icon eos-adm-icon-directory-book-blue"
                     style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
                     container="body"
                     placement="bottom"
@@ -1272,7 +1272,7 @@
                 <a style="right: 30px;"
                     class="clear-btn"
                     [ngClass]="{'hide': !searchModel['rules_name']}"
-                    (click)="[searchModel['rules_name'] = '', searchModel['rules'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    (click)="[searchModel['rules_name'] = '', searchModel['rules'] = '']"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
             </div>
         </div>
         <div class="search-field-sev">
@@ -1312,7 +1312,7 @@
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
                     (click)="searchModel['CLASSIF_NAME']=''">
-                    <span class="eos-icon eos-icon-close-blue"></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
                 </a>
             </div>
         </div>
@@ -1331,7 +1331,7 @@
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['DG_NAMES']}"
                     (click)="searchModel['DG_NAMES']=''">
-                    <span class="eos-icon eos-icon-close-blue"></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
                 </a>
             </div>
         </div>
@@ -1349,7 +1349,7 @@
                 <a class="clear-btn"
                     [ngClass]="{'hide': !searchModel['NOTE']}"
                     (click)="searchModel['NOTE']=''">
-                    <span class="eos-icon eos-icon-close-blue"></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
                 </a>
             </div>
         </div>

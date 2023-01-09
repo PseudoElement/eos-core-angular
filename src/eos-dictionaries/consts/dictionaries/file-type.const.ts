@@ -8,7 +8,7 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
     dictType: E_DICT_TYPE.linear,
     title: 'Типы файлов',
     visible: true,
-    iconName: 'eos-icon-folder-blue',
+    iconName: 'eos-adm-icon-folder-blue',
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'quickSearch', 'fullSearch', 'userOrder', 'userOrderCut', 'userOrderPaste', 'markRecords', 'moveUp', 'moveDown', 'showDeleted',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore',

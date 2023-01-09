@@ -27,15 +27,15 @@
             <div class="organ-new-now">
                 <span (click)="openOrganiz()"
                 eosClickMode
-                class = "eos-icon"
+                class = "eos-adm-icon"
                 tooltip="Выбрать организацию"
                 containerClass="tooltip-info"
                 placement="left"
                 container="body"
                 triggers="hover:click"
                 [ngClass]="{
-                    'eos-icon-building-blue': !form.controls['rec.ISN_ORGANIZ'].disabled,
-                    'eos-icon-building-grey': form.controls['rec.ISN_ORGANIZ'].disabled,
+                    'eos-adm-icon-building-blue': !form.controls['rec.ISN_ORGANIZ'].disabled,
+                    'eos-adm-icon-building-grey': form.controls['rec.ISN_ORGANIZ'].disabled,
                     'organ-new-now-dis': form.controls['rec.ISN_ORGANIZ'].disabled,
                     'organ-new-now-en': !form.controls['rec.ISN_ORGANIZ'].disabled
                 }"

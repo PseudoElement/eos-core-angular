@@ -12,7 +12,7 @@
                 (click)="addOrganiz()"
                 eosClickMode
             >
-                <span class="eos-icon eos-icon-plus-blue small"></span>
+                <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
             </button>
             <button *ngIf="editMode && !selectedNode.control.disabled"
                 class="btn"
@@ -24,7 +24,7 @@
                 [disabled]="!selectedDep || returnOgrani()"
                 (click)="itemTooltip.hide(); DeleteDep()"
             >
-                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
             </button>
         </div>
         <div>
@@ -43,7 +43,7 @@
                 ></eos-list-doc-tree> <!-- если понадобиться вернуть дерево нужно просто раскоментировать -->
             </div>
         </div>
-        
+
 
     </div>
 </div>

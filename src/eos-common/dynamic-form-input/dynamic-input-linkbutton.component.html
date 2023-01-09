@@ -1,7 +1,7 @@
 <div [formGroup]="form">
     <label [hidden]="(input.hideLabel || hideLabel)"
            [attr.for]="input.key">{{label}}</label>
-    <div class="eos-select" *ngIf="!readonly"
+    <div class="eos-adm-select" *ngIf="!readonly"
            [ngClass]="{'required': isRequired, 'disabled': disabled}">
         <div class="input-button-container">
             <input class="form-control m-font link-input"
@@ -18,13 +18,13 @@
                 [attr.for]="input.key"
                 >
                     <span>
-                        <a 
-                        [ngClass]="{'readonly': readonly, 'disabled': disabled}" 
+                        <a
+                        [ngClass]="{'readonly': readonly, 'disabled': disabled}"
                         (click)="onButtonClick1()" *ngIf="!readonly && !iconForElem">
-                            <span class="eos-icon eos-icon-arrow-v-blue-bottom small">
+                            <span class="eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small">
                             </span>
                         </a>
-                        <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick2()" *ngIf="enRemoveButton() && !readonly" ><span class="eos-icon eos-icon-close-blue small"></span></a>
+                        <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick2()" *ngIf="enRemoveButton() && !readonly" ><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></a>
                         <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick1()" *ngIf="!readonly && iconForElem"><span class="{{newClass}}" ></span></a>
                     </span>
                 </div>

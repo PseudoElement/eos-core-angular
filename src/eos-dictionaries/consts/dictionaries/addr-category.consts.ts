@@ -7,7 +7,7 @@ export const ADDR_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINEA
     apiInstance: 'ADDR_CATEGORY_CL',
     title: 'Категории адресатов',
     visible: true,
-    iconName: 'eos-icon-address-category-blue',
+    iconName: 'eos-adm-icon-address-category-blue',
     fields: [...LINEAR_TEMPLATE.fields,
         Object.assign({}, COMMON_FIELD_NAME, {
             isUnique: true,

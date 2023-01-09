@@ -8,7 +8,7 @@ export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINE
     apiInstance: 'RESOLUTION_CATEGORY_CL',
     title: 'Категории поручений',
     visible: true,
-    iconName: 'eos-icon-category-blue',
+    iconName: 'eos-adm-icon-category-blue',
     fields: [...LINEAR_TEMPLATE.fields,
         COMMON_FIELD_ICONS_SEV,
         Object.assign({}, COMMON_FIELD_NAME, {

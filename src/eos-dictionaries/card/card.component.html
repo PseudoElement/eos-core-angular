@@ -1,5 +1,5 @@
-<div class="eos-card">
-    <div class="eos-card-wrapper">
+<div class="eos-adm-card">
+    <div class="eos-adm-card-wrapper">
         <header>
             <div class="edit-header"
                 [ngClass]="{'edited': editMode}">
@@ -14,7 +14,7 @@
                             tooltip="Предыдущая"
                             [delay]="tooltipDelay"
                             placement="bottom"
-                            containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-left small"></span></button>
+                            containerClass="tooltip-info"><span class="eos-adm-icon eos-adm-icon-arrow-v-blue-left small"></span></button>
                         <button *ngIf="node && !editMode"
                             [disabled]="disManager(false, tt2)"
                             #tt2="bs-tooltip"
@@ -24,7 +24,7 @@
                             tooltip="Следующая"
                             [delay]="tooltipDelay"
                             placement="bottom"
-                            containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-right small"></span></button>
+                            containerClass="tooltip-info"><span class="eos-adm-icon eos-adm-icon-arrow-v-blue-right small"></span></button>
                     </div>
                 </div>
                 <div class="name-wrapper"
@@ -52,7 +52,7 @@
                             tooltip="Редактировать"
                             [delay]="tooltipDelay"
                             placement="bottom"
-                            containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
+                            containerClass="tooltip-info"><span class="eos-adm-icon eos-adm-icon-edit-blue small"></span></button>
                         <a class="btn btn-primary-light"
                             routerLink="{{selfLink}}"
                             aria-hidden="true"
@@ -60,7 +60,7 @@
                             [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info"
-                            target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
+                            target="_blank"><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span></a>
                         <button class="btn btn-primary-light"
                             aria-hidden="true"
                             [disabled]="!node || node.updating"
@@ -69,7 +69,7 @@
                             [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info">
-                    <span class="eos-icon eos-icon-close-blue small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
                 </button>
                     </div>
                 </div>

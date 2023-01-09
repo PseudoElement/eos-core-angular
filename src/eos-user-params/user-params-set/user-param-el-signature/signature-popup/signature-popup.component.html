@@ -1,10 +1,10 @@
 <div class="input-user-wrapper input-user-directories-wrapper">
 <div class="nav-signature">
     <button class="btn btn-primary-light" placement="bottom" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
-        <span class="eos-icon eos-icon-plus-blue small"></span>
+        <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
     </button>
     <button class="btn btn-primary-light" placement="bottom" [containerClass]="isCurrentSettings ? 'tooltip-info-current visible' : 'tooltip-info visible'" (click)="deleteStores()" tooltip='Удалить хранилище'>
-        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+        <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
     </button>
 </div>
 <div class="signature-list" *ngIf='listCertStores'>
@@ -47,7 +47,7 @@
           <div *ngIf='InfoSert.length > 0; else unset'>
                 <div class="sert-list" *ngFor="let sert of InfoSert">
                     {{sert}}
-                    <span class="info-icon eos-icon eos-icon-info-blue x-small" (click)="showCertInfo(sert)"></span>
+                    <span class="info-icon eos-adm-icon eos-adm-icon-info-blue x-small" (click)="showCertInfo(sert)"></span>
                 </div>
              </div>
              <ng-template #unset>

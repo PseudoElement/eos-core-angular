@@ -17,8 +17,8 @@
                             placement="bottom"
                             container="body"
                             containerClass="tooltip-info"
-                            (click)="resetSearch()"><span class="eos-icon eos-icon-close-blue small"></span>
-                            </button> 
+                            (click)="resetSearch()"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -35,13 +35,13 @@
                                 container="body"
                                 containerClass="tooltip-info"
                             >
-                                <span class="eos-icon eos-icon-open-read-only-blue small"></span>
+                                <span class="eos-adm-icon eos-adm-icon-open-read-only-blue small"></span>
                             </button>
                         </div>
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
                             <button [disabled]="DisabledRemoveAudits()" class="btn btn-primary-light bth-size-sum" [tooltip]="DisabledRemoveAudits() ? null : 'Удалить'" (click)="DeleteEventUser()"
                                 placement="bottom" container="body" containerClass="tooltip-info">
-                                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
                             </button>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             <label class="checkbox">
                                 <input type="checkbox" [checked]="protocolUser" [disabled]="userTech || checkboxLoad"
                                 (change)="markProtocol($event)">
-                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                                <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                             </label>
                         </div>
                         <span>Протоколирование работы со справочником 'Пользователи'</span>
@@ -63,30 +63,30 @@
                             <label class="checkbox" >
                                 <input [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
                                 <div>
-                                    <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
+                                    <span class="eos-adm-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
                                      placement="auto" containerClass="tooltip-info fix-pos-check" container="body"></span>
                                 </div>
                             </label>
                         </div>
                         <span class=" width-title1 likeLink-sum" (click)="SortPageList(1)">
                             Дата
-                            <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-icon small"
-                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[0].date, 'eos-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
+                            <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-adm-icon small"
+                             [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[0].date, 'eos-adm-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
                         </span>
                         <span class=" width-title2 likeLink-sum" (click)="SortPageList(2)">
                             Событие
-                            <span *ngIf="status === 'eventUser'" class="icon eos-icon small"
-                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[1].event, 'eos-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
+                            <span *ngIf="status === 'eventUser'" class="icon eos-adm-icon small"
+                             [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[1].event, 'eos-adm-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
                         </span>
                         <span class=" width-title3 likeLink-sum" (click)="SortPageList(3)">
                             Редактировал
-                            <span *ngIf="status === 'WHO'" class="icon eos-icon small"
-                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
+                            <span *ngIf="status === 'WHO'" class="icon eos-adm-icon small"
+                             [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[2].who, 'eos-adm-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
                         </span>
                         <span class=" likeLink-sum width-title3" (click)="SortPageList(4)">
                             Пользователя
-                            <span *ngIf="status === 'USER'" class="icon eos-icon small"
-                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[3].isn, 'eos-icon-arrow-blue-bottom': !arrSort[3].isn}"></span>
+                            <span *ngIf="status === 'USER'" class="icon eos-adm-icon small"
+                             [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[3].isn, 'eos-adm-icon-arrow-blue-bottom': !arrSort[3].isn}"></span>
                         </span>
                     </div>
                 </div>
@@ -96,9 +96,9 @@
                             <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
                                 <div class="check-sum">
                                     <label class="checkbox minus-checkbox">
-                                        <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" 
+                                        <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked"
                                         (ngModelChange)="markNode($event,user)">
-                                        <span class="eos-icon eos-icon-checkbox-black"></span>
+                                        <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                                     </label>
                                 </div>
                                 <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
@@ -119,7 +119,7 @@
                                         {{user.isnUser}}
                                     </div>
                                 </span>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                     <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>

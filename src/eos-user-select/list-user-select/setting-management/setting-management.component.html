@@ -4,7 +4,7 @@
     </div>
     <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" tooltip="Закрыть" placement="bottom"
         container="body" containerClass="tooltip-info">
-        <span class="eos-icon eos-icon-close-blue small"></span>
+        <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
     </button>
 </header>
 <main *ngIf="!isLoading && form; else spiner">
@@ -15,14 +15,14 @@
                 <input (keyup)="delSelectUser($event)" class="form-control m-font inline-block input-w" readonly
                     [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text"
                     [placeholder]="inputs['USER_COPY'].label" autocomplete="off">
-                <span class="icon eos-icon small icon-add-department"
-                    [ngClass]="{'eos-icon-avatar-blue': !form.get('USER_TEMPLATES').value, 'eos-icon-avatar-grey': form.get('USER_TEMPLATES').value}"
+                <span class="icon eos-adm-icon small icon-add-department"
+                    [ngClass]="{'eos-adm-icon-avatar-blue': !form.get('USER_TEMPLATES').value, 'eos-adm-icon-avatar-grey': form.get('USER_TEMPLATES').value}"
                     [ngStyle]="{'margin-left': !form.value['USER_COPY'] ? '' : '-60px'}"
                     (click)="selectUser(form.get('USER_TEMPLATES').value)"></span>
 
                 <a [ngClass]="{'hide': !form.value['USER_COPY']}" (click)="cleanUser()">
                     <span style="margin-bottom: -7px; margin-left: 5px "
-                        class="eos-icon eos-icon-close-blue small"></span></a>
+                        class="eos-adm-icon eos-adm-icon-close-blue small"></span></a>
             </div>
         </div>
         <div class="">

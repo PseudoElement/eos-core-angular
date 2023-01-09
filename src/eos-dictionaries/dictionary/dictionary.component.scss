@@ -22,7 +22,7 @@
         color: red;
     }
 }
-.eos-dictionary {
+.eos-adm-dictionary {
     overflow: hidden;
     .tree-wrapper,
     .opened-wrapper,
@@ -237,7 +237,7 @@
 }
 
 @media (max-width: 1000px) {
-    .eos-dictionary {
+    .eos-adm-dictionary {
         .tree-wrapper {
             z-index: 4;
         }
@@ -267,7 +267,7 @@
 }
 
 @media(min-width: 0px) and (max-width: 999px) {
-    .eos-dictionary {
+    .eos-adm-dictionary {
         .tree-wrapper,
         .opened-wrapper {
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
@@ -342,7 +342,7 @@
 }
 
 @media(min-width: 1000px) and (max-width: 1599px) {
-    .eos-dictionary {
+    .eos-adm-dictionary {
         .tree-wrapper,
         .opened-wrapper {
             width: $dictionary-block-width;
@@ -416,7 +416,7 @@
 }
 
 @media (min-width: 1600px) {
-    .eos-dictionary {
+    .eos-adm-dictionary {
         .tree-wrapper,
         .opened-wrapper {
             width: $dictionary-block-width-big-display;

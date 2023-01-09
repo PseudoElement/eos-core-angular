@@ -60,7 +60,7 @@
         }
     }
     .incr-cabinet {
-        .eos-select {
+        .eos-adm-select {
             width: 50px;
         }
     }
@@ -99,7 +99,7 @@
             .order-icon {
                 padding: 0 3px;
             }
-            .eos-icon {
+            .eos-adm-icon {
                 margin: -5px 0 0;
                 vertical-align: middle;
             }
@@ -124,7 +124,7 @@
         margin-right: 20px;
     }
     .add-to-juornal-radio {
-        padding-top: 20px; 
+        padding-top: 20px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -133,7 +133,7 @@
         }
     }
     .add-to-juornal {
-        padding-top: 20px; 
+        padding-top: 20px;
         display: flex;
         justify-content: flex-start;
         .form-group {
@@ -156,7 +156,7 @@
                 }
 
             }
-            
+
         }
         .delete-wr-input {
             .form-group {
@@ -175,7 +175,7 @@
     .resolution {
         display: flex;
         justify-content: flex-start;
-        //align-items: center;  //@bag166916 основательно мешает в Кабинеты - Поручения 
+        //align-items: center;  //@bag166916 основательно мешает в Кабинеты - Поручения
         >div {
             margin-left: 0px;
             width: 40%;

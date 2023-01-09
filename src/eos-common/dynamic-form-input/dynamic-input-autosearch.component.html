@@ -1,9 +1,9 @@
 <div [formGroup]="form">
     <label [hidden]="input.hideLabel || hideLabel" [attr.for]="input.key">{{ input.label }}</label>
-    <div class="eos-select" [ngClass]="{ 'required': isRequired, 'disabled': disabled, 'readonly': readonly }">
+    <div class="eos-adm-select" [ngClass]="{ 'required': isRequired, 'disabled': disabled, 'readonly': readonly }">
+        <!-- убираем dropdownToggle -- смена стандартного поведения для div - контейнера выпадашки @167506 -->
         <div
-            dropdownToggle
-            class="input-button-container eos-select2"
+            class="input-button-container eos-adm-select2"
             [container]="container"
             [dropup]="dropup"
             dropdown
@@ -13,10 +13,10 @@
             (onShown)="onMenuShown($event)"
             (onHidden)="onMenuHidden($event)"
         >
-            <input 
+            <input
                 #textInputSelect
                 class="form-control m-font text-input-select2"
-                [readonly]="readonly" 
+                [readonly]="readonly"
                 [ngClass]="{ 'placeholder': !hasValue(), 'disabled': disabled}"
                 [value]="currentValue"
                 [type]="textType"
@@ -31,22 +31,23 @@
                 triggers="hover"
                 container="body"
                 containerClass="tooltip-info word-break tooltip-z-index"
+                (click)="onClick()"
             />
             <div class="textareacounter" *ngIf="isFocused">
                 <span>{{ getCounterLabel() }}</span>
             </div>
 
-            <div class="inbutton2" *ngIf="!form.disabled">
-                <span class="eos-icon eos-icon-close-blue small" (click)="onEraseClick()"></span>
+            <div class="inbutton2" *ngIf="!form.disabled && control.value?.length > 0">
+                <span class="eos-adm-icon eos-adm-icon-close-blue small" (click)="onEraseClick()"></span>
             </div>
             <div class="inbutton" *ngIf="!form.disabled">
-                <span class="eos-icon eos-icon-directory-book-blue small" (click)="onClickDict.emit($event)"></span>
+                <span class="eos-adm-icon eos-adm-icon-directory-book-blue small" (click)="onClickDict.emit($event)"></span>
             </div>
 
             <ul
                 *dropdownMenu
                 #dropdownElement
-                class="dropdown-menu eos-select2" 
+                class="dropdown-menu eos-adm-select2"
                 role="menu"
                 autofocus
                 aria-labelledby="button-container"
@@ -57,10 +58,10 @@
                     role="menuitem"
                     *ngIf="viewOpts.defaultValue"
                     [value]="viewOpts.defaultValue.value"
-                    [ngClass]="{ 'eos-icon-checkbox-blue': !hasValue() }"
+                    [ngClass]="{ 'eos-adm-icon-checkbox-blue': !hasValue() }"
                 >
-                    <a class="dropdown-item eos-select2" style="color: black;" (click)="selectAction($event, viewOpts.defaultValue)">
-                        <span class="eos-icon x-small" [ngClass]="{ 'eos-icon-checkbox-blue': !hasValue() }"></span>
+                    <a class="dropdown-item eos-adm-select2" style="color: black;" (click)="selectAction($event, viewOpts.defaultValue)">
+                        <span class="eos-adm-icon x-small" [ngClass]="{ 'eos-adm-icon-checkbox-blue': !hasValue() }"></span>
                         {{ viewOpts.defaultValue.title }}</a
                     >
                 </li>
@@ -71,7 +72,7 @@
                 >
                     <a
                         #compartmentOpen
-                        class="dropdown-item eos-select2"
+                        class="dropdown-item eos-adm-select2"
                         [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item, 'option-is-deleted': item.isDeleted }"
                         [ngStyle]="item.style"
                         (click)="!item.disabled ? selectAction($event, item) : null"
@@ -82,13 +83,13 @@
                         containerClass="tooltip-info word-break tooltip-z-index"
                     >
                         <span
-                            class="eos-icon x-small"
-                            [ngClass]="{ 'eos-icon-checkbox-blue': isItemSelected(item), disabled: item.disabled }"
+                            class="eos-adm-icon x-small"
+                            [ngClass]="{ 'eos-adm-icon-checkbox-blue': isItemSelected(item), disabled: item.disabled }"
                         ></span>
                         {{item.title}}
                     </a>
                 </li>
             </ul>
-        </div>        
+        </div>
     </div>
 </div>

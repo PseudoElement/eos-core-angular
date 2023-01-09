@@ -14,7 +14,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     // dictType: E_DICT_TYPE.tree,
     title: 'Организации',
     visible: true,
-    iconName: 'eos-icon-building-blue',
+    iconName: 'eos-adm-icon-building-blue',
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'cut', 'combine', 'paste', 'dopRequisites',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'export', 'import',

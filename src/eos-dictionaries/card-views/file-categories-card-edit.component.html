@@ -20,8 +20,8 @@
                         containerClass="tooltip-info"
                         [tooltip]="editMode ? 'Выбрать' : null"
                         triggers="hover"
-                        class="action eos-icon  grif-icon-directory"
-                        [ngClass]="{'eos-icon-directory-book-blue': editMode, 'eos-icon-directory-book-grey': !editMode}"
+                        class="action eos-adm-icon  grif-icon-directory"
+                        [ngClass]="{'eos-adm-icon-directory-book-blue': editMode, 'eos-adm-icon-directory-book-grey': !editMode}"
                         (click)="selectDocGroup()">
                     </span>
                     <span
@@ -32,7 +32,7 @@
                     (click)="unbindDocGroup()"
                     triggers="hover"
                     *ngIf="editMode"
-                    class="action eos-icon delet-icon-directory eos-icon-close-blue small" ></span>
+                    class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" ></span>
                 </span>
 
 

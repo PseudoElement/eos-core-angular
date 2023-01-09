@@ -156,7 +156,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             }
         });
     }
+
     deleteSel() {
+        this.setValue('rec.DOCVID_NAME', null);
         this.setValue('rec.ISN_DOCVID', null);
         this.logDeletDoc = false;
         this.inputChoice.nativeElement.value = '';
@@ -173,13 +175,15 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     ngOnInit(): void {
         super.ngOnInit();
-
         if (this.dictSrv.treeNode && this.dictSrv.treeNode.data && this.dictSrv.treeNode.data.rec.ISN_DOCVID && this.isNewRecord) {
             const parentDocVid = this.dictSrv.treeNode.data.rec.ISN_DOCVID;
             this.fillDocvid(parentDocVid.toString(), true, false);
         } else {
             if (typeof this.data.rec['ISN_DOCVID'] === 'number') {
                 this.fillDocvid(this.data.rec['ISN_DOCVID'].toString(), false);
+            } else {
+                this.setValue('rec.ISN_DOCVID', null);
+                this.inputChoice.nativeElement.value = '';
             }
         }
         this.updateForm({});
@@ -353,7 +357,6 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         } else {
             this.uniqFlagShablonCheck = false;
         }
-
         if (Object.keys(updates).length) {
             this.form.patchValue(updates);
         }

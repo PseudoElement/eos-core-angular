@@ -2,12 +2,12 @@
     <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
                        [form]="form"
                        [readonly]="!editMode"
-                       
+
                        ></eos-dynamic-input>
     <eos-dynamic-input [input]="inputs['rec.NOTE']"
                        [form]="form"
                        [readonly]="!editMode"
-                       
+
                        ></eos-dynamic-input>
     <eos-dynamic-input [input]="inputs['rec.CHANNEL_TYPE']"
                        [form]="form"
@@ -31,27 +31,27 @@
             </ul>
         </div>
         <div *ngIf="currTab===0"
-                class="eos-broadcast-channel-tab">
+                class="eos-adm-broadcast-channel-tab">
             <table class="table usual-border border-bottom table-owners">
                 <tr>
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_EMAIL']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
-                                           
+
+
                                            ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
+
                                            ></eos-dynamic-input>
                         <!-- <span> -->
                             <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
                                                [form]="form"
                                                [disabled]="(+authMethod === 0)"
                                                [readonly]="!editMode || (+authMethod === 0)"
-                                               
+
                                                ></eos-dynamic-input>
                         <!-- </span> -->
                         <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
@@ -66,14 +66,14 @@
                         <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
+
                                            ></eos-dynamic-input>
                         <span>
                             <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
                                                [form]="form"
                                                [disabled]="(+authMethod === 0)"
                                                [readonly]="!editMode || (+authMethod === 0)"
-                                               
+
                                                ></eos-dynamic-input>
                         </span>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_DELAY']"
@@ -84,24 +84,24 @@
             </table>
         </div>
         <div *ngIf="currTab===1"
-             class="eos-broadcast-channel-tab">
+             class="eos-adm-broadcast-channel-tab">
             <table class="table usual-border border-bottom table-owners">
                 <tr>
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.POP3_SERVER']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
+
                                            ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_LOGIN']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
+
                                            ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_ENCRYPTION']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
+
                                            ></eos-dynamic-input>
                     </td>
                     <td>
@@ -111,7 +111,7 @@
                         <eos-dynamic-input [input]="inputs['rec.POP3_PASSWORD']"
                                            [form]="form"
                                            [readonly]="!editMode"
-                                           
+
                                            ></eos-dynamic-input>
                     </td>
                 </tr>

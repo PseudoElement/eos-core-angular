@@ -1,12 +1,12 @@
-.eos-backgraund {
+.eos-adm-backgraund {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
     width: calc(100vw - 30px);
     overflow-y: auto;
     max-height: calc(100vh - 50px);
-    &.eos-backgraund-padding {
+    &.eos-adm-backgraund-padding {
         padding: 20px 20px 0 20px;
     }
- 
+
 }

@@ -6,7 +6,7 @@ $item-width: 48px;
 $dictionary-block-width-big-display: 380px;
 $block-color-main-theme: $white;
 $dictionary-block-width: 300px;
-.eos-breadcrumb {
+.eos-adm-breadcrumb {
     height: $breadcrumbs-height;
     border-bottom: 1px solid $border-color-main-theme;
     border-radius: 0;
@@ -97,7 +97,7 @@ $dictionary-block-width: 300px;
 }
 
 @media (max-width: 1599px) {
-    .eos-breadcrumb {
+    .eos-adm-breadcrumb {
         .opened-node-actions {
             width: $dictionary-block-width;
             &.c-info {
@@ -114,7 +114,7 @@ $dictionary-block-width: 300px;
 }
 
 @media (min-width: 1600px) {
-    .eos-breadcrumb {
+    .eos-adm-breadcrumb {
         .opened-node-actions {
             width: $dictionary-block-width-big-display;
             &.c-info {

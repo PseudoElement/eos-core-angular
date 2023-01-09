@@ -335,11 +335,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     get getflagChecked() {
         if (this.allMarked) {
-            return 'eos-icon-checkbox-square-v-blue';
+            return 'eos-adm-icon-checkbox-square-v-blue';
         } else if (this.markedInfo.anyMarked) {
-            return 'eos-icon-checkbox-square-minus-blue';
+            return 'eos-adm-icon-checkbox-square-minus-blue';
         } else {
-            return 'eos-icon-checkbox-square-blue';
+            return 'eos-adm-icon-checkbox-square-blue';
         }
     }
 

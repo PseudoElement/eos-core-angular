@@ -70,14 +70,20 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
     }
 
     showDropDown() {
-       if (!this._dropDown.isOpen) {
-            this._dropDown.show();
-            if (!this.focusedItem) {
-                if (this.input.options.length > 0) {
+        if (!this._dropDown.isOpen && this.control.value.length >= 3) {
+            if (this.input.options.length > 0) {
+                this._dropDown.show();
+                if (this.input.options.length > 1) {
                     this.setFirstFocusedItem();
                 }
             }
+        } else {
+            this._dropDown.hide();
         }
+    }
+
+    hideDropDown() {
+        this._dropDown.hide();
     }
 
     getMenuWidthStyle(): any {
@@ -116,11 +122,10 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         } else {
             this.control.setValue(String(item.value));
         }
-
+        this._dropDown.hide();
         if (AppContext.isIE()) {
             // console.log("TCL: DynamicInputSelect2Component -> selectAction -> AppContext.isIE", AppContext.isIE())
             /* IE fix */
-            this._dropDown.hide();
             if (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -154,26 +159,36 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
     onEraseClick() {
         this.control.setValue('');
         this.input.options = [];
+        this._dropDown.hide();
     }
 
     filterKeyDown(event) {
-        this.showDropDown();
         const code = event.code /* !IE */ || event.key /* IE */;
         switch (code) {
             case 'ArrowDown':
-            case 'Down':  this._hoverNext(); break;
+            case 'Down': this._hoverNext(); break;
             case 'ArrowUp':
-            case 'Up':  this._hoverPrev(); break;
-            case 'Enter' : if (this._dropDown.isOpen) {
-                                this.selectAction(null, this.focusedItem);
-                                this._dropDown.hide();
-                            }
+            case 'Up': this._hoverPrev(); break;
+            case 'Enter': if (this._dropDown.isOpen) {
+                this.selectAction(null, this.focusedItem);
+                this._dropDown.hide();
+            }
         }
     }
 
     setFirstFocusedItem() {
         this.focusedItem = this.input.options[0];
         this._scrollTo(this.focusedItem);
+    }
+
+    onClick() {
+        if (this.input.options.length > 0) {
+            if (this._dropDown.isOpen) {
+                this._dropDown.hide();
+            } else {
+                this._dropDown.show();
+            }
+        }
     }
 
     private _hoverNext(): any {
@@ -183,7 +198,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         if (!this.focusedItem) {
             this.focusedItem = this.input.options[0];
         } else {
-            const i = this.input.options.findIndex( (o) => o === this.focusedItem);
+            const i = this.input.options.findIndex((o) => o === this.focusedItem);
             if (i === -1 || i === this.input.options.length - 1) {
                 this.focusedItem = this.input.options[0];
             } else {
@@ -200,7 +215,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
         if (!this.focusedItem) {
             this.focusedItem = this.input.options[this.input.options.length - 1];
         } else {
-            const i = this.input.options.findIndex( (o) => o === this.focusedItem);
+            const i = this.input.options.findIndex((o) => o === this.focusedItem);
             if (i === -1 || i === 0) {
                 this.focusedItem = this.input.options[this.input.options.length - 1];
             } else {
@@ -211,12 +226,12 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
     }
 
     private _scrollTo(item: any): any {
-        const i = this.input.options.findIndex( (o) => o === item);
-        if (i !== -1) {
+        const i = this.input.options.findIndex((o) => o === item);
+        if (i !== -1 && this.dropdownElement) {
             const pos = i * LI_HEIGHT;
             const isVisible = this.dropdownElement.nativeElement.scrollTop < pos
                 && (this.dropdownElement.nativeElement.scrollTop +
-                this.dropdownElement.nativeElement.clientHeight) > pos;
+                    this.dropdownElement.nativeElement.clientHeight) > pos;
             if (!isVisible) {
                 this.dropdownElement.nativeElement.scrollTop = i * LI_HEIGHT;
             }

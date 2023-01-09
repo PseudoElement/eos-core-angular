@@ -12,7 +12,7 @@
     <!-- <div class="param-input-group">
         <span class="l-font">Параметры хранения прикрепленных файлов</span>
         <div class="info-icon-wrap" (click)="showInfoAttachFiles()">
-            <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
+            <span class="info-icon eos-adm-icon eos-adm-icon-info-blue x-small"></span>
         </div>
     </div>
     <hr> -->
@@ -40,7 +40,7 @@
                     <div>
                         <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.DOC_RC_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.DOC_RC_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    
+
                 </div>
                 <span>С расширением</span>
                     <div>
@@ -64,7 +64,7 @@
                     <div>
                     <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.RESOLUTION_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.RESOLUTION_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    
+
                     <hr>
                 </div>
                 <span>С расширением</span>
@@ -87,7 +87,7 @@
                         <div>
                             <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.REPLY_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_ONE_FILE'].readonly"></eos-dynamic-input>
                         </div>
-                        
+
                     </div>
                     <span>С расширением</span>
                     <div>
@@ -110,7 +110,7 @@
                     <div>
                         <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.PRJ_RC_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.PRJ_RC_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
-                    
+
                 </div>
                 <span>С расширением</span>
                 <div>
@@ -118,7 +118,7 @@
                         style="padding-left: 0; width: 100%"
                         class="inline-block wer pad-left"
                         [input]="inputAttach['rec.PRJ_RC_EXTENSIONS']"
-                        [form]="formAttach" 
+                        [form]="formAttach"
                         [readonly]="inputAttach['rec.PRJ_RC_EXTENSIONS'].readonly">
                     </eos-dynamic-input>
                 </div>
@@ -157,9 +157,9 @@
         <span class="l-font">Описание файлов:</span><br/>
         <div class="description-all-grup">
             <div class="description-input-group">
-                <eos-dynamic-input 
-                (onControlBlur)="validBlur($event)" 
-                [input]="inputs['rec.FILE_DESCRIPTION_VALID_CHARS']" 
+                <eos-dynamic-input
+                (onControlBlur)="validBlur($event)"
+                [input]="inputs['rec.FILE_DESCRIPTION_VALID_CHARS']"
                 [form]="form"
                 [notStandartText]="true"
                 [readonly]="inputs['rec.FILE_DESCRIPTION_VALID_CHARS'].readonly"></eos-dynamic-input>
@@ -179,7 +179,7 @@
         <div class="description-input-group-rep">
             <eos-dynamic-input (onControlBlur)="replaceBlur($event)" (keydown)="chenge($event)" [input]="inputs['rec.FILE_DESCRIPTION_REPLACE']" [form]="form" [readonly]="!form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value"></eos-dynamic-input>
         </div>
-        
+
     </div>
     <!-- <div *ngIf="inputs" bsModal #infoAttachFilesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
         <div class="modal-dialog">
@@ -187,7 +187,7 @@
                 <div class="modal-header">
                     <h4 id="dialog-child-name" class="modal-title pull-left">Параметры хранения прикрепленных файлов</h4>
                     <button type="button" class="close pull-right" aria-label="Close" (click)="hideInfoAttachFiles()">
-              <span class="eos-icon eos-icon-close-white small"></span>
+              <span class="eos-adm-icon eos-adm-icon-close-white small"></span>
             </button>
                 </div>
                 <div class="modal-body">

@@ -356,11 +356,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     get getClass() {
         const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
-        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
+        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-adm-icon eos-adm-icon-info-blue small' : 'eos-adm-icon eos-adm-icon-info-grey small';
     }
     get getClassClearBtn() {
         const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
-        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
+        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-adm-icon eos-adm-icon-close-blue small' : 'eos-adm-icon eos-adm-icon-close-grey small';
     }
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this.form.controls['rec.RESOLUTION_CONTROLLER'].value;
@@ -477,7 +477,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     // }
                     // this._userParamsSetSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
                     this.editMode();
-                    this._pushState();
+                    this._userParamsSetSrv.setChangeState({ isChange: false, disableSave: this.MaxIncrement });
+                    // this._pushState();
                 });
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);

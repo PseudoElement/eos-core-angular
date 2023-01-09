@@ -130,19 +130,19 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         const howCheckbox = this.getFlagInDepartment(funkNum);
         if (this.editMode) {
             if (howCheckbox === 1) {
-                return 'eos-icon-checkbox-square-v-blue';
+                return 'eos-adm-icon-checkbox-square-v-blue';
             } else if (howCheckbox === 0) {
-                return 'eos-icon-checkbox-square-minus-blue';
+                return 'eos-adm-icon-checkbox-square-minus-blue';
             } else {
-                return 'eos-icon-checkbox-square-blue';
+                return 'eos-adm-icon-checkbox-square-blue';
             }
         } else {
             if (howCheckbox === 1) {
-                return 'eos-icon-checkbox-black';
+                return 'eos-adm-icon-checkbox-black';
             } else if (howCheckbox === 0) {
-                return 'eos-icon-minus-black';
+                return 'eos-adm-icon-minus-black';
             } else {
-                return 'eos-icon-checkbox-square-grey';
+                return 'eos-adm-icon-checkbox-square-grey';
             }
         }
     }

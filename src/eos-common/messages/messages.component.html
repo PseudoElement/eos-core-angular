@@ -1,16 +1,16 @@
 <alert *ngFor="let message of messages"
-    class="eos-alert"
+    class="eos-adm-alert"
     [type]="message.type"
     [dismissible]="true"
     (click)="onClose(message)"
     [dismissOnTimeout]="message.dismissOnTimeout">
     <div class="alert-icon">
-        <!-- <span [ngClass]="'eos-icon eos-icon-close-white'"></span> -->
-        <span class="eos-icon small"
+        <!-- <span [ngClass]="'eos-adm-icon eos-adm-icon-close-white'"></span> -->
+        <span class="eos-adm-icon small"
             [ngClass]="{
-            'eos-icon-checkbox-white': message.type==='success',
-            'eos-icon-close-white': message.type==='danger',
-            'eos-icon-info-white': message.type==='info' || message.type==='warning'}"></span>
+            'eos-adm-icon-checkbox-white': message.type==='success',
+            'eos-adm-icon-close-white': message.type==='danger',
+            'eos-adm-icon-info-white': message.type==='info' || message.type==='warning'}"></span>
     </div>
     <div class="alert-body">
         <span>

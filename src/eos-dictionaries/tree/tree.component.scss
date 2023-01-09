@@ -1,4 +1,4 @@
-.eos-tree-node {
+.eos-adm-tree-node {
     display: inline-block;
     .node {
         font-size: 0;
@@ -43,7 +43,7 @@
 }
 
 @media(max-width: 1599px) {
-    .eos-tree-node {
+    .eos-adm-tree-node {
         .node {
             min-width: $dictionary-block-width;
         }
@@ -51,7 +51,7 @@
 }
 
 @media(min-width: 1600px) {
-    .eos-tree-node {
+    .eos-adm-tree-node {
         .node {
             min-width: $dictionary-block-width-big-display;
         }

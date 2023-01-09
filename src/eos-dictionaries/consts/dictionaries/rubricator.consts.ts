@@ -11,7 +11,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     dictType: E_DICT_TYPE.tree,
     title: 'Рубрикатор',
     visible: true,
-    iconName: 'eos-icon-template-blue',
+    iconName: 'eos-adm-icon-template-blue',
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'cut', 'paste', 'combine',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',

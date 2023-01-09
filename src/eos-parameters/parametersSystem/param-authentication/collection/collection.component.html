@@ -3,13 +3,13 @@
 </header>
 <div class="collection-action">
     <button class="btn" tooltip="Добавить" placement="bottom" containerClass="tooltip-info" (click)="addWord()">
-            <span class="eos-icon eos-icon-plus-blue small"></span>
+            <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
     </button>
     <button class="btn" #dTolltip="bs-tooltip" tooltip="Удалить" placement="bottom" containerClass="tooltip-info" (click)="dTolltip.hide(); deleteWords()" [disabled]="!isMarkNode">
-            <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+            <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
     </button>
     <button class="btn" tooltip="Редактировать" placement="bottom" containerClass="tooltip-info" (click)="editWord()" [disabled]="selectOneNode() || !currentSelectedWord">
-            <span class="eos-icon eos-icon-edit-blue small"></span>
+            <span class="eos-adm-icon eos-adm-icon-edit-blue small"></span>
     </button>
 </div>
 <div class="collection-param">
@@ -25,8 +25,8 @@
             </span>
         <span class="order-icon">
                 <span
-                class="icon eos-icon small"
-                [ngClass]="{'eos-icon-arrow-blue-top': orderBy, 'eos-icon-arrow-blue-bottom': !orderBy}"
+                class="icon eos-adm-icon small"
+                [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy, 'eos-adm-icon-arrow-blue-bottom': !orderBy}"
                 >
                 </span>
         </span>

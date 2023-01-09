@@ -5,7 +5,7 @@
     <p *ngIf="readonly"
        class="form-control-static m-font"
        [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
-    <div class="eos-select" *ngIf="!readonly"
+    <div class="eos-adm-select" *ngIf="!readonly"
             [ngClass]="{'required': isRequired, 'disabled': disabled}">
         <select class="form-control m-font"
                 [ngClass]="{'readonly': readonly, 'placeholder': !hasValue()}"

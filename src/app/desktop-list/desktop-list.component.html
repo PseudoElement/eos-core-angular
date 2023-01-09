@@ -23,9 +23,9 @@
             <div *ngIf="!(editDeskMenu && (editDeskMenu.id === desk.id))"
                 class="desktop-menu-icon">
                 <span *ngIf="desk.id === selectedDesk.id"
-                      class="eos-icon eos-icon-checkbox-blue small"></span>
+                      class="eos-adm-icon eos-adm-icon-checkbox-blue small"></span>
                 <span *ngIf="desk.id !== selectedDesk.id"
-                      class="eos-icon small"></span>
+                      class="eos-adm-icon small"></span>
             </div>
             <div *ngIf="desk.id !== 'system'"
                 class="item-actions"
@@ -37,7 +37,7 @@
                     placement="top"
                     container="body"
                     containerClass="tooltip-info">
-                    <span class="eos-icon eos-icon-edit-blue small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-edit-blue small"></span>
                 </div>
                 <div class="action-icon action2"
                     (click)="removeDesk(desk,$event)"
@@ -45,7 +45,7 @@
                     placement="top"
                     container="body"
                     containerClass="tooltip-info">
-                    <span class="eos-icon eos-icon-bin-blue small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-bin-blue small"></span>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
         (click)="openCreateForm($event)">
         <div class="inline-flex">
             <div *ngIf="!creating" class="desktop-menu-icon">
-                <span class="eos-icon eos-icon-plus-blue small"></span>
+                <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
             </div>
             <span *ngIf="!creating; else editItemTpl1" class="item-title m-font">Создать рабочий стол</span>
         </div>
@@ -93,7 +93,7 @@
                         placement="top"
                         container="body"
                         containerClass="tooltip-info">
-                        <span class="eos-icon eos-icon-close-blue small"></span>
+                        <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
                     </div>
                     <div class="action-icon action2"
                         (click)="saveDesk($event)"
@@ -101,9 +101,9 @@
                         placement="top"
                         container="body"
                         containerClass="tooltip-info">
-                        <span 
-                            class="eos-icon small" 
-                            [ngClass]="{'eos-icon-checkbox-grey': deskName.trim().length === 0, 'eos-icon-checkbox-blue': deskName.trim().length > 0}">
+                        <span
+                            class="eos-adm-icon small"
+                            [ngClass]="{'eos-adm-icon-checkbox-grey': deskName.trim().length === 0, 'eos-adm-icon-checkbox-blue': deskName.trim().length > 0}">
                         </span>
                     </div>
             </div>

@@ -9,7 +9,7 @@ export const Templates: IDictionaryDescriptor = {
     defaultOrder: 'NAME_TEMPLATE',
     title: 'Настройка шаблонов',
     visible: true,
-    iconName: 'eos-icon-templates-settings',
+    iconName: 'eos-adm-icon-templates-settings',
     actions: ['add', 'markRecords', 'edit', 'removeHard', 'downloadFile', 'protViewSecurity'],
     fields: [{
         key: 'NAME_TEMPLATE',

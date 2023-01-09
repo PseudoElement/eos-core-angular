@@ -538,6 +538,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     private _searchEmpInDep(empLexem, due) {
+        this.inputs['DUE_DEP_NAME'].dib.hideDropDown();
         empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
         const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
         let VALUES;
@@ -562,13 +563,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                             this.inputs['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
                         }
                     });
-                    // ставим активную первую запись @task161934
-                    if (this.inputs['DUE_DEP_NAME'].options.length > 0) {
-                        this.inputs['DUE_DEP_NAME'].dib.setFirstFocusedItem();
+                    // ставим активную первую запись @task161934 - в случае найденности чего либо
+                    if (this.inputs['DUE_DEP_NAME'].options.length > 0 && this.inputs['DUE_DEP_NAME'].options[0].due !== '-1') {
+                        this.inputs['DUE_DEP_NAME'].dib.showDropDown();
                     }
                     this._idsForModalDictDep = [];
                     this._idsForModalDictDep = empItems.map(x => x.DUE);
                     if (this.inputs['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
+                        this._idsForModalDictDep = [empItems[0].DUE];
                         this._setDepartment(empItems[0].DUE);
                     }
                 });
@@ -577,6 +579,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     title: EMPTY_SEARCH_DL_RESULTS, value: EMPTY_SEARCH_DL_RESULTS, due: '-1',
                     disabled: true
                 }];
+                this.inputs['DUE_DEP_NAME'].dib.showDropDown();
             }
         }).catch(err => { throw err; });
     }
@@ -773,6 +776,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 } else { // выбрали из выпадашки значение
                     const ITEM = this.inputs['DUE_DEP_NAME'].options.filter(item => item.value === value);
                     const DUE: string = ITEM[0].due;
+                    this._idsForModalDictDep = [DUE];
                     this._setDepartment(DUE);
                 }
             } else {

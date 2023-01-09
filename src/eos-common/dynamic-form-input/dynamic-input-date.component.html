@@ -3,11 +3,11 @@
     <p class="form-control-static m-font"
         [ngClass]="{'placeholder': !hasValue()}"
         *ngIf="readonly">{{currentValue}}</p>
-    <div class="eos-datepicker" *ngIf="!readonly">
+    <div class="eos-adm-datepicker" *ngIf="!readonly">
         <input type="text" eosDateMask [id]="input.key" [formControlName]="input.key" class="form-control" [ngClass]="{readonly: readonly}" [readonly]="readonly" placeholder="--.--.----"
                (onleave)="onLeave()"
                (mouseenter)="onEnter()"
                 maxlength="11">
-        <a bsDatepicker [hidden]="hidePicker" [placement]="placement" [bsConfig]="bsConfig" [bsValue]="bsDate" [minDate]="bsConfig.minDate" [maxDate]="bsConfig.maxDate" [isDisabled]="readonly" (bsValueChange)="dpChanged($event)"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+        <a bsDatepicker [hidden]="hidePicker" [placement]="placement" [bsConfig]="bsConfig" [bsValue]="bsDate" [minDate]="bsConfig.minDate" [maxDate]="bsConfig.maxDate" [isDisabled]="readonly" (bsValueChange)="dpChanged($event)"><span class="eos-adm-icon eos-adm-icon-calendar-blue small"></span></a>
     </div>
 </div>

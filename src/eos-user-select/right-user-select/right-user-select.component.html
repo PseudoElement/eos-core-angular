@@ -9,7 +9,7 @@
                             [ngStyle]="{'background-image': urlPhoto}"
                             alt="Фотография должностного лица"> -->
                         <span class="avatar-img" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
-                        <span class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-icon eos-icon-Man-Blue small"></span>
+                        <span class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-adm-icon eos-adm-icon-Man-Blue small"></span>
                     </a>
                 </div>
                 <div class="avatar-title">
@@ -19,11 +19,11 @@
             <ng-template #unset>
                 <div class="teh-user">
                     <span class="teh-user-name">{{CurrentUser.name}}</span>
-                    <!-- <span class="eos-icon eos-icon-checkbox-black"></span> -->
+                    <!-- <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span> -->
                     <div class="teh-p">
                         <label class="checkbox disabled minus-checkbox ">
                             <input [attr.checked]="'checked'" disabled  type="checkbox" readonly="readonly" class="readonly">
-                            <span class="eos-icon eos-icon-checkbox-black"></span>
+                            <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
                             Технический пользователь</label>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                                     trigger="hover"
                                     container="body"
                                 >
-                                <span class="eos-icon eos-icon-keyfile-blue small" ></span></span>
+                                <span class="eos-adm-icon eos-adm-icon-keyfile-blue small" ></span></span>
                         </div>
                     </div>
                 </div>
@@ -89,8 +89,8 @@
                 <div class="sustem-tab-rw" (click)='openedSustem()'>
                     <span class="sustem-title">ДОСТУП К СИСТЕМАМ</span>
                     <span class="sustem-open">
-                                <span class="eos-icon eos-icon-arrow-v-blue-bottom small"  *ngIf='!opened'></span>
-                    <span class="eos-icon eos-icon-arrow-v-blue-top small" *ngIf='opened'></span>
+                                <span class="eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small"  *ngIf='!opened'></span>
+                    <span class="eos-adm-icon eos-adm-icon-arrow-v-blue-top small" *ngIf='opened'></span>
                     </span>
                 </div>
                 <div class="sustem-wr" *ngIf="flagSustem" [ngClass]="{opened: opened}">

@@ -25,9 +25,9 @@
         </div>
         <div class="dnd-driver">
             <button class="btn btn-primary-light"
-                (click)="addToTemplate()"><span class="eos-icon eos-icon-arrow-v-blue-right"></span></button>
+                (click)="addToTemplate()"><span class="eos-adm-icon eos-adm-icon-arrow-v-blue-right"></span></button>
             <button class="btn btn-primary-light"
-                (click)="removeFromTemplate()"><span class="eos-icon eos-icon-arrow-v-blue-left"></span></button>
+                (click)="removeFromTemplate()"><span class="eos-adm-icon eos-adm-icon-arrow-v-blue-left"></span></button>
         </div>
         <div class="dnd-content">
             <p>Итоговый список</p>
@@ -96,7 +96,7 @@
                 [checked]="valueForControl(item)"
                 [tooltip]="getListText(item)"
                 value="{{getListText(item)}}">
-                <div class="inbutton" (click)="itemCButtonClick(item, $event)"><span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span></div>
+                <div class="inbutton" (click)="itemCButtonClick(item, $event)"><span class="eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small"></span></div>
 
                 <!-- <button class="btn btn-primary" (click)="itemCButtonClick(item, $event)">тык</button> -->
         </div>

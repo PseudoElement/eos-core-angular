@@ -15,7 +15,7 @@
     <span>Помещать новые организации
         в вершину справочника "Организации":</span>
     <span class="get-new-org" [ngClass]="{'text-log-deleted': logDeletOrg}">
-        <span *ngIf='logDeletOrg' class="icon eos-icon small eos-icon-bin-grey address-log-delet"></span>
+        <span *ngIf='logDeletOrg' class="icon eos-adm-icon small eos-adm-icon-bin-grey address-log-delet"></span>
         <input style="outline: none;" readonly type="text" [(ngModel)]="orgName">
     </span>
     <div
@@ -28,7 +28,7 @@
             class="btn btn-primary-light add-storage"
             (click)="openClassif()"
             eosClickMode>
-            <span class="eos-icon eos-icon-folder-blue small"></span>
+            <span class="eos-adm-icon eos-adm-icon-folder-blue small"></span>
         </button>
     </div>
     <div
@@ -40,7 +40,7 @@
             [disabled] = "!flagEdit"
             class="btn btn-primary-light add-storage"
             (click)="clearField()">
-            <span class="eos-icon eos-icon-close-blue small"></span>
+            <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
         </button>
     </div>
 </div>

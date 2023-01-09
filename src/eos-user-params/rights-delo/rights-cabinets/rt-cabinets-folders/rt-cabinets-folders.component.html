@@ -12,7 +12,7 @@
                     <!-- (change)="changeMainCabinet()" -->
                     <input [disabled]="!flagEdit || !card?.allowed || !currentCabinet?.data?.FOLDERS_AVAILABLE" type="checkbox"
                         [checked]="!!currentCabinet?.data.HOME_CABINET" (change)='checkHomeCabinet()'/>
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                     главный
                 </label>
             </div>
@@ -20,73 +20,73 @@
                 <label class="checkbox">
                     <!-- (change)="changeMainCabinet()" -->
                     <input *ngIf='!flagEdit' [disabled]="!flagEdit" type="checkbox" [checked]="currentCabinet.data.FOLDERS_AVAILABLE.length === 9"/>
-                    <span class="eos-icon small pos-checkbox" [ngClass]="getflagChecked" (click)="checkAllElem()"></span>
+                    <span class="eos-adm-icon small pos-checkbox" [ngClass]="getflagChecked" (click)="checkAllElem()"></span>
                     Папки
                 </label>
-                
+
             </div>
         </div>
         <div class="" *ngIf="currentCabinet">
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('1')" [checked]="checkedFolder('1')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">Поступившие</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('2')" [checked]="checkedFolder('2')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">На исполнении</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('3')" [checked]="checkedFolder('3')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">На контроле</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('4')" [checked]="checkedFolder('4')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">У руководства</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('5')" [checked]="checkedFolder('5')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">На рассмотрении</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('6')" [checked]="checkedFolder('6')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">В дело</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('7')" [checked]="checkedFolder('7')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">Управление проектами</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('8')" [checked]="checkedFolder('8')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">На визировании</span>
             </div>
             <div class="folders-item item-pakege">
                 <label class="checkbox">
                     <input [disabled]="!flagEdit || !card?.allowed" type="checkbox" (change)="changeFolders('9')" [checked]="checkedFolder('9')" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">На подписи</span>
             </div>
@@ -97,7 +97,7 @@
                         [disabled]="!disabledInAcces || !flagEdit || !card?.allowed"
                         [checked]="!!currentCabinet.data['HIDE_INACCESSIBLE']" />
 
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">Учитывать ограничения доступа к РК по грифам и группам документов</span>
             </div>
@@ -106,7 +106,7 @@
                     <input type="checkbox" (change)="changeFolders('HIDE_INACCESSIBLE_PRJ')"
                         [disabled]="!disabledInAccesPrj || !flagEdit || !card?.allowed"
                         [checked]="!!+currentCabinet.data['HIDE_INACCESSIBLE_PRJ']" />
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">Учитывать права для работы с РКПД</span>
             </div>

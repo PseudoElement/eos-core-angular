@@ -7,8 +7,8 @@
         <button class="pag-btn btn-default prev"
             [disabled]="config?.current === 1||isPageCountAll()"
             (click)="showPage(config.current - 1)">
-            <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-left"
-                [ngClass]="{'eos-icon-arrow-v-grey-left':config?.current === 1}"></span>
+            <span class="icon-btn eos-adm-icon eos-adm-icon-arrow-v-blue-left small to-left"
+                [ngClass]="{'eos-adm-icon-arrow-v-grey-left':config?.current === 1}"></span>
         </button>
         <button *ngFor="let page of pages let i = index"
             class="pag-btn btn-default selected-text"
@@ -17,8 +17,8 @@
         <button class="pag-btn btn-default next"
             [disabled]="config?.current === pageCount||isPageCountAll()"
             (click)="showPage(config.current + 1)">
-            <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"
-                [ngClass]="{'eos-icon-arrow-v-grey-left': config?.current === pageCount}"></span>
+            <span class="icon-btn eos-adm-icon eos-adm-icon-arrow-v-blue-left small to-rigth"
+                [ngClass]="{'eos-adm-icon-arrow-v-grey-left': config?.current === pageCount}"></span>
         </button>
     </div>
 
@@ -36,8 +36,8 @@
             class="drop-btn btn btn-transparent selected-text">
             <div class="show-by-label">{{getShowLabel()}}</div>
             <div class="arrow">
-                <span class="icon-btn eos-icon small"
-                    [ngClass]="{'eos-icon-arrow-v-blue-top': !dd.isOpen, 'eos-icon-arrow-v-blue-bottom': dd.isOpen}"></span>
+                <span class="icon-btn eos-adm-icon small"
+                    [ngClass]="{'eos-adm-icon-arrow-v-blue-top': !dd.isOpen, 'eos-adm-icon-arrow-v-blue-bottom': dd.isOpen}"></span>
             </div>
         </button>
         <ul *dropdownMenu

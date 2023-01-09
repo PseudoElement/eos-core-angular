@@ -35,16 +35,16 @@
                 [disabled]="editedItem || selectedFixedItem"
                 (click)="addToCurrent()" >
                     <span
-                    class="eos-icon"
-                    [ngClass]="editedItem || selectedFixedItem ? 'eos-icon-arrow-v-grey-right' : 'eos-icon-arrow-v-blue-right'" ></span>
+                    class="eos-adm-icon"
+                    [ngClass]="editedItem || selectedFixedItem ? 'eos-adm-icon-arrow-v-grey-right' : 'eos-adm-icon-arrow-v-blue-right'" ></span>
                 </button>
                 <button
                 class="btn btn-primary-light"
                 [disabled]="editedItem || selectedFixedItem"
                 (click)="removeFromCurrent()" >
                     <span
-                    class="eos-icon"
-                    [ngClass]="editedItem || selectedFixedItem ? 'eos-icon-arrow-v-grey-left' : 'eos-icon-arrow-v-blue-left'" ></span>
+                    class="eos-adm-icon"
+                    [ngClass]="editedItem || selectedFixedItem ? 'eos-adm-icon-arrow-v-grey-left' : 'eos-adm-icon-arrow-v-blue-left'" ></span>
                 </button>
             </span>
         </div>
@@ -69,7 +69,7 @@
                         <button
                             #fixedEditBtn
                             [hidden]="item !== selectedFixedItem"
-                            class="btn-primary-light edit-btn eos-icon eos-icon-edit-blue small"
+                            class="btn-primary-light edit-btn eos-adm-icon eos-adm-icon-edit-blue small"
                             [tooltip]="'Редактировать'"
                             #itemTooltip="bs-tooltip"
                             [delay]="tooltipDelay"
@@ -112,7 +112,7 @@
                         <button
                             #curEditBtn
                             [hidden]="item !== selectedCurrItem"
-                            class="btn-primary-light edit-btn eos-icon eos-icon-edit-blue small"
+                            class="btn-primary-light edit-btn eos-adm-icon eos-adm-icon-edit-blue small"
                             [tooltip]="'Редактировать'"
                             #itemTooltip="bs-tooltip"
                             [delay]="tooltipDelay"

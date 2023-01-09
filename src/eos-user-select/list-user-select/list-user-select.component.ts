@@ -343,7 +343,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     checkSortSessionStore() {
         const sort = this._storage.getItem('SortPageList');
         if (sort) {
-            this._apiSrv.srtConfig['login'].checked = false;
+            this._apiSrv.srtConfig['fullDueName'].checked = false;
+            // this._apiSrv.srtConfig['login'].checked = false; @166034
             this._apiSrv.currentSort = sort['sort'];
             this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = true;
             this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = sort['upDoun'];
@@ -467,9 +468,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     getClassOrder(flag) {
         if (flag) {
-            return 'icon eos-icon small eos-icon-arrow-blue-bottom';
+            return 'icon eos-adm-icon small eos-adm-icon-arrow-blue-bottom';
         }
-        return 'icon eos-icon small eos-icon-arrow-blue-top';
+        return 'icon eos-adm-icon small eos-adm-icon-arrow-blue-top';
     }
 
     showAction(nameMethods: any) {
@@ -488,11 +489,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
         this.flagScan = true;
+        /* @163034
         if (this._apiSrv.flagDelitedPermanantly === true) {
             this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         } else {
             this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
         }
+        */
+        this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.stateDeleteUsers === true) {
             this.buttons.moreButtons[3].isActive = false;
@@ -524,7 +528,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this._apiSrv.flagTehnicalUsers === true && this._apiSrv.configList.shooseTab === 0) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         }
-        this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
+         // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); @166034
+        this._storage.setItem('SortPageList', { 'sort': 'fullFueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.stateTehUsers === true) {
             this.buttons.moreButtons[2].isActive = false;
@@ -550,7 +555,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this._apiSrv.flagDisableUser === true && this._apiSrv.configList.shooseTab === 0) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         }
-        this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
+        // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); @166034
+        this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.flagDisableUser) {
             this.buttons.moreButtons[2].isActive = false;
@@ -1085,13 +1091,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         switch (this.flagChecked) {
             case true:
                 this.checkAll = 'Снять пометки';
-                return 'eos-icon-checkbox-square-v-blue';
+                return 'eos-adm-icon-checkbox-square-v-blue';
             case false:
                 this.checkAll = 'Отметить все на странице';
-                return 'eos-icon-checkbox-square-minus-blue';
+                return 'eos-adm-icon-checkbox-square-minus-blue';
             default:
                 this.checkAll = 'Отметить все на странице';
-                return 'eos-icon-checkbox-square-blue';
+                return 'eos-adm-icon-checkbox-square-blue';
         }
     }
     searchUsers($event: IRequest): void {
@@ -1110,7 +1116,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     quickSearchKey(evn) {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', evn);
-        this.sortPageList('login', 'sortSearch');
+        // this.sortPageList('login', 'sortSearch'); @166034
+        this.sortPageList('fullDueName', 'sortSearch');
     }
     resetSearch() {
         let urlUpdate;

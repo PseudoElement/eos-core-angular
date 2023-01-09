@@ -22,7 +22,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     apiInstance: 'LINK_CL',
     title: 'Типы связок',
     visible: true,
-    iconName: 'eos-icon-chain-blue',
+    iconName: 'eos-adm-icon-chain-blue',
     fields: [...LINEAR_TEMPLATE.fields,
         COMMON_FIELD_ICONS_SEV,
         Object.assign({}, COMMON_FIELD_NAME, {

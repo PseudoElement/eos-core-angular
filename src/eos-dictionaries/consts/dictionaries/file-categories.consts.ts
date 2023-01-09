@@ -15,7 +15,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
     dictType: E_DICT_TYPE.linear,
     title: 'Категории файлов',
     visible: true,
-    iconName: 'eos-icon-folder-blue',
+    iconName: 'eos-adm-icon-folder-blue',
     defaultOrder: 'WEIGHT',
     actions: ['add', 'edit', 'remove', 'showDeleted', 'restore', 'userOrder',  'userOrderCut', 'userOrderPaste', 'view', 'tableCustomization',
               'export', 'import', 'protViewSecurity', 'removeHard', 'markRecords', 'quickSearch', 'fullSearch'],
