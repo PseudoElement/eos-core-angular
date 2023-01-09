@@ -30,7 +30,7 @@ try {
     # должно быть сформировано даже при ошибках сборки!
     finally {
         Invoke-Log-Command { CI-Publish-Artifact @{
-            "$PipelineWorkDir\dist" = 'BuildResult\dist'
+            "$PipelineWorkDir\dist" = 'BuildResult\classif'
             }
         }
     }
