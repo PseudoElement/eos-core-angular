@@ -13,6 +13,7 @@
                (focus)="onFocus()"
                (blur)="onBlur()"
                (input)="onInput($event)"
+               (paste)="onPaste($event)"
                autocomplete="off">
         <div class="textareacounter" *ngIf="isFocused && !readonly" >
             <span>{{getCounterLabel()}}</span>
