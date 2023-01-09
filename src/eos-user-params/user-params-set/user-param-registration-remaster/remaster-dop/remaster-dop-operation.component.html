@@ -37,6 +37,23 @@
         
     </div>
 </div>
+<div [hidden]="this.appMode.hasMode && (appMode.tkDoc || appMode.tk)" class="user-group-form">
+    <span>Заполнять значениями от предыдущей РК реквизиты:</span>
+    <div class="inputs-inline">
+        <eos-dynamic-input
+            class="input-right"
+            [input]="inputs['rec.DOC_EXE_FROM_PREVIOUS_RC']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            class="input-right"
+            [input]="inputs['rec.DOC_SIGN_FROM_PREVIOUS_RC']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+</div>
 <!-- @task165408 убрать настройки для толстяка
 <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
     <span>Печатать регистрационный штамп в приложении Документы:</span>

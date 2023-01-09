@@ -1286,6 +1286,16 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
             title: 'В дело'
         },
         {
+            key: 'DOC_EXE_FROM_PREVIOUS_RC',
+            type: 'boolean',
+            title: 'Исполнители'
+        },
+        {
+            key: 'DOC_SIGN_FROM_PREVIOUS_RC',
+            type: 'boolean',
+            title: 'Подписывающие'
+        },
+        {
             key: 'AUTOSTAMP',
             type: 'boolean',
             title: 'Входящий'
