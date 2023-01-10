@@ -1,4 +1,4 @@
-trigger:
+trigger: 
   batch: true
   branches:
     include:
@@ -11,8 +11,8 @@ pool:
   - Agent.ComputerName -equals mskbuild4
 
 steps:
-- task: PowerShell@2
-  displayName: Pipeline
-  inputs:
-    targetType: filePath
-    filePath: ./_CI/pipeline.ps1
+  - task: PowerShell@2
+    displayName: Build
+    inputs:
+      targetType: filePath
+      filePath: ./_CI/pipeline.ps1
