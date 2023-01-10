@@ -27,7 +27,7 @@ export class EosBackgroundListComponent implements OnInit {
   public setCurentTask(list: IFonLists) {
     try {
       if (list.type !== ETypeFon.popUp) {
-        this.router.navigate(['/background-tasks', list.id]);
+        this.router.navigate(['/services', list.id]);
       } else {
         list.loadPlugin('eos-admin-fon-tasks');
       }

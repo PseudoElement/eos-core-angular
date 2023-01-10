@@ -28,10 +28,10 @@ export class EosInstrumentsListComponent implements OnDestroy, OnInit {
       this.list.checkAccess().then(access => {
         switch (this.list.id) {
           case 'CHANGE_DL':
-            this.disabled = access && this._appContext.CurrentUser['TECH_RIGHTS'][28] === '1';
+            this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][28] !== '1';
             break;
           default:
-            this.disabled = access;
+            this.disabled = !access;
             break;
         }
       });
@@ -42,9 +42,9 @@ export class EosInstrumentsListComponent implements OnDestroy, OnInit {
 
   public setCurentTask(list: IFonLists) {
     if (list.type !== ETypeFon.popUp) {
-      this.router.navigate(['/instruments', list.id]);
+      this.router.navigate(['/tools', list.id]);
     } else {
-      list.loadPlugin('eos-admin-instruments');
+      list.loadPlugin('eos-admin-tools-tasks');
     }
   }
   getIcon(list) {

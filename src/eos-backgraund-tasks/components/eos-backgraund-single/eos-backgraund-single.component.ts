@@ -23,7 +23,7 @@ export class EosBackgraundSingleComponent implements OnInit {
         const id = data['taskId'] || this._fonTasks.saveTaskId;
         const currentPlugin = this._fonTasks.getCurrentTaskList(id);
         if (!currentPlugin) {
-          this.router.navigate(['./background-tasks']);
+          this.router.navigate(['./services']);
           return;
         }
         currentPlugin.render(this.MOUNT_POINT, 'scriptAppend');

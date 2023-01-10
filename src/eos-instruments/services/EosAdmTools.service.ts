@@ -5,17 +5,18 @@ import { IFonLists } from 'eos-backgraund-tasks/interface';
 @Injectable({
   providedIn: 'root'
 })
-export class FonTasksService {
+export class EosAdmToolsService {
   tasksList: IFonLists[] = [];
   activeTask: IFonLists | null = null;
   loadedPlugins: Set<any> = new Set();
+  saveTaskId: string;
   constructor() {
     this.loadTaskLists();
 
   }
 
-  loadTaskLists(): any {
-    this.tasksList = Manager.getArray<IFonLists>('eos-admin-fon-tasks');
+  loadTaskLists(): IFonLists[] {
+    this.tasksList = Manager.getArray<IFonLists>('eos-admin-tools-tasks');
     return this.tasksList;
   }
 

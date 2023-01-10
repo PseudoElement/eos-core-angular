@@ -339,7 +339,7 @@ const routes: Routes = [{
     ]
 },
 {
-    path: 'instruments',
+    path: 'tools',
     data: { title: 'Инструменты', showInBreadcrumb: false },
     canActivate: [AuthorizedGuard],
     children: [
@@ -362,7 +362,7 @@ const routes: Routes = [{
     ],
 },
 {
-    path: 'background-tasks',
+    path: 'services',
     data: { title: 'Сервисы', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard, BackgroundTaskGuard],
     children: [

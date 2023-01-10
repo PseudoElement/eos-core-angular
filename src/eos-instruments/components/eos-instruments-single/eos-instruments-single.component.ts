@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, /* Router */ } from '@angular/router';
+import { ActivatedRoute, Router, /* Router */ } from '@angular/router';
 import { NavParamService } from 'app/services/nav-param.service';
+import { EosAdmToolsService } from 'eos-instruments/services/EosAdmTools.service';
 
 
 @Component({
@@ -10,8 +11,8 @@ import { NavParamService } from 'app/services/nav-param.service';
 })
 export class EosInstrumentsSingleComponent implements OnInit {
 
-  public readonly MOUNT_POINT = 'eos-admin-instruments';
-  constructor(private route: ActivatedRoute, /* private router: Router, */ private _navSrv: NavParamService) { }
+  public readonly MOUNT_POINT = 'eos-admin-tools';
+  constructor(private route: ActivatedRoute, private router: Router, private _navSrv: NavParamService, private _eosAdmTools: EosAdmToolsService) { }
 
 
   ngOnInit() {
@@ -19,22 +20,18 @@ export class EosInstrumentsSingleComponent implements OnInit {
       this._navSrv._subscriBtnTree.next(true);
     });
     this.route.params.subscribe(data => {
-     // const id = data['taskId'];
-      // const currentPlugin = this._fonTasks.getCurrentTaskList(id);
-      // if (!currentPlugin) {
-      //   this.router.navigate(['./instruments']);
-      //   return;
-      // }
-      // if (this._fonTasks.loadedPlugins.has(id) && currentPlugin) {
-      //   currentPlugin.render(this.MOUNT_POINT);
-
-      //   return;
-      // } else {
-      //   this._fonTasks.loadedPlugins.add(id);
-      //   currentPlugin.loadPlugin(this.MOUNT_POINT).then(() => {
-      //     currentPlugin.render(this.MOUNT_POINT);
-      //   });
-      // }
+      try {
+        const id = data['taskId'] || this._eosAdmTools.saveTaskId;
+        const currentPlugin = this._eosAdmTools.getCurrentTaskList(id);
+        if (!currentPlugin) {
+          this.router.navigate(['./instruments']);
+          return;
+        }
+        currentPlugin.render(this.MOUNT_POINT, 'scriptAppend');
+        this._eosAdmTools.saveTaskId = id;
+      } catch (error) {
+        console.log('Ошибка при загрузке', error);
+      }
     });
   }
 }

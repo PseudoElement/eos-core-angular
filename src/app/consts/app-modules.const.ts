@@ -13,11 +13,11 @@ export const APP_MODULES = [
     },
     {
         title: 'Сервисы',
-        url: '/background-tasks',
+        url: '/services',
     },
     {
         title: 'Инструменты',
-        url: '/instruments',
+        url: '/tools',
     },
 
 ];

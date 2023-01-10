@@ -247,7 +247,7 @@ export const CHANGE_DL: IFonLists = {
 //     render(mountPoint) {
 //     },
 // };
-export const INSTRUMENTS_DICTIONARIES = [
+export const TOOLS_DICTIONARIES = [
     EXPORT,
     IMPORT,
     PROTOCOL_REMOVE,
