@@ -6,7 +6,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { ExportImportClService } from './../services/export-import-cl.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { URL_LOGIN } from 'app/consts/common.consts';
+import { URL_EXIT } from 'app/consts/common.consts';
 
 @Component({
     selector: 'eos-header',
@@ -95,8 +95,8 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         this.ngUnsubscribe.complete();
     }
     logOut() {
-        document.location.assign(URL_LOGIN);
         sessionStorage.removeItem('fromclassif');
+        document.location.assign(URL_EXIT);
     }
     eiCl(id: any) {
         if (id === 'export') {
