@@ -40,16 +40,16 @@
         min-width: 405px;
     }
     .form-control {
-        background-color: white !important;
         &:focus {
             box-shadow: none;
             border-color: #ccc;
         }
-        &.readonly {
-            box-shadow: none;
-            border-color: $border-color-main-theme;
-            background-color: white !important;
-        }
+        &[disabled],
+        &[readonly],
+            fieldset[disabled] & {
+                background-color: white !important;
+                opacity: 1; 
+            }
     }
 
 }
