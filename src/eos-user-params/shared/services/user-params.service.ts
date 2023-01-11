@@ -201,7 +201,7 @@ export class UserParamsService {
     }
     ProtocolService(isn: number, kind: number): Promise<any> {
         const protocol = () => {
-            const url = `../UserInfo/UserOperations.asmx/WriteUserAudit?uisn=${isn}&event_kind=${kind}`;
+            const url = `../FOP/WriteUserAudit/${kind}/${isn}`;
             const protocolParam = this._userContext.USER_PARMS_List.find((parm) => parm.PARM_NAME === 'USER_EDIT_AUDIT');
             if (protocolParam && protocolParam.PARM_VALUE === 'YES') {
                 return this._pipRx.read({
