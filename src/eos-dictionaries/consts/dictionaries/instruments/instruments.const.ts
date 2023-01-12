@@ -91,7 +91,7 @@ function openProtocolChange(url) {
     }
 }
 function openProtocolView(url) {
-    if (OPENED_WINDOW.windowView && !this.windowView.closed) {
+    if (OPENED_WINDOW.windowView && !OPENED_WINDOW.windowView.closed) {
         OPENED_WINDOW.windowView.focus();
     } else {
         OPENED_WINDOW.windowView = window.open(url, '_blank', 'width=900,height=700');

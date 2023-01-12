@@ -34,7 +34,7 @@ import { EosBackgraundTasksComponent } from 'eos-backgraund-tasks/components/eos
 import { EosBackgraundSingleComponent } from 'eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
 import { EosInstrumentsListsComponent } from 'eos-instruments/components/eos-instruments-lists/eos-instruments-lists.component';
 import { EosInstrumentsSingleComponent } from 'eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
-import { BackgroundTaskGuard } from './guards/background-tasks.guard';
+// import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -364,7 +364,7 @@ const routes: Routes = [{
 {
     path: 'services',
     data: { title: 'Сервисы', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard, BackgroundTaskGuard],
+    canActivate: [AuthorizedGuard/* , BackgroundTaskGuard */], // убраю проверку прав оставляю только проверку авторизации, если опять понадобятся то можно будет вернуть
     children: [
         {
             path: '',
