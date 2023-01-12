@@ -62,7 +62,26 @@ $horizontal-line-color-CB: #c4c4c4;
         border-bottom: none !important;
     }
 }
-
+.web-dialog {
+    outline: none;
+    button {
+        color: $text-color !important;
+        background-color: $button-bg !important;
+        border: 1px solid #d7d7d2;
+    }
+    .alert_main {
+        border-bottom: none !important;
+    }
+    .ui-dialog-titlebar {
+        background-color: #CAC7BE;
+    }
+    .alert_main {
+        text-align: left !important;
+    }
+    .ui-dialog-buttonpane {
+        text-align: right;
+    }
+}
 @mixin style-other-button($isCB: false) {
     padding: 0 0 0 5px;
     margin: 0;
