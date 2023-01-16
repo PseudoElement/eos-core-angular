@@ -74,12 +74,17 @@ $horizontal-line-color-CB: #c4c4c4;
     }
     .ui-dialog-titlebar {
         background-color: #CAC7BE;
+        height: 30px;
+        padding: 5px 15px !important;
     }
     .alert_main {
         text-align: left !important;
     }
     .ui-dialog-buttonpane {
         text-align: right;
+    }
+    .ui-dialog-titlebar-close {
+        display: none;
     }
 }
 @mixin style-other-button($isCB: false) {
