@@ -57,7 +57,11 @@
             cursor: pointer;
             outline: none;
         }
-
+        label {
+            color: #000;
+            line-height: 32px;
+            margin-bottom: 5px!important;
+        }
     }
 
     .doc-navigate{

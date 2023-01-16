@@ -46,6 +46,11 @@
         padding-left: 8px;
         display: flex;
         align-items: center;
+        label {
+            color: #000;
+            line-height: 32px;
+            margin-bottom: 5px!important;
+        }
     }
     .cabinets-folders {
         overflow-y: auto;
@@ -54,6 +59,11 @@
     .cabinets-wrapper {
         overflow-y: auto;
         height: 100%;
+        label {
+            color: #000;
+            line-height: 32px;
+            margin-bottom: 5px!important;
+        }
     }
     .cabinets-fixed {
         height: 115px;

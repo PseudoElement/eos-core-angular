@@ -25,6 +25,11 @@
                 line-height: 32px;
                 cursor: pointer;
                 padding-left: 15px;
+                label {
+                    color: #000;
+                    line-height: 32px;
+                    margin-bottom: 5px!important;
+                }
             }
         }
         .right-block {
