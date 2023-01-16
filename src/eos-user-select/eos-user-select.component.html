@@ -4,7 +4,8 @@
         'info': !currentState[0] && currentState[1] || currentState[0] && currentState[1] && hideTree,
         'tree': currentState[0] && !currentState[1] && !hideTree}"
 >
-    <div class="tree-wrapper block"
+    <div class="border-tree-wrapper">
+        <div class="tree-wrapper block"
         #tree
         [ngClass]="{'open-tree': currentState[0] && !hideTree, 'has-spinner': !treeNodes.length }">
         <eos-tree-user-select></eos-tree-user-select>
@@ -17,6 +18,7 @@
             [style.width]="fonConf.width"
             [style.height]="fonConf.height"
             [style.top]="fonConf.top"></div>
+        </div>
     </div>
     <div class="selected-wrapper"
         #selectedWrapper
