@@ -558,6 +558,13 @@ export class NodeActionsComponent implements OnDestroy {
     }
     private _checkGranted(button: IActionButton, opts: IActionUpdateOptions): boolean {
         if (button.type === E_RECORD_ACTIONS.showDeleted) {
+            /*
+            * Сам справочник FORMAT_CL доступен при this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'][1]
+            * Так что если мы в него вошли то уже можем делать отображение логически удалённых
+            */
+            if (this.dictionary.id === 'format') {
+                return true;
+            }
             return this._eaps.checkShowDeleted(this.dictionary.id);
         } else if (this.dictionary && this.dictionary.id) {
             const forDicts = [

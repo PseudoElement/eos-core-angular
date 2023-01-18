@@ -11,6 +11,7 @@ import { EosUserProfileService } from './services/eos-user-profile.service';
 export class AppComponent {
     version: string;
     isAuthorized = false;
+    isHideHeader = false;
     firstLoadAuth = true;
     isLoadedPlugins = false;
     isMode: boolean = false;
@@ -19,10 +20,15 @@ export class AppComponent {
         private _route: ActivatedRoute,
 
     ) {
-
         // параметр передается при открытии прилодения из веба. В противном случае нужно скрыть ссылку на переход в main.aspx
         if (window.location.href.match('fromclassif=true')) {
             sessionStorage.setItem('fromclassif', `true`);
+        }
+
+        if (/cardFrom/.test(window.location.hash)) {
+            this.isHideHeader = true;
+        } else {
+            this.isHideHeader = false;
         }
         this._profileSrv.authorized$.subscribe((auth) => {
             this.isAuthorized = auth;

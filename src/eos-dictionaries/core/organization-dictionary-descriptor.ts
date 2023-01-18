@@ -59,6 +59,16 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 if (criteries.hasOwnProperty('GATE_ID')) {
                     queries.medo.GATE_ID = criteries['GATE_ID'];
                 }
+                if (criteries.hasOwnProperty('CONTACT.MEDO_GLOBAL_ID')) {
+                    if (!queries.contact) {
+                        queries.contact = {
+                            'CONTACT.MEDO_GLOBAL_ID': criteries['CONTACT.MEDO_GLOBAL_ID'],
+                            'CONTACT.ORDERNUM': 0
+                        };
+                    } else {
+                        queries.contact['CONTACT.MEDO_GLOBAL_ID'] = criteries['CONTACT.MEDO_GLOBAL_ID'];
+                    }
+                }
             }
         } else {
             if (criteries.hasOwnProperty('EMAIL')) {

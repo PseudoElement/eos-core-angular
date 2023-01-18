@@ -200,7 +200,7 @@ export class RtUserSelectService {
             withLicense: true,
         },
         MEDO_2_7: {
-            label: 'Модуль сопряжения работ с МЭДО 2.7',
+            label: 'Модуль взаимодействия с МЭДО. Расширенный',
             checked: false,
             Trial: '-',
             Expired: '-',

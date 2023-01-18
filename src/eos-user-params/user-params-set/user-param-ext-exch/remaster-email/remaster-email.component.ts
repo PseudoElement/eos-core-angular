@@ -13,6 +13,7 @@ import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
 import { IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
 import { AccordionPanelComponent } from 'ngx-bootstrap';
 import { SearchService } from '../.././shared-user-param/services/search-service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 export interface TreeItem {
     title: string;
     key: string;
@@ -85,6 +86,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         private inputCtrlSrv: InputControlService,
         private _RemasterService: RemasterService,
         private _searchService: SearchService,
+        private _appContext: AppContext,
     ) {
         this._RemasterService.cancelEmit
             .pipe(
@@ -169,6 +171,24 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         });
     }
     initEmail() {
+        if (!this._appContext.cbBase) {
+            this.fieldsConst.fields.splice(4, 0,
+                {
+                    key: 'RCSEND1',
+                    type: 'boolean',
+                    title: 'Организации',
+                    keyPosition: 171,
+                    parent: null,
+                },
+                {
+                    key: 'RCSEND2',
+                    type: 'boolean',
+                    title: 'Гражданину',
+                    keyPosition: 172,
+                    parent: null,
+                }
+            );
+        }
         this.preparedItemForInputs = this.parse_Create(this.fieldsConst.fields, 'userData', 'RCSEND');
         this.prepareInputs = this.formHelp.getObjectInputFields(this.fieldsConst.fields);
         this.prepareData = this.formHelp.convData(this.preparedItemForInputs);
@@ -315,10 +335,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         }
     }
     sliceArrayForTemplate(): void {
-        this.listForAccordion.splice(0, this.listForAccordion.length);
+        let count = 8;
+        if (!this._appContext.cbBase) {
+            count = 10;
+        }
         // @task165408 убирание настроек толстяка
         // изначально this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(0, 8) });
-        this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, 8) });
+        this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, count) });
         this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(8, 13) });
         this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(13) });
     }

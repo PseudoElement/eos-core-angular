@@ -122,7 +122,13 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     },
     {
         key: 'CONTACT.MEDO_ID',
-        title: 'ID организации',
+        title: 'Идентификатор организации',
+        type: 'string',
+        length: 255
+    },
+    {
+        key: 'CONTACT.MEDO_GLOBAL_ID',
+        title: 'Идентификатор организации в ГАС',
         type: 'string',
         length: 255
     },
@@ -134,7 +140,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     },
     {
         key: 'GATE_ID',
-        title: 'ID шлюза',
+        title: 'Идентификатор шлюза',
         type: 'string',
         length: 255
     },
@@ -295,7 +301,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         // ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
-    fullSearchFields: ['CLASSIF_NAME', 'EMAIL', 'INN', 'DOP_REC', 'CONTACT.MEDO_ID', 'GATE', 'GATE_ID'],
+    fullSearchFields: ['CLASSIF_NAME', 'EMAIL', 'INN', 'DOP_REC', 'CONTACT.MEDO_ID', 'GATE', 'GATE_ID', 'CONTACT.MEDO_GLOBAL_ID'],
     // quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',
     //     'ISN_ORGANIZ_TYPE', 'SERTIFICAT',  'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'sev'],
     quickViewFields: ['FULLNAME',

@@ -38,9 +38,11 @@ export class AppContext {
     public setHeader = new Subject();
     public licenze: any;
     private _ready = new Deferred<any>();
-
+    private _sreamScane: boolean = false;
     constructor(private pip: PipRX) { }
-
+    get sreamScane(): boolean {
+        return this._sreamScane;
+    }
     static isIE(): boolean {
         const ua = window.navigator.userAgent;
         return /MSIE|Trident/.test(ua);
@@ -133,6 +135,9 @@ export class AppContext {
                 if (this.SysParms._more_json.ParamsDic['CB_FUNCTIONS'] === 'YES') {
                     this.cbBase = true;
                     ctxstore.cbBase = true;
+                }
+                if (this.SysParms._more_json.ParamsDic['STREAMSCAN_FUNCTIONS'] === 'YES') {
+                    this._sreamScane = true;
                 }
                 this.CurrentUser = userWithViews.user;
                 this.hasUnlimTech = isUnlimTech;

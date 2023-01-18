@@ -34,6 +34,7 @@ import { EosBackgraundTasksComponent } from 'eos-backgraund-tasks/components/eos
 import { EosBackgraundSingleComponent } from 'eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
 import { EosInstrumentsListsComponent } from 'eos-instruments/components/eos-instruments-lists/eos-instruments-lists.component';
 import { EosInstrumentsSingleComponent } from 'eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
+import { CardFromComponent } from 'eos-dictionaries/card-from/card-from.component';
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
 
@@ -49,6 +50,45 @@ const formDictionariesComponent = [
         pathMatch: 'full'
     }
 ];
+const childrenDictionariesComponent2: Routes = [
+   {
+    path: ':dictionaryId',
+    canDeactivate: [CanDeactivateDictGuard],
+    children: [{
+        path: ':nodeId',
+        data: { title: 'Запись', showInBreadcrumb: false },
+        children: [{
+            path: '',
+            component: DictionaryComponent,
+            pathMatch: 'full',
+        }, {
+            path: 'edit',
+            children: [
+                {
+                    path: '',
+                    redirectTo: '0',
+                    pathMatch: 'full',
+                },
+                {
+                    path: ':tabNum',
+                    component: CardFromComponent,
+                    canDeactivate: [CanDeactivateGuard],
+                }],
+        }, {
+            path: 'view',
+            children: [
+                {
+                    path: '',
+                    redirectTo: '0',
+                    pathMatch: 'full',
+                },
+                {
+                    path: ':tabNum',
+                    component: CardFromComponent,
+                }],
+        }],
+    }],
+}];
 const childrenDictionariesComponent: Routes = [{
     path: '',
     pathMatch: 'full',
@@ -121,7 +161,13 @@ const childrenDictionariesComponent: Routes = [{
     }],
 }];
 
-const routes: Routes = [{
+const routes: Routes = [
+    {
+        path: 'cardFrom',
+        canActivate: [AuthorizedGuard],
+        children: childrenDictionariesComponent2
+    },
+    {
     path: 'spravochniki/SEV',
     data: { title: 'СЭВ', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],

@@ -7,18 +7,25 @@ export const SEARCH_PARAM: IBaseParameters = {
         {
             key: 'INDEXKIND',
             type: 'radio',
-            readonly: true,
+            readonly: false,
             title: '',
             options: [
                 {value: 'DBMS', title: 'СУБД'},
                 {value: 'MSINDEXSERVER', title: 'Внешняя служба'},
+                {value: 'ES', title: 'Служба Elasticsearch'}
             ]
+        },
+        {
+            key: 'ES_SETTINGS',
+            type: 'string',
+            readonly: false,
+            title: 'Адрес Elasticsearch',
         },
         {
             key: 'INDEX_URL',
             type: 'string',
-            readonly: true,
-            title: 'Полный путь к прокси-сервису внешней службы поиска',
+            readonly: false,
+            title: 'Полный путь к прокси-серверу службы поиска',
         },
         {
             key: 'INDEXTIMEOUT',

@@ -32,6 +32,8 @@ import { SEV_FOLDER } from './dictionaries/sev/folder-sev.consts';
 import { TYPE_DOCUM_DICT } from './dictionaries/type-docum.const';
 import { FILE_TYPE_DICT } from './dictionaries/file-type.const';
 import { FILE_CATEGORIES_DICT } from './dictionaries/file-categories.consts';
+import { FORMAT_DICT } from './dictionaries/format.const';
+import { MEDO_NODE_DICT } from './dictionaries/medo-node.const';
 
 export const DICTIONARIES = [
 
@@ -64,10 +66,10 @@ export const DICTIONARIES = [
     Templates,
     TYPE_DOCUM_DICT,
     FILE_TYPE_DICT,
-
+    MEDO_NODE_DICT,
     // @stub157113 открыть при наличии бэка
     FILE_CATEGORIES_DICT,
-
+    FORMAT_DICT,
     ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR_FOLDER, ] : [CITIZENS_DICT, ],
     ... Features.cfg.SEV.isDictsEnabled ? [SEV_FOLDER] : [],
     REESTRTYPE_DICT,

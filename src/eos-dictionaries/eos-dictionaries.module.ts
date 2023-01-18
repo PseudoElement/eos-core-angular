@@ -109,8 +109,12 @@ import { DictionaryPasteComponent } from './dictionary-paste/dictionary-paste.co
 import { PrintTemplateComponent } from './print-template/print-template.component';
 import { ResolutionCategoryEditComponent } from './card-views/resolution-category-edit.component';
 import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.component';
+import { FormatEditComponent } from './card-views/format-edit.component';
+import { MedoNodeCardComponent } from './card-views/medo-node-card-edit.component';
+import { CardFromComponent } from './card-from/card-from.component';
 @NgModule({
     declarations: [
+        CardFromComponent,
         CardComponent,
         CardEditComponent,
         DictFormComponent,
@@ -168,6 +172,7 @@ import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.co
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        FormatEditComponent,
         FileCategoryCardEditComponent,
         CalendarFormComponent,
         EosDatepickerInlineComponent,
@@ -182,7 +187,8 @@ import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.co
         PrintTemplateComponent,
         TooltipErrorFixDirective,
         ResolutionCategoryEditComponent,
-        SevSyncDictsComponent
+        SevSyncDictsComponent,
+        MedoNodeCardComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -239,6 +245,9 @@ import { SevSyncDictsComponent } from './sev-modals/sev-sync-dicts/sync-dicts.co
         CalendarFormComponent,
         EosDatepickerInlineComponent,
         TooltipErrorFixDirective,
+        CardComponent,
+        CardEditComponent,
+        CardFromComponent
     ],
     providers: [
         DictionaryDescriptorService,

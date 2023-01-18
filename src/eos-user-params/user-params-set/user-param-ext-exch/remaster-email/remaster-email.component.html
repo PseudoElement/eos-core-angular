@@ -11,7 +11,12 @@
 
                     <ng-template #treeTmpl let-item="items" let-mar="margin">
                         <div *ngFor="let node of item">
-                            <ng-container *ngTemplateOutlet="treeNodeTmpl; context:{node: node, m: mar}"></ng-container>
+                            <span *ngIf="node.key === 'RCSEND1'">
+                                Добавлять файл визуализации в сообщение:
+                            </span>
+                            <div [ngClass]="{'rcsend-margin': node.key === 'RCSEND1' || node.key === 'RCSEND2'}">
+                                <ng-container *ngTemplateOutlet="treeNodeTmpl; context:{node: node, m: mar}"></ng-container>
+                            </div>
                         </div>
                     </ng-template>
 
