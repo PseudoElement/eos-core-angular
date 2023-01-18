@@ -140,6 +140,11 @@
             height: 0px;
             overflow: hidden;
             transition: 0.4s;
+            label {
+                color: #000;
+                line-height: 32px;
+                margin-bottom: 5px!important;
+            }
         }
         .opened {
             height: 525px;
