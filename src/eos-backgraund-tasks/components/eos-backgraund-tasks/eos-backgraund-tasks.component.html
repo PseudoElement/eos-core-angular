@@ -1,5 +1,5 @@
-<div class="eos-adm-backgraund eos-adm-backgraund-padding">
+<div #containerTask class="eos-adm-backgraund eos-adm-backgraund-padding">
   <ng-container *ngFor="let list of lists">
-    <eos-eos-background-list [list]="list"></eos-eos-background-list>
+    <eos-eos-background-list [ngStyle]="{'max-width': itemWidth() + 'px'}" [list]="list"></eos-eos-background-list>
   </ng-container>
 </div>

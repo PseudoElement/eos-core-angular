@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IFonLists } from 'eos-backgraund-tasks/interface';
 import { FonTasksService } from 'eos-backgraund-tasks/services/fon-tasks.service';
 
@@ -11,7 +11,10 @@ import { FonTasksService } from 'eos-backgraund-tasks/services/fon-tasks.service
 
 
 export class EosBackgraundTasksComponent implements OnInit, OnDestroy {
+  @ViewChild('containerTask') containerTask: ElementRef;
   lists: IFonLists[] = [];
+  private _lastWrapperWidth: number;
+  private _calcItemWidth: number;
   constructor(private _fonTasksSrv: FonTasksService) {
   }
 
@@ -27,5 +30,26 @@ export class EosBackgraundTasksComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.lists = [];
   }
-
+  itemWidth() {
+    const w = this.containerTask.nativeElement.clientWidth;
+    if (!this.lists || w === this._lastWrapperWidth) {
+        return this._calcItemWidth;
+    }
+    this._lastWrapperWidth = w;
+    const padsPerElem = 30;
+    const maxW: number = 490 + padsPerElem;
+    const minW: number = 400 + padsPerElem;
+    const dmin =  w / minW ;
+    const dmax =  w / maxW ;
+    const dmin_f = Math.floor(dmin);
+    const dmax_f = Math.floor(dmax);
+    if (dmax_f >= this.lists.length) {
+        this._calcItemWidth = maxW - padsPerElem;
+    } else if (dmin_f === dmax_f) {
+        this._calcItemWidth =  maxW - padsPerElem;
+    } else {
+        this._calcItemWidth = (w / dmin_f) - padsPerElem;
+    }
+    return this._calcItemWidth;
+  }
 }
