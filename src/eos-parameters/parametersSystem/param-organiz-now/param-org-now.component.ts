@@ -18,7 +18,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
     public organOld: ORGANIZ_CL;
     public masDisable: any[] = [];
     private defaultOrganiz = {
-        ISN_OWNER: -99,
+        ISN_OWNER: 1,
         NAME: '',
         ISN_ORGANIZ: 0,
         DUE_ORGANIZ: '',
@@ -98,7 +98,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         this.isLoading = false;
         this.prepareDataParam();
         return  this.pip.read({
-            DELO_OWNER: -99
+            DELO_OWNER: 1
         })
         .then(data => {
             if (!data[0]) {
@@ -220,7 +220,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         const query = [
             {
                 method: 'MERGE',
-                requestUri: `DELO_OWNER(-99)`,
+                requestUri: `DELO_OWNER(1)`,
                 data: dateMerg
             },
         ];

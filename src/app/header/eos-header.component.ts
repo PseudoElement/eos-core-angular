@@ -1,6 +1,6 @@
 import { Component, OnDestroy, HostListener, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { APP_MODULES, APP_MODULES_DROPDOWN } from '../consts/app-modules.const';
+import { APP_MODULES } from '../consts/app-modules.const';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { ExportImportClService } from './../services/export-import-cl.service';
@@ -14,8 +14,8 @@ import { URL_EXIT } from 'app/consts/common.consts';
     styleUrls: ['./eos-header.component.scss']
 })
 export class EosHeaderComponent implements OnDestroy, OnInit {
-    modules = APP_MODULES;
-    modulesDropdown = APP_MODULES_DROPDOWN;
+    modules = [...APP_MODULES];
+    modulesDropdown = [];
     breadcrumbView = true;
     navParamView = false;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
@@ -48,6 +48,13 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
             return true;
         }
     }
+    get widthHead(): number {
+        let width = 0;
+        this.modules.forEach((head) => {
+            width += head.width;
+        });
+        return width;
+    }
     constructor(
         private _router: Router,
         private _route: ActivatedRoute,
@@ -55,6 +62,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
         private _appcontext: AppContext,
     ) {
         this.width = window.innerWidth;
+        this.updateHead();
         /* Делать переход к последнему открытому только если открываем приложение заного */
         if (localStorage.getItem('lastUrl') && this._router.url === '/desk/system') {
             this._router.navigateByUrl(localStorage.getItem('lastUrl'));
@@ -76,6 +84,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     resize($event) {
         this.width = window.innerWidth;
         // console.log(window.innerWidth);
+        this.updateHead();
     }
     ngOnInit() {
         this.currentUser = this._appcontext.CurrentUser;
@@ -181,6 +190,24 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
             this.windowView = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
             this.windowView.blur();
         }
+    }
+    private updateHead() {
+        const title =  this.width > 1250 ? 244 : 48;
+        const widthHead = this.showtitle ? title + 170 + 95 : 170 + 95;
+        const newHead = [];
+        let widthTemp = widthHead;
+        this.modulesDropdown = [];
+        let flag = true; // флаг что больше поместить нельзя
+        APP_MODULES.forEach((head) => {
+            if (flag && (widthTemp + head.width) <= this.width) {
+                widthTemp += head.width;
+                newHead.push(head);
+            } else {
+                flag = false;
+                this.modulesDropdown.push(head);
+            }
+        });
+        this.modules = newHead;
     }
     private update() {
         let _actRoute = this._route.snapshot;

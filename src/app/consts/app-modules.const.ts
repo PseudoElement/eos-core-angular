@@ -1,23 +1,28 @@
 export const APP_MODULES = [
     {
         title: 'Cправочники',
-        url: '/spravochniki'
+        url: '/spravochniki',
+        width: 153
     },
     {
         title: 'Пользователи',
         url: '/user_param',
+        width: 160
     },
     {
         title: 'Параметры системы',
         url: '/parameters',
+        width: 216
     },
     {
         title: 'Сервисы',
         url: '/services',
+        width: 115
     },
     {
         title: 'Инструменты',
         url: '/tools',
+        width: 155
     },
 
 ];

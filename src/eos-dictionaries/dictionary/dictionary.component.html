@@ -4,29 +4,34 @@
         'info': !currentState[0] && currentState[1] || currentState[0] && currentState[1] && hideTree,
         'tree': currentState[0] && !currentState[1] && !hideTree}"
     (transitionend)="transitionEnd()">
-    <div class="tree-wrapper block"
-        id = "leftTreeView"
-        #tree
-        [ngClass]="{'open-tree': currentState[0] && !hideTree && !accessDenied,
-                    'has-spinner': ((hasCustomTree && !customTreeData) || !treeNodes.length) }"
-        [hidden]="this.dictionary?.descriptor.type === dictTypes.linear || accessDenied" >
-        <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length) && !accessDenied" size="lg">
-        </eos-spinner>
-        <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied"
-            [nodes]="treeNodes"
-            [showDeleted]="params.showDeleted" [filters] = "filterDate"></eos-tree>
-        <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
-                         [data]="customTreeData"
-                         (onSetActiveNode)="onSetActiveNode($event)"
-                         [showDeleted]="params.showDeleted"
-                         [filters] = "filterDateNomenkl"
-                         ></eos-custom-tree>
-<!--        <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>-->
-        <div class="fon highlighted"
-            [style.width]="fonConf.width"
-            [style.height]="fonConf.height"
-            [style.top]="fonConf.top"></div>
+    <div class="border-tree-wrapper">
+        <div class="tree-wrapper block"
+            id = "leftTreeView"
+            #tree
+            [ngClass]="{'open-tree': currentState[0] && !hideTree && !accessDenied,
+                        'has-spinner': ((hasCustomTree && !customTreeData) || !treeNodes.length) }"
+            [hidden]="this.dictionary?.descriptor.type === dictTypes.linear || accessDenied" >
+            <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length) && !accessDenied" size="lg">
+            </eos-spinner>
+            <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied"
+                [nodes]="treeNodes"
+                [showDeleted]="params.showDeleted" [filters] = "filterDate"></eos-tree>
+            <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
+                [data]="customTreeData"
+                (onSetActiveNode)="onSetActiveNode($event)"
+                [showDeleted]="params.showDeleted"
+                [filters] = "filterDateNomenkl"
+                >
+            </eos-custom-tree>
+    <!--        <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>-->
+            <div class="fon highlighted"
+                [style.width]="fonConf.width"
+                [style.height]="fonConf.height"
+                [style.top]="fonConf.top">
+            </div>
+        </div>
     </div>
+    
     <div class="selected-wrapper"
         #selectedWrapper
         [ngClass]="{'open-tree': currentState[0] && !hideTree }">

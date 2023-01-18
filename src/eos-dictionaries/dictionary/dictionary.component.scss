@@ -23,6 +23,9 @@
     }
 }
 .eos-adm-dictionary {
+    .border-tree-wrapper {
+        border-right: 1px solid #e6e6e6;
+    }
     overflow: hidden;
     .tree-wrapper,
     .opened-wrapper,
@@ -35,11 +38,11 @@
         }
     }
     .tree-wrapper {
-        /* padding-top: 16px; */
+        padding-top: 16px;
         height: calc(100vh - 96px);
         overflow-x: auto;
         overflow-y: auto;
-        border-right: 1px solid $border-color-main-theme;
+        // border-right: 1px solid $border-color-main-theme;
         &.has-spinner {
             display: flex;
             justify-content: space-around;

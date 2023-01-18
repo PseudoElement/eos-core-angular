@@ -64,6 +64,30 @@
                     </li>
                 </ul>
                 </li> -->
+                <li *ngIf="modulesDropdown.length > 0" class="header-item else-dropdown primary-text fixet-drop-menu"
+                    dropdown
+                    placement="left"
+                    container="body">
+                    <a class="link-name primary-text xl-font"
+                        routerLinkActive="active"
+                        dropdownToggle>
+                        <span class="eos-adm-icon eos-adm-icon-fab-blue small"></span>
+                    </a>
+                    <ul *dropdownMenu
+                        class="dropdown-menu more-prot"
+                        role="menu">
+                        <li *ngFor="let item of modulesDropdown"
+                            class="header-item primary-text">
+                            <a class="link-name primary-text xl-font"
+                                [routerLink]="item.url"
+                                routerLinkActive="active">
+                                <span tooltip="{{item.title}}"
+                                placement="bottom"
+                                [delay]="tooltipDelay"
+                                container="body" containerClass="tooltip-info">{{item.title}}</span></a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="header-item primary-text close-header">
                     <a class=" link-name primary-text xl-font" (click)="logOut()">
                         <span class="xl-font">Выход</span>
