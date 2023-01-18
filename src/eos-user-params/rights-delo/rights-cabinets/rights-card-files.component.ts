@@ -64,7 +64,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
     updateInit () {
         this._userSrv.getUserIsn({
-            expand: 'USERCARD_List'
+            expand: 'USER_PARMS_List,USERCARD_List'
         })
         .then(() => {
             this.flagChangeCards = true;
@@ -294,6 +294,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         });
         if (changes.length) {
             return this._pipSrv.batch(changes, '').then(data => {
+                this._userSrv.ProtocolService(this.userId, 5);
                 this._msgSrv.addNewMessage({
                     type: 'success',
                     title: 'Изменения сохранены',
