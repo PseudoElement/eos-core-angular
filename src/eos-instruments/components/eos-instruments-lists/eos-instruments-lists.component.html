@@ -1,5 +1,5 @@
-<div class="eos-adm-instruments eos-adm-instruments-padding">
+<div #containerInstrument class="eos-adm-instruments eos-adm-instruments-padding">
   <ng-container *ngFor="let tool of tools">
-    <eos-instruments-list [list]="tool"></eos-instruments-list>
+    <eos-instruments-list [ngStyle]="{'max-width': itemWidth() + 'px'}" [list]="tool"></eos-instruments-list>
   </ng-container>
 </div>
