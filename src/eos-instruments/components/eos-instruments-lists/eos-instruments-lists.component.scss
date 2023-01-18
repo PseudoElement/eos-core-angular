@@ -2,7 +2,7 @@
     display: flex;
     flex-wrap: wrap;
     padding: 0;
-    width: calc(100vw - 30px);
+    /* width: calc(100vw - 30px); */
     overflow-y: auto;
     max-height: calc(100vh - 130px);
     &.eos-adm-instruments-padding {
