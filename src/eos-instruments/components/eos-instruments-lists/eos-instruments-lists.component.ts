@@ -15,7 +15,6 @@ export class EosInstrumentsListsComponent implements OnInit {
   // containerInstrument
   @ViewChild('containerInstrument') containerInstrument: ElementRef;
   public tools: IFonLists[] = [...TOOLS_DICTIONARIES];
-  public isLoading: boolean = false;
   private _lastWrapperWidth: number;
   private _calcItemWidth: number;
   constructor(private _toolsSrv: EosAdmToolsService) {
@@ -23,10 +22,7 @@ export class EosInstrumentsListsComponent implements OnInit {
 
   ngOnInit(): void {
     try {
-      setTimeout(() => {
-        this.isLoading = true;
         this.tools.push(...this._toolsSrv.loadTaskLists()) ;
-      }, 100);
     } catch (error) {
       console.log('Ошибка получения всех плагинов', error);
     }
