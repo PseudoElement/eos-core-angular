@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
 import {DynamicInputBase} from './dynamic-input-base';
 import {BsDatepickerConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {EosUtils} from '../core/utils';
@@ -8,8 +8,9 @@ import {EosUtils} from '../core/utils';
     templateUrl: 'dynamic-input-date.component.html'
 })
 export class DynamicInputDateComponent extends DynamicInputBase implements OnInit, OnChanges {
+    @Input() placementIn;
     bsConfig: Partial<BsDatepickerConfig>;
-    placement = 'bottom';
+    placement;
     bsDate: Date;
 
     hidePicker = false;
@@ -112,6 +113,10 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     // }
 
     private updateDatePickerPlacement() {
+        if (this.placementIn) {
+            this.placement = this.placementIn;
+            return ;
+        }
         if (this.datePickerWrapper) {
             setTimeout(() => {
                 const rect = this.datePickerWrapper.nativeElement.getBoundingClientRect();

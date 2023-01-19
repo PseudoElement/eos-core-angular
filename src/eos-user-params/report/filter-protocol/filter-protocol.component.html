@@ -1,8 +1,9 @@
 <div class="filter-comp">
-    <div [popover]="searchModal" (onShown)="onShown()" containerClass="head-protocol filter" placement="bottom" container="body"
-        class="cust-style-mod" #full="bs-popover">
+    <div [popover]="searchModal" (onShown)="onShown()" containerClass="head-protocol filter" placement="left" container="body"
+    [adaptivePosition]="false"
+    class="cust-style-mod" #full="bs-popover">
         <button [ngClass]="{'opened': formBol}" class="btn btn-primary-light search-btn" tooltip="Расширенный поиск"
-            placement="bottom" container="body" (click)="isActiveButton()" containerClass="tooltip-info">
+            placement="left" triggers="hover" container="body" (click)="isActiveButton()" containerClass="tooltip-info">
             <i [hidden]="formBol" class="eos-adm-icon eos-adm-icon-filter-blue small" aria-hidden="true"></i>
             <i [hidden]="!formBol" class="eos-adm-icon eos-adm-icon-filter-white small" aria-hidden="true"></i>
         </button>
@@ -21,7 +22,7 @@
             <div class="cont-datepick">
                 <eos-dynamic-input class="s-font" [input]="inputs['rec.DATEFROM']" [form]="filterForm"
                     [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input class="s-font" [input]="inputs['rec.DATETO']" [form]="filterForm"
+                <eos-dynamic-input class="s-font" [placement]="'left'" [input]="inputs['rec.DATETO']" [form]="filterForm"
                     [readonly]="false"></eos-dynamic-input>
             </div>
             <eos-dynamic-input class="s-font" [input]="inputs['rec.USEREVENTS']" [form]="filterForm"

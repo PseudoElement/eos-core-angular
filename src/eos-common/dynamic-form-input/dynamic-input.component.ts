@@ -47,6 +47,7 @@ export class DynamicInputComponent {
     @Input() dropup: boolean; // выкидывать меню селекта вверх, а не вниз
     @Input() height: number; // ограничить высоту выпадалки
     @Input() notStandartText: boolean; // параметр для text принимает boolean по дефолту undefined, если true то прячет иконку
+    @Input() placement: string; // используется для даты чтобы можно было указать в какую сторону открывать выпадашку
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClickDict: EventEmitter<any> = new EventEmitter<any>();
