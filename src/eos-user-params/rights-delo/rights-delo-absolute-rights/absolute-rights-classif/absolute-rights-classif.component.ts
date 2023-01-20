@@ -315,7 +315,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            let techRights: string = '11111111111111111111001111111111111110001000000001';
+            let techRights: string = '111111111111111111110011111111111111100010100001011';
             if (this._appContext.sreamScane) {
                 const arr = techRights.split('');
                 arr[48] = '1';
@@ -337,8 +337,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     arr[index] = '0';
                 }
             });
+            // Нужно увеличить размер поля USER_CL.TECH_RIGHTS до 64 символов.
             // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
-            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 50);
+            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         /* if (!this._appContext.cbBase) {
@@ -361,6 +362,13 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
+        if (this._appContext.sreamScane) {
+            this.listClassif.push(new RightClassifNode({
+                key: 49,
+                label: 'Форматы сохранения',
+                expandable: E_TECH_USER_CLASSIF_CONTENT.none
+            }, this.curentUser, this.selectedNode, this));
+        }
         if (this.selectedNode.isCreate) {
             this.selectedNode.isCreate = false;
         }

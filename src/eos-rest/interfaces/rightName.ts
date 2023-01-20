@@ -44,6 +44,7 @@ export enum E_TECH_RIGHT {
     FileCategories = 42, // Категории файлов
     BackgroundTasks = 48, // Фоновые задачи
     MedoNode = 50, // Справочники МЭДО
+    DocumentTypes = 51, // Виды документов
 }
 
 export enum E_CARD_RIGHT {

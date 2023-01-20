@@ -20,5 +20,5 @@ export const SEV_FOLDER: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     title: 'Справочники СЭВ',
     visible: Features.cfg.SEV.isDictsEnabled,
     apiInstance: 'SEV',
-    iconName: 'eos-icon-shared-folder-blue'
+    iconName: 'eos-adm-icon-shared-folder-blue'
 });

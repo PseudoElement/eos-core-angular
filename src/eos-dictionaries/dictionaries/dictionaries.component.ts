@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { RECENT_URL } from 'app/consts/common.consts';
-import { TYPE_DOCUM_DICT } from '../consts/dictionaries/type-docum.const';
-import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
+/* import { TYPE_DOCUM_DICT } from '../consts/dictionaries/type-docum.const';
+import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName'; */
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { DISABLED_LIST_ITEM } from 'app/consts/messages.consts';
 
@@ -76,13 +76,13 @@ export class DictionariesComponent implements OnInit, OnDestroy {
 
     isAccessEnabled(dict: any) {
             // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
-            if (dict.id === TYPE_DOCUM_DICT.id) {
+            /* if (dict.id === TYPE_DOCUM_DICT.id) { // зачем Виды документов, проверять так хз
                 if (!this.curUserHasDocGroup) {
                     return APS_DICT_GRANT.denied;
                 } else {
                     return this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
                 }
-            }
+            } */
             return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
 
     }
