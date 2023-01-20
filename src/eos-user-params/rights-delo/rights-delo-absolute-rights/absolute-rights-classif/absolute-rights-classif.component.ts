@@ -362,6 +362,13 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
+        if (this._appContext.sreamScane) {
+            this.listClassif.push(new RightClassifNode({
+                key: 49,
+                label: 'Форматы сохранения',
+                expandable: E_TECH_USER_CLASSIF_CONTENT.none
+            }, this.curentUser, this.selectedNode, this));
+        }
         if (this.selectedNode.isCreate) {
             this.selectedNode.isCreate = false;
         }
