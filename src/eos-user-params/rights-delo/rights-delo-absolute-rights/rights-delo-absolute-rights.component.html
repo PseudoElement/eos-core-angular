@@ -7,7 +7,7 @@
                 <div [formGroup]="form">
                     <label class="checkbox" [ngClass]="{'disabled': !editMode}" (click)="[clickLable($event, item), checkRcpd($event, item)]">
                         <input type="checkbox" hide [formControlName]="item.key" [id]="item.key">
-                        <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
+                        <span eosClickMode class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
                         </span>
                         {{item.label}}
                     </label>
@@ -19,7 +19,7 @@
                 <ng-container [ngSwitch]="selectedNode.contentProp">
                     <!-- docGroup -->
                     <ng-container *ngSwitchCase="0">
-                        <ng-container *ngTemplateOutlet="rightDocGroup"></ng-container>
+                        <ng-container eosClickMode *ngTemplateOutlet="rightDocGroup"></ng-container> <!-- s -->
                     </ng-container>
 
                     <!-- none -->
