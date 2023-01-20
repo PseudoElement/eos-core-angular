@@ -182,7 +182,7 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         listedUT: false
     },
     {
-        id: TYPE_DOCUM_DICT.id, tech: E_TECH_RIGHT.Templates,
+        id: TYPE_DOCUM_DICT.id, tech: E_TECH_RIGHT.DocumentTypes,
         listedUT: false
     },
     {
@@ -229,20 +229,7 @@ export class EosAccessPermissionsService {
 
             // Проверка прав на "Виды документов"
             if (dt.id === TYPE_DOCUM_DICT.id) {
-                let curUserHasDocGroupe: boolean = false;
-                const techList = this.appCtx.CurrentUser.USER_TECH_List;
-                const isLimTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
-                if (!isLimTech) {
-                    curUserHasDocGroupe = true;
-                }
-                if (!this.appCtx.hasUnlimTech && !isLimTech) {
-                    curUserHasDocGroupe = true;
-                }
-                if (!curUserHasDocGroupe) {
-                    return APS_DICT_GRANT.denied;
-                } else {
-                    return this.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-                }
+                return this.checkAccessTech(E_TECH_RIGHT.DocumentTypes) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
             }
 
             // проверить дерево USER_TECH
@@ -258,11 +245,6 @@ export class EosAccessPermissionsService {
         }
         if (dictId === MEDO_NODE_DICT.id) {
             return APS_DICT_GRANT.readwrite;
-
-        }
-        if (dictId === MEDO_NODE_DICT.id) {
-            return APS_DICT_GRANT.readwrite;
-
         }
         let dict;
 
