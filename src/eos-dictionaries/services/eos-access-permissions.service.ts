@@ -252,7 +252,7 @@ export class EosAccessPermissionsService {
             return grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
         if (dictId === FORMAT_DICT.id) {
-            if (this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'][1] === '1') {
+            if (this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'] && this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'][1] === '1') {
                 return APS_DICT_GRANT.readwrite;
             }
         }

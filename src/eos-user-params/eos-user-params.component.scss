@@ -189,11 +189,15 @@
     min-width: 600px;
     position: relative;
     border-radius: 0;
+    .popover-arrow {
+        top: 60px !important
+    }
     .popover-content{
         padding: 0 !important;
     }
     &.filter {
         height: 400px;
+        top: 125px !important;
     }
  }
  .theme-green .bs-datepicker-head,

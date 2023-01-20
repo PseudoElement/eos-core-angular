@@ -63,7 +63,7 @@ export class DictionariesComponent implements OnInit, OnDestroy {
      * @method checkLimitedDocGroup - функция проверки текущего пользователя (системного технолога) на ограниченность в видах документах,
      * если у него есть права, то давать пускать в справочник виды документов.
      * */
-    checkLimitedDocGroup() {
+    checkLimitedDocGroup() { /*  */
         const techList = this._appCtx.CurrentUser.USER_TECH_List;
         const isLimTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
         if (!isLimTech) {

@@ -117,6 +117,8 @@ export class ParamSearchComponent extends BaseParamComponent {
                     this.headerElement.editMode = true;
                 }
             });
+        } else {
+            this.submit();
         }
     }
     submit() {
