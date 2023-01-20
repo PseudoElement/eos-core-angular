@@ -123,14 +123,14 @@ export class RtUserSelectService {
         //     label: 'Мобильный кабинет',
         //     checked: false
         // },
-        Informer: {
-            id: 27,
-            label: 'Информер',
-            checked: false,
-            Users: 0,
-            ActualUsers: 0,
-            Expired: '-',
-        },
+        // Informer: {
+        //     id: 27,
+        //     label: 'Информер',
+        //     checked: false,
+        //     Users: 0,
+        //     ActualUsers: 0,
+        //     Expired: '-',
+        // },
         EDITORMO: {
             id: 42,
             label: 'Редактор файлов МО',

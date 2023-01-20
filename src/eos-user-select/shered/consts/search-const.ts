@@ -65,12 +65,12 @@ export const USER_SEARCH = {
             title: 'ДЕЛО',
             value: '0'
         },
-        {
-            type: 'boolean',
-            key: '26',
-            title: 'Информер',
-            value: '0'
-        },
+        // {
+        //     type: 'boolean',
+        //     key: '26',
+        //     title: 'Информер',
+        //     value: '0'
+        // },
         // {
         //     type: 'boolean',
         //     key: '23',
