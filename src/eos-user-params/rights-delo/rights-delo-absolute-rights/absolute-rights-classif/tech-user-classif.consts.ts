@@ -218,6 +218,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         label: 'Управление фоновыми задачами',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
+    {
+        key: 51,
+        label: 'Виды документов',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
 ];
 
 export const E_CLASSIF_ID = {

@@ -337,8 +337,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     arr[index] = '0';
                 }
             });
+            // Нужно увеличить размер поля USER_CL.TECH_RIGHTS до 64 символов.
             // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
-            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 50);
+            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         /* if (!this._appContext.cbBase) {
