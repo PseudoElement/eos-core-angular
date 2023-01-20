@@ -315,7 +315,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            let techRights: string = '11111111111111111111001111111111111110001000000001';
+            let techRights: string = '111111111111111111110011111111111111100010100001011';
             if (this._appContext.sreamScane) {
                 const arr = techRights.split('');
                 arr[48] = '1';
