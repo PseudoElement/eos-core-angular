@@ -121,6 +121,9 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 control.patchValue('0', {emitEvent: false});
                 this.newData.rec[VALUE] = '0';
             }
+            if (this.updateData[VALUE] === '') {
+                this.updateData[VALUE] = '0';
+            }
         });
         this._checkExternalAuthChanges();
         super.submit();
@@ -164,7 +167,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     private _handleExternalAuth() {
         const extAuthValue: string = this.prepareData.rec[this.externalAuth.commonKey];
         const extAuthValues: string[] = (extAuthValue && extAuthValue.split(',')) || [];
-        if (extAuthValue.split(',').indexOf('1') !== -1) {
+        if (extAuthValue && extAuthValue.split(',').indexOf('1') !== -1) {
             this.externalAuthHide = !extAuthValue;
         }
         this.externalAuth.auths.forEach((extAuth) => {
