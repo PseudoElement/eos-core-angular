@@ -10,7 +10,7 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, S
     id: 'broadcast-channel',
     apiInstance: 'SEV_CHANNEL',
     visible: true,
-    iconName: 'eos-icon-move-2d-blue',
+    iconName: 'eos-adm-icon-move-2d-blue',
     keyField: 'ISN_LCLASSIF',
     defaultOrder: 'CHANNEL_TYPE',
     title: 'Каналы передачи сообщений',
