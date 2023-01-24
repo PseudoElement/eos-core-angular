@@ -116,7 +116,7 @@
 
 .tooltip {
     opacity: 1 !important;
-    // z-index: 1045;
+    z-index: 1101;
     word-break: break-word;
     &.word-break {
         word-break: normal;
@@ -133,7 +133,7 @@
 }
 
 .modal-container .tooltip {
-    z-index: 1070;
+    z-index: 1101;
 }
 
 .tooltip.tooltip-info.no-arrow {
