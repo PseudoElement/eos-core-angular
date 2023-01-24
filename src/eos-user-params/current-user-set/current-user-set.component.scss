@@ -271,7 +271,7 @@ $horizontal-line-color-CB: #c4c4c4;
 
 //выпадака реализованная в виде портала
 bs-dropdown-container {
-    span.eos-adm-icon.eos-adm-icon-checkbox-blue {
+    span.eos-adm-icon.eos-adm-icon-checkbox-grey {
         background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
         transform: rotate(270deg);
     }
@@ -597,7 +597,7 @@ bs-dropdown-container {
                             top: 2px;
                         }
 
-                        span.eos-adm-icon-checkbox-blue {
+                        span.eos-adm-icon-checkbox-grey {
                             background-image: url("assets/icons/Checkbox-UserSettings-Grey.svg");
                         }
 

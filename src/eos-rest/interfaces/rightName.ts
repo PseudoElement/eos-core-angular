@@ -41,9 +41,10 @@ export enum E_TECH_RIGHT {
     StatPrjPor = 40, // Статусы проекта поручения
     FileType = 41, // Типы файлов
     // @stub157113 открыть при готовности бэка
-    FileCategories = 42, // Категории файлов
+    FileCategories = 43, // Категории файлов
     BackgroundTasks = 48, // Фоновые задачи
     MedoNode = 50, // Справочники МЭДО
+    FormatSave = 49, // Форматы сохранения
     DocumentTypes = 51, // Виды документов
 }
 

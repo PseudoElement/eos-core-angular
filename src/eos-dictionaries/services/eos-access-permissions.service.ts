@@ -231,7 +231,9 @@ export class EosAccessPermissionsService {
             if (dt.id === TYPE_DOCUM_DICT.id) {
                 return this.checkAccessTech(E_TECH_RIGHT.DocumentTypes) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
             }
-
+            if (dt.id === TYPE_DOCUM_DICT.id) {
+                return this.checkAccessTech(E_TECH_RIGHT.DocumentTypes) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            }
             // проверить дерево USER_TECH
             if (grant && dt.listedUT && due) {
                 return this._userTechListGranted(dt.tech, due);
@@ -239,9 +241,7 @@ export class EosAccessPermissionsService {
             return grant ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
         if (dictId === FORMAT_DICT.id) {
-            if (this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'] && this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'][1] === '1') {
-                return APS_DICT_GRANT.readwrite;
-            }
+            return this.checkAccessTech(E_TECH_RIGHT.FormatSave) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
         if (dictId === MEDO_NODE_DICT.id) {
             return APS_DICT_GRANT.readwrite;
