@@ -3902,23 +3902,26 @@ export interface FILE_TYPE_CL {
     UPD_DATE: string;
 }
 
-export interface FILE_CATEGORY_CL {
-    ISN_LCLASSIF: number;
-    NAME: string;
-    NOTE: string;
-    PROTECTED: number;
-    WEIGHT: number;
-    ISN_NODE_DG: number;
-    ISN_PERSON: number;
-    ISN_WHO: number;
-    ISN_DATE: number;
-    UPD_WHO: string;
-    UPD_DATE: string;
-    DELETED: number;
-}
 export interface MEDO_PARTICIPANT {
     ISN_ORGANIZ: number;
     GATE: string;
     GATE_ID: string;
     MSGFORMAT: string;
 }
+
+export interface IDG_FILE_CATEGORY {
+    ISN_NODE_DG: number;
+    ISN_FILE_CATEGORY: number;
+    DUE_NODE_DG: string;
+}
+
+export interface FILE_CATEGORY_CL extends IEnt, IStamp {
+    ISN_LCLASSIF: number;
+    NAME: string;
+    NOTE: string;
+    PROTECTED: number;
+    WEIGHT: number;
+    DG_FILE_CATEGORY_List: IDG_FILE_CATEGORY[];
+    DELETED: number;
+}
+

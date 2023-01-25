@@ -440,6 +440,21 @@
         transition: 0ms;
         transform: rotate(90deg);
     }
+    &.eos-adm-icon-category-doc-black {
+        background-image: url("../assets/icons/Category-Doc-Black.svg");
+    }
+    &.eos-adm-icon-category-doc-blue {
+        background-image: url("../assets/icons/Category-Doc-Blue.svg");
+    }
+    &.eos-adm-icon-category-dark-doc-blue {
+        background-image: url("../assets/icons/Category-Doc-Dark-Blue.svg");
+    }
+    &.eos-adm-icon-category-doc-grey {
+        background-image: url("../assets/icons/Category-Doc-Grey.svg");
+    }
+    &.eos-adm-icon-category-doc-white {
+        background-image: url("../assets/icons/Category-Doc-White.svg");
+    }
     &.eos-adm-icon-pin-blue {
         background-image: url("../assets/icons/Pin-Blue.svg");
     }
