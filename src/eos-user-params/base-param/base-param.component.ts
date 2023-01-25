@@ -937,6 +937,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (ids) {
             OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
         }
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 this._setDepartment(data);
