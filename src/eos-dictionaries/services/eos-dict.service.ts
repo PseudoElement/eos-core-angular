@@ -434,10 +434,6 @@ export class EosDictService {
         }
     }
 
-    unbindDocGroups() {
-        this.currentDictionary.unbindDocGroups();
-    }
-
     bindDocGroups(dues: string) {
         if (dues && this.currentDictionary) {
             return this.currentDictionary.bindDocGroups(dues);

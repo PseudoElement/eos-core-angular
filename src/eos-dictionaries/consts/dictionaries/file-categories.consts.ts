@@ -1,13 +1,6 @@
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { E_DICT_TYPE, IFieldPreferences, IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
-import {ISelectOption} from 'eos-common/interfaces';
-
-export const DELETED_VALUES: ISelectOption[] = [
-    {value: null, title: 'Не указан'},
-    {value: 1, title: 'Да'},
-    {value: 0, title: 'Нет'}
-];
 
 export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
     id: 'file-category',
@@ -15,10 +8,10 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
     dictType: E_DICT_TYPE.linear,
     title: 'Категории файлов',
     visible: true,
-    iconName: 'eos-adm-icon-folder-blue',
+    iconName: 'eos-adm-icon-category-doc-blue',
     defaultOrder: 'WEIGHT',
-    actions: ['add', 'edit', 'remove', 'showDeleted', 'restore', 'userOrder',  'userOrderCut', 'userOrderPaste', 'view', 'tableCustomization',
-              'export', 'import', 'protViewSecurity', 'removeHard', 'markRecords', 'quickSearch', 'fullSearch'],
+    actions: ['add', 'edit', 'remove', 'showDeleted', 'restore', 'userOrder', 'userOrderCut', 'userOrderPaste', 'view', 'tableCustomization',
+        'export', 'import', 'protViewSecurity', 'removeHard', 'markRecords', 'quickSearch', 'fullSearch'],
     keyField: 'ISN_LCLASSIF',
     fields: [
         {
@@ -32,6 +25,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
             title: 'Название',
             length: 200,
             isUnique: true,
+            required: true,
             pattern: NOT_EMPTY_STRING,
             preferences: <IFieldPreferences>{
                 minColumnWidth: 200,
@@ -47,24 +41,11 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
         {
             key: 'WEIGHT',
             type: 'number',
-            title: 'Название',
+            title: 'Вес',
             length: 200,
         },
         {
-            key: 'DG_FILE_CATEGORY.ISN_NODE_DG',
-            type: 'dictionary[]',
-            dictionaryId: 'DG_FILE_CATEGORY',
-            title: '',
-            required: true,
-            dictionaryLink: {
-                pk: 'ISN_NODE_DG',
-                fk: 'ISN_FILE_CATEGORY',
-                label: '',
-            },
-            options: []
-        },
-        {
-            key: 'DG_NAMES',
+            key: 'DOC_GROUP_NAMES',
             type: 'string',
             title: 'Группы документов',
             preferences: <IFieldPreferences>{
@@ -113,18 +94,16 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
         {
             key: 'DELETED',
             title: 'Удален',
-            type: 'select',
-            options: DELETED_VALUES
-
+            type: 'boolean',
         },
-   ],
-   searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
-    editFields: ['NAME', 'NOTE', 'DG_NAMES'],
+    ],
+    searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
+    editFields: ['NAME', 'NOTE', 'DOC_GROUP_NAMES'],
     searchFields: ['NAME'],
-    quickViewFields: ['NAME', 'DG_NAMES', 'NOTE'],
-    shortQuickViewFields: ['ISN_LCLASSIF'],
-    listFields: ['NAME',  'DG_NAMES', 'NOTE'],
-    allVisibleFields: ['NAME', 'NOTE', 'WEIGHT', 'DG_NAMES', 'INS_PERSON', 'PROTECTED', 'INS_DATE', 'INS_WHO', 'UPD_DATE', 'UPD_WHO', 'DELETED'],
-    treeFields: ['ISN_LCLASSIF'],
-    fullSearchFields: ['NAME', 'NOTE', 'DG_NAMES']
+    treeFields: ['NAME'],
+    quickViewFields: ['NAME', 'DOC_GROUP_NAMES', 'NOTE'],
+    shortQuickViewFields: ['NAME'],
+    listFields: ['NAME', 'DOC_GROUP_NAMES', 'NOTE'],
+    allVisibleFields: ['NAME', 'NOTE', 'DOC_GROUP_NAMES'],
+    fullSearchFields: ['NAME', 'NOTE', 'DOC_GROUP_NAMES']
 };

@@ -13,29 +13,26 @@
             <label [ngClass]="{'unimportant-text': !editMode }">Группа документов</label>
             <div style="position: relative;">
                 <span class="pull-left" style="margin-right: 0; width: 100%;">
-                    <input class="input-style" readonly type="text" [value]="docGroupsName">
-                    <span
-                        container="body"
-                        placement="bottom"
-                        containerClass="tooltip-info"
-                        [tooltip]="editMode ? 'Выбрать' : null"
-                        triggers="hover"
-                        class="action eos-adm-icon  grif-icon-directory"
-                        [ngClass]="{'eos-adm-icon-directory-book-blue': editMode, 'eos-adm-icon-directory-book-grey': !editMode}"
-                        (click)="selectDocGroup()">
-                    </span>
-                    <span
-                    container="body"
-                    placement="bottom"
-                    containerClass="tooltip-info"
-                    tooltip="Удалить"
-                    (click)="unbindDocGroup()"
-                    triggers="hover"
-                    *ngIf="editMode"
-                    class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" ></span>
+                    <input class="input-style" readonly type="text" [value]="inputs['rec.DOC_GROUP_NAMES'].value" placeholder="...">
+                <span
+                container="body"
+                placement="bottom"
+                containerClass="tooltip-info"
+                triggers="hover"
+                tooltip="Выбрать"
+                *ngIf="editMode" class="action eos-adm-icon eos-adm-icon-directory-book-blue grif-icon-directory"  (click)="selectDocGroup()">
                 </span>
-
-
+                <span
+                container="body"
+                placement="bottom"
+                containerClass="tooltip-info"
+                triggers="hover"
+                tooltip="Удалить"
+                *ngIf="editMode "
+                class="action eos-adm-icon eos-adm-icon-close-blue delet-icon-directory small"
+                (click)="clearDocGroup()"></span>
+                                    
+                </span>
             </div>
         </div>
     <div class="clearfix"></div>
