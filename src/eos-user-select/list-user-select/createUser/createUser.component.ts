@@ -187,7 +187,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 if (this.initDue) {
                     this.data['dueDL'] = this.initDue;
                     this._userParamSrv.getDepartmentFromUser([this.initDue]).then((dt) => {
-                        this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME']);
+                        this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME'], {emitEvent: false});
                     });
                 }
                 if (this.initLogin) {
