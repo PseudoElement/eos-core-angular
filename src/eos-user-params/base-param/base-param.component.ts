@@ -28,6 +28,7 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT, CONFIRM_UNAVAILABLE_SYSTEMS } from 'eos-dictionaries/consts/confirm.consts';
 
+const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 @Component({
     selector: 'eos-params-base-param',
     templateUrl: './base-param.component.html'
@@ -75,7 +76,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
     private _defaultDepDue: string;
     private _sysParamsDueOrganiz: string = undefined;
-    private _dueDepNameSubscription: Subscription;
     private _searchLexem: string = '';
     private _depDueLinkOrg: string = undefined;
 
@@ -916,19 +916,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     });
                 }
                 this.dueDepName = dep['CLASSIF_NAME'];
-                this._dueDepNameSubscription.unsubscribe();
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
-                this.formControls.get('DUE_DEP_NAME').setValue(dep['CLASSIF_NAME']); // @task161934 - изменение значения в поле
+                this.formControls.get('DUE_DEP_NAME').setValue(dep['CLASSIF_NAME'], { emitEvent: false }); // @task161934 - изменение значения в поле
                 this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE']; // @task161934 - данные для записи в БД
-                this._setDueDepNameSubscription();
                 return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
                 this.isShell = false;
-                this._dueDepNameSubscription.unsubscribe();
-                this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem);
-                this._setDueDepNameSubscription();
+                this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem, { emitEvent: false });
             });
     }
 
@@ -1003,24 +999,25 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                             this.controls['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
                         }
                     });
-                    if (this.controls['DUE_DEP_NAME'].options.length > 1) { // нашелся всего один ДЛ
-                        this.controls['DUE_DEP_NAME'].dib.setFirstFocusedItem();
+                    // ставим активную первую запись @task161934 - в случае найденности чего либо
+                    if (this.controls['DUE_DEP_NAME'].options.length > 0 && this.controls['DUE_DEP_NAME'].options[0].due !== '-1') {
+                        this.controls['DUE_DEP_NAME'].dib.showDropDown();
                     }
                     this._idsForModalDictDep = [];
                     this._idsForModalDictDep = empItems.map(x => x.DUE);
                     if (this.controls['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
-                        if (this.curentUser.DUE_DEP !== empItems[0].DUE) {
-                            this._setDepartment(empItems[0].DUE);
-                        } else {
-                            this._dueDepNameSubscription.unsubscribe();
-                            this.formControls.get('DUE_DEP_NAME').patchValue(this.curentUser.DUE_DEP_NAME);
-                            this._setDueDepNameSubscription();
-                        }
+                        this._idsForModalDictDep = [empItems[0].DUE];
+                        this._setDepartment(empItems[0].DUE);
                     }
                 });
             } else {
-                this.controls['DUE_DEP_NAME'].options = [];
+                this.controls['DUE_DEP_NAME'].options = [{
+                    title: EMPTY_SEARCH_DL_RESULTS, value: EMPTY_SEARCH_DL_RESULTS, due: '-1',
+                    disabled: true
+                }];
+                this.controls['DUE_DEP_NAME'].dib.showDropDown();
             }
+
         }).catch(err => { throw err; });
     }
 
@@ -1134,11 +1131,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     private _setDueDepNameSubscription() {
-        this._dueDepNameSubscription = this.formControls.get('DUE_DEP_NAME').valueChanges
-            .pipe(
-                debounceTime(1200), takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(value => this._setDueDepName(value));
+        this.formControls.get('DUE_DEP_NAME').valueChanges
+        .pipe(
+            debounceTime(1200), takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(value => this._setDueDepName(value));
     }
 
     private _setDueDepName(value) {
@@ -1153,6 +1150,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 } else { // выбрали из выпадашки значение
                     const ITEM = this.controls['DUE_DEP_NAME'].options.filter(item => item.value === value);
                     const DUE: string = ITEM[0].due;
+                    this._idsForModalDictDep = [DUE];
                     this._setDepartment(DUE);
                 }
             } else {
