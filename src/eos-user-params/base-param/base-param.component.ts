@@ -225,6 +225,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
 
                 this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
+                this.inputs['DUE_DEP_NAME'].data = null;
                 this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
                 this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
 
