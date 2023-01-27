@@ -259,9 +259,9 @@ export class WaitClassifService {
             url += this.getSymbol(url) + `can_tech=${params.can_tech}`;
         }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
-        // if (params.criteriesSearch) {
-        //     url += '&criteries=note:' +  encodeURIComponent('Руководство');
-        // }
+        if (params.criteriesSearch) {
+             url += '&search_query=' +  encodeURIComponent(params.criteriesName);
+        }
         return url;
     }
 
