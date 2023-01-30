@@ -73,6 +73,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private modalRef: BsModalRef;
     private subscription: Subscription;
 
+    // блок автопоиска при выборе ДЛ
     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
     private _defaultDepDue: string;
     private _sysParamsDueOrganiz: string = undefined;
@@ -858,7 +859,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     handleShowDepartment() {
         if (this._idsForModalDictDep.length >= 1) {
-            this._showDepartment(this._idsForModalDictDep.join('|'));
+            this._showDepartment(this._idsForModalDictDep[0]);
         } else {
             this._showDepartment();
         }
@@ -931,10 +932,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     private _showDepartment(ids?: string) {
         this.isShell = true;
-        if (ids) {
-            OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
-        }
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        if (this._isFromList(this.formControls.get('DUE_DEP_NAME').value)) { // выбрано что-то из выпадашки
+            if (ids) {
+                OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
+            }
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
+        } else {  // просто задана лексема и значение не выбрано
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
+            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+            OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+
+        }
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 this._setDepartment(data);
@@ -1004,10 +1013,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (this.controls['DUE_DEP_NAME'].options.length > 0 && this.controls['DUE_DEP_NAME'].options[0].due !== '-1') {
                         this.controls['DUE_DEP_NAME'].dib.showDropDown();
                     }
-                    this._idsForModalDictDep = [];
-                    this._idsForModalDictDep = empItems.map(x => x.DUE);
+                    this._idsForModalDictDep = [empItems[0].DUE]; // передаем только один
                     if (this.controls['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
-                        this._idsForModalDictDep = [empItems[0].DUE];
                         this._setDepartment(empItems[0].DUE);
                     }
                 });
@@ -1017,8 +1024,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     disabled: true
                 }];
                 this.controls['DUE_DEP_NAME'].dib.showDropDown();
+                this._idsForModalDictDep = [];
             }
-
         }).catch(err => { throw err; });
     }
 
@@ -1133,10 +1140,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     private _setDueDepNameSubscription() {
         this.formControls.get('DUE_DEP_NAME').valueChanges
-        .pipe(
-            debounceTime(1200), takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(value => this._setDueDepName(value));
+            .pipe(
+                debounceTime(1200), takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(value => this._setDueDepName(value));
     }
 
     private _setDueDepName(value) {
@@ -1145,8 +1152,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._idsForModalDictDep = [];
         } else {
             if (this.controls['DUE_DEP_NAME'].options.length > 0) {
-                const VALUE_FROM_LIST: boolean = this.controls['DUE_DEP_NAME'].options.some(x => value === x.value);
-                if (!VALUE_FROM_LIST) { // запуск поиска по лексеме
+                if (!this._isFromList(value)) { // запуск поиска по лексеме
                     this.searchDL();
                 } else { // выбрали из выпадашки значение
                     const ITEM = this.controls['DUE_DEP_NAME'].options.filter(item => item.value === value);
@@ -1258,6 +1264,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 });
         }
         return Promise.resolve(true);
+    }
+
+    private _isFromList(value: string): boolean {
+        return this.controls['DUE_DEP_NAME'].options.some(x => value === x.value);
     }
 
 }

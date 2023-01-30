@@ -567,10 +567,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     if (this.inputs['DUE_DEP_NAME'].options.length > 0 && this.inputs['DUE_DEP_NAME'].options[0].due !== '-1') {
                         this.inputs['DUE_DEP_NAME'].dib.showDropDown();
                     }
-                    this._idsForModalDictDep = [];
-                    this._idsForModalDictDep = empItems.map(x => x.DUE);
+                    this._idsForModalDictDep = [empItems[0].DUE];
                     if (this.inputs['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
-                        this._idsForModalDictDep = [empItems[0].DUE];
                         this._setDepartment(empItems[0].DUE);
                     }
                 });
@@ -580,6 +578,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     disabled: true
                 }];
                 this.inputs['DUE_DEP_NAME'].dib.showDropDown();
+                this._idsForModalDictDep = [];
             }
         }).catch(err => { throw err; });
     }
@@ -640,10 +639,17 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private _showDepartment(ids?: string) {
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
-        if (ids) {
-            OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
-        }
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        if (this._isFromList(this._searchLexem)) { // выбрано что-то из выпадашки
+            if (ids) {
+                OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
+            }
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
+        } else {  // просто задана лексема и значение не выбрано
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
+            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+            OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        }
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 this._setDepartment(data);
@@ -770,8 +776,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._idsForModalDictDep = [];
         } else {
             if (this.inputs['DUE_DEP_NAME'].options.length > 0) {
-                const VALUE_FROM_LIST: boolean = this.inputs['DUE_DEP_NAME'].options.some(x => value === x.value);
-                if (!VALUE_FROM_LIST) { // запуск поиска по лексеме
+                if (!this._isFromList(value)) { // запуск поиска по лексеме
                     this.searchDL();
                 } else { // выбрали из выпадашки значение
                     const ITEM = this.inputs['DUE_DEP_NAME'].options.filter(item => item.value === value);
@@ -783,6 +788,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.searchDL();
             }
         }
+    }
+
+    private _isFromList(value: string): boolean {
+        return this.inputs['DUE_DEP_NAME'].options.some(x => value === x.value);
     }
 
 }
