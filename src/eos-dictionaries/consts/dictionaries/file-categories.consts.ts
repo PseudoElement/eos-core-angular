@@ -47,7 +47,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
         {
             key: 'DOC_GROUP_NAMES',
             type: 'string',
-            title: 'Группы документов',
+            title: 'Группa документов',
             preferences: <IFieldPreferences>{
                 minColumnWidth: 300,
             }
