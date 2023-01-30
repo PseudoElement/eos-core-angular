@@ -77,7 +77,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private _defaultDepDue: string;
     private _sysParamsDueOrganiz: string = undefined;
     private _depDueLinkOrg: string = undefined;
-    private _dueDepNameSubscription: Subscription;
     private _searchLexem: string = '';
 
     constructor(
@@ -416,7 +415,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     selectDepartment(status) {
         if (status) {
-            this._showDepartment();
+            this.showDepartment();
         }
     }
     delSelectUser($event?) { // удаление от кого копировать
@@ -475,15 +474,34 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         }
     }
 
-    handleShowDepartment() {
-        if (this.inputs['DUE_DEP_NAME'].options.length === 0) {
-            this._idsForModalDictDep = [];
+    showDepartment() {
+        const ITEM = this._getCurrentItem();
+        const FOCUSED_ITEM_DUE = ITEM[0].due;
+        if (this._idsForModalDictDep.length > 0) {
+            if (this._idsForModalDictDep[0] !== FOCUSED_ITEM_DUE) {
+                this._idsForModalDictDep[0] = FOCUSED_ITEM_DUE;
+              }
         }
-        if (this._idsForModalDictDep.length >= 1) {
-            this._showDepartment(this._idsForModalDictDep.join('|'));
-        } else {
-            this._showDepartment();
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        if (this._isFromList(this._searchLexem)) { // выбрано что-то из выпадашки
+            if (this._idsForModalDictDep.length > 0) {
+                OPEN_CLASSIF_DEPARTMENT['selected'] = this._idsForModalDictDep[0];
+            }
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
+        } else {  // просто задана лексема и значение не выбрано
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
+            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
         }
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
     }
 
     private _urlSegment(): string {
@@ -568,9 +586,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.inputs['DUE_DEP_NAME'].dib.showDropDown();
                     }
                     this._idsForModalDictDep = [empItems[0].DUE];
-                    if (this.inputs['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
-                        this._setDepartment(empItems[0].DUE);
-                    }
                 });
             } else {
                 this.inputs['DUE_DEP_NAME'].options = [{
@@ -620,42 +635,15 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.isShell = false;
                 this.departmentData = dep;
                 this.data['dueDL'] = dep['DUE'];
-                this._dueDepNameSubscription.unsubscribe();
-                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME'], {emitEvent: false});
                 this._searchLexem = dep['CLASSIF_NAME'];
                 if (!!this.departmentData.UNREAD_FLAG) {
                     this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
                     this.form.controls['USER_COPY'].patchValue('', { emitEvent: false });
                 }
-                this._setDueDeNameSubscription();
             }).catch(() => {
                 this.isShell = false;
-                this._dueDepNameSubscription.unsubscribe();
-                this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue(this._searchLexem);
-                this._setDueDeNameSubscription();
-            });
-    }
-
-    private _showDepartment(ids?: string) {
-        this.isShell = true;
-        OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
-        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
-        if (this._isFromList(this._searchLexem)) { // выбрано что-то из выпадашки
-            if (ids) {
-                OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
-            }
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
-        } else {  // просто задана лексема и значение не выбрано
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
-            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
-            OPEN_CLASSIF_DEPARTMENT['selected'] = '';
-        }
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
-            .then((data: string) => {
-                this._setDepartment(data);
-            })
-            .catch(() => {
-                this.isShell = false;
+                this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue(this._searchLexem, { emitEvent: false });
             });
     }
 
@@ -763,7 +751,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     private _setDueDeNameSubscription() {
-        this._dueDepNameSubscription = this.form.get(this.inputs['DUE_DEP_NAME'].key).valueChanges
+        this.form.get(this.inputs['DUE_DEP_NAME'].key).valueChanges
             .pipe(
                 debounceTime(1200), takeUntil(this.ngUnsubscribe)
             )
@@ -780,9 +768,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this.searchDL();
                 } else { // выбрали из выпадашки значение
                     const ITEM = this.inputs['DUE_DEP_NAME'].options.filter(item => item.value === value);
-                    const DUE: string = ITEM[0].due;
-                    this._idsForModalDictDep = [DUE];
-                    this._setDepartment(DUE);
+                    this._idsForModalDictDep = [ITEM[0].due];
+                    this._setDepartment(ITEM[0].due);
                 }
             } else {
                 this.searchDL();
@@ -792,6 +779,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     private _isFromList(value: string): boolean {
         return this.inputs['DUE_DEP_NAME'].options.some(x => value === x.value);
+    }
+
+    private _getCurrentItem() {
+        return this.inputs['DUE_DEP_NAME'].options.filter(x => this.form.get(this.inputs['DUE_DEP_NAME'].key).value === x.value);
     }
 
 }

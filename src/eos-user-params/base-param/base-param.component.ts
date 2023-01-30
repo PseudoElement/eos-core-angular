@@ -857,14 +857,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
 
-    handleShowDepartment() {
-        if (this._idsForModalDictDep.length >= 1) {
-            this._showDepartment(this._idsForModalDictDep[0]);
-        } else {
-            this._showDepartment();
-        }
-    }
-
     searchDL() {
         this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
         if (this._defaultDepDue.length > 0) {
@@ -873,6 +865,29 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._searchDLinSysParamsOrg();
         }
     }
+
+    showDepartment() {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        if (this._isFromList(this.formControls.get('DUE_DEP_NAME').value)) { // выбрано что-то из выпадашки
+            if (this._idsForModalDictDep.length > 0) {
+                OPEN_CLASSIF_DEPARTMENT['selected'] = this._idsForModalDictDep[0];
+            }
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
+        } else {  // просто задана лексема и значение не выбрано
+            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
+            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+        }
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
+    }
+
 
     private _searchDLinSysParamsOrg() {
         this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
@@ -927,29 +942,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .catch(() => {
                 this.isShell = false;
                 this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem, { emitEvent: false });
-            });
-    }
-
-    private _showDepartment(ids?: string) {
-        this.isShell = true;
-        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
-        if (this._isFromList(this.formControls.get('DUE_DEP_NAME').value)) { // выбрано что-то из выпадашки
-            if (ids) {
-                OPEN_CLASSIF_DEPARTMENT['selected'] = ids;
-            }
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
-        } else {  // просто задана лексема и значение не выбрано
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
-            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
-            OPEN_CLASSIF_DEPARTMENT['selected'] = '';
-
-        }
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
-            .then((data: string) => {
-                this._setDepartment(data);
-            })
-            .catch(() => {
-                this.isShell = false;
             });
     }
 
@@ -1014,9 +1006,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         this.controls['DUE_DEP_NAME'].dib.showDropDown();
                     }
                     this._idsForModalDictDep = [empItems[0].DUE]; // передаем только один
-                    if (this.controls['DUE_DEP_NAME'].options.length === 1) { // нашелся всего один ДЛ
-                        this._setDepartment(empItems[0].DUE);
-                    }
                 });
             } else {
                 this.controls['DUE_DEP_NAME'].options = [{
