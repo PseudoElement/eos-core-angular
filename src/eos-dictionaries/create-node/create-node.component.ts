@@ -73,9 +73,8 @@ export class CreateNodeComponent {
      */
     public create(hide = true) {
 
-
         if (!this.formIsValid) {
-            this._windowInvalidSave();
+            if (this.dictionaryId !== 'file-category') {this._windowInvalidSave(); }
             return;
         }
 
