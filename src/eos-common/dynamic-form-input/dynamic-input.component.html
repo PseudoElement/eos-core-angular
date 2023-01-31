@@ -60,7 +60,8 @@
                 [inputTooltip]="tooltip"
                 (onControlBlur)="onControlBlur.emit($event)"
                 (onControlFocus)="onControlFocus.emit($event)"
-                (onClickDict)="onClickDict.emit($event)"
+                (onClickChoose)="onClickChoose.emit($event)"
+                (onEnterSearchEmptyResults)="onEnterSearchEmptyResults.emit($event)"
             ></eos-dynamic-input-autosearch>
             <eos-dynamic-input-checkbox
                 *ngSwitchCase="types.boolean"

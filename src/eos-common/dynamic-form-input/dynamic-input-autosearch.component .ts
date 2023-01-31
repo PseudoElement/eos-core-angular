@@ -12,7 +12,8 @@ const LI_HEIGHT = 20;
 export class DynamicInputAutoSearchComponent extends DynamicInputBase implements OnChanges, OnDestroy {
     @Output() buttonClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() buttonClickRemove: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onClickDict: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onEnterSearchEmptyResults: EventEmitter<any> = new EventEmitter<any>();
     @Input() container: string;
     @Input() dropup: boolean;
     @Input() height: number;
@@ -117,10 +118,12 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
     }
 
     selectAction(e: MouseEvent, item: any, params?: any) {
-        if (item.value === '') {
-            this.control.setValue(null);
-        } else {
-            this.control.setValue(String(item.value));
+        if (item) {
+            if (item.value === '') {
+                this.control.setValue(null);
+            } else {
+                this.control.setValue(String(item.value));
+            }
         }
         this._dropDown.hide();
         if (AppContext.isIE()) {
@@ -169,9 +172,13 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
             case 'Down': this._hoverNext(); break;
             case 'ArrowUp':
             case 'Up': this._hoverPrev(); break;
-            case 'Enter': if (this._dropDown.isOpen) {
-                this.selectAction(null, this.focusedItem);
-                this._dropDown.hide();
+            case 'Enter': if (this._isEmptyResults()) {
+                this.onEnterSearchEmptyResults.emit();
+            } else {
+                if (this._dropDown.isOpen) {
+                    this.selectAction(null, this.focusedItem);
+                    this._dropDown.hide();
+                }
             }
         }
     }
@@ -189,6 +196,10 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBase implements
                 this._dropDown.show();
             }
         }
+    }
+
+    private _isEmptyResults(): boolean {
+        return (this.input.options.length === 1 && this.input.options[0].due === '-1');
     }
 
     private _hoverNext(): any {

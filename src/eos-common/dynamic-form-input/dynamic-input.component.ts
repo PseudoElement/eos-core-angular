@@ -50,7 +50,10 @@ export class DynamicInputComponent {
     @Input() placement: string; // используется для даты чтобы можно было указать в какую сторону открывать выпадашку
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onClickDict: EventEmitter<any> = new EventEmitter<any>();
+
+    // для контрола контекстного поиска в карточке пользователя
+    @Output() onClickChosse: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onEnterSearchEmptyResults: EventEmitter<any> = new EventEmitter<any>();
 
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
