@@ -155,6 +155,9 @@
              width: 250px;
              margin-left: 33px;
              display: inline-block;
+             .readonly{
+                padding: 0 !important;
+             }
          }
          .base-text-input {
         //    width: 250px;
