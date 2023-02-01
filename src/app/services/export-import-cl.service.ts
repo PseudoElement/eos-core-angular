@@ -5,8 +5,8 @@ declare function openPopup(url: string, callback?: Function): boolean;
 
 @Injectable()
 export class ExportImportClService {
-    EXPORT_VIEW_URL: string = '../MRExportImportCL/Pages/Export.aspx?';
-    IMPORT_VIEW_URL: string = '../MRExportImportCL/Pages/Import.aspx?';
+    EXPORT_VIEW_URL: string = '../ExportImport.WebPlugin/export.html?';
+    IMPORT_VIEW_URL: string = '../ExportImport.WebPlugin/import.html?';
 
     constructor(
         protected apiSrv: PipRX
