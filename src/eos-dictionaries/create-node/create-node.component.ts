@@ -73,9 +73,7 @@ export class CreateNodeComponent {
      */
     public create(hide = true) {
 
-
         if (!this.formIsValid) {
-            this._windowInvalidSave();
             return;
         }
 

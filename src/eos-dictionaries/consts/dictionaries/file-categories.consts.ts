@@ -25,6 +25,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
             title: 'Название',
             length: 200,
             isUnique: true,
+            uniqueInDict: true,
             required: true,
             pattern: NOT_EMPTY_STRING,
             preferences: <IFieldPreferences>{
