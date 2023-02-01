@@ -48,7 +48,7 @@ function eiCl(id: any) {
 }
 
 function openExport(dictionaryId: string) {
-    const URL = `../MRExportImportCL/Pages/Export.aspx?id=${dictionaryId}`;
+    const URL = `../ExportImport.WebPlugin/export.html?id=${dictionaryId}`;
     if (OPENED_WINDOW.EXPORT && !OPENED_WINDOW.EXPORT.closed) {
         OPENED_WINDOW.EXPORT.focus();
     } else {
@@ -58,7 +58,7 @@ function openExport(dictionaryId: string) {
 }
 
 function openImport(dictionaryId: string, nodeId: string) {
-    const URL = `../MRExportImportCL/Pages/Import.aspx?id=${dictionaryId}&due=${nodeId}`;
+    const URL = `../ExportImport.WebPlugin/import.html?id=${dictionaryId}&due=${nodeId}`;
     if (OPENED_WINDOW.IMPORT && !OPENED_WINDOW.IMPORT.closed) {
         OPENED_WINDOW.IMPORT.focus();
     } else {
