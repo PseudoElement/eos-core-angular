@@ -186,7 +186,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 if (this.initDue) {
                     this.data['dueDL'] = this.initDue;
                     this._userParamSrv.getDepartmentFromUser([this.initDue]).then((dt) => {
-                        this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME'], {emitEvent: false});
+                        this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME'], { emitEvent: false });
                     });
                 }
                 if (this.initLogin) {
@@ -415,7 +415,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     selectDepartment(status) {
         if (status) {
-            this.showDepartment();
+            this.showDepChoose();
         }
     }
     delSelectUser($event?) { // удаление от кого копировать
@@ -474,13 +474,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         }
     }
 
-    showDepartment() {
+    showDepChoose() {
         const ITEM = this._getCurrentItem();
         const FOCUSED_ITEM_DUE = ITEM[0].due;
         if (this._idsForModalDictDep.length > 0) {
             if (this._idsForModalDictDep[0] !== FOCUSED_ITEM_DUE) {
                 this._idsForModalDictDep[0] = FOCUSED_ITEM_DUE;
-              }
+            }
         }
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
@@ -502,6 +502,23 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             .catch(() => {
                 this.isShell = false;
             });
+    }
+
+    showDepChooseEmpty() {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
+        OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
+
     }
 
     private _urlSegment(): string {
@@ -635,7 +652,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.isShell = false;
                 this.departmentData = dep;
                 this.data['dueDL'] = dep['DUE'];
-                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME'], {emitEvent: false});
+                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME'], { emitEvent: false });
                 this._searchLexem = dep['CLASSIF_NAME'];
                 if (!!this.departmentData.UNREAD_FLAG) {
                     this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });

@@ -24,7 +24,7 @@
     </div>
     <div [ngClass]="{'flex-wr': !cbBase}">
         <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['DUE_DEP_NAME']"
-            [form]="form" [disabled]="isTechUser" (onClickDict)="showDepartment()"></eos-dynamic-input>
+            [form]="form" [disabled]="isTechUser" (onClickDict)="showDepChoose()" (onEnterSearchEmptyResults)="showDepChooseEmpty()" ></eos-dynamic-input>
         <eos-dynamic-input *ngIf="!cbBase" class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']"
             [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>

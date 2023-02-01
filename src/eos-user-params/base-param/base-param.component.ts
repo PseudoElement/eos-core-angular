@@ -866,7 +866,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
 
-    showDepartment() {
+    showDepChoose() {
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         OPEN_CLASSIF_DEPARTMENT['selected'] = '';
@@ -888,6 +888,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             });
     }
 
+    showDepChooseEmpty() {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
+        OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
+    }
 
     private _searchDLinSysParamsOrg() {
         this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;

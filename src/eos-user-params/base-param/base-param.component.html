@@ -39,7 +39,8 @@
                 [form]="formControls"
                 [readonly]="!editMode"
                 [disabled]="isTechUser"
-                (onClickDict)="showDepartment()"
+                (onDepChoose)="showDepChoose()"
+                (onEnterSearchEmptyResults)="showDepChooseEmpty()"
         ></eos-dynamic-input>
         </div>
 
