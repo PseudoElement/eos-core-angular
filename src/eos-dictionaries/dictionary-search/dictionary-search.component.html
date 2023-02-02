@@ -50,9 +50,7 @@
     </div>
     <div class="full-search-settings-container usual-border">
         <div *ngIf="visibleBranchOptions()">
-            <label class="radio-inline"><input type="radio" name="full-space" [value]="0" [(ngModel)]="mode"><span></span><span class="m-font">Во всём справочнике</span></label>
-            <label class="radio-inline"><input type="radio" name="full-space" [value]="1" [(ngModel)]="mode"><span></span><span class="m-font">В текущей ветке</span></label>
-            <label class="radio-inline"><input type="radio" name="full-space" [value]="2" [(ngModel)]="mode"><span></span><span class="m-font">Текущая и подчиненные</span></label>
+            <label *ngFor="let but of radioTopButton" class="radio-inline"><input type="radio" name="full-space" [value]="but.value" [(ngModel)]="mode"><span></span><span class="m-font">{{but.title}}</span></label>
         </div>
         <div class="line" *ngIf="visibleDeletedOption()">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>

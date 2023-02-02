@@ -140,3 +140,32 @@ export const SEV_PARTIPANT = {
         }
     }
 };
+
+export const SEARCH_RADIO_BUTTON = [
+    {
+        title: 'Во всём справочнике',
+        value: 0
+    },
+    {
+        title: 'В текущей ветке',
+        value: 1
+    },
+    {
+        title: 'Текущая и подчиненные',
+        value: 2
+    }
+];
+export const SEARCH_RADIO_BUTTON_NOMENKL = [
+    {
+        title: 'Во всём справочнике',
+        value: 0
+    },
+    {
+        title: 'В текущем подразделении',
+        value: 1
+    },
+    {
+        title: 'В текущем и подчинённых',
+        value: 2
+    }
+];
