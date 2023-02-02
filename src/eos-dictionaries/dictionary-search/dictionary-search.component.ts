@@ -259,7 +259,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 select: {
                     foreignKey: 'select',
                     title: '',
-                    type: 17,
+                    type: 10,
                     options: [
                         { title: '...', value: '' },
                         ...options
@@ -361,7 +361,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 type: {
                     foreignKey: 'type',
                     title: '',
-                    type: 17,
+                    type: 10,
                     options: [
                         { title: '...', value: '' },
                         ...type.options
@@ -370,7 +370,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 kind: {
                     foreignKey: 'kind',
                     title: '',
-                    type: 17,
+                    type: 10,
                     options: [
                         { title: '...', value: '' },
                         ...kind.options
