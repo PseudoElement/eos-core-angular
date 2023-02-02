@@ -101,6 +101,7 @@ export const MEDO_NODE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
     fullSearchFields: ['NAME', 'DIRECTORY', 'NOTE'],
     quickViewFields: ['NAME', 'DIRECTORY', 'NOTE'],
     shortQuickViewFields: ['NAME'],
-    listFields: ['NAME', 'DIRECTORY', 'NOTE'],
-    allVisibleFields: ['NAME', 'DIRECTORY', 'NOTE'],
+    listFields: ['NAME'], // 'NAME' Замок в настройках столбцов
+    allVisibleFields: ['DIRECTORY', 'NOTE'],
+    fieldDefault: ['DIRECTORY', 'NOTE']
 });

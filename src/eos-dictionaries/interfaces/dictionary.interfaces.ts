@@ -160,6 +160,7 @@ export interface IDictionaryDescriptor {
     editOnlyNodes?: boolean;
     showDeleted?: boolean;
     openURL?: string;
+    fieldDefault?: string[]; // эти поля будут отображаться в правом стакане настроек отображения но только если пользователь сам не менял правый стакан
 }
 
 export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {

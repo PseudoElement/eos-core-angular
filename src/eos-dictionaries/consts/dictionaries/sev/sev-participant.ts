@@ -96,4 +96,5 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     fullSearchFields: ['CLASSIF_NAME', 'ADDRESS', 'rules', 'ISN_CHANNEL', 'SEV_PARTICIPANT', 'SEV_PARTICIPANT_RULE.ISN_RULE'],
     quickViewFields: ['NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'sev_partisipant', 'sev_rule', 'FILE_SYNC_DATE' ],
     searchFields: ['CLASSIF_NAME'],
+    fieldDefault: ['ISN_CHANNEL', 'CRYPT', 'FILE_SYNC_DATE']
 });

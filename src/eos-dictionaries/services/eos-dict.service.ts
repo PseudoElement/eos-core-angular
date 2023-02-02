@@ -209,7 +209,15 @@ export class EosDictService {
     }
 
     get customFields(): IFieldView[] {
-        const _storageData = this._storageSrv.getItem('customFieldsList');
+        let _storageData = this._storageSrv.getItem('customFieldsList');
+        if (_storageData && !_storageData[this.currentDictionary.id] && this.currentDictionary.descriptor.fieldDefault) {
+            _storageData[this.currentDictionary.id] = this.currentDictionary.descriptor.fieldDefault;
+            this._storageSrv.setItem('customFieldsList', _storageData, true);
+        } else if (!_storageData && this.currentDictionary.descriptor.fieldDefault) {
+            _storageData = {[this.currentDictionary.id]: this.currentDictionary.descriptor.fieldDefault};
+            this._storageSrv.setItem('customFieldsList', _storageData, true);
+        }
+
         const dictionary = this.currentDictionary;
         if (_storageData && dictionary) {
             this._customFields = _storageData;
