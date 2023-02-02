@@ -22,7 +22,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
         {
             key: 'NAME',
             type: 'string',
-            title: 'Название',
+            title: 'Наименование',
             length: 200,
             isUnique: true,
             uniqueInDict: true,
