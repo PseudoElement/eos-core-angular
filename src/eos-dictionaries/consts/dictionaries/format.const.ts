@@ -41,7 +41,7 @@ export const FORMAT_DICT: IDictionaryDescriptor = {
     iconName: 'eos-icon-directory-book-blue',
     defaultOrder: 'NOTE',
     actions: ['add', 'quickSearch', 'userOrder', 'restore', 'remove', 'showDeleted', 'markRecords', 'edit', 'view', 'removeHard',
-    'moveUp', 'moveDown'],
+    'moveUp', 'moveDown', 'userOrderCut', 'userOrderPaste'],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],
     fields: [
