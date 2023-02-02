@@ -135,7 +135,7 @@ export const SEV_PARTIPANT = {
         ISN_CHANNEL:  {
             foreignKey: 'ISN_CHANNEL',
             title: '',
-            type:  17,
+            type:  10,
             options: [],
         }
     }
