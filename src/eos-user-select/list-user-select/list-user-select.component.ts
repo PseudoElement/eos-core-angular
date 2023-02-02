@@ -34,6 +34,7 @@ import { SettingManagementComponent } from './setting-management/setting-managem
 import { FormGroup } from '@angular/forms';
 import { LIST_USER_CABINET } from 'eos-user-select/shered/consts/list-user.const';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
+import { ShowTooltipService } from 'app/services/add-tooltip.service';
 interface TypeBread {
     action: number;
 }
@@ -140,6 +141,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _srhSrv: SearchServices,
         private _appContext: AppContext,
         private _inputCtrlSrv: InputParamControlService,
+        public showTooltipService: ShowTooltipService
     ) {
 
     }

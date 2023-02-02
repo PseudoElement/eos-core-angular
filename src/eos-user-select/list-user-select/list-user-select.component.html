@@ -138,9 +138,17 @@
                                     <span *ngIf="user.blockedSystem && !user.deleted"
                                         class="eos-adm-icon eos-adm-icon-Blockeduser-Red  small"></span>
                                 </span>
-                                <span class="user-list-two-colomn" tooltip="{{user.fullDueName}}" [isDisabled]="user.fullDueName === '...'" [delay]="tooltipDelay" placement="bottom"
-                                    [ngClass]="{'last-tooltip' : last }" containerClass="tooltip-info"
-                                    container="body">
+                                <span 
+                                    #twoColomnElement
+                                    [isDisabled]="showTooltipService.someMethod(twoColomnElement, user.fullDueName)"
+                                    class="user-list-two-colomn"
+                                    tooltip="{{user.fullDueName}}"
+                                    [delay]="tooltipDelay"
+                                    placement="bottom"
+                                    [ngClass]="{'last-tooltip' : last }"
+                                    containerClass="tooltip-info"
+                                    container="body"
+                                >
                                     <span *ngIf="!user.deep"
                                         class="eos-adm-icon eos-adm-icon-Techuser-Grey small icon-user"></span>
                                     <span *ngIf="user.deep"
@@ -153,8 +161,16 @@
                                     class="eos-adm-icon eos-adm-icon-department-grey small icon-user"></span>...
                                 </span>
                                 <ng-template #depUser>
-                                    <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="bottom" 
-                                    containerClass="tooltip-info" container="body">{{user.department}}
+                                    <span 
+                                        [isDisabled]="showTooltipService.someMethod(firstColomnElement, user.department)"
+                                        class="user-list-first-colomn"
+                                        #firstColomnElement
+                                        tooltip="{{user.department}}"
+                                        placement="bottom"
+                                        containerClass="tooltip-info"
+                                        container="body"
+                                    >
+                                        {{user.department}}
                                     </span>
                                 </ng-template>
                             </div>
