@@ -74,7 +74,9 @@
         background-color: $button-color-main-theme;
     }
 }
-
+.not-disable-color {
+    opacity: 1 !important;
+}
 .highlighted {
     background: $highlight-color-main-theme;
     color: $secondary-font-color-main-theme;
