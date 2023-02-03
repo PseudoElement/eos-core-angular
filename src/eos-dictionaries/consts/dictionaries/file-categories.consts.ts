@@ -11,7 +11,7 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
     iconName: 'eos-adm-icon-category-doc-blue',
     defaultOrder: 'WEIGHT',
     actions: ['add', 'edit', 'remove', 'showDeleted', 'restore', 'userOrder', 'userOrderCut', 'userOrderPaste', 'view', 'tableCustomization',
-        'export', 'import', 'protViewSecurity', 'removeHard', 'markRecords', 'quickSearch', 'fullSearch'],
+        'export', 'import', 'protViewSecurity', 'removeHard', 'markRecords', 'quickSearch', 'fullSearch', 'moveUp', 'moveDown'],
     keyField: 'ISN_LCLASSIF',
     fields: [
         {
