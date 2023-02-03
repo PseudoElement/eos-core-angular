@@ -135,8 +135,37 @@ export const SEV_PARTIPANT = {
         ISN_CHANNEL:  {
             foreignKey: 'ISN_CHANNEL',
             title: '',
-            type:  17,
+            type:  10,
             options: [],
         }
     }
 };
+
+export const SEARCH_RADIO_BUTTON = [
+    {
+        title: 'Во всём справочнике',
+        value: 0
+    },
+    {
+        title: 'В текущей ветке',
+        value: 1
+    },
+    {
+        title: 'Текущая и подчиненные',
+        value: 2
+    }
+];
+export const SEARCH_RADIO_BUTTON_NOMENKL = [
+    {
+        title: 'Во всём справочнике',
+        value: 0
+    },
+    {
+        title: 'В текущем подразделении',
+        value: 1
+    },
+    {
+        title: 'В текущем и подчинённых',
+        value: 2
+    }
+];

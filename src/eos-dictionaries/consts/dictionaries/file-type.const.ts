@@ -6,13 +6,13 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
     id: 'filetype',
     apiInstance: 'FILE_TYPE_CL',
     dictType: E_DICT_TYPE.linear,
-    title: 'Типы файлов',
+    title: 'Типы файлов', /*  */
     visible: true,
     iconName: 'eos-adm-icon-folder-blue',
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'quickSearch', 'fullSearch', 'userOrder', 'userOrderCut', 'userOrderPaste', 'markRecords', 'moveUp', 'moveDown', 'showDeleted',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore',
-        'export', 'import', 'protViewSecurity'
+        'export', 'import', 'protViewSecurity', 'tableCustomization'
     ],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],
@@ -75,6 +75,7 @@ export const FILE_TYPE_DICT: IDictionaryDescriptor = {
     fullSearchFields: ['CLASSIF_NAME', 'TAG', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'TAG', 'UNIQUE_FLAG', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CLASSIF_NAME', 'UNIQUE_FLAG', 'TAG', 'NOTE'],
-    allVisibleFields: ['NOTE'],
+    listFields: ['CLASSIF_NAME'],
+    allVisibleFields: ['UNIQUE_FLAG', 'TAG', 'NOTE'],
+    fieldDefault: ['UNIQUE_FLAG', 'TAG', 'NOTE']
 };

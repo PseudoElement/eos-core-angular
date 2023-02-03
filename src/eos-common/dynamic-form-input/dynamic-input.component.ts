@@ -52,7 +52,7 @@ export class DynamicInputComponent {
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
 
     // для контрола контекстного поиска в карточке пользователя
-    @Output() onClickChosse: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() onEnterSearchEmptyResults: EventEmitter<any> = new EventEmitter<any>();
 
     types = E_FIELD_TYPE;

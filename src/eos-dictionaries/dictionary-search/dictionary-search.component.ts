@@ -14,7 +14,7 @@ import { IOpenClassifParams } from 'eos-common/interfaces';
 import { AR_DESCRIPT, PipRX } from 'eos-rest';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { DOP_REC, SEV_PARTIPANT } from 'eos-dictionaries/consts/dictionaries/_common';
+import { DOP_REC, SEARCH_RADIO_BUTTON, SEARCH_RADIO_BUTTON_NOMENKL, SEV_PARTIPANT } from '../../eos-dictionaries/consts/dictionaries/_common';
 import { FormGroup, Validators } from '@angular/forms';
 // import { PipRX } from 'eos-rest';
 
@@ -54,6 +54,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     public mode = 0;
     public formSearch: FormGroup;
     public inputs;
+    public radioTopButton = [];
     inputsSelect;
     formSelect: FormGroup;
     mapAr_Descr: Map<string, AR_DESCRIPT> = new Map();
@@ -95,6 +96,12 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 this.sevChanelAllToSelect = data;
                 this.initFormSevPartishion(this.dictionary.descriptor.record.getFullSearchFields);
             });
+        }
+        if (this.dictionary.descriptor.id === 'nomenkl') {
+            this.radioTopButton = SEARCH_RADIO_BUTTON_NOMENKL;
+            this.mode = 1;
+        } else {
+            this.radioTopButton = SEARCH_RADIO_BUTTON;
         }
     }
 
@@ -259,7 +266,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 select: {
                     foreignKey: 'select',
                     title: '',
-                    type: 17,
+                    type: 10,
                     options: [
                         { title: '...', value: '' },
                         ...options
@@ -361,7 +368,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 type: {
                     foreignKey: 'type',
                     title: '',
-                    type: 17,
+                    type: 10,
                     options: [
                         { title: '...', value: '' },
                         ...type.options
@@ -370,7 +377,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 kind: {
                     foreignKey: 'kind',
                     title: '',
-                    type: 17,
+                    type: 10,
                     options: [
                         { title: '...', value: '' },
                         ...kind.options

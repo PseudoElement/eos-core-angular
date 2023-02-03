@@ -88,7 +88,7 @@ const RECORD_ACTION_USER_SORT_CUT: IAction = {
     disabledIconClass: 'eos-adm-icon eos-adm-icon-scissors-grey small',
     activeIconClass: 'eos-adm-icon eos-adm-icon-scissors-white small',
     hoverIconClass: 'eos-adm-icon eos-adm-icon-scissors-white small',
-    buttonClass: null,
+    buttonClass: 'not-disable-color',
     accessNeed: APS_DICT_GRANT.read,
 };
 
@@ -101,7 +101,7 @@ const RECORD_ACTION_USER_SORT_PASTE: IAction = {
     disabledIconClass: 'eos-adm-icon eos-adm-icon-paste-grey small',
     activeIconClass: 'eos-adm-icon eos-adm-icon-paste-white small',
     hoverIconClass: 'eos-adm-icon eos-adm-icon-paste-white small',
-    buttonClass: null,
+    buttonClass: 'not-disable-color',
     accessNeed: APS_DICT_GRANT.read,
 };
 
@@ -112,9 +112,9 @@ const RECORD_ACTION_TO_UP: IAction = {
     hint: 'Поднять строку',
     iconClass: 'eos-adm-icon eos-adm-icon-arrow-v-blue-top small',
     disabledIconClass: 'eos-adm-icon eos-adm-icon-arrow-v-grey-top small',
-    activeIconClass: null,
+    activeIconClass: 'eos-adm-icon eos-adm-icon-arrow-v-white-top small',
     hoverIconClass: 'eos-adm-icon eos-adm-icon-arrow-v-dark-blue-top small',
-    buttonClass: null,
+    buttonClass: 'not-disable-color',
     accessNeed: APS_DICT_GRANT.read,
 };
 
@@ -125,9 +125,9 @@ const RECORD_ACTION_TO_DOWN: IAction = {
     hint: 'Опустить строку',
     iconClass: 'eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small',
     disabledIconClass: 'eos-adm-icon eos-adm-icon-arrow-v-grey-bottom small',
-    activeIconClass: null,
+    activeIconClass: 'eos-adm-icon eos-adm-icon-arrow-v-white-bottom small',
     hoverIconClass: 'eos-adm-icon eos-adm-icon-arrow-v-dark-blue-bottom small',
-    buttonClass: null,
+    buttonClass: 'not-disable-color',
     accessNeed: APS_DICT_GRANT.read,
 };
 
