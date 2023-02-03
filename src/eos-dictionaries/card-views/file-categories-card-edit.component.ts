@@ -16,7 +16,7 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
 
     get isDocGroup(): boolean {
-        return this.data.__relfield['DUE_NODE_DG'];
+        return !!this.data.rec['DOC_GROUP_NAMES'];
     }
 
     constructor(
@@ -53,7 +53,7 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
                         this._zone.run(() => this._bindDocGroups(dues));
                     }
                 })
-                    .catch(() => {
+                    .catch((err) => {
                     });
             });
         }
@@ -61,7 +61,7 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
 
     clearDocGroup() {
         if (this.isDocGroup) {
-            this.data.__relfield['DUE_NODE_DG'] = null;
+            this._bindDocGroups(null);
         } else {
             this._msgService.addNewMessage(WARN_NO_BINDED_DOCGROUP);
         }
@@ -83,9 +83,15 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
     }
 
     private _setDocGroupNames(docGroups) {
-        const NAMES = docGroups.map(item => item.CLASSIF_NAME);
-        this.inputs['rec.DOC_GROUP_NAMES'].value = NAMES.join(', ');
-        this.form.controls['rec.DOC_GROUP_NAMES'].patchValue(NAMES.join(', '));
+        if (docGroups) {
+            const NAMES = docGroups.map(item => item.CLASSIF_NAME);
+            this.inputs['rec.DOC_GROUP_NAMES'].value = NAMES.join(', ');
+            this.form.controls['rec.DOC_GROUP_NAMES'].patchValue(NAMES.join(', '));
+        } else {
+            this.inputs['rec.DOC_GROUP_NAMES'].value = null;
+            this.form.controls['rec.DOC_GROUP_NAMES'].patchValue(null);
+        }
+
     }
 
     private _updateForm(formChanges) {
