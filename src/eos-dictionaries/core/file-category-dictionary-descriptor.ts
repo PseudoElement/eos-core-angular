@@ -91,7 +91,7 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
                 RESTRICTED_DUES.push(DUE);
             }
         }
-        if (DUES_NODE_DG.length > 0) {
+        if (DUES_NODE_DG.length >= 0) {
             const CHANGE_LIST: any[] = [];
             for (const DUE of DUES_NODE_DG) {
                 if (!RESTRICTED_DUES.includes(DUE)) {
