@@ -106,5 +106,6 @@ export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
     shortQuickViewFields: ['NAME'],
     listFields: ['NAME'],
     allVisibleFields: ['NOTE', 'DOC_GROUP_NAMES'],
-    fullSearchFields: ['NAME', 'NOTE', 'DOC_GROUP_NAMES']
+    fullSearchFields: ['NAME', 'NOTE', 'DOC_GROUP_NAMES'],
+    fieldDefault: ['NAME', 'NOTE', 'DOC_GROUP_NAMES'],
 };
