@@ -1,5 +1,5 @@
 import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.component';
-import { Component, Injector, OnInit, OnChanges, SimpleChanges/* , NgZone  */} from '@angular/core';
+import { Component, Injector, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { PipRX, SEV_ASSOCIATION, SEV_RULE, SEV_PARTICIPANT_RULE } from '../../eos-rest';
 import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV } from 'eos-dictionaries/consts/messages.consts';
@@ -18,6 +18,8 @@ import { AppContext } from 'eos-rest/services/appContext.service';
     styleUrls: ['./sev-participant-card-edit.component.scss'],
 })
 export class SevParticipantCardEditComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+    @ViewChild('pop') pop;
+    @ViewChild('pop2') pop2;
     _logDeletOrg: boolean;
     _orgName: any;
     modalWindow: BsModalRef;
@@ -80,7 +82,30 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
             });
         this._readDBLists();
     }
-
+    getValueOrg(): string {
+        const value = this.form.controls['rec.CLASSIF_NAME'].value || '';
+        if (!value) {
+            this.pop.show();
+        } else {
+            this.pop.hide();
+        }
+        return value;
+    }
+    getClassToInput() {
+        const value = this.form.controls['rec.CLASSIF_NAME'].value || '';
+        if (value) {
+            return '';
+        } else {
+            return 'input-error';
+        }
+    }
+    getClassToInputRule() {
+        if (this._usedRulesString) {
+            return '';
+        } else {
+            return 'input-error';
+        }
+    }
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
             this.unsubscribe();
@@ -183,8 +208,10 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
 
     getStringUsedRules(): string {
         if (this._usedRulesString) {
+            this.pop2.hide();
             return this._usedRulesString;
         }
+        this.pop2.show();
         return '...';
     }
     openClassiSecurity(value) {
