@@ -50,7 +50,13 @@
     </div>
     <div class="full-search-settings-container usual-border">
         <div *ngIf="visibleBranchOptions()">
-            <label *ngFor="let but of radioTopButton" class="radio-inline"><input type="radio" name="full-space" [value]="but.value" checked="but.value === mode" [(ngModel)]="mode"><span></span><span class="m-font">{{but.title}}</span></label>
+            <label *ngFor="let but of radioTopButton" class="radio-inline">
+                <input type="radio" name="full-space" [value]="but.value" [(ngModel)]="mode">
+                <span></span>
+                <span class="m-font">
+                    {{but.title}}
+                </span>
+            </label>
         </div>
         <div class="line" *ngIf="visibleDeletedOption()">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
