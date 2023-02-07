@@ -268,7 +268,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.userOrderCut:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults && !this._userOrderCutMode;
                     _enabled = (!this._userOrderCutMode) && this._visibleCount && opts.listHasItems;
-                    _active = this._viewParams.userOrdered;
+                    _active = _enabled && this._viewParams.userOrdered;
                     break;
                 case E_RECORD_ACTIONS.userOrderPaste:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults && this._userOrderCutMode;
@@ -282,17 +282,17 @@ export class NodeActionsComponent implements OnDestroy {
                             _enabled = _enabled && (this._dictSrv.parentIdForPasteOperation === SELECTED_ITEM.parentId);
                         }
                     }
-                    _active = this._viewParams.userOrdered;
+                    _active =  _enabled && this._viewParams.userOrdered;
                     break;
                 case E_RECORD_ACTIONS.moveUp:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[0].isMarked;
-                    _active = this._viewParams.userOrdered;
+                    _active = _enabled && this._viewParams.userOrdered;
                     break;
                 case E_RECORD_ACTIONS.moveDown:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[this._visibleCount - 1].isMarked;
-                    _active = this._viewParams.userOrdered;
+                    _active = _enabled && this._viewParams.userOrdered;
                     break;
                 case E_RECORD_ACTIONS.export:
                     if (this.dictionary.id === 'sign-kind' || this.dictionary.id === 'eds-category') {

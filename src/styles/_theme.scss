@@ -74,8 +74,15 @@
         background-color: $button-color-main-theme;
     }
 }
+.not-disable-color-user-sort {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 .not-disable-color {
     opacity: 1 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #2196f3 !important;
 }
 .highlighted {
     background: $highlight-color-main-theme;
