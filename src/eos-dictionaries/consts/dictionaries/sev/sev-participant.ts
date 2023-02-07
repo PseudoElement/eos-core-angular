@@ -42,7 +42,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     }, {
         key: 'CRYPT',
         type: 'boolean',
-        title: 'Шифровать',
+        title: 'Шифрование',
 
     }, {
         key: 'rules',
