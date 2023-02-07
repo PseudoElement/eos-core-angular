@@ -2,10 +2,16 @@
     <div class="clearfix"></div>
         <div class="form-group">
             <div class="organization-wrapper">
-                <label [ngClass]="{'unimportant-text': !editMode }">ОРГАНИЗАЦИЯ</label>
+                <label [ngClass]="{'unimportant-text': !editMode }">ОРГАНИЗАЦИЯ</label> <!--  -->
                 <div style="position: relative;">
                     <span class="pull-left" style="margin-right: 0; width: 100%;">
-                        <input class="input-style" readonly type="text" [value]="this.form.controls['rec.CLASSIF_NAME'].value || ''">
+                        <input class="input-style" readonly type="text"
+                            [ngClass]="getClassToInput()"
+                            #pop="bs-tooltip"
+                            [tooltip]="getValueOrg() !== '...' ? '' : 'Обязательное поле'"
+                            placement="bottom"
+                            containerClass="tooltip-error"
+                            [value]="getValueOrg()">
                         <span
                             container="body"
                             placement="bottom"
@@ -81,7 +87,13 @@
         <label [ngClass]="{'unimportant-text': !editMode }">Используемые правила</label>
         <div style="position: relative;">
             <span class="pull-left" style="margin-right: 0; width: 100%;">
-                <input class="input-style" readonly type="text" [value]="getStringUsedRules()">
+                <input class="input-style" readonly type="text"
+                    #pop2="bs-tooltip"
+                    [ngClass]="getClassToInputRule()"
+                    [tooltip]="getStringUsedRules() !== '...' ? '' : 'Обязательное поле'"
+                    placement="bottom"
+                    containerClass="tooltip-error"
+                    [value]="getStringUsedRules()">
                 <span
                     eosClickMode
                     container="body"
@@ -94,14 +106,14 @@
                     (click)="openClassiSecurity('rec.fileAccessListRk')">
                 </span>
                 <span
-                container="body"
-                placement="bottom"
-                containerClass="tooltip-info"
-                tooltip="Удалить"
-                (click)="deleteAllRule()"
-                triggers="hover"
-                *ngIf="editMode"
-                class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" ></span> <!-- (click)="deleteFieldsNames('rec.fileAccessListRk')" -->
+                    container="body"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    tooltip="Удалить"
+                    (click)="deleteAllRule()"
+                    triggers="hover"
+                    *ngIf="editMode && getStringUsedRules() !== '...'"
+                    class="action eos-adm-icon delet-icon-directory eos-adm-icon-close-blue small" ></span> <!-- (click)="deleteFieldsNames('rec.fileAccessListRk')" -->
             </span>
         </div>
         <!-- <label [ngClass]="{'unimportant-text': !editMode }">Используемые правила <a

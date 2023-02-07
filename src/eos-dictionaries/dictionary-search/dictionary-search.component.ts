@@ -101,6 +101,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             this.radioTopButton = SEARCH_RADIO_BUTTON_NOMENKL;
             this.mode = 1;
         } else {
+            this.mode = 0;
             this.radioTopButton = SEARCH_RADIO_BUTTON;
         }
     }
@@ -346,12 +347,16 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 }).then(d => {
                     if (d) {
                         this.searchModel['rules_name'] = d[0]['CLASSIF_NAME'];
-                        this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'] = d[0]['ISN_LCLASSIF'];
+                        this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'] = '' + d[0]['ISN_LCLASSIF'];
                     }
                 });
-        });
+        })
+        .catch(() => {});
     }
-
+    public clearDictSev() {
+        delete this.searchModel['rules_name'];
+        delete this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'];
+    }
     public initFormRule(allField: any[]) {
         let type: any = {};
         let kind: any = {};
@@ -445,7 +450,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         // if (this.formSearch && this.dictId === 'file-category') {
         //    this.formSearch.reset();
         // }
-        this.mode = 0;
+        if (this.dictionary.descriptor.id === 'nomenkl') {
+            this.mode = 1;
+        } else {
+            this.mode = 0;
+        }
         this.settings.opts.deleted = false;
         this.settings.opts.onlyNew = false;
         this.settings.opts.closed = false;

@@ -75,7 +75,7 @@ const RECORD_ACTION_USER_SORT: IAction = {
     disabledIconClass: 'eos-adm-icon eos-adm-icon-custom-list-grey small',
     activeIconClass: 'eos-adm-icon eos-adm-icon-custom-list-white small',
     hoverIconClass: 'eos-adm-icon eos-adm-icon-custom-list-white small',
-    buttonClass: null,
+    buttonClass: 'not-disable-color-user-sort',
     accessNeed: APS_DICT_GRANT.read,
 };
 
