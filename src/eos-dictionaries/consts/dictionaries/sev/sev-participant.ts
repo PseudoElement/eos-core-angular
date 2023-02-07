@@ -16,7 +16,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     visible: true,
     iconName: 'eos-adm-icon-shared-folder-blue',
     keyField: 'ISN_LCLASSIF',
-    defaultOrder: 'CLASSIF_NAME',
+    defaultOrder: 'WEIGHT',
     showDeleted: true,
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     fields: LINEAR_TEMPLATE.fields.concat([{
@@ -88,7 +88,11 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         key: 'FILE_SYNC_DATE',
         title: 'Дата формирования файла синхронизации',
         type: 'number'
-    },
+    }, {
+        key: 'WEIGHT',
+        title: 'Вес элемента',
+        type: 'number',
+    }
    ]),
     editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'CRYPT', 'ADDRESS', 'rules', 'CLASSIF_NAME', 'sev_partisipant', 'sev_rule'],
     listFields: ['CLASSIF_NAME'],
