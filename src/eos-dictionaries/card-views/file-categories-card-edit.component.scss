@@ -1,12 +1,15 @@
 .input-style {
-    background-color: #fafafa;
     color: #000000;
     padding: 6px 8px;
     min-height: 32px;
     border: 1px solid #e6e6e6;
     width: 100%;
     outline: none;
+    &.edit{
+        background-color: #fafafa;
+    }
 }
+
 .grif-icon-directory {
     position: absolute;
     right: 5px;
