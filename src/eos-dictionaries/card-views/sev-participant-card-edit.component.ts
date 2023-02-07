@@ -83,7 +83,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         this._readDBLists();
     }
     getValueOrg(): string {
-        const value = this.form.controls['rec.CLASSIF_NAME'].value || '';
+        const value = this.form.controls['rec.CLASSIF_NAME'].value || '...';
         if (!value) {
             this.pop.show();
         } else {
