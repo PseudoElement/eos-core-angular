@@ -13,7 +13,8 @@
             <label [ngClass]="{'unimportant-text': !editMode }">Группа документов</label>
             <div style="position: relative;">
                 <span class="pull-left" style="margin-right: 0; width: 100%;">
-                    <input class="input-style" readonly type="text" [value]="inputs['rec.DOC_GROUP_NAMES'].value" placeholder="...">
+                    <input class="input-style" [ngClass]="{'edit': editMode}" 
+                    readonly type="text" [value]="inputs['rec.DOC_GROUP_NAMES'].value" placeholder="...">
                 <span
                 container="body"
                 placement="bottom"
