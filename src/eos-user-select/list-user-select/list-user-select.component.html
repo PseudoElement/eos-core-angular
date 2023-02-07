@@ -34,8 +34,13 @@
                 (click)="toggleNested()"
                 [ngClass]="{active:onlyView}"
                 >
-                    <img *ngIf="!onlyView" src="./Three-Blue.svg" alt="Nested" class="nested-img">
-                    <img *ngIf="onlyView" src="./Three-White.svg" alt="Nested" class="nested-img">
+                    <span 
+                    class="eos-adm-icon small"
+                    [ngClass]="{                        
+                        'eos-adm-icon-tree-blue':!onlyView,
+                        'eos-adm-icon-tree-white':onlyView
+                        }"
+                    ></span>
                 </button>
             </div>
 

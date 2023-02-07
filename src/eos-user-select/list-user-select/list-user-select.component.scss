@@ -247,6 +247,9 @@ margin-right: 17px;
 }
 
 .button-nested{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 48px;
     width: 48px;
     border: none;
@@ -258,8 +261,4 @@ margin-right: 17px;
     &.active{
         background-color: #2196f3;
     }
-}
-.nested-img{
-    height: 24px;
-    width: 24px;
 }
