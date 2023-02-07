@@ -77,6 +77,8 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
                 rdata.forEach((d) => {
                     if (d['DELETED'] === 0) {
                         i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF'] });
+                    } else if (d['ISN_LCLASSIF'] === this.form.controls['rec.ISN_CHANNEL'].value) {
+                        i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF'], isDeleted: true });
                     }
                 });
             });
