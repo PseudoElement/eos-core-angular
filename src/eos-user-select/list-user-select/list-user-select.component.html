@@ -23,19 +23,27 @@
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
             <eos-users-info [open]='openUserInfo' (closeModal)="OpenUsersInfo($event)" ></eos-users-info>
-            <div class="checkbox only-view" *ngIf="shooseP===0  && currentDue !=='0.'">
-                <label class="user-check-label">
-                    <input [checked]="onlyView" type="checkbox" (change)="setChengeOnlyView()">
-                    <div>
-                        <span class="eos-adm-icon small"
-                            [ngClass]="{'eos-adm-icon-checkbox-square-v-blue': onlyView, 'eos-adm-icon-checkbox-square-blue': !onlyView}"
-                            tooltip="Показывать вложенные" containerClass="tooltip-info" placement="bottom"></span>
-                    </div>
-                </label>
-                <div class="only-view-title">
-                    <span>С вложенными</span>
-                </div>
+
+            <div class="wrapper-button-nested">
+                <button class="button-nested"
+                *ngIf="showBtnNested()"
+                #nested
+                tooltip="Показывать вложенные"
+                containerClass="tooltip-info" 
+                placement="bottom"
+                (click)="toggleNested()"
+                [ngClass]="{active:onlyView}"
+                >
+                    <span 
+                    class="eos-adm-icon small"
+                    [ngClass]="{                        
+                        'eos-adm-icon-tree-blue':!onlyView,
+                        'eos-adm-icon-tree-white':onlyView
+                        }"
+                    ></span>
+                </button>
             </div>
+
             <eos-user-search (quickSearchKey)="quickSearchKey($event)" #quickSearchOpen (search)="searchUsers($event)"
                 [flagDeep]="shooseP"></eos-user-search>
         </div>

@@ -439,15 +439,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
         });
     }
-    setChengeOnlyView() {
-        if (this.shooseP === 0) {
-            this.onlyView = !this.onlyView;
-            this._apiSrv.flagOnlyThisDepart = this.onlyView;
-            this._storage.setItem('onlyView', this.onlyView);
-            const id = this._route.params['value'].nodeId;
-            this._pagSrv.resetConfig();
-            this.initView(id ? id : '0.');
-        }
+
+    showBtnNested() {
+        return this._apiSrv.dueDep === '0.' ? false :
+                this.shooseP === 0 ? true : false;
+    }
+
+    toggleNested() {
+        this.onlyView = !this.onlyView;
+        this._apiSrv.flagOnlyThisDepart = this.onlyView;
+        this._storage.setItem('onlyView', this.onlyView);
+        const id = this._route.params['value'].nodeId;
+        this._pagSrv.resetConfig();
+        this.initView(id ? id : '0.');
     }
 
     sortPageList(nameSort: string, sortSearch?: string): void {
