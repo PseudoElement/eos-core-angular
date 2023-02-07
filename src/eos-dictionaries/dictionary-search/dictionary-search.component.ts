@@ -347,12 +347,16 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
                 }).then(d => {
                     if (d) {
                         this.searchModel['rules_name'] = d[0]['CLASSIF_NAME'];
-                        this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'] = d[0]['ISN_LCLASSIF'];
+                        this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'] = '' + d[0]['ISN_LCLASSIF'];
                     }
                 });
-        });
+        })
+        .catch(() => {});
     }
-
+    public clearDictSev() {
+        delete this.searchModel['rules_name'];
+        delete this.searchModel['SEV_PARTICIPANT_RULE.ISN_RULE'];
+    }
     public initFormRule(allField: any[]) {
         let type: any = {};
         let kind: any = {};
