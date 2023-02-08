@@ -10,7 +10,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
     id: 'sev-participant',
     apiInstance: 'SEV_PARTICIPANT',
     title: 'Участники СЭВ',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
         'removeHard', 'edit', 'view', 'protViewSecurity'],
     visible: true,

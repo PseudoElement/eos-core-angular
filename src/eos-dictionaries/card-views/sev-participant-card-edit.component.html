@@ -8,7 +8,7 @@
                         <input class="input-style" readonly type="text"
                             [ngClass]="getClassToInput()"
                             #pop="bs-tooltip"
-                            [tooltip]="getValueOrg() !== '...' ? '' : 'Обязательное поле'"
+                            [tooltip]="getValueOrg() === '...' ? 'Обязательное поле' : ''"
                             placement="bottom"
                             containerClass="tooltip-error"
                             [value]="getValueOrg()">
