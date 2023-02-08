@@ -25,7 +25,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
     visible: true,
     iconName: 'eos-adm-icon-rules-blue',
     title: 'Правила СЭВ',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization',
         'removeHard', 'edit', 'view', 'protViewSecurity'],
     keyField: 'ISN_LCLASSIF',

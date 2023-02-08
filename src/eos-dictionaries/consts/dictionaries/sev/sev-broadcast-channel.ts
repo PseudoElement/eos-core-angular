@@ -7,7 +7,7 @@ import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { VALID_REQ_STRING } from 'eos-common/consts/common.consts';
 
 export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
-    id: 'broadcast-channel',
+    id: 'broadcast-channel', // 'userOrderCut', 'userOrderPaste',
     apiInstance: 'SEV_CHANNEL',
     visible: true,
     iconName: 'eos-adm-icon-move-2d-blue',

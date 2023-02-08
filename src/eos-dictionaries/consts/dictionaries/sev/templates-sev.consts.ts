@@ -1,7 +1,7 @@
 import { LINEAR_TEMPLATE } from '../_linear-template';
 
 const SEV_ACTIONS = [
-    'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+    'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'restore',
     'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
     'removeHard',
     'edit', 'view', 'remove', 'removeHard', 'userOrder', 'protViewSecurity'];
