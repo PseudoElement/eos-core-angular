@@ -10,6 +10,7 @@ import { FILTER_PROTOCOL } from 'eos-user-params/user-params-set/shared-user-par
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { DatePickerStyleFixes } from 'eos-common/type/const.type';
 
 @Component({
   selector: 'eos-filter-protocol',
@@ -20,6 +21,7 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
   @ViewChild('full') full;
+  customStyle: DatePickerStyleFixes = 'customDisplayDatepicker';
   data = {};
   placement = 'bottom';
   public prepareData;

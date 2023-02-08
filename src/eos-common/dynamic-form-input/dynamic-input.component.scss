@@ -382,6 +382,11 @@ eos-dynamic-input {
     background-color: $button-color-main-theme !important;
 }
 
+.customDisplayDatepicker{
+    position: absolute;
+    right: -15px;
+}
+
 .toggle-wrap {
     background: $light-grey-1;
     border: 1px solid $border-color-main-theme;

@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit, OnChanges, SimpleChanges, Inp
 import {DynamicInputBase} from './dynamic-input-base';
 import {BsDatepickerConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {EosUtils} from '../core/utils';
+import { DatePickerStyleFixes } from 'eos-common/type/const.type';
 
 @Component({
     selector: 'eos-dynamic-input-date',
@@ -9,6 +10,7 @@ import {EosUtils} from '../core/utils';
 })
 export class DynamicInputDateComponent extends DynamicInputBase implements OnInit, OnChanges {
     @Input() placementIn;
+    @Input() customStyleIn: DatePickerStyleFixes | undefined;
     bsConfig: Partial<BsDatepickerConfig>;
     placement;
     bsDate: Date;
@@ -80,6 +82,7 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
         this.hidePicker = (this.viewOpts ? this.viewOpts.hidePicker : false);
         this.localeService.use('ru');
         this.updateDatePickerPlacement();
+        this.updateDatePickerStyle();
     }
 
     onEnter() {
@@ -131,5 +134,8 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
                 }
             }, 10);
         }
+    }
+    private updateDatePickerStyle() {
+        this.bsConfig.containerClass = this.customStyleIn ? this.bsConfig.containerClass + ' ' + this.customStyleIn : this.bsConfig.containerClass;
     }
 }
