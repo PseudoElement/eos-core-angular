@@ -1,0 +1,29 @@
+<div class="eos-adm-node-info">
+    <div class="opened-node-wrapper">
+        <div class="content-block">
+            <div *ngIf="nodeDataShort"
+                class="short-info l-font">
+                <span *ngFor="let key of keys(fieldsDescriptionShort.rec)">{{nodeDataShort.rec[key]}}</span>
+            </div>
+            <div *ngIf="nodeDataFull"
+                class="full-info usual-border">
+                <div *ngFor="let key of keys(fieldsDescriptionFull.rec)"
+                    class="field">
+                        <span *ngIf="key !== 'SMTP_EMAIL' || value(key)">
+                            <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                            <span *ngIf="fieldsDescriptionFull.rec[key].logDelet" class="icon eos-adm-icon small icon-bin-due-dep eos-adm-icon-bin-grey"></span>
+                            <p class="field-value m-font"
+                            [ngClass]="{'text-log-delet': fieldsDescriptionFull.rec[key].logDelet}"
+                                >{{value(key) || '...'}}</p>
+                        </span>
+
+                </div>
+                <div class="field"
+                    *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
+                    <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
+                    <p class="field-value m-font">{{nodeDataFull.sev?.GLOBAL_ID || '...'}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
