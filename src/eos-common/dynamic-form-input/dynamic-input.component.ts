@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { DatePickerStyleFixes } from 'eos-common/type/const.type';
 
 
 export class ErrorTooltip {
@@ -48,6 +49,7 @@ export class DynamicInputComponent {
     @Input() height: number; // ограничить высоту выпадалки
     @Input() notStandartText: boolean; // параметр для text принимает boolean по дефолту undefined, если true то прячет иконку
     @Input() placement: string; // используется для даты чтобы можно было указать в какую сторону открывать выпадашку
+    @Input() customStyle: DatePickerStyleFixes | undefined; // для передачи кастомных стилей выподающему окну Datepicker
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
 
