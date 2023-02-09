@@ -228,7 +228,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         }
         const OPEN_CLASSIF_SEV_RULE: IOpenClassifParams = {
             classif: 'SEV_RULE',
-            selectMulty: false,
+            selectMulty: true,
             selectLeafs: true,
             skipDeleted: false,
             id: '0.',

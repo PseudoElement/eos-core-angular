@@ -330,7 +330,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     public openDictSevPArtipant() {
         const OPEN_CLASSIF_SEV_RULE: IOpenClassifParams = {
             classif: 'SEV_RULE',
-            selectMulty: true,
+            selectMulty: false,
             selectLeafs: true,
             skipDeleted: false,
             id: '0.',
