@@ -109,7 +109,7 @@ export class PipRX extends PipeUtils {
 
     batchVariant(changeSet: any[], vc: string): Promise<any[]> {
         // return this._batch(changeSet, vc, this._cfg.dataApiUrl).toPromise();
-        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + '/CoreHost/OData/').toPromise();
+        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + 'CoreHost/OData/').toPromise();
     }
 
     private makeArgs(args: IKeyValuePair): string {
