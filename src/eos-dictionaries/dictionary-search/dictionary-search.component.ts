@@ -312,6 +312,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
     public initFormSevPartishion(allField: any[]) {
         this.inputs = this._dataSrv.getInputs(SEV_PARTIPANT as any, { rec: { CLASSIF_NAME: '', ADDRESS: '', rules: '', ISN_CHANNEL: '' }});
+        this.inputs['rec.ISN_CHANNEL'].options = [];
         this.sevChanelAllToSelect.forEach((chan) => {
             this.inputs['rec.ISN_CHANNEL'].options.push({
                 value: chan['ISN_LCLASSIF'],
