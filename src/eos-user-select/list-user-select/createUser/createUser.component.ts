@@ -476,7 +476,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     showDepChoose() {
         const ITEM = this._getCurrentItem();
-        const FOCUSED_ITEM_DUE = ITEM[0].due;
+        const FOCUSED_ITEM_DUE = ITEM.length === 0 ? '' : ITEM[0].due;
         if (this._idsForModalDictDep.length > 0) {
             if (this._idsForModalDictDep[0] !== FOCUSED_ITEM_DUE) {
                 this._idsForModalDictDep[0] = FOCUSED_ITEM_DUE;
