@@ -874,10 +874,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (this._idsForModalDictDep.length > 0) {
                 OPEN_CLASSIF_DEPARTMENT['selected'] = this._idsForModalDictDep[0];
             }
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
         } else {  // просто задана лексема и значение не выбрано
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
-            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+            OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
         }
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
@@ -892,8 +890,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         OPEN_CLASSIF_DEPARTMENT['selected'] = '';
-        OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
-        OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+        OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 this._setDepartment(data);

@@ -258,10 +258,11 @@ export class WaitClassifService {
         if (params.can_tech !== undefined && params.can_tech !== null) {
             url += this.getSymbol(url) + `can_tech=${params.can_tech}`;
         }
-        url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
-        if (params.criteriesSearch) {
-             url += '&search_query=' +  encodeURIComponent(params.criteriesName);
+        if (params.search_query !== undefined && params.search_query !== null) {
+            url += '&search_query=' + params.search_query;
         }
+        url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
+
         return url;
     }
 

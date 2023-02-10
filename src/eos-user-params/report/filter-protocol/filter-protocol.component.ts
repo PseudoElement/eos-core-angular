@@ -115,7 +115,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   }
 
   selectUserEdit() {
-    OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+    OPEN_CLASSIF_USER_CL['search_query'] = this._apiSrv.configList.titleDue;
     OPEN_CLASSIF_USER_CL['selectMulty'] = true;
     OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
@@ -141,7 +141,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   }
 
   selectUserWho() {
-    OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+   OPEN_CLASSIF_USER_CL['search_query'] = this._apiSrv.configList.titleDue;
    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
    OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
