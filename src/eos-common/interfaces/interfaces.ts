@@ -28,8 +28,7 @@ export interface IOpenClassifParams {
     return_due?: boolean;
     selected? ;
     Selected? ;
-    criteriesSearch?: boolean;
-    criteriesName?: string;
+    search_query?: string;
     user_id?: number;
     clUser?: boolean;
     from_classif?: boolean; // параметр который говорит что окно было открыто из ангулар

@@ -431,7 +431,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         if (!access) {
             const openUserCl = {
                 ...OPEN_CLASSIF_USER_CL,
-                criteriesName: this._apiSrv.configList.titleDue,
+                search_query: this._apiSrv.configList.titleDue,
                 selectMulty: false,
                 skipDeleted: null,
             };
@@ -490,10 +490,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             if (this._idsForModalDictDep.length > 0) {
                 OPEN_CLASSIF_DEPARTMENT['selected'] = this._idsForModalDictDep[0];
             }
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = false;
         } else {  // просто задана лексема и значение не выбрано
-            OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
-            OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+            OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
         }
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
@@ -509,8 +507,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         OPEN_CLASSIF_DEPARTMENT['selected'] = '';
-        OPEN_CLASSIF_DEPARTMENT.criteriesSearch = true;
-        OPEN_CLASSIF_DEPARTMENT.criteriesName = this._searchLexem;
+        OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 this._setDepartment(data);
