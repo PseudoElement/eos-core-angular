@@ -336,6 +336,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     sliceArrayForTemplate(): void {
         let count = 8;
+        this.listForAccordion = [];
         if (!this._appContext.cbBase) {
             count = 10;
         }
