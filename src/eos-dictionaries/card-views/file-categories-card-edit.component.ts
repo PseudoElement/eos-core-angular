@@ -47,6 +47,27 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
 
     selectDocGroup() {
         if (this.editMode) {
+            OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = undefined;
+            const valueCat: string = this.inputs['rec.DOC_GROUP_NAMES'].value;
+
+            if (valueCat !== '' && valueCat !== null) {
+                if (this.data.__relfield.DUE_NODE_DG === undefined) {
+                    let selectedCat: string = '';
+                    let cycleIndicator: boolean = false;
+                    this.data.rec.DG_FILE_CATEGORY_List.forEach(el => {
+                        if (!cycleIndicator) {
+                            selectedCat = selectedCat + el.DUE_NODE_DG;
+                            cycleIndicator = true;
+                        } else {
+                            selectedCat = selectedCat + '|' + el.DUE_NODE_DG;
+                        }
+                    });
+                    OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = selectedCat;
+                } else {
+                    OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = this.data.__relfield.DUE_NODE_DG;
+                }
+            }
+
             this._zone.runOutsideAngular(() => {
                 return this._classifService.openClassif(OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT).then((dues: string) => {
                     if (dues && dues.length > 0) {
