@@ -16,7 +16,7 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
 
     get isDocGroup(): boolean {
-        return !!this.data.rec['DOC_GROUP_NAMES'];
+        return !!this.inputs['rec.DOC_GROUP_NAMES'].value;
     }
 
     constructor(
@@ -31,7 +31,7 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
 
     ngOnInit(): void {
         const DESC = this._dictService.currentDictionary.descriptor as FileCategoryDictionaryDescriptor;
-        if (this.data.rec.DG_FILE_CATEGORY_List) {
+        if (this.data.rec.DG_FILE_CATEGORY_List.length > 0) {
             DESC.setDocGroupNames([this.data.rec]).then(resp => this.inputs['rec.DOC_GROUP_NAMES'].value = resp[0]['DOC_GROUP_NAMES']);
         } else {
             this.inputs['rec.DOC_GROUP_NAMES'].value = '';
@@ -44,29 +44,32 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this._updateForm(formChanges));
         }
     }
+    fillingSelected(): void {
+        const valueCat: string = this.inputs['rec.DOC_GROUP_NAMES'].value ? this.inputs['rec.DOC_GROUP_NAMES'].value : '';
+        if (valueCat) {
+            if (!this.data.__relfield.DUE_NODE_DG) {
+                let selectedCat: string = '';
+                let cycleIndicator: boolean = false;
+
+                this.data.rec.DG_FILE_CATEGORY_List.forEach(el => {
+                    if (cycleIndicator) {
+                        selectedCat = selectedCat + '|' + el.DUE_NODE_DG;
+                    } else {
+                        selectedCat = selectedCat + el.DUE_NODE_DG;
+                        cycleIndicator = true;
+                    }
+                });
+                OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = selectedCat;
+            } else {
+                OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = this.data.__relfield.DUE_NODE_DG;
+            }
+        }
+    }
 
     selectDocGroup() {
         if (this.editMode) {
-            OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = undefined;
-            const valueCat: string = this.inputs['rec.DOC_GROUP_NAMES'].value;
-
-            if (valueCat !== '' && valueCat !== null) {
-                if (this.data.__relfield.DUE_NODE_DG === undefined) {
-                    let selectedCat: string = '';
-                    let cycleIndicator: boolean = false;
-                    this.data.rec.DG_FILE_CATEGORY_List.forEach(el => {
-                        if (!cycleIndicator) {
-                            selectedCat = selectedCat + el.DUE_NODE_DG;
-                            cycleIndicator = true;
-                        } else {
-                            selectedCat = selectedCat + '|' + el.DUE_NODE_DG;
-                        }
-                    });
-                    OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = selectedCat;
-                } else {
-                    OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = this.data.__relfield.DUE_NODE_DG;
-                }
-            }
+            OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT.Selected = '';
+            this.fillingSelected();
 
             this._zone.runOutsideAngular(() => {
                 return this._classifService.openClassif(OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT).then((dues: string) => {
