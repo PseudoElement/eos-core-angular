@@ -148,7 +148,7 @@
                                 </span>
                                 <span 
                                     #twoColomnElement
-                                    [isDisabled]="showTooltipService.someMethod(twoColomnElement, user.fullDueName)"
+                                    [isDisabled]="showTooltipService.calcIsDisabled(twoColomnElement, user.fullDueName)"
                                     class="user-list-two-colomn"
                                     tooltip="{{user.fullDueName}}"
                                     [delay]="tooltipDelay"
@@ -170,7 +170,7 @@
                                 </span>
                                 <ng-template #depUser>
                                     <span 
-                                        [isDisabled]="showTooltipService.someMethod(firstColomnElement, user.department)"
+                                        [isDisabled]="showTooltipService.calcIsDisabled(firstColomnElement, user.department)"
                                         class="user-list-first-colomn"
                                         #firstColomnElement
                                         tooltip="{{user.department}}"

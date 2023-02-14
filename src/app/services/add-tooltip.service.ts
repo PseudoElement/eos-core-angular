@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 
 export class ShowTooltipService {
     constructor() {}
-    someMethod(elem: HTMLElement, text: string) {
+    calcIsDisabled(elem: HTMLElement, text: string): boolean {
         if (text === '...' ) {
             return true;
         } else if (elem.offsetWidth - text.length * 9 > 0 ) {
