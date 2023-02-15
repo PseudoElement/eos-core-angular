@@ -1,7 +1,7 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 /* import { EosMessageService } from 'eos-common/services/eos-message.service'; */
 /* import { CONFIRM_REESTRTYPE_DELIVERY_CHANGE, BUTTON_RESULT_OK } from 'app/consts/confirms.const'; */
 /* import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
@@ -12,7 +12,7 @@ import { PipRX } from 'eos-rest'; */
     selector: 'eos-resolution-category-edit',
     templateUrl: 'resolution-category-edit.component.html',
 })
-export class ResolutionCategoryEditComponent extends BaseCardEditComponent implements OnInit, OnDestroy {
+export class ResolutionCategoryEditComponent extends BaseCardEditDirective implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(injector: Injector,
         ) {

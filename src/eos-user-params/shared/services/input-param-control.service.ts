@@ -13,7 +13,9 @@ import { EosUtils } from 'eos-common/core/utils';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { AutoSearchInput } from 'eos-common/core/inputs/autosearch-input';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class InputParamControlService {
     generateInputs(inputs: IInputParamControl[]) {
         const set = {};

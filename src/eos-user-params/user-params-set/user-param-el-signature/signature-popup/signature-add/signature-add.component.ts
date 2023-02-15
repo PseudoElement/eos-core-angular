@@ -17,7 +17,7 @@ export class SignatureAddComponent implements OnInit {
     @Input() input: FormControl;
     @Input() form: FormGroup;
 
-    @Output('closeAddCertModal') closeAddCertModal = new EventEmitter;
+    @Output() closeAddCertModal = new EventEmitter;
     public certSystemStore: string;
     public certSystemAddress: string;
     public currentSelectNode: IListStores;

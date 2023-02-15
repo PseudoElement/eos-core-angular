@@ -1,11 +1,11 @@
 import { Component, Injector } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 
 @Component({
     selector: 'eos-security-card-edit',
     templateUrl: 'security-card-edit.component.html',
 })
-export class SecurityCardEditComponent extends BaseCardEditComponent {
+export class SecurityCardEditComponent extends BaseCardEditDirective {
     constructor(injector: Injector) {
         super(injector);
     }

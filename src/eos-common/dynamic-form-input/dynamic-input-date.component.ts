@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
-import {DynamicInputBase} from './dynamic-input-base';
+import {DynamicInputBaseDirective} from './dynamic-input-base';
 import {BsDatepickerConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {EosUtils} from '../core/utils';
 import { DatePickerStyleFixes } from 'eos-common/type/const.type';
@@ -8,7 +8,7 @@ import { DatePickerStyleFixes } from 'eos-common/type/const.type';
     selector: 'eos-dynamic-input-date',
     templateUrl: 'dynamic-input-date.component.html'
 })
-export class DynamicInputDateComponent extends DynamicInputBase implements OnInit, OnChanges {
+export class DynamicInputDateComponent extends DynamicInputBaseDirective implements OnInit, OnChanges {
     @Input() placementIn;
     @Input() customStyleIn: DatePickerStyleFixes | undefined;
     bsConfig: Partial<BsDatepickerConfig>;

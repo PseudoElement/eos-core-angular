@@ -37,7 +37,7 @@ import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
 export class NodeActionsComponent implements OnDestroy {
 
     // @Input('params') params: INodeListParams;
-    @Output('action') action: EventEmitter<IActionEvent> = new EventEmitter<IActionEvent>();
+    @Output() action: EventEmitter<IActionEvent> = new EventEmitter<IActionEvent>();
 
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     buttons: IActionButton[];

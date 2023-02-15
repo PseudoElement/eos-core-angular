@@ -6,10 +6,10 @@ import { NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
     providers: [{ provide: NG_VALIDATORS, useExisting: UnicValidatorDirective, multi: true }]
 })
 export class UnicValidatorDirective implements Validator {
-    @Input('eosUnic') eosUnic: boolean;
-    @Input('checkingMethod') checkingMethod: Function;
-    @Input('key') key: string;
-    @Input('inDict') inDict: boolean;
+    @Input() eosUnic: boolean;
+    @Input() checkingMethod: Function;
+    @Input() key: string;
+    @Input() inDict: boolean;
 
     validate(control: AbstractControl): { [key: string]: any } {
         if (this.eosUnic) {

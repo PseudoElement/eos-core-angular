@@ -64,7 +64,7 @@ export class EosRestModule {
         }
     }
 
-    static forRoot(config: any): ModuleWithProviders {
+    static forRoot(config: any): ModuleWithProviders<EosRestModule> {
         return {
             ngModule: EosRestModule,
             providers: [

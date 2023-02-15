@@ -40,7 +40,7 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { E_LIST_ENUM_TYPE } from 'eos-dictionaries/features/features.interface';
 import { PipRX, ICancelFormChangesEvent } from 'eos-rest';
-import { BaseCardEditComponent } from '../../eos-dictionaries/card-views/base-card-edit.component';
+import { BaseCardEditDirective } from '../../eos-dictionaries/card-views/base-card-edit.component';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -411,7 +411,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                             break;
                         }
                     }
-                    BaseCardEditComponent.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
+                    BaseCardEditDirective.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
                     return true;
                 })
                 .catch(() => {

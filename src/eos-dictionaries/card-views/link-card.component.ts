@@ -1,5 +1,5 @@
 import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import {EosUtils} from '../../eos-common/core/utils';
 import {EosDictService} from '../services/eos-dict.service';
@@ -13,7 +13,7 @@ import { ValidatorsControl, ValidatorOptions } from 'eos-dictionaries/validators
     templateUrl: 'link-card.component.html',
     styleUrls: ['./link-card.component.scss']
 })
-export class LinkCardComponent extends BaseCardEditComponent implements OnChanges {
+export class LinkCardComponent extends BaseCardEditDirective implements OnChanges {
     private _prev = {};
 
     constructor(injector: Injector,

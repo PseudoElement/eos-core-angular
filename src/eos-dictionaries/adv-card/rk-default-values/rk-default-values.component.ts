@@ -1,5 +1,5 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
-import { RKNomenkBasePage } from './rk-nomenk-base-page';
+import { RKNomenkBasePageDirective } from './rk-nomenk-base-page';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { DictUtils } from 'eos-dictionaries/utils/dict-utils';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -11,7 +11,7 @@ const FeaturesRK = Features.cfg.rkdefaults;
     templateUrl: 'rk-default-values.component.html',
 })
 
-export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements OnChanges {
+export class RKDefaultValuesCardComponent extends RKNomenkBasePageDirective implements OnChanges {
 
     static rkDaysVariations = [];
 

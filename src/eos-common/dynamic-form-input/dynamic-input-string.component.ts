@@ -1,11 +1,11 @@
 import {Component, OnChanges, SimpleChanges} from '@angular/core';
-import { DynamicInputBase } from './dynamic-input-base';
+import { DynamicInputBaseDirective } from './dynamic-input-base';
 
 @Component({
     selector: 'eos-dynamic-input-string',
     templateUrl: 'dynamic-input-string.component.html'
 })
-export class DynamicInputStringComponent extends DynamicInputBase implements OnChanges {
+export class DynamicInputStringComponent extends DynamicInputBaseDirective implements OnChanges {
 
     get textType(): string {
         if (this.input.password) {

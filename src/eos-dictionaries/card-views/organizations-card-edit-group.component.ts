@@ -1,5 +1,5 @@
 import { Component, Injector, OnChanges } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 // import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 import { DictUtils, IDaysVariant } from 'eos-dictionaries/utils/dict-utils';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
@@ -12,7 +12,7 @@ import { PipRX, ORGANIZ_CL } from 'eos-rest';
     templateUrl: 'organizations-card-edit-group.component.html',
 })
 
-export class OrganizationsCardEditGroupComponent extends BaseCardEditComponent implements OnChanges {
+export class OrganizationsCardEditGroupComponent extends BaseCardEditDirective implements OnChanges {
     isCBFunc = false;
     daysVariants: IDaysVariant[] = null;
     daysLabel = 'ДНЯ (ДНЕЙ)';

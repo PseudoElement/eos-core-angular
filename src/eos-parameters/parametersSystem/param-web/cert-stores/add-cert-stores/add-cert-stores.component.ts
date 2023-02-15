@@ -10,7 +10,7 @@ import { CarmaHttp2Service } from 'app/services/camaHttp2.service';
     templateUrl: 'add-cert-stores.component.html'
 })
 export class AddCertStoresComponent {
-    @Output('closeAddCertModal') closeAddCertModal = new EventEmitter;
+    @Output() closeAddCertModal = new EventEmitter;
     titleHeader = 'Выберите хранилища сертификатов';
     certSystemStore: string = 'sslm';
     certSystemAddress: string;

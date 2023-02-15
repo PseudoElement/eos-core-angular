@@ -1,5 +1,5 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { PipRX } from '../../eos-rest';
 import { ORGANIZ_CL } from '../../eos-rest';
 import { Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { Validators } from '@angular/forms';
     templateUrl: 'medo-node-card-edit.component.html',
     styleUrls: ['./medo-node-card-edit.component.scss']
 })
-export class MedoNodeCardComponent extends BaseCardEditComponent implements OnInit, OnDestroy {
+export class MedoNodeCardComponent extends BaseCardEditDirective implements OnInit, OnDestroy {
     showDoc: boolean;
     showDocOrgList: ORGANIZ_CL[] = [];
     hashPass: string = 'хеш пароля';

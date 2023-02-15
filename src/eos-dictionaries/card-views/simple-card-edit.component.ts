@@ -1,13 +1,13 @@
 import { Component, Injector } from '@angular/core';
 
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 
 @Component({
     selector: 'eos-simple-card-edit',
     templateUrl: 'simple-card-edit.component.html',
 })
 
-export class SimpleCardEditComponent extends BaseCardEditComponent {
+export class SimpleCardEditComponent extends BaseCardEditDirective {
 
     get styleModeEdit() {
         if (this.dictSrv.currentDictionary && this.dictSrv.currentDictionary.id === 'ca-category' && this.editMode && !this.isNewRecord) {

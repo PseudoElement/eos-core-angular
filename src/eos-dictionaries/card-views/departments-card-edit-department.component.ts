@@ -2,11 +2,11 @@ import { IOpenClassifParams } from 'eos-common/interfaces';
 import { WaitClassifService } from './../../app/services/waitClassif.service';
 
 import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
-import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
+import { DynamicInputBaseDirective } from 'eos-common/dynamic-form-input/dynamic-input-base';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { StampBlobFormComponent } from 'eos-dictionaries/shablon-blob-form/stamp-blob-form.component';
 import { BsModalService } from 'ngx-bootstrap';
@@ -20,7 +20,7 @@ import { PipRX } from 'eos-rest';
     selector: 'eos-departments-card-edit-department',
     templateUrl: 'departments-card-edit-department.component.html',
 })
-export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirective implements OnChanges, OnInit {
 
     featuresDep = Features.cfg.departments;
     isStampEnable = Features.cfg.departments.stamp;
@@ -225,7 +225,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     clickNumcreation() {
-        const dib: DynamicInputBase = this.inputs['rec.indexDep'].dib;
+        const dib: DynamicInputBaseDirective = this.inputs['rec.indexDep'].dib;
         dib.forceTooltip();
         const c = this.form.controls['rec.DEPARTMENT_INDEX'];
         c.markAsDirty();

@@ -1,6 +1,6 @@
 import { RussianName, RussianNameProcessor } from './../utils/Declination';
 import { Component, Injector, OnChanges, OnInit } from '@angular/core';
-import { BaseCardEditComponent } from 'eos-dictionaries/card-views/base-card-edit.component';
+import { BaseCardEditDirective } from 'eos-dictionaries/card-views/base-card-edit.component';
 import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
 import { IImage } from '../interfaces/image.interface';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
@@ -33,7 +33,7 @@ interface IToDeclineFields {
     selector: 'eos-departments-card-edit-person',
     templateUrl: 'departments-card-edit-person.component.html',
 })
-export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class DepartmentsCardEditPersonComponent extends BaseCardEditDirective implements OnChanges, OnInit {
     // readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения', 'Отсутствие и замещение'];
 
     photo: any;

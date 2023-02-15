@@ -1,13 +1,14 @@
 import { DynamicInputLinkButtonComponent } from './../../../eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
 import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
-import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable } from '@angular/core';
+import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable, Directive } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap';
 import {AppContext} from '../../../eos-rest/services/appContext.service';
 
+@Directive()
 @Injectable()
-export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
+export abstract class RKBasePageDirective implements OnChanges, OnInit, OnDestroy {
     @Input() dataController: AdvCardRKDataCtrl;
     // @Input() fieldsDescription: any;
     @Input() data: any;

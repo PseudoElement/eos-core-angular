@@ -21,14 +21,14 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export class NodeListItemComponent implements OnInit, OnChanges {
     @ViewChild('item') item: ElementRef;
-    @Input('node') node: EosDictionaryNode;
-    @Input('params') params: IDictionaryViewParameters;
-    @Input('length') length: any = {};
-    @Input('customFields') customFields: IFieldView[];
-    @Input('firstColumnIndex') firstColumnIndex: number;
-    @Output('clickMark') clickMark: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Output('clickSelect') clickSelect: EventEmitter<EosDictionaryNode> = new EventEmitter<EosDictionaryNode>();
-    @Output('onHoverItem') onHoverItem: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
+    @Input() node: EosDictionaryNode;
+    @Input() params: IDictionaryViewParameters;
+    @Input() length: any = {};
+    @Input() customFields: IFieldView[];
+    @Input() firstColumnIndex: number;
+    @Output() clickMark: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() clickSelect: EventEmitter<EosDictionaryNode> = new EventEmitter<EosDictionaryNode>();
+    @Output() onHoverItem: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
 
     viewFields: IFieldView[];
     custom: IFieldView[];

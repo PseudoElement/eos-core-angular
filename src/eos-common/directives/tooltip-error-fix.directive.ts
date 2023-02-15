@@ -3,7 +3,7 @@ import { fromEvent } from 'rxjs';
 
 @Directive({ selector: '[eosTooltipErrorFix]' })
 export class TooltipErrorFixDirective implements OnInit, OnDestroy {
-    @Input('scrollableParent') scrollableParent;
+    @Input() scrollableParent;
     private scrollSubscribe;
     private parentTop;
     private parentBottom;

@@ -9,7 +9,7 @@ import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { EosDepartmentsService } from '../services/eos-department-service';
 import { SUCCESS_SAVE } from '../consts/messages.consts';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
-import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import {BaseCardEditDirective} from '../card-views/base-card-edit.component';
 import { CONFIRM_SAVE_INVALID, ERROR_LOGIN } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { EosUtils } from 'eos-common/core/utils';
@@ -178,7 +178,7 @@ export class CreateNodeComponent {
                         break;
                     }
                 }
-                BaseCardEditComponent.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
+                BaseCardEditDirective.setElementOnValidate(key, this.cardEditRef.baseCardEditRef);
                 return true;
             })
             .catch(() => {
@@ -200,7 +200,7 @@ export class CreateNodeComponent {
         if (!hide) {
             this.onOpen.emit(true);
         }
-        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
+        BaseCardEditDirective.autoFocusOnFirstStringElement('eos-card-edit');
     }
 
     private _confirmSave(data, isNewRecord: boolean): Promise<boolean> {

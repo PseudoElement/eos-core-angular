@@ -1,12 +1,13 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { DynamicInputBase } from './dynamic-input-base';
+
 import { Validators } from '@angular/forms';
+import { DynamicInputBaseDirective } from './dynamic-input-base';
 
 @Component({
     selector: 'eos-dynamic-input-increment-number',
     templateUrl: 'dynamic-input-increment-number.component.html'
 })
-export class DynamicInputNumberIncrementComponent extends DynamicInputBase  implements OnChanges {
+export class DynamicInputNumberIncrementComponent extends DynamicInputBaseDirective  implements OnChanges {
 
     onIncrease() {
         if (this.control.enabled) {

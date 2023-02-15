@@ -1,5 +1,5 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { RKNomenkBasePage } from './rk-nomenk-base-page';
+import { RKNomenkBasePageDirective } from './rk-nomenk-base-page';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 import { DynamicInputLinkButtonComponent } from 'eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
 
@@ -8,7 +8,7 @@ import { DynamicInputLinkButtonComponent } from 'eos-common/dynamic-form-input/d
     templateUrl: 'rk-default-writes.component.html',
 })
 
-export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges {
+export class RKWritesCardComponent extends RKNomenkBasePageDirective implements OnChanges {
 
     forward_who_w: boolean;
     journal_who_w: boolean;

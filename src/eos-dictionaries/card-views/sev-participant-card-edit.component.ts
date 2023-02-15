@@ -1,6 +1,6 @@
 import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.component';
 import { Component, Injector, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { PipRX, SEV_ASSOCIATION, SEV_RULE, SEV_PARTICIPANT_RULE } from '../../eos-rest';
 import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV } from 'eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -17,7 +17,7 @@ import { AppContext } from 'eos-rest/services/appContext.service';
     templateUrl: 'sev-participant-card-edit.component.html',
     styleUrls: ['./sev-participant-card-edit.component.scss'],
 })
-export class SevParticipantCardEditComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class SevParticipantCardEditComponent extends BaseCardEditDirective implements OnChanges, OnInit {
     @ViewChild('pop') pop;
     @ViewChild('pop2') pop2;
     _logDeletOrg: boolean;

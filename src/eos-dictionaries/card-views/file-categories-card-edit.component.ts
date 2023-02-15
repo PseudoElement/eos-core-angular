@@ -1,5 +1,5 @@
 import { Component, Injector, NgZone, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { EosDictService } from '../services/eos-dict.service';
 import { OPEN_CLASSIF_DOCGROUP_FOR_FILE_CAT } from 'app/consts/query-classif.consts';
@@ -12,7 +12,7 @@ import { FileCategoryDictionaryDescriptor } from '../core/file-category-dictiona
     templateUrl: 'file-categories-card-edit.component.html',
     styleUrls: ['./file-categories-card-edit.component.scss']
 })
-export class FileCategoryCardEditComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class FileCategoryCardEditComponent extends BaseCardEditDirective implements OnChanges, OnInit {
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
 
     get isDocGroup(): boolean {

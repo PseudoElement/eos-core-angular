@@ -1,13 +1,14 @@
 import { DynamicInputLinkButtonComponent } from './../../../eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
-import { Injectable } from '@angular/core';
-import { RKBasePage } from './rk-base-page';
+import { Injectable, Directive } from '@angular/core';
+import { RKBasePageDirective } from './rk-base-page';
 import { RecordViewComponent } from '../record-view.component/record-view.component';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 declare function openPopup(url: string, callback?: Function): boolean;
 
+@Directive()
 @Injectable()
-export abstract class RKNomenkBasePage extends RKBasePage {
+export abstract class RKNomenkBasePageDirective extends RKBasePageDirective {
 
 
     protected doCardSelectView(path: string) {

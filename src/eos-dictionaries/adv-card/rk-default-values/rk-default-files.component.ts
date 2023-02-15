@@ -1,5 +1,5 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { RKBasePage } from './rk-base-page';
+import { RKBasePageDirective } from './rk-base-page';
 import { STRICT_OPTIONS, NOT_STRICT_OPTIONS } from './rk-default-const';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
@@ -9,7 +9,7 @@ import { STRICT_OPTIONS, NOT_STRICT_OPTIONS } from './rk-default-const';
     templateUrl: 'rk-default-files.component.html',
 })
 
-export class RKFilesCardComponent extends RKBasePage implements OnChanges {
+export class RKFilesCardComponent extends RKBasePageDirective implements OnChanges {
     public isFileAccessEnabled = false;
     public isSecurLavelAccessEnabled = false;
     ngOnChanges(changes: SimpleChanges) {

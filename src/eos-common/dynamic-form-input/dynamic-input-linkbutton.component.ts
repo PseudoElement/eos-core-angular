@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { DynamicInputBase } from './dynamic-input-base';
+import { DynamicInputBaseDirective } from './dynamic-input-base';
 
 @Component({
     selector: 'eos-dynamic-input-linkbutton',
     templateUrl: 'dynamic-input-linkbutton.component.html'
 })
-export class DynamicInputLinkButtonComponent extends DynamicInputBase {
+export class DynamicInputLinkButtonComponent extends DynamicInputBaseDirective {
     @Input() buttonClick: Function;
     @Input() buttonClickRemove: Function;
     @Input() iconForElem: string;

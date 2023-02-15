@@ -1,5 +1,5 @@
 import { Component, Injector, OnChanges, OnInit, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
 import { Validators } from '@angular/forms';
@@ -22,7 +22,7 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
     selector: 'eos-docgroup-card',
     templateUrl: 'docgroup-card.component.html',
 })
-export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class DocgroupCardComponent extends BaseCardEditDirective implements OnChanges, OnInit {
 
     get isPrjFlag(): boolean {
         return this.getValue('rec.PRJ_NUM_FLAG');

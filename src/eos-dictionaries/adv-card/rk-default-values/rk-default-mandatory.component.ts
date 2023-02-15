@@ -1,5 +1,5 @@
 import { Component, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { RKBasePage } from './rk-base-page';
+import { RKBasePageDirective } from './rk-base-page';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 
@@ -8,7 +8,7 @@ import { RKBasePage } from './rk-base-page';
     templateUrl: 'rk-default-mandatory.component.html',
 })
 
-export class RKMandatoryCardComponent extends RKBasePage implements OnChanges, OnInit {
+export class RKMandatoryCardComponent extends RKBasePageDirective implements OnChanges, OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
     }

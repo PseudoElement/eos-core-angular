@@ -1,5 +1,5 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
+import { DynamicInputBaseDirective } from 'eos-common/dynamic-form-input/dynamic-input-base';
 
 export class InputBase<T> {
     value: T;
@@ -24,7 +24,7 @@ export class InputBase<T> {
     formatDbBinary?: boolean;
     minValue?: number;
     maxValue?: number;
-    dib?: DynamicInputBase;
+    dib?: DynamicInputBaseDirective;
     descriptor?: any;
 
     constructor(options: {

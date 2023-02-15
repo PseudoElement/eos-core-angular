@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector } from '@angular/core';
+import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector, Component} from '@angular/core';
 
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -17,6 +17,9 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
+@Component({
+    template: ''
+})
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();

@@ -1,6 +1,6 @@
-///<reference path="../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
+// ///<reference path="../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
 import {Component, Injector, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import {BaseCardEditComponent} from './base-card-edit.component';
+import {BaseCardEditDirective} from './base-card-edit.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
     selector: 'eos-broadcast-channel-card-edit',
     templateUrl: 'broadcast-channel-card-edit.component.html',
 })
-export class BroadcastChannelCardEditComponent extends BaseCardEditComponent implements OnChanges, OnDestroy, OnInit {
+export class BroadcastChannelCardEditComponent extends BaseCardEditDirective implements OnChanges, OnDestroy, OnInit {
     private ngUnsubscribe: Subject<any> = new Subject();
     private REC_CHANNEL_TYPE = 'rec.CHANNEL_TYPE';
     private REC_AUTH_METHOD = 'rec.AUTH_METHOD';

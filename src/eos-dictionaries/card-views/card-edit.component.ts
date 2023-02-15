@@ -9,7 +9,7 @@ import {
     SimpleChanges,
     HostListener,
 } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosUtils } from 'eos-common/core/utils';
@@ -41,7 +41,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
     @Output() formInvalid: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @ViewChild('cardEditEl') baseCardEditRef: BaseCardEditComponent;
+    @ViewChild('cardEditEl') baseCardEditRef: BaseCardEditDirective;
 
     form: FormGroup;
     inputs: any;

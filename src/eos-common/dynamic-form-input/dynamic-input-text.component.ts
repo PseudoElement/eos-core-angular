@@ -2,13 +2,13 @@ import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
-import { DynamicInputBase } from './dynamic-input-base';
+import { DynamicInputBaseDirective } from './dynamic-input-base';
 
 @Component({
     selector: 'eos-dynamic-input-text',
     templateUrl: 'dynamic-input-text.component.html'
 })
-export class DynamicInputTextComponent extends DynamicInputBase {
+export class DynamicInputTextComponent extends DynamicInputBaseDirective {
     @ViewChild('textArea') textArea: ElementRef<HTMLElement>;
     @Input() notStandartText: boolean;
     /* public isShowText = false; */

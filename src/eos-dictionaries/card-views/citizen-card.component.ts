@@ -1,11 +1,11 @@
 import { Component, Injector, OnChanges } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 
 @Component({
     selector: 'eos-citizen-card',
     templateUrl: 'citizen-card.component.html',
 })
-export class CitizenCardComponent extends BaseCardEditComponent implements OnChanges {
+export class CitizenCardComponent extends BaseCardEditDirective implements OnChanges {
 
     constructor(
         injector: Injector,

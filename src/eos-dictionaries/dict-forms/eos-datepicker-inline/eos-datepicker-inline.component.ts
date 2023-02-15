@@ -34,12 +34,12 @@ export class EosDatepickerInlineComponent implements OnInit {
         [this.rumonths[9], this.rumonths[10], this.rumonths[11], ],
     ];
 
-    @Input('bsValue') bsValue: Date;
-    @Input('getClassForDate') getClassForDate: Function;
+    @Input() bsValue: Date;
+    @Input() getClassForDate: Function;
 
     @ViewChild('daystbody') daystbody: ElementRef;
 
-    @Output('bsValueChange') bsValueChange: EventEmitter<Date>;
+    @Output() bsValueChange: EventEmitter<Date>;
     yearsItemsArr: number[][];
 
     constructor (

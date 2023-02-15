@@ -15,7 +15,7 @@ import { BsModalRef } from 'ngx-bootstrap';
 import { VALIDATOR_TYPE, ValidatorsControl } from '../validators/validators-control';
 import { Subscription } from 'rxjs';
 import { IDynamicInputOptions } from '../../eos-common/dynamic-form-input/dynamic-input.component';
-import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
+import { BaseCardEditDirective } from '../card-views/base-card-edit.component';
 import { RK_SELECTED_VALUE_INCORRECT, RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST, RK_ERROR_SAVE_SECUR } from '../../app/consts/confirms.const';
 import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
@@ -572,7 +572,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         this.updateSEndAccess(grif.value);
                         this.isUpdating = false;
                         this._prjExecListOnChange();
-                        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values');
+                        BaseCardEditDirective.autoFocusOnFirstStringElement('eos-prj-default-values');
                     });
                 PrjDefaultValuesComponent._updateValidators(this.form.controls);
                 this.$statusChanges = this.form.statusChanges
@@ -628,7 +628,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
 
     setTab(i: number) {
         this.currTab = i;
-        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values');
+        BaseCardEditDirective.autoFocusOnFirstStringElement('eos-prj-default-values');
     }
 
     cancel(): void {

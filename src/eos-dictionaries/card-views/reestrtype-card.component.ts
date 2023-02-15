@@ -1,5 +1,5 @@
 import { Component, Injector, OnChanges, OnInit } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { CONFIRM_REESTRTYPE_DELIVERY_CHANGE, BUTTON_RESULT_OK } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
@@ -11,7 +11,7 @@ import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.compo
     templateUrl: 'reestrtype-card.component.html',
     styleUrls: ['./reestrtype-card.component.scss']
 })
-export class ReestrtypeCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class ReestrtypeCardComponent extends BaseCardEditDirective implements OnChanges, OnInit {
 
     private _deliv_checkneed: boolean;
 

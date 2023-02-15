@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy, Injector } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 
 @Component({
     selector: 'eos-format-edit',
     templateUrl: 'format-edit.component.html',
     styleUrls: ['format-edit.component.scss']
 })
-export class FormatEditComponent extends BaseCardEditComponent implements OnDestroy, OnInit {
+export class FormatEditComponent extends BaseCardEditDirective implements OnDestroy, OnInit {
     private ngUnsubscribe: Subject<any> = new Subject();
     get getCheckColor(): boolean {
         const value: string = this.form.controls['rec.FORMAT_GNAME'].value;

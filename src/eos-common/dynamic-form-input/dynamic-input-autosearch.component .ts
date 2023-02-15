@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input } from '@angular/core';
-import { DynamicInputBase } from './dynamic-input-base';
+import { DynamicInputBaseDirective } from './dynamic-input-base';
 import { BsDropdownDirective } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
 
@@ -9,7 +9,7 @@ const LI_HEIGHT = 20;
     templateUrl: 'dynamic-input-autosearch.component.html'
 })
 
-export class DynamicInputAutoSearchComponent extends DynamicInputBase implements OnChanges, OnDestroy {
+export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective implements OnChanges, OnDestroy {
     @Output() buttonClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() buttonClickRemove: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();

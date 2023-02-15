@@ -4,7 +4,7 @@ import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, E_FIELD_SET, IRecordModeDescription, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
-import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
+import { BaseCardEditDirective } from '../card-views/base-card-edit.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 // export interface IQuickSrchObj {
 //     isOpenQuick: boolean;
@@ -139,7 +139,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     autoFocus() {
-        BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container');
+        BaseCardEditDirective.autoFocusOnFirstStringElement('popover-container');
         this.settings.lastSearch = SEARCHTYPE.none;
         this.switchFastSrch.emit(false);
     }

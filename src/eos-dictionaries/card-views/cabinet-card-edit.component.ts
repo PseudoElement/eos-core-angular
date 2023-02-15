@@ -1,6 +1,6 @@
 import { Component, Injector, ViewChild, OnChanges, HostListener } from '@angular/core';
 
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { CABINET_FOLDERS } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { DEPARTMENT, PipRX, CABINET } from 'eos-rest';
 import { IOrderBy } from '../interfaces';
@@ -25,7 +25,7 @@ interface ICabinetOwner {
     selector: 'eos-cabinet-card-edit',
     templateUrl: 'cabinet-card-edit.component.html',
 })
-export class CabinetCardEditComponent extends BaseCardEditComponent implements OnChanges {
+export class CabinetCardEditComponent extends BaseCardEditDirective implements OnChanges {
     readonly tabs = ['Основные данные', 'Доступ пользователей к кабинету'];
     status: any = {
         showOwners: true,

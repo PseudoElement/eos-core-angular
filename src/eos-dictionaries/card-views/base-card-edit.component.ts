@@ -1,4 +1,4 @@
-import {Input, Injector, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
+import { Input, Injector, OnDestroy, OnInit, AfterViewInit, Directive } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { EosDictService } from '../services/eos-dict.service';
@@ -9,7 +9,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
-import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
+import { DynamicInputBaseDirective } from 'eos-common/dynamic-form-input/dynamic-input-base';
 import { BsModalService } from 'ngx-bootstrap';
 
 export class TabOptions {
@@ -24,7 +24,8 @@ enum TabStatus {
     TabEmpty,
 }
 
-export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
+@Directive()
+export class BaseCardEditDirective implements OnDestroy, OnInit, AfterViewInit {
     @Input() form: FormGroup;
     @Input() inputs: any;
     @Input() data: any;
@@ -92,7 +93,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
             }
         }, 500);
     }
-    public static setElementOnValidate(key: string, component: BaseCardEditComponent) {
+    public static setElementOnValidate(key: string, component: BaseCardEditDirective) {
         if (key) {
             if (component.tabOptions.length > 0) {
                 let ind = -1;
@@ -119,7 +120,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         for (const key in this.inputs) {
             if (this.inputs.hasOwnProperty(key)) {
                 const el = this.inputs[key];
-                const elDib: DynamicInputBase = el.dib;
+                const elDib: DynamicInputBaseDirective = el.dib;
                 if (elDib && elDib.inputTooltip) {
                     elDib.inputTooltip.visible = false;
                 }
@@ -131,7 +132,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         for (const key in this.inputs) {
             if (this.inputs.hasOwnProperty(key)) {
                 const el = this.inputs[key];
-                const elDib: DynamicInputBase = el.dib;
+                const elDib: DynamicInputBaseDirective = el.dib;
                 if (elDib && elDib.inputTooltip) {
                     elDib.delayedTooltip();
                 }
@@ -144,7 +145,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
+        BaseCardEditDirective.autoFocusOnFirstStringElement('eos-card-edit');
 
     }
 

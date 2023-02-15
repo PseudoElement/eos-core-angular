@@ -1,5 +1,5 @@
 import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 
@@ -9,7 +9,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
     styleUrls: ['./nomenkl-card.component.scss']
 })
 
-export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+export class NomenklCardComponent extends BaseCardEditDirective implements OnChanges, OnInit {
 
 
     buttons = [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}];

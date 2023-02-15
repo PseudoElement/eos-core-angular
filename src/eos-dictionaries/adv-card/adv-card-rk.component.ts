@@ -7,13 +7,13 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, STRICT_OPTIONS, NOT_STRICT_OPTIONS } from './rk-default-values/rk-default-const';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs';
-import { RKBasePage } from './rk-default-values/rk-base-page';
+import { RKBasePageDirective } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { /* RK_SELECTED_VALUE_INCORRECT_EMPTY_LIST ,*/ RK_SELECTED_VALUE_INCORRECT, RK_SELECTED_VALUE_INCORRECT_ONLY_DELETED, RK_ERROR_SAVE_SECUR } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
-import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
+import { BaseCardEditDirective } from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
@@ -63,7 +63,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     isEDoc: boolean;
     rkType: number;
 
-    @ViewChild('currentPage') private currentPage: RKBasePage;
+    @ViewChild('currentPage') private currentPage: RKBasePageDirective;
     private subscriptions: Subscription[];
     private _node = {};
     private isn_node: number;
@@ -335,7 +335,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public clickTab(item: Ttab) {
         this.activeTab = item;
-        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
+        BaseCardEditDirective.autoFocusOnFirstStringElement('eos-adv-card-rk');
     }
 
     public initByNodeData(dndata: any) {
@@ -390,7 +390,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
                 this._subscribeToChanges();
                 this.isUpdating = false;
-                BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
+                BaseCardEditDirective.autoFocusOnFirstStringElement('eos-adv-card-rk');
             });
         });
 

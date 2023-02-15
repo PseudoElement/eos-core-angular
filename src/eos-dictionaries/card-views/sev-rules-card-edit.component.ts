@@ -1,5 +1,5 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
-import { BaseCardEditComponent } from './base-card-edit.component';
+import { BaseCardEditDirective } from './base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import {
     OPEN_CLASSIF_LINK_CL,
@@ -22,7 +22,7 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
     templateUrl: 'sev-rules-card-edit.component.html',
     styleUrls: ['./sev-rules-card-edit.component.scss'],
 })
-export class SevRulesCardEditComponent extends BaseCardEditComponent implements OnInit, OnDestroy {
+export class SevRulesCardEditComponent extends BaseCardEditDirective implements OnInit, OnDestroy {
     public linkTypeListNames = [];
     public fileAccessNames = [];
     public fieldNotUpdate = [

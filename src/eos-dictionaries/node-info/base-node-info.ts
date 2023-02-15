@@ -1,8 +1,11 @@
-import { Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, } from '@angular/core';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
+@Component({
+    template: ''
+})
 export class BaseNodeInfoComponent implements OnChanges {
     @Input() node: EosDictionaryNode;
 
