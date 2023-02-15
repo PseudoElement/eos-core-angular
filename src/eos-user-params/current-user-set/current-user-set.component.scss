@@ -102,9 +102,9 @@ $horizontal-line-color-CB: #c4c4c4;
         width: 24px;
 
         @if $isCB {
-            background-image: url("assets/icons/Icon-Add-UserSettings-CB.svg");
+            background-image: url("../../assets/icons/Icon-Add-UserSettings-CB.svg");
         } @else {
-            background-image: url("assets/icons/Icon-Add-UserSettings.svg");
+            background-image: url("../../assets/icons/Icon-Add-UserSettings.svg");
         }
     }
 
@@ -115,9 +115,9 @@ $horizontal-line-color-CB: #c4c4c4;
         width: 18px;
 
         @if $isCB {
-            background-image: url("assets/icons/Icon-Delete-UserSettings-CB.svg");
+            background-image: url("../../assets/icons/Icon-Delete-UserSettings-CB.svg");
         } @else {
-            background-image: url("assets/icons/Icon-Delete-UserSettings.svg");
+            background-image: url("../../assets/icons/Icon-Delete-UserSettings.svg");
         }
     }
 
@@ -126,9 +126,9 @@ $horizontal-line-color-CB: #c4c4c4;
         width: 18px;
 
         @if $isCB {
-            background-image: url("assets/icons/Icon-Info-UserSettings-CB.svg");
+            background-image: url("../../assets/icons/Icon-Info-UserSettings-CB.svg");
         } @else {
-            background-image: url("assets/icons/Icon-Info-UserSettings.svg");
+            background-image: url("../../assets/icons/Icon-Info-UserSettings.svg");
         }
     }
 }
@@ -145,7 +145,7 @@ $horizontal-line-color-CB: #c4c4c4;
     content: "";
     width: 16px;
     height: 15px;
-    background-image: url("assets/icons/Counter-UserSettings.svg");
+    background-image: url("../../assets/icons/Counter-UserSettings.svg");
     background-repeat: no-repeat;
 }
 
@@ -272,14 +272,14 @@ $horizontal-line-color-CB: #c4c4c4;
 //выпадака реализованная в виде портала
 bs-dropdown-container {
     span.eos-adm-icon.eos-adm-icon-checkbox-grey {
-        background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+        background-image: url("../../assets/icons/Arrow-V-UserSettings-Grey.svg");
         transform: rotate(270deg);
     }
 }
 
 .current-settings {
     eos-spinner > i {
-        content: url("assets/icons/Spiner-Curent.svg");
+        content: url("../../assets/icons/Spiner-Curent.svg");
     }
     display: flex;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -373,7 +373,7 @@ bs-dropdown-container {
                     background-color: $header-bg;
 
                     &::before {
-                        content: url("assets/icons/Icon-Gear-UserSettings.svg");
+                        content: url("../../assets/icons/Icon-Gear-UserSettings.svg");
                         position: absolute;
                         top: 0px;
                         left: 0px;
@@ -533,19 +533,19 @@ bs-dropdown-container {
                                     }
 
                                     input[type="checkbox"] + span {
-                                        background-image: url("assets/icons/Checkbox-UserSettings-Black.svg");
+                                        background-image: url("../../assets/icons/Checkbox-UserSettings-Black.svg");
                                     }
 
                                     input[type="checkbox"]:checked + span {
-                                        background-image: url("assets/icons/Checkbox-UserSettings-V-Black.svg");
+                                        background-image: url("../../assets/icons/Checkbox-UserSettings-V-Black.svg");
                                     }
 
                                     input[type="checkbox"][disabled] + span {
-                                        background-image: url("assets/icons/Checkbox-UserSettings-Square-Grey.svg");
+                                        background-image: url("../../assets/icons/Checkbox-UserSettings-Square-Grey.svg");
                                     }
 
                                     input[type="checkbox"][disabled]:checked + span {
-                                        background-image: url("assets/icons/Checkbox-Grey.svg");
+                                        background-image: url("../../assets/icons/Checkbox-Grey.svg");
                                     }
                                 }
                             }
@@ -569,15 +569,15 @@ bs-dropdown-container {
                                     }
 
                                     input[type="radio"] + span {
-                                        background-image: url("assets/icons/Radio-UserSettings-Black.svg");
+                                        background-image: url("../../assets/icons/Radio-UserSettings-Black.svg");
                                     }
 
                                     input[type="radio"]:checked + span {
-                                        background-image: url("assets/icons/Radio-UserSettings-V-Black.svg");
+                                        background-image: url("../../assets/icons/Radio-UserSettings-V-Black.svg");
                                     }
 
                                     input[type="radio"][disabled] + span {
-                                        background-image: url("assets/icons/Radio-UserSettings-Grey.svg");
+                                        background-image: url("../../assets/icons/Radio-UserSettings-Grey.svg");
                                     }
                                 }
                             }
@@ -598,11 +598,11 @@ bs-dropdown-container {
                         }
 
                         span.eos-adm-icon-checkbox-grey {
-                            background-image: url("assets/icons/Checkbox-UserSettings-Grey.svg");
+                            background-image: url("../../assets/icons/Checkbox-UserSettings-Grey.svg");
                         }
 
                         span.eos-adm-icon-arrow-v-blue-bottom {
-                            background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+                            background-image: url("../../assets/icons/Arrow-V-UserSettings-Grey.svg");
                         }
                     }
 
@@ -670,7 +670,7 @@ bs-dropdown-container {
                     span.eos-adm-icon-close-folder-blue,
                     span.eos-adm-icon-open-folder-grey,
                     span.eos-adm-icon-open-folder-blue {
-                        background-image: url("assets/icons/Icon-Open-Close-UserSettings.svg") !important;
+                        background-image: url("../../assets/icons/Icon-Open-Close-UserSettings.svg") !important;
                         background-repeat: no-repeat;
                         background-size: 8px 10px;
                     }
@@ -694,13 +694,13 @@ bs-dropdown-container {
                         }
 
                         span.eos-adm-icon-arrow-v-blue-bottom {
-                            background-image: url("assets/icons/Arrow-V-UserSettings-Grey.svg");
+                            background-image: url("../../assets/icons/Arrow-V-UserSettings-Grey.svg");
                         }
                     }
 
                     span.eos-adm-icon-open-folder-blue,
                     span.eos-adm-icon-close-folder-blue {
-                        background-image: url("assets/icons/Open-Close-UserSettings-Folder-Grey.svg");
+                        background-image: url("../../assets/icons/Open-Close-UserSettings-Folder-Grey.svg");
                     }
                 }
             }

@@ -14,6 +14,7 @@ import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { AutoSearchInput } from 'eos-common/core/inputs/autosearch-input';
 import { Injectable } from '@angular/core';
+import { ISelectInput } from 'eos-common/core/inputs/inputs.interfaces';
 
 @Injectable()
 export class InputParamControlService {
@@ -31,8 +32,8 @@ export class InputParamControlService {
                     set[input.key] = new DateInput(input);
                     break;
                 case E_FIELD_TYPE.select:
-                     set[input.key] = new DropdownInput(Object.assign({options: []}, input));
-                     break;
+                    set[input.key] = new DropdownInput(Object.assign(<ISelectInput>{options: []}, input));
+                    break;
                 case E_FIELD_TYPE.radio:
                     set[input.key] = new RadioInput(input);
                     break;
@@ -40,7 +41,7 @@ export class InputParamControlService {
                 //     set[input.key] = new ButtonsInput(<ISelectInput>input);
                 //     break;
                 case E_FIELD_TYPE.autosearch:
-                    set[input.key] = new AutoSearchInput(Object.assign({options: []}, input));
+                    set[input.key] = new AutoSearchInput(Object.assign(<ISelectInput>{options: []}, input));
                     break;
                 default:
                     set[input.key] = new StringInput(input);
@@ -64,7 +65,7 @@ export class InputParamControlService {
                     set[input.key] = new DateInput(input);
                     break;
                 case E_FIELD_TYPE.select:
-                    set[input.key] = new DropdownInput(Object.assign({options: []}, input));
+                    set[input.key] = new DropdownInput(Object.assign(<ISelectInput>{options: []}, input));
                     break;
                 case E_FIELD_TYPE.radio:
                     set[input.key] = new RadioInput(input);
@@ -73,7 +74,7 @@ export class InputParamControlService {
                 //     set[input.key] = new ButtonsInput(<ISelectInput>input);
                 //     break;
                 case E_FIELD_TYPE.autosearch:
-                    set[input.key] = new AutoSearchInput(Object.assign({options: []}, input));
+                    set[input.key] = new AutoSearchInput(Object.assign(<ISelectInput>{options: []}, input));
                     break;
                 default:
                     set[input.key] = new StringInput(input);
