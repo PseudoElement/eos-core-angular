@@ -20,7 +20,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 })
 
 export class NodeListItemComponent implements OnInit, OnChanges {
-    @ViewChild('item') item: ElementRef;
+    @ViewChild('item', { static: true }) item: ElementRef;
     @Input() node: EosDictionaryNode;
     @Input() params: IDictionaryViewParameters;
     @Input() length: any = {};

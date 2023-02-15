@@ -7,10 +7,10 @@ $ie:10 !default;
 // @import "fontawesome/variables";
 // VENDOR - Default fall-backs and external files.
 // ==========================================================================
-@import "../../node_modules/font-awesome/scss/font-awesome";
+@import "../../node_modules/font-awesome/css/font-awesome.min.css";
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css";
-@import "../../node_modules/dragula/dist/dragula.css";
+@import "../../node_modules/dragula/dist/dragula.min.css";
 
 @import "app";
 @import "general-items";

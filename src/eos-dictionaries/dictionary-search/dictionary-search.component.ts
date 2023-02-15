@@ -34,9 +34,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     searchRun: EventEmitter<SearchFormSettings> = new EventEmitter();
     @Output()
     switchFastSrch: EventEmitter<boolean> = new EventEmitter();
-    @ViewChild('full')
+    @ViewChild('full', { static: true })
     fSearchPop;
-    @ViewChild('quick')
+    @ViewChild('quick', { static: false })
     qSearchPop;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
 

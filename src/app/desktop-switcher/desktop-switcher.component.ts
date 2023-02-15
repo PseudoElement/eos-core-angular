@@ -14,7 +14,7 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 export class DesktopSwitcherComponent implements OnInit, OnDestroy {
     selectedDesk: EosDesk;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
-    @ViewChild('dropDown') private _dropDown: BsDropdownDirective;
+    @ViewChild('dropDown', {static: false}) private _dropDown!: BsDropdownDirective;
 
     private _selectedDeskSubscription: Subscription;
 

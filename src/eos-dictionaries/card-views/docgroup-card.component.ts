@@ -47,7 +47,7 @@ export class DocgroupCardComponent extends BaseCardEditDirective implements OnCh
     isUsed = true;
     uniqFlagShablonCheck: boolean = false;
     logDeletDoc: boolean = false;
-    @ViewChild('inputChoice') inputChoice: ElementRef;
+    @ViewChild('inputChoice', { static: true }) inputChoice: ElementRef;
     private _prev = {};
     private modalSrv: BsModalService;
     private templateModal: BsModalRef;

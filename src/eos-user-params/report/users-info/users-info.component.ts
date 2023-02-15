@@ -19,7 +19,7 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 export class EosReportUsersInfoComponent implements OnChanges {
     @Input() open: boolean = false;
     @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @ViewChild('usersInfo') usersInfo;
+    @ViewChild('usersInfo', { static: true }) usersInfo;
     users: any[];
     modalRef: BsModalRef;
     selectUser: any;

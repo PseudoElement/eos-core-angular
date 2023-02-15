@@ -10,7 +10,7 @@ import { NavParamService } from 'app/services/nav-param.service';
     templateUrl: 'eos-user-select.component.html'
 })
 export class UserSelectComponent implements OnDestroy, AfterViewInit, DoCheck {
-    @ViewChild('tree') treeEl;
+    @ViewChild('tree', { static: true }) treeEl;
     currentState: boolean[] = [true, true];
     _treeScrollTop = 0;
     hasParent: boolean = true;

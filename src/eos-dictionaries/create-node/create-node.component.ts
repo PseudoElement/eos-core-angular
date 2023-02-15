@@ -28,7 +28,7 @@ export class CreateNodeComponent {
     @Output() onHide: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() onOpen: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @ViewChild('cardEditEl') cardEditRef: CardEditComponent;
+    @ViewChild('cardEditEl', { static: true }) cardEditRef: CardEditComponent;
 
     formIsValid = false;
     hasChanges = false;

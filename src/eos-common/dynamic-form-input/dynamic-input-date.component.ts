@@ -27,7 +27,7 @@ export class DynamicInputDateComponent extends DynamicInputBaseDirective impleme
         return '--.--.----';
     }
 
-    @ViewChild('dpw') datePickerWrapper: ElementRef;
+    @ViewChild('dpw', { static: true }) datePickerWrapper: ElementRef;
 
     constructor(
         private localeService: BsLocaleService,

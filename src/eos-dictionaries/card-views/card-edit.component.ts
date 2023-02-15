@@ -41,7 +41,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
     @Output() formInvalid: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @ViewChild('cardEditEl') baseCardEditRef: BaseCardEditDirective;
+    @ViewChild('cardEditEl', { static: false }) baseCardEditRef: BaseCardEditDirective;
 
     form: FormGroup;
     inputs: any;

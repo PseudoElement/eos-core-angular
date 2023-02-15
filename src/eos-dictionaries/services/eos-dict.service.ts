@@ -48,7 +48,6 @@ import { NADZOR_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor
 import { STORAGE_WEIGHTORDER, URL_LOGIN } from 'app/consts/common.consts';
 import { SEV_DICTIONARIES } from 'eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
-import { isArray } from 'util';
 import { ERROR_LOGIN } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
@@ -906,7 +905,7 @@ export class EosDictService {
         if (results) {
             if (typeof results === 'number') {
                 this._storageSrv.setItem('newNode', results, true);
-            } else if (isArray(results)) {
+            } else if (Array.isArray(results)) {
                 if (results[0] && results[0].record && results[0].record.data && results[0].record.data.rec.ISN_LCLASSIF) {
                     this._storageSrv.setItem('newNode', results[0].record.data.rec.ISN_LCLASSIF, true);
                 } else if (results[0] && typeof results[0].record === 'number') {

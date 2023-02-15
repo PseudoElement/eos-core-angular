@@ -90,7 +90,7 @@
                     .list-item-cert {
                         max-width: 95%;
                         display: inline-block;
-                        @include text-overflow;
+                        // @include text-overflow;
                     }
 
                     .info-icon-wrap {

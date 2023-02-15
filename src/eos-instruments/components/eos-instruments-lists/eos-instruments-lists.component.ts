@@ -28,7 +28,7 @@ export class EosInstrumentsListsComponent implements OnInit {
     }
   }
   itemWidth() {
-    const w = this.containerInstrument.nativeElement.clientWidth;
+    const w = this.containerInstrument?.nativeElement.clientWidth || window.innerWidth;
     if (!this.tools || w === this._lastWrapperWidth) {
         return this._calcItemWidth;
     }

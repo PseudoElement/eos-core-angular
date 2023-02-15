@@ -20,7 +20,7 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
 
     @Output() onSelectDesk: EventEmitter<EosDesk> = new EventEmitter<EosDesk>();
     @Output() onDeleteDesk: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @ViewChild('inputDeskName') inputDeskName: ElementRef;
+    @ViewChild('inputDeskName', {static: false}) inputDeskName: ElementRef;
 
     inputTooltip: any = {
         visible: false,

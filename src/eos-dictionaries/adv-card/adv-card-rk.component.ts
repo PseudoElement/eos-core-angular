@@ -63,7 +63,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     isEDoc: boolean;
     rkType: number;
 
-    @ViewChild('currentPage') private currentPage: RKBasePageDirective;
+    @ViewChild('currentPage', { static: false }) private currentPage: RKBasePageDirective;
     private subscriptions: Subscription[];
     private _node = {};
     private isn_node: number;

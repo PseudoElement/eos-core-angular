@@ -26,7 +26,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
 
     /* @Input() checkedParams: string; */
     /* @Input() code: Map<string, string>; */
-    @ViewChild('autentif') autentif: ElementRef;
+    @ViewChild('autentif', { static: false }) autentif: ElementRef;
     @Output() sendParams = new EventEmitter<any>();
 
     isLoading = false;

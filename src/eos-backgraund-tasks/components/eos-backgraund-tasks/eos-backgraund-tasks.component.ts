@@ -11,7 +11,7 @@ import { FonTasksService } from 'eos-backgraund-tasks/services/fon-tasks.service
 
 
 export class EosBackgraundTasksComponent implements OnInit, OnDestroy {
-  @ViewChild('containerTask') containerTask: ElementRef;
+  @ViewChild('containerTask', {static: true}) containerTask: ElementRef;
   lists: IFonLists[] = [];
   private _lastWrapperWidth: number;
   private _calcItemWidth: number;
@@ -31,7 +31,7 @@ export class EosBackgraundTasksComponent implements OnInit, OnDestroy {
     this.lists = [];
   }
   itemWidth() {
-    const w = this.containerTask.nativeElement.clientWidth;
+    const w = this.containerTask?.nativeElement.clientWidth || window.innerWidth;
     if (!this.lists || w === this._lastWrapperWidth) {
         return this._calcItemWidth;
     }

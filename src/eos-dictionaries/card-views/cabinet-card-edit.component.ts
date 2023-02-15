@@ -50,8 +50,8 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
     };
     isUserSorted = false;
 
-    @ViewChild('tableEl') tableEl;
-    @ViewChild('intupString') intupString;
+    @ViewChild('tableEl', { static: false }) tableEl;
+    @ViewChild('intupString', { static: false }) intupString;
 
     private _apiSrv: PipRX;
     private _msgSrv: EosMessageService;

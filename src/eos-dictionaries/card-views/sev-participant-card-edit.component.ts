@@ -18,8 +18,8 @@ import { AppContext } from 'eos-rest/services/appContext.service';
     styleUrls: ['./sev-participant-card-edit.component.scss'],
 })
 export class SevParticipantCardEditComponent extends BaseCardEditDirective implements OnChanges, OnInit {
-    @ViewChild('pop') pop;
-    @ViewChild('pop2') pop2;
+    @ViewChild('pop', { static: true }) pop;
+    @ViewChild('pop2', { static: true }) pop2;
     _logDeletOrg: boolean;
     _orgName: any;
     modalWindow: BsModalRef;

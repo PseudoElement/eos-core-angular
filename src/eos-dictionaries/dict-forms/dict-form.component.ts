@@ -23,7 +23,7 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
 })
 export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
 
-    @ViewChild('formElement') formElement: IDictFormBase;
+    @ViewChild('formElement', { static: false }) formElement: IDictFormBase;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionaryId: string;
     editMode: boolean;

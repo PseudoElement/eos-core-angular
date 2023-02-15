@@ -18,7 +18,7 @@ export class PushpinComponent {
     hideSystem = true;
     showSelected = false;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
-    @ViewChild('dropDown') private _dropDown: BsDropdownDirective;
+    @ViewChild('dropDown', { static: true }) private _dropDown: BsDropdownDirective;
 
     constructor(private _deskSrv: EosDeskService, private _msgSrv: EosMessageService) { }
 

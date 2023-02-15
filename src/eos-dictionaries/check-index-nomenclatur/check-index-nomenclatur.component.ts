@@ -35,8 +35,8 @@ interface SORTITEM {
 export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     @Output() onHide: EventEmitter<any> = new EventEmitter<any>();
     @Output() onOpen: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @ViewChild('settingsWindow') settingsWindow: ElementRef;
-    @ViewChild('redactWindow') redactWindow: ElementRef;
+    @ViewChild('settingsWindow', { static: true }) settingsWindow: ElementRef;
+    @ViewChild('redactWindow', { static: true }) redactWindow: ElementRef;
     searchForm: FormGroup;
     inputs: InputBase<any>[];
     forWhom: number = 0;

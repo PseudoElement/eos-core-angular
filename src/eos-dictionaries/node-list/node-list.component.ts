@@ -34,10 +34,10 @@ const ITEM_WIDTH_FOR_NAN = 100;
     templateUrl: 'node-list.component.html',
 })
 export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, AfterContentChecked {
-    @ViewChild(SortableComponent) sortableComponent: SortableComponent;
-    @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
-    @ViewChild('eosNodeList') eosNodeList;
-    @ViewChild('nodeListElement') nodeListElement;
+    @ViewChild(SortableComponent, { static: false }) sortableComponent: SortableComponent;
+    @ViewChild(LongTitleHintComponent, { static: false }) hint: LongTitleHintComponent;
+    @ViewChild('eosNodeList', { static: true }) eosNodeList;
+    @ViewChild('nodeListElement', { static: true }) nodeListElement;
 
     customFields: IFieldView[] = [];
     length = {};

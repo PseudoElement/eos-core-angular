@@ -9,7 +9,7 @@ import { DynamicInputBaseDirective } from './dynamic-input-base';
     templateUrl: 'dynamic-input-text.component.html'
 })
 export class DynamicInputTextComponent extends DynamicInputBaseDirective {
-    @ViewChild('textArea') textArea: ElementRef<HTMLElement>;
+    @ViewChild('textArea', {static: false}) textArea: ElementRef<HTMLElement>;
     @Input() notStandartText: boolean;
     /* public isShowText = false; */
     constructor(private _waitCl: WaitClassifService/* , private appCtx: AppContext */) {

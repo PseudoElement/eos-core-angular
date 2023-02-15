@@ -30,7 +30,7 @@ const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 })
 export class CreateUserComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
-    @ViewChild('templatePassword') templatePassword: ElementRef;
+    @ViewChild('templatePassword', { static: true }) templatePassword: ElementRef;
     @ViewChild('classifName') classifName;
     modalRef: BsModalRef;
     isLoading: boolean = true;

@@ -18,7 +18,7 @@ export class PhotoUploaderComponent implements OnInit {
     @Output() onBeforeModal: EventEmitter<any> = new EventEmitter<any>();
     @Output() onAfterModal: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild('fileInput') inputEl: ElementRef;
+    @ViewChild('fileInput', { static: true }) inputEl: ElementRef;
     // contactUrl = 'http://localhost/Eos.Delo.OData/Services/DELO_BLOB.asmx/Upload';
     // uploading = false;
     // multiple = false;
@@ -31,7 +31,7 @@ export class PhotoUploaderComponent implements OnInit {
 
     componentId: string;
 
-    @ViewChild('confirmModal') private confirmModalRef: ModalDirective;
+    @ViewChild('confirmModal', { static: true }) private confirmModalRef: ModalDirective;
 
     constructor(private _msgSrv: EosMessageService) {
         this.componentId = 'file' + PhotoUploaderComponent.genid++;

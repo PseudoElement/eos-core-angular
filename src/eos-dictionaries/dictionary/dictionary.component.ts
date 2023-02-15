@@ -89,13 +89,13 @@ import { AppContext } from 'eos-rest/services/appContext.service';
 })
 
 export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, OnInit {
-    @ViewChild('nodeList') nodeList: NodeListComponent;
-    @ViewChild('tree') treeEl;
-    @ViewChild('custom-tree') customTreeEl;
-    @ViewChild('selectedWrapper') selectedEl;
-    @ViewChild('quickSearchCtl') quickSearchCtl;
-    @ViewChild('searchCtl') searchCtl;
-    @ViewChild('modalWord') modalWord: TemplateRef<any>;
+    @ViewChild('nodeList', { static: true }) nodeList: NodeListComponent;
+    @ViewChild('tree', { static: true }) treeEl;
+    @ViewChild('custom-tree', { static: false }) customTreeEl;
+    @ViewChild('selectedWrapper', { static: true }) selectedEl;
+    @ViewChild('quickSearchCtl', { static: false }) quickSearchCtl;
+    @ViewChild('searchCtl', { static: true }) searchCtl;
+    @ViewChild('modalWord', { static: true }) modalWord: TemplateRef<any>;
     isLoading = false;
     modalWordRef: BsModalRef;
     newNameBaseDepartment: string = '';

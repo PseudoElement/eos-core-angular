@@ -43,7 +43,7 @@ interface TypeBread {
     templateUrl: 'list-user-select.component.html'
 })
 export class ListUserSelectComponent implements OnDestroy, OnInit {
-    @ViewChild('listContent') listContent;
+    @ViewChild('listContent', { static: false }) listContent;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     currentState: boolean[];
     createUserModal: BsModalRef;

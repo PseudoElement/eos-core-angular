@@ -62,7 +62,7 @@ const SELECTION_CLOSE_TAG = '</span>';
     templateUrl: 'eos-user-params.component.html'
 })
 export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
-    @ViewChild('emailChenge') emailChenge;
+    @ViewChild('emailChenge', { static: false }) emailChenge;
     @ViewChild(UserParamExtendExchComponent) allPanels: UserParamExtendExchComponent;
 
     email = '';

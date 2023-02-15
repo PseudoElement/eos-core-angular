@@ -18,8 +18,8 @@ import { DISABLED_LIST_ITEM } from 'app/consts/messages.consts';
 
 export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
-    @ViewChild('title') title: ElementRef;
-    @ViewChild('linkContainer') linkContainer: ElementRef;
+    @ViewChild('title', {static: false}) title: ElementRef;
+    @ViewChild('linkContainer', {static: true}) linkContainer: ElementRef;
 
     referencesList: IDeskItem[];
     deskId: string;
@@ -93,7 +93,7 @@ export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
 
     itemWidth() {
-        const w = this.linkContainer.nativeElement.clientWidth;
+        const w = this.linkContainer?.nativeElement.clientWidth || window.innerWidth;
         if (!this.referencesList || w === this._lastWrapperWidth) {
             return this._calcItemWidth;
         }

@@ -85,8 +85,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     dutysList: string[] = [];
     fullNamesList: string[] = [];
 
-    @ViewChild('onlyEdit') modalOnlyRef: ModalDirective;
-    @ViewChild('cardEditEl') cardEditRef: CardEditComponent;
+    @ViewChild('onlyEdit', { static: true }) modalOnlyRef: ModalDirective;
+    @ViewChild('cardEditEl', { static: true }) cardEditRef: CardEditComponent;
 
     get nodeName() {
         let _nodeName = '';

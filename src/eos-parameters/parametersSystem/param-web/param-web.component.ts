@@ -12,7 +12,7 @@ import { CertStoresService } from './cert-stores.service';
 
 })
 export class ParamWebComponent extends BaseParamComponent {
-    @ViewChild('certStores') certStores: CertStoresComponent;
+    @ViewChild('certStores', { static: true }) certStores: CertStoresComponent;
     @Input() btnError;
     editMode: boolean;
     public masDisable: any [] = [];

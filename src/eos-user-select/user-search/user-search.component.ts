@@ -20,7 +20,7 @@ import { PipRX } from 'eos-rest';
 export class UserSearchComponent implements OnInit  {
     @Output() search = new EventEmitter<any>();
     @Output() quickSearchKey = new EventEmitter<any>();
-    @ViewChild('full') fSearchPop;
+    @ViewChild('full', { static: true }) fSearchPop;
     @ViewChild('quickSearchField') quickSearchField;
     @Input() quickSearchOpen;
     @Input() flagDeep;

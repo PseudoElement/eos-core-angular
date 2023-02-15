@@ -21,7 +21,7 @@ const UPDATE_INDEXKIND: IConfirmWindow2 = {
     templateUrl: 'param-search.component.html'
 })
 export class ParamSearchComponent extends BaseParamComponent {
-    @ViewChild('headerElement') headerElement;
+    @ViewChild('headerElement', {static: false}) headerElement;
     @Input() btnError;
     public masDisable: any[] = [];
     private indexKing; // тут храниться значение INDEXKIND чтобы после изменения знать что за значение было до этого

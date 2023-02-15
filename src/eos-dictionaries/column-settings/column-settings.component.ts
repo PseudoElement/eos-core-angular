@@ -18,8 +18,8 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
     @Input() dictionaryFields: IFieldView[] = [];
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('editedCurrentItem') editedCurrentItemRef: ElementRef;
-    @ViewChild('editFixedItem') editFixedItemRef: ElementRef;
+    @ViewChild('editedCurrentItem', { static: true }) editedCurrentItemRef: ElementRef;
+    @ViewChild('editFixedItem', { static: true }) editFixedItemRef: ElementRef;
     @ViewChildren('curEditBtn') curEditBtnRefs: QueryList<ElementRef>;
     @ViewChildren('fixedEditBtn') fixedEditBtnRefs: QueryList<ElementRef>;
     public haveCustomTitle = false;

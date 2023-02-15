@@ -37,7 +37,7 @@ export class EosDatepickerInlineComponent implements OnInit {
     @Input() bsValue: Date;
     @Input() getClassForDate: Function;
 
-    @ViewChild('daystbody') daystbody: ElementRef;
+    @ViewChild('daystbody', { static: true }) daystbody: ElementRef;
 
     @Output() bsValueChange: EventEmitter<Date>;
     yearsItemsArr: number[][];

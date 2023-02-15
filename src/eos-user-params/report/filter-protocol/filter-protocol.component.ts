@@ -20,7 +20,7 @@ import { DatePickerStyleFixes } from 'eos-common/type/const.type';
 })
 
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
-  @ViewChild('full') full;
+  @ViewChild('full', { static: true }) full;
   customStyle: DatePickerStyleFixes = 'customDisplayDatepicker';
   data = {};
   placement = 'bottom';

@@ -63,6 +63,7 @@ import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 import { EosBackgraundTasksModule } from '../eos-backgraund-tasks/eos-backgraund-tasks.module';
 import { EosInstrumentsModule } from 'eos-instruments/eos-instruments.module';
 import { BackgroundTaskGuard } from './guards/background-tasks.guard';
+import { DragulaModule } from 'ng2-dragula';
 /* end guards */
 
 @NgModule({
@@ -101,7 +102,8 @@ import { BackgroundTaskGuard } from './guards/background-tasks.guard';
         EosUserParamsModule,
         EosUserSelectModule,
         EosBackgraundTasksModule,
-        EosInstrumentsModule
+        EosInstrumentsModule,
+        DragulaModule
     ],
     entryComponents: [
         LoginFormComponent,

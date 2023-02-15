@@ -26,7 +26,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Input() cancelMode: boolean;
-    @ViewChild('newCards') newCards;
+    @ViewChild('newCards', { static: true }) newCards;
     @Output() Changed = new EventEmitter();
     @Output() allNotCheck = new EventEmitter();
     userTechList;

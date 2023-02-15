@@ -7,7 +7,7 @@ import { TooltipDirective } from 'ngx-bootstrap/tooltip';
 })
 export class InfoComponent {
     @Input() info: string;
-    @ViewChild('pop') private _tooltip: TooltipDirective;
+    @ViewChild('pop', { static: true }) private _tooltip: TooltipDirective;
 
     private _pinned: boolean;
     private _innerClick: boolean;

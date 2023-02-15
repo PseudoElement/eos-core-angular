@@ -56,7 +56,7 @@ interface CalendarRecord extends CALENDAR_CL {
 })
 
 export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
-    @ViewChild('datepicker') datepicker: EosDatepickerInlineComponent;
+    @ViewChild('datepicker', { static: true }) datepicker: EosDatepickerInlineComponent;
     @Output() onSaveChanges: EventEmitter<any> = new EventEmitter<any>();
     @Input() due = null;
 

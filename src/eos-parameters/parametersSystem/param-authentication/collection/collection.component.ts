@@ -23,8 +23,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 export class AuthenticationCollectionComponent implements OnInit {
     @Output() closeCollection = new EventEmitter();
-    @ViewChild('modalWord') modalWord: TemplateRef<any>;
-    @ViewChild('checkAllMarkes') checkAllMarkes;
+    @ViewChild('modalWord', { static: true }) modalWord: TemplateRef<any>;
+    @ViewChild('checkAllMarkes', { static: true }) checkAllMarkes;
     modalWordRef: BsModalRef;
     isMarkNode: boolean = false;
     isNewWord: boolean;

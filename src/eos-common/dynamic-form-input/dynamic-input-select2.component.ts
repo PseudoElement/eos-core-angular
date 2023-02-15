@@ -21,9 +21,9 @@ export class DynamicInputSelect2Component extends DynamicInputBaseDirective impl
     public focusedItem: any;
 
 
-    @ViewChild('dropdown') private _dropDown: BsDropdownDirective;
-    @ViewChild('dropdownElement') private dropdownElement: ElementRef;
-    @ViewChild('textInputSelect') private textInputSelect: ElementRef;
+    @ViewChild('dropdown', {static: false}) private _dropDown: BsDropdownDirective;
+    @ViewChild('dropdownElement', {static: false}) private dropdownElement: ElementRef;
+    @ViewChild('textInputSelect', {static: false}) private textInputSelect: ElementRef;
 
 
 
@@ -105,7 +105,7 @@ export class DynamicInputSelect2Component extends DynamicInputBaseDirective impl
         }
     }
     getMenuWidth(): number {
-        const w = this.textInputSelect.nativeElement.clientWidth;
+        const w = this.textInputSelect?.nativeElement.clientWidth || window.innerWidth;
         if (w === this._lastWrapperWidth) {
             return this._calcItemWidth;
         }

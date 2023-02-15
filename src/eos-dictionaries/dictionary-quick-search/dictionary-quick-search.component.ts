@@ -17,7 +17,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit, OnInit {
     @Output() searchClose: EventEmitter<SearchFormSettings> = new EventEmitter();
     @Output() searchRun: EventEmitter<SearchFormSettings> = new EventEmitter();
     @Input() settings: SearchFormSettings;
-    @ViewChild('quickSearchField') private searchElementRef: ElementRef;
+    @ViewChild('quickSearchField', { static: true }) private searchElementRef: ElementRef;
 
     // private searchDone = true;
 
