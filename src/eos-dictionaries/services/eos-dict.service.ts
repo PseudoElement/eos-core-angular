@@ -1956,7 +1956,7 @@ export class EosDictService {
         return dictionary.search(this._srchCriteries)
             .then((nodes: any[]) => {
                 if (!nodes || nodes.length < 1) {
-                    this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
+                //    this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
                 } else {
                     this.viewParameters.showDeleted = showDeleted;
                     this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);
