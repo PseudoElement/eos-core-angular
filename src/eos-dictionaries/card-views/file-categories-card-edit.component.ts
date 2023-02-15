@@ -31,8 +31,10 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
 
     ngOnInit(): void {
         const DESC = this._dictService.currentDictionary.descriptor as FileCategoryDictionaryDescriptor;
-        if (this.data.rec.DG_FILE_CATEGORY_List.length > 0) {
-            DESC.setDocGroupNames([this.data.rec]).then(resp => this.inputs['rec.DOC_GROUP_NAMES'].value = resp[0]['DOC_GROUP_NAMES']);
+        if (this.data.rec.DG_FILE_CATEGORY_List) {
+            DESC.setDocGroupNames([this.data.rec]).then(resp => {
+                this.inputs['rec.DOC_GROUP_NAMES'].value = resp[0]['DOC_GROUP_NAMES'] || '';
+            });
         } else {
             this.inputs['rec.DOC_GROUP_NAMES'].value = '';
         }
@@ -45,7 +47,7 @@ export class FileCategoryCardEditComponent extends BaseCardEditComponent impleme
         }
     }
     fillingSelected(): void {
-        const valueCat: string = this.inputs['rec.DOC_GROUP_NAMES'].value ? this.inputs['rec.DOC_GROUP_NAMES'].value : '';
+        const valueCat: string = this.inputs['rec.DOC_GROUP_NAMES'].value || '';
         if (valueCat) {
             if (!this.data.__relfield.DUE_NODE_DG) {
                 let selectedCat: string = '';
