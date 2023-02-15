@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector, Component} from '@angular/core';
+import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector, Component, Inject} from '@angular/core';
 
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -48,7 +48,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     private _fieldsType = {};
     constructor(
         injector: Injector,
-        paramModel,
+        @Inject(Object) paramModel,
     ) {
         this._appContext = injector.get(AppContext);
         this.constParam = this._appContext.cbBase ? this.paramModelCB(paramModel) : paramModel;

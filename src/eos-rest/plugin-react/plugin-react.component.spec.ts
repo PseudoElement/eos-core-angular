@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PluginReactComponent } from './plugin-react.component';
 
@@ -6,7 +6,7 @@ describe('PluginReactComponent', () => {
   let component: PluginReactComponent;
   let fixture: ComponentFixture<PluginReactComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PluginReactComponent ]
     })
