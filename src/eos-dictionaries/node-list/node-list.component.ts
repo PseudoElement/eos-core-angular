@@ -451,7 +451,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 }
             }
         }
-        if (isFormingWeights && changeList !== {}) {
+        if (isFormingWeights && Object.keys(changeList).length !== 0) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
                 this.userOrdered(this.nodes);
             });
@@ -493,7 +493,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 }
             }
         }
-        if (changeList !== {}) {
+        if (Object.keys(changeList).length) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList);
             this.userOrdered(this.nodes);
         }
@@ -541,7 +541,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
         let changeList = {};
         changes.forEach(item => changeList = { ...changeList, ...item });
-        if (changeList !== {}) {
+        if (Object.keys(changeList).length) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
                 this.userOrdered(this.nodes);
             });
