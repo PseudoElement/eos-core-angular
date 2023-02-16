@@ -6,7 +6,7 @@ import { StringInput } from 'eos-common/core/inputs/string-input';
 import { IInputParamControl } from '../interfaces/sev.interface';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { ISelectInput } from 'eos-common/interfaces';
 
@@ -54,7 +54,7 @@ export class SevControlService {
                 this._addInput(group, inputs[input]);
             }
         });
-        return new FormGroup(group);
+        return new UntypedFormGroup(group);
     }
 
     private _addInput(group: any, input: IInputParamControl) {
@@ -62,7 +62,7 @@ export class SevControlService {
         const validators = [];
 
         if (input.disabled) {
-            group[input.key] = new FormControl({ value: value, disabled: true }, validators);
+            group[input.key] = new UntypedFormControl({ value: value, disabled: true }, validators);
         } else {
             if (input.pattern) {
                 validators.push(Validators.pattern(input.pattern));
@@ -75,7 +75,7 @@ export class SevControlService {
             if (input.length) {
                 validators.push(Validators.maxLength(input.length));
             }
-            group[input.key] = new FormControl(value, validators);
+            group[input.key] = new UntypedFormControl(value, validators);
         }
     }
 }

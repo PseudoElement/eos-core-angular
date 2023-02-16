@@ -1,7 +1,7 @@
 import { Component, EventEmitter, /* Input, */ OnInit, Output, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { AUNTEFICATION_CONTROL_INPUT } from 'eos-user-params/shared/consts/auntefication-param.consts';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 /* import { BaseParamCurentDescriptor } from 'eos-user-params/base-param/shared/base-param-curent.descriptor'; */
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
@@ -41,7 +41,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
     public inputsInfo: any;
     public inputs;
     public _descSrv;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public storeParams = new Set();
     public errorPass: boolean = false;
     public disableSave: boolean = false;
@@ -702,7 +702,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
         }
         this.newLogin = false;
     }
-    cancelValues(inputs, form: FormGroup) {
+    cancelValues(inputs, form: UntypedFormGroup) {
         form.controls['pass'].patchValue(inputs['pass'].value, { emitEvent: false });
         form.controls['passRepeated'].patchValue(inputs['passRepeated'].value, { emitEvent: false });
         form.controls['ID_USER'].patchValue(inputs['ID_USER'].value, { emitEvent: false });

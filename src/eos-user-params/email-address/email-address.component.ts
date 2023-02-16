@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormArray } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -44,7 +44,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public CODE: Map<string, string>;
     public currentParams: string;
     public childParams: Set<string> = new Set();
-    public myForm: FormGroup;
+    public myForm: UntypedFormGroup;
     public storeParams = new Set();
     public inputsInfo: any;
     public showRigth: boolean = false;
@@ -64,7 +64,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         }
         return '';
     }
-    private ArrayForm: FormArray;
+    private ArrayForm: UntypedFormArray;
     constructor(
         private _emailService: EmailAddressService,
         private modalService: BsModalService,
@@ -123,7 +123,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 this._emailService.Decode(this.umailsInfo, map);
                 this.CODE = map;
                 this.createForm(false, false);
-                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
                 this.myForm.valueChanges.subscribe(data => {
                     this.checkChanges(data);
                 });
@@ -158,7 +158,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         } else {
             this.currentIndex = null;
         }
-        this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+        this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
         this.flagEdit = false;
         this.redactEmail.emit(this.flagEdit);
         this.editMode();
@@ -189,7 +189,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                             this.resetForm();
                             this.umailsInfo = this.saveParams.slice();
                             this.statusBtnSub = true;
-                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                            this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
                             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                         }
                         this.flagEdit = false;
@@ -455,26 +455,26 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     }
 
     createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
-        this.myForm = new FormGroup({ 'groupForm': this.createGroup(changedField, newField, flagBackForm) });
+        this.myForm = new UntypedFormGroup({ 'groupForm': this.createGroup(changedField, newField, flagBackForm) });
     }
 
-    createGroup(changedField: boolean, newField: boolean, flagBackForm?: boolean): FormArray {
+    createGroup(changedField: boolean, newField: boolean, flagBackForm?: boolean): UntypedFormArray {
         let arrayField;
-        const group = new FormArray([]);
+        const group = new UntypedFormArray([]);
         flagBackForm ? arrayField = this.saveParams : arrayField = this.umailsInfo;
         arrayField.forEach(element => {
-            group.push(new FormGroup(this.createFormControls(element, changedField, newField)));
+            group.push(new UntypedFormGroup(this.createFormControls(element, changedField, newField)));
         });
         return group;
     }
-    createFormControls(element: NTFY_USER_EMAIL, bool1, bool2): { [key: string]: FormControl } {
+    createFormControls(element: NTFY_USER_EMAIL, bool1, bool2): { [key: string]: UntypedFormControl } {
         const controls = {};
-        controls['email'] = new FormControl(element.EMAIL);
-        controls['checkbox'] = new FormControl(Number(element.IS_ACTIVE));
-        controls['weigth'] = new FormControl(Number(element.WEIGHT));
-        controls['params'] = new FormControl(element.EXCLUDE_OPERATION);
-        controls['change'] = new FormControl(bool1);
-        controls['newField'] = new FormControl(bool2);
+        controls['email'] = new UntypedFormControl(element.EMAIL);
+        controls['checkbox'] = new UntypedFormControl(Number(element.IS_ACTIVE));
+        controls['weigth'] = new UntypedFormControl(Number(element.WEIGHT));
+        controls['params'] = new UntypedFormControl(element.EXCLUDE_OPERATION);
+        controls['change'] = new UntypedFormControl(bool1);
+        controls['newField'] = new UntypedFormControl(bool2);
         return controls;
     }
     checkChanges(data?: { [key: string]: Array<any> }) {
@@ -517,7 +517,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     }
 
     addFormControls(newFieldEmail: NTFY_USER_EMAIL, change: boolean, newField: boolean) {
-        this.ArrayForm.push(new FormGroup(this.createFormControls(newFieldEmail, change, newField)));
+        this.ArrayForm.push(new UntypedFormGroup(this.createFormControls(newFieldEmail, change, newField)));
     }
 
     upWeight() {

@@ -1,5 +1,5 @@
 import { Component, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { ELECTRONIC_SIGNATURE } from '../shared-user-param/consts/electronic-signature';
@@ -32,7 +32,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public control: AbstractControl;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public inputs: any;
     public nameButton: string;
     public controlName: string;

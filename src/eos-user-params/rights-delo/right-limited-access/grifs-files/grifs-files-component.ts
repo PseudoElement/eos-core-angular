@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class GrifsFilesComponent implements OnInit, OnDestroy {
     @Output() changeGrifsFiles = new EventEmitter();
     fieldsGrifs: IInputParamControl[] = [];
     fields: IInputParamControl[];
-    form: FormGroup;
+    form: UntypedFormGroup;
     inputs;
     checkGrifs;
     listRight: any[] = [];
@@ -75,7 +75,7 @@ export class GrifsFilesComponent implements OnInit, OnDestroy {
             this.changeGrifsFiles.emit({flag: !data.length, form:  this.form , data: data, });
         }
     }
-    checkChenge(form: FormGroup, input: any[]) {
+    checkChenge(form: UntypedFormGroup, input: any[]) {
         const returnCheng = [];
         Object.keys(form.controls).forEach(key => {
             if (form.get(key).value !== input[key].value) {

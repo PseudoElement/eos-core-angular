@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -30,7 +30,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     @Output() pushChenge = new EventEmitter<any>();
     @Output() errorSave = new EventEmitter<boolean>();
     public inputs;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public isCbBase: boolean = false;
     private prepareInputs;
     private prapareData;

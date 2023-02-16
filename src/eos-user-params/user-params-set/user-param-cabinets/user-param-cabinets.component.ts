@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter/* , ViewChild */ } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -52,7 +52,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public prepareInputs;
     public defoltInputs;
     public inputs;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public currTab: number = 0;
     public allData;
     public mapChanges = new Map();

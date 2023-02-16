@@ -3,7 +3,7 @@ import { USER_SEARCH, USERSRCH, USERSRCHFORM } from '../../eos-user-select/shere
 import { FormHelperService } from '../../eos-user-params/shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { SearchServices } from '../shered/services/search.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
@@ -31,7 +31,7 @@ export class UserSearchComponent implements OnInit  {
     public currTab: number = 0;
     public SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
     public inputs: any;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public disabledOrg = false;
     public disabledDep = false;
     private prapareData: any;

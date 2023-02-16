@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
@@ -34,7 +34,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     public prepInputs;
     public constUserParam: IBaseUsers = EXTERNAL_APPLICATION_USER;
     public inputs;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public sortedData;
     public editFlag: boolean = false;
     public titleHeader: string;

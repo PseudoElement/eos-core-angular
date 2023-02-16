@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -49,9 +49,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     /* инпуты */
 
     /* формы */
-    form: FormGroup;
-    formControls: FormGroup;
-    formAccess: FormGroup;
+    form: UntypedFormGroup;
+    formControls: UntypedFormGroup;
+    formAccess: UntypedFormGroup;
     /* формы */
     isLoading: Boolean = true;
     selfLink = null;
@@ -787,7 +787,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._newDataformAccess.clear();
         this._newDataformControls.clear();
     }
-    upform(inputs, form: FormGroup) {
+    upform(inputs, form: UntypedFormGroup) {
         Object.keys(form.controls).forEach((key, val, arr) => {
             inputs[key].value = form.controls[key].value;
         });
@@ -826,7 +826,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._pushState();
         this.editModeF();
     }
-    cancelValues(inputs, form: FormGroup) {
+    cancelValues(inputs, form: UntypedFormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
             form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
         });

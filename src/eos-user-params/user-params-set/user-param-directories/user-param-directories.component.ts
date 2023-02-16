@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { DIRECTORIES_USER } from '../../user-params-set/shared-user-param/consts/directories.consts';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { FormHelperService } from '../../shared/services/form-helper.services';
@@ -28,7 +28,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public inputs;
     public btnDisable;
     public flagEdit;

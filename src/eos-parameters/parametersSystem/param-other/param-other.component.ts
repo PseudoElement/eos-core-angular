@@ -1,7 +1,7 @@
 import { OTHER_PARAM, OTHER_PARAM_CB } from './../shared/consts/other-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { USER_PARMS } from 'eos-rest';
 
@@ -15,7 +15,7 @@ import { USER_PARMS } from 'eos-rest';
 export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     @Input() btnError;
     masDisable: any[] = [];
-    formServer: FormGroup;
+    formServer: UntypedFormGroup;
     licMedo: boolean = false;
 
 

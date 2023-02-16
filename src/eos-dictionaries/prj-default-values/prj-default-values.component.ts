@@ -1,5 +1,5 @@
 import { Component, Input, NgZone, OnDestroy } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { DG_FILE_CONSTRAINT, DOCGROUP_CL, PipRX, PRJ_DEFAULT_VALUE } from '../../eos-rest';
 import { SUCCESS_SAVE } from '../consts/messages.consts';
@@ -458,7 +458,7 @@ class PrjDefaultFactory {
 })
 
 export class PrjDefaultValuesComponent implements OnDestroy {
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
 
     selOpts: IDynamicInputOptions = {
         defaultValue: { value: '', title: '...'}

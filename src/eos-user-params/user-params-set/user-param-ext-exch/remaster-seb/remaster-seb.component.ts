@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 import {Subject} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public inputs;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     flagEdit: boolean = false;
     private prepareInputs;
     private prapareData;

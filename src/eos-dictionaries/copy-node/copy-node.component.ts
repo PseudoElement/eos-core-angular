@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {AbstractControl, FormGroup, ValidatorFn} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap';
 import {InputControlService} from '../../eos-common/services/input-control.service';
 import {NumberIncrementInput} from '../../eos-common/core/inputs/number-increment-input';
@@ -18,7 +18,7 @@ import {Subscription} from 'rxjs';
 })
 
 export class CopyNodeComponent implements OnDestroy {
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 

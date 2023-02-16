@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -26,7 +26,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public inputs;
     public btnDisable;
     public flagEdit;

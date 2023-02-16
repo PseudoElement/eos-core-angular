@@ -1,5 +1,5 @@
 import { Component, Injector, ViewChild, Input } from '@angular/core';
-import { FormGroup, FormControl, AbstractControl, /* ValidatorFn */ } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, AbstractControl, /* ValidatorFn */ } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap';
 import { debounceTime } from 'rxjs/operators';
 
@@ -19,14 +19,14 @@ export class ParamFielsComponent extends BaseParamComponent {
     @Input() btnError;
     validChengeValueStr = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзиклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ';
     defaultValidCharsFileDesc = ' !$()’,-.;=_';
-    formAttachChoice: FormGroup;
+    formAttachChoice: UntypedFormGroup;
     _currentFormAttachStatus;
     dataAttachDb;
     updateDataAttach = {};
     prepDataAttach = { rec: {} };
     inputAttach;
     hiddenFieldAttach = false;
-    formAttach: FormGroup;
+    formAttach: UntypedFormGroup;
     prepInputsAttach;
     isChangeFormAttach = false;
     newDataAttach;
@@ -64,8 +64,8 @@ export class ParamFielsComponent extends BaseParamComponent {
             .then(() => {
                  // b-119380
                 this.updateFormInput();
-                this.formAttachChoice = new FormGroup({
-                    attachFile: new FormControl('rc')
+                this.formAttachChoice = new UntypedFormGroup({
+                    attachFile: new UntypedFormControl('rc')
                 });
                 this.prepInputsAttach = this.prepareInputField(FILES_PARAM.fieldsChild);
                 this.afterInit();

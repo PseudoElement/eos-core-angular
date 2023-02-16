@@ -4,7 +4,7 @@ import { UserParamApiSrv } from './user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
@@ -14,7 +14,7 @@ export class LimitedAccesseService {
     CurrentUser: any;
     public subscribe: Subject<any> = new Subject();
     public editEmit: Subject<any> = new Subject();
-    LinksFrom: FormGroup;
+    LinksFrom: UntypedFormGroup;
     user_id: number;
     constructor(
         private _userServices: UserParamsService,

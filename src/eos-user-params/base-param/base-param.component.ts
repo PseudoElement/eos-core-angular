@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject, Subscription } from 'rxjs';
@@ -47,9 +47,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     /* инпуты */
 
     /* формы */
-    form: FormGroup;
-    formControls: FormGroup;
-    formAccess: FormGroup;
+    form: UntypedFormGroup;
+    formControls: UntypedFormGroup;
+    formAccess: UntypedFormGroup;
     /* формы */
     isLoading: Boolean = true;
     selfLink = null;

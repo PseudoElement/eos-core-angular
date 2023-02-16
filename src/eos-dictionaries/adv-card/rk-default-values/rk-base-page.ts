@@ -2,7 +2,7 @@ import { DynamicInputLinkButtonComponent } from './../../../eos-common/dynamic-f
 import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
 import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable, Directive } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap';
 import {AppContext} from '../../../eos-rest/services/appContext.service';
 
@@ -14,7 +14,7 @@ export abstract class RKBasePageDirective implements OnChanges, OnInit, OnDestro
     @Input() data: any;
     @Input() dgStoredValues: any;
     @Input() inputs: any;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() editMode: boolean;
 
     selOpts: IDynamicInputOptions = {

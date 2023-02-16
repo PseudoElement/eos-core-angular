@@ -38,7 +38,7 @@ import { CardFromComponent } from 'eos-dictionaries/card-from/card-from.componen
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
 
-const formDictionariesComponent = [
+const formDictionariesComponent: Routes = [
     {
         path: ':dictionaryId',
         canDeactivate: [CanDeactivateGuard],

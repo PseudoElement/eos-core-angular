@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChil
 import { BsModalRef } from 'ngx-bootstrap';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME, IUpdateDictEvent } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, STRICT_OPTIONS, NOT_STRICT_OPTIONS } from './rk-default-values/rk-default-const';
 import { EosUtils } from 'eos-common/core/utils';
@@ -49,7 +49,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     tabs: Ttab[];
     dataController: AdvCardRKDataCtrl;
     activeTab: Ttab;
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     values: any;
 

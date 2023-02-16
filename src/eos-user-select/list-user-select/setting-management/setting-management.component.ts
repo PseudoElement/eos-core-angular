@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy, Input } from '@angular/core';
 import { SETTINGS_MANAGEMENT_INPUTS, CUT_RIGHTS_INPUTS } from 'eos-user-select/shered/consts/settings-management.const';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -29,9 +29,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     isLoading: boolean = false;
     isShell: boolean = false;
     isnCopyFrom: number;
-    form: FormGroup;
+    form: UntypedFormGroup;
     inputsCut: any;
-    formCut: FormGroup;
+    formCut: UntypedFormGroup;
     private _data: Map<string, any> = new Map();
     private _ngUnsubscribe: Subject<any> = new Subject();
 
@@ -282,7 +282,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         this._pathForm(true);
         this.isnCopyFrom = null;
     }
-    private _checkForm(form: FormGroup): boolean {
+    private _checkForm(form: UntypedFormGroup): boolean {
         let flag = false;
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY' && form.controls[key].value) {
@@ -291,7 +291,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         });
         return flag;
     }
-    private _createUrlForSop(form: FormGroup, isn?: string, copy?: boolean): string {
+    private _createUrlForSop(form: UntypedFormGroup, isn?: string, copy?: boolean): string {
         let url;
         let rigths = '';
         if (this.form.controls['USER_TEMPLATES'].value && copy) {
@@ -344,7 +344,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     //     }
     // }
 
-    private _getRightsData(form: FormGroup): string {
+    private _getRightsData(form: UntypedFormGroup): string {
         let str = '';
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY') {

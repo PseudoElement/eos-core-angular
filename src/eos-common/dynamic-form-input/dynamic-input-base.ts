@@ -1,7 +1,7 @@
 import { ErrorTooltip, IDynamicInputOptions } from './dynamic-input.component';
 import { Input, OnChanges, OnDestroy, SimpleChanges, Output, EventEmitter, Directive } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosUtils } from 'eos-common/core/utils';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
@@ -10,7 +10,7 @@ const ENABLED_FIELD_TYPES = [E_FIELD_TYPE.string, E_FIELD_TYPE.text];
 @Directive()
 export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
     @Input() input: InputBase<any>;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() readonly: boolean;
     @Input() disabled: boolean;
     @Input() inputTooltip: ErrorTooltip;

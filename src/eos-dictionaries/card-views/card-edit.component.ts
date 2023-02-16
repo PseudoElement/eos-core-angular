@@ -10,7 +10,7 @@ import {
     HostListener,
 } from '@angular/core';
 import { BaseCardEditDirective } from './base-card-edit.component';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosUtils } from 'eos-common/core/utils';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -43,7 +43,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
 
     @ViewChild('cardEditEl', { static: false }) baseCardEditRef: BaseCardEditDirective;
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     inputs: any;
     newData: any = {};
     isChanged: boolean;

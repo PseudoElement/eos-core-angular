@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -38,8 +38,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     fields: IInputParamControl[];
     inputs;
     inputAll;
-    form: FormGroup;
-    formGroupAll: FormGroup;
+    form: UntypedFormGroup;
+    formGroupAll: UntypedFormGroup;
     subs = {};
     queryForSave = [];
     rightContent: boolean;
@@ -753,8 +753,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.subs['all'].unsubscribe();
             this.formGroupAll = null;
         }
-        this.formGroupAll = new FormGroup({
-            all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
+        this.formGroupAll = new UntypedFormGroup({
+            all: new UntypedFormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
         });
         setTimeout(() => {
             if (this.editMode) {

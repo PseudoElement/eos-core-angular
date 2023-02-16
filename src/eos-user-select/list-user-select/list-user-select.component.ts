@@ -31,7 +31,7 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { SearchServices } from 'eos-user-select/shered/services/search.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { SettingManagementComponent } from './setting-management/setting-management.component';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { LIST_USER_CABINET } from 'eos-user-select/shered/consts/list-user.const';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { ShowTooltipService } from 'app/services/add-tooltip.service';
@@ -69,7 +69,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     deleteOwnUser: any;
     CabinetOptions = [];
     public inputs: any;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries['USER_CL.Removed'] === 'true') {
             this._apiSrv.sortDelUsers = true;

@@ -7,7 +7,7 @@ import { DateInput } from 'eos-common/core/inputs/date-input';
 // import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { StringInput } from 'eos-common/core/inputs/string-input';
 import { IInputParamControl, IInputParamControlForIndexRight } from '../intrfaces/user-parm.intterfaces';
-import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { EosUtils } from 'eos-common/core/utils';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
@@ -96,7 +96,7 @@ export class InputParamControlService {
                 this._addInput(group, inputs[input]);
             }
         });
-        return new FormGroup(group);
+        return new UntypedFormGroup(group);
     }
 
     dateValueValidator(): ValidatorFn {
@@ -125,7 +125,7 @@ export class InputParamControlService {
             let errMessage: string = null;
             const value = control.value;
             if (value && value instanceof Date) {
-                const group = <FormGroup>control.parent;
+                const group = <UntypedFormGroup>control.parent;
                 if (group) {
                     const compareCtrl = group.controls[commparePath];
                     if (compareCtrl && compareCtrl.value && compareCtrl.value instanceof Date) {
@@ -156,7 +156,7 @@ export class InputParamControlService {
         const validators = [];
 
         if (input.disabled) {
-            group[input.key] = new FormControl({ value: value, disabled: true }, validators);
+            group[input.key] = new UntypedFormControl({ value: value, disabled: true }, validators);
         } else {
             if (input.controlType === E_FIELD_TYPE.date) {
                 validators.push(this.dateValueValidator());
@@ -182,7 +182,7 @@ export class InputParamControlService {
             if (input.length) {
                 validators.push(Validators.maxLength(input.length));
             }
-            group[input.key] = new FormControl(value, validators);
+            group[input.key] = new UntypedFormControl(value, validators);
         }
     }
 }

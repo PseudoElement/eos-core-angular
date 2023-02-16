@@ -1,5 +1,5 @@
 import { Component, TemplateRef, OnInit, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { /* Observable, */ Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,8 +18,8 @@ import { CertStoresService, IListCertStotes } from '../../../../eos-parameters/p
 
 export class SignaturePopupComponent implements OnInit {
     @Input() inputName: string;
-    @Input() input: FormControl;
-    @Input() form: FormGroup;
+    @Input() input: UntypedFormControl;
+    @Input() form: UntypedFormGroup;
     @Input() isCurrentSettings?: boolean;
     public CurrentSelect: IListCertStotes;
     public InfoSert: Array<string> = [];

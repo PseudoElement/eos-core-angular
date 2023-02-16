@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, Inject } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router, UrlSegment } from '@angular/router';
 
 import { combineLatest, Subject, Subscription } from 'rxjs';
@@ -37,7 +37,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     data = {};
     fields = CREATE_USER_INPUTS;
     inputs;
-    form: FormGroup;
+    form: UntypedFormGroup;
     titleHeader = 'Новый пользователь';
     btnDisabled: boolean = true;
     isShell: Boolean = false;

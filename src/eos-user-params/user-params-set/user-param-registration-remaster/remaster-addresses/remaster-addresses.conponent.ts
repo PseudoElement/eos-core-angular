@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 import {Subject} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
     public inputs;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public flagBacground: boolean = false;
     public orgName;
     public logDeletOrg: boolean = false;

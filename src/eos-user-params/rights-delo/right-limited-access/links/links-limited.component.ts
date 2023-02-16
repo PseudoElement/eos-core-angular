@@ -1,5 +1,5 @@
 import {Component, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
-import { FormGroup, FormControl, FormArray} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormArray} from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -11,8 +11,8 @@ import {LimitedAccesseService} from '../../../shared/services/limited-access.ser
     templateUrl: 'links-limited.component.html'
 })
 export class LinksLimitedComponent implements OnInit, OnDestroy {
-    public myForm: FormGroup;
-    public formArray: FormArray = new FormArray([]);
+    public myForm: UntypedFormGroup;
+    public formArray: UntypedFormArray = new UntypedFormArray([]);
     public oldDate: Array<{[key: string]: string}>;
     public flagChande: boolean;
     Unsub = new Subject();
@@ -53,7 +53,7 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
         this.Unsub.complete();
     }
     createFrom() {
-        this.myForm = new FormGroup({'links':   this.formArray});
+        this.myForm = new UntypedFormGroup({'links':   this.formArray});
     }
 
     createArrayFormControll(array: Array<any>) {
@@ -65,11 +65,11 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
         }
         dataFroInit.forEach(elemForm => {
             const controls = {};
-            controls['CLASSIF_NAME'] = new FormControl(elemForm['CLASSIF_NAME']);
-            controls['ISN_LINK'] = new FormControl(elemForm['ISN_LINK']);
-            controls['checkbox'] = new FormControl(elemForm.checkbox);
-            controls['ACTION'] = new FormControl('UNSET');
-            this.formArray.push(new FormGroup(controls));
+            controls['CLASSIF_NAME'] = new UntypedFormControl(elemForm['CLASSIF_NAME']);
+            controls['ISN_LINK'] = new UntypedFormControl(elemForm['ISN_LINK']);
+            controls['checkbox'] = new UntypedFormControl(elemForm.checkbox);
+            controls['ACTION'] = new UntypedFormControl('UNSET');
+            this.formArray.push(new UntypedFormGroup(controls));
         });
     }
     checkChenges(data) {
@@ -104,7 +104,7 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
         const current = this.oldDate.slice();
         this.oldDate.splice(0,  this.oldDate.length);
         this.myForm.removeControl('links');
-        this.formArray = new FormArray([]);
+        this.formArray = new UntypedFormArray([]);
         sessionStorage.removeItem('links');
         this.oldDate = current;
         this.myForm.setControl('links', this.createGroup(current));
@@ -112,11 +112,11 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
     createGroup (date) {
         date.forEach(elemForm => {
             const controls = {};
-            controls['CLASSIF_NAME'] = new FormControl(elemForm['CLASSIF_NAME']);
-            controls['ISN_LINK'] = new FormControl(elemForm['ISN_LINK']);
-            controls['checkbox'] = new FormControl(elemForm.checkbox);
-            controls['ACTION'] = new FormControl('UNSET');
-           this.formArray.push(new FormGroup(controls));
+            controls['CLASSIF_NAME'] = new UntypedFormControl(elemForm['CLASSIF_NAME']);
+            controls['ISN_LINK'] = new UntypedFormControl(elemForm['ISN_LINK']);
+            controls['checkbox'] = new UntypedFormControl(elemForm.checkbox);
+            controls['ACTION'] = new UntypedFormControl('UNSET');
+           this.formArray.push(new UntypedFormGroup(controls));
         });
         return this.formArray;
     }
@@ -126,7 +126,7 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
             sessionStorage.removeItem('links');
             this.oldDate.splice(0,  this.oldDate.length);
             this.myForm.removeControl('links');
-            this.formArray = new FormArray([]);
+            this.formArray = new UntypedFormArray([]);
             this.oldDate = info.slice();
             this.myForm.setControl('links', this.createGroup(info));
             this.oldDate = info.slice();

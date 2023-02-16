@@ -4,7 +4,7 @@ import { UserParamsService } from '../../../shared/services/user-params.service'
 import { Subject } from 'rxjs';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { PipRX, DEPARTMENT, DELIVERY_CL } from 'eos-rest';
@@ -27,7 +27,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     @Input() isCurrentSettings?: boolean;
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public inputs: any;
     public flagBacground: boolean = false;
     public sendFrom: string = '';

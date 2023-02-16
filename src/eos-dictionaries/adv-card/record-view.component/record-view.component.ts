@@ -1,7 +1,7 @@
 import { PipRX } from 'eos-rest';
 import { Component, OnDestroy, OnInit, OnChanges, NgZone, EventEmitter, Output } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -22,7 +22,7 @@ export class RecordViewComponent implements OnDestroy, OnInit, OnChanges {
     isUpdating = true;
     nodes: any[];
     // dataController: AdvCardRKDataCtrl;
-    form: FormGroup;
+    form: UntypedFormGroup;
     inputs: any[];
     data: any;
     dictid: string;

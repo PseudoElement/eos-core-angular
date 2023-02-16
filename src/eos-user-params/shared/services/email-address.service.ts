@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import { FormArray} from '@angular/forms';
+import { UntypedFormArray} from '@angular/forms';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { UserParamsService } from '../services/user-params.service';
 import { UserParamApiSrv } from './user-params-api.service';
@@ -45,7 +45,7 @@ export class EmailAddressService {
         }
         return Promise.resolve(1);
     }
-    preAddEmail(form: FormArray) {
+    preAddEmail(form: UntypedFormArray) {
         const data = [];
         const arrForms = form.value.filter(element => {
             return element.newField === true;
@@ -75,7 +75,7 @@ export class EmailAddressService {
         });
     }
 
-    preEditEmail(form: FormArray, emailsInfo?) {
+    preEditEmail(form: UntypedFormArray, emailsInfo?) {
         const data = [];
         const post = [];
         const chengedFields = form.value.filter(element => {

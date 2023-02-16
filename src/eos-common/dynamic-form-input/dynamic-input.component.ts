@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { DatePickerStyleFixes } from 'eos-common/type/const.type';
 
@@ -38,7 +38,7 @@ export class DynamicInputComponent {
     @Input() input: InputBase<any>;
     @Input() iconForElem: string;
     @Input() visibleDeletElem: boolean;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() readonly: boolean;
     @Input() disabled: boolean;
     @Input() isGroup: boolean;

@@ -122,7 +122,6 @@
       }
     }
   },
-  "defaultProject": "eos",
   "cli": {
     "analytics": "a10bb217-b1f8-4b84-8b20-54786a8db238"
   }

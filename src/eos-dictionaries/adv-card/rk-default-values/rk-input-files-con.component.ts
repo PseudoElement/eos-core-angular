@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { AdvCardRKDataCtrl } from '../adv-card-rk-datactrl';
 
 @Component({
@@ -14,7 +14,7 @@ export class RKFilesConInputComponent implements OnChanges {
     @Input() inputCb: any;
     @Input() inputExt: any;
     @Input() dataController: AdvCardRKDataCtrl;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() editMode: boolean;
     type: any;
     output: any;
