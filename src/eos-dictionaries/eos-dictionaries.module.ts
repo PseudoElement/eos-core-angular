@@ -192,29 +192,6 @@ import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel
         MedoNodeCardComponent,
         BroadcastChannelNodeInfoComponent
     ],
-    entryComponents: [
-        ColumnSettingsComponent,
-        CounterNpEditComponent,
-        AdvCardRKEditComponent,
-        RecordViewComponent,
-        RKDefaultValuesCardComponent,
-        RulesSelectComponent,
-        CreateNodeComponent,
-        CreateNodeBroadcastChannelComponent,
-        CheckIndexNomenclaturComponent,
-        DocgroupTemplateConfigComponent,
-        ListSelectorFormComponent,
-        PrjDefaultValuesComponent,
-        CalendarFormComponent,
-        EosDatepickerInlineComponent,
-        CopyPropertiesComponent,
-        CopyNodeComponent,
-        EdsImportComponent,
-        StampBlobFormComponent,
-        DictionaryPasteComponent,
-        PrintTemplateComponent,
-        SevSyncDictsComponent
-    ],
     imports: [
         BrowserModule,
         FormsModule,
@@ -260,6 +237,6 @@ import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel
         EosDictService,
         EosSandwichService,
         EosAccessPermissionsService,
-    ],
+    ]
 })
 export class EosDictionariesModule { }

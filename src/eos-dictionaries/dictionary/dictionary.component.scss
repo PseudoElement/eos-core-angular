@@ -128,7 +128,7 @@
                 justify-content: space-around;
             }
             .item-count-content {
-                padding: 0 $grid-gutter-width / 2;
+                padding: 0 $grid-gutter-width * 0.5;
                 line-height: 24px;
                 font-size: 16px;
                 .counter {
@@ -142,7 +142,7 @@
             .item-count-found {
                 font-size: 16px;
                 line-height: 24px;
-                padding-left: $grid-gutter-width / 2;
+                padding-left: $grid-gutter-width * 0.5;
                 .counter {
                     padding: 6.5px 10px;
                     background: $disabled-color-main-theme;
@@ -248,14 +248,14 @@
         &.tree,
         &.full {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
         }
         &.info {
             .selected-wrapper {
-                left: $grid-gutter-width / 2;
+                left: $grid-gutter-width * 0.5;
             }
         }
         .screen-wrapper {
@@ -278,9 +278,9 @@
         }
         &.info {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -293,9 +293,9 @@
         }
         &.tree {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -308,9 +308,9 @@
         }
         &.full {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -321,16 +321,16 @@
                 top: $top-menu-height;
             }
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
         }
         &.only-selected {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -352,9 +352,9 @@
         }
         &.info {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2 + $dictionary-block-width;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5 + $dictionary-block-width;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -367,9 +367,9 @@
         }
         &.tree {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2 + $dictionary-block-width;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5 + $dictionary-block-width;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -382,9 +382,9 @@
         }
         &.full {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2 + $dictionary-block-width;
-                right: $grid-gutter-width / 2 + $dictionary-block-width;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5 + $dictionary-block-width;
+                right: $grid-gutter-width * 0.5 + $dictionary-block-width;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -395,16 +395,16 @@
                 top: $top-menu-height;
             }
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2 + $dictionary-block-width;
-                right: $grid-gutter-width / 2 + $dictionary-block-width;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5 + $dictionary-block-width;
+                right: $grid-gutter-width * 0.5 + $dictionary-block-width;
             }
         }
         &.only-selected {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -426,9 +426,9 @@
         }
         &.info {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -441,9 +441,9 @@
         }
         &.tree {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -456,9 +456,9 @@
         }
         &.full {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
-                right: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
+                right: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
             }
             .tree-wrapper {
                 top: $top-menu-height;
@@ -469,16 +469,16 @@
                 top: $top-menu-height;
             }
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
-                right: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
+                right: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
             }
         }
         &.only-selected {
             .selected-wrapper {
-                top: $grid-gutter-width / 2 + $top-menu-height;
-                left: $grid-gutter-width / 2;
-                right: $grid-gutter-width / 2;
+                top: $grid-gutter-width * 0.5 + $top-menu-height;
+                left: $grid-gutter-width * 0.5;
+                right: $grid-gutter-width * 0.5;
             }
             .tree-wrapper {
                 top: $top-menu-height;

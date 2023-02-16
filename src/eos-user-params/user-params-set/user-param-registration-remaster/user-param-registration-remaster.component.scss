@@ -92,14 +92,14 @@
         /* color: */
         .item {
             display: inline-block;
-            margin-right: 40px / 2;
+            margin-right: 40px * 0.5;
             margin-top: 11px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
             &+.item {
-                margin-left: 40px / 2;
+                margin-left: 40px * 0.5;
             }
             .text {
                 cursor: pointer;

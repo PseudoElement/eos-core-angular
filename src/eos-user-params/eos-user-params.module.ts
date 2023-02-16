@@ -147,9 +147,6 @@ import { SearchService } from './user-params-set/shared-user-param/services/sear
         AutenteficationComponent,
         CurrentUserSetComponent,
     ],
-    entryComponents: [
-        AddGrifComponent
-    ],
     imports: [
         BrowserModule,
         TooltipModule.forRoot(),

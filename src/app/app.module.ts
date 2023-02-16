@@ -105,9 +105,6 @@ import { DragulaModule } from 'ng2-dragula';
         EosInstrumentsModule,
         DragulaModule
     ],
-    entryComponents: [
-        LoginFormComponent,
-    ],
     exports: [
         EosRestModule,
     ],
@@ -135,7 +132,7 @@ import { DragulaModule } from 'ng2-dragula';
         ExportImportClService,
         BackgroundTaskGuard,
     ],
-    bootstrap: [AppComponent],
+    bootstrap: [AppComponent]
 })
 
 export class AppModule {

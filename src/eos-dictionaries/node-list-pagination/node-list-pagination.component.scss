@@ -156,16 +156,16 @@
 @media(min-width: 0px) and (max-width: 999px) {
     .pagination-option {
         &.tree {
-            left: $grid-gutter-width / 2;
-            right: $grid-gutter-width / 2;
+            left: $grid-gutter-width * 0.5;
+            right: $grid-gutter-width * 0.5;
         }
         &.info {
-            right: $grid-gutter-width / 2;
-            left: $grid-gutter-width / 2;
+            right: $grid-gutter-width * 0.5;
+            left: $grid-gutter-width * 0.5;
         }
         &.full {
-            left: $grid-gutter-width / 2;
-            right: $grid-gutter-width / 2;
+            left: $grid-gutter-width * 0.5;
+            right: $grid-gutter-width * 0.5;
         }
     }
 }
@@ -173,16 +173,16 @@
 @media(min-width: 1000px) and (max-width: 1599px) {
     .pagination-option {
         &.tree {
-            left: $grid-gutter-width / 2 + $dictionary-block-width;
-            right: $grid-gutter-width / 2;
+            left: $grid-gutter-width * 0.5 + $dictionary-block-width;
+            right: $grid-gutter-width * 0.5;
         }
         &.info {
-            right: $grid-gutter-width / 2 + $dictionary-block-width;
-            left: $grid-gutter-width / 2;
+            right: $grid-gutter-width * 0.5 + $dictionary-block-width;
+            left: $grid-gutter-width * 0.5;
         }
         &.full {
-            left: $grid-gutter-width / 2 + $dictionary-block-width;
-            right: $grid-gutter-width / 2 + $dictionary-block-width;
+            left: $grid-gutter-width * 0.5 + $dictionary-block-width;
+            right: $grid-gutter-width * 0.5 + $dictionary-block-width;
         }
     }
 }
@@ -197,16 +197,16 @@
 @media (min-width: 1600px) {
     .pagination-option {
         &.tree {
-            left: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
-            right: $grid-gutter-width / 2;
+            left: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
+            right: $grid-gutter-width * 0.5;
         }
         &.info {
-            right: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
-            left: $grid-gutter-width / 2;
+            right: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
+            left: $grid-gutter-width * 0.5;
         }
         &.full {
-            left: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
-            right: $grid-gutter-width / 2 + $dictionary-block-width-big-display;
+            left: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
+            right: $grid-gutter-width * 0.5 + $dictionary-block-width-big-display;
         }
     }
 }

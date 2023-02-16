@@ -106,10 +106,6 @@ import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-in
         UserSelectPaginationComponent,
         EosClickModeDirective
     ],
-    entryComponents: [
-        ConfirmWindowComponent,
-        ConfirmWindow2Component,
-    ],
     providers: [
         ConfirmWindowService,
         EosMessageService,

@@ -236,8 +236,8 @@ export class EdsImportComponent implements OnInit {
         const name = `error_${date.toLocaleDateString()}.txt`;
         const type = 'text/plain';
         const blob = new Blob([this.createText()], { type: type });
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(blob, name);
+        if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
+            window.navigator['msSaveOrOpenBlob'](blob, name);
         } else {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);

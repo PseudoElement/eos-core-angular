@@ -8,7 +8,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
     selector: 'eos-param-auth-collection',
     templateUrl: 'collection.component.html',
     styles: [
-        `.form-control.ng-invalid.ng-dirty(:focus) {
+        `.form-control.ng-invalid.ng-dirty:focus {
             border-color: #f44336;
             border-width: 2px;
         }`,

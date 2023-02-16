@@ -90,8 +90,8 @@ export class EosReportUsersInfoComponent implements OnChanges {
 
     download(filename, data) {
         const blob = new Blob([data], { type: 'text/html' });
-        if (window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveBlob(blob, filename);
+        if (window.navigator['msSaveOrOpenBlob']) {
+            window.navigator['msSaveBlob'](blob, filename);
         } else {
             const elem = window.document.createElement('a');
             elem.href = window.URL.createObjectURL(blob);

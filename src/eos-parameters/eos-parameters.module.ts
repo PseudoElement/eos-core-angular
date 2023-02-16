@@ -59,9 +59,6 @@ import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.compon
         ParamUnloadingComponent,
         ParamLibComponent
     ],
-    entryComponents: [
-        AuthenticationCollectionComponent
-    ],
     imports: [
         BrowserModule,
         TooltipModule.forRoot(),
@@ -77,6 +74,6 @@ import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.compon
     ],
     exports: [
         ParamHeaderComponent,
-    ],
+    ]
 })
 export class EosParametersModule {}

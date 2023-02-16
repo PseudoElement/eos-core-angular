@@ -35,10 +35,6 @@ import { SettingManagementComponent } from './list-user-select/setting-managemen
         EosReportUsersInfoComponent,
         SettingManagementComponent
     ],
-    entryComponents: [
-        CreateUserComponent,
-        SettingManagementComponent
-    ],
     imports: [
         BrowserModule,
         TooltipModule.forRoot(),
@@ -58,6 +54,6 @@ import { SettingManagementComponent } from './list-user-select/setting-managemen
         RtUserSelectService,
         SearchServices,
         UserPaginationService
-    ],
+    ]
 })
 export class EosUserSelectModule {}

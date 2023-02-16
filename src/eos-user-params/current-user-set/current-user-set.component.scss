@@ -1040,7 +1040,7 @@ bs-dropdown-container {
 
                                 &:nth-child(3) {
                                     display: flex;
-                                    justify-content: end;
+                                    justify-content: flex-end;
                                     width: 100%;
                                     & > eos-dynamic-input {
                                         width: calc(50% - 47px) !important;

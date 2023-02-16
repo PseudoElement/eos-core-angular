@@ -256,8 +256,8 @@ export class UserHeaderComponent implements OnInit {
         </html>
         `;
         const blobHtml = new Blob([html], { type: 'text/html;charset=utf-8' });
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveBlob(blobHtml, 'Настройки пользователя.html');
+        if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
+            window.navigator['msSaveBlob'](blobHtml, 'Настройки пользователя.html');
         } else {
             saveAs(blobHtml, 'Настройки пользователя.html');
         }

@@ -84,14 +84,14 @@
         /* color: */
         .item {
             display: inline-block;
-            margin-right: $grid-gutter-width / 2;
+            margin-right: $grid-gutter-width * 0.5;
             margin-top: 11px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
             &+.item {
-                margin-left: $grid-gutter-width / 2;
+                margin-left: $grid-gutter-width * 0.5;
             }
             .text {
                 cursor: pointer;

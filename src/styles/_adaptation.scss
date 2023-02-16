@@ -12,7 +12,7 @@
 
 // @media (min-width: 0px) and (max-width: 1280px) {
 //     .eos-dictionaries .dictionary {
-//         // flex-basis: calc((100% - 2*12px) / 2);
+//         // flex-basis: calc((100% - 2*12px) * 0.5);
 //     }
 // }
 
@@ -24,7 +24,7 @@
 
 // @media (min-width: 1170px) and (max-width: 1679px) {
 //     .eos-desktop .sortable-item {
-//         flex-basis: calc((100% - 2*12px) / 2);
+//         flex-basis: calc((100% - 2*12px) * 0.5);
 //     }
 // }
 
