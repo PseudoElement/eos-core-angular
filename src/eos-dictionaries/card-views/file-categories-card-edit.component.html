@@ -38,7 +38,7 @@
                         containerClass="tooltip-info"
                         triggers="hover"
                         tooltip="Удалить"
-                        *ngIf="editMode "
+                        *ngIf="editMode && inputs['rec.DOC_GROUP_NAMES'].value"
                         class="action eos-adm-icon eos-adm-icon-close-blue delet-icon-directory small"
                         (click)="clearDocGroup()"
                     ></span>
