@@ -112,6 +112,22 @@
                 [btnError] = "disableSave"
             ></eos-param-lib>
         </ng-container>
+        <ng-container *ngSwitchCase="'cryptography'">
+            <eos-param-cryptography
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-param-cryptography>
+        </ng-container>
+        <ng-container *ngSwitchCase="'email'">
+            <eos-param-email
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-param-email>
+        </ng-container>
     </ng-container>
 </div>
 

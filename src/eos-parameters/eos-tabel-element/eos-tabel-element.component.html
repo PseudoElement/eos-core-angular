@@ -1,0 +1,76 @@
+<div class="eos-adm-table">
+    <!-- Хидер с кнопками и счётчиком выделенного -->
+    <div *ngIf="title" class="eos-adm-table-title">
+        <span>{{title}}</span>
+    </div>
+    <div class="btn-table">
+        <div style="flex: 1;">
+            <button
+                *ngFor="let btnElem of btnArray"
+                class="btn"
+                [tooltip]="btnElem.tooltip"
+                placement="bottom"
+                [disabled]="getDisabledBtn(btnElem)"
+                container="body"
+                containerClass="tooltip-info"
+                (click)="clickToButton(btnElem)">
+                <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(btnElem)"></span>
+            </button>
+        </div>
+        <div class="counter-table">
+            <span>Выбрано</span>
+            <span class="counter">{{countSelected}}</span>
+        </div>
+    </div>
+    <!-- название столбцов -->
+    <div>
+        <div class="header-table-param">
+            <div style="padding-left: 12px;margin-right: 9px;" class="checkbox-inline">
+                <label class="checkbox" >
+                    <input [checked]="getAllCheck()" [disabled]="!edit" type="checkbox" (change)="toggleAllMarks($event)">
+                    <div>
+                        <span class="eos-adm-icon small" [ngClass]="getflagChecked()"></span>
+                    </div>
+                </label>
+            </div>
+            <div *ngFor="let header of headerTitle"
+                class="header-table-title"
+                [ngStyle]="getStyle(header)"
+                (click)="orderByField(header)">
+                <span class="text"
+                    tooltip="Упорядочить"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info">
+                    {{header.title}}
+                </span>
+                <div >
+                    <span class="order-icon">
+                        <span class="icon eos-adm-icon small"
+                        [ngClass]="getBtnOrder(header)">
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Переданные элементы -->
+    <div >
+        <div class="display-element-item" *ngFor="let element of tabelData.data">
+            <div style="padding-left: 12px;" class="checkbox-inline">
+                <label>
+                    <input type="checkbox" [disabled]="!edit" (change)="selected($event, element)" [checked]="element.check">
+                    <span></span>
+                </label>
+            </div>
+            <div *ngFor="let header of headerTitle"
+                class="header-table-title"
+                [ngStyle]="getStyle(header)"
+                (click)="orderByField(header)">
+                <span class="text">
+                    {{getElement(header, element)}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

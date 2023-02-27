@@ -21,6 +21,7 @@ import { PipeUtils } from '../core/pipe-utils';
 import { Cache } from '../core/cache';
 import { RestError } from '../core/rest-error';
 import { commonMergeMeta } from 'eos-rest/common/initMetaData';
+import { IUploadParam } from 'eos-parameters/interfaces/app-setting.interfaces';
 
 
 @Injectable()
@@ -89,6 +90,7 @@ export class PipRX extends PipeUtils {
         this._cfg.dataApiUrl = this._cfg.apiBaseUrl + this._cfg.dataApi;
         this._cfg.authApiUrl = this._cfg.apiBaseUrl + this._cfg.authApi;
         this._cfg.templateApiUrl = this._cfg.apiBaseUrl + this._cfg.templateApi;
+        this._cfg.appSetting = '../CoreHost/appsettings';
         this._cfg.metaMergeFuncList = [commonMergeMeta];
     }
 
@@ -111,7 +113,45 @@ export class PipRX extends PipeUtils {
         // return this._batch(changeSet, vc, this._cfg.dataApiUrl).toPromise();
         return this._batch(changeSet, vc, this._cfg.apiBaseUrl + 'CoreHost/OData/').toPromise();
     }
-
+    getAppSetting<T>(urlParam: IUploadParam): Promise<T> {
+        const options = {
+            withCredentials: true,
+            headers: new HttpHeaders({
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'Content-Type': 'text/plain; charset=utf-8'
+            }),
+            responseType: 'text' as 'text',
+        };
+        const instance = urlParam.instance ? `&instance=${urlParam.instance}` : '';
+        const get_list = !urlParam.instance ? '/get-list' : '';
+        return this.getHttp_client().get(this._cfg.appSetting + get_list + `?namespace=${urlParam.namespace}&typename=${urlParam.typename + instance}&$format=compact`, options)
+            .toPromise<string>()
+            .then((ans: string) => {
+                if (ans) {
+                    return JSON.parse(ans);
+                } else {
+                    return ans;
+                }
+            })
+            .catch((error) => {
+                return Promise.reject({code: error['status'], message: error['error']});
+            });
+    }
+    setAppSetting<T>(changeSet: IUploadParam, body: T): Promise<any> {
+        return fetch(this._cfg.appSetting + `/upload?namespace=${changeSet.namespace}&typename=${changeSet.typename}&instance=${changeSet.instance}`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((answer: any) => {
+            if (answer['status'] !== 200) {
+                return Promise.reject({code: answer['status'], message: answer['error']});
+            }
+            return answer;
+        });
+    }
     private makeArgs(args: IKeyValuePair): string {
         let url = '';
         // tslint:disable-next-line:forin

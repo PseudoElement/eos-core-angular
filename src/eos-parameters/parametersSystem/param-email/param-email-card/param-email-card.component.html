@@ -1,0 +1,60 @@
+<div class="eos-adm-table">
+    <!-- Хидер с кнопками и счётчиком выделенного -->
+    <div *ngIf="title" class="eos-adm-table-title-button">
+        <div class="eos-adm-table-title">
+            <span>{{title}}</span>
+        </div>
+        
+        <div class="header-button-wrap">
+            <button class="btn btn-primary header-button" (click)="cancel()">ОТМЕНИТЬ
+            </button>
+            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="statusBtnSub">СОХРАНИТЬ
+            </button>
+        </div>
+    </div>
+    <div style="padding: 20px">
+        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
+        <div class="second-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.EmailAccount']" [form]="form"  [readonly]="inputs['rec.EmailAccount'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input class="padding-left" [input]="inputs['rec.Password']" [form]="form"  [readonly]="inputs['rec.Password'].readonly"></eos-dynamic-input>
+        </div>
+        <div class="label-style">Сервер входящей почты</div>
+        <div class="label-bottom-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InProtocol']" [form]="form"  [readonly]="inputs['rec.InProtocol'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input style="margin-top: 20px;" class="padding-left boolean-not-label" [input]="inputs['rec.DeleteEmailsOnServer']" [form]="form"  [readonly]="inputs['rec.DeleteEmailsOnServer'].readonly"></eos-dynamic-input>
+        </div>
+        <div class="second-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InServerHost']" [form]="form"  [readonly]="inputs['rec.InServerHost'].readonly"></eos-dynamic-input>
+            <div style="margin-top: -5px;" class="padding-left">
+                <span>ПОРТ</span>
+                <eos-dynamic-input  [input]="inputs['rec.InServerPort']" [form]="form"  [readonly]="inputs['rec.InServerPort'].readonly"></eos-dynamic-input>
+            </div>
+            
+        </div>
+        <div class="second-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InAuthMethod']" [form]="form"  [readonly]="inputs['rec.InAuthMethod'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input class="padding-left" [input]="inputs['rec.InEncryption']" [form]="form"  [readonly]="inputs['rec.InEncryption'].readonly"></eos-dynamic-input>
+        </div>
+        <div class="second-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InUserName']" [form]="form"  [readonly]="inputs['rec.InUserName'].readonly"></eos-dynamic-input>
+            <div class="padding-left"></div>
+        </div>
+        <div class="label-style">Сервер исходящей почты</div>
+        <div class="label-bottom-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.OutServerHost']" [form]="form"  [readonly]="inputs['rec.OutServerHost'].readonly"></eos-dynamic-input>
+            <div style="margin-top: -5px;" class="padding-left">
+                <span>ПОРТ</span>
+                <eos-dynamic-input  [input]="inputs['rec.OutServerPort']" [form]="form"  [readonly]="inputs['rec.OutServerPort'].readonly"></eos-dynamic-input>
+            </div>
+        </div>
+        <div class="second-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.OutAuthMethod']" [form]="form"  [readonly]="inputs['rec.OutAuthMethod'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input class="padding-left" [input]="inputs['rec.OutEncryption']" [form]="form"  [readonly]="inputs['rec.OutEncryption'].readonly"></eos-dynamic-input>
+        </div>
+        <div class="second-string">
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.OutUserName']" [form]="form"  [readonly]="inputs['rec.OutUserName'].readonly"></eos-dynamic-input>
+            <div class="padding-left"></div>
+        </div>
+
+    </div>
+</div>
