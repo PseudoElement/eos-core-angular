@@ -36,7 +36,6 @@ import {ParamConversionComponent} from './parametersSystem/param-conversion/para
 import { ParamUnloadingComponent } from './parametersSystem/param-unloading/param-unloading.component';
 import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.component';
 import { ParamCryptographyComponent } from './parametersSystem/param-cryptography/param-cryptography.component';
-import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.component';
 import { EditCryptographyComponent } from './parametersSystem/param-cryptography/edit-cryptography/edit-cryptography.component';
 import { ParamEmailComponent } from './parametersSystem/param-email/param-email.component';
 import { ParamEmailCardComponent } from './parametersSystem/param-email/param-email-card/param-email-card.component';
@@ -64,7 +63,6 @@ import { ParamEmailCardComponent } from './parametersSystem/param-email/param-em
         ParamUnloadingComponent,
         ParamLibComponent,
         ParamCryptographyComponent,
-        TabelElementComponent,
         EditCryptographyComponent,
         ParamEmailComponent,
         ParamEmailCardComponent

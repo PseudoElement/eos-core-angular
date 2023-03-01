@@ -47,12 +47,14 @@ export class ParamUnloadingComponent extends BaseParamComponent {
         }
       });
       if (Archivist) {
-        this.form.controls['rec.Name'].setValue(Archivist.Library['Name'], { emitEvent: false });
-        this.form.controls['rec.Directory'].setValue(Archivist.Library['Directory'], { emitEvent: false });
+        if (Archivist.Library) {
+          this.form.controls['rec.Name'].setValue(Archivist.Library['Name'], { emitEvent: false });
+          this.form.controls['rec.Directory'].setValue(Archivist.Library['Directory'], { emitEvent: false });
+          this.prepareData.rec['Name'] = Archivist.Library['Name'];
+          this.prepareData.rec['Directory'] = Archivist.Library['Directory'];
+        }
         this.form.controls['rec.ArhStoreUrl'].setValue(Archivist['ArhStoreUrl'], { emitEvent: false });
         this.prepareData.rec['ArhStoreUrl'] = Archivist['ArhStoreUrl'];
-        this.prepareData.rec['Name'] = Archivist.Library['Name'];
-        this.prepareData.rec['Directory'] = Archivist.Library['Directory'];
       } else {
         this.prepareData.rec['ArhStoreUrl'] = '';
         this.prepareData.rec['Name'] = '';
@@ -96,9 +98,11 @@ export class ParamUnloadingComponent extends BaseParamComponent {
   }
   submit() {
     const newArhivist = {
+      Library: {
+        Name: this.updateData['Name'] ? this.updateData['Name'] : this.prepareData.rec['Name'],
+        Directory: this.updateData['Directory'] ? this.updateData['Directory'] : this.prepareData.rec['Directory'],
+      },
       ArhStoreUrl: this.updateData['ArhStoreUrl'] ? this.updateData['ArhStoreUrl'] : this.prepareData.rec['ArhStoreUrl'],
-      Directory: this.updateData['Directory'] ? this.updateData['Directory'] : this.prepareData.rec['Directory'],
-      Name: this.updateData['Name'] ? this.updateData['Name'] : this.prepareData.rec['Name']
     };
     this.setAppSetting(this.paramUpload, newArhivist)
     .then(() => {
@@ -107,7 +111,11 @@ export class ParamUnloadingComponent extends BaseParamComponent {
       this.updateData = {};
       this.form.disable();
       this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-      this.prepareData.rec = Object.assign({}, newArhivist);
+      this.prepareData.rec = {
+        Name: newArhivist.Library.Name,
+        Directory: newArhivist.Library.Directory,
+        ArhStoreUrl: newArhivist.ArhStoreUrl
+      };
     })
     .catch((error) => {
       this.msgSrv.addNewMessage({

@@ -25,7 +25,7 @@ export class EditCryptographyComponent implements OnInit {
         {
             title: 'Хранилище',
             id: 'name',
-            order: 1,
+            order: 'asc',
             style: {width: '100%'}
         },
     ];

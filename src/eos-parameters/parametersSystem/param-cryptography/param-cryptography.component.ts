@@ -28,7 +28,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
         {
             title: 'Наименование',
             id: 'name',
-            order: 1,
+            order: 'asc',
             style: {width: '100%'}
         },
     ];

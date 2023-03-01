@@ -5,7 +5,7 @@ import { ITableBtn, ITableData, ITableHeader } from '../../eos-parameters/parame
 
 export interface IOrderTable {
     id: string;
-    order?: 0 | 1 | 2;
+    order?: 'asc' | 'desc' | 'none';
 }
 
 @Component({
@@ -16,20 +16,19 @@ export interface IOrderTable {
 })
 export class TabelElementComponent implements OnInit {
     @Input() tabelData: ITableData;
-    @Input() setting: any;
     @Input() edit: boolean;
     @Output() btnAction = new EventEmitter();
     @Output() elementsSelect = new EventEmitter();
     @Output() orderHead = new EventEmitter<IOrderTable>();
     public title;
-    public headerTitle: ITableHeader[] = [];
+    public colomns: ITableHeader[] = [];
     public isLoading = false;
-    public btnArray: ITableBtn[] = [];
+    public buttons: ITableBtn[] = [];
     public countSelected = 0;
     constructor() {}
     ngOnInit(): void {
-        this.headerTitle = this.tabelData.tableHeader;
-        this.btnArray = this.tabelData.tableBtn;
+        this.colomns = this.tabelData.tableHeader;
+        this.buttons = this.tabelData.tableBtn;
         this.tabelData.data.forEach((item) => {
             if (item.check) {
                 this.countSelected++;
@@ -72,32 +71,32 @@ export class TabelElementComponent implements OnInit {
         if (headerOrd.order === undefined || !this.edit) {
             return;
         }
-        this.headerTitle.forEach((header) => {
+        this.colomns.forEach((header) => {
             if (header.id === headerOrd.id && header.order !== undefined) {
-                if (header.order === 1) {
-                    header.order = 2;
-                    this.orderHead.emit({id: header.id, order: 2});
+                if (header.order === 'asc') {
+                    header.order = 'desc';
+                    this.orderHead.emit({id: header.id, order: 'desc'});
                 } else {
-                    header.order = 1;
-                    this.orderHead.emit({id: header.id, order: 1});
+                    header.order = 'desc';
+                    this.orderHead.emit({id: header.id, order: 'asc'});
                 }
             } else {
                 if (header.order) {
-                    header.order = 0;
+                    header.order = 'none';
                 }
             }
         });
     }
     getBtnOrder(header: ITableHeader): string {
         if (!this.edit) {
-            if (header.order === 1 || header.order === 2) {
-                return header.order === 1 ?  'eos-adm-icon-arrow-grey-top' : 'eos-adm-icon-arrow-grey-bottom';
+            if (header.order === 'asc' || header.order === 'desc') {
+                return header.order === 'asc' ?  'eos-adm-icon-arrow-grey-top' : 'eos-adm-icon-arrow-grey-bottom';
             } else {
                 return '';
             }
         } else {
-            if (header.order === 1 || header.order === 2) {
-                return header.order === 1 ?  'eos-adm-icon-arrow-blue-top' : 'eos-adm-icon-arrow-blue-bottom';
+            if (header.order === 'asc' || header.order === 'desc') {
+                return header.order === 'asc' ?  'eos-adm-icon-arrow-blue-top' : 'eos-adm-icon-arrow-blue-bottom';
             } else {
                 return '';
             }
@@ -111,7 +110,7 @@ export class TabelElementComponent implements OnInit {
         $event.target.checked ? this.countSelected++ : this.countSelected--;
         this.elementsSelect.emit(this.tabelData.data.filter((elem) => elem.check));
     }
-    getElement(header: ITableHeader, element: any): string {
+    getElement<T>(header: ITableHeader, element: T): string {
         return element[header.id];
     }
     getflagChecked() {

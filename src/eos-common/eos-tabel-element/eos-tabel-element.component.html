@@ -6,15 +6,15 @@
     <div class="btn-table">
         <div style="flex: 1;">
             <button
-                *ngFor="let btnElem of btnArray"
+                *ngFor="let button of buttons"
                 class="btn"
-                [tooltip]="btnElem.tooltip"
+                [tooltip]="button.tooltip"
                 placement="bottom"
-                [disabled]="getDisabledBtn(btnElem)"
+                [disabled]="getDisabledBtn(button)"
                 container="body"
                 containerClass="tooltip-info"
-                (click)="clickToButton(btnElem)">
-                <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(btnElem)"></span>
+                (click)="clickToButton(button)">
+                <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(button)"></span>
             </button>
         </div>
         <div class="counter-table">
@@ -33,21 +33,21 @@
                     </div>
                 </label>
             </div>
-            <div *ngFor="let header of headerTitle"
+            <div *ngFor="let col of colomns"
                 class="header-table-title"
-                [ngStyle]="getStyle(header)"
-                (click)="orderByField(header)">
+                [ngStyle]="getStyle(col)"
+                (click)="orderByField(col)">
                 <span class="text"
                     tooltip="Упорядочить"
                     placement="bottom"
                     container="body"
                     containerClass="tooltip-info">
-                    {{header.title}}
+                    {{col.title}}
                 </span>
                 <div >
                     <span class="order-icon">
                         <span class="icon eos-adm-icon small"
-                        [ngClass]="getBtnOrder(header)">
+                        [ngClass]="getBtnOrder(col)">
                         </span>
                     </span>
                 </div>
@@ -56,19 +56,19 @@
     </div>
     <!-- Переданные элементы -->
     <div >
-        <div class="display-element-item" *ngFor="let element of tabelData.data">
+        <div class="display-element-item" *ngFor="let row of tabelData.data">
             <div style="padding-left: 12px;" class="checkbox-inline">
                 <label>
-                    <input type="checkbox" [disabled]="!edit" (change)="selected($event, element)" [checked]="element.check">
+                    <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">
                     <span></span>
                 </label>
             </div>
-            <div *ngFor="let header of headerTitle"
+            <div *ngFor="let col of colomns"
                 class="header-table-title"
-                [ngStyle]="getStyle(header)"
-                (click)="orderByField(header)">
+                [ngStyle]="getStyle(col)"
+                (click)="orderByField(col)">
                 <span class="text">
-                    {{getElement(header, element)}}
+                    {{getElement(col, row)}}
                 </span>
             </div>
         </div>

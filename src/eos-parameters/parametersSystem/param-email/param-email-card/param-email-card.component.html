@@ -12,7 +12,7 @@
             </button>
         </div>
     </div>
-    <div style="padding: 20px">
+    <div *ngIf="!isLoading" style="padding: 20px">
         <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
         <div class="second-string">
             <eos-dynamic-input class="padding-right" [input]="inputs['rec.EmailAccount']" [form]="form"  [readonly]="inputs['rec.EmailAccount'].readonly"></eos-dynamic-input>
@@ -20,7 +20,7 @@
         </div>
         <div class="label-style">Сервер входящей почты</div>
         <div class="label-bottom-string">
-            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InProtocol']" [form]="form"  [readonly]="inputs['rec.InProtocol'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InServerType']" [form]="form"  [readonly]="inputs['rec.InServerType'].readonly"></eos-dynamic-input>
             <eos-dynamic-input style="margin-top: 20px;" class="padding-left boolean-not-label" [input]="inputs['rec.DeleteEmailsOnServer']" [form]="form"  [readonly]="inputs['rec.DeleteEmailsOnServer'].readonly"></eos-dynamic-input>
         </div>
         <div class="second-string">
@@ -56,5 +56,8 @@
             <div class="padding-left"></div>
         </div>
 
+    </div>
+    <div class="spinner-wrapper email-wr" *ngIf="isLoading">
+        <eos-spinner [size]="'lg'"></eos-spinner>
     </div>
 </div>

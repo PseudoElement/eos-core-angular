@@ -1,7 +1,7 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { Component, Injector, Input} from '@angular/core';
 import { Validators } from '@angular/forms';
-import { IOrderTable } from 'eos-parameters/eos-tabel-element/eos-tabel-element.component';
+import { IOrderTable } from 'eos-common/eos-tabel-element/eos-tabel-element.component';
 import { ISettingEmailCommon, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { CRYPTO_PARAM_BTN_TABEL } from '../shared/consts/cryptography.const';
@@ -20,6 +20,14 @@ export class ParamEmailComponent extends BaseParamComponent {
         namespace: 'Eos.Delo.Settings.Email',
         typename: 'CommonCfg'
     };
+    public paramReceive: IUploadParam = {
+        namespace: 'Eos.Delo.Settings.Email',
+        typename: 'ReceiveCfg',
+    };
+    public paramSend: IUploadParam = {
+        namespace: 'Eos.Delo.Settings.Email',
+        typename: 'SendCfg',
+    };
     public masDisable: any[] = [];
     public orderBy: boolean = true;
     public editElement = false;
@@ -34,7 +42,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         {
             title: 'Наименование',
             id: 'ProfileName',
-            order: 1,
+            order: 'asc',
             style: {width: '100%'}
         },
     ];
@@ -66,24 +74,19 @@ export class ParamEmailComponent extends BaseParamComponent {
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.subscribeChangeForm();
         const allQueryGet = [];
-        /* const paramReceive: IUploadParam = {
-            namespace: 'Eos.Delo.Settings.Email',
-            typename: 'ReceiveCfg'
-        }
-        const paramSend: IUploadParam = {
-            namespace: 'Eos.Delo.Settings.Email',
-            typename: 'SendCfg'
-        } */
         allQueryGet.push(this.getAppSetting<ISettingEmailCommon>(this.paramCommon));
-        /* allQueryGet.push(this.getAppSetting<any>(paramReceive));
-        allQueryGet.push(this.getAppSetting<any>(paramSend)); */
         return Promise.all<Map<string, ISettingEmailCommon>>(allQueryGet)
-        .then(([Common/* , Receive, Send */]) => {
+        .then(([Common]) => {
             Object.keys(Common).forEach((key) => {
                 if (typeof(+key) === 'number' && !isNaN(+key)) {
                     this.maxKey = +key;
                 }
-                this.tabelData.data.push({'ProfileName': Common[key]['ProfileName'], 'key': key});
+                this.tabelData.data.push({
+                    'ProfileName': Common[key]['ProfileName'],
+                    'Password': Common[key]['Password'],
+                    'EmailAccount': Common[key]['EmailAccount'],
+                    'key': key
+                });
             });
             this.orderHead({id: this.tableHeader[0].id, order: this.tableHeader[0].order});
         });
@@ -91,9 +94,9 @@ export class ParamEmailComponent extends BaseParamComponent {
     orderHead($event: IOrderTable) {
         this.tabelData.data.sort((a, b) => {
             if (a[$event.id] > b[$event.id]) {
-                return $event.order === 2 ? -1 : 1;
+                return $event.order === 'desc' ? -1 : 1;
             } else if (a[$event.id] < b[$event.id]) {
-                return $event.order === 2 ? 1 : -1;
+                return $event.order === 'desc' ? 1 : -1;
             } else {
                 return 0;
             }
@@ -125,8 +128,6 @@ export class ParamEmailComponent extends BaseParamComponent {
         switch (action) {
             case 'add':
                 this.form.controls['rec.ProfileName'].setValidators([Validators.required]);
-                this.form.controls['rec.ProfileName'].setValidators([Validators.required]);
-                // this.form.controls['rec.ProfileName'].setValue('', { emitEvent: false });
                 this.editData = undefined;
                 this.showCard = true;
                 break;
@@ -160,19 +161,53 @@ export class ParamEmailComponent extends BaseParamComponent {
         return newElem;
     }
     submitEmit() {
+        const queryAll = [];
         const newEmailAcount = {
-            EmailAccount: this.updateData['EmailAccount'] ? this.updateData['EmailAccount'] : this.prepareData.rec['EmailAccount'],
-            Password: this.updateData['Password'] ? this.updateData['Password'] : this.prepareData.rec['Password'],
-            ProfileName: this.updateData['ProfileName'] ? this.updateData['ProfileName'] : this.prepareData.rec['ProfileName']
+            EmailAccount: this.updateData['EmailAccount'] !== undefined ? this.updateData['EmailAccount'] : this.prepareData.rec['EmailAccount'],
+            Password: this.updateData['Password'] !== undefined ? this.updateData['Password'] : this.prepareData.rec['Password'],
+            ProfileName: this.updateData['ProfileName'] !== undefined ? this.updateData['ProfileName'] : this.prepareData.rec['ProfileName']
         };
-        const newCommon: IUploadParam = {
-            namespace: 'Eos.Delo.Settings.Email',
-            typename: 'CommonCfg',
-            instance: '' + (this.maxKey + 1)
+        if (this.updateData['DeleteEmailsOnServer'] === 'NO') {
+            this.updateData['DeleteEmailsOnServer'] = false;
+        }
+        if (this.updateData['DeleteEmailsOnServer'] === 'YES') {
+            this.updateData['DeleteEmailsOnServer'] = true;
+        }
+        const newEmailReceive = {
+            DeleteEmailsOnServer: this.updateData['DeleteEmailsOnServer'] !== undefined ? this.updateData['DeleteEmailsOnServer'] : this.prepareData.rec['DeleteEmailsOnServer'],
+            InAuthMethod: this.updateData['InAuthMethod'] !== undefined ? +this.updateData['InAuthMethod'] : +this.prepareData.rec['InAuthMethod'],
+            InEncryption: this.updateData['InEncryption'] !== undefined ? +this.updateData['InEncryption'] : +this.prepareData.rec['InEncryption'],
+            InServerHost: this.updateData['InServerHost'] !== undefined ? this.updateData['InServerHost'] : this.prepareData.rec['InServerHost'],
+            InServerPort: this.updateData['InServerPort'] !== undefined ? +this.updateData['InServerPort'] : +this.prepareData.rec['InServerPort'],
+            InServerType: this.updateData['InServerType'] !== undefined ? +this.updateData['InServerType'] : +this.prepareData.rec['InServerType'],
+            InUserName: this.updateData['InUserName'] !== undefined ? this.updateData['InUserName'] : this.prepareData.rec['InUserName'],
         };
-        this.setAppSetting(newCommon, newEmailAcount)
+        const newEmailSend = {
+            OutAuthMethod: this.updateData['OutAuthMethod'] !== undefined ? +this.updateData['OutAuthMethod'] : +this.prepareData.rec['OutAuthMethod'],
+            OutEncryption: this.updateData['OutEncryption'] !== undefined ? +this.updateData['OutEncryption'] : +this.prepareData.rec['OutEncryption'],
+            OutServerHost: this.updateData['OutServerHost'] !== undefined ? this.updateData['OutServerHost'] : this.prepareData.rec['OutServerHost'],
+            OutServerPort: this.updateData['OutServerPort'] !== undefined ? +this.updateData['OutServerPort'] : +this.prepareData.rec['OutServerPort'],
+            OutUserName: this.updateData['OutUserName'] !== undefined ? this.updateData['OutUserName'] : this.prepareData.rec['OutUserName']
+        };
+        const newInstance =  this.editData ? '' + this.editData.key : '' + (this.maxKey + 1);
+        const newCommon = Object.assign({instance: newInstance}, this.paramCommon);
+        const newReceive = Object.assign({instance: newInstance}, this.paramReceive);
+        const newSend = Object.assign({instance: newInstance}, this.paramSend);
+        queryAll.push(this.setAppSetting(newCommon, newEmailAcount));
+        queryAll.push(this.setAppSetting(newReceive, newEmailReceive));
+        queryAll.push(this.setAppSetting(newSend, newEmailSend));
+        return Promise.all(queryAll)
         .then(() => {
-            this.tabelData.data.push({'ProfileName': newEmailAcount['ProfileName'], 'key': this.maxKey});
+            if (this.editData) {
+                this.tabelData.data.forEach((item) => {
+                    console.log('item', item, this.editData.key);
+                    if ('' + item.key === '' + this.editData.key) {
+                        item['ProfileName'] = item.ProfileName;
+                    }
+                });
+            } else {
+                this.tabelData.data.push({'ProfileName': newEmailAcount['ProfileName'], 'key': this.maxKey});
+            }
             this.showCard = false;
             this.maxKey++;
           this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);

@@ -15,7 +15,7 @@ export interface ITableHeader {
     /*
     * 0 - нет значка, 1 - уменьшение, 2 - увеличение
     */
-    order?: 0 | 1 | 2;
+    order?: 'none' | 'asc' | 'desc';
     id: string;
     style?: any;
 }

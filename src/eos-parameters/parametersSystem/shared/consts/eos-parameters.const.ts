@@ -39,7 +39,7 @@ export const EOS_PARAMETERS_TAB = [{
 },{
     title: 'Электронная почта',
     url: 'email'
-}, */{
+},*/{
     title: 'Текущая организация',
     url: 'now-organiz'
 }, {

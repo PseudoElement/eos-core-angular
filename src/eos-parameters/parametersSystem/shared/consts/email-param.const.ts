@@ -2,16 +2,16 @@ import { EMAIL } from '../../../../eos-dictionaries/consts/input-validation';
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 
 export const EmailEncryptionType = [
-    {value: '1', title: 'None'},
-    {value: '2', title: 'TLS'},
-    {value: '3', title: 'STARTTLS'}
+    {value: 1, title: 'None'},
+    {value: 2, title: 'TLS'},
+    {value: 3, title: 'STARTTLS'}
 ];
 export const EmailAuthenticationType = [
-    {value: '1', title: 'Password'},
-    {value: '2', title: 'EncryptedPassword'},
-    {value: '3', title: 'Kerberos'},
-    {value: '4', title: 'NTLM'},
-    {value: '5', title: 'None'}
+    {value: 1, title: 'Password'},
+    {value: 2, title: 'EncryptedPassword'},
+    {value: 3, title: 'Kerberos'},
+    {value: 4, title: 'NTLM'},
+    {value: 5, title: 'None'}
 ];
 export const EMAIL_PARAM: IBaseParameters = {
     id: 'email',
@@ -39,13 +39,13 @@ export const EMAIL_PARAM: IBaseParameters = {
         },
         /* Сервер входящей почты */
         {
-            key: 'InProtocol',
+            key: 'InServerType',
             type: 'select',
             readonly: false,
             title: 'Протокол',
             options: [
-                {value: '1', title: 'IMAP'},
-                {value: '2', title: 'POP3'}
+                {value: 1, title: 'IMAP'},
+                {value: 2, title: 'POP3'}
             ]
         },
         {
@@ -125,3 +125,67 @@ export const EMAIL_PARAM: IBaseParameters = {
     ]
 };
 
+export const DEFAULT_EMAIL_PARAM = [
+    {
+        key: 'ProfileName',
+        value: ''
+    },
+    {
+        key: 'EmailAccount',
+        value: ''
+    },
+    {
+        key: 'Password',
+        value: ''
+    },
+    /* Сервер входящей почты */
+    {
+        key: 'InServerType',
+        value: ''
+    },
+    {
+        key: 'InServerHost',
+        value: ''
+    },
+    {
+        key: 'InServerPort',
+        value: ''
+    },
+    {
+        key: 'InEncryption',
+        value: 1
+    },
+    {
+        key: 'InAuthMethod',
+        value: 1
+    },
+    {
+        key: 'InUserName',
+        value: ''
+    },
+    {
+        key: 'DeleteEmailsOnServer',
+        value: false
+    },
+    /* Сервер исходящей почты */
+    {
+        key: 'OutServerHost',
+        value: ''
+    },
+    {
+        key: 'OutServerPort',
+        value: ''
+    },
+    {
+        key: 'OutEncryption',
+        value: 1
+    },
+    {
+        key: 'OutAuthMethod',
+        value: 1
+    },
+    {
+        key: 'OutUserName',
+        value: ''
+    },
+];

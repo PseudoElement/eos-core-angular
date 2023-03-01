@@ -4,14 +4,20 @@ export interface ISettingEmailCommon {
     ProfileName: string;
 }
 export interface ISettingEmailReceive {
-    EmailAccount: string;
-    Password: string;
-    ProfileName: string;
+    DeleteEmailsOnServer: boolean;
+    InAuthMethod: number;
+    InEncryption: number;
+    InServerHost: string;
+    InServerPort: number;
+    InServerType: number;
+    InUserName: string;
 }
 export interface ISettingEmailSend {
-    EmailAccount: string;
-    Password: string;
-    ProfileName: string;
+    OutAuthMethod: number;
+    OutEncryption: number;
+    OutServerHost: string;
+    OutServerPort: number;
+    OutUserName: string;
 }
 
 interface ILibrary {
