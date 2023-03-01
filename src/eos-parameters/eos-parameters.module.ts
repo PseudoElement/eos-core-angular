@@ -28,13 +28,17 @@ import { ParamOrganizNowComponent } from './parametersSystem/param-organiz-now/p
 
 /*  Service  */
 import { ParamApiSrv } from './parametersSystem/shared/service/parameters-api.service';
-import { EosCommonModule } from 'eos-common/eos-common.module';
+import { EosCommonModule } from '../eos-common/eos-common.module';
 import { CollectionService } from './parametersSystem/param-authentication/collection/collection.service';
 import { ParamDictionariesComponent } from './parametersSystem/param-dictionaries/param-dictionaries.component';
 import { ParamLoggingComponent } from './parametersSystem/param-logging/param-logging.component';
 import {ParamConversionComponent} from './parametersSystem/param-conversion/param-conversion.component';
 import { ParamUnloadingComponent } from './parametersSystem/param-unloading/param-unloading.component';
 import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.component';
+import { ParamCryptographyComponent } from './parametersSystem/param-cryptography/param-cryptography.component';
+import { EditCryptographyComponent } from './parametersSystem/param-cryptography/edit-cryptography/edit-cryptography.component';
+import { ParamEmailComponent } from './parametersSystem/param-email/param-email.component';
+import { ParamEmailCardComponent } from './parametersSystem/param-email/param-email-card/param-email-card.component';
 
 
 @NgModule({
@@ -57,10 +61,15 @@ import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.compon
         ParamOrganizNowComponent,
         ParamConversionComponent,
         ParamUnloadingComponent,
-        ParamLibComponent
+        ParamLibComponent,
+        ParamCryptographyComponent,
+        EditCryptographyComponent,
+        ParamEmailComponent,
+        ParamEmailCardComponent
     ],
     entryComponents: [
-        AuthenticationCollectionComponent
+        AuthenticationCollectionComponent,
+        EditCryptographyComponent
     ],
     imports: [
         BrowserModule,

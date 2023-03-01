@@ -1,5 +1,9 @@
+$light-grey-1: #fafafa;
+$border-color-main-theme: #e6e6e6;
+$button-color-main-theme: #337ab7;
+$white: #fff;
 .modal-collection {
-    width: 800px;
+    width: 800px !important;
     margin: 200px auto 0;
 
 
@@ -75,7 +79,7 @@
 }
 
 .modalWord {
-    width: 600px;
+    width: 600px !important;
     margin: 280px auto 0;
 
     .modalWord-content {

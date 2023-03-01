@@ -9,14 +9,17 @@
   ></eos-param-header>
   <div class="param-input-group">
     <eos-dynamic-input
+      [input]="inputs['rec.Name']"
+      [form]="form"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.Directory']"
+        [form]="form"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
       [input]="inputs['rec.ArhStoreUrl']"
       [form]="form"
-     
     ></eos-dynamic-input>
-      <eos-dynamic-input
-        [input]="inputs['rec.ArhExportPath']"
-        [form]="form"
-       
-    ></eos-dynamic-input>
+    
   </div>
 </div>
