@@ -1,0 +1,35 @@
+<div class="eos-adm-node-info">
+    <div class="opened-node-wrapper">
+        <div class="content-block">
+            <div *ngIf="nodeDataShort"
+                class="short-info l-font">
+                <span *ngFor="let key of keys(fieldsDescriptionShort.rec)">{{nodeDataShort.rec[key]}}</span>
+            </div>
+            <div *ngIf="nodeDataFull"
+                class="full-info usual-border">
+                <div *ngFor="let key of keys(fieldsDescriptionFull.rec)"
+                    class="field">
+                    <ng-container [ngSwitch]="fieldsDescriptionFull.rec[key].type">
+                        <ng-container *ngSwitchCase="fieldTypes.boolean">
+                                <label class="checkbox minus-checkbox field-title unimportant-text s-font"><input type="checkbox"
+                                    [(ngModel)]="nodeDataFull.rec[key]"
+                                    disabled><span></span>{{fieldsDescriptionFull.rec[key].title}}</label>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="fieldTypes.date">
+                                <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <p class="field-value m-font"
+                                    >{{(value(key) | eosDate) || '...'}}</p>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                                <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <p class="field-value m-font" [ngClass]="{'isn-channel-position-parent': showIcon(key)}">
+                                        <span *ngIf="showIcon(key)" class="small isn-channel-position eos-adm-icon" [ngClass]="getTypeShowIcon(key)"></span>
+                                        {{value(key) || '...'}}
+                                </p>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

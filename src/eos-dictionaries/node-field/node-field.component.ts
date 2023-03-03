@@ -10,6 +10,7 @@ import { CHANNEL_TYPE } from 'eos-dictionaries/consts/dictionaries/sev/types.con
 interface ISpecialIcon {
     class: string;
     tooltip: string;
+    title?: string;
 }
 
 @Component({
@@ -90,7 +91,8 @@ export class NodeFieldComponent implements OnInit {
             const CHANNNEL_OBJ = (CHANNEL_TYPE.filter( item =>  item.value === CHANNEL_TYPE_VALUE))[0];
             this.iconsArray.push({
                 class: !this.node.isDeleted ? CHANNNEL_OBJ.iconClass.standard : CHANNNEL_OBJ.iconClass.deleted,
-                tooltip: CHANNNEL_OBJ.iconClass.tooltip
+                tooltip: CHANNNEL_OBJ.iconClass.tooltip,
+                title: NEED_ITEM[0]['CLASSIF_NAME']
             });
        }
     }
