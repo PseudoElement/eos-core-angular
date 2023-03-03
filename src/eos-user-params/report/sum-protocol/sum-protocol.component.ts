@@ -110,7 +110,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this.PaginateData(this.config.length, this.orderByStr);
     this._user_pagination.totalPages = undefined;
     return this._pipeSrv.read<USER_PARMS>({
-      USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
+      USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT', 'ISN_USER_OWNER': -99 })
     })
       .then(data => {
         if (data[0]) {

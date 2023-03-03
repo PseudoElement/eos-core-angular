@@ -49,7 +49,7 @@ export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
         {
             key: 'NOTE',
             title: 'Примечание',
-            type: 'string',
+            type: 'text',
             length: 255
         },
         {

@@ -113,6 +113,7 @@ import { FormatEditComponent } from './card-views/format-edit.component';
 import { MedoNodeCardComponent } from './card-views/medo-node-card-edit.component';
 import { CardFromComponent } from './card-from/card-from.component';
 import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel-node-info.component';
+import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node-info/sev-participant-node-info.component';
 @NgModule({
     declarations: [
         CardFromComponent,
@@ -190,7 +191,8 @@ import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel
         ResolutionCategoryEditComponent,
         SevSyncDictsComponent,
         MedoNodeCardComponent,
-        BroadcastChannelNodeInfoComponent
+        BroadcastChannelNodeInfoComponent,
+        SevParticiantNodeInfoComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,

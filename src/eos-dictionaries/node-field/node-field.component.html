@@ -21,11 +21,14 @@
                 {{ currentValue() }}
             </label>
             <ng-template #sevChannelType> <!-- отображение иконки типа канала сообщений СЭВ -->
-                <div class="table-field-ico" *ngFor="let icon of iconsArray;">
-                    <span class="folder small eos-adm-icon"
+                <div class="" *ngFor="let icon of iconsArray;">
+                    <span class="folder-isn-channel small eos-adm-icon"
                         [ngClass]="icon.class"
                         [tooltip]="icon.tooltip"
                         placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
+                        <label *ngIf="icon.title" class="fieldlabel field-label-icon" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
+                            {{ icon.title }}
+                        </label>
                 </div>
             </ng-template>
         </ng-container>
