@@ -45,6 +45,9 @@
             input {
                 width: 363px;
             }
+            p.form-control-static {
+                width: 363px;
+            }
         }
     }
     .shell {
@@ -85,7 +88,7 @@
     align-items: self-start;
     justify-content: space-between;
     .type-input {
-        top: -37px;
+        top: -25px;
         position: relative;
         input {
             width: 363px;
