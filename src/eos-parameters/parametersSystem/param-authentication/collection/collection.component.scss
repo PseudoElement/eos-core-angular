@@ -1,15 +1,11 @@
-$light-grey-1: #fafafa;
-$border-color-main-theme: #e6e6e6;
-$button-color-main-theme: #337ab7;
-$white: #fff;
 .modal-collection {
     width: 800px !important;
     margin: 200px auto 0;
 
 
     .collection-action {
-        background: $light-grey-1;
-        border-bottom: 1px solid $border-color-main-theme;
+        background: #fafafa;
+        border-bottom: 1px solid #e6e6e6;
 
         .btn {
             width: 48px;
@@ -19,8 +15,8 @@ $white: #fff;
     }
 
     .collection-param {
-        background: $light-grey-1;
-        border-bottom: 1px solid $border-color-main-theme;
+        background: #fafafa;
+        border-bottom: 1px solid #e6e6e6;
         // border-top-color: transparent;
 
         .checkbox-inline {
@@ -34,7 +30,7 @@ $white: #fff;
 
             .text {
                 cursor: pointer;
-                color: $button-color-main-theme;
+                color: #337ab7;
                 position: relative;
                 top: 3px;
             }
@@ -47,7 +43,7 @@ $white: #fff;
     .collection-main {
         min-height: 200px;
         max-height: 50vh;
-        background: $white;
+        background: #fff;;
         overflow: auto;
         padding: 10px 0 10px 0;
 
@@ -84,6 +80,6 @@ $white: #fff;
 
     .modalWord-content {
         padding: 15px;
-        background: $white;
+        background: #fff;;
     }
 }
