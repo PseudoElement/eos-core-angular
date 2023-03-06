@@ -1,0 +1,130 @@
+$breadcrumbs-height: 48px;
+$white: #fff;
+$border-color-main-theme: #e6e6e6;
+$item-height: 48px;
+$item-width: 48px;
+$dictionary-block-width-big-display: 380px;
+$block-color-main-theme: $white;
+$dictionary-block-width: 300px;
+.eos-adm-breadcrumb {
+    height: $breadcrumbs-height;
+    border-bottom: 1px solid $border-color-main-theme;
+    border-radius: 0;
+    position: relative;
+    display: block;
+    white-space: nowrap;
+
+    .breadcrumb {
+        background-color: inherit;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        top: 11px;
+        padding-left: 20px;
+
+        & > li:not(:first-child)::before {
+            // font-family: "Glyphicons Halflings";
+            // content: "\E258";
+            content: "";
+            background-image: url("../assets/icons/Arrow-V-Blue.svg");
+            transition: 0ms;
+            transform: rotate(180deg);
+            display: inline-block;
+            height: 24px;
+            width: 24px;
+            background-size: cover;
+        }
+
+        .breadcrumb-item {
+            //max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            padding: 0 12px;
+        }
+
+        .link {
+            &:hover,
+            &:active,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .opened-node-actions {
+        transition: right 300ms ease-in-out;
+        position: absolute;
+        height: $breadcrumbs-height;
+        border-left: 1px $border-color-main-theme solid;
+        top: 0;
+        right: 0;
+        .btn {
+            padding: 0;
+            height: $item-height;
+            width: $item-width;
+            background-color: transparent;
+            border-radius: 0;
+            border-color: transparent;
+            &:focus {
+                outline: 0;
+            }
+        }
+        .icon-btn {
+            position: absolute;
+
+            &.left {
+                left: 0;
+            }
+            &.right {
+                left: $item-width;
+            }
+        }
+    }
+
+
+    .left-sandwich {
+        width: $item-width;
+        height: $item-height;
+        display: inline-block;
+        .btn {
+            margin-right: -16px;
+            margin-bottom: -7px;
+        }
+    }
+}
+
+@media (max-width: 1599px) {
+    .eos-adm-breadcrumb {
+        .opened-node-actions {
+            width: $dictionary-block-width;
+            &.c-info {
+                right: -1 * $dictionary-block-width;
+            }
+
+            .icon-btn {
+                &.edit {
+                    right: $item-width;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1600px) {
+    .eos-adm-breadcrumb {
+        .opened-node-actions {
+            width: $dictionary-block-width-big-display;
+            &.c-info {
+                right: -1 * $dictionary-block-width-big-display;
+            }
+            .icon-btn {
+                &.edit {
+                    right: $item-width;
+                }
+            }
+        }
+    }
+}

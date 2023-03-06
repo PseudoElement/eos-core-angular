@@ -3,7 +3,40 @@
   "compilerOptions": {
     "module": "es2020",
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
+    "paths": {
+      "@eos/delo-adm": [
+        "dist/delo-lib/delo-lib",
+        "dist/delo-lib"
+      ],
+      "eos-dictionaries/*": [
+        "projects/delo-lib/src/lib/eos-dictionaries/*",
+      ],
+      "eos-common/*": [
+        "projects/delo-lib/src/lib/eos-common/*",
+      ],
+      "app/*": [
+        "projects/delo-lib/src/lib/app/*",
+      ],
+      "eos-rest": [
+        "projects/delo-lib/src/lib/eos-rest",
+      ],
+      "eos-rest/*": [
+        "projects/delo-lib/src/lib/eos-rest/*",
+      ],
+      "eos-user-params/*": [
+        "projects/delo-lib/src/lib/eos-user-params/*",
+      ],
+      "test/*": [
+        "projects/delo-lib/src/lib/test/*",
+      ],
+      "eos-user-select/*": [
+        "projects/delo-lib/src/lib/eos-user-select/*",
+      ],
+      "eos-parameters/*": [
+        "projects/delo-lib/src/lib/eos-parameters/*",
+      ],
+    },
+    "baseUrl": "./",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

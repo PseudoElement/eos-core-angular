@@ -1,0 +1,9 @@
+{
+    "bundlerOptions": {
+        "entryFile": "./projects/delo-lib/src/lib/styles/main.scss",
+        "rootDir": "./projects/delo-lib/src/lib/styles/",
+        "outFile": "./dist/common.scss",
+        "ignoreImports": ["~@angular/.*"],
+        "logLevel": "silent"
+    }
+}
