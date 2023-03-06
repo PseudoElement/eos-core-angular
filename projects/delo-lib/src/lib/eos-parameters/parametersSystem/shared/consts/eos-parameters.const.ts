@@ -33,6 +33,12 @@ export const EOS_PARAMETERS_TAB = [{
 }, {
     title: 'Протоколирование',
     url: 'logging'
+}, /* {
+    title: 'Криптография',
+    url: 'cryptography'
+}, */{
+    title: 'Электронная почта1',
+    url: 'email'
 }, {
     title: 'Текущая организация',
     url: 'now-organiz'
@@ -83,6 +89,12 @@ export const CARMA_UNIC_VALUE: IMessage = {
     title: 'Данное хранилище уже выбранно',
     msg: 'Выберите другое хранилище.',
     dismissOnTimeout: 5000
+};
+export const ELEMENT_PROTECT_NOT_DELET: IMessage = {
+    type: 'warning',
+    title: 'Изменения сохранены',
+    msg: 'Нельзя удалить общий профиль "{{prot}}"',
+    dismissOnTimeout: 2000
 };
 
 export const REG_RANGE_0_30 = /^[1-2]?\d$|^30$/;

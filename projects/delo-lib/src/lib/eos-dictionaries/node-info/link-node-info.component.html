@@ -7,7 +7,7 @@
                     class="field">
                     <ng-container [ngSwitch]="fieldsDescriptionFull.rec[key].type">
                             <ng-container *ngSwitchCase="fieldTypes.boolean">
-                                    <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
+                                    <label class="checkbox minus-checkbox field-title unimportant-text s-font"><input type="checkbox"
                                         [(ngModel)]="nodeDataFull.rec[key]"
                                         disabled><span></span>{{fieldsDescriptionFull.rec[key].title}}</label>
                             </ng-container>
@@ -32,7 +32,7 @@
                         >{{node.data.PARE_LINK_Ref['CLASSIF_NAME'] || '...'}}</p>
                 </div>
                 <div class="field">
-                    <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
+                    <label class="checkbox minus-checkbox field-title unimportant-text s-font"><input type="checkbox"
                         [(ngModel)]="node.data.PARE_LINK_Ref['TRANSPARENT']"
                         disabled><span></span>{{fieldsDescriptionFull.rec['TRANSPARENT'].title}}</label>
                 </div>

@@ -1,0 +1,55 @@
+<header>
+    <eos-param-header [title]='title' statusBtnSub="true" (submitForm)="submit()" (cancelForm)="cancel()" editBtn="true"></eos-param-header>
+</header>
+<div class="collection-edit">
+    <div class="collection-profile-name">
+        <label>Название профиля</label>
+        <input class="form-control m-font inline-block" type="text">
+    </div>
+    <div class="collection-profile-name">
+        <label>Строка инициализации</label>
+        <input class="form-control m-font inline-block" type="text"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+    </div>
+
+    <div class="collection-profile-table">
+        <label>Хранилища сертификатов</label>
+    </div>
+    <div>
+        <eos-tabel-element
+        [edit]="edit"
+        [tabelData]="tabelData"
+        (btnAction)="actionTo($event)">
+        </eos-tabel-element>
+    </div>
+</div>
+
+<ng-template #modalStorage>
+    <header>
+        <div class="header paaram-header-wrapp">
+            <div class="header__text-wrap">
+                <span class="header__text">Выбор хранилищ сертификатов</span>
+            </div>
+            <div class="header__button-wrap">
+                <button class="btn btn-primary header__button" (click)="cancelModalWord()">ОТМЕНИТЬ
+                </button>
+                <button class="btn btn-primary-full header__button" (click)="submitModalWord()" [disabled]="false">СОХРАНИТЬ
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="modalWord-content-edit">
+        <div class="collection-add-name">
+            <label>Строка инициализации</label>
+            <input class="form-control m-font inline-block" type="text"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+        </div>
+        <div class="collection-add-name">
+            <label>Адрес хранилища</label>
+            <input class="form-control m-font inline-block" type="text"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+        </div>
+        <div class="collection-add-name">
+            <label>Нужно указать название поля</label>
+            <textarea #textArea class="form-control m-font"></textarea>
+            <!-- <input class="form-control m-font inline-block" type="textarea"> -->
+        </div>
+    </main>
+</ng-template>

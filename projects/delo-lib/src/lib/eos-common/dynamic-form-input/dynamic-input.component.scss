@@ -187,7 +187,7 @@ eos-dynamic-input {
         &.ng-invalid {
         //.ng-dirty {
         //:not(:focus) {
-            border-color: $invalid-color-main-theme;
+            border-color: $invalid-color-main-theme  !important;
             border-width: 2px;
             /* outline: $invalid-color-main-theme solid 1px !important; */
             /* outline-offset: 0 !important; */

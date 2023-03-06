@@ -4,6 +4,7 @@ import { PipRX } from '../../../../eos-rest/services/pipRX.service';
 import { ERROR_LOGIN } from '../../../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../../../eos-common/confirm-window/confirm-window.service';
 import { URL_LOGIN } from '../../../../app/consts/common.consts';
+import { IUploadParam } from '../../../../eos-parameters/interfaces/app-setting.interfaces';
 
 @Injectable()
 export class ParamApiSrv {
@@ -46,7 +47,12 @@ export class ParamApiSrv {
             return data;
         });
     }
-
+    getAppSetting<T>(url: IUploadParam): Promise<T> {
+        return this.apiSrv.getAppSetting<T>(url);
+    }
+    setAppSetting<T>(query: IUploadParam, body: T) {
+        return this.apiSrv.setAppSetting(query, body);
+    }
     // protected prepareForEdit(records: any[]): any[] {
     //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));
     // }

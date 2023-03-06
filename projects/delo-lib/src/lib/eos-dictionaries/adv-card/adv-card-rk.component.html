@@ -35,8 +35,7 @@
         </ng-container>
 
     </div>
-</div>
-<div class="bottom-buttons">
+    <div class="bottom-buttons">
         <button class="btn btn-primary-full upper"
             (click)="userListsEdit()"
             >Ведение списков</button>
@@ -44,8 +43,9 @@
         <button class="btn btn-primary-full upper"
             [disabled]="!isChanged || formInvalid"
             (click)="save()">Записать</button>
-        <button class="btn btn-primary upper"
+        <button style="margin-left: 5px;" class="btn btn-primary upper"
             (click)="cancel()">Отменить</button>
+    </div>
 </div>
 
 <ng-template #defaultEdit1>

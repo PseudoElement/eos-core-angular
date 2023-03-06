@@ -36,6 +36,10 @@ import {ParamConversionComponent} from './parametersSystem/param-conversion/para
 import { ParamUnloadingComponent } from './parametersSystem/param-unloading/param-unloading.component';
 import { ParamLibComponent } from './parametersSystem/param-lib/param-lib.component';
 import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
+import { ParamCryptographyComponent } from './parametersSystem/param-cryptography/param-cryptography.component';
+import { EditCryptographyComponent } from './parametersSystem/param-cryptography/edit-cryptography/edit-cryptography.component';
+import { ParamEmailComponent } from './parametersSystem/param-email/param-email.component';
+import { ParamEmailCardComponent } from './parametersSystem/param-email/param-email-card/param-email-card.component';
 
 
 @NgModule({
@@ -58,10 +62,15 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
         ParamOrganizNowComponent,
         ParamConversionComponent,
         ParamUnloadingComponent,
-        ParamLibComponent
+        ParamLibComponent,
+        ParamCryptographyComponent,
+        EditCryptographyComponent,
+        ParamEmailComponent,
+        ParamEmailCardComponent
     ],
     entryComponents: [
-        AuthenticationCollectionComponent
+        AuthenticationCollectionComponent,
+        EditCryptographyComponent
     ],
     imports: [
         BrowserModule,

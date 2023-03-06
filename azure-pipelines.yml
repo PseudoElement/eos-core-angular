@@ -2,17 +2,17 @@ trigger:
   batch: true
   branches:
     include:
-    - dev/*
-    - prod/*
+    - dev/22.8
+    - prod/22.8
 
 pool:
   name: Default
   demands:
-  - Agent.ComputerName -equals mskbuild4
+    - EOS_NODEJS
 
 steps:
   - task: PowerShell@2
-    displayName: Build
+    displayName: Pipeline
     inputs:
       targetType: filePath
       filePath: ./_CI/pipeline.ps1

@@ -1,6 +1,6 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { takeUntil } from 'rxjs/operators';
 import { BaseCardEditDirective } from './base-card-edit.component';
 /* import { EosMessageService } from 'eos-common/services/eos-message.service'; */
 /* import { CONFIRM_REESTRTYPE_DELIVERY_CHANGE, BUTTON_RESULT_OK } from 'app/consts/confirms.const'; */

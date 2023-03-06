@@ -152,12 +152,15 @@ export class SevSyncDictsComponent implements OnInit {
 
     private _readMainOrg(): void {
         this._api.read({
-            DELO_OWNER: -99
+            DELO_OWNER: 1
         }).then(resp => {
-            this._mainOrgDue = resp[0]['DUE_ORGANIZ'];
-            this._mainOrgName = resp[0]['NAME'];
-            this._queryOrgs.push({ due: resp[0]['DUE_ORGANIZ'], name: resp[0]['NAME'] });
-            this._readSevOrgs();
+            if (resp.length) {
+                this._mainOrgDue = resp[0]['DUE_ORGANIZ'];
+                this._mainOrgName = resp[0]['NAME'];
+                this._queryOrgs.push({ due: resp[0]['DUE_ORGANIZ'], name: resp[0]['NAME'] });
+                this._readSevOrgs();
+            }
+
         }).catch(err => { throw err; });
     }
 
@@ -194,7 +197,7 @@ export class SevSyncDictsComponent implements OnInit {
     }
 
     private _warnCheckSevDeparments() {
-        const msg = {... SEV_WARN_CHECK_SEV_DEPARTMENTS, ... { title: `В организации ${this._mainOrgName} нет ДЛ с заполненным индексом СЭВ. Выполнение операции невозможно`}};
+        const msg = { ...SEV_WARN_CHECK_SEV_DEPARTMENTS, ... { title: `В организации ${this._mainOrgName} нет ДЛ с заполненным индексом СЭВ. Выполнение операции невозможно` } };
         this._msgSrv.addNewMessage(msg);
     }
 
@@ -207,7 +210,7 @@ export class SevSyncDictsComponent implements OnInit {
     // продолжить - идем на проверку адресов (проверка 3)
     private _confirmCheckCryptCertsSome(sevs: string[]) {
         const CUTS: string[] = sevs.length > 20 ? sevs.slice(0, 19) : sevs; // показывать только первые 20 названий
-        const MSG = merge({ bodyList: CUTS }, SEV_SYNCHRO_CHECK_CRYPT_SOME );
+        const MSG = merge({ bodyList: CUTS }, SEV_SYNCHRO_CHECK_CRYPT_SOME);
         this._confirmSrv.confirm2(MSG).then(button => {
             switch (button.result) {
                 case 1: this._checkExistsAddresses(); break;

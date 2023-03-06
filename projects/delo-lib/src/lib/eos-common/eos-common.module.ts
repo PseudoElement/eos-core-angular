@@ -51,6 +51,7 @@ import { UserPaginationService } from '../eos-user-params/shared/services/users-
 import { EosTooltipService } from './services/eos-tooltip.service';
 import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input-select2.component';
 import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-input-autosearch.component ';
+import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.component';
 
 @NgModule({
     declarations: [
@@ -79,7 +80,8 @@ import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-in
         EosDateMaskDirective,
         EosDatePipe,
         UserSelectPaginationComponent,
-        EosClickModeDirective
+        EosClickModeDirective,
+        TabelElementComponent
     ],
     imports: [
         BrowserModule,
@@ -104,7 +106,8 @@ import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-in
         SearchInputStringComponent,
         EosDatePipe,
         UserSelectPaginationComponent,
-        EosClickModeDirective
+        EosClickModeDirective,
+        TabelElementComponent
     ],
     entryComponents: [
         ConfirmWindowComponent,

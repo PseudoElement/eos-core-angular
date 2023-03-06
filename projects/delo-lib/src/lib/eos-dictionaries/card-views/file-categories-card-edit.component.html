@@ -1,38 +1,47 @@
 <div class="card-content-wrapper" #root>
     <div class="clearfix"></div>
         <div class="form-group">
-            <eos-dynamic-input  [input]="inputs['rec.NAME']"
-                                [form]="form"
-                                [readonly]="!editMode"
-                                ></eos-dynamic-input>
-            <eos-dynamic-input  [input]="inputs['rec.NOTE']"
-                                [form]="form"
-                                [readonly]="!editMode"
-                            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.NAME']"
+                [form]="form"
+                [readonly]="!editMode"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.NOTE']"
+                [form]="form"
+                [readonly]="!editMode"
+            ></eos-dynamic-input>
 
             <label [ngClass]="{'unimportant-text': !editMode }">Группа документов</label>
             <div style="position: relative;">
                 <span class="pull-left" style="margin-right: 0; width: 100%;">
-                    <input class="input-style" [ngClass]="{'edit': editMode}" 
-                    readonly type="text" [value]="inputs['rec.DOC_GROUP_NAMES'].value" placeholder="...">
-                <span
-                container="body"
-                placement="bottom"
-                containerClass="tooltip-info"
-                triggers="hover"
-                tooltip="Выбрать"
-                *ngIf="editMode" class="action eos-adm-icon eos-adm-icon-directory-book-blue grif-icon-directory"  (click)="selectDocGroup()">
-                </span>
-                <span
-                container="body"
-                placement="bottom"
-                containerClass="tooltip-info"
-                triggers="hover"
-                tooltip="Удалить"
-                *ngIf="editMode "
-                class="action eos-adm-icon eos-adm-icon-close-blue delet-icon-directory small"
-                (click)="clearDocGroup()"></span>
-                                    
+                    <input 
+                        class="input-style" 
+                        [ngClass]="{'edit': editMode}" 
+                        readonly type="text" 
+                        [value]="inputs['rec.DOC_GROUP_NAMES'].value" 
+                        placeholder="..."
+                    >
+                    <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        triggers="hover"
+                        tooltip="Выбрать"
+                        *ngIf="editMode"
+                        class="action eos-adm-icon eos-adm-icon-directory-book-blue grif-icon-directory"
+                        (click)="selectDocGroup()"
+                    ></span>
+                    <span
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        triggers="hover"
+                        tooltip="Удалить"
+                        *ngIf="editMode && inputs['rec.DOC_GROUP_NAMES'].value"
+                        class="action eos-adm-icon eos-adm-icon-close-blue delet-icon-directory small"
+                        (click)="clearDocGroup()"
+                    ></span>
                 </span>
             </div>
         </div>

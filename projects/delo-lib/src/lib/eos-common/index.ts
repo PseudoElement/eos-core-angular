@@ -21,3 +21,4 @@ export * from "./photo-uploader/photo-uploader.component";
 export * from "./pagination-user-select/pagination-user-select.component";
 export * from "./input-cleaner/input-cleaner.directive";
 export * from "./services/input-control.service";
+export * from "./eos-tabel-element/eos-tabel-element.component";

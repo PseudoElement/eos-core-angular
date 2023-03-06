@@ -18,7 +18,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
             text-align: center;
             color: #f44336;
         }`
-    ]
+    ],
+    styleUrls: ['./collection.component.scss']
 })
 
 export class AuthenticationCollectionComponent implements OnInit {

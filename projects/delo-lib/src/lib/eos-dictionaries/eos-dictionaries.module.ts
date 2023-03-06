@@ -114,6 +114,7 @@ import { MedoNodeCardComponent } from './card-views/medo-node-card-edit.componen
 import { CardFromComponent } from './card-from/card-from.component';
 import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel-node-info.component';
 import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
+import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node-info/sev-participant-node-info.component';
 @NgModule({
     declarations: [
         CardFromComponent,
@@ -191,7 +192,8 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
         ResolutionCategoryEditComponent,
         SevSyncDictsComponent,
         MedoNodeCardComponent,
-        BroadcastChannelNodeInfoComponent
+        BroadcastChannelNodeInfoComponent,
+        SevParticiantNodeInfoComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,

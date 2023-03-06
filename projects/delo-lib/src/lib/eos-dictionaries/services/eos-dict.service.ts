@@ -26,7 +26,6 @@ import { LS_PAGE_LENGTH, PAGES } from '../node-list-pagination/node-list-paginat
 import {
     WARN_NO_ORGANIZATION,
     WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE,
-    WARN_SEARCH_NOTFOUND
 } from '../consts/messages.consts';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { EosStorageService } from '../../app/services/eos-storage.service';
@@ -1955,7 +1954,7 @@ export class EosDictService {
         return dictionary.search(this._srchCriteries)
             .then((nodes: any[]) => {
                 if (!nodes || nodes.length < 1) {
-                    this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
+                //    this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
                 } else {
                     this.viewParameters.showDeleted = showDeleted;
                     this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);

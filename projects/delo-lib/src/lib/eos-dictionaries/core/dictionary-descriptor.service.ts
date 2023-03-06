@@ -38,6 +38,7 @@ import { FileCategoryDictionaryDescriptor } from './file-category-dictionary-des
 import { FormatDictionaryDescriptor } from './format-dictionary-descriptor';
 import { MedoNodeDictionaryDescriptor } from './medo-node-dictionary-descriptor';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -51,7 +52,7 @@ export class DictionaryDescriptorService {
         private _injector: Injector,
         private _confirmSrv: ConfirmWindowService,
         private _appContext: AppContext,
-
+        private _GraphQLService: GraphQLService
     ) {
         this._mDicts = new Map<string, IDictionaryDescriptor>();
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
@@ -175,7 +176,7 @@ export class DictionaryDescriptorService {
                         res = new MedoNodeDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case FILE_CATEGORIES_DICT.id:
-                        res = new FileCategoryDictionaryDescriptor(descr, this.apiSrv);
+                        res = new FileCategoryDictionaryDescriptor(descr, this.apiSrv, this._GraphQLService);
                 }
 
                 // Added for parent be a Nadzor

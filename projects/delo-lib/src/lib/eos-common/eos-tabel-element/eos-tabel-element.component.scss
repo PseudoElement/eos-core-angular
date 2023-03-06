@@ -1,0 +1,60 @@
+.eos-adm-table {
+    .eos-adm-table-title {
+        padding: 10px 15px;
+        color: #646464;
+        font-size: 18px;
+        background: #fafafa;
+    }
+
+    .btn-table {
+        background: #fafafa;
+        border-bottom: 1px solid #e6e6e6;
+        border-top: 1px solid #e6e6e6;
+        display: flex;
+        .btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+        }
+    }
+    .header-table-param {
+        background: #fafafa;
+        border-bottom: 1px solid #e6e6e6;
+        border-top-color: transparent;
+        display: flex;
+        .checkbox-inline {
+            width: 48px;
+            height: 48px;
+            padding-top: 10px;
+        }
+        .header-table-title {
+            padding-top: 13px;
+            font-size: 15px;
+            display: flex;
+            cursor: pointer;
+        }
+    }
+    .display-element-item {
+        display: flex;
+        padding: 6px 0 6px 0;
+        line-height: 23.4px;
+    }
+    .counter-table {
+        align-self: center;
+        text-align: center;
+        line-height: 48px;
+        border-left: 1px solid #e6e6e6;
+        padding-left: 16px;
+        padding-right: 16px;
+        .counter-table-title {
+            padding-right: 10px;
+        }
+        .counter {
+            margin-left: 15px;
+            padding: 6.5px 10px;
+            background: #bababa;
+            border-radius: 2px;
+            color: #ffffff;
+        }
+    }
+}

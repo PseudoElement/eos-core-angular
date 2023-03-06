@@ -36,6 +36,13 @@
             "styles": [
               "projects/box/src/styles.scss"
             ],
+            "allowedCommonJsDependencies": [
+              "@eos/jsplugins-manager",
+              "file-saver",
+              "lodash",
+              "ng2-dragula",
+              "xml2js"
+            ],
             "scripts": []
           },
           "configurations": {

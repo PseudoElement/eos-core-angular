@@ -16,6 +16,7 @@ import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { WaitClassifService } from '../../../app/services/waitClassif.service';
 import { ErrorHelperServices } from '../../../eos-user-params/shared/services/helper-error.services';
 import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
+import { IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 
 @Component({
     template: ''
@@ -116,6 +117,12 @@ export class BaseParamComponent implements OnDestroy, OnInit {
 
     getData(req): Promise<any> {
         return this.paramApiSrv.getData(req);
+    }
+    getAppSetting<T>(url: IUploadParam): Promise<T> {
+        return this.paramApiSrv.getAppSetting<T>(url);
+    }
+    setAppSetting<T>(param: IUploadParam, body: T) {
+        return this.paramApiSrv.setAppSetting<T>(param, body);
     }
     prepareDataParam() {
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);

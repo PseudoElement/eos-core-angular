@@ -1,7 +1,7 @@
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 export const ORGAN_PARAM: IBaseParameters = {
     id: 'now-organiz',
-    apiInstance: 'DELO_OWNER(-99)',
+    apiInstance: 'DELO_OWNER(1)',
     title: 'Текущая организация',
     fields: [
         {

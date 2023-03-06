@@ -4,8 +4,8 @@
 
 
     .collection-action {
-        background: $light-grey-1;
-        border-bottom: 1px solid $border-color-main-theme;
+        background: #fafafa;
+        border-bottom: 1px solid #e6e6e6;
 
         .btn {
             width: 48px;
@@ -15,8 +15,8 @@
     }
 
     .collection-param {
-        background: $light-grey-1;
-        border-bottom: 1px solid $border-color-main-theme;
+        background: #fafafa;
+        border-bottom: 1px solid #e6e6e6;
         // border-top-color: transparent;
 
         .checkbox-inline {
@@ -30,7 +30,7 @@
 
             .text {
                 cursor: pointer;
-                color: $button-color-main-theme;
+                color: #337ab7;
                 position: relative;
                 top: 3px;
             }
@@ -43,7 +43,7 @@
     .collection-main {
         min-height: 200px;
         max-height: 50vh;
-        background: $white;
+        background: #fff;;
         overflow: auto;
         padding: 10px 0 10px 0;
 
@@ -80,6 +80,6 @@
 
     .modalWord-content {
         padding: 15px;
-        background: $white;
+        background: #fff;;
     }
 }

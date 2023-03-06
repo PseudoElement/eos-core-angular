@@ -1,237 +1,133 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
 import { CONVERSION_PARAM } from '../shared/consts/conversion.const';
 import { Validators } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
-import { PipRX } from '../../../eos-rest';
+import { IConverterParam, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
 
 @Component({
     selector: 'eos-parameters-conversion',
     templateUrl: 'param-conversion.component.html',
 })
-export class ParamConversionComponent extends BaseParamComponent implements OnInit {
+export class ParamConversionComponent extends BaseParamComponent {
     @Input() btnError;
-    public editMode = false;
     public isLoading = true;
     public masDisable: any[] = [];
     public oldData: any;
-    private maxLength2000 = [
-        Validators.maxLength(2000)
-    ];
-    private outputSizeValid = [
-        Validators.pattern(/[1-9][0-9]*/),
-        Validators.maxLength(255)
-    ];
-
+    public paramConverter: IUploadParam = {
+        namespace: 'Eos.Platform.Settings.Converter',
+        typename: 'ConverterCfg',
+        instance: 'Default'
+    };
+    public openAcord = false;
     constructor(injector: Injector,
-        private pipRX: PipRX
     ) {
         super(injector, CONVERSION_PARAM);
+        this.init()
+        .then(() => {
+            this.cancel();
+        }).catch(err => {
+            this._errorSrv.errorHandler(err);
+        });
     }
-
-    subscribeChangeForm() {
-        this.subscriptions.push(
-            this.form.valueChanges
-                .pipe(
-                    debounceTime(200)
-                )
-                .subscribe(newVal => {
-                    let changed = false;
-                    Object.keys(newVal).forEach(path => {
-                        if (this.changeByPath(path, newVal[path])) {
-                            changed = true;
-                        }
-                    });
-                    this.formChanged.emit(changed);
-                    this.isChangeForm = changed;
-                })
-        );
-        this.subscriptions.push(
-            this.form.statusChanges.subscribe(status => {
-                if (this._currentFormStatus !== status) {
-                    this.formInvalid.emit(status === 'INVALID');
-                }
-                this._currentFormStatus = status;
-            })
-        );
-    }
-
-    ngOnInit() {
-        this.init();
-    }
-
     init(): Promise<any> {
-        this.isLoading = false;
-        this.prepareDataParam();
-        return this.getData(this.queryObj)
-            .then(data => {
-                this.prepareData = this.convData(data);
-                this.prepareData.rec.CONVERTER_USE = this.prepareData.rec.CONVERTER_USE === 'NO' ? false : true;
-                this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
-                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                this.form.controls['rec.CONVERTER_USE'].disable();
-                this.setStartValidators();
-                this.isLoading = true;
-                this.subscribeChangeForm();
-            })
-            .catch(err => {
-                this.prepareData = this.convData([]);
-                this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
-                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                this.subscribeChangeForm();
-                this.cancelEdit();
-                this.isLoading = true;
-                throw err;
+        const allRequest = [];
+        allRequest.push(this.getData({'GetLibLibraries': ALL_ROWS }));
+        allRequest.push(this.getAppSetting<IConverterParam>(this.paramConverter));
+        return Promise.all(allRequest)
+        .then(([libLibrary, Converter]) => {
+            this.prepareData = this.convData([]);
+            this.prepareDataParam();
+            this.inputs = this.getInputs();
+            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+            this.inputs['rec.LibraryName'].options = [];
+            Object.keys(libLibrary[0]).forEach((key) => {
+                if (key !== '__metadata') {
+                    this.inputs['rec.LibraryName'].options.push({value: key, title: libLibrary[0][key]});
+                }
             });
-    }
-
-    setStartValidators() {
-        this.form.controls['rec.CONVERTER_INPUT_DIR'].setValidators(this.maxLength2000);
-        this.form.controls['rec.CONVERTER_OUTPUT_DIR'].setValidators(this.maxLength2000);
-        this.form.controls['rec.CONVERTER_TEMP_DIR'].setValidators(this.maxLength2000);
-        this.form.controls['rec.CONVERTER_OUTPUT_SIZE'].setValidators(this.outputSizeValid);
+            if (Converter) {
+                this.updatePrepareData(Converter);
+                this.updateFormForPrepare();
+            }
+            this.form.controls['rec.LibraryName'].setValidators([Validators.required]);
+            this.form.controls['rec.LibraryDirectory'].setValidators([Validators.required]);
+            this.form.controls['rec.MaxCacheSize'].setValidators([Validators.required]);
+            this.subscribeChangeForm();
+        })
+        .catch((er) => {
+            this._errorSrv.errorHandler({code: er.status, message: er.error});
+        });
     }
 
     edit() {
         this.form.enable({ emitEvent: false });
-        this.editMode = true;
     }
 
-    cancelEdit() {
-        this.masDisable = [];
-        Object.keys(this.form.controls).forEach(key => {
-            if (!this.form.controls[key].disabled) {
-                this.masDisable.push(key);
-            }
-        });
-        this.form.disable({ emitEvent: false });
-    }
-
-    checkedPath(directory): Promise<any> {
-        let url = 'CheckDirectoryRight?';
-        url += `&directory=${directory}`;
-        return this.pipRX.read({
-            [url]: ALL_ROWS
-        });
-    }
-
-    checkControlsEmpty(inputs): string[] {
-        const emptyContrl = [];
-
-        inputs.forEach((inp) => {
-            if (!this.form.controls[inp.input].value) {
-                emptyContrl.push(`Поле ${inp.dirName} не заполнено.`);
-            }
-        });
-        return emptyContrl;
-    }
-
-    checkControlsDir(inputs) {
-        const errDirPath = [];
-        inputs.forEach((inp) => {
-            if (this.form.controls[inp.input].value && inp.isDir) {
-                errDirPath.push(this.checkedPath(this.form.controls[inp.input].value));
-            }
-        });
-        return errDirPath;
-    }
-
-    preSubmit() {
-        let emptyControls = [];
-        let req = [];
-        const pathInputs = [
-            { input: 'rec.CONVERTER_INPUT_DIR', dirName: '«Папка входящих файлов»', isDir: true },
-            { input: 'rec.CONVERTER_OUTPUT_DIR', dirName: ' «Папка результатов конвертации»', isDir: true },
-            { input: 'rec.CONVERTER_TEMP_DIR', dirName: ' «Папка временных файлов»', isDir: true },
-            { input: 'rec.CONVERTER_OUTPUT_SIZE', dirName: ' «Максимальный размер папки результатов, Гб»', isDir: false },
-        ];
-        if (this.form.controls['rec.CONVERTER_USE'].value) {
-            emptyControls = [...this.checkControlsEmpty(pathInputs)];
-        }
-        req = this.checkControlsDir(pathInputs);
-        if (emptyControls.length) {
-            alert(`${emptyControls.join('\n')} `);
-        } else {
-            Promise.all(req).then((res: any) => {
-                const err = [];
-                res.forEach((answ: any) => {
-                    if (answ !== 'Ок') {
-                        err.push(answ);
-                    }
-                });
-                if (err.length) {
-                    alert(`${err.join('\n')} `);
-                } else {
-                    this.submit();
-                }
-            });
-
-        }
+    openAccordion() {
+        this.openAcord = !this.openAcord;
     }
 
     submit() {
-        this.isLoading = false;
-
-        if (!this.newData) {
-            this.cancel();
-            return;
-        }
-
-        this.newData.rec.CONVERTER_USE = this.newData.rec.CONVERTER_USE === 'YES' ? 1 : 0;
-        const req = this.createObjRequest();
-        this.updateData = {};
-        this.paramApiSrv.setData(req)
-            .then(() => {
-                this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                this.formChanged.emit(false);
-                this.cancelEdit();
-                this.isChangeForm = false;
-                this.isLoading = true;
-                this.editMode = false;
-                this.newData = null;
-                this.ngOnDestroy();
-                this.ngOnInit();
-            })
-            .catch(er => {
-                this.formChanged.emit(true);
-                this.isChangeForm = true;
-                this.editMode = true;
-                this.isLoading = true;
-                this.msgSrv.addNewMessage({
-                    type: 'danger',
-                    title: 'Ошибка сервера',
-                    msg: er.message ? er.message : er
-                });
-                this.cancelEdit();
+        const newConverter: IConverterParam = {
+            Library: {
+                Name: this.updateData['LibraryName'] !== undefined ? this.updateData['LibraryName'] : this.prepareData.rec['LibraryName'],
+                Directory: this.updateData['LibraryDirectory'] !== undefined ? this.updateData['LibraryDirectory'] : this.prepareData.rec['LibraryDirectory'],
+            },
+            MaxCacheSize: this.updateData['MaxCacheSize'] !== undefined ? +this.updateData['MaxCacheSize'] : +this.prepareData.rec['MaxCacheSize'],
+            ConverterFormat: this.prepareData.rec['ConverterFormat'],
+            Name: this.updateData['Name'],
+            IsActive: this.updateData['IsActive'] !== undefined ? Boolean(this.updateData['IsActive']) : Boolean(this.prepareData.rec['IsActive']),
+            serverURL: this.updateData['serverURL'] !== undefined ? this.updateData['serverURL'] : this.prepareData.rec['serverURL']
+        };
+        this.setAppSetting(this.paramConverter, newConverter)
+        .then(() => {
+            this.updateData = {};
+            this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+            this.isLoading = true;
+            this.form.disable();
+            this.updatePrepareData(newConverter);
+        })
+        .catch((error) => {
+            this.msgSrv.addNewMessage({
+                type: 'danger',
+                title: 'Ошибка сервера',
+                msg: error.message ? error.message : error
             });
+        });
     }
-
     cancel() {
-        this.cancelEdit();
         if (this.isChangeForm) {
+            this.updateFormForPrepare();
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-        }
-        this.newData = null;
-        this.isChangeForm = false;
-        this.formChanged.emit(false);
-        this.isLoading = true;
-        this.editMode = false;
-        this.ngOnDestroy();
-        this.init();
-
+            this.isChangeForm = false;
+            this.formChanged.emit(false);
+            this.updateData = {};
+            this.form.disable();
+          } else {
+            this.form.disable();
+            this.formChanged.emit(false);
+          }
     }
-
-    // changeValidators() {
-    //     if (this.form.controls['rec.CONVERTER_USE'].value) {
-    //         this.form.controls['rec.CONVERTER_INPUT_DIR'].setValidators([...this.maxLength2000, Validators.required]);
-    //         this.form.controls['rec.CONVERTER_OUTPUT_DIR'].setValidators([...this.maxLength2000, Validators.required]);
-    //         this.form.controls['rec.CONVERTER_TEMP_DIR'].setValidators([...this.maxLength2000, Validators.required]);
-    //         this.form.controls['rec.CONVERTER_OUTPUT_SIZE'].setValidators([...this.outputSizeValid, Validators.required]);
-    //     } else {
-    //         this.setStartValidators();
-    //     }
-    //     this.edit();
-    // }
+    updatePrepareData(newConverter: IConverterParam) {
+        Object.keys(newConverter).forEach((key) => {
+            if (key === 'Library') {
+                this.prepareData.rec['LibraryName'] = newConverter[key] ? newConverter[key].Name : '';
+                this.prepareData.rec['LibraryDirectory'] = newConverter[key] ? newConverter[key].Directory : '';
+            } else if (key === 'IsActive') {
+                this.prepareData.rec[key] = newConverter[key] ? '1' : '0';
+            } else {
+                this.prepareData.rec[key] = newConverter[key] === null || newConverter[key] === undefined ? '' : newConverter[key];
+            }
+        });
+        this.prepareData.rec['serverURL'] = '';
+    }
+    updateFormForPrepare() {
+        Object.keys(this.prepareData.rec).forEach((key) => {
+            this.form.controls['rec.' + key].setValue(this.prepareData.rec[key], { emitEvent: false });
+        });
+    }
 }

@@ -10,6 +10,7 @@ export class ApiCfg implements IAppCfg {
     authApi = 'Services/ApiSession.asmx/';
     dataApi = 'CoreHost/OData/';
     templateApi = 'CoreHost/FOP/GetDocTemplate/';
+    appSetting = '../CoreHost/';
 
     metaMergeFuncList?: any[] = [];
     authApiUrl?: string = this.apiBaseUrl + this.authApi;

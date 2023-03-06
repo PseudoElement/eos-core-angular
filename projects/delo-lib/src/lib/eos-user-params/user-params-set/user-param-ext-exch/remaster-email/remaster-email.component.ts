@@ -34,8 +34,8 @@ export interface Accordion {
 })
 
 export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit {
-    fieldsConst = REGISTRATION_REMASTER_USER;
-    fieldsConstMailResive = REGISTRATION_MAILRESIVE;
+    fieldsConst = JSON.parse(JSON.stringify(REGISTRATION_REMASTER_USER)) ;
+    fieldsConstMailResive = JSON.parse(JSON.stringify(REGISTRATION_MAILRESIVE));
     public preparedItemForInputs: any;
     public preparedItemForInputsMailREsive: any;
     public prepareInputs;
@@ -336,14 +336,17 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     sliceArrayForTemplate(): void {
         let count = 8;
+        let separator = 13;
+        this.listForAccordion = [];
         if (!this._appContext.cbBase) {
             count = 10;
+            separator = 15;
         }
         // @task165408 убирание настроек толстяка
         // изначально this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(0, 8) });
         this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, count) });
-        this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(8, 13) });
-        this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(13) });
+        this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(count, separator) });
+        this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(separator) });
     }
     triggerNode(node: TreeItem): void {
         node.isOpen = !node.isOpen;

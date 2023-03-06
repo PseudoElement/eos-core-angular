@@ -8,27 +8,33 @@ import { DOCGROUP_CL, FILE_CATEGORY_CL } from '../../eos-rest';
 import {
     IDictionaryDescriptor, IRecordOperationResult
 } from '../../eos-dictionaries/interfaces';
+import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
+import { ORIGINDATA, ResponseGraphQL } from '../../eos-dictionaries/interfaces/fetch.interface';
 
 export class FileCategoryDescriptor extends RecordDescriptor {
     dictionary: FileCategoryDictionaryDescriptor;
     fullSearchFields: any;
 
-    constructor(dictionary: FileCategoryDictionaryDescriptor, descriptor: IDictionaryDescriptor
+    constructor(
+        dictionary: FileCategoryDictionaryDescriptor,
+        descriptor: IDictionaryDescriptor
     ) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
         this._initFieldSets(['fullSearchFields'], descriptor);
-
     }
 }
 export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: FileCategoryDescriptor;
+    graphQLService: GraphQLService;
 
     constructor(
         descriptor: IDictionaryDescriptor,
-        private _api: PipRX
+        private _api: PipRX,
+        _GraphQLService: GraphQLService
     ) {
         super(descriptor, _api);
+        this.graphQLService = _GraphQLService;
     }
 
     public getSubtree(): Promise<any[]> {
@@ -62,7 +68,7 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
             });
     }
 
-    updateRecord(originalData: any, updates: any): Promise<IRecordOperationResult[]> {
+    updateRecord(originalData: ORIGINDATA, updates: any): Promise<IRecordOperationResult[]> {
         const results: IRecordOperationResult[] = [];
         let QUERY_REL = null;
         const queue: Promise<any>[] = [];
@@ -110,26 +116,36 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
 
 
             }
+            const DELETED_GROUP_DOC: string[] = [];
             for (const DUE of OLD_DUES_NODE_DG) {
                 if (!RESTRICTED_DUES.includes(DUE)) {
-                    const CHANGE = {
-                        ...{ method: 'DELETE', requestUri: `FILE_CATEGORY_CL(${rec.ISN_LCLASSIF})/DG_FILE_CATEGORY_List` }, ...{
-                            data: {
-                                DUE_NODE_DG: DUE,
-                                ISN_FILE_CATEGORY: rec.ISN_LCLASSIF
-                            }
-                        }
-                    };
-                    CHANGE_LIST.push(CHANGE);
+                   DELETED_GROUP_DOC.push(this.graphQLService.createDelParams(DUE, originalData));
                 } else { continue; }
             }
+
+            const deletet: Promise<Response> | null = DELETED_GROUP_DOC.length ? this.graphQLService.createFetch(DELETED_GROUP_DOC) : null;
             QUERY_REL = this.apiSrv.batch(CHANGE_LIST, '');
             queue.push(QUERY_REL);
+            if (deletet) { queue.push(deletet); }
         }
-        return Promise.all(queue).then(() => {
-            results.push({ success: true, record: updates.rec });
-            return results;
-        });
+
+        return Promise.all(queue)
+            .then((result) => {
+                results.push({ success: true, record: updates.rec });
+                if (result.length === 3 ) {
+                    if (result[2].ok ) {
+                        return result[2].json().then((el123: ResponseGraphQL)  => {
+                            return el123.data.deleteDgFileCategory.success ?
+                                    results :
+                                    [{ success: false, record: updates.rec, error: new Error(el123.data.deleteDgFileCategory.message)}];
+                        });
+                    } else {
+                        return [{ success: false, record: updates.rec, error: new Error(result[2].statusText)}];
+                    }
+                } else {
+                    return results;
+                }
+            });
     }
 
     dgFileCategoryCreate(data: any, idFileCategory: number): Promise<any> {

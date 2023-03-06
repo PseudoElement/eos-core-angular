@@ -142,7 +142,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
             if (this._defaultDepDue.length === 0) {
                 this.apiSrvRx.read({
-                    DELO_OWNER: -99
+                    DELO_OWNER: 1
                 }).then(org => {
                     if (org.length > 0) { // задана организация по умолчанию
                         this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
