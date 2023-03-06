@@ -79,7 +79,7 @@ export class ParamConversionComponent extends BaseParamComponent {
             ConverterFormat: this.prepareData.rec['ConverterFormat'],
             Name: this.updateData['Name'],
             IsActive: this.updateData['IsActive'] !== undefined ? Boolean(this.updateData['IsActive']) : Boolean(this.prepareData.rec['IsActive']),
-            serverURL: this.updateData['serverURL'] !== undefined ? this.updateData['serverURL'] : this.prepareData.rec['serverURL']
+            ServerURL: this.updateData['ServerURL'] !== undefined ? this.updateData['ServerURL'] : this.prepareData.rec['ServerURL']
         };
         this.setAppSetting(this.paramConverter, newConverter)
         .then(() => {
@@ -123,7 +123,7 @@ export class ParamConversionComponent extends BaseParamComponent {
                 this.prepareData.rec[key] = newConverter[key] === null || newConverter[key] === undefined ? '' : newConverter[key];
             }
         });
-        this.prepareData.rec['serverURL'] = '';
+        this.prepareData.rec['ServerURL'] = '';
     }
     updateFormForPrepare() {
         Object.keys(this.prepareData.rec).forEach((key) => {

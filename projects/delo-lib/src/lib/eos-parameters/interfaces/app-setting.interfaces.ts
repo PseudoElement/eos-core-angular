@@ -40,7 +40,7 @@ export interface IConverterParam {
     MaxCacheSize: number;
     IsActive: boolean;
     ConverterFormat: string;
-    serverURL: string;
+    ServerURL: string;
 }
 export interface IKafkaParams {
     ServerURL: string;

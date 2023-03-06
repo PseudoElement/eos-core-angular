@@ -39,7 +39,7 @@ export const CONVERSION_PARAM: IBaseParameters = {
             title: ''
         },
         {
-            key: 'serverURL',
+            key: 'ServerURL',
             type: 'string',
             title: 'АДРЕС'
         }
