@@ -36,10 +36,10 @@ export const EOS_PARAMETERS_TAB = [{
 }, /* {
     title: 'Криптография',
     url: 'cryptography'
-},{
+}, */{
     title: 'Электронная почта',
     url: 'email'
-},*/{
+}, {
     title: 'Текущая организация',
     url: 'now-organiz'
 }, {
@@ -93,7 +93,7 @@ export const CARMA_UNIC_VALUE: IMessage = {
 export const ELEMENT_PROTECT_NOT_DELET: IMessage = {
     type: 'warning',
     title: 'Изменения сохранены',
-    msg: 'Элемент "{{prot}}" защищён от удаления',
+    msg: 'Нельзя удалить общий профиль "{{prot}}"',
     dismissOnTimeout: 2000
 };
 

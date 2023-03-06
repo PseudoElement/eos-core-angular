@@ -81,6 +81,43 @@
         cursor: not-allowed;
     }
 }
+.param-conversion {
+    min-height: calc(100vh - 300px);
+    label {
+        font-size: 14px;
+        line-height: 10px;
+    }
+    .second-string {
+        display: flex;
+    }
+    .label-bottom-string {
+        display: flex;
+        margin-top: 15px;
+    }
+    .padding-right {
+        margin-right: 20px;
+        width: 50%;
+    }
+    .padding-left {
+        margin-left: 20px;
+        width: 50%;
+    }
+    .padding-right-number {
+        margin-left: 40px;
+        width: 50%; 
+    }
+    .title-under-conversion-table {
+        width: 100%;
+        font-size: 18px;
+        margin-bottom: 16px;
+        margin-top: 32px;
+        display: flex;
+        div {
+            border-bottom: 1px solid #e6e6e6;
+            width: 100%;
+        }
+    }
+}
 
 .params-nav-list {
     z-index: 10;

@@ -62,9 +62,6 @@ export class ParamEmailComponent extends BaseParamComponent {
         })
         .catch(err => {
             this._errorSrv.errorHandler(err);
-            /* if (err.code !== 434 || err.statusText ===) {
-                console.log(err);
-            } */
         });
     }
     init() {
@@ -111,6 +108,9 @@ export class ParamEmailComponent extends BaseParamComponent {
         this.disableForm = false;
     }
     cancelEdit() {
+        if (this.deletedElem.length > 0) {
+            this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+        }
         this.deletedElem.forEach((item) => {
             this.tabelData.data.push(item);
         });
@@ -123,6 +123,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         this.tabelData.data.forEach((item) => {
             item.check = false;
         });
+        this.formChanged.emit(false);
     }
     actionTo(action) {
         switch (action) {
@@ -137,6 +138,9 @@ export class ParamEmailComponent extends BaseParamComponent {
                 break;
             case 'deleted':
                 this.tabelData.data = this.updateToDelete(this.tabelData.data);
+                if (this.deletedElem.length > 0) {
+                    this.formChanged.emit(true);
+                }
                 break;
             default:
                 break;
@@ -200,17 +204,29 @@ export class ParamEmailComponent extends BaseParamComponent {
         .then(() => {
             if (this.editData) {
                 this.tabelData.data.forEach((item) => {
-                    console.log('item', item, this.editData.key);
                     if ('' + item.key === '' + this.editData.key) {
-                        item['ProfileName'] = item.ProfileName;
+                        item['EmailAccount'] = newEmailAcount.EmailAccount;
+                        item['Password'] = newEmailAcount.Password;
+                        item['ProfileName'] = newEmailAcount.ProfileName;
                     }
                 });
             } else {
-                this.tabelData.data.push({'ProfileName': newEmailAcount['ProfileName'], 'key': this.maxKey});
+                this.tabelData.data.push({
+                    'ProfileName': newEmailAcount['ProfileName'],
+                    'Password': newEmailAcount['Password'],
+                    'EmailAccount': newEmailAcount['EmailAccount'],
+                    'key': this.maxKey
+                });
             }
             this.showCard = false;
             this.maxKey++;
-          this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this.updateData = {};
+            if (this.deletedElem.length > 0) {
+                this.formChanged.emit(true);
+            } else {
+                this.formChanged.emit(false);
+            }
+            this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
         })
         .catch((error) => {
           this.msgSrv.addNewMessage({
@@ -219,8 +235,9 @@ export class ParamEmailComponent extends BaseParamComponent {
             msg: error.message ? error.message : error
           });
         });
-      }
+    }
     cancelEmit() {
+        this.updateData = {};
         this.form.controls['rec.ProfileName'].setValidators(null);
         this.showCard = false;
     }
@@ -236,6 +253,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         });
         return Promise.all(allQuery)
         .then(() => {
+            this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.arrayBtn.forEach((btn) => {
                 btn.disable = true;
             });
@@ -244,6 +262,7 @@ export class ParamEmailComponent extends BaseParamComponent {
                 item.check = false;
             });
             this.deletedElem = [];
+            this.formChanged.emit(false);
         })
         .catch((error) => {
             console.log('err', error);
