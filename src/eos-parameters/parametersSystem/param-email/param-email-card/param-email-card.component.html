@@ -15,8 +15,37 @@
     <div *ngIf="!isLoading" style="padding: 20px">
         <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
         <div class="second-string">
-            <eos-dynamic-input class="padding-right" [input]="inputs['rec.EmailAccount']" [form]="form"  [readonly]="inputs['rec.EmailAccount'].readonly"></eos-dynamic-input>
-            <eos-dynamic-input class="padding-left" [input]="inputs['rec.Password']" [form]="form"  [readonly]="inputs['rec.Password'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input 
+                class="padding-right"
+                [input]="inputs['rec.EmailAccount']"
+                [form]="form"
+                [readonly]="inputs['rec.EmailAccount'].readonly"
+                (onControlBlur)="inputAllElem($event.keyCode, true)">
+            </eos-dynamic-input>
+            <div class="dynamic-input-wrapper base-text-input text-pass-input pass-width padding-right">
+                <label>ПАРОЛЬ</label>
+                <div class="vision">
+                    <input class="form-control m-font" maxlength="64"
+                    [(ngModel)]="emailPass"
+                    [ngClass]="{'error-focus': errorPass, 'readonly': false}"
+                    [type]="typeInput"
+                    [readonly]="false"
+                    [placeholder]="dataProfile && dataProfile['Password'] ? '*******' : ''"
+                    [tooltip]="errorPass ? 'Обязательное поле' : ''"
+                    placement="bottom"
+                    containerClass="tooltip-error"
+                    (keyup)="onKeyUp($event)"
+                    [autocomplete]="'off'">
+                    <eos-dynamic-input
+                        hidden="true"
+                        [input]="inputs['rec.PASSWORD']"
+                        [form]="form"
+                        [readonly]="false"
+                        autocomplete="off">
+                    </eos-dynamic-input>
+                    <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-adm-icon eos-adm-icon-show-blue small"></span>
+                </div>
+            </div>
         </div>
         <div class="label-style">Сервер входящей почты</div>
         <div class="label-bottom-string">

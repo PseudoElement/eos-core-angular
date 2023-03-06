@@ -19,11 +19,16 @@ export class ParamEmailCardComponent implements OnInit {
     @Input() prepareData;
     @Output() submitEmit = new EventEmitter();
     @Output() cancelEmit = new EventEmitter();
+    public emailPass = '';
+    public type1 = 'password';
     public isLoading = false;
     public data = {
         ProfileName: ''
     };
     public title = 'Редактирование профиля электронной почты';
+    get typeInput(): string {
+        return !this.form.controls['rec.Password'].value ? 'text' : this.type1;
+    }
     constructor(private _paramApiSrv: ParamApiSrv) {}
     ngOnInit(): void {
         this.isLoading = true;
@@ -40,7 +45,6 @@ export class ParamEmailCardComponent implements OnInit {
         this.submitEmit.next();
     }
     editProfile() {
-        console.log('inputs', this.inputs);
         const paramReceive: IUploadParam = {
             namespace: 'Eos.Delo.Settings.Email',
             typename: 'ReceiveCfg',
@@ -62,6 +66,7 @@ export class ParamEmailCardComponent implements OnInit {
             this.prepareData.rec['ProfileName'] = this.dataProfile['ProfileName'];
             this.prepareData.rec['Password'] = this.dataProfile['Password'];
             this.prepareData.rec['EmailAccount'] = this.dataProfile['EmailAccount'];
+            this.emailPass = this.dataProfile['Password'];
             Object.keys(Receive).forEach((key) => {
                 if (this.form.controls[`rec.${key}`]) {
                     this.form.controls[`rec.${key}`].setValue(Receive[key], { emitEvent: false });
@@ -85,5 +90,22 @@ export class ParamEmailCardComponent implements OnInit {
             this.form.controls[`rec.${item.key}`].setValue(item.value, { emitEvent: false });
         });
         this.isLoading = false;
+    }
+    inputAllElem($event, flag) {
+        if (!this.form.controls['rec.InUserName'].value && this.form.controls['rec.EmailAccount'].value) {
+            this.form.controls['rec.InUserName'].setValue(this.form.controls['rec.EmailAccount'].value);
+        }
+        if (!this.form.controls['rec.OutUserName'].value && this.form.controls['rec.EmailAccount'].value) {
+            this.form.controls['rec.OutUserName'].setValue(this.form.controls['rec.EmailAccount'].value);
+        }
+    }
+    onKeyUp($event) {
+        this.form.controls['rec.Password'].setValue(this.emailPass);
+    }
+    setVision() {
+        this.type1 = 'text';
+    }
+    resetVision() {
+        this.type1 = 'password';
     }
 }

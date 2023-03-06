@@ -55,7 +55,7 @@
         </div>
     </div>
     <!-- Переданные элементы -->
-    <div >
+    <div class="eos-rows-table">
         <div class="display-element-item" *ngFor="let row of tabelData.data">
             <div style="padding-left: 12px;" class="checkbox-inline">
                 <label>
@@ -63,12 +63,12 @@
                     <span></span>
                 </label>
             </div>
-            <div *ngFor="let col of colomns"
+            <div *ngFor="let colomn of colomns"
                 class="header-table-title"
-                [ngStyle]="getStyle(col)"
-                (click)="orderByField(col)">
+                [ngStyle]="getStyle(colomn)"
+                (click)="orderByField(colomn)">
                 <span class="text">
-                    {{getElement(col, row)}}
+                    {{getElement(colomn, row)}}
                 </span>
             </div>
         </div>

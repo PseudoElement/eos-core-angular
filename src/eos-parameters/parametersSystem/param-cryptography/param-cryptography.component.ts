@@ -1,12 +1,12 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { Component, Injector, Input } from '@angular/core';
-import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { BsModalRef } from 'ngx-bootstrap';
 import { BsModalService } from 'ngx-bootstrap';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { CRYPTO_PARAM, CRYPTO_PARAM_BTN_TABEL } from '../shared/consts/cryptography.const';
 import { ITableBtn, ITableData, ITableHeader } from '../shared/interfaces/tables.interfaces';
 import { EditCryptographyComponent } from './edit-cryptography/edit-cryptography.component';
+import { IUploadParam } from 'eos-parameters/interfaces/app-setting.interfaces';
 /* import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts'; */
 
 
@@ -54,14 +54,18 @@ export class ParamCryptographyComponent extends BaseParamComponent {
         });
     }
     init() {
-        this.prepareDataParam();
+        /* this.prepareDataParam();
         this.prepareData = this.convData([]);
         this.inputs = this.getInputs();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-        this.subscribeChangeForm();
-        return this.getData({
-            'appsettings?namespace=Eos.Delo.Settings.Archivist&typename=ArchivistCfg&instance=Default': ALL_ROWS
-        })
+        this.subscribeChangeForm(); */
+        const paramReceive: IUploadParam = {
+            namespace: 'Eos.Delo.Settings.Cryptography',
+            typename: 'CryptographyCfg'
+        };
+        /* const allQueryGet = [];
+        allQueryGet.push(this.getAppSetting<any>(paramReceive)); */
+        return this.getAppSetting<any>(paramReceive)
         .then(data => {
             this.prepareData = this.convData(data);
             this.inputs = this.getInputs();
@@ -89,31 +93,26 @@ export class ParamCryptographyComponent extends BaseParamComponent {
     actionTo(action) {
         switch (action) {
             case 'add':
-                this.modalCollection = this._modalSrv.show(EditCryptographyComponent, {
-                    class: 'modal-collection',
-                    animated: false,
-                    ignoreBackdropClick: true
-                });
-                this.modalCollection.content.title = 'Добавление профиля криптографии';
-                this.modalCollection.content.closeCollection.subscribe(() => {
-                    this.modalCollection.hide();
-                });
+                this.openModalForm('Добавление профиля криптографии');
                 break;
             case 'edit':
-                this.modalCollection = this._modalSrv.show(EditCryptographyComponent, {
-                    class: 'modal-collection',
-                    animated: false,
-                    ignoreBackdropClick: true
-                });
-                this.modalCollection.content.title = 'Редактирование профиля криптографии';
-                this.modalCollection.content.closeCollection.subscribe(() => {
-                    this.modalCollection.hide();
-                });
+                this.openModalForm('Редактирование профиля криптографии');
                 break;
             case 'deleted':
                 break;
             default:
                 break;
         }
+    }
+    openModalForm(title: string) {
+        this.modalCollection = this._modalSrv.show(EditCryptographyComponent, {
+            class: 'modal-collection',
+            animated: false,
+            ignoreBackdropClick: true
+        });
+        this.modalCollection.content.title = title;
+        this.modalCollection.content.closeCollection.subscribe(() => {
+            this.modalCollection.hide();
+        });
     }
 }

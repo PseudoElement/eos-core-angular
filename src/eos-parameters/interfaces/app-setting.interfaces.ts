@@ -33,3 +33,28 @@ export interface IUploadParam {
     typename: string;
     instance?: string; // если ну указать instance то будет использоваться get-list или говоря по другому будет получены все записи а не конкретная запись
 }
+
+export interface IConverterParam {
+    Name: string;
+    Library: ILibrary;
+    MaxCacheSize: number;
+    IsActive: boolean;
+    ConverterFormat: string;
+    serverURL: string;
+}
+export interface IKafkaParams {
+    ServerURL: string;
+    PartitionsCount: number;
+    ConsumersCount: number;
+}
+export interface IElasticParams {
+    ServerURL: string;
+    Login: string;
+    Password: string;
+}
+export interface ICrawlerParams {
+    MaxItemsGetCount: number;
+    ReindexThreadsCount: number;
+    IndexThreadsCount: number;
+}
+

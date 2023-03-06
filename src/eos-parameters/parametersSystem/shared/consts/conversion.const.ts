@@ -1,42 +1,47 @@
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 export const CONVERSION_PARAM: IBaseParameters = {
     id: 'conversion',
-    apiInstance: 'USER_PARMS',
+    apiInstance: 'APP_SETTINGS',
     title: 'Служба конвертации',
     fields: [
         {
-            key: 'CONVERTER_USE',
+            key: 'IsActive',
             type: 'boolean',
             title: 'Использовать службу конвертации',
+            formatDbBinary: true
         },
         {
-            key: 'CONVERTER_INPUT_DIR',
+            key: 'Name',
             type: 'string',
             readonly: true,
-            length: 2000,
             title: ''
         },
         {
-            key: 'CONVERTER_OUTPUT_DIR',
-            type: 'string',
+            key: 'MaxCacheSize',
+            type: 'numberIncrement',
             readonly: true,
-            length: 2000,
+            title: 'МАКС. РАЗМЕР ПАПКИ РЕЗУЛЬТАТОВ (ГБ)'
+        },
+        {
+            key: 'LibraryDirectory',
+            type: 'string',
+            title: 'ПАПКА'
+        },
+        {
+            key: 'LibraryName',
+            type: 'select',
+            readonly: false,
+            title: 'ХРАНИЛИЩЕ',
+        },
+        {
+            key: 'ConverterFormat',
+            type: 'string',
             title: ''
         },
         {
-            key: 'CONVERTER_TEMP_DIR',
+            key: 'serverURL',
             type: 'string',
-            readonly: true,
-            length: 2000,
-            title: ''
-        },
-        {
-            key: 'CONVERTER_OUTPUT_SIZE',
-            type: 'string',
-            readonly: true,
-            title: '',
-            length: 255,
-            pattern: /[1-9][0-9]*/
+            title: 'АДРЕС'
         }
     ]
 };
