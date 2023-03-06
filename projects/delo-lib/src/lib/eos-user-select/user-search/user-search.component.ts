@@ -189,6 +189,12 @@ export class UserSearchComponent implements OnInit  {
         if (disable) {
             return;
         }
+        if (classif === 'CONTACT' && this.form.controls['rec.USERDEP_List'].value ) {
+            return;
+        }
+        if (classif === 'DEPARTMENT' && this.form.controls['rec.USER_ORGANIZ_List'].value) {
+            return;
+        }
         this._waitClassifSrv.openClassif({
             classif: classif,
             selectLeafs: true,
