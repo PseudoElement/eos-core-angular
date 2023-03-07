@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 
 // import {EosSandwichService} from 'eos-dictionaries/services/eos-sandwich.service';
 import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
-import { USER_CL, DEPARTMENT, USER_PARMS } from '../../eos-rest';
+import { USER_CL, DEPARTMENT, USER_PARMS, ExetentionsUserParamsLib } from '../../eos-rest';
 import { DELO_BLOB } from '../../eos-rest/interfaces/structures';
 import { RECENT_URL } from '../../app/consts/common.consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
@@ -36,6 +36,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     flagFirstGetInfo: boolean = true;
+    public departments = '';
     get disableLink() {
         return this._appContext.CurrentUser.IS_SECUR_ADM || !this.CurrentUser.isEditable;
     }
@@ -46,6 +47,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _errSrv: ErrorHelperServices,
         private _appContext: AppContext,
+        private _extensionsUser: ExetentionsUserParamsLib
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -93,6 +95,13 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             this.getInfo();
             this.showDep = false;
         }
+        this._extensionsUser.loadDepartments(this.CurrentUser.data.TECH_DUE_DEP || '').then(deep => {
+            if (deep !== null) {
+                this.departments = deep;
+            } else {
+                this.departments = this.CurrentUser.data.NOTE || 'Не указано';
+            }
+        });
     }
 
     parseSustemParam(parseParam) {

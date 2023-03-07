@@ -5,6 +5,7 @@ import { KEY_RIGHT_TECH, IKeyRightTech } from '../../app/consts/permission.const
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { AccessParamsServiceLib } from '../../eos-rest/addons/accessPrams.service';
 
 @Injectable()
 export class SystemParamsGuard implements CanActivate {
@@ -14,6 +15,7 @@ export class SystemParamsGuard implements CanActivate {
         private _pipSrv: PipRX,
         private _apCtx: AppContext,
         private _route: Router,
+        private _accessExtensions: AccessParamsServiceLib,
     ) { }
     canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> {
         const urlSegment: UrlSegment = _route.url[0];
@@ -22,8 +24,7 @@ export class SystemParamsGuard implements CanActivate {
         return this._getContext()
             .then((user: USER_CL[]) => {
                 this._userProfile = user[0];
-                const access: boolean =
-                    (this._userProfile.TECH_RIGHTS && (!!+this._userProfile.TECH_RIGHTS[(conf.key - 1)] || !!+this._userProfile.TECH_RIGHTS[29] || !!+this._userProfile.TECH_RIGHTS[1]));
+                const access: boolean = this._accessExtensions.getCanActivate(this._userProfile, conf);
                 if (this._apCtx.cbBase) {
                     if (
                         this._userProfile.TECH_RIGHTS && !!+this._userProfile.TECH_RIGHTS[0]

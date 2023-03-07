@@ -28,3 +28,8 @@ export interface ISelectOption {
     value: string | number;
     title: string;
 }
+
+export interface AdditionalInputs {
+    input: string;
+    readonly: boolean;
+}

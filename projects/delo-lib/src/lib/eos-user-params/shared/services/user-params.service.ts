@@ -19,6 +19,7 @@ import { saveAs } from 'file-saver';
 import { HttpHeaders } from '@angular/common/http';
 import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
 import { UserSelectNode } from '../../../eos-user-select/list-user-select/user-node-select';
+import { AbsoluteRigthServiceLib } from '../../../eos-rest/addons/absoluteRigth.service';
 
 
 @Injectable()
@@ -94,7 +95,8 @@ export class UserParamsService {
         private _appContext: AppContext,
         private _confirmSrv: ConfirmWindowService,
         private _errorSrv: ErrorHelperServices,
-        private _userProfiler: EosUserProfileService
+        private _userProfiler: EosUserProfileService,
+        private _absRigthSer: AbsoluteRigthServiceLib
 
     ) { }
     getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
@@ -136,9 +138,9 @@ export class UserParamsService {
                 if (this._userContext.USER_RIGHT_DOCGROUP_List) {
                     this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
                 }
-                // if (this._userContext.USER_EDIT_ORG_TYPE_List) {
-                //     this._userContext.USER_EDIT_ORG_TYPE_List.forEach(item => this.userEditOrgType.push(Object.assign({}, item)));
-                // }
+                if (this._userContext['USER_EDIT_ORG_TYPE_List']) {
+                    this.userEditOrgType = this._absRigthSer.getUserEditOrgType(this._userContext['USER_EDIT_ORG_TYPE_List']);
+                }
                 if (this._userContext.USERCARD_List) {
                     this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
                 }

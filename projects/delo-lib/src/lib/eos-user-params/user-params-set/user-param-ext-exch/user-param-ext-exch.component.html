@@ -44,6 +44,14 @@
                 [isCurrentSettings]="isCurrentSettings"
             ></eos-remaster-mado>
         </div>
+        <div [hidden]="currTabName !== 'ЕПП'" class="clearfix">
+            <remaster-epp 
+                (pushChange)='emitChangesEpp($event)'
+                [userData]='hash'
+                [defaultValues]='defaultValues'
+                [appMode]="appMode"
+                [isCurrentSettings]="isCurrentSettings"></remaster-epp>
+        </div>
     </div>
     <div class="sp" *ngIf="!isLoading">
         <eos-spinner size="lg"></eos-spinner>

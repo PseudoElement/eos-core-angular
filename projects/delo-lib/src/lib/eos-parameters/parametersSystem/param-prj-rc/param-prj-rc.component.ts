@@ -5,6 +5,9 @@ import { USER_LISTS } from '../../../eos-rest';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
+import { ExetentionsParametersPrjRcService } from '../../../eos-rest/addons/exetentionsParametersPrjRc.service'
+import { IBaseParameters, AdditionalInputs } from '../shared/interfaces/parameters.interfaces';
+
 
 @Component({
     selector: 'eos-param-prj-rc',
@@ -13,9 +16,13 @@ import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
 export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, OnDestroy {
     @Input() btnError;
     @Input() optionsRc: USER_LISTS[];
+    updateBaseParam: IBaseParameters;
+    additionalInputs: AdditionalInputs[];
     private _unsubscribe = new Subject();
-    constructor(injector: Injector) {
-        super(injector, PRJ_RC_PARAM);
+    constructor(injector: Injector, public exetentionsParametersPrjRc: ExetentionsParametersPrjRcService) {
+        super(injector, exetentionsParametersPrjRc.overrideBaseParam(PRJ_RC_PARAM));
+        this.updateBaseParam = exetentionsParametersPrjRc.overrideBaseParam(PRJ_RC_PARAM);
+        this.additionalInputs = exetentionsParametersPrjRc.additionalInputs;
     }
     ngOnInit() {
         this.paramApiSrv.getData({
@@ -65,7 +72,7 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
         }
     }
     getField(name: string): any {
-        return PRJ_RC_PARAM.fields.filter(field => {
+        return this.updateBaseParam.fields.filter(field => {
             return field.key === name;
         });
     }
@@ -105,13 +112,13 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
      */
     createObjRequest() {
         const requests = super.createObjRequest();
-
-        const filteredRequests = requests.filter((req) => {
+        /* убираю удаление запросов, ошибку которая была связана с этим багом больше не вызывается */
+        /* const filteredRequests = requests.filter((req) => {
             return (!this._appContext.cbBase && req.requestUri.indexOf('PRJ_GROUP_FILE_PROTECTED') === -1) &&
             req.requestUri.indexOf('PRJ_RC_SECURLEVEL_CONSIDER') === -1;
-        });
+        }); */
 
-        return filteredRequests;
+        return requests;
     }
 
     ngOnDestroy() {

@@ -83,6 +83,10 @@ import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.modu
 import { UserParamDispatchComponent } from './user-params-set/user-param-other/user-param-dispatch/user-param-dispatch.component';
 import { SearchService } from './user-params-set/shared-user-param/services/search-service';
 import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
+import { AbsolutRigthExampleComponent } from '../eos-rest/addons/components/absolutRigthExample.component';
+import { UserBaseParamsComponent } from '../eos-rest/addons/components/userBaseParams.component';
+import { UserParamsExample } from '../eos-rest/addons/components/userParamsExample.component';
+import { UserParamsRegistration } from '../eos-rest/addons/components/userParamsRegistration.component';
 
 @NgModule({
     declarations: [
@@ -147,6 +151,10 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
         CbUserRoleComponent,
         AutenteficationComponent,
         CurrentUserSetComponent,
+        AbsolutRigthExampleComponent,
+        UserBaseParamsComponent,
+        UserParamsExample,
+        UserParamsRegistration
     ],
     entryComponents: [
         AddGrifComponent

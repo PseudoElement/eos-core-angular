@@ -2,53 +2,68 @@ import { IMessage } from '../../../../eos-common/interfaces';
 
 export const EOS_PARAMETERS_TAB = [{
     title: 'Работа с РК',
-    url: 'rc'
+    url: 'rc',
+    visible: true
 }, {
     title: 'Работа с РКПД',
-    url: 'prj-rc'
+    url: 'prj-rc',
+    visible: true
 }, {
     title: 'Аутентификация',
-    url: 'authentication'
+    url: 'authentication',
+    visible: true
 }, {
     title: 'Работа с файлами',
-    url: 'files'
+    url: 'files',
+    visible: true
 }, {
     title: 'Хранение файлов',
-    url: 'param-lib'
+    url: 'param-lib',
+    visible: true
 }, {
     title: 'Поиск',
-    url: 'search'
+    url: 'search',
+    visible: true
 }, {
     title: 'Контекст РК(РКПД)',
-    url: 'context-rc'
+    url: 'context-rc',
+    visible: true
 }, {
     title: 'Справочники',
-    url: 'dictionaries'
+    url: 'dictionaries',
+    visible: true
 }, {
     title: 'Прочие',
-    url: 'other'
+    url: 'other',
+    visible: true
 }, {
     title: 'WEB',
-    url: 'web'
+    url: 'web',
+    visible: true
 }, {
     title: 'Протоколирование',
-    url: 'logging'
+    url: 'logging',
+    visible: true
 }, /* {
     title: 'Криптография',
     url: 'cryptography'
 }, */{
-    title: 'Электронная почта1',
-    url: 'email'
+    title: 'Электронная почта',
+    url: 'email',
+    visible: true
 }, {
     title: 'Текущая организация',
-    url: 'now-organiz'
+    url: 'now-organiz',
+    visible: true
 }, {
     title: 'Служба конвертации',
-    url: 'conversion'
+    url: 'conversion',
+    visible: true
 },
 {
     title: 'Архивное хранилище',
-    url: 'unloading-arch'
+    url: 'unloading-arch',
+    visible: true
 }
 ];
 

@@ -11,6 +11,7 @@ import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { Subject } from 'rxjs';
 import { RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { Features } from '../../../eos-dictionaries/';
 
 @Component({
     selector: 'eos-ext-exch',
@@ -39,6 +40,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     public isLoading: boolean = false;
     public editFlag: boolean = false;
     public currentUser;
+    public notInVersion: boolean;
     private EmailChangeValue: any;
     private SabChangeValue: any;
     private MadoChangeValue: any;
@@ -72,12 +74,16 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         .subscribe((rout: RouterStateSnapshot) => {
             this._userSrv.submitSave = this.submit('');
         });
+        this.notInVersion = Features.cfg.variant !== 2;
     }
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
         /* if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
             this.currTab = Number(this.openingTab) - 1;
         } */
+        if (!this.notInVersion) {
+            this.fieldGroupsForExhcExt.push('ЕПП');
+        }
         if (this.appMode.tkDoc) {
             this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
                 return item !== 'МЭДО';

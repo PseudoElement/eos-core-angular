@@ -44,12 +44,19 @@
         ></eos-dynamic-input>
         </div>
 
-        <eos-dynamic-input class="base-text-input base-input-role"
+        <div class="wrapper"> <!-- [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}" -->
+            <eos-dynamic-input class="base-text-input base-input-role" 
                 [input]="controls['SELECT_ROLE']"
+                style="padding-right: 15px; width: 230px"
                 [form]="formControls"
-                [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
-                [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled"
-        ></eos-dynamic-input><br>
+                [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled">
+            </eos-dynamic-input>
+        <extension-user-params 
+            [form]="form"
+            [techUser]="formControls.get('teсhUser').value"
+            [value]=form.value [editMode]=editMode >
+        </extension-user-params>
+    </div>
 
         <!-- Доступ к системам 1-й ряд -->
         <span class="l-font">Доступ к системам</span>

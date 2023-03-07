@@ -25,6 +25,7 @@ import { ViewManager } from '../eos-rest/services/viewManager';
 import { EosTemplateComponent } from './clman/eos-template/eos-template.component';
 import { PluginReactComponent } from './plugin-react/plugin-react.component';
 import { EosCommonModule } from '../eos-common';
+import { ExtendsLinkedSearch } from './addons/components/linked-search-default/linked-search-default.component';
 
 @NgModule({
     imports: [
@@ -41,6 +42,7 @@ import { EosCommonModule } from '../eos-common';
         UserRestComponent,
         EosTemplateComponent,
         PluginReactComponent,
+        ExtendsLinkedSearch
     ],
     exports: [
         DeliveryComponent,

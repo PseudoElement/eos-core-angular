@@ -115,6 +115,7 @@ import { CardFromComponent } from './card-from/card-from.component';
 import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel-node-info.component';
 import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
 import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node-info/sev-participant-node-info.component';
+import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/templateCardExample.component';
 @NgModule({
     declarations: [
         CardFromComponent,
@@ -193,7 +194,8 @@ import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node
         SevSyncDictsComponent,
         MedoNodeCardComponent,
         BroadcastChannelNodeInfoComponent,
-        SevParticiantNodeInfoComponent
+        SevParticiantNodeInfoComponent,
+        SpravochnikiTemplateComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,

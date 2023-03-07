@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { EosStorageService } from '../../../app/services/eos-storage.service';
 import { Router } from '@angular/router';
+import { ExtendProtocolLib } from '../../../eos-rest/addons/extendProtocol.service';
 
 @Component({
   selector: 'eos-protocol',
@@ -53,9 +54,15 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
-
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _userpar: UserParamsService,
-    public _user_pagination: UserPaginationService, private _storage: EosStorageService, private _router: Router) {
+  public buttons;
+  constructor(
+    private _pipeSrv: PipRX,
+    private _errorSrv: ErrorHelperServices,
+    private _userpar: UserParamsService,
+    public _user_pagination: UserPaginationService,
+    private _storage: EosStorageService,
+    private _router: Router,
+    private _extendProtocolLib: ExtendProtocolLib) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -73,6 +80,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
           }
         }
       });
+      this.buttons = _extendProtocolLib.getButtons();
   }
 
   ngOnDestroy() {
@@ -232,7 +240,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   SingleUserCheck(user) {
-    this.isnRefFile = undefined;
+    this._extendProtocolLib.isnRefFile = undefined;
     user.checked = true;
     if (user.checked) {
       this.frontData.forEach(node => {
@@ -247,7 +255,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   ShowData() {
     let eventUser;
     this.frontData = [];
-    this.isnRefFile = undefined;
+    this._extendProtocolLib.isnRefFile = undefined;
     this.usersAudit.map((user) => {
       const date = this.ConvertDate(user.EVENT_DATE);
       eventUser = this.eventKind[user.EVENT_KIND - 1];
@@ -290,7 +298,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     })
       .then((data: any) => {
         if (data.length !== 0) {
-          this.isnRefFile = data[0].ISN_REF_FILE;
+          this._extendProtocolLib.isnRefFile = data[0].ISN_REF_FILE;
         }
       })
       .catch((error) => {

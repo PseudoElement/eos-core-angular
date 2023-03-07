@@ -37,6 +37,7 @@ import {
 import { UserParamExtendExchComponent } from '../eos-user-params/user-params-set/user-param-ext-exch/user-param-ext-exch.component';
 import { SearchService } from './user-params-set/shared-user-param/services/search-service';
 import { EosSandwichService } from '../eos-dictionaries/services/eos-sandwich.service';
+import { ExetentionsRigthsServiceLib } from '../eos-rest/addons/extentionsRigts.service';
 
 const REGISTRATION_DOP_OPERATION_FIELDS = REGISTRATION_DOP_OPERATION.fields;
 const REGISTRATION_ADDRESSES_FIELDS = REGISTRATION_ADDRESSES.fields;
@@ -106,7 +107,8 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
         private _sandwichService: EosSandwichService,
-        private _searchService: SearchService
+        private _searchService: SearchService,
+        private _exetentionsRigts: ExetentionsRigthsServiceLib, 
     ) {
         this._route.params
             .pipe(
@@ -224,6 +226,7 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
     }
 
     ngOnInit() {
+        this._exetentionsRigts.updateRigthTabs(); // обновление параметров
         this._openAccordion(this.accordionList);
         if (document.documentElement.clientWidth < 1050) {
             this._navSrv.changeStateSandwich(false);

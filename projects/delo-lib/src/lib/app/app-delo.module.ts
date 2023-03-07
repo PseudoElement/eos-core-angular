@@ -64,6 +64,9 @@ import { AppDeloRoutingModule } from './app-delo-routing.module';
 import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 import { EosBackgraundTasksModule } from '../eos-backgraund-tasks/eos-backgraund-tasks.module';
 import { EosInstrumentsModule } from '../eos-instruments/eos-instruments.module';
+import { AbsoluteRigthServiceLib } from '../eos-rest/addons/absoluteRigth.service';
+import { ExetentionsRigthsServiceLib } from '../eos-rest/addons/extentionsRigts.service';
+import { ExetentionsUserParamsLib } from '../eos-rest/addons/ExtentionsUserParamsLib.service';
 /* end guards */
 
 @NgModule({
@@ -134,6 +137,9 @@ import { EosInstrumentsModule } from '../eos-instruments/eos-instruments.module'
         CertificateService,
         ExportImportClService,
         BackgroundTaskGuard,
+        AbsoluteRigthServiceLib,
+        ExetentionsRigthsServiceLib,
+        ExetentionsUserParamsLib,
     ],
 })
 

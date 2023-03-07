@@ -18,9 +18,11 @@ import {
     UserLists,
     Unlock,
     ViewDisableUser,
+    CommonTechLists,
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { EosStorageService } from '../../app/services/eos-storage.service';
+import { UserListsButtonAccessService } from '../../eos-rest/addons/UserListsButtonAccess.service';
 @Component({
     selector: 'eos-btn-action',
     templateUrl: 'btn-action.component.html',
@@ -66,9 +68,11 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         private _rtSrv: RtUserSelectService,
         private _appContext: AppContext,
         private _storage: EosStorageService,
+        private _btnAccess: UserListsButtonAccessService
     ) {
     }
     ngOnInit() {
+        this._btnAccess.checkVisibleButton(this.buttons);
         this._rtSrv.updateBtn.pipe(takeUntil(this._unSubscribe)).subscribe(({ listUsers, selectedUser }) => {
             this.listUsers = listUsers;
             this.selectUser = selectedUser;
@@ -172,6 +176,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             case 'ViewDisableUser':
                 this.checkBtnViewDisableUser();
                 break;
+            case 'CommonTechLists':
+                this.checkCommonTechLists();
+                break;
             case 'UserSession':
             default:
                 console.log('not Action');
@@ -184,6 +191,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             CreateUser.disabled = false;
         }
+        this._btnAccess.checkAccess(CreateUser, this);
     }
 
     checkBtnViewDeletedUsers() {
@@ -192,6 +200,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             ViewDeletedUsers.disabled = false;
         }
+        this._btnAccess.checkAccess(ViewDeletedUsers, this);
     }
     checkBtnViewTechicalUsers() {
         if (this._storage.getItem('quickSearch')) {
@@ -199,40 +208,52 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             ViewTechicalUsers.disabled = false;
         }
+        this._btnAccess.checkAccess(ViewTechicalUsers, this);
     }
     checkRedactBrn() {
         this.checkWithLimitedUser(RedactUser);
+        this._btnAccess.checkAccess(RedactUser, this);
     }
     checkBtnDelete() {
         this.deleteForever(DeliteUser);
+        this._btnAccess.checkAccess(DeliteUser, this);
     }
     checkBtnBlockUser() {
         this.checkWithBlocketUSer(BlockUser);
+        this._btnAccess.checkAccess(BlockUser, this);
     }
     checkBtnUnlockUser() {
         this.checkWithUnlockUSer(Unlock);
+        this._btnAccess.checkAccess(Unlock, this);
     }
     checkBtnOpenAdress() {
         this.checkWithLimitedUser(OpenAddressManagementWindow);
+        this._btnAccess.checkAccess(OpenAddressManagementWindow, this);
     }
     checkBtnOpenSystemDelo() {
         this.OpenRightsSystemCaseDelo(OpenRightsSystemCaseDelo);
+        this._btnAccess.checkAccess(OpenRightsSystemCaseDelo, this);
     }
     checkBtnProtocol() {
         this.checkWittAllUsers(Protocol);
+        this._btnAccess.checkAccess(Protocol, this);
     }
     checkBtnUserInfo() {
         this.checkWittAllUsers(UsersInfo);
         this._rtSrv.usersInfo = UsersInfo;
+        this._btnAccess.checkAccess(UsersInfo, this);
     }
     checkBtnSettingsManagement() {
         this.checkSettingsManagement(SettingsManagement);
+        this._btnAccess.checkAccess(SettingsManagement, this);
     }
     checkBtnSharingLists() {
         this.checkWithUsersList(UserLists);
+        this._btnAccess.checkAccess(SettingsManagement, this);
     }
     checkBtnViewDisableUser() {
         ViewDisableUser.disabled = false;
+        this._btnAccess.checkAccess(ViewDisableUser, this);
     }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
@@ -256,6 +277,10 @@ export class BtnActionComponent implements OnInit, OnDestroy {
                 }
             }
         }
+        this._btnAccess.checkAccess(OpenStreamScanSystem, this);
+    }
+    checkCommonTechLists() {
+        this._btnAccess.checkAccess(CommonTechLists, this);
     }
     checkBtnOpenSumProtocol(): void {
         if (this.limitCards.length) {
@@ -264,6 +289,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             SumProtocol.disabled = false;
         }
+        this._btnAccess.checkAccess(SumProtocol, this);
     }
     checkBtnDefaultSettings(): void {
         if (this.limitCards.length) {
@@ -272,6 +298,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             DefaultSettings.disabled = false;
         }
+        this._btnAccess.checkAccess(DefaultSettings, this);
     }
     checkWithLimitedUser(button: BtnActionFields): void {
         if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {

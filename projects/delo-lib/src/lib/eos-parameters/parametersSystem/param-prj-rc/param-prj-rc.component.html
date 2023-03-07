@@ -95,12 +95,15 @@
         ></eos-dynamic-input>
     </div>
     <hr>
-    <div class="param-input-group">
+    <div 
+        class="param-input-group"
+        *ngFor="let item of additionalInputs"
+    >
         <eos-dynamic-input
             [ngClass]="'param-input-radio'"
-            [input]="inputs['rec.PRJ_RC_SECURLEVEL_CONSIDER']"
+            [input]="inputs[item.input]"
             [form]="form"
-            [readonly]="true"
+            [readonly]="item.readonly"
         ></eos-dynamic-input>
     </div>
 </div>

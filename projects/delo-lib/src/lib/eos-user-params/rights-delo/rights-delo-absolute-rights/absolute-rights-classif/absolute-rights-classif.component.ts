@@ -14,6 +14,7 @@ import { EMPTY_ADD_ELEMENT_WARN } from '../../../../app/consts/messages.consts';
 import { UserParamsService } from '../../../../eos-user-params/shared/services/user-params.service';
 import { PipRX } from '../../../../eos-rest';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
+import { ExetentionsRigthsServiceLib } from '../../../../eos-rest/addons/extentionsRigts.service';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -73,6 +74,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         private _waitClassifSrv: WaitClassifService,
         private pipRx: PipRX,
         private _appContext: AppContext,
+        public _extentionsRigts: ExetentionsRigthsServiceLib,
     ) {
         this.userTechList = this._userParmSrv.userTechList;
     }
@@ -315,7 +317,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            let techRights: string = '111111111111111111110011111111111111100010100001011';
+            let techRights: string  = this._extentionsRigts.getTechRigth();
             if (this._appContext.sreamScane) {
                 const arr = techRights.split('');
                 arr[48] = '1';
@@ -332,11 +334,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             this.curentUser['TECH_RIGHTS'] = techRights;
         } else {  // строке в индексах с пробеломи присваиваем 0
             const arr = this.curentUser['TECH_RIGHTS'].split('');
-            arr.forEach((i,  index) => {
-                if (i === ' ' || index === 20 || index === 21 || index === 39 || index === 38 || index === 37) {
-                    arr[index] = '0';
-                }
-            });
+            this._extentionsRigts.updateRigth(arr);
             // Нужно увеличить размер поля USER_CL.TECH_RIGHTS до 64 символов.
             // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
             this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
@@ -372,6 +370,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         if (this.selectedNode.isCreate) {
             this.selectedNode.isCreate = false;
         }
+        this._extentionsRigts.disableNode(this.selectedNode, this.curentUser['TECH_RIGHTS']);
     }
     private _checkRepeat(node: RightClassifNode, entity: any[], config: IConfigUserTechClassif): boolean {
         const list: NodeDocsTree[] = node.listContent;
