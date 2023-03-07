@@ -1,0 +1,138 @@
+.has-spinner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon-bin-due-dep {
+    position: absolute;
+    margin-top: 3px;
+    left: 15px;
+}
+.icon-bin-due-dep-sev {
+    position: absolute;
+}
+.text-log-delet {
+    margin-left: 17px;
+    color: #BABABA;
+}
+.isn-channel-position-parent {
+    position: relative;
+    margin-left: 25px;
+    white-space: pre-line !important;
+}
+.isn-channel-position {
+    position: absolute;
+    margin-left: -25px;
+    margin-top: -5px;
+}
+.eos-adm-node-info {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .opened-node-wrapper {
+        overflow-x: hidden;
+        overflow-y: auto;
+        .content-block {
+            padding: 20px;
+        }
+    }
+    .head-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        .current-image {
+            flex: 0 0 $photo-radius;
+            min-height: $photo-radius;
+            min-width: $photo-radius;
+            height: $photo-radius;
+            width: $photo-radius;
+            display: inline-block;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            margin: 0 $grid-gutter-width * 0.5 0 0;
+            .current-image-no-user{
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+            }
+        }
+        .info {
+            flex: 0 1 239px;
+            max-height: $photo-radius;
+            max-width: calc(100% - 100px);
+            div {
+                max-width: 100%;
+                display: inline-block;
+                overflow: hidden;
+            }
+        }
+    }
+    .short-info {
+        display: block;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        word-break: break-word;
+        // height: 52px;
+    }
+    .full-info {
+        border-top-width: 1px;
+        border-top-style: solid;
+        padding-top: 0;
+    }
+    .field-title {
+        text-transform: uppercase;
+        font-weight: normal;
+        margin: 0;
+        line-height: 14px;
+    }
+    .field-value {
+        margin-top: 7px;
+        line-height: 20px;
+        /* display: inline-block; */
+        white-space: pre-wrap;
+        max-width: 100%;
+        padding: 0;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+    .field {
+        margin: 0;
+        margin-top: 20px;
+        color: $black;
+    }
+    .no-data {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 100%;
+    }
+    .flex-wrapper {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+    .boss-icon {
+        margin-right: 12px;
+    }
+    ul,
+    .ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        white-space: unset;
+        li,
+        .li {
+            padding: 0;
+        }
+    }
+    .placeholder {
+        color: $placeholder-color;
+    }
+}

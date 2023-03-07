@@ -1,0 +1,114 @@
+<div class="base-param-wrapper" *ngIf="!isLoading">
+    <eos-user-params-header [editMode]="editMode" [title]='title' [disableBtn]="!getValidDate || newInfo" [errorSave]="getErrorSave" (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'></eos-user-params-header>
+    <div #root class="base-param-main" >
+        <div class="top-base-align">
+            <div class="avatar-base" *ngIf="(isPhoto && !formControls.controls['teсhUser'].value) || (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP); else tech">
+                <a class="av-link-b" [routerLink]="['/spravochniki','departments', !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP, 'view' ]">
+                    <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
+                    <span class="avatar-img-b" *ngIf="!isPhoto" class="avatar-img-b eos-adm-icon eos-adm-icon-Man-Blue small"></span>
+                </a>
+            </div>
+            <ng-template #tech>
+                <div class="avatar-base">
+                    <a class="av-link-b">
+                        <span class="avatar-img-b" class="avatar-img-b eos-adm-icon eos-adm-icon-Techman-Grey small"></span>
+                    </a>
+                </div>
+            </ng-template>
+            <!-- Логин и Аутентификация с помощью ОС -->
+            <!-- !curentUser['IS_PASSWORD'] && -->
+            <div class="wrapper-password">
+                <div style="width: 200px" class="base-text-input base-login-input" [formGroup]="form" [tooltip]="validClassif" container="body" placement="bottom" containerClass="tooltip-error">
+                    <label  [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label >
+                    <input class="form-control m-font" maxlength="maxLoginLength" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
+                </div>
+                <div style="width: 315px" class="mar-fio-r" [formGroup]="form" [tooltip]="!form.controls['SURNAME_PATRON'].value ? 'Поле ФАМИЛИЯ И.О. не может быть пустым' : null"
+                container="body" placement="bottom" containerClass="tooltip-error">
+                    <label [hidden]="inputs['SURNAME_PATRON'].hideLabel" [attr.for]="inputs['SURNAME_PATRON'].key">{{inputs['SURNAME_PATRON'].label}}</label>
+                    <input  class="form-control m-font" maxlength="64" [formControlName]="inputs['SURNAME_PATRON'].key" [readonly]="inputs['SURNAME_PATRON'].readonly" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <!-- технический пользователь -->
+        <eos-dynamic-input class="base-login-input" [input]="controls['teсhUser']" [form]="formControls"></eos-dynamic-input>
+
+        <!-- должностное лицо и роль -->
+        <div class="wrapper-password">
+            <eos-dynamic-input style="width: 550px" class="base-text-input base-input-role" 
+                [input]="controls['DUE_DEP_NAME']"
+                [form]="formControls"
+                [readonly]="!editMode"
+                [disabled]="isTechUser"
+                (onClickChoose)="showDepChoose()"
+                (onEnterSearchEmptyResults)="showDepChooseEmpty()"
+        ></eos-dynamic-input>
+        </div>
+
+        <div class="wrapper"> <!-- [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}" -->
+            <eos-dynamic-input class="base-text-input base-input-role" 
+                [input]="controls['SELECT_ROLE']"
+                style="padding-right: 15px; width: 230px"
+                [form]="formControls"
+                [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled">
+            </eos-dynamic-input>
+        <extension-user-params 
+            [form]="form"
+            [techUser]="formControls.get('teсhUser').value"
+            [value]=form.value [editMode]=editMode >
+        </extension-user-params>
+    </div>
+
+        <!-- Доступ к системам 1-й ряд -->
+        <span class="l-font">Доступ к системам</span>
+        <hr>
+        <div>
+            <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"  (change)="[tf(), checkMeinControlAccess($event, '0')]"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['0-1']" [form]="formAccess" [readonly]="formAccess.get('0-1').disabled" class="base-checkbox-input" (change)="[tf(), checkMeinControlAccess($event, '0-1')]"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['delo_web']" [form]="formAccess" [readonly]="formAccess.get('delo_web').disabled" (change)="[tf(), checkMeinControlAccess($event, 'delo_web')]"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['1-27']" [form]="formAccess" [readonly]="formAccess.get('1-27').disabled" class="pull-right"></eos-dynamic-input>
+        </div>
+        <hr style="margin-top: 5px;">
+        <!-- Доступ к системам 2-й ряд -->
+      <div class="access-syst-wr">
+        <div class="access-syst-part">
+            <!-- <eos-dynamic-input [input]="accessInputs['26']" [form]="formAccess" [readonly]="formAccess.get('26').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
+            <!-- <eos-dynamic-input [input]="accessInputs['23']" [form]="formAccess" [readonly]="formAccess.get('23').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
+            <eos-dynamic-input [input]="accessInputs['25']" [form]="formAccess" [readonly]="formAccess.get('25').disabled" class="base-checkbox-input"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['21']" [form]="formAccess" [readonly]="formAccess.get('21').disabled"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['41']" [form]="formAccess" [readonly]="formAccess.get('41').disabled"></eos-dynamic-input>
+        </div>
+        <!-- Доступ к системам 3-й ряд -->
+        <div class="access-syst-part">
+            <eos-dynamic-input [input]="accessInputs['2']" [form]="formAccess" [readonly]="formAccess.get('2').disabled" class="base-checkbox-input"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['3']" [form]="formAccess" [readonly]="formAccess.get('3').disabled" class="base-checkbox-input"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['15']" [form]="formAccess" [readonly]="formAccess.get('15').disabled" class="base-checkbox-input"></eos-dynamic-input>
+        </div>
+        <!-- Доступ к системам 4-й ряд -->
+        <div class="access-syst-part">
+            <eos-dynamic-input [input]="accessInputs['17']" [form]="formAccess" [readonly]="formAccess.get('17').disabled"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
+            <span (click)="getSerts(template)" class="eos-adm-icon small icon-electronic" [ngClass]="{'eos-adm-icon-electronic-signature-blue pointer': editMode, 'eos-adm-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+            placement="bottom" containerClass="tooltip-info"></span>
+        </div>
+      </div>
+      <hr style="margin-top: 5px;">
+    <!-- Примечания onkeypress="return event.keyCode != 13;"-->
+    <div>
+        <eos-dynamic-input class="note-textarea" [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
+    </div>
+    </div>
+</div>
+
+
+<div class="base-param-wrapper">
+    <div class="spinner-wrapper" *ngIf="isLoading">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
+</div>
+
+<div *ngIf="isShell" class="shell"></div>
+
+<ng-template #template>
+    <eos-base-serts (closeModal)="closeSerts()"></eos-base-serts>
+</ng-template>

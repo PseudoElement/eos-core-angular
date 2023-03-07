@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../../../dist/delo-lib/lib/styles/header.scss'; // верхний наш уровень
+@import "../../../node_modules/font-awesome/css/font-awesome.min.css"; // стандартные библиотеки
+@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap"; // стандартные библиотеки
+@import "../../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"; // стандартные библиотеки
+@import "../../../node_modules/dragula/dist/dragula.css"; // стандартные библиотеки
+@import '../../../dist/delo-lib/lib/styles/footer.scss'; // нижний наш уровень 
+

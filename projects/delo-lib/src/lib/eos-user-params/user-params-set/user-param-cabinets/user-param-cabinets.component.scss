@@ -1,0 +1,244 @@
+.input-user-cabinets-rk-forwarding-wrapper {
+    .scrollWrapper {
+        overflow: auto;
+        max-height: calc(100vh - 330px);
+        padding: 20px 30px 0 30px;
+    }
+    eos-dynamic-input {
+        font-size: 14px;
+    }
+    .tabs-wrapper {
+        margin: 0;
+    }
+    .inline-block {
+        display: inline-block;
+    }
+    /* .block {
+        display: block;
+    }*/
+    .reply-input {
+        label {
+            display: none;
+        }
+        margin-left: 10px;
+        width: 200px;
+    }
+    .user-input-increment-cabinets {
+        padding-left: 10px;
+        display: inline-flex;
+    }
+    .cabinets-highlight-new-enntries-in-the-folder {
+        display: inline-block;
+        padding-left: 40px;
+    }
+    .cab-mar-span {
+        margin: 0 0 10px 25px;
+    }
+    .user-input-span-for-increment-cabinets {
+        display: block;
+        margin-left: 10px;
+        padding-top: 7px;
+    }
+    .elem-input-radio {
+        font-size: 14px;
+        // display: inline-block;
+        margin-right: 40px;
+    }
+    .user-input-group-section {
+        .span-or {
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+    }
+    .cabsort {
+        width: 300px;
+        select {
+            cursor: pointer;
+        }
+        .input-button-container {
+            min-width: 300px;
+        }
+    }
+    .incr-cabinet {
+        .eos-adm-select {
+            width: 50px;
+        }
+    }
+    .the-main-recipients-of-the-document-titles {
+        font-weight: bold;
+        clear: both;
+    }
+    .restrict-by-document-groups {
+        width: 65%;
+        display: inline-block;
+    }
+    .add-storage {
+        margin-bottom: 50px;
+    }
+    .template-title {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        vertical-align: middle;
+        font-size: 0;
+        /* color: */
+        .item {
+            display: inline-block;
+            margin-right: $grid-gutter-width * 0.5;
+            margin-top: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            &+.item {
+                margin-left: $grid-gutter-width * 0.5;
+            }
+            .text {
+                cursor: pointer;
+            }
+            .order-icon {
+                padding: 0 3px;
+            }
+            .eos-adm-icon {
+                margin: -5px 0 0;
+                vertical-align: middle;
+            }
+        }
+    }
+    .table-templates {
+        padding-left: 7%;
+    }
+    .user-cabinet-log-delet {
+        position: absolute;
+        margin-top: 20px;
+    }
+}
+
+.instructions {
+    padding: 0px 20px;
+    label {
+        font-size: 14px;
+    }
+    .add-j-title {
+        padding-bottom: 13px;
+        margin-right: 20px;
+    }
+    .add-to-juornal-radio {
+        padding-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .elem-input-radio {
+            display: inline-block;
+        }
+    }
+    .add-to-juornal {
+        padding-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+        .form-group {
+            margin-right: 20px;
+        }
+    }
+    .classifDep {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        position: relative;
+        .wr-input {
+            width: 60%;
+            .form-group {
+                margin-bottom: 0px;
+                margin-top: -5px;
+                input {
+                    padding-left: 5px;
+                    border-color: #e6e6e6;
+                }
+
+            }
+
+        }
+        .delete-wr-input {
+            .form-group {
+                input {
+                    padding-left: 20px;
+                    color: #BABABA;
+                }
+
+            }
+        }
+        >span {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    }
+    .resolution {
+        display: flex;
+        justify-content: flex-start;
+        //align-items: center;  //@bag166916 основательно мешает в Кабинеты - Поручения
+        >div {
+            margin-left: 0px;
+            width: 40%;
+            height: 34px;
+        }
+    }
+    .date-resolution {
+        .elem-input-radio {
+            display: inline;
+        }
+    }
+    .author-resolution {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .author-res-title {
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+        label {
+            margin-right: 20px;
+        }
+    }
+    .control-state {
+        padding-top: 20px;
+        .elem-input-radio {
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
+    .check-resol {
+        display: flex;
+        justify-content: flex-start;
+        .check-resol-title {
+            padding-top: 7px;
+            padding-right: 10px;
+        }
+        .form-group {
+            margin-right: 20px;
+        }
+    }
+    .send-res {
+        .elem-input-radio {
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
+}
+
+.rc-doc-left-column {
+    position: relative;
+    display: block;
+}
+
+.bacgrFixed {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 99;
+    background-color: #646464;
+    opacity: 0.6;
+}

@@ -1,0 +1,130 @@
+<div class="search-container" [ngClass]="{'user-srch-heigth' : fastSearch}">
+    <div [popover]="searchModal" (onShown)="onShown()" containerClass="full-search-popover" class="search-btn-wraper" placement="bottom"
+        #full="bs-popover" [outsideClick]="true">
+        <button [ngClass]="{'opened': isActiveButton()}" class="btn btn-primary-light search-btn" tooltip="Расширенный поиск" placement="bottom"
+            container="body" containerClass="tooltip-info">
+            <i [hidden]="isActiveButton()" class="eos-adm-icon eos-adm-icon-filter-blue small" aria-hidden="true"></i>
+            <i [hidden]="!isActiveButton()" class="eos-adm-icon eos-adm-icon-filter-white small" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="search-btn-wraper"  containerClass="quick-search-popover" placement="bottom">
+        <button [ngClass]="{'opened': isActiveButtonQuick()}" class="btn btn-primary-light search-btn quick-search-btn"
+          placement="bottom" container="body" tooltip="Быстрый поиск" containerClass="tooltip-info" (click)="openFastSrch()">
+            <i [hidden]="isActiveButtonQuick()" class="eos-adm-icon eos-adm-icon-search-blue small" aria-hidden="true"></i>
+            <i [hidden]="!isActiveButtonQuick()" class="eos-adm-icon eos-adm-icon-search-white small" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+
+    <div class="user-srch" *ngIf="fastSearch">
+        <div class="item input-item">
+            <input type="text"
+                autofocus
+                class="form-control quick-search-form"
+                [(ngModel)]="srchString"
+                (keyup)="clickKey($event)" #quickSearchField maxlength="255" minlength="1">
+            <a class="btn clear-btn"
+                tooltip="Закрыть"
+                placement="bottom"
+                containerClass="tooltip-info"
+                (click)="clearQuickForm()"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+        </div>
+        <div class="tringle"></div>
+        <div class="tringle-fon"></div>
+    </div>
+
+<ng-template #searchModal>
+    <form (ngSubmit)="startSearch()">
+    <div class="btn-nav">
+        <h3 class="title">Критерии поиска</h3>
+        <div class="btn-search">
+            <button class="btn btn-primary upper" type="button" (click)="resetForm()" [disabled]="!disableResetBtn">Сбросить</button>
+            <button class="btn btn-primary-full upper" type="submit" [disabled]="!disableSearchBtn">Найти</button>
+        </div>
+    </div>
+    <div *ngIf=form>
+        <div class="search-users-wrapper usual-border border-bottom">
+            <ul class="tabs">
+                <li class="tab-item" *ngFor="let tab of fieldGroupsForSearch; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
+                    <span class="tab-title">{{tab}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="search-input-wr" *ngIf="currTab === 1">
+            <eos-dynamic-input [input]="inputs['rec.SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.SURNAME']}"
+            (click)="form.controls['rec.SURNAME'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
+        </div>
+        <div class="" *ngIf="currTab === 0">
+            <div class="search-input-wr block-user">
+                <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div class="search-input-wr">
+                <eos-dynamic-input [input]="inputs['rec.LOGIN']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.LOGIN']}"
+                (click)="form.controls['rec.LOGIN'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
+            </div>
+            <div class="search-input-wr">
+                <eos-dynamic-input [input]="inputs['rec.fullDueName']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.fullDueName']}"
+                (click)="form.controls['rec.fullDueName'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
+            </div>
+            <div class="search-input-wr">
+                <eos-dynamic-input [input]="inputs['rec.DEPARTMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.DEPARTMENT']}"
+                (click)="form.controls['rec.DEPARTMENT'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
+            </div>
+        </div>
+        <div  class="search-input-wr-av" *ngIf="currTab === 2">
+            <div class="search-input-wr block-user">
+                <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div class="av-container">
+                <div class="av-pos">
+                    <eos-dynamic-input [input]="inputs['rec.0']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.26']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.5']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.41']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
+                <div class="av-pos">
+                    <eos-dynamic-input [input]="inputs['rec.1']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.25']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.21']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.2']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
+                <div>
+                    <eos-dynamic-input [input]="inputs['rec.3']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.15']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.17']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.16']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
+            </div>
+        </div>
+        <div  class="search-input-wr-av" *ngIf="currTab === 3">
+            <div class="search-input-wr block-user">
+                <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <eos-dynamic-input [input]="inputs['rec.DELO_RIGHTS']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div style="position: relative;">
+                <span *ngIf="form.controls['rec.USERDEP_List'].value" class="eos-adm-icon eos-adm-icon-close-blue icon-delete-element" (click)="clearField('rec.USERDEP_List')"></span>
+                <span
+                    [ngClass]="{'eos-adm-icon-directory-book-blue' : !disableDep,  'eos-adm-icon-directory-book-grey disabled' : disableDep}"
+                    class="eos-adm-icon icon-select-element"
+                    (click)="openClassif('DEPARTMENT', disabledDep)"
+                    eosClickMode>
+                </span>
+                <eos-dynamic-input aria-disabled="true" [input]="inputs['rec.USERDEP_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div style="position: relative;">
+                <span *ngIf="form.controls['rec.USER_ORGANIZ_List'].value" class="eos-adm-icon eos-adm-icon-close-blue icon-delete-element" (click)="clearField('rec.USER_ORGANIZ_List')"></span>
+                <span
+                    [ngClass]="{'eos-adm-icon-directory-book-blue' : !disableOrg,  'eos-adm-icon-directory-book-grey disabled' : disableOrg}"
+                    class="eos-adm-icon icon-select-element" (click)="openClassif('CONTACT', disabledOrg)"
+                    eosClickMode>
+                </span>
+                <eos-dynamic-input aria-disabled="true" [input]="inputs['rec.USER_ORGANIZ_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        </div>
+    </div>
+</form>
+</ng-template>

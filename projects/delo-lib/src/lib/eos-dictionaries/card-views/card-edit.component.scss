@@ -1,0 +1,80 @@
+.card-edit {
+    /* max-width: 800px; */
+    overflow: hidden;
+    /*
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 240px);
+    */
+}
+
+.edit-content {
+    label {
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 10px;
+        color: $label-color;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        &.checkbox,
+        &.radio {
+            color: $grey;
+            line-height: 24px;
+            padding: 4px 0;
+            font-size: 14px;
+            vertical-align: middle;
+            text-transform: none;
+            margin-bottom: 0;
+        }
+        &.checkbox-inline,
+        &.radio-inline {
+            padding-left: 12px;
+        }
+    }
+    .photo-uploader {
+        label {
+            margin: 0;
+        }
+    }
+    .tabs-wrapper {
+        margin-bottom: 0;
+    }
+}
+
+.card-content-wrapper {
+    padding: $grid-gutter-width * 0.5 $grid-gutter-width * 0.5 0 $grid-gutter-width * 0.5;
+    padding-bottom: 50px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 220px);
+}
+
+.row-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    &>div+div,
+    &>eos-dynamic-input+div,
+    &>div+eos-dynamic-input {
+        margin-left: $grid-gutter-width * 0.5;
+    }
+    &>eos-dynamic-input+eos-dynamic-input {
+        margin-left: $grid-gutter-width;
+    }
+    .form-group {
+        flex-grow: 1;
+        select {
+            width: 100%;
+        }
+        input {
+            width: 100%;
+        }
+    }
+}
+
+.space-between {
+    justify-content: space-between;
+}

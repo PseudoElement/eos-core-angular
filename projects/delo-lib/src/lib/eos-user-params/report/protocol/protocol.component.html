@@ -1,0 +1,84 @@
+<div class="prot-dictionary">
+    <div class="table-wrapper usual-border">
+        <div class="prot-report-list">
+            <div class="table-header">
+                <div class="table-prot-wraper">
+                    <div class="selected-prot-title">
+                        <span class="long-title xl-font">Протокол редактирования пользователя {{username}}</span>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" [queryParams]="{isn_cl: link}" aria-hidden="true" tooltip="Открыть в новом окне" placement="bottom"
+                        container="body" containerClass="tooltip-info" target="_blank"><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span></a>
+                        <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" tooltip="Закрыть" placement="bottom" containerClass="tooltip-info">
+                            <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-header header-pos-prot">
+                <div class="btn-group-prot">
+                    <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
+                        <button *ngFor="let button of buttons"
+                            class="btn btn-primary-light bth-size-prot"
+                            [disabled]="button.disabled()"
+                            triggers="hover" 
+                            [tooltip]="closeTooltip === true ? button.tooltip : null"
+                            (click)="button.click()"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info">
+                         <span class="eos-icon small" [ngClass]="button.icon"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="item-count-prot usual-border m-font">
+                    <span class="item-count-content-prot">
+                            Записей:
+                        <span class="counter-prot">{{config?.itemsQty}}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="table-header header-pad">
+                <div class="table-title contain-span-header">
+                    <span class=" width-title1 likeLink-prot" (click)="SortPageList(1)">
+                        Дата
+                        <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[0].date, 'eos-adm-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
+                    </span>
+                    <span class=" width-title2 likeLink-prot" (click)="SortPageList(2)">
+                        Событие
+                        <span *ngIf="status === 'eventUser'" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[1].event, 'eos-adm-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
+                    </span>
+                    <span class=" width-title3 likeLink-prot" (click)="SortPageList(3)">
+                        Пользователь
+                        <span *ngIf="status === 'WHO'" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[2].who, 'eos-adm-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="selected-wrapper">
+                <div class="user-item prot-list-prot" *ngIf="!isLoading">
+                    <div *ngFor="let user of frontData; let i = index ">
+                        <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
+                            <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
+                                {{user.date}}
+                            </span>
+                            <span class=" item-table width-title2"  (click)="SingleUserCheck(user)">
+                                <div>
+                                    {{user.eventUser}}
+                                </div>
+                            </span>
+                            <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
+                                <div>
+                                    {{user.isnWho}}
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
+        </div>
+        <div class="spinner-prot" *ngIf="isLoading">
+            <eos-spinner size="lg"></eos-spinner>
+        </div>
+    </div>
+</div>
+</div>

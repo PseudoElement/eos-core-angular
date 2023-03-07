@@ -1,0 +1,59 @@
+@media (max-width: 1470px) {
+    .not-xl {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1470px) {
+    .only-xl {
+        display: none !important;
+    }
+}
+
+// @media (min-width: 0px) and (max-width: 1280px) {
+//     .eos-dictionaries .dictionary {
+//         // flex-basis: calc((100% - 2*12px) * 0.5);
+//     }
+// }
+
+// @media (min-width: 1281px) and (max-width: 1640px) {
+//     .eos-dictionaries .dictionary {
+//         // flex-basis: calc((100% - 3*12px) / 3);
+//     }
+// }
+
+// @media (min-width: 1170px) and (max-width: 1679px) {
+//     .eos-desktop .sortable-item {
+//         flex-basis: calc((100% - 2*12px) * 0.5);
+//     }
+// }
+
+// @media (min-width: 1680px) and (max-width: 2079px) {
+//     .eos-desktop .sortable-item {
+//         flex-basis: calc((100% - 3*12px) / 3);
+//     }
+// }
+
+// @media (min-width: 2080px) and (max-width: 2500px) {
+//     .eos-desktop .sortable-item {
+
+//         flex-basis: calc((100% - 4*12px) / 4);
+//     }
+// }
+
+// For IE, Edge
+@media screen\0  {
+    input,
+    textarea {
+        &.ng-invalid.ng-dirty {
+            /* border-color: $disabled-color-main-theme !important; */
+            /* outline: none !important; */
+
+            &.ng-touched {
+                border-color: $invalid-color-main-theme/* !important */;
+                /* outline: $invalid-color-main-theme solid 1px !important; */
+                /* outline-offset: 0!important; */
+            }
+        }
+    }
+}
