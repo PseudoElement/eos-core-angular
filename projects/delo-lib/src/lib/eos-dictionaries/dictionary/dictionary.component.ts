@@ -1109,7 +1109,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             .then((button: IConfirmButton) => {
                 if (button && button.result === 2) {
                     return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
-                        const deletedList = results.filter(r => !r.error)
+                        const deletedList = results.filter(r => r && !r.error)
                             .map(r => r.record[titleId] || r.record['CLASSIF_NAME']);
                         if (deletedList && deletedList.length) {
                             const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
