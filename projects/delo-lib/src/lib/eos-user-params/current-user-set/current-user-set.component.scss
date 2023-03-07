@@ -1162,6 +1162,13 @@ bs-dropdown-container {
                         padding-top: 20px !important;
                     }
                 }
+                .control {
+                    margin-top: 20px;
+                    eos-dynamic-input {
+                        padding-top: 20px;
+                        margin-left: 15px;
+                    }
+                }
                 & > div:nth-child(2) {
                     .control-state {
                         margin-left: 15px;

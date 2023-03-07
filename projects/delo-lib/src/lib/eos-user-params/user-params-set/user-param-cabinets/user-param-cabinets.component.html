@@ -178,14 +178,13 @@
                 <eos-dynamic-input [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
-
-         <!-- @@task165408 убираем настройки толстяка
-        <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
+        <div [hidden]="appMode.cbr" class="user-group-form control">
             <div class="inputs-inline">
                 <span class="input-title" [ngStyle]="{'padding-bottom': '5px'}">При снятии с контроля в приложении Документы:</span>
                 <eos-dynamic-input [input]="inputs['rec.CHECK_RESOL_REPORT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
+         <!-- @@task165408 убираем настройки толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
                 <span class="input-title">Показывать в окне поручения в приложении Документы:</span>
