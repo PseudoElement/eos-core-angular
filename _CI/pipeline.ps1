@@ -17,10 +17,13 @@ try {
 
         Invoke-Log-Command {CI-Use-PipelineBoard}
         
-	    Invoke-Log-Command { Npm-Set-Version NODEJS14 -UseAnyOnFail:$("$env:AGENT_OS" -eq "") }
+	    Invoke-Log-Command { Npm-Set-Version NODEJS16 -UseAnyOnFail:$("$env:AGENT_OS" -eq "") }
 
         Invoke-Log-Command { Npm-Install -UseCI -Project "$env:BuildRootDir" }
-        Invoke-Log-Command { Npm-Run 'build-prod' -Project "$env:BuildRootDir" }
+
+        Invoke-Log-Command { Npm-Run 'build-lib' -Project "$env:BuildRootDir" }
+        Invoke-Log-Command { Npm-Run 'build-resources' -Project "$env:BuildRootDir" }
+        Invoke-Log-Command { Npm-Run 'build' -Project "$env:BuildRootDir" }
     }
 
     # вывод ошибок сборки
