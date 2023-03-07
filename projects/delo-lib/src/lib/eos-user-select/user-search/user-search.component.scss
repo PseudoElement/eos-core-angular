@@ -20,6 +20,10 @@
     right: 30px;
     cursor: pointer;
 }
+.position-close {
+    position: absolute;
+    right: -220px;
+}
 .disabled {
     cursor: not-allowed;
 }
@@ -48,6 +52,7 @@
         }
     }
     .search-input-wr {
+        position: relative;
         width: 95%;
         margin: 20px;
         max-height: 71px;

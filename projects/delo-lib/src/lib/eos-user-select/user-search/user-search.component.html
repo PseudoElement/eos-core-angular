@@ -53,7 +53,7 @@
         <div class="search-input-wr" *ngIf="currTab === 1">
             <eos-dynamic-input [input]="inputs['rec.SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.SURNAME']}"
-            (click)="form.controls['rec.SURNAME'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></a>
+            (click)="form.controls['rec.SURNAME'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
         </div>
         <div class="" *ngIf="currTab === 0">
             <div class="search-input-wr block-user">
@@ -62,17 +62,17 @@
             <div class="search-input-wr">
                 <eos-dynamic-input [input]="inputs['rec.LOGIN']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.LOGIN']}"
-                (click)="form.controls['rec.LOGIN'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></a>
+                (click)="form.controls['rec.LOGIN'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
             </div>
             <div class="search-input-wr">
                 <eos-dynamic-input [input]="inputs['rec.fullDueName']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.fullDueName']}"
-                (click)="form.controls['rec.fullDueName'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></a>
+                (click)="form.controls['rec.fullDueName'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
             </div>
             <div class="search-input-wr">
                 <eos-dynamic-input [input]="inputs['rec.DEPARTMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <a class="clear-btn" [ngClass]="{'hide': !form.value['rec.DEPARTMENT']}"
-                (click)="form.controls['rec.DEPARTMENT'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small"></span></a>
+                (click)="form.controls['rec.DEPARTMENT'].patchValue('')"><span class="eos-adm-icon eos-adm-icon-close-blue small position-close"></span></a>
             </div>
         </div>
         <div  class="search-input-wr-av" *ngIf="currTab === 2">
