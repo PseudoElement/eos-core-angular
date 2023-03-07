@@ -92,7 +92,7 @@
             <!-- <eos-dynamic-input [ngStyle]="{'width': '452px'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
             <eos-dynamic-input [ngStyle]="{'width': '67%', 'margin-left': '20px' }" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input> 
         </div>
-        <eos-dynamic-input [hidden]="!appMode.tkDoc" [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input> <!-- [hidden]="!appMode.tkDoc" -->
     </div>
     <!-- @task165408 убрать настройки для толстяка
     <div [hidden]="appMode.arm" class="set-header bold">
