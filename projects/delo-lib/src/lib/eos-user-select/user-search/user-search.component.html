@@ -113,7 +113,7 @@
                     (click)="openClassif('DEPARTMENT', disabledDep)"
                     eosClickMode>
                 </span>
-                <eos-dynamic-input aria-disabled="true" [input]="inputs['rec.USERDEP_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input class="color-input" aria-disabled="true" [input]="inputs['rec.USERDEP_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <div style="position: relative;">
                 <span *ngIf="form.controls['rec.USER_ORGANIZ_List'].value" class="eos-adm-icon eos-adm-icon-close-blue icon-delete-element" (click)="clearField('rec.USER_ORGANIZ_List')"></span>
@@ -122,7 +122,7 @@
                     class="eos-adm-icon icon-select-element" (click)="openClassif('CONTACT', disabledOrg)"
                     eosClickMode>
                 </span>
-                <eos-dynamic-input aria-disabled="true" [input]="inputs['rec.USER_ORGANIZ_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input class="color-input" aria-disabled="true" [input]="inputs['rec.USER_ORGANIZ_List']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
     </div>
