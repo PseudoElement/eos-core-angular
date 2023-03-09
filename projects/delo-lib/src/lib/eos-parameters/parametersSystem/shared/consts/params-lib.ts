@@ -3,7 +3,7 @@ import { FILES_UNS } from './eos-parameters.const';
 export const PARAMS_LIB: IBaseParameters = {
     id: 'lib_params',
     apiInstance: 'USER_PARMS',
-    title: 'Библиотеки',
+    title: 'Хранение файлов',
     fields: [
         {
             key: 'EDMSNAME',

@@ -80,7 +80,7 @@ export class ParamEmailComponent extends BaseParamComponent {
                 }
                 this.tabelData.data.push({
                     'ProfileName': Common[key]['ProfileName'],
-                    'Password': Common[key]['Password'],
+                    'Password': Common[key]['Password'] ? Common[key]['Password']['Key'] : '',
                     'EmailAccount': Common[key]['EmailAccount'],
                     'key': key
                 });
@@ -168,9 +168,14 @@ export class ParamEmailComponent extends BaseParamComponent {
         const queryAll = [];
         const newEmailAcount = {
             EmailAccount: this.updateData['EmailAccount'] !== undefined ? this.updateData['EmailAccount'] : this.prepareData.rec['EmailAccount'],
-            Password: this.updateData['Password'] !== undefined ? this.updateData['Password'] : this.prepareData.rec['Password'],
+            Password: {},
             ProfileName: this.updateData['ProfileName'] !== undefined ? this.updateData['ProfileName'] : this.prepareData.rec['ProfileName']
         };
+        if (this.updateData['Password'] !== undefined) {
+            newEmailAcount.Password['Value'] = this.updateData['Password'];
+        } else {
+            newEmailAcount.Password['Key'] = this.prepareData.rec['Password'];
+        }
         if (this.updateData['DeleteEmailsOnServer'] === 'NO') {
             this.updateData['DeleteEmailsOnServer'] = false;
         }

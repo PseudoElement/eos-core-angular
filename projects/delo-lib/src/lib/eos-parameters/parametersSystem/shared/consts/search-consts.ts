@@ -16,12 +16,6 @@ export const SEARCH_PARAM: IBaseParameters = {
             ]
         },
         {
-            key: 'ES_SETTINGS',
-            type: 'string',
-            readonly: false,
-            title: 'Адрес Elasticsearch',
-        },
-        {
             key: 'INDEX_URL',
             type: 'string',
             readonly: false,
@@ -45,6 +39,30 @@ export const SEARCH_PARAM: IBaseParameters = {
             // readonly: true,
             title: 'Форматы файлов, индексируемых внешней службой',
             length: 2000
+        },
+        {
+            key: 'KafkaCfgServerURL',
+            type: 'string',
+            readonly: false,
+            title: 'Адрес Kafka',
+        },
+        {
+            key: 'ElasticCfgServerURL',
+            type: 'string',
+            readonly: false,
+            title: 'Адрес Elasticsearch',
+        },
+        {
+            key: 'ElasticCfgLogin',
+            type: 'string',
+            readonly: false,
+            title: 'Логин',
+        },
+        {
+            key: 'ElasticCfgPassword',
+            type: 'string',
+            readonly: false,
+            title: 'Пароль',
         },
     ]
 };
