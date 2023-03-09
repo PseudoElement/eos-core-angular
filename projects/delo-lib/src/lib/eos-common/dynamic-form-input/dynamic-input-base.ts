@@ -66,11 +66,9 @@ export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
         // this.delayedTooltip(); @task161788 отключаем подсказку
         this.cutLongerValue(this.control.value);
     }
-
     onPaste(event) {
-        event.preventDefault();
-        const PASTED_VALUE = event.clipboardData.getData('Text');
-        this.cutLongerValue(PASTED_VALUE, true);
+        const oldText = this.control.value ? this.control.value : '';
+        this.cutLongerValue(oldText, true);
     }
 
     delayedTooltip(): void {
@@ -172,6 +170,8 @@ export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
                     this.control.patchValue(value);
                 }
             }
+        } else {
+            this.control.patchValue(value);
         }
     }
 
