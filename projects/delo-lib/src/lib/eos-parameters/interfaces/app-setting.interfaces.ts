@@ -1,6 +1,11 @@
+
+export interface IPasswordSetting {
+    Key?: string;
+    Value?: string;
+}
 export interface ISettingEmailCommon {
     EmailAccount: string;
-    Password: string;
+    Password: IPasswordSetting;
     ProfileName: string;
 }
 export interface ISettingEmailReceive {

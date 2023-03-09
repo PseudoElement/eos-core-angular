@@ -30,7 +30,7 @@
                     [ngClass]="{'error-focus': errorPass, 'readonly': false}"
                     [type]="typeInput"
                     [readonly]="false"
-                    [placeholder]="dataProfile && dataProfile['Password'] ? '*******' : ''"
+                    [placeholder]="dataProfile && dataProfile['Password'].value ? '*******' : ''"
                     [tooltip]="errorPass ? 'Обязательное поле' : ''"
                     placement="bottom"
                     containerClass="tooltip-error"

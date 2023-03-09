@@ -18,38 +18,78 @@ class="input-param-wrapper input-param-search-wrapper">
             [form]="form"
             [disabled]="inputs['rec.INDEXKIND'].readonly"
         ></eos-dynamic-input>
-        <eos-dynamic-input
-            *ngIf="checkValueElements && this.form.controls['rec.INDEXKIND'].value !== 'DBMS'"
-            [input]="inputs['rec.ES_SETTINGS']"
-            [form]="form"
-            [readonly]="form.controls['rec.INDEXKIND'].value !== 'ES'"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            *ngIf="checkValueElements || this.form.controls['rec.INDEXKIND'].value === 'MSINDEXSERVER'"
-            [input]="inputs['rec.INDEX_URL']"
-            [form]="form"
-            [readonly]="form.controls['rec.INDEXKIND'].value !== 'ES' && form.controls['rec.INDEXKIND'].value !== 'MSINDEXSERVER'"
-        ></eos-dynamic-input>
-        <div>
-            <span>{{inputs['rec.INDEXTIMEOUT'].label}}</span>
+        <div *ngIf="this.form.controls['rec.INDEXKIND'].value === 'MSINDEXSERVER'">
             <eos-dynamic-input
-                class="inline-block"
-                [input]="inputs['rec.INDEXTIMEOUT']"
+                [input]="inputs['rec.INDEX_URL']"
                 [form]="form"
-                [readonly]="inputs['rec.INDEXTIMEOUT'].readonly"
             ></eos-dynamic-input>
-        </div>
-        <eos-dynamic-input
-            [input]="inputs['rec.ELNPATH']"
-            [form]="form"
-            [readonly]="inputs['rec.ELNPATH'].readonly"
-        ></eos-dynamic-input>
-        <div style='padding-bottom: 100px;'>
+            <div>
+                <span>{{inputs['rec.INDEXTIMEOUT'].label}}</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['rec.INDEXTIMEOUT']"
+                    [form]="form"
+                    [readonly]="inputs['rec.INDEXTIMEOUT'].readonly"
+                ></eos-dynamic-input>
+            </div>
             <eos-dynamic-input
-                [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
+                [input]="inputs['rec.ELNPATH']"
+                [form]="form"
+                [readonly]="inputs['rec.ELNPATH'].readonly"
+            ></eos-dynamic-input>
+            <div style='padding-bottom: 100px;'>
+                <eos-dynamic-input
+                    [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
+                    [form]="form"
+                    
+                ></eos-dynamic-input>
+            </div>
+        </div>
+        <div *ngIf="this.form.controls['rec.INDEXKIND'].value === 'ES'">
+            <span class="l-font">Сервер Kafka</span>
+            <hr>
+            <eos-dynamic-input
+                    [input]="inputs['rec.KafkaCfgServerURL']"
+                    [form]="form"
+            ></eos-dynamic-input>
+            <span class="l-font">Сервер Elasticsearch</span>
+            <hr>
+            <eos-dynamic-input
+                [input]="inputs['rec.ElasticCfgServerURL']"
                 [form]="form"
                 
-            ></eos-dynamic-input> <!-- [readonly]="inputs['rec.FULLTEXT_EXTENSIONS'].readonly" -->
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.ElasticCfgLogin']"
+                [form]="form"
+                
+            ></eos-dynamic-input>
+            <div class="dynamic-input-wrapper base-text-input text-pass-input pass-width padding-right">
+                <label>Пароль</label>
+                <div class="vision" [ngClass]="{'disabled': form.controls['rec.ElasticCfgPassword'].disabled}">
+                    <input class="form-control m-font" maxlength="64"
+                    [(ngModel)]="paramPassword"
+                    [type]="typeInput"
+                    [disabled]="form.controls['rec.ElasticCfgPassword'].disabled"
+                    [placeholder]="form && form.controls['rec.ElasticCfgPassword'].value ? '*******' : ''"
+                    placement="bottom"
+                    containerClass="tooltip-error"
+                    (keyup)="onKeyUp($event)"
+                    [autocomplete]="'off'">
+                    <eos-dynamic-input
+                        hidden="true"
+                        [input]="inputs['rec.ElasticCfgPassword']"
+                        [form]="form"
+                        [readonly]="form.controls['rec.ElasticCfgPassword'].disabled"
+                        autocomplete="off">
+                    </eos-dynamic-input>
+                    <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-adm-icon small"  [ngClass]="form.controls['rec.ElasticCfgPassword'].disabled ? 'eos-adm-icon-show-grey' : 'eos-adm-icon-show-blue'"></span>
+                </div>
+            </div>
+            <!-- <eos-dynamic-input
+                [input]="inputs['rec.ElasticCfgPassword']"
+                [form]="form"
+            ></eos-dynamic-input> -->
         </div>
     </div>
 </div>

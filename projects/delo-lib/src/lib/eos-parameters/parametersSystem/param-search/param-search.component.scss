@@ -1,0 +1,21 @@
+:host {
+    .input-param-search-wrapper {
+        padding-bottom: 20px;
+    }
+    .vision {
+        position: relative;
+        >span {
+            position: absolute;
+            top: 5px;
+            right: 9px;
+            cursor: pointer;
+        }
+        .vision-close {
+            right: 32px;
+        }
+    }
+    .form-control:focus {
+        border-color: #e6e6e6 !important;
+        box-shadow: none !important;
+    }
+}
