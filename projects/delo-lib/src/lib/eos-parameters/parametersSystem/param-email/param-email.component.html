@@ -1,12 +1,12 @@
 <div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs">
     <div [hidden]="showCard">
         <eos-param-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancelEdit()"
-        [statusBtnSub]="btnError"
-        [editBtn]="true"
-        (editForm)="edit()"
+            [title]="titleHeader"
+            (submitForm)="submit()"
+            (cancelForm)="cancelEdit()"
+            [statusBtnSub]="btnError"
+            [editBtn]="true"
+            (editForm)="edit()"
         ></eos-param-header>
         <div class="title-under-table">
             <div>
@@ -30,7 +30,7 @@
         [inputs]="inputs"
         [dataProfile]="editData"
         [prepareData]="prepareData"
-        ></eos-param-email-card>
+    ></eos-param-email-card>
 </div>
 <!--  -->
 

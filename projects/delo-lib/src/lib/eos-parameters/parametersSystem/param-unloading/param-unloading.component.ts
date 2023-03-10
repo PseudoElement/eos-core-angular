@@ -99,10 +99,10 @@ export class ParamUnloadingComponent extends BaseParamComponent {
   submit() {
     const newArhivist = {
       Library: {
-        Name: this.updateData['Name'] ? this.updateData['Name'] : this.prepareData.rec['Name'],
-        Directory: this.updateData['Directory'] ? this.updateData['Directory'] : this.prepareData.rec['Directory'],
+        Name: this.updateData['Name'] !== undefined ? this.updateData['Name'] : this.prepareData.rec['Name'],
+        Directory: this.updateData['Directory'] !== undefined ? this.updateData['Directory'] : this.prepareData.rec['Directory'],
       },
-      ArhStoreUrl: this.updateData['ArhStoreUrl'] ? this.updateData['ArhStoreUrl'] : this.prepareData.rec['ArhStoreUrl'],
+      ArhStoreUrl: this.updateData['ArhStoreUrl'] !== undefined ? this.updateData['ArhStoreUrl'] : this.prepareData.rec['ArhStoreUrl'],
     };
     this.setAppSetting(this.paramUpload, newArhivist)
     .then(() => {
