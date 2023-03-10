@@ -59,11 +59,11 @@ export class ParamSearchComponent extends BaseParamComponent {
                         });
                     }
                     if (KafkaCfg) {
-                        Object.keys(ElasticCfg).forEach((key) => {
+                        Object.keys(KafkaCfg).forEach((key) => {
                             if (key === 'ServerURL') {
-                                this.form.controls['rec.ElasticCfg' + key].setValue(KafkaCfg[key], { emitEvent: false });
+                                this.form.controls['rec.KafkaCfg' + key].setValue(KafkaCfg[key], { emitEvent: false });
                             }
-                            this.prepareData.rec['ElasticCfg' + key] = ElasticCfg[key];
+                            this.prepareData.rec['KafkaCfg' + key] = KafkaCfg[key];
                         });
                         this.form.controls['rec.KafkaCfgServerURL'].setValue(KafkaCfg['ServerURL'], { emitEvent: false });
                         this.prepareData.rec['KafkaCfgServerURL'] = KafkaCfg['ServerURL'];
