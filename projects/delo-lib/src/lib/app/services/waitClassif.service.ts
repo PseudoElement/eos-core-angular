@@ -13,7 +13,8 @@ const LIST_OLD_PAGES: string[] = [
     'LINK_CL',
     'SECURITY_CL',
     'DOCVID_CL',
-    'SEV_RULE'
+    'SEV_RULE',
+    'NOMENKL_CL'
 ];
 // const OLD_VIEW_URL: string = '../Pages/Classif/ChooseClassif.aspx?';
 const OLD_VIEW_URL: string = '../Eos.Delo.JsControls/Classif/ChooseClassif.html?';

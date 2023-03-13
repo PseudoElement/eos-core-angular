@@ -9,10 +9,8 @@ declare function openPopup(url: string, callback?: Function): boolean;
 @Directive()
 @Injectable()
 export abstract class RKNomenkBasePageDirective extends RKBasePageDirective {
-
-
     protected doCardSelectView(path: string) {
-        const config = this.dataController.getApiConfig();
+        /* const config = this.dataController.getApiConfig();
         const pageUrl = config.webBaseUrl + 'classifChoose/cl?';
         const params = 'Classif=CARDINDEX&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=False&select_multy=False';
         const url = pageUrl + params;
@@ -29,7 +27,26 @@ export abstract class RKNomenkBasePageDirective extends RKBasePageDirective {
                 this.setDictLinkValue(path, str);
             });
             return Promise.resolve(str);
-        }).bind(this));
+        }).bind(this)); */
+        this._waitClassifSrv.openClassif({
+            classif: 'CARDINDEX',
+            id: '__ClassifIds',
+            skipDeleted: true,
+            selectNodes: true,
+            selectLeafs: true,
+            return_due: false,
+            selectMulty: false
+        }, true)
+        .then((str: string) => {
+            this.dataController.zone.run(() => {
+                this.setDictLinkValue(path, str);
+            });
+            return Promise.resolve(str);
+        })
+        .catch((er) => {
+            console.log('er', er);
+            
+        });
     }
 
     protected doNomenklSelectView(path: string) {
@@ -46,22 +63,20 @@ export abstract class RKNomenkBasePageDirective extends RKBasePageDirective {
             }
 
         } else {
-            const config = this.dataController.getApiConfig();
-            const url = config.webBaseUrl + 'classifChoose/cl?Classif=NOMENKL_CL&select_multy=False';
-            let flag = false;
-            if (window['dontCheckExistPopUp'] === undefined) {
-                flag = true;
-                window['dontCheckExistPopUp'] = true;
-            }
-            openPopup(url, ((event, str) => {
-                if (flag) {
-                    delete window['dontCheckExistPopUp'];
-                }
+            this._waitClassifSrv.openClassif({
+                classif: 'NOMENKL_CL',
+                selectMulty: false,
+            }, true)
+            .then((str: string) => {
                 this.dataController.zone.run(() => {
                     this.setDictLinkValue(path, str);
                 });
                 return Promise.resolve(str);
-            }).bind(this));
+            })
+            .catch((er) => {
+                console.log('er', er);
+                
+            });
         }
     }
 
