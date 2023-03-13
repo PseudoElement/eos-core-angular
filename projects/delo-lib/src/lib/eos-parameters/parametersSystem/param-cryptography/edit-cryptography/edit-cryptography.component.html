@@ -1,24 +1,29 @@
-<header>
-    <eos-param-header [title]='title' statusBtnSub="true" (submitForm)="submit()" (cancelForm)="cancel()" editBtn="true"></eos-param-header>
-</header>
 <div class="collection-edit">
-    <div class="collection-profile-name">
-        <label>Название профиля</label>
-        <input class="form-control m-font inline-block" type="text">
+    <div *ngIf="title" class="eos-adm-table-title-button">
+        <div class="eos-adm-table-title">
+            <span>{{title}}</span>
+        </div>
+        <div class="header-button-wrap">
+            <button class="btn btn-primary header-button" (click)="cancel()">ОТМЕНИТЬ
+            </button>
+            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="statusBtnSub">СОХРАНИТЬ
+            </button>
+        </div>
     </div>
-    <div class="collection-profile-name">
-        <label>Строка инициализации</label>
-        <input class="form-control m-font inline-block" type="text"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+    <div style="padding: 20px;">
+        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.InitString']" [form]="form"  [readonly]="inputs['rec.InitString'].readonly"></eos-dynamic-input>
     </div>
-
     <div class="collection-profile-table">
         <label>Хранилища сертификатов</label>
     </div>
     <div>
         <eos-tabel-element
-        [edit]="edit"
-        [tabelData]="tabelData"
-        (btnAction)="actionTo($event)">
+            [edit]="edit"
+            [tabelData]="tabelData"
+            (elementsSelect)="selectElement($event)"
+            (btnAction)="actionTo($event)"
+            (orderHead)="orderHead($event)">
         </eos-tabel-element>
     </div>
 </div>
@@ -30,26 +35,69 @@
                 <span class="header__text">Выбор хранилищ сертификатов</span>
             </div>
             <div class="header__button-wrap">
-                <button class="btn btn-primary header__button" (click)="cancelModalWord()">ОТМЕНИТЬ
+                <button class="btn btn-primary header__button" style="width: 86px;" (click)="cancelModal()">ОТМЕНИТЬ
                 </button>
-                <button class="btn btn-primary-full header__button" (click)="submitModalWord()" [disabled]="false">СОХРАНИТЬ
+                <button class="btn btn-primary-full header__button" style="width: 86px;" (click)="submitModal()" [disabled]="false">ВЫБРАТЬ
                 </button>
             </div>
         </div>
     </header>
     <main class="modalWord-content-edit">
-        <div class="collection-add-name">
-            <label>Строка инициализации</label>
-            <input class="form-control m-font inline-block" type="text"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+        <div class="input-wrap" style="margin-bottom: 14px;">
+            <label for="selectStores" style="color: #969696;">
+                СТРОКА ИНИЦИАЛИЗАЦИИ
+            </label>
+            <br>
+            <div class="eos-select">
+                <select class="form-control m-font select" id="selectStores" [(ngModel)]="certSystemStore" (ngModelChange)="onChangeSelect($event)">
+                        <option value="sslm">
+                            Учетная запись компьютера
+                        </option>
+                        <option value="sss">
+                            Учетная запись службы
+                        </option>
+                        <option value="remote">
+                            Удаленный сервер
+                        </option>
+                </select>
+            </div>
         </div>
-        <div class="collection-add-name">
-            <label>Адрес хранилища</label>
-            <input class="form-control m-font inline-block" type="text"> <!-- pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" -->
+
+        <div class="input-wrap">
+            <label for="adress" style="color: #969696;">
+                АДРЕС ХРАНИЛИЩА
+            </label>
+            <div class="sert-input-button">
+                <input class="form-control m-font"
+                    id="adress"
+                    type="text"
+                    placeholder="Адрес хранилища"
+                    autocomplete="off"
+                    [(ngModel)]="certSystemAddress"
+                >
+                <button
+                    class="adres-search btn"
+                    (click)="searchStore()"
+                >
+                    <span class="eos-adm-icon eos-adm-icon-search-blue small"></span>
+                </button>
+            </div>
         </div>
-        <div class="collection-add-name">
-            <label>Нужно указать название поля</label>
-            <textarea #textArea class="form-control m-font"></textarea>
-            <!-- <input class="form-control m-font inline-block" type="textarea"> -->
+        <div style="margin-top: 20px; color: #969696;">
+            <label >
+                НУЖНО УКАЗАТЬ НАЗВАНИЕ ПОЛЯ
+            </label>
+        </div>
+        <div class="list-stores">
+            <ul *ngIf="listStores">
+                <li
+                    *ngFor="let list of listStores"
+                    [ngClass]="{highlighted: list.selected}"
+                    (click)="selectNode(list)"
+                    (dblclick)="submitModal()">
+                    {{list.title}}
+                </li>
+            </ul>
         </div>
     </main>
 </ng-template>

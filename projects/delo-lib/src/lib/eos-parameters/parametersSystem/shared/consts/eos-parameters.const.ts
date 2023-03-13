@@ -44,10 +44,10 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Протоколирование',
     url: 'logging',
     visible: true
-}, /* {
+}, {
     title: 'Криптография',
     url: 'cryptography'
-}, */{
+}, {
     title: 'Электронная почта',
     url: 'email',
     visible: true

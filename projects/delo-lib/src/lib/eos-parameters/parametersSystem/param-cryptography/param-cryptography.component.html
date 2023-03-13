@@ -1,21 +1,35 @@
 <div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs">
-    <eos-param-header
-        [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit(); cancelEdit()"
-        (cancelForm)="cancel(); cancelEdit()"
-        [statusBtnSub]="btnError"
-        [editBtn]="true"
-        (editForm)="edit()"
-    ></eos-param-header>
-    <div class="title-under-table">
-        <div>
-            <span>Криптографическе профили</span>
+    <div [hidden]="showCard">
+        <eos-param-header
+            [title]="titleHeader"
+            (submitForm)="submit()"
+            (cancelForm)="cancelEdit()"
+            [statusBtnSub]="btnError"
+            [editBtn]="true"
+            (editForm)="edit()"
+        ></eos-param-header>
+        <div class="title-under-table">
+            <div>
+                <span>Криптографическе профили</span>
+            </div>
         </div>
+        <eos-tabel-element
+            [edit]="!disableForm"
+            [tabelData]="tabelData"
+            (btnAction)="actionTo($event)"
+            (elementsSelect)="selectElement($event)"
+            (orderHead)="orderHead($event)">
+        </eos-tabel-element>
     </div>
-    <eos-tabel-element
-        [edit]="!disableForm"
-        [tabelData]="tabelData"
-        (btnAction)="actionTo($event)"
-    >
-    </eos-tabel-element>
+    <eos-edit-cryptography
+        *ngIf="showCard"
+        (submitEmit)="submitEmit($event)"
+        (cancelEmit)="cancelEmit($event)"
+        [form]="form"
+        [title]="titleEdit"
+        [inputs]="inputs"
+        [dataProfile]="editData"
+        [prepareData]="prepareData"
+        [allData]="tabelData.data"
+    ></eos-edit-cryptography>
 </div>

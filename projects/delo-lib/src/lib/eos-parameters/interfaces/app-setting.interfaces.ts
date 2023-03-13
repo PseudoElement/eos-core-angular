@@ -63,3 +63,9 @@ export interface ICrawlerParams {
     IndexThreadsCount: number;
 }
 
+export interface ICryptographyParams {
+    CertStores: string;
+    InitString: string;
+    ProfileName: string;
+}
+

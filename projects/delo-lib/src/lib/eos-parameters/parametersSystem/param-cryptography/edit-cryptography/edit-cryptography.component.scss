@@ -15,14 +15,170 @@
             text-transform: uppercase;
         }
     }
+    .eos-adm-table-title-button {
+        padding: 10px 15px;
+        color: #646464;
+        font-size: 18px;
+        background: #fafafa;
+        display: flex;
+        flex: 1;
+        .eos-adm-table-title {
+            flex: 1;
+        }
+        .header-button-wrap {
+            .header-button {
+                margin-right: 10px;
+                width: 86px;
+            }
+        }
+    }
+    label {
+        text-transform: uppercase;
+        font-size: 14px;
+        line-height: 10px;
+    }
+    .second-string {
+        display: flex;
+    }
+    .label-bottom-string {
+        display: flex;
+        margin-top: 15px;
+    }
+    .padding-right {
+        margin-right: 20px;
+        width: 50%;
+    }
+    .padding-left {
+        margin-left: 20px;
+        width: 50%;
+    }
+    .padding-right-number {
+        margin-left: 40px;
+        width: 50%; 
+    }
+    .label-style {
+        margin-top: 12px;
+        width: 100%;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 26px;
+        color: #646464;
+        border-bottom: 1px solid #e6e6e6;
+        font-style: normal;
+    }
+    .padding-top {
+        padding-top: 15px;
+    }
+    .chekbox-label {
+        margin-top: 32px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 26px;
+        color: #646464;
+        font-style: normal;
+    }
+    .padding-none {
+        padding-left: 0px;
+    }
+    .line {
+        margin-top: 25px;
+    }
+    
+    .boolean-not-label {
+        label {
+            text-transform: none;
+        }
+    }
+    .vision {
+        position: relative;
+        >span {
+            position: absolute;
+            top: 5px;
+            right: 9px;
+            cursor: pointer;
+        }
+        .vision-close {
+            right: 32px;
+        }
+    }
+    
+    
 }
 .modalWord-content-edit {
-    padding: 15px 15px 0 15px;
+    padding: 15px;
     background: #ffffff;
+    .sert-input-button {
+        display: flex;
+        position: relative;
+        
+        .adres-search {
+            // display: block;
+            background: #fafafa;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+        }
+    }
+    .list-stores {
+        background: #fafafa;
+        border: 1px solid #e6e6e6;
+        min-height: 200px;
+        max-height: 315px;
+        overflow: auto;
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 7px;
+
+            li {
+                color: black;
+                padding-left: 4px;
+                user-select: none;
+            }
+        }
+    }
+    .eos-select {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+      .eos-select:after {
+        content: url("../assets/icons/Arrow-V-Blue.svg");
+        padding: 0 8px;
+        font-size: 12px;
+        position: absolute;
+        right: -8px;
+        top: 1px;
+        z-index: 1;
+        width: 44px;
+        text-align: center;
+        pointer-events: none;
+        box-sizing: border-box;
+        transform: rotate(270deg);
+        cursor: pointer;
+      }
+      select {
+        padding-right: 25px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
 }   
 .collection-add-name {
     margin-bottom: 14px;
     label {
         text-transform: uppercase;
+    }
+}
+
+.modalCrypto {
+    width: 600px !important;
+    .modalWord-content {
+        padding: 15px;
+        background: #fff;;
     }
 }

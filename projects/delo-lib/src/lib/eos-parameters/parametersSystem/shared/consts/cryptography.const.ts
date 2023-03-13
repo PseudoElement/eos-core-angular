@@ -4,7 +4,25 @@ export const CRYPTO_PARAM: IBaseParameters = {
     title: 'Криптография',
     apiInstance: 'APP_SETTINGS',
     fields: [
-
+        
+        {
+            key: 'ProfileName',
+            type: 'string',
+            readonly: false,
+            title: 'Название профиля',
+        },
+        {
+            key: 'InitString',
+            type: 'string',
+            readonly: false,
+            title: 'Строка инициализации',
+        },
+        {
+            key: 'CertStores',
+            type: 'string',
+            readonly: false,
+            title: 'Хранилища',
+        },
     ],
     fieldsChild: [
 

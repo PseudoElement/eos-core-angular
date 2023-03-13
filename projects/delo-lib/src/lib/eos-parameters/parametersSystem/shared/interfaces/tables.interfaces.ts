@@ -19,6 +19,10 @@ export interface ITableHeader {
     id: string;
     style?: any;
 }
+export interface ITableInfData {
+    key: string | number;
+    check?: boolean;
+}
 export interface ITableData {
     tableBtn: ITableBtn[];
     tableHeader: ITableHeader[];
