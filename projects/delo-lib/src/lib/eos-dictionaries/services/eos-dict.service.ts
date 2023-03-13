@@ -44,7 +44,7 @@ import { CABINET_DICT } from '../../eos-dictionaries/consts/dictionaries/cabinet
 import { NOMENKL_DICT } from '../../eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from '../../eos-rest';
 import { NADZOR_DICTIONARIES } from '../../eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
-import { STORAGE_WEIGHTORDER, URL_LOGIN } from '../../app/consts/common.consts';
+import { RETURN_URL, STORAGE_WEIGHTORDER, URL_LOGIN } from '../../app/consts/common.consts';
 import { SEV_DICTIONARIES } from '../../eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
@@ -1997,7 +1997,7 @@ export class EosDictService {
             .confirm2(ERROR_LOGIN)
             .then((confirmed) => {
                 if (confirmed) {
-                    document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
+                    document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
                 }
             });
 

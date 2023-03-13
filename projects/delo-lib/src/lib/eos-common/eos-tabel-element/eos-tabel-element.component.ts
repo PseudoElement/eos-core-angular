@@ -77,7 +77,7 @@ export class TabelElementComponent implements OnInit {
                     header.order = 'desc';
                     this.orderHead.emit({id: header.id, order: 'desc'});
                 } else {
-                    header.order = 'desc';
+                    header.order = 'asc';
                     this.orderHead.emit({id: header.id, order: 'asc'});
                 }
             } else {

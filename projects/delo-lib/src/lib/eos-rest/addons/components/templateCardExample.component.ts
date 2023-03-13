@@ -13,14 +13,16 @@ export class SpravochnikiTemplateComponent implements OnChanges {
       private _uiLibExampleService: AddTemplateService
       ) { }
     ngAfterViewInit(): void {
+      if (this._uiLibExampleService.dinamicTemplateElement) {
         const ExpandComponent = this.resolver.resolveComponentFactory(this._uiLibExampleService.dinamicTemplateElement);
         this.viewRef.clear();
         this.component = this.viewRef.createComponent(ExpandComponent);
         if (this.viewRef) {
-            if (this.component) {
-                this.component.instance['form'] = this.form;
-            }
+          if (this.component) {
+              this.component.instance['form'] = this.form;
           }
+        }
+      }
     }
     ngOnChanges(changes: SimpleChanges): void {
         if (this.component) {

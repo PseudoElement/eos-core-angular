@@ -5,6 +5,7 @@ import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable, Directi
 import { UntypedFormGroup } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap';
 import {AppContext} from '../../../eos-rest/services/appContext.service';
+import { WaitClassifService } from '../../../app/services/waitClassif.service';
 
 @Directive()
 @Injectable()
@@ -31,6 +32,7 @@ export abstract class RKBasePageDirective implements OnChanges, OnInit, OnDestro
     constructor (
         protected _modalSrv: BsModalService,
         protected _appCtx: AppContext,
+        protected _waitClassifSrv: WaitClassifService,
     ) {
 
     }

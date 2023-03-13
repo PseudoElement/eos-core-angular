@@ -89,7 +89,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         });
     }
     orderHead($event: IOrderTable) {
-        this.tabelData.data.sort((a, b) => {
+        this.tabelData.data = this.tabelData.data.sort((a, b) => {
             if (a[$event.id] > b[$event.id]) {
                 return $event.order === 'desc' ? -1 : 1;
             } else if (a[$event.id] < b[$event.id]) {
@@ -275,25 +275,20 @@ export class ParamEmailComponent extends BaseParamComponent {
         });
     }
     selectElement($event: any[]) {
-        if ($event.length > 0) {
-            this.arrayBtn.forEach((elem) => {
-                if (elem.id === 'deleted') {
+        this.arrayBtn.forEach((elem) => {
+            switch (elem.id) {
+                case 'deleted':
+                    elem.disable = !($event.length > 0);
+                    break;
+                case 'add':
                     elem.disable = false;
-                }
-            });
-        }
-        if ($event.length === 1) {
-            this.arrayBtn.forEach((elem) => {
-                if (elem.id === 'edit') {
-                    elem.disable = false;
-                }
-            });
-        } else {
-            this.arrayBtn.forEach((elem) => {
-                if (elem.id === 'edit') {
-                    elem.disable = true;
-                }
-            });
-        }
+                    break;
+                case 'edit':
+                    elem.disable = !($event.length === 1);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 }

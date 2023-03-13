@@ -56,9 +56,9 @@ export class DynamicInputSelect2Component extends DynamicInputBaseDirective impl
             if (this.viewOpts.selectionEditable) {
                 return this.control.value;
             }
-            let optValue = this.input.options.find((option) => option.value === ctrl.value);
+            let optValue = this.input.options?.find((option) => option.value === ctrl.value);
             if (!optValue && typeof ctrl.value === 'string') {
-                optValue = this.input.options.find((option) => String(option.value) === ctrl.value);
+                optValue = this.input.options?.find((option) => String(option.value) === ctrl.value);
             }
             if (optValue) {
                 value = optValue.title;
@@ -70,7 +70,7 @@ export class DynamicInputSelect2Component extends DynamicInputBaseDirective impl
         let optValue;
         const ctrl = this.control;
         if (ctrl) {
-            optValue = this.input.options.find((option) => option.value === ctrl.value);
+            optValue = this.input.options?.find((option) => option.value === ctrl.value);
         }
         if (this.textInputSelect && optValue && optValue.tooltip) {
             const tooltip = this.textInputSelect.nativeElement.clientWidth < this.textInputSelect.nativeElement.scrollWidth ? this.currentValue : undefined;

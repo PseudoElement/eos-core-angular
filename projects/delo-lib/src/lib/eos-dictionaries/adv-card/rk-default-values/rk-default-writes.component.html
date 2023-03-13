@@ -193,6 +193,7 @@
     <div class="items-group">
         <!-- Списать в дело -->
         <eos-dynamic-input
+            eosClickMode
             class="margin10"
             [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W']"
             iconForElem="eos-adm-icon-directory-book-blue"
@@ -225,6 +226,7 @@
             </eos-dynamic-input>
 
             <eos-dynamic-input
+                eosClickMode
                 [input]="inputs['fict.ISN_CARD_REG_W_1']"
                 class="radio-position-1"
                 [form]="form"
@@ -248,6 +250,7 @@
             >
             </eos-dynamic-input>
             <eos-dynamic-input
+                eosClickMode
                 [input]="inputs['fict.ISN_CARD_REG_W_2']"
                 class="radio-position-2"
                 [form]="form"
@@ -279,6 +282,7 @@
         <!-- Доп. картотеки РК -->
 
         <eos-dynamic-input
+            eosClickMode
             [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_ISN_W']"
             [form]="form"
             iconForElem="eos-adm-icon-directory-book-blue"

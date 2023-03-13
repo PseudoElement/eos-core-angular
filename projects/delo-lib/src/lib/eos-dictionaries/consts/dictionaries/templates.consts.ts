@@ -30,7 +30,7 @@ export const Templates: IDictionaryDescriptor = {
         key: 'DESCRIPTION',
         title: 'Описание',
         type: 'string',
-        length: 64,
+        length: 255,
         isUnique: false,
     },
     {

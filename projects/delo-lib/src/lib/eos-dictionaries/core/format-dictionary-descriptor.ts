@@ -15,6 +15,10 @@ export class FormatDictionaryDescriptor extends DictionaryDescriptor {
     * и добавление приоритета изменённой записи
     */
     updateRecord(originalData: any, updates: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
+        if (updates.rec['FORMAT_GNAME'] === 'pdf' || updates.rec['FORMAT_GNAME'] === 'no') {
+            updates.rec['COMPR'] = 0;
+            updates.rec['COLOR'] = 0;
+        }
         if (updates.rec['PRIORITET'] === 1 && updates.rec._orig['PRIORITET'] === 0) {
             return this.apiSrv.read({
                 FORMAT_CL: {
@@ -26,6 +30,10 @@ export class FormatDictionaryDescriptor extends DictionaryDescriptor {
             .then((data) => {
                 const query = this.updatePrioritet(data);
                 if (query) {
+                    if (data[0]['FORMAT_GNAME'] === 'no' || data[0]['FORMAT_GNAME'] === 'pdf') {
+                        query.data['COLOR'] = 0;
+                        query.data['COMPR'] = 0;
+                    }
                     appendToChanges = query;
                 }
                 return super.updateRecord(originalData, updates, appendToChanges);
@@ -38,6 +46,10 @@ export class FormatDictionaryDescriptor extends DictionaryDescriptor {
     * При добавлении записи с установление приоритета снимаем приоритете со старой записи и добавляем его новой
     */
     addRecord(data: any, _useless: any, appendToChanges: any = null, isProtected = false, isDeleted = false): Promise<any> {
+        if (data.rec['FORMAT_GNAME'] === 'pdf' || data.rec['FORMAT_GNAME'] === 'no') {
+            data.rec['COMPR'] = 0;
+            data.rec['COLOR'] = 0;
+        }
         if (data.rec['PRIORITET'] === 1) {
             return this.apiSrv.read({
                 FORMAT_CL: {
@@ -49,6 +61,10 @@ export class FormatDictionaryDescriptor extends DictionaryDescriptor {
             .then((data_prior) => {
                 const query = this.updatePrioritet(data_prior);
                 if (query) {
+                    if (data[0]['FORMAT_GNAME'] === 'no' || data[0]['FORMAT_GNAME'] === 'pdf') {
+                        query.data['COLOR'] = 0;
+                        query.data['COMPR'] = 0;
+                    }
                     appendToChanges = query;
                 }
                 return super.addRecord(data, _useless, appendToChanges, isProtected = false, isDeleted = false);

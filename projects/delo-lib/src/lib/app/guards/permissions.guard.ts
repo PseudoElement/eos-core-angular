@@ -8,7 +8,7 @@ import { RestError } from '../../eos-rest/core/rest-error';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
-import { URL_LOGIN } from '../../app/consts/common.consts';
+import { RETURN_URL, URL_LOGIN } from '../../app/consts/common.consts';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -87,7 +87,7 @@ export class PermissionsGuard implements CanActivate {
                         .confirm2(ERROR_LOGIN)
                         .then((confirmed) => {
                             if (confirmed) {
-                                document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
+                                document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
                             }
                         });
                     } else {
