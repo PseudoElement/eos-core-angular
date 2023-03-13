@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { URL_LOGIN } from '../../../app/consts/common.consts';
+import { RETURN_URL, URL_LOGIN } from '../../../app/consts/common.consts';
 // import { Router } from '@angular/router';
 import { ERROR_LOGIN } from '../../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
@@ -52,14 +52,14 @@ export class ErrorHelperServices {
     .confirm2(ERROR_LOGIN)
     .then((confirmed) => {
         if (confirmed) {
-            document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
+            document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
         }
     });
     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
      /* if (this._userProfiler.openWithCurrentUserSettings ||  !sessionStorage.getItem('fromclassif')) {
-        document.location.assign('../login.aspx?ReturnUrl=classif/#/spravochniki/citizens/0.');
+        document.location.assign('../login.aspx?returnUrl=classif/#/spravochniki/citizens/0.');
      } else {
-         document.location.assign('../login.aspx?ReturnUrl=classif/#/spravochniki/citizens/0.');
+         document.location.assign('../login.aspx?returnUrl=classif/#/spravochniki/citizens/0.');
      } */
         /*
         this._router.navigate(['login'], {

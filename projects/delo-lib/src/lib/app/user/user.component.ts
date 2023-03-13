@@ -7,7 +7,7 @@ import { EosUserProfileService } from '../services/eos-user-profile.service';
 import { ISettingsItem } from '../core/settings-item.interface';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
-import { URL_LOGIN } from '../../app/consts/common.consts';
+import { RETURN_URL, URL_LOGIN } from '../../app/consts/common.consts';
 
 @Component({
     selector: 'eos-user',
@@ -37,7 +37,7 @@ export class UserComponent {
         .confirm2(ERROR_LOGIN)
         .then((confirmed) => {
             if (confirmed) {
-                document.location.assign(URL_LOGIN + '?ReturnUrl=' + document.location.href);
+                document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
             }
         });
     }
