@@ -211,14 +211,14 @@ export class ParamEmailComponent extends BaseParamComponent {
                 this.tabelData.data.forEach((item) => {
                     if ('' + item.key === '' + this.editData.key) {
                         item['EmailAccount'] = newEmailAcount.EmailAccount;
-                        item['Password'] = newEmailAcount.Password;
+                        item['Password'] = newEmailAcount['Password']['Value'] !== undefined ? newEmailAcount['Password']['Value'] : newEmailAcount['Password']['Key'];
                         item['ProfileName'] = newEmailAcount.ProfileName;
                     }
                 });
             } else {
                 this.tabelData.data.push({
                     'ProfileName': newEmailAcount['ProfileName'],
-                    'Password': newEmailAcount['Password'],
+                    'Password': newEmailAcount['Password']['Value'] ? newEmailAcount['Password']['Value'] : newEmailAcount['Password']['Key'],
                     'EmailAccount': newEmailAcount['EmailAccount'],
                     'key': this.maxKey
                 });

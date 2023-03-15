@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
 import { UserParamsService } from '../../eos-user-params/shared/services/user-params.service';
 import { IInputParamControl, IParamUserCl } from '../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
@@ -50,7 +50,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     public countChecnged: number = 0;
     public flagShow: boolean = false;
     private inputFields: any;
-    private form: UntypedFormGroup;
+    private form: FormGroup;
     private newData = {};
     private _ngUnsubscribe: Subject<any> = new Subject();
     get title() {

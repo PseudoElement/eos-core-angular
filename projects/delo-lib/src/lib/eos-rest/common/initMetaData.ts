@@ -4,7 +4,7 @@ import { _T } from '../core/consts';
 const _t = _T;
 
 // Файл практически целиком генериться, поэтому не боремся с устаревшим синтаксисом
-const commonMeta = {
+export const commonMeta = {
     ADDR_CATEGORY_CL: {
         pk: 'ISN_LCLASSIF',
         properties: {

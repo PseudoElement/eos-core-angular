@@ -19,6 +19,6 @@ export * from './services/eos-storage.service';
 export * from './services/export-import-cl.service';
 export * from './services/nav-param.service';
 export * from './services/waitClassif.service';
-/* export * from './services/np-counter-override.service';
-export * from './services/logo-overrride.service'; */
+export * from './services/logo-overrride.service';
+
 

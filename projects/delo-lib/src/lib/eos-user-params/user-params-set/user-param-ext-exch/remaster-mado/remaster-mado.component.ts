@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
@@ -21,7 +21,7 @@ export class RemasterMadoComponent implements OnInit, OnDestroy {
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public inputs;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     flagEdit: boolean = false;
     private prepareInputs;
     private prapareData;

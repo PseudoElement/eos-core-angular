@@ -1,14 +1,12 @@
 import {Component, Output, EventEmitter} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import {DOCGROUP_CL, PipRX} from '../../eos-rest';
+import {DOCGROUP_CL, NpCounterOverrideService, PipRX} from '../../eos-rest';
 import {EosDictService} from '../services/eos-dict.service';
 import {YEAR_PATTERN, NUMERIC_PATTERN, NOT_EMPTY_STRING} from '../../eos-common/consts/common.consts';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { DANGER_NUMCREATION_NP_CHANGE } from '../../eos-dictionaries/consts/messages.consts';
 import { CONFIRM_NUMCREATION_CANT, CONFIRM_NUMCREATION_CHANGE } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
-import { Features } from '../../eos-dictionaries/features/features-current.const';
-import { EOSDICTS_VARIANT } from '../../eos-dictionaries/features/features.interface';
 import { SopsHelper } from '../../eos-dictionaries/helpers/sops.helper';
 
 const NODE_ID_NAME = 'ISN_NODE';
@@ -23,13 +21,13 @@ const ERROR_MESSAGE_NOSUPPORT = 'Справочник не поддержива�
 export enum E_COUNTER_TYPE {
     counterDepartmentMain,
     counterDepartment,
-    counterDepartmentRK,
-    counterDepartmentRKPD,
-    counterDocgroup,
-    counterDocgroupRKPD,
+    counterDepartmentRK = 2,
+    counterDepartmentRKPD = 3,
+    counterDocgroup = 4,
+    counterDocgroupRKPD = 5,
 }
 
-class CounterDeclarator {
+export class CounterDeclarator {
     type: E_COUNTER_TYPE;
     dictId: string;
     dbTableName: string;
@@ -47,7 +45,7 @@ class CounterDeclarator {
     };
 }
 
-const numDeclarators: CounterDeclarator [] = [
+export let numDeclarators: CounterDeclarator [] = [
     {
         type: E_COUNTER_TYPE.counterDocgroup,
         dictId : 'docgroup',
@@ -96,30 +94,6 @@ const numDeclarators: CounterDeclarator [] = [
         rootLabel : 'Корневой элемент',
         mainLabel : 'Счетчик номерообразования РКПД',
         isCounterRK : true,
-    }, {
-        type: E_COUNTER_TYPE.counterDepartmentMain,
-        dictId : 'departments',
-        dbTableName : 'NP_NUMCREATION',
-        dbNumIdName : 'BASE_ID',
-        dbNodeName : 'NUMCREATION_FLAG',
-        rootLabel : 'Главный счетчик',
-        mainLabel : 'Счетчик номерообразования НП',
-        defaultRecord: {
-            year: 1000,
-            value: 1,
-        }
-    }, {
-        type: E_COUNTER_TYPE.counterDepartment,
-        dictId: 'departments',
-        dbTableName: 'NP_NUMCREATION',
-        dbNumIdName : 'BASE_ID',
-        dbNodeName : 'NUMCREATION_FLAG',
-        rootLabel: 'Главный счетчик',
-        mainLabel : 'Счетчик номерообразования НП',
-        defaultRecord: {
-            year: 1000,
-            value: 1,
-        }
     }
 ];
 
@@ -155,6 +129,7 @@ export class CounterNpEditComponent {
         private _dictSrv: EosDictService,
         private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
+        private _npCounterOverride: NpCounterOverrideService
     ) {
         this.apiSrv = apiSrv;
         this.isUpdating = true;
@@ -170,11 +145,21 @@ export class CounterNpEditComponent {
     }
 
     /**
-     * summon a modal window for NP_NUMCREATION
+     * 
      * @param dndata EosDictionaryNode.data.rec - use departament's data.rec.CLASSIF_NAME and data.rec.ISN_NODE
      * if null - use main counter with base_id = '0'
      */
+    public checknumDeclarators(arrayDeclarators: CounterDeclarator[]): boolean {
+        const overrideDecl = this._npCounterOverride.getOverridesCounterDeclarator();
+      return  arrayDeclarators.some(node => overrideDecl.some(_ov => _ov.type === node.type))
+    }
     public initByNodeData(type: E_COUNTER_TYPE, dndata: any) {
+        const oldDeclarator = [...numDeclarators];
+        numDeclarators = [];
+        numDeclarators.push(...oldDeclarator)
+        if (!this.checknumDeclarators(oldDeclarator)) {
+            numDeclarators.push(...this._npCounterOverride.getOverridesCounterDeclarator());
+        }
         this._initialData = dndata;
         this._decl = this._init(type);
         if (!this._decl) {
@@ -294,10 +279,6 @@ export class CounterNpEditComponent {
 
     _saveCheckValues(): Promise<boolean> {
 
-        if (Features.cfg.variant === EOSDICTS_VARIANT.Nadzor) {
-            return Promise.resolve(true);
-        }
-
         let check = Promise.resolve(false);
 
         if (this._decl.type === E_COUNTER_TYPE.counterDocgroup) {
@@ -340,7 +321,7 @@ export class CounterNpEditComponent {
         return this._fillDocGroup()
             .then(() => {
                 this.isUpdating = false;
-                this.apiSrv.read(req)
+                 return this.apiSrv.read(req)
                     .then((cnts) => {
                         CounterNpEditComponent._autoFocusOnValNumber();
                         this.nodes = cnts.filter(d => {

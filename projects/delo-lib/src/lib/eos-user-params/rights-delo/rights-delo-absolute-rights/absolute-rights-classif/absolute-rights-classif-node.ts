@@ -1,8 +1,8 @@
 import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
 import { NodeAbsoluteRight } from '../node-absolute';
-import { IParamUserCl, INodeDocsTreeCfg } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IParamUserCl, INodeDocsTreeCfg } from '../../../shared/intrfaces/user-parm.intterfaces';
 import { E_CLASSIF_ID } from './tech-user-classif.consts';
-import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
+import { NodeDocsTree } from '../../../shared/list-docs-tree/node-docs-tree';
 import { AbsoluteRightsClassifComponent } from './absolute-rights-classif.component';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { USER_TECH } from '../../../../eos-rest';
@@ -13,6 +13,7 @@ export class RightClassifNode {
     curentSelectedNode: NodeDocsTree;
     isLoading: boolean;
     isShell: Boolean = false;
+    disableItem: boolean = true;
     set isExpanded(v: boolean) {
         this._isExpanded = v;
         if (v && this._listUserTech.length && !this.listContent.length) {
@@ -23,16 +24,16 @@ export class RightClassifNode {
         return this._isExpanded;
     }
     get expandable(): boolean {
-        return (this._item.expandable !== E_TECH_USER_CLASSIF_CONTENT.none) && !!this._value;
+        return (this.item.expandable !== E_TECH_USER_CLASSIF_CONTENT.none) && !!this._value;
     }
     get key(): number {
-        return this._item.key;
+        return this.item.key;
     }
     get type(): E_TECH_USER_CLASSIF_CONTENT {
-        return this._item.expandable;
+        return this.item.expandable;
     }
     get label(): string {
-        return this._item.label;
+        return this.item.label;
     }
     get value(): number {
         return this._value;
@@ -40,10 +41,10 @@ export class RightClassifNode {
     set value(v) {
         this._valueLast = this._value;
         this._value = +v;
-        const right = this._curentUser['TECH_RIGHTS'].split('');
+        const right = this.curentUser['TECH_RIGHTS'].split('');
         right[this.key - 1] = this._value.toString();
         const newTechRight = right.join('');
-        this._curentUser['TECH_RIGHTS'] = newTechRight;
+        this.curentUser['TECH_RIGHTS'] = newTechRight;
         const chenge: IChengeItemAbsolute = {
             method: 'MERGE',
             user_cl: true,
@@ -51,17 +52,17 @@ export class RightClassifNode {
                 TECH_RIGHTS: newTechRight,
             }
         };
-        this._parentNode.pushChange(chenge);
+        this.parentNode.pushChange(chenge);
         setTimeout(() => {
             this._component.Changed.emit();
         }, 0);
         if (this.key === 1) {
-            this._item.label = 'Пользователи';
+            this.item.label = 'Пользователи';
         }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
                 const newNode: USER_TECH = this._component.createEntyti<USER_TECH>({
-                    ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                    ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
                     FUNC_NUM: this.key,
                     CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                     DUE: '0.',
@@ -69,7 +70,7 @@ export class RightClassifNode {
                 }, 'USER_TECH');
                 this._listUserTech.push(newNode);
                 this._component.userTechList.push(newNode);
-                this._parentNode.pushChange({
+                this.parentNode.pushChange({
                     method: 'POST',
                     due: newNode.DUE,
                     funcNum: this.key,
@@ -89,40 +90,57 @@ export class RightClassifNode {
         //     this._component.allNotCheck.emit(true);
         // }
     }
+    public curentUser: IParamUserCl;
+    public item: ITechUserClassifConst;
+    public parentNode: NodeAbsoluteRight;
     private _value: number;
-    private _item: ITechUserClassifConst;
     private _component: AbsoluteRightsClassifComponent;
     private _valueLast: number;
-    private _parentNode: NodeAbsoluteRight;
-    private _curentUser: IParamUserCl;
     private _isExpanded: boolean;
     private _listUserTech: any[] = [];
     private _config: IConfigUserTechClassif;
     constructor(item: ITechUserClassifConst, user: IParamUserCl, pNode: NodeAbsoluteRight, component: AbsoluteRightsClassifComponent) {
-        this._item = item;
-        this._curentUser = user;
-        this._parentNode = pNode;
+        this.item = item;
+        this.curentUser = user;
+        this.parentNode = pNode;
         this._component = component;
-        const v = +(this._curentUser['TECH_RIGHTS'][item.key - 1]);
-        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate || this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key).length !== 0) {
+        const v = +(this.curentUser['TECH_RIGHTS'][item.key - 1]);
+        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this.parentNode.isCreate || this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key).length !== 0) {
             this._listUserTech = this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key);
         }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             this._config = this._component.getConfig(this.type);
         }
-        if (this._parentNode.isCreate) {
+        const initialOwerride = component._extentionsRigts.initialValues().filter(e => e.key === item.key);
+        const disableFields  = component._extentionsRigts.disableRigths().filter(e => e.key === item.key);
+        if (this.parentNode.isCreate) {
             this._value = 0;
             this.value = v;
+            // переопределение поведения и дефолтных значений
+            if (initialOwerride.length) {
+                this.value = initialOwerride[0].setValue(this);
+            }
+            if (disableFields.length) {
+                this.disableItem = disableFields[0].checkStatus(component);
+            }
             return;
         }
         this._value = v;
         this._valueLast = v;
         const techListLim = this._component.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         if (this.key === 1 && techListLim.length === 0) {
-            this._item.label = 'Пользователи';
+            this.item.label = 'Пользователи';
         }
         if (this.key === 1 && techListLim.length > 0) {
-            this._item.label = 'Пользователи (доступ ограничен)';
+            this.item.label = 'Пользователи (доступ ограничен)';
+        }
+        // переопределение поведения и дефолтных значений
+        if (initialOwerride.length) {
+            this._value = initialOwerride[0].setValue(this);
+        }
+
+        if (disableFields.length) {
+            this.disableItem = disableFields[0].checkStatus(component);
         }
     }
     addInstance() {
@@ -130,13 +148,13 @@ export class RightClassifNode {
         this._component.addInstance(this._config, this)
             .then(data => {
                 if (this._config.rootLabel === 'Центральная картотека') {
-                    this._item.label = 'Пользователи (доступ ограничен)';
+                    this.item.label = 'Пользователи (доступ ограничен)';
                 }
                 const newList: NodeDocsTree[] = [];
                 if (data) {
                     data.forEach(entity => {
                         const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
-                            ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                            ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
                             FUNC_NUM: this.key,
                             CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                             DUE: entity['DUE'],
@@ -152,9 +170,9 @@ export class RightClassifNode {
                             allowed: !!newTechRight['ALLOWED'],
                             data: d,
                         };
-                        newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true, undefined, this.getLogElem(entity)));
+                        newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
 
-                        this._parentNode.pushChange({
+                        this.parentNode.pushChange({
                             method: 'POST',
                             due: entity.DUE,
                             funcNum: this.key,
@@ -212,7 +230,7 @@ export class RightClassifNode {
                 this._component.DeleteChildCards(this.curentSelectedNode.DUE).then((data: any) => {
                     const newData = data.map((item) => {
                         const cardTech = this._component.createEntyti<USER_TECH>({
-                            ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                            ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
                             FUNC_NUM: this.key,
                             CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                             DUE: item.DUE,
@@ -223,7 +241,7 @@ export class RightClassifNode {
                     this._component._userParmSrv.confirmCallCard(this._component.newCards).then((answer) => {
                         if (answer === true) {
                             const childDue = newData.map(item => {
-                                this._parentNode.pushChange({
+                                this.parentNode.pushChange({
                                     method: 'DELETE',
                                     due: item.DUE,
                                     funcNum: 1,
@@ -236,7 +254,7 @@ export class RightClassifNode {
                             this._component.userTechList = this._component.userTechList.filter(node => childDue.indexOf(node['DUE']) === -1);
                         } else {
                             this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
-                            this._parentNode.pushChange({
+                            this.parentNode.pushChange({
                                 method: 'DELETE',
                                 due: this.curentSelectedNode.DUE,
                                 funcNum: this.key,
@@ -248,7 +266,7 @@ export class RightClassifNode {
                             this._component.userTechList.splice(index2, 1);
                         }
                         if (this.listContent.length === 0) {
-                            this._item.label =  'Пользователи';
+                            this.item.label = 'Пользователи';
                         }
                         this.curentSelectedNode = null;
                         this._component.Changed.emit();
@@ -256,14 +274,14 @@ export class RightClassifNode {
                 });
             } else {
                 this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
-                this._parentNode.pushChange({
+                this.parentNode.pushChange({
                     method: 'DELETE',
                     due: this.curentSelectedNode.DUE,
                     funcNum: this.key,
                     data: this.curentSelectedNode.data['userTech']
                 });
                 if (this.listContent.length === 0) {
-                    this._item.label =  'Пользователи';
+                    this.item.label = 'Пользователи';
                 }
                 const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
                 this._listUserTech.splice(index, 1);
@@ -283,16 +301,13 @@ export class RightClassifNode {
     }
     checkedNode(node: NodeDocsTree) {
         node.data['userTech']['ALLOWED'] = +node.isAllowed;
-        this._parentNode.pushChange({
+        this.parentNode.pushChange({
             method: 'MERGE',
             due: node.DUE,
             funcNum: this.key,
             data: node.data['userTech']
         });
         this._component.Changed.emit();
-    }
-    getLogElem(item): boolean {
-        return item.DUE !== '0.' && !!item['DELETED'] ? true : false;
     }
     private _createListContent(userTech: any[], listContent: NodeDocsTree[]) {
         this.isLoading = true;
@@ -314,7 +329,7 @@ export class RightClassifNode {
                         allowed: uT['ALLOWED'],
                         data: d,
                     };
-                    listContent.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true, undefined, this.getLogElem(item)));
+                    listContent.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
                 });
                 this.isLoading = false;
             });
@@ -324,7 +339,7 @@ export class RightClassifNode {
         for (let i = 0; i < count; i++) {
             const node = this._component.userTechList[i];
             if (node['FUNC_NUM'] === this.key) {
-                this._parentNode.pushChange({
+                this.parentNode.pushChange({
                     method: 'DELETE',
                     due: node.DUE,
                     funcNum: this.key,

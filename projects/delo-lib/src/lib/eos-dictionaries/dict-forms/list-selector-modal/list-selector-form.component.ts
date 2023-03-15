@@ -43,8 +43,8 @@ export class ListSelectorFormComponent implements OnDestroy {
 
 
     constructor (
-        private dragulaService: DragulaService,
         public bsModalRef: BsModalRef,
+        private dragulaService: DragulaService,
     ) {
 
         // this.availableList_ = [];//[{ key: 1, title: 'dsag', obj: {}}, { key: 2, title: 'ds35215235ag', obj: {}}, ];

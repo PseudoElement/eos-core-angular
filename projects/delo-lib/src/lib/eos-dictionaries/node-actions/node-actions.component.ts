@@ -28,6 +28,7 @@ import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.servi
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
+import { NpCounterOverrideService } from '../../eos-rest';
 
 
 @Component({
@@ -37,7 +38,7 @@ import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 export class NodeActionsComponent implements OnDestroy {
 
     // @Input('params') params: INodeListParams;
-    @Output() action: EventEmitter<IActionEvent> = new EventEmitter<IActionEvent>();
+    @Output('action') action: EventEmitter<IActionEvent> = new EventEmitter<IActionEvent>();
 
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     buttons: IActionButton[];
@@ -80,6 +81,7 @@ export class NodeActionsComponent implements OnDestroy {
         _dictSrv: EosDictService,
         private _eaps: EosAccessPermissionsService,
         private _storageSrv: EosStorageService,
+        public _npOverrideSrv: NpCounterOverrideService
     ) {
         this._markedNodes = [];
         this._initButtons();
@@ -311,11 +313,17 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.remove: {
                     _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
+                    if (this.dictionary.id === 'organization') {
+                        _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
+                    }
                     break;
                 }
                 case E_RECORD_ACTIONS.restore: {
                     _enabled = !_isLDSubTree && !this._viewParams.updatingList;
                     _enabled = _enabled && opts.listHasDeleted;
+                    if (this.dictionary.id === 'organization') {
+                        _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
+                    }
                     break;
                 }
                 case E_RECORD_ACTIONS.CloseSelected:
@@ -344,6 +352,9 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.removeHard:
                     _enabled = _enabled && opts.listHasItems;
+                    if (this.dictionary.id === 'organization') {
+                        _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
+                    }
                     break;
                 case E_RECORD_ACTIONS.edit:
                     _enabled = (!_isLDSubTree || Features.cfg.canEditLogicDeleted) && !this._viewParams.updatingList && opts.listHasOnlyOne;
@@ -358,6 +369,12 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
 
+                    if (this._markedNodes.length) {
+                        _enabled =  this._dictSrv.dictionatyOverrideSrv.accessActionEdit(this._markedNodes[0], _enabled, this.dictionary.id);
+                    }
+                    if (this.dictionary.id === 'organization') {
+                        _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
+                    }
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
                     _active = this._viewParams.showDeleted;
@@ -519,6 +536,11 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.renameBaseDepartment:
                     _enabled = this._eaps.checkBaseDepartmentRight();
+                    break;
+                default:
+                    const {enabled, show} = this._dictSrv.npOverrideSrv.checkActiveMenuButtons(button.type, this, opts)
+                    _enabled = enabled;
+                    _show = show
                     break;
             }
 

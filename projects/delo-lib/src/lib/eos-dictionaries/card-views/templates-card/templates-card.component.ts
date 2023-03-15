@@ -1,5 +1,5 @@
 import { Input, Component, OnDestroy, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
-import { UntypedFormGroup, /* AsyncValidatorFn, AbstractControl, ValidationErrors */ } from '@angular/forms';
+import { FormGroup, /* AsyncValidatorFn, AbstractControl, ValidationErrors */ } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosDictService } from '../../../eos-dictionaries/services/eos-dict.service';
 import { REF_FILE, PipRX, DOCGROUP_CL } from '../../../eos-rest';
@@ -23,7 +23,7 @@ declare const Uploader: any;
     styleUrls: ['./templates-card.component.scss'],
 })
 export class TemplatesCardComponent implements OnInit, OnDestroy {
-    @Input() form: UntypedFormGroup;
+    @Input() form: FormGroup;
     @Input() inputs: any;
     @Input() data: any;
     @Input() editMode: boolean;

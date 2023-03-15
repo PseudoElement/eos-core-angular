@@ -38,7 +38,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         return {rec: deloOwner};
     }
     getOrganization(node: number, add: boolean) {
-        this.pip.read({ ORGANIZ_CL: {
+        this.pip.read<ORGANIZ_CL>({ ORGANIZ_CL: {
             criteries: {
                 ISN_NODE: node
             },
@@ -66,7 +66,7 @@ export class ParamOrganizNowComponent extends BaseParamComponent implements OnIn
         });
     }
     getOrganizationDUE(DUE: String, add: boolean) {
-        this.pip.read({ ORGANIZ_CL: {
+        this.pip.read<ORGANIZ_CL>({ ORGANIZ_CL: {
             criteries: {
                 DUE: DUE
             },

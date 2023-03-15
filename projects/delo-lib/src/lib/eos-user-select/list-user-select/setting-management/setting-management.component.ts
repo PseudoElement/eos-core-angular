@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy, Input } from '@angular/core';
 import { SETTINGS_MANAGEMENT_INPUTS, CUT_RIGHTS_INPUTS } from '../../../eos-user-select/shered/consts/settings-management.const';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from '../../../eos-user-params/shared/services/input-param-control.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -29,9 +29,9 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     isLoading: boolean = false;
     isShell: boolean = false;
     isnCopyFrom: number;
-    form: UntypedFormGroup;
+    form: FormGroup;
     inputsCut: any;
-    formCut: UntypedFormGroup;
+    formCut: FormGroup;
     private _data: Map<string, any> = new Map();
     private _ngUnsubscribe: Subject<any> = new Subject();
 
@@ -116,14 +116,14 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     }
     loadUsersTemplats(params: Array<number>, map: Map<number, any>): Promise<any> {
         const isns = params.join('|');
-        return this._pipeSrv.read({
+        return this._pipeSrv.read<DEPARTMENT>({
             DEPARTMENT: {
                 criteries: {
                     ISN_NODE: isns
                 }
             }
         }).then((_d: DEPARTMENT[]) => {
-            return this._pipeSrv.read({
+            return this._pipeSrv.read<USER_CL>({
                 USER_CL: {
                     criteries: {
                         DUE_DEP: _d.map(_d1 => _d1['DUE']).join('|')
@@ -282,7 +282,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         this._pathForm(true);
         this.isnCopyFrom = null;
     }
-    private _checkForm(form: UntypedFormGroup): boolean {
+    private _checkForm(form: FormGroup): boolean {
         let flag = false;
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY' && form.controls[key].value) {
@@ -291,7 +291,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         });
         return flag;
     }
-    private _createUrlForSop(form: UntypedFormGroup, isn?: string, copy?: boolean): string {
+    private _createUrlForSop(form: FormGroup, isn?: string, copy?: boolean): string {
         let url;
         let rigths = '';
         if (this.form.controls['USER_TEMPLATES'].value && copy) {
@@ -344,7 +344,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     //     }
     // }
 
-    private _getRightsData(form: UntypedFormGroup): string {
+    private _getRightsData(form: FormGroup): string {
         let str = '';
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY') {

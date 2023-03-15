@@ -10,9 +10,6 @@ export * from './services/eos-dict.service';
 export * from './services/eos-sandwich.service';
 export * from './services/eos-sev-rules.service';
 export * from './services/eos-view-prot.services';
-/* export * from './services/dictionary-override.service';
-export * from './services/sevExtentions-override.service';
-export * from './services/docgroup-override.service'; */
 export * from './consts/common';
 export * from './consts/confirm.consts';
 export * from './consts/dictionaries/_common';

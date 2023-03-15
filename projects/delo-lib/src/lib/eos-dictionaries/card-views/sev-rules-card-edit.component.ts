@@ -451,7 +451,7 @@ export class SevRulesCardEditComponent extends BaseCardEditDirective implements 
         this.updateInputDue_doc();
         this.inputDepartSelect();
         // this.checkKind();
-        this.dictSrv['_apiSrv'].read({ DEPARTMENT: { criteries: { 'DUE_LINK_ORGANIZ': 'isnotnull' } } }).then((d: DEPARTMENT[]) => {
+        this.dictSrv['_apiSrv'].read<DEPARTMENT>({ DEPARTMENT: { criteries: { 'DUE_LINK_ORGANIZ': 'isnotnull' } } }).then((d: DEPARTMENT[]) => {
             let idsOrganiz: string[] = [];
             const options = new Map();
             if (d && d.length) {
@@ -464,7 +464,7 @@ export class SevRulesCardEditComponent extends BaseCardEditDirective implements 
                 });
             }
             if (options.size > 0) {
-                this.dictSrv['_apiSrv'].read({ ORGANIZ_CL: idsOrganiz }).then((o: ORGANIZ_CL[]) => {
+                this.dictSrv['_apiSrv'].read<ORGANIZ_CL>({ ORGANIZ_CL: idsOrganiz }).then((o: ORGANIZ_CL[]) => {
                     const due_depInput = this.inputs['rec.DUE_DEP'];
                     o.forEach((e: ORGANIZ_CL) => {
                         const val = options.get(e.DUE);

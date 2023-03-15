@@ -15,7 +15,7 @@ import { AR_DESCRIPT, PipRX } from '../../eos-rest';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../eos-dictionaries/services/eos-data-convert.service';
 import { DOP_REC, SEARCH_RADIO_BUTTON, SEARCH_RADIO_BUTTON_NOMENKL, SEV_PARTIPANT } from '../../eos-dictionaries/consts/dictionaries/_common';
-import { UntypedFormGroup, Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 // import { PipRX } from 'eos-rest';
 
 export interface IQuickSrchObj {
@@ -52,11 +52,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     type: E_DICT_TYPE;
     searchModel = {};
     public mode = 0;
-    public formSearch: UntypedFormGroup;
+    public formSearch: FormGroup;
     public inputs;
     public radioTopButton = [];
     inputsSelect;
-    formSelect: UntypedFormGroup;
+    formSelect: FormGroup;
     mapAr_Descr: Map<string, AR_DESCRIPT> = new Map();
     private dictionary: EosDictionary;
     private subscriptions: Subscription[] = [];

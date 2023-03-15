@@ -3,7 +3,6 @@ import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { RightClassifNode } from './absolute-rights-classif-node';
-import { TECH_USER_CLASSIF } from './tech-user-classif.consts';
 import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
 import { UserParamApiSrv } from '../../../../eos-user-params/shared/services/user-params-api.service';
 import { OPEN_CLASSIF_DEPARTMENT_ONLI_NODE, OPEN_CLASSIF_DOCGROUP_CL_ONLI_NODE, OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE, OPEN_CLASSIF_CARDINDEX } from '../../../../app/consts/query-classif.consts';
@@ -35,15 +34,20 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     isShell: Boolean = false;
     strNewCards: any;
     listClassif: RightClassifNode[] = [];
+    private _techUserRigts: ITechUserClassifConst[] = [];
     get isCheckedSide() {
         let type = null;
         let count = 0;
+        let countEnable = 0;
         this.listClassif.forEach(item => {
             if (item.value) {
                 count++;
             }
+            if (item.disableItem) {
+                countEnable++;
+            }
         });
-        if (count === this.listClassif.length) {
+        if (count === countEnable) {
             type = true;
         }   else if (count === 0) {
             type = null;
@@ -56,11 +60,11 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     get getflagChecked() {
         switch (this.isCheckedSide) {
             case true:
-                return this.editMode && !this.limitedTehnologist ? 'eos-adm-icon-checkbox-square-v-blue' : 'eos-adm-icon-checkbox-black';
+                return (this.editMode && this.selectedNode.control.enabled) && !this.limitedTehnologist ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-black';
             case false:
-                return  this.editMode && !this.limitedTehnologist ? 'eos-adm-icon-checkbox-square-minus-blue' : 'eos-adm-icon-checkbox-square-minus-grey';
+                return (this.editMode && this.selectedNode.control.enabled) && !this.limitedTehnologist ? 'eos-icon-checkbox-square-minus-blue' : 'eos-icon-checkbox-square-minus-grey';
             default:
-                return  this.editMode && !this.limitedTehnologist ?  'eos-adm-icon-checkbox-square-blue' : 'eos-adm-icon-checkbox-square-grey';
+                return (this.editMode && this.selectedNode.control.enabled) && !this.limitedTehnologist ?  'eos-icon-checkbox-square-blue' : 'eos-icon-checkbox-square-grey';
         }
     }
 
@@ -79,13 +83,19 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         this.userTechList = this._userParmSrv.userTechList;
     }
     ngOnInit() {
+        this.registerExtentionsRigths();
         this._init();
         this.isLoading = true;
+    }
+    getDisableNode(node: RightClassifNode) {
+        return !this.editMode || this.selectedNode.control.disabled || !node.disableItem;
     }
     updateFlagDictionaries() {
         const flag = this.isCheckedSide;
         this.listClassif.forEach(item => {
-            item.value = flag ? 0 : 1;
+            if (item.disableItem) {
+                item.value = flag ? 0 : 1;
+            }
         });
     }
     expendList(node: RightClassifNode) {
@@ -314,15 +324,33 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             return newCards;
         });
     }
+    private registerExtentionsRigths(): void {
+        const extendsRigths = this._extentionsRigts.extendsTechRigthsUser();
+        const rigths = this._extentionsRigts.techUserRigth().slice();
+
+        extendsRigths.forEach(ex => {
+            let exitFromLoop = false;
+            const indexInsert = ex.indexInsert;
+            rigths.forEach((r, i) => {
+                if (exitFromLoop) {return;}
+                if (indexInsert === 0 || indexInsert) {
+                    if (i === indexInsert) {
+                        rigths.splice(i, 0, ex.data);
+                        exitFromLoop = true;
+                    }
+                } else {
+                    rigths.push(ex.data);
+                    exitFromLoop = true;
+                }
+            });
+        });
+
+        this._techUserRigts = rigths;
+    }
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            let techRights: string  = this._extentionsRigts.getTechRigth();
-            if (this._appContext.sreamScane) {
-                const arr = techRights.split('');
-                arr[48] = '1';
-                techRights = arr.join('');
-            }
+            const techRights: string  = this._extentionsRigts.getTechRigth();
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -335,9 +363,8 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         } else {  // строке в индексах с пробеломи присваиваем 0
             const arr = this.curentUser['TECH_RIGHTS'].split('');
             this._extentionsRigts.updateRigth(arr);
-            // Нужно увеличить размер поля USER_CL.TECH_RIGHTS до 64 символов.
             // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
-            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
+            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 47);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         /* if (!this._appContext.cbBase) {
@@ -351,7 +378,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 TECH_USER_CLASSIF.splice(delIndex, 1);
             }
         } */
-        TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
+        this._techUserRigts.forEach((item: ITechUserClassifConst) => {
             if (item.key === 1 && techListLim.length !== 0) {
                 item.label = 'Пользователи (доступ ограничен)';
             }
@@ -360,13 +387,6 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
-        if (this._appContext.sreamScane) {
-            this.listClassif.push(new RightClassifNode({
-                key: 49,
-                label: 'Форматы сохранения',
-                expandable: E_TECH_USER_CLASSIF_CONTENT.none
-            }, this.curentUser, this.selectedNode, this));
-        }
         if (this.selectedNode.isCreate) {
             this.selectedNode.isCreate = false;
         }

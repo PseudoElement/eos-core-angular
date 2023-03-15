@@ -57,7 +57,7 @@ export class LongTitleHintComponent {
         }
     }
 
-    componentEventHandler(e: MouseEvent) {
+    componentEventHandler() {
         this._moveCounter++;
     }
 }

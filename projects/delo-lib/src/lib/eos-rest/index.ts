@@ -7,12 +7,17 @@ export * from './common/initMetaData';
 export * from './addons/extentionsRigts.service';
 export * from './addons/ExtentionsUserParamsLib.service';
 export * from './addons/absoluteRigth.service';
-/* export * from './addons/addAbsOrganization.service';
+export * from './addons/addAbsOrganization.service';
 export * from './addons/extendUserBase.service';
 export * from './addons/extendTemplate.service';
-export * from './addons/userParamRegistrationExample.service'; */
+export * from './addons/userParamRegistrationExample.service';
 export * from './addons/exetentionsParametersPrjRc.service';
 export * from './services/appContext.service';
 export * from './addons/accessPrams.service';
 export * from './addons/UserListsButtonAccess.service';
-/* export * from './addons/UserParamsRemasterEpp.service'; */
+export * from './addons/UserParamsRemasterEpp.service';
+export * from './addons/dictionary-override.service';
+export * from './addons/sevExtentions-override.service';
+export * from './addons/docgroup-override.service';
+export * from './addons/np-counter-override.service';
+export * from './addons/extendProtocol.service';

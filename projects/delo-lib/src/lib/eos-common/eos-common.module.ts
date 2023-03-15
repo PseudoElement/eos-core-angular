@@ -52,6 +52,8 @@ import { EosTooltipService } from './services/eos-tooltip.service';
 import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input-select2.component';
 import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-input-autosearch.component ';
 import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.component';
+import { AddControlsDirective } from './directives/add-controls.directive';
+import { EosCommonDynamicComponent } from './eos-common-dynamic/eos-common-dynamic.component';
 
 @NgModule({
     declarations: [
@@ -81,7 +83,9 @@ import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.com
         EosDatePipe,
         UserSelectPaginationComponent,
         EosClickModeDirective,
-        TabelElementComponent
+        TabelElementComponent,
+        EosCommonDynamicComponent,
+        AddControlsDirective
     ],
     imports: [
         BrowserModule,
@@ -107,7 +111,9 @@ import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.com
         EosDatePipe,
         UserSelectPaginationComponent,
         EosClickModeDirective,
-        TabelElementComponent
+        TabelElementComponent,
+        AddControlsDirective,
+        EosCommonDynamicComponent,
     ],
     entryComponents: [
         ConfirmWindowComponent,

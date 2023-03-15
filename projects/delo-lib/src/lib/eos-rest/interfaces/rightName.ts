@@ -41,6 +41,7 @@ export enum E_TECH_RIGHT {
     StatPrjPor = 40, // Статусы проекта поручения
     FileType = 41, // Типы файлов
     FileCategories = 43, // Категории файлов
+    AddresType = 47, // Типы адресов
     BackgroundTasks = 48, // Фоновые задачи
     MedoNode = 50, // Справочники МЭДО
     FormatSave = 49, // Форматы сохранения

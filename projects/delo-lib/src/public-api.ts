@@ -14,3 +14,4 @@ export * from './lib/eos-dictionaries';
 export * from './lib/eos-rest';
 export * from './lib/eos-common';
 export * from './lib/eos-user-select';
+export * from './lib/eos-parameters';

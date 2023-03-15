@@ -10,11 +10,9 @@ import { DepartmentDictionaryDescriptor } from '../../eos-dictionaries/core/depa
 import { OrganizationDictionaryDescriptor } from '../../eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from '../../eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from '../../eos-dictionaries/core/docgroup-dictionary-descriptor';
-import {NADZOR_DICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {SevCollisionsDictionaryDescriptor} from './sev/sev-collisions-dictionary-descriptor';
-import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import {SevRulesDictionaryDescriptor} from './sev/sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
@@ -39,6 +37,8 @@ import { FormatDictionaryDescriptor } from './format-dictionary-descriptor';
 import { MedoNodeDictionaryDescriptor } from './medo-node-dictionary-descriptor';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
+import { DictionaryOverrideService } from '../../eos-rest';
+import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -46,13 +46,15 @@ export class DictionaryDescriptorService {
     private _mDictClasses: Map<string, AbstractDictionaryDescriptor>;
 
     constructor(
+        public dictionaryOverrideSrv: DictionaryOverrideService,
         private apiSrv: PipRX,
         private _channelSrv: EosBroadcastChannelService,
         private _rulesSrv: EosSevRulesService,
         private _injector: Injector,
         private _confirmSrv: ConfirmWindowService,
         private _appContext: AppContext,
-        private _GraphQLService: GraphQLService
+        private _GraphQLService: GraphQLService,
+        private _eosOverrideServices: EosCommonOverriveService,
     ) {
         this._mDicts = new Map<string, IDictionaryDescriptor>();
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
@@ -74,18 +76,8 @@ export class DictionaryDescriptorService {
                 }
             })
             .forEach((dict) => this._mDicts.set(dict.id, dict));
+        this._eosOverrideServices.setCollectionDescriptors(this._mDicts);
 
-        NADZOR_DICTIONARIES
-            .sort((a, b) => {
-                if (a.title > b.title) {
-                    return 1;
-                } else if (a.title < b.title) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            })
-            .forEach((dict) => this._mDicts.set(dict.id, dict));
         SEV_DICTIONARIES
             // .sort((a, b) => {
             //     if (a.title > b.title) {
@@ -101,10 +93,6 @@ export class DictionaryDescriptorService {
 
     visibleDictionaries(): IDictionaryDescriptor[] {
         return DICTIONARIES.filter((dict) => dict.visible);
-    }
-
-    visibleNadzorDictionaries(): IDictionaryDescriptor[] {
-        return NADZOR_DICTIONARIES.filter((dict) => dict.visible);
     }
 
     visibleSevDictionaries(): IDictionaryDescriptor[] {
@@ -179,24 +167,6 @@ export class DictionaryDescriptorService {
                         res = new FileCategoryDictionaryDescriptor(descr, this.apiSrv, this._GraphQLService);
                 }
 
-                // Added for parent be a Nadzor
-                if (!res) {
-                    for (const d of NADZORDICTIONARIES_TREE) {
-                        if (d.id && d.id === descr.id) {
-                            res = new NadzorTreeDictionaryDescriptor(descr, this.apiSrv);
-                            break;
-                        }
-                    }
-                }
-                if (!res) {
-                    for (const d of NADZORDICTIONARIES_LINEAR) {
-                        if (d.id && d.id === descr.id) {
-                            res = new NadzorLinearDictionaryDescriptor(descr, this.apiSrv);
-                            break;
-                        }
-                    }
-                }
-
                 if (!res) {
                     for (const d of SEV_DICTIONARIES) {
                         if (d.id && d.id === descr.id) {
@@ -205,6 +175,8 @@ export class DictionaryDescriptorService {
                         }
                     }
                 }
+
+                this._eosOverrideServices.setDescriptor(res, descr, this.apiSrv);
 
                 if (!res) {
                     switch (descr.dictType) {

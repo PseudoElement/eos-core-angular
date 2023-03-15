@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, Inject } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Router, UrlSegment } from '@angular/router';
 
 import { combineLatest, Subject, Subscription } from 'rxjs';
@@ -37,7 +37,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     data = {};
     fields = CREATE_USER_INPUTS;
     inputs;
-    form: UntypedFormGroup;
+    form: FormGroup;
     titleHeader = 'Новый пользователь';
     btnDisabled: boolean = true;
     isShell: Boolean = false;
@@ -219,14 +219,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     loadUsersTemplats(params: Array<number>, map: Map<number, any>): Promise<any> {
         const isns = params.join('|');
-        return this._pipeSrv.read({
+        return this._pipeSrv.read<DEPARTMENT>({
             DEPARTMENT: {
                 criteries: {
                     ISN_NODE: isns
                 }
             }
         }).then((_d: DEPARTMENT[]) => {
-            return this._pipeSrv.read({
+            return this._pipeSrv.read<USER_CL>({
                 USER_CL: {
                     criteries: {
                         DUE_DEP: _d.map(_d1 => _d1['DUE']).join('|')

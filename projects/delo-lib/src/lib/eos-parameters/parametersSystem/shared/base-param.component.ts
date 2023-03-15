@@ -1,4 +1,4 @@
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector, Component, Inject} from '@angular/core';
 
 import { Subscription } from 'rxjs';
@@ -39,7 +39,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     newData;
     prepInputs: any;
     inputs: any;
-    form: UntypedFormGroup;
+    form: FormGroup;
     queryObj;
     subscriptions: Subscription[] = [];
     prepareData;

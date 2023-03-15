@@ -41,16 +41,16 @@ export const DEFAULT_DESKS: EosDesk[] = [DEFAULT_DESKTOP];
 
 @Injectable()
 export class EosDeskService {
-    private _desksList: EosDesk[] = [];
-    private readonly _recentItems: IDeskItem[];
+    public _desksList: EosDesk[] = [];
+    public readonly _recentItems: IDeskItem[];
 
-    private _desksList$: BehaviorSubject<EosDesk[]>;
-    private _recentItems$: BehaviorSubject<IDeskItem[]>;
-    private _currentReferences$: BehaviorSubject<IDeskItem[]>;
-    private _selectedDesk$: BehaviorSubject<EosDesk>;
+    public _desksList$: BehaviorSubject<EosDesk[]>;
+    public _recentItems$: BehaviorSubject<IDeskItem[]>;
+    public _currentReferences$: BehaviorSubject<IDeskItem[]>;
+    public _selectedDesk$: BehaviorSubject<EosDesk>;
 
-    private _currentReferences: IDeskItem[] = [];
-    private _selectedDesk: EosDesk;
+    public _currentReferences: IDeskItem[] = [];
+    public _selectedDesk: EosDesk;
 
     get desksList(): Observable<EosDesk[]> {
         return this._desksList$.asObservable();
@@ -65,14 +65,14 @@ export class EosDeskService {
     }
 
     constructor(
-        private _dictSrv: EosDictService,
-        private _msgSrv: EosMessageService,
-        private _router: Router,
-        private _appCtx: AppContext,
-        private _apiSrv: PipRX,
-        private viewManager: ViewManager,
-        private _eaps: EosAccessPermissionsService,
-        private _descrSrv: DictionaryDescriptorService,
+        public _dictSrv: EosDictService,
+        public _msgSrv: EosMessageService,
+        public _router: Router,
+        public _appCtx: AppContext,
+        public _apiSrv: PipRX,
+        public viewManager: ViewManager,
+        public _eaps: EosAccessPermissionsService,
+        public _descrSrv: DictionaryDescriptorService,
     ) {
         this._selectedDesk = DEFAULT_DESKS[0];
         this._desksList = [...DEFAULT_DESKS];
@@ -98,7 +98,7 @@ export class EosDeskService {
      * Add dictionary to desktop
      * @param desk desktop with which add dictionary
      */
-    public appendDeskItemToView(desk: IDesk) {
+    public appendDeskItemToView(desk: IDesk): any {
         let item: IDeskItem;
         const dictionaryURL = this._router.url.split('/')[2];
         const section = this._router.url.split('/')[1];
@@ -315,7 +315,7 @@ export class EosDeskService {
         return _newName;
     }
 
-    private _readReferences(deskId = null) {
+    public _readReferences(deskId = null) {
         // this._appCtx.init()
         //     .then( () => { });
                 this._dictSrv.getAllDictionariesList(deskId)
@@ -346,7 +346,7 @@ export class EosDeskService {
 
     }
 
-    private _deskItemByDescriptor(descr): IDeskItem {
+    public _deskItemByDescriptor(descr): IDeskItem {
         return <IDeskItem>{
             url: (descr.dictType === E_DICT_TYPE.form ? '/form/' : '/spravochniki/') + descr.id,
             title: descr.title,
@@ -356,7 +356,7 @@ export class EosDeskService {
         };
     }
 
-    private _readDeskList() {
+    public _readDeskList() {
         const list = [...DEFAULT_DESKS];
         const viewIds = this._appCtx.UserViews
             .filter((uv) => uv.SRCH_KIND_NAME === 'clmanDesc')
@@ -382,14 +382,14 @@ export class EosDeskService {
         }
     }
 
-    private _sortDeskList() {
+    public _sortDeskList() {
         this._desksList.sort((a, b) => {
             return (a.id === 'system') ? -1 : (b.id === 'system') ? 1 :
                 a.name.localeCompare(b.name);
         });
     }
 
-    private mapToDefaultDescItem(dl: SRCH_VIEW_DESC, defaults: IDeskItem[]): IDeskItem {
+    public mapToDefaultDescItem(dl: SRCH_VIEW_DESC, defaults: IDeskItem[]): IDeskItem {
         const lable = EOS_PARAMETERS_TAB.find(i => i.url === dl.BLOCK_ID);
         if (lable) {
             return {
@@ -423,7 +423,7 @@ export class EosDeskService {
      * Find desktop in the UserView
      * @param deskId destop ID
      */
-    private findView(deskId: string) {
+    public findView(deskId: string) {
         const isn: number = parseInt(deskId, 0);
         const v: SRCH_VIEW = this._appCtx.UserViews.find((uv: SRCH_VIEW) => uv.ISN_VIEW === isn);
         if (v === undefined) {

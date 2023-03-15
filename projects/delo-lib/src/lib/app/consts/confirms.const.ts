@@ -389,3 +389,23 @@ export const SEV_SYNCHRO_CHECK_ADDRESSES_SOME: IConfirmWindow2 = {
         {title: 'Отменить',  result: 2, isDefault: true },
     ],
 };
+
+export const UPDATE_ABS_CHECK_OUT: IConfirmWindow2 = {
+    title: '',
+    bodyList: [],
+    body: ``,
+    buttons: [
+        {title: 'Редактирование всех реквизитов',  result: 1, isDefault: true,},
+        {title: 'Редактирование незаполненных реквизитов', result: 2 },
+        {title: 'Отмена', result: 0},
+    ],
+};
+
+export const CONFIRM_DEPCALENDAR_CREATE: IConfirmWindow2 = {
+    title: 'Подтверждение создания',
+    body: 'Вы действительно хотите создать календарь подразделения?',
+    buttons: [
+        {title: 'Да', result: BUTTON_RESULT_YES, isDefault: true},
+        {title: 'Нет', result: BUTTON_RESULT_NO, },
+    ]
+};

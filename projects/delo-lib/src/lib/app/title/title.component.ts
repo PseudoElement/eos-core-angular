@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { logoOverrideServices } from '../../app/services/logo-overrride.service';
+
+
 import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.service';
 
 // import { EosDeskService } from '../services/eos-desk.service';
@@ -7,11 +10,17 @@ import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.servi
     selector: 'eos-title',
     templateUrl: 'title.component.html'
 })
-export class TitleComponent {
+export class TitleComponent  implements OnInit{
     @Input() tooltip: String;
+    constructor(private logoOverrideSrv: logoOverrideServices) { }
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     /* todo: define it or remove. Mocked now*/
     title = 'Настройка системы';
+    pathLogo: string;
+    ngOnInit(): void {
+        this.pathLogo = this.logoOverrideSrv.pathLogo;
+        this.tooltip = this.logoOverrideSrv.tooltip || this.tooltip;
+    }
     openDelo() {
         try {
             this.clearCK();

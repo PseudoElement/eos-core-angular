@@ -1,4 +1,4 @@
-import { Component, Injector, OnChanges, OnInit, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
+import { Component, Injector, OnChanges, OnInit, SimpleChanges, ElementRef, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { BaseCardEditDirective } from './base-card-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
@@ -9,11 +9,12 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import { EOSDICTS_VARIANT } from '../../eos-dictionaries/features/features.interface';
 import { EosUtils } from '../../eos-common/core/utils';
 import { SelectorListItem } from '../../eos-dictionaries/dict-forms/list-selector-modal/list-selector-form.component';
-import { SHABLON_DETAIL, PipRX, DOCGROUP_CL, DOC_DEFAULT_VALUE, SECURITY_CL } from '../../eos-rest';
+import { SHABLON_DETAIL, PipRX, DOCGROUP_CL, DOC_DEFAULT_VALUE, SECURITY_CL, DocgroupOverrideService } from '../../eos-rest';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { RK_ERROR_SAVE_SECUR } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { WaitClassifService } from '../../app/services/waitClassif.service';
+import { AddControlsDirective } from '../../eos-common/directives/add-controls.directive';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -23,7 +24,7 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
     templateUrl: 'docgroup-card.component.html',
 })
 export class DocgroupCardComponent extends BaseCardEditDirective implements OnChanges, OnInit {
-
+    @ViewChild(AddControlsDirective, { static: true }) addControl!: AddControlsDirective;
     get isPrjFlag(): boolean {
         return this.getValue('rec.PRJ_NUM_FLAG');
     }
@@ -57,7 +58,9 @@ export class DocgroupCardComponent extends BaseCardEditDirective implements OnCh
         injector: Injector,
         private _errorSrv: ErrorHelperServices,
         private _apiSrv: PipRX,
-        private _waitClassifSrv: WaitClassifService
+        private _waitClassifSrv: WaitClassifService,
+        private _docgRoupOverrideService: DocgroupOverrideService,
+        private _resolver: ComponentFactoryResolver
     ) {
         super(injector);
         this.modalSrv = injector.get(BsModalService);
@@ -210,6 +213,16 @@ export class DocgroupCardComponent extends BaseCardEditDirective implements OnCh
 
         this.isCBBase = this.appctx.getParams(CB_FUNCTIONS) === 'YES';
         this.isNadzor = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor;
+
+        const viewRef = this.addControl.viewContainerRef;
+        viewRef.clear();
+        const component_ = this._resolver.resolveComponentFactory(this._docgRoupOverrideService.autoregComponent);
+        if (component_) {
+            const component: any = viewRef.createComponent(component_);
+            this._docgRoupOverrideService.setInstanseData(component, this);
+        }
+      
+        //component.instance = 
     }
 
     dataShablonDetail(): [] {

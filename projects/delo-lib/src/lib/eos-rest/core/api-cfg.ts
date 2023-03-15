@@ -1,3 +1,4 @@
+import { RESPUNS_URL_QUERY } from '../../app/consts/common.consts';
 import { IAppCfg } from '../../eos-common/interfaces';
 
 /**
@@ -8,7 +9,7 @@ export class ApiCfg implements IAppCfg {
     webBaseUrl = '../';
     apiBaseUrl = '../';
     authApi = 'Services/ApiSession.asmx/';
-    dataApi = 'CoreHost/OData/';
+    dataApi = RESPUNS_URL_QUERY;
     templateApi = 'CoreHost/FOP/GetDocTemplate/';
     appSetting = '../CoreHost/';
 

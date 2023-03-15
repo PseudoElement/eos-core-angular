@@ -9,8 +9,10 @@ export * from './shared/consts/user-param.consts';
 export * from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
 export * from './shared/services/helper-error.services';
 export * from './rights-delo/rights-delo-absolute-rights/absolute-rights-classif/tech-user-classif.interface';
+export * from './rights-delo/rights-delo-absolute-rights/absolute-rights-classif/tech-user-classif.consts'
 export * from './user-params-set/shared-user-param/services/remaster-service';
 export * from './shared/services/form-helper.services';
-/* export * from './shared/consts/rc-cabinet-folder.const'; */
+export * from './shared/consts/rc-cabinet-folder.const';
 export * from './user-params-set/shared-user-param/consts/visualization.consts';
 export * from './user-params-set/shared-user-param/consts/remaster-email.const';
+export * from './rights-delo/rights-delo-absolute-rights/absolute-rights.consts';

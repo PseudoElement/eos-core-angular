@@ -17,6 +17,8 @@ export interface IOESDictsFeatures {
         stamp: boolean; /* угловой штамп */
         userCreateButton: boolean; /* кнопка "создать юзера" для ДЛ */
         datesReq: boolean; /* требовать дату начала */
+        calendar_depart: boolean, /* Отображение колхозных справочников */
+        
     };
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;

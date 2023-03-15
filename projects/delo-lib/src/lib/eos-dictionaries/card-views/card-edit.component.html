@@ -132,7 +132,7 @@
                                      [data]="data"
                                      [isNewRecord]="isNewRecord"
                                      [editMode]="editMode"></eos-resolution-category-edit>
-                 <eos-file-category-card-edit *ngSwitchCase="'file-category'"
+                <eos-file-category-card-edit *ngSwitchCase="'file-category'"
                                     #cardEditEl
                                     class="nomenkl-card simple-card-edit"
                                     [form]="form"
@@ -140,7 +140,7 @@
                                     [data]="data"
                                     [isNewRecord]="isNewRecord"
                                     [editMode]="editMode">
-                             </eos-file-category-card-edit>
+                            </eos-file-category-card-edit>
                 <eos-link-card *ngSwitchCase="'link'"
                                #cardEditEl
                                class="simple-card-edit"
@@ -149,46 +149,15 @@
                                [data]="data"
                                [isNewRecord]="isNewRecord"
                                [editMode]="editMode"></eos-link-card>
-                <eos-nadzor-card-edit *ngSwitchCase="'ob-motiv'"
-                                      #cardEditEl
-                                      class="simple-card-edit"
-                                      [form]="form"
-                                      [inputs]="inputs"
-                                      [data]="data"
-                                      [isNewRecord]="isNewRecord"
-                                      [editMode]="editMode"></eos-nadzor-card-edit>
-                <eos-nadzor-card-edit *ngSwitchCase="'ob-return'"
-                                      #cardEditEl
-                                      class="simple-card-edit"
-                                      [form]="form"
-                                      [inputs]="inputs"
-                                      [data]="data"
-                                      [isNewRecord]="isNewRecord"
-                                      [editMode]="editMode"></eos-nadzor-card-edit>
-                <eos-nadzor-card-edit *ngSwitchCase="'ob-osnov'"
-                                      #cardEditEl
-                                      class="simple-card-edit"
-                                      [form]="form"
-                                      [inputs]="inputs"
-                                      [data]="data"
-                                      [isNewRecord]="isNewRecord"
-                                      [editMode]="editMode"></eos-nadzor-card-edit>
-                <eos-nadzor-card-edit *ngSwitchCase="'ob-type'"
-                                      #cardEditEl
-                                      class="simple-card-edit"
-                                      [form]="form"
-                                      [inputs]="inputs"
-                                      [data]="data"
-                                      [isNewRecord]="isNewRecord"
-                                      [editMode]="editMode"></eos-nadzor-card-edit>
-                <eos-nadzor-card-edit *ngSwitchCase="'ob-otziv'"
-                                      #cardEditEl
-                                      class="simple-card-edit"
-                                      [form]="form"
-                                      [inputs]="inputs"
-                                      [data]="data"
-                                      [isNewRecord]="isNewRecord"
-                                      [editMode]="editMode"></eos-nadzor-card-edit>
+                <lib-eos-common-dynamic *ngSwitchCase="expression"
+                                        #cardEditEl
+                                        class="simple-card-edit"
+                                        [form]="form"
+                                        [inputs]="inputs"
+                                        [data]="data"
+                                        [isNewRecord]="isNewRecord"
+                                        [editMode]="editMode"></lib-eos-common-dynamic>
+               
                 <eos-templates-card *ngSwitchCase="'templates'"
                                       #cardEditEl
                                       class="simple-card-edit"

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { OTHER_USER_SHABLONY } from '../shared-user-param/consts/other.consts';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { FormHelperService } from '../../shared/services/form-helper.services';
@@ -26,7 +26,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public initShablony: Array<any>;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     public inputs: any;
     public btnDisable;
     public currentUser;

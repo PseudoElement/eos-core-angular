@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter/* , ViewChild */ } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -52,7 +52,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public prepareInputs;
     public defoltInputs;
     public inputs;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     public currTab: number = 0;
     public allData;
     public mapChanges = new Map();
@@ -675,7 +675,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.prepareInputs = {};
         const curTabParams = this.formHelp.queryparams(this.getCurentTabDefaultFields(this.currTab), 'fieldsDefaultValue');
         const prep = this.formHelp.getObjQueryInputsFieldForDefault(curTabParams);
-        return this._pipRx.read(prep)
+        return this._pipRx.read<USER_PARMS>(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;
                 this.creatchesheDefault = this.formHelp.createhash(data);

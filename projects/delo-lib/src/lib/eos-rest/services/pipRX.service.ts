@@ -22,6 +22,7 @@ import { Cache } from '../core/cache';
 import { RestError } from '../core/rest-error';
 import { commonMergeMeta } from '../../eos-rest/common/initMetaData';
 import { IUploadParam } from '../../eos-parameters/interfaces/app-setting.interfaces';
+import { RESPUNS_URL_QUERY } from '../../app/consts/common.consts';
 
 
 @Injectable()
@@ -84,7 +85,7 @@ export class PipRX extends PipeUtils {
             webBaseUrl: '../',
             apiBaseUrl: '../',
             authApi: 'Services/ApiSession.asmx/',
-            dataApi: 'CoreHost/OData/',
+            dataApi: RESPUNS_URL_QUERY,
             templateApi: 'CoreHost/FOP/GetDocTemplate/',
         }, config);
         this._cfg.dataApiUrl = this._cfg.apiBaseUrl + this._cfg.dataApi;
@@ -111,7 +112,7 @@ export class PipRX extends PipeUtils {
 
     batchVariant(changeSet: any[], vc: string): Promise<any[]> {
         // return this._batch(changeSet, vc, this._cfg.dataApiUrl).toPromise();
-        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + 'CoreHost/OData/').toPromise();
+        return this._batch(changeSet, vc, this._cfg.apiBaseUrl + RESPUNS_URL_QUERY).toPromise();
     }
     getAppSetting<T>(urlParam: IUploadParam): Promise<T> {
         const options = {

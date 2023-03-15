@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class CabinetsInformerComponent implements OnInit, OnDestroy {
     public prepareInputs;
     public inputs;
     public defaultInputs;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     readonly informerFoldersFieldsKeys: Map<string, number> = new Map ([
         ['INFORMER_FOLDERS_RECEIVED', 0],
         ['INFORMER_FOLDERS_FOR_EXECUTION', 1],

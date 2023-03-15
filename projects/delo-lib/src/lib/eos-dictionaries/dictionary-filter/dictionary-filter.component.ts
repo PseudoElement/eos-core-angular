@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, IRecordModeDescription } from '../../eos-dictionaries/interfaces';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputBase } from '../../eos-common/core/inputs/input-base';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { EosDictionary } from '../core/eos-dictionary';
@@ -64,7 +64,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
     hasYear: boolean;
     type: E_DICT_TYPE;
 
-    searchForm: UntypedFormGroup;
+    searchForm: FormGroup;
     inputs: InputBase<any>[];
 
     public mode = 0;

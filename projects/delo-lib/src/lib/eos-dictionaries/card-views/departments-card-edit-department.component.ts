@@ -1,10 +1,10 @@
 import { IOpenClassifParams } from '../../eos-common/interfaces';
 import { WaitClassifService } from './../../app/services/waitClassif.service';
 
-import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit, ViewChild, AfterViewInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { BaseCardEditDirective } from './base-card-edit.component';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
-import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
+import { SUCCESS_SAVE, WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { DynamicInputBaseDirective } from '../../eos-common/dynamic-form-input/dynamic-input-base';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
@@ -12,29 +12,44 @@ import { StampBlobFormComponent } from '../../eos-dictionaries/shablon-blob-form
 import { BsModalService } from 'ngx-bootstrap';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from '../../eos-dictionaries/services/eos-access-permissions.service';
 import { DEPARTMENTS_DICT } from '../../eos-dictionaries/consts/dictionaries/department.consts';
-import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES, CONFIRM_DEPARTMENTS_DATES_FIX1 } from '../../app/consts/confirms.const';
+import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES, CONFIRM_DEPARTMENTS_DATES_FIX1, CONFIRM_DEPCALENDAR_CREATE, CONFIRM_DEPCALENDAR_DELETE } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { PipRX } from '../../eos-rest';
+import { AddControlsDirective } from '../../eos-common/directives/add-controls.directive';
+import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
+import { CalendarHelper, CALENDAR_CL_BY_DEP } from '../../eos-dictionaries/helpers/calendars.helper';
+import { COMMON_FIELD_NAME } from '../../eos-dictionaries/consts/dictionaries/_common';
+import { DepartmentCalendarComponent } from '../../eos-dictionaries/department-calendar/department-calendar.component';
+
 
 @Component({
     selector: 'eos-departments-card-edit-department',
     templateUrl: 'departments-card-edit-department.component.html',
 })
-export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirective implements OnChanges, OnInit {
+export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirective implements OnChanges, OnInit, AfterViewInit {
+    @ViewChild(AddControlsDirective, { static: true }) addControl!: AddControlsDirective;
+    @ViewChild("template", { static: true }) template!: TemplateRef<any>;
+    @ViewChild("gas_ps", { static: true, read: ViewContainerRef }) gas_ps!: ViewContainerRef;
 
+    calendarInfo = {
+        hasOwn: false,
+        statusText: '',
+        refreshing: true,
+    };
     featuresDep = Features.cfg.departments;
     isStampEnable = Features.cfg.departments.stamp;
     directGrant;
-
+    showCalendar = Features.cfg.departments.calendar_depart;
     private _orgName = '';
     private previousValues: SimpleChanges;
 
     constructor(private injector: Injector,
         private _zone: NgZone,
-        private msgSrv: EosMessageService,
+        private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
         private _apiSrv: PipRX,
-        private _waitClassifSrv: WaitClassifService
+        private _waitClassifSrv: WaitClassifService,
+        private _eosCommonOverride: EosCommonOverriveService
     ) {
         super(injector);
         this.previousValues = {};
@@ -64,7 +79,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
 
     ngOnInit() {
         // super.ngOnInit();
-        const v = this.featuresDep.numcreation ? [this.validatorNumcreationFlag()] : [];
+        const v = this._eosCommonOverride.updateValidator(this.form) || [];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }
@@ -85,6 +100,18 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
                 );
             }
         }
+        const viewRef = this.addControl.viewContainerRef;
+        viewRef.clear();
+        this._eosCommonOverride.controlsCardDepartments.forEach(name => {
+            const component = viewRef.createEmbeddedView(this.template);
+            component.context = { node: name, editMode: this.editMode }
+        })
+
+        this._eosCommonOverride.controlsCardDepartments2.forEach(name => {
+            const component = this.gas_ps.createEmbeddedView(this.template);
+            component.context = { node: name, editMode: this.editMode }
+        })
+        this._refreshCalendarInfo();
     }
 
     validatorNumcreationFlag(): ValidatorFn {
@@ -198,9 +225,11 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
                     return true;
                 }
             }).catch(e => {
-                this.msgSrv.addNewMessage({  type: 'warning',
-                title: 'Предупреждение:',
-                msg: e.message});
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение:',
+                    msg: e.message
+                });
                 return true;
             });
         }
@@ -210,7 +239,11 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
         this.tooltipsHide();
         const isn = this.data.rec['ISN_STAMP'];
         const _modalSrv = this.injector.get(BsModalService);
-        const modalWindow = _modalSrv.show(StampBlobFormComponent, { class: 'department-stamp-form' });
+        const config = {
+            ignoreBackdropClick: true,
+            class: 'department-stamp-form',
+        };
+        const modalWindow = _modalSrv.show(StampBlobFormComponent, config);
         (<StampBlobFormComponent>modalWindow.content).init(isn);
         if (modalWindow) {
             const hideWaitSubscr = _modalSrv.onHide.subscribe(() => {
@@ -253,18 +286,6 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
                 console.log('window closed');
             });
         });
-        /* const config = this.dictSrv.getApiConfig();
-        if (config) {
-            const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
-            const params = 'Classif=CONTACT&ClassifIds&app=nadzor&skip_deleted=True&select_multy=False&select_nodes=False&select_leaf=True&return_due=True&search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"';
-            // &search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"
-            this._zone.runOutsideAngular(() => {
-                window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
-                window['endPopup'] = (due) => {
-                    this._zone.run(() => this.bindOrganization(due));
-                };
-            });
-        } */
     }
 
     bindOrganization(orgDue: string) {
@@ -290,7 +311,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
             this.data.__relfield['ORGANIZ_CL'] = null;
             this.setValue('rec.DUE_LINK_ORGANIZ', null);
         } else {
-            this.msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
+            this._msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
         }
     }
 
@@ -300,7 +321,88 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
     }
+    createCalendar() {
+        const _confirmSrv = this.injector.get(ConfirmWindowService);
+        _confirmSrv.confirm2(CONFIRM_DEPCALENDAR_CREATE).then((button) => {
+            if (button && button.result === BUTTON_RESULT_YES) {
+                this._openFormCalendar();
+            }
+        });
+    }
 
+    editCalendar() {
+        this._openFormCalendar();
+    }
+
+    clearCalendar() {
+        const _confirmSrv = this.injector.get(ConfirmWindowService);
+        const _apiSrv = this.injector.get(PipRX);
+        _confirmSrv.confirm2(CONFIRM_DEPCALENDAR_DELETE).then((button) => {
+            if (button && button.result === BUTTON_RESULT_YES) {
+                const due = this.data.rec['DUE'];
+                CalendarHelper.clearHardCalendarForDue(_apiSrv, due).then((result) => {
+                    if (result === null) {
+
+                    } else if (result === true) {
+                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    } else {
+                        this._msgSrv.addNewMessage({ msg: result.message, type: 'danger', title: 'Ошибка записи' });
+
+                    }
+                    this._refreshCalendarInfo();
+                });
+            }
+        });
+    }
+
+    private _openFormCalendar() {
+        const due = this.data.rec['DUE'];
+        const title = this.data.rec[COMMON_FIELD_NAME.key];
+        const _modalSrv = this.injector.get(BsModalService);
+        const modalWindow = _modalSrv.show(DepartmentCalendarComponent, { class: 'department-calendar-modal' });
+        (<DepartmentCalendarComponent>modalWindow.content).init(due, title);
+        if (modalWindow) {
+            const subscription = (<DepartmentCalendarComponent>modalWindow.content).onClose.subscribe((hasChanges) => {
+                subscription.unsubscribe();
+                if (hasChanges) {
+                    this._refreshCalendarInfo();
+                }
+            });
+        }
+    }
+
+    private _refreshCalendarInfo() {
+        // if (this.directGrant <= APS_DICT_GRANT.denied) {
+        //     return;
+        // }
+        this.calendarInfo.refreshing = true;
+        this._readCalendarInfo().then(() => {
+            this.calendarInfo.refreshing = false;
+        }).catch(() => {
+            this.calendarInfo.refreshing = false;
+        });
+    }
+
+    private _readCalendarInfo(): Promise<any> {
+        const apiSrv = this.injector.get(PipRX);
+        const due = this.data.rec['DUE'];
+        return CalendarHelper.readDB(apiSrv, due).then((dates: CALENDAR_CL_BY_DEP[]) => {
+            let foundOwn = false;
+            for (let i = 0; i < dates.length; i++) {
+                const el = dates[i];
+                if (el.OWNER_ID === due) {
+                    foundOwn = true;
+                    break;
+                }
+            }
+            this.calendarInfo.hasOwn = foundOwn;
+            if (foundOwn) {
+                this.calendarInfo.statusText = 'Используется календарь подразделения';
+            } else {
+                this.calendarInfo.statusText = 'Используется вышестоящий календарь';
+            }
+        });
+    }
     private updateForm(formChanges: any) {
         if (this.previousValues['rec.CARD_FLAG'] !== formChanges['rec.CARD_FLAG']) {
             this.previousValues['rec.CARD_FLAG'] = formChanges['rec.CARD_FLAG'];
@@ -315,6 +417,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
             }
 
         }
+        this._eosCommonOverride.updateForm(this, formChanges);
 
         if (this.previousValues['rec.NUMCREATION_FLAG'] !== formChanges['rec.NUMCREATION_FLAG']) {
             this.previousValues['rec.NUMCREATION_FLAG'] = formChanges['rec.NUMCREATION_FLAG'];

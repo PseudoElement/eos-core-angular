@@ -2,8 +2,8 @@
   "name": "@eos/delo-adm",
   "version": "20.9.1",
   "peerDependencies": {
-    "@angular/common": "^15.1.0",
-    "@angular/core": "^15.1.0"
+    "@angular/common": "^12.2.16",
+    "@angular/core": "^12.2.16"
   },
   "dependencies": {
     "tslib": "^2.3.0"

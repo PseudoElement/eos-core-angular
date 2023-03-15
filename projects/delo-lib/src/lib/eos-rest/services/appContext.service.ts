@@ -35,7 +35,7 @@ export class AppContext {
     public hasUnlimTech: any;
 
     public cbBase: boolean;
-    public setHeader = new Subject();
+    public setHeader = new Subject<boolean>();
     public licenze: any;
     private _ready = new Deferred<any>();
     private _sreamScane: boolean = false;

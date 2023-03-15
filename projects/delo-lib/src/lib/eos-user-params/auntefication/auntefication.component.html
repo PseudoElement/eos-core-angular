@@ -76,7 +76,7 @@
                     [formControlName]="inputs['pass'].key"
                     [id]="inputs['pass'].key" [type]="type"
                     [readonly]="inputs['pass'].readonly"
-                    [ngClass]="{'error-focus': form.get('pass').errors, 'readonly': readonly}"
+                    [ngClass]="{'error-focus': form.get('pass').errors, 'readonly': false}"
                     [tooltip]="form.get('pass').errors ? 'Введите пароль' : null"
                     placement="bottom"
                     [containerClass]="form.get('pass').errors ? 'tooltip-error' : 'tooltip-info'"

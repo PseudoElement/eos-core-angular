@@ -1,7 +1,7 @@
 import { PipRX } from '../../../eos-rest';
 import { Component, OnDestroy, OnInit, OnChanges, NgZone, EventEmitter, Output } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { InputControlService } from '../../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../../eos-dictionaries/services/eos-data-convert.service';
@@ -22,7 +22,7 @@ export class RecordViewComponent implements OnDestroy, OnInit, OnChanges {
     isUpdating = true;
     nodes: any[];
     // dataController: AdvCardRKDataCtrl;
-    form: UntypedFormGroup;
+    form: FormGroup;
     inputs: any[];
     data: any;
     dictid: string;
@@ -67,7 +67,7 @@ export class RecordViewComponent implements OnDestroy, OnInit, OnChanges {
     initByNodeData (query: any, dictD: IDictionaryDescriptor) {
         this.dictid = dictD.id;
         const req = { [dictD.apiInstance]: query };
-        this._apiSrv.read(req).then (data => {
+        this._apiSrv.read(req).then(data => {
             this.data = this.dataSrv.convData(data[0]);
             const dict = new EosDictionary(dictD.id, this._descrSrv);
             const descr: any = dict.getEditDescriptor();

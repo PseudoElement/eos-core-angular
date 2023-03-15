@@ -116,6 +116,7 @@ import { BroadcastChannelNodeInfoComponent } from './node-info/broadcast-channel
 import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
 import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node-info/sev-participant-node-info.component';
 import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/templateCardExample.component';
+import { DepartmentCalendarComponent } from './department-calendar/department-calendar.component';
 @NgModule({
     declarations: [
         CardFromComponent,
@@ -195,7 +196,8 @@ import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/tem
         MedoNodeCardComponent,
         BroadcastChannelNodeInfoComponent,
         SevParticiantNodeInfoComponent,
-        SpravochnikiTemplateComponent
+        SpravochnikiTemplateComponent,
+        DepartmentCalendarComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -218,6 +220,7 @@ import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/tem
         StampBlobFormComponent,
         DictionaryPasteComponent,
         PrintTemplateComponent,
+        DepartmentCalendarComponent
     ],
     imports: [
         BrowserModule,
@@ -253,7 +256,8 @@ import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/tem
         TooltipErrorFixDirective,
         CardComponent,
         CardEditComponent,
-        CardFromComponent
+        CardFromComponent,
+        DepartmentCalendarComponent
     ],
     providers: [
         DictionaryDescriptorService,
