@@ -36,7 +36,10 @@
             "styles": [
               "projects/box/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@eos/jsplugins-manager"
+           ]
           },
           "configurations": {
             "production": {

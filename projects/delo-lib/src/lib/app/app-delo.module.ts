@@ -68,6 +68,7 @@ import { AbsoluteRigthServiceLib } from '../eos-rest/addons/absoluteRigth.servic
 import { ExetentionsRigthsServiceLib } from '../eos-rest/addons/extentionsRigts.service';
 import { ExetentionsUserParamsLib } from '../eos-rest/addons/ExtentionsUserParamsLib.service';
 import { EosCommonOverriveService } from './services/eos-common-overrive.service';
+import { logoOverrideServices } from './services/logo-overrride.service';
 /* end guards */
 
 @NgModule({
@@ -141,7 +142,8 @@ import { EosCommonOverriveService } from './services/eos-common-overrive.service
         AbsoluteRigthServiceLib,
         ExetentionsRigthsServiceLib,
         ExetentionsUserParamsLib,
-        EosCommonOverriveService
+        EosCommonOverriveService,
+        logoOverrideServices
     ],
 })
 
