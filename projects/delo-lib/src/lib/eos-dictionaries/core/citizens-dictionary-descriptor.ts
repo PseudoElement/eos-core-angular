@@ -144,7 +144,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
 
         return this.apiSrv
-            .read(req)
+            .read<CITIZEN>(req)
             .then((data: CITIZEN[]) => {
                 const REG_DUE = data.filter(cit => cit.DUE_REGION).map(d => d.DUE_REGION);
                 return this.queryForRegion(REG_DUE).then(dataRagion => {
@@ -202,7 +202,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
             });
     }
     ar_Descript(): Promise<any> {
-        return this.apiSrv.read({
+        return this.apiSrv.read<AR_DESCRIPT>({
             AR_DESCRIPT: {
                 criteries: {
                     OWNER: 'C',

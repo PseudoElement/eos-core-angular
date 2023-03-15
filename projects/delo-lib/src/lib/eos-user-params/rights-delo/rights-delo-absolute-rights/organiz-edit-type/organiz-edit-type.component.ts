@@ -79,7 +79,7 @@ export class OrganizEditTypeComponent implements OnInit {
         return index;
     }
     private getOrgType(): Promise<ORG_TYPE_CL[]> {
-        return this._pipRx.read({ 'ORG_TYPE_CL': ALL_ROWS }).then((data: ORG_TYPE_CL[]) => {
+        return this._pipRx.read<ORG_TYPE_CL>({ 'ORG_TYPE_CL': ALL_ROWS }).then((data: ORG_TYPE_CL[]) => {
             return data;
         }).catch(error => {
             console.log(error);

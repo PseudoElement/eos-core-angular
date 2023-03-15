@@ -42,13 +42,13 @@ import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permis
 import { PARTICIPANT_SEV_DICT } from '../../eos-dictionaries/consts/dictionaries/sev/sev-participant';
 import { CABINET_DICT } from '../../eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from '../../eos-dictionaries/consts/dictionaries/nomenkl.const';
-import { PipRX } from '../../eos-rest';
-import { NADZOR_DICTIONARIES } from '../../eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
+import { DictionaryOverrideService, NpCounterOverrideService, PipRX, SaveExtensionsOverrideService } from '../../eos-rest';
 import { RETURN_URL, STORAGE_WEIGHTORDER, URL_LOGIN } from '../../app/consts/common.consts';
 import { SEV_DICTIONARIES } from '../../eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
+import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\'!]', 'g');
@@ -111,7 +111,7 @@ export class EosDictService {
     private _treeNodeId: string;
     private _reloadDopRecvizites$: Subject<any>;
     private _resetSerch$: Subject<any>;
-    private _setNomenklFilterClose$: BehaviorSubject<boolean>;
+    private _setNomenklFilterClose$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private _userOrderCutMode$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     /* Observable dictionary for subscribing on updates in components */
@@ -285,16 +285,19 @@ export class EosDictService {
         return this._bufferNodes;
     }
 
+
     constructor(
+        public dictionatyOverrideSrv: DictionaryOverrideService,
+        public npOverrideSrv: NpCounterOverrideService,
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
-        //    private departmentsSrv: EosDepartmentsService,
-        //    private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _apiSrv: PipRX,
         private _errorHelper: ErrorHelperServices,
         private _confirmSrv: ConfirmWindowService,
+        private _eosOverridesSrv: EosCommonOverriveService,
+        public _extSrvSave: SaveExtensionsOverrideService,
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -315,7 +318,6 @@ export class EosDictService {
         this._weightOrdered = !!this._storageSrv.getItem(STORAGE_WEIGHTORDER);
         this._reloadDopRecvizites$ = new Subject();
         this._resetSerch$ = new Subject();
-        this._setNomenklFilterClose$ = new BehaviorSubject(null);
     }
 
     getDescr(dictionaryId: string): IDictionaryDescriptor {
@@ -325,10 +327,12 @@ export class EosDictService {
                 return dict;
             }
         }
-        for (let i = 0; i < NADZOR_DICTIONARIES.length; i++) {
-            const dict = NADZOR_DICTIONARIES[i];
-            if (dict.id === dictionaryId) {
-                return dict;
+        if (this._eosOverridesSrv.overrideDictionaries) {
+            for (let i = 0; i < this._eosOverridesSrv.overrideDictionaries.length; i++) {
+                const dict = this._eosOverridesSrv.overrideDictionaries[i];
+                if (dict.id === dictionaryId) {
+                    return dict;
+                }
             }
         }
 
@@ -655,7 +659,7 @@ export class EosDictService {
     getAllDictionariesList(deskId): Promise<IDictionaryDescriptor[]> {
         let allDicts = this._descrSrv.visibleDictionaries();
         if (deskId !== 'system') {
-            allDicts = allDicts.concat(this._descrSrv.visibleNadzorDictionaries());
+            allDicts = allDicts.concat(this._eosOverridesSrv.visibleDictionaries());
             allDicts = allDicts.concat(this._descrSrv.visibleSevDictionaries());
         }
         return Promise.resolve(allDicts);
@@ -665,8 +669,8 @@ export class EosDictService {
         return Promise.resolve(this._descrSrv.visibleDictionaries());
     }
 
-    getNadzorDictionariesList(): Promise<IDictionaryDescriptor[]> {
-        return Promise.resolve(this._descrSrv.visibleNadzorDictionaries());
+    getAddonDictionariesList(): Promise<IDictionaryDescriptor[]> {
+        return Promise.resolve(this._eosOverridesSrv.visibleDictionaries());
     }
 
     getSevDictionariesList(): Promise<IDictionaryDescriptor[]> {
@@ -871,7 +875,8 @@ export class EosDictService {
                                 return dictionary.updateNodeData(node, data, appendChanges);
                             });
                     })
-                    .then((results) => {
+                    .then(async (results) => {
+                        await this._extSrvSave.saveExtensions(dictionary, data, results, node);
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
                         results.forEach((res) => {
                             res.record = dictionary.getNode(res.record[keyFld] + '');
@@ -928,7 +933,8 @@ export class EosDictService {
                     this.rememberNewNode(results);
                     this.updateViewParameters({ updatingList: true });
                     return this._reloadList(true)
-                        .then(() => {
+                        .then(async() => {
+                            await this._extSrvSave.saveExtensions(dictionary, data, results, this._treeNode.data, true);
                             this.updateViewParameters({ updatingList: false });
                             if (dictionary.descriptor.type !== E_DICT_TYPE.linear &&
                                 dictionary.descriptor.type !== E_DICT_TYPE.custom) {
@@ -1039,8 +1045,8 @@ export class EosDictService {
                     return this._reloadList()
                         .then(() => {
                             const deletedList = results.filter(r => {
-                               return r && !r.error;
-                            })
+                                return r && !r.error;
+                             })
                                 .map(r => r.record[title] || r.record['CLASSIF_NAME']);
                             this.deleteCutedNodes(title, deletedList);
                             this.updateViewParameters({ updatingList: false });

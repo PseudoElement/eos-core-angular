@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { LimitedAccesseService } from '../../shared/services/limited-access.service';
-import { UntypedFormGroup, UntypedFormControl, UntypedFormArray } from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { EosMessageService } from '../../../eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from '../../../eos-common/consts/common.consts';
 import { OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/create-user.consts';
@@ -37,16 +37,16 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public flagGrifs: boolean;
     public flagLinks: boolean;
     public bacgHeader: boolean;
-    public grifsForm: UntypedFormGroup;
+    public grifsForm: FormGroup;
     public myElem: any[] = [];
-    public myForm: UntypedFormGroup;
+    public myForm: FormGroup;
     public tabsForAccessLimited;
     public currTab = 0;
     public currentUser;
     public editFlag: boolean = false;
     public checkCB;
     public grifsFiles: any[] = [];
-    public grifsFileForm: UntypedFormGroup;
+    public grifsFileForm: FormGroup;
     public myElemFiles: any[] = [];
     public flagFileGrifs: boolean = true;
     public initGrifs: any[];
@@ -65,7 +65,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
 
     private checkUserCard;
     // private checkGrifs;
-    private ArrayForm: UntypedFormArray;
+    private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _limitservise: LimitedAccesseService,
@@ -120,7 +120,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 this.saveParams = this.umailsInfo.slice();
                 this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
                 this.createForm(false, false);
-                this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
+                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                 this.myForm.valueChanges.subscribe(data => {
                     this.checkChanges(data);
                 });
@@ -221,7 +221,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.umailsInfo = this.saveParams.slice();
         this.sortArray(this.umailsInfo);
         this.sortArray(this.saveParams);
-        this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
+        this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
         this.flagGrifs = true;
         this.statusBtnSub = true;
     }
@@ -229,7 +229,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         // this.myForm.removeControl('groupForm');
         // this.myForm.setControl('groupForm', this.createGroup(false, false, true));
         this.createForm(false, false, true);
-        this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
+        this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
         this.myForm.valueChanges.subscribe(data => {
             this.checkChanges(data);
         });
@@ -309,7 +309,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                             this.grifsForm = null;
                             this.myElem = [];
                             this.myElemFiles = [];
-                            this.ArrayForm = <UntypedFormArray>this.myForm.controls['groupForm'];
+                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                             this.editModeForm();
                             this._pushState();
                             this._limitservise.subscribe.next(false);
@@ -453,26 +453,26 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
 
     createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
-        this.myForm = new UntypedFormGroup({ 'groupForm': this.createGroup(changedField, newField, flagBackForm) });
+        this.myForm = new FormGroup({ 'groupForm': this.createGroup(changedField, newField, flagBackForm) });
     }
 
-    createGroup(changedField: boolean, newField: boolean, flagBackForm?: boolean): UntypedFormArray {
+    createGroup(changedField: boolean, newField: boolean, flagBackForm?: boolean): FormArray {
         let arrayField;
-        const group = new UntypedFormArray([]);
+        const group = new FormArray([]);
         flagBackForm ? arrayField = this.saveParams : arrayField = this.umailsInfo;
         arrayField.forEach((element, index) => {
-            group.push(new UntypedFormGroup(this.createFormControls(element, changedField, newField, index)));
+            group.push(new FormGroup(this.createFormControls(element, changedField, newField, index)));
         });
         return group;
     }
-    createFormControls(element, bool1, bool2, index?): { [key: string]: UntypedFormControl } {
+    createFormControls(element, bool1, bool2, index?): { [key: string]: FormControl } {
         const controls = {};
-        controls['name'] = new UntypedFormControl(element.NAME);
-        controls['due'] = new UntypedFormControl(element.DUE);
-        controls['checkbox'] = new UntypedFormControl(Boolean(element.ALLOWED));
-        controls['change'] = new UntypedFormControl(bool1);
-        controls['newField'] = new UntypedFormControl(bool2);
-        controls['DELETED'] = new UntypedFormControl(element['DUE'] !== '0.' && element['DELETED'] === 1);
+        controls['name'] = new FormControl(element.NAME);
+        controls['due'] = new FormControl(element.DUE);
+        controls['checkbox'] = new FormControl(Boolean(element.ALLOWED));
+        controls['change'] = new FormControl(bool1);
+        controls['newField'] = new FormControl(bool2);
+        controls['DELETED'] = new FormControl(element['DUE'] !== '0.' && element['DELETED'] === 1);
         return controls;
     }
     checkChanges(data?: { [key: string]: Array<any> }) {
@@ -504,7 +504,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
 
     addFormControls(newFieldEmail, change: boolean, newField: boolean) {
-        this.ArrayForm.push(new UntypedFormGroup(this.createFormControls(newFieldEmail, change, newField)));
+        this.ArrayForm.push(new FormGroup(this.createFormControls(newFieldEmail, change, newField)));
     }
 
     sortArray(array) {

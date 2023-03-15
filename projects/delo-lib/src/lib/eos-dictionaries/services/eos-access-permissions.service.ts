@@ -7,7 +7,6 @@ import { CABINET_DICT } from './../consts/dictionaries/cabinet.consts';
 import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import { Injectable } from '@angular/core';
 import { AppContext } from '../../eos-rest/services/appContext.service';
-import { NADZOR_DICTIONARIES as NADZOR_DICTIONARIES, NADZOR_FOLDER } from '../../eos-dictionaries/consts/dictionaries/nadzor/nadzor.consts';
 import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 import { DEPARTMENTS_DICT } from '../../eos-dictionaries/consts/dictionaries/department.consts';
 import { SIGN_KIND_DICT } from '../../eos-dictionaries/consts/dictionaries/sign-kind.consts';
@@ -31,11 +30,14 @@ import { CITIZENS_DICT } from '../../eos-dictionaries/consts/dictionaries/citize
 import { SEV_FOLDER, SEV_DICTIONARIES } from '../../eos-dictionaries/consts/dictionaries/sev/folder-sev.consts';
 import { TYPE_DOCUM_DICT } from '../../eos-dictionaries/consts/dictionaries/type-docum.const';
 import { FILE_TYPE_DICT } from '../../eos-dictionaries/consts/dictionaries/file-type.const';
+import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
+import { E_RECORD_ACTIONS } from '../../eos-dictionaries/interfaces';
 import { FILE_CATEGORIES_DICT } from '../../eos-dictionaries/consts/dictionaries/file-categories.consts';
 import { FORMAT_DICT } from '../../eos-dictionaries/consts/dictionaries/format.const';
 import { MEDO_NODE_DICT } from '../../eos-dictionaries/consts/dictionaries/medo-node.const';
+import { ADDRESS_VID_CL } from '../../eos-dictionaries/consts/dictionaries/type-address.const';
 
-const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
+export const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
     // Рубрикатор
     {
         id: RUBRICATOR_DICT.id, tech: E_TECH_RIGHT.Rubrics,
@@ -67,8 +69,10 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         listedUT: false
     },
     // Группы документов
-    { id: DOCGROUP_DICT.id,         tech: E_TECH_RIGHT.Docgroups,
-        listedUT: true },
+    { 
+        id: DOCGROUP_DICT.id, tech: E_TECH_RIGHT.Docgroups,
+        listedUT: true
+    },
     // Категории ЭП
     {
         id: EDS_CATEGORY_CL_CONTS.id, tech: E_TECH_RIGHT.EdsCategory,
@@ -139,11 +143,6 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
         id: LINK_DICT.id, tech: E_TECH_RIGHT.LinkTypes,
         listedUT: false
     },
-    // Группа справочников Надзора
-    {
-        id: NADZOR_FOLDER.id, tech: E_TECH_RIGHT.NadzorCL,
-        listedUT: false
-    },
     // Категории поручений
     {
         id: RESOL_CATEGORY_DICT.id, tech: E_TECH_RIGHT.ResCategories,
@@ -194,7 +193,16 @@ const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* про�
 
     // @stub157113 - добавление нового справочника КАТЕГОРИИ ФАЙЛОВ
     { id: FILE_CATEGORIES_DICT.id, tech: E_TECH_RIGHT.FileCategories,
-    listedUT: false }
+        listedUT: false 
+    },
+    {
+        id: FILE_TYPE_DICT.id, tech: E_TECH_RIGHT.FileType,
+        listedUT: false
+    },
+    {
+        id: ADDRESS_VID_CL.id, tech: E_TECH_RIGHT.AddresType,
+        listedUT: false
+    }
 ];
 
 const LicenseTech = {
@@ -211,6 +219,7 @@ export enum APS_DICT_GRANT {
 export class EosAccessPermissionsService {
     constructor(
         private appCtx: AppContext,
+        private _eosOverridesServ: EosCommonOverriveService
     ) { }
 
     // --------------------------------------------------------------
@@ -218,7 +227,6 @@ export class EosAccessPermissionsService {
         const dt = dictsTechs.find(d => dictId === d.id);
         if (dt) {
             const grant = this.checkAccessTech(dt.tech);
-
             // Если к кабинетам есть доступ, а подразделениям - нет, то подразделения отдаем в readonly
             if (dt.id === DEPARTMENTS_DICT.id && !grant) {
                 const cab_grant = this.isAccessGrantedForDictionary(CABINET_DICT.id, due);
@@ -229,11 +237,22 @@ export class EosAccessPermissionsService {
 
             // Проверка прав на "Виды документов"
             if (dt.id === TYPE_DOCUM_DICT.id) {
-                return this.checkAccessTech(E_TECH_RIGHT.DocumentTypes) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+                let curUserHasDocGroupe: boolean = false;
+                const techList = this.appCtx.CurrentUser.USER_TECH_List;
+                const isLimTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
+                if (!isLimTech) {
+                    curUserHasDocGroupe = true;
+                }
+                if (!this.appCtx.hasUnlimTech && !isLimTech) {
+                    curUserHasDocGroupe = true;
+                }
+                if (!curUserHasDocGroupe) {
+                    return APS_DICT_GRANT.denied;
+                } else {
+                    return this.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+                }
             }
-            if (dt.id === TYPE_DOCUM_DICT.id) {
-                return this.checkAccessTech(E_TECH_RIGHT.DocumentTypes) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-            }
+
             // проверить дерево USER_TECH
             if (grant && dt.listedUT && due) {
                 return this._userTechListGranted(dt.tech, due);
@@ -248,9 +267,11 @@ export class EosAccessPermissionsService {
         }
         let dict;
 
-        dict = NADZOR_DICTIONARIES.find(n => n.id === dictId);
+        dict = this._eosOverridesServ.checkRigths(dictId);
         if (dict) {
-            return this.checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            if (this._eosOverridesServ.numberTechRigth) {
+                return this.checkAccessTech(this._eosOverridesServ.numberTechRigth) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            }
         }
 
         dict = SEV_DICTIONARIES.find(n => n.id === dictId);
@@ -288,10 +309,6 @@ export class EosAccessPermissionsService {
         if (!r) {
             return false;
         }
-        // @stub157113 для обхода проверки прав для категорий файлов
-        // if (tr === E_TECH_RIGHT.FileCategories) {
-        // return true;
-        // }
         return (r[tr - 1] === '1');
     }
 
@@ -300,7 +317,7 @@ export class EosAccessPermissionsService {
         if (dt) {
             return this.checkAccessTech(dt.tech);
         }
-        return false;
+        return this._eosOverridesServ.getCheckButton(E_RECORD_ACTIONS.showDeleted, dictId);
     }
     /* системному технологу с доступом к справочнику "Подразделения" и разрешеной вершиной "Все подразделения" */
     public checkBaseDepartmentRight(): boolean {

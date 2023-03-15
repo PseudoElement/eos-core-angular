@@ -29,6 +29,8 @@ export interface IOpenClassifParams {
     selected? ;
     Selected?: string ;
     search_query?: string;
+    criteriesSearch?: boolean;
+    criteriesName?: string;
     user_id?: number;
     clUser?: boolean;
     from_classif?: boolean; // параметр который говорит что окно было открыто из ангулар
@@ -46,6 +48,14 @@ export interface IOpenClassifParams {
     nameText?: string;
     formText?: string;
     can_tech?: boolean; // отображение пользователей только из разрешённых картотек
+    datas?: {rc_id?: string[], due?: string[]};
+    dl_from?: string;
+    dl_to?: string;
+    /* 
+    для StdTextByCode
+    */
+    texts?: string;
+    lists?: string;
 }
 
 export interface ICertificateInit {

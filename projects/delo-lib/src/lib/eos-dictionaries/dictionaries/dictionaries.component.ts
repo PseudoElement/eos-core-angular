@@ -11,11 +11,10 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { DISABLED_LIST_ITEM } from '../../app/consts/messages.consts';
 
 @Component({
-    selector: 'eos-dictionaries',
+    selector: '../../eos-dictionaries',
     templateUrl: 'dictionaries.component.html',
 })
 export class DictionariesComponent implements OnInit, OnDestroy {
-    instrumentsList: IDictionaryDescriptor[] = [];
     dictionariesList: IDictionaryDescriptor[] = [];
     r: number = 0;
     modalWindow: Window;
@@ -40,9 +39,9 @@ export class DictionariesComponent implements OnInit, OnDestroy {
         this._dictSrv.closeDictionary();
         let dictList;
         if (this._router.url === '/spravochniki') {
-           dictList = this._dictSrv.getDictionariesList();
+            dictList = this._dictSrv.getDictionariesList();
         } else if (this._router.url === '/spravochniki/nadzor') {
-            dictList = this._dictSrv.getNadzorDictionariesList();
+            dictList = this._dictSrv.getAddonDictionariesList();
         } else if (this._router.url === '/spravochniki/SEV') {
             dictList = this._dictSrv.getSevDictionariesList();
         }
@@ -63,7 +62,7 @@ export class DictionariesComponent implements OnInit, OnDestroy {
      * @method checkLimitedDocGroup - функция проверки текущего пользователя (системного технолога) на ограниченность в видах документах,
      * если у него есть права, то давать пускать в справочник виды документов.
      * */
-    checkLimitedDocGroup() { /*  */
+    checkLimitedDocGroup() {
         const techList = this._appCtx.CurrentUser.USER_TECH_List;
         const isLimTech = techList.some((el) => el.FUNC_NUM === 9 && !el.ALLOWED);
         if (!isLimTech) {
@@ -75,15 +74,15 @@ export class DictionariesComponent implements OnInit, OnDestroy {
     }
 
     isAccessEnabled(dict: any) {
-            // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
-            /* if (dict.id === TYPE_DOCUM_DICT.id) { // зачем Виды документов, проверять так хз
-                if (!this.curUserHasDocGroup) {
-                    return APS_DICT_GRANT.denied;
-                } else {
-                    return this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
-                }
-            } */
-            return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
+        // временно для Видов документов, если есть доступ к гр.док., то спр. доступен
+        /* if (dict.id === TYPE_DOCUM_DICT.id) { // зачем Виды документов, проверять так хз
+            if (!this.curUserHasDocGroup) {
+                return APS_DICT_GRANT.denied;
+            } else {
+                return this._eaps.checkAccessTech(E_TECH_RIGHT.Docgroups) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+            }
+        } */
+        return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
 
     }
 

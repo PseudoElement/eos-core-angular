@@ -21,6 +21,7 @@ export interface IInputParamControl {
     disabled?: boolean;
     data?: any;
     deleted?: boolean;
+    useInProject?: string;
 }
 
 export interface IInputParamControlForIndexRight {

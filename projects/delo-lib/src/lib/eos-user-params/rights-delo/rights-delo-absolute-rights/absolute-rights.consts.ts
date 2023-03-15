@@ -10,7 +10,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.classif
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -19,7 +20,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 24
@@ -28,7 +30,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 3
@@ -37,7 +40,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 4
@@ -46,7 +50,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     // {
     //     controlType: E_FIELD_TYPE.boolean, // 5
@@ -64,7 +69,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     // {
     //     controlType: E_FIELD_TYPE.boolean, // 7
@@ -82,7 +88,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 16
@@ -91,7 +98,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 9
@@ -100,7 +108,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 10
@@ -109,16 +118,18 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 11
         key: '7',
-        label: 'Добавление организаций и граждан',
+        label: 'Добавление организаций',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -127,17 +138,9 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
-        }
+        },
+        useInProject: 'delo'
     },
-    // {
-    //     controlType: E_FIELD_TYPE.boolean, // 12
-    //     key: '8',
-    //     label: 'Редактирование организаций',
-    //     data: {
-    //         isSelected: false,
-    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz
-    //     }
-    // },
     // {
     //     controlType: E_FIELD_TYPE.boolean,
     //     key: '20',
@@ -145,7 +148,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     //     data: {
     //         isSelected: false,
     //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-    //     }
+    //     },
+    //     useInProject: 'delo,nadzor'
     // },
     // {
     //     controlType: E_FIELD_TYPE.boolean, // 14
@@ -154,7 +158,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     //     data: {
     //         isSelected: false,
     //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
-    //     }
+    //     },
+    //     useInProject: 'delo,nadzor'
     // },
     {
         controlType: E_FIELD_TYPE.boolean, // 15
@@ -163,7 +168,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -172,7 +178,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -181,7 +188,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -190,7 +198,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -199,7 +208,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 19
@@ -208,7 +218,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 20
@@ -217,7 +228,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 21
@@ -226,7 +238,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none,
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 22
@@ -236,7 +249,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 26
@@ -246,7 +260,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 34
@@ -256,7 +271,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     /* {
         controlType: E_FIELD_TYPE.boolean, // 24
@@ -283,7 +299,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     // {
     //     controlType: E_FIELD_TYPE.boolean,
@@ -328,7 +345,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
+        },
+        useInProject: 'delo,nadzor'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 23
@@ -338,7 +356,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: false,
-        }
+        },
+        useInProject: 'delo'
     },
     {
         controlType: E_FIELD_TYPE.boolean, // 23
@@ -348,7 +367,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: false,
-        }
+        },
+        useInProject: 'delo'
     },
 ];
 

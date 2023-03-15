@@ -6,6 +6,7 @@ import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.servi
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 import { RESOLVE_DESCRIPTIONS } from '../../eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 import { CHANNEL_TYPE } from '../../eos-dictionaries/consts/dictionaries/sev/types.consts';
+import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
 
 interface ISpecialIcon {
     class: string;
@@ -31,7 +32,7 @@ export class NodeFieldComponent implements OnInit {
     iconsArray: ISpecialIcon[] = [];
     private _hasFolderIcon: boolean;
 
-    constructor() {
+    constructor(private _eosCommonOverride: EosCommonOverriveService) {
     }
 
     viewNode(evt: Event) {
@@ -41,7 +42,7 @@ export class NodeFieldComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._hasFolderIcon = this.field.preferences && this.field.preferences.hasIcon;
+        this._hasFolderIcon = this.field.preferences && this.field.preferences.hasIcon;    
         if (this.field.type === E_FIELD_TYPE.icon) {
             if (this.node.data.rec['CARD_FLAG']) {
                 this.iconsArray.push({
@@ -56,6 +57,18 @@ export class NodeFieldComponent implements OnInit {
                     tooltip: 'Номерообразование',
                 });
             }
+            if (this.node.data.rec['UNREAD_FLAG']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-alert-grey' : 'eos-icon-alert-yellow',
+                    tooltip: 'Непроверенная запись',
+                });
+            }
+            if (this.node.data.rec['CARD_FLAG']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-card-index-grey' : 'eos-icon-card-index-black',
+                    tooltip: 'Картотека',
+                });
+            }
             if (this.node.data.rec['POST_H'] === 1) {
                 this.iconsArray.push({
                     class: this.node.isDeleted ? 'eos-adm-icon-user-ceo-grey' : 'eos-adm-icon-user-ceo-black',
@@ -68,20 +81,20 @@ export class NodeFieldComponent implements OnInit {
                     tooltip: 'Закрыто',
                 });
             }
-        } else
-           if (this.field.type === E_FIELD_TYPE.icon_sev) {
-              if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
-                    this.iconsArray.push({
-                        class: this.node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black',
-                        tooltip: 'Индекс СЭВ',
-                    });
-                }
-                if (this.node.data.rec['CONFIDENTIONAL']) {
-                    this.iconsArray.push({
-                        class: this.node.isDeleted ? 'eos-adm-icon-restricted-grey' : 'eos-adm-icon-restricted-blue',
-                        tooltip: 'ДСП файлы',
-                    });
-                }
+            this._eosCommonOverride.updateNodeFields(this);
+        } else if (this.field.type === E_FIELD_TYPE.icon_sev) {
+            if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black',
+                    tooltip: 'Индекс СЭВ',
+                });
+            }
+            if (this.node.data.rec['CONFIDENTIONAL']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-adm-icon-restricted-grey' : 'eos-adm-icon-restricted-blue',
+                    tooltip: 'ДСП файлы',
+                });
+            }
         }
         // костыль для участников СЭВ, отображение иконки типа передачи сообщений
         if (this.isSevChannelType()) {

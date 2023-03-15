@@ -4,7 +4,7 @@ import { UserParamsService } from '../../../shared/services/user-params.service'
 import { Subject } from 'rxjs';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 // import { PipRX } from 'eos-rest';
@@ -22,7 +22,7 @@ export class UserParamDispatchComponent implements OnDestroy, OnInit {
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     @Input() isCurrentSettings?: boolean;
     @Input() appMode?: boolean;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     public inputs: any;
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;

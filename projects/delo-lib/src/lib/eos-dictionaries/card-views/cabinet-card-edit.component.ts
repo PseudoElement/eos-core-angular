@@ -4,7 +4,7 @@ import { BaseCardEditDirective } from './base-card-edit.component';
 import { CABINET_FOLDERS } from '../../eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { DEPARTMENT, PipRX, CABINET } from '../../eos-rest';
 import { IOrderBy } from '../interfaces';
-import { AbstractControl, UntypedFormControl } from '@angular/forms';
+import { AbstractControl, FormControl } from '@angular/forms';
 import { CONFIRM_ADD_DL_UPDATE_CAB, CONFIRM_CABINET_NON_EMPTY } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { WaitClassifService } from '../../app/services/waitClassif.service';
@@ -165,7 +165,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
                 this.form.controls['rec.CABINET_NAME'].setAsyncValidators((control: AbstractControl) => {
                     if (control && control.value && control.value.length) {
                         return this.appctx['pip']
-                        ['read']({
+                        ['read']<CABINET>({
                             CABINET: {
                                 criteries: {
                                     DUE: this.data.rec.DUE,
@@ -291,7 +291,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
                     });
                 }
                 if (updateCab.length > 0) {
-                    this._apiSrv.read({
+                    this._apiSrv.read<CABINET>({
                         CABINET: {
                             criteries: {
                                 ISN_CABINET: updateCabIsn.join('|'),
@@ -386,8 +386,8 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
                 this.data.owners.push(dep);
                 const path = 'owners[' + startIndex + '].ISN_CABINET';
                 const orderNum = 'owners[' + startIndex + '].ORDER_NUM';
-                this.form.addControl(path, new UntypedFormControl(dep['ISN_CABINET']));
-                this.form.addControl(orderNum, new UntypedFormControl(dep['ORDER_NUM']));
+                this.form.addControl(path, new FormControl(dep['ISN_CABINET']));
+                this.form.addControl(orderNum, new FormControl(dep['ORDER_NUM']));
                 const newCabinet = <ICabinetOwner>{
                     index: startIndex,
                     marked: false,
@@ -615,8 +615,8 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
             this.cabinetOwners = ans.owners.map((owner, idx) => {
                 const path = 'owners[' + idx + '].ISN_CABINET';
                 const orderNum = 'owners[' + idx + '].ORDER_NUM';
-                this.form.addControl(path, new UntypedFormControl(owner['ISN_CABINET']));
-                this.form.addControl(orderNum, new UntypedFormControl(owner['ORDER_NUM']));
+                this.form.addControl(path, new FormControl(owner['ISN_CABINET']));
+                this.form.addControl(orderNum, new FormControl(owner['ORDER_NUM']));
 
                 return <ICabinetOwner>{
                     index: idx,

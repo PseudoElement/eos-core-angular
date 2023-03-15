@@ -26,6 +26,10 @@ import { EosTemplateComponent } from './clman/eos-template/eos-template.componen
 import { PluginReactComponent } from './plugin-react/plugin-react.component';
 import { EosCommonModule } from '../eos-common';
 import { ExtendsLinkedSearch } from './addons/components/linked-search-default/linked-search-default.component';
+import { DocgroupOverrideService } from './addons/docgroup-override.service';
+import { DictionaryOverrideService } from './addons/dictionary-override.service';
+import { NpCounterOverrideService } from './addons/np-counter-override.service';
+
 
 @NgModule({
     imports: [
@@ -56,6 +60,9 @@ import { ExtendsLinkedSearch } from './addons/components/linked-search-default/l
         AuthService,
         AppContext,
         ViewManager,
+        DocgroupOverrideService,
+        DictionaryOverrideService,
+        NpCounterOverrideService
         // ContextService,
     ]
 })

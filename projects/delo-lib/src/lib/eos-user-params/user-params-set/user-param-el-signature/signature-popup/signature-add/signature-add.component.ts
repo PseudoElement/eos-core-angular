@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CertStoresService } from '../../../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
 // import { PARM_ERR_OPEN_CERT_STORES } from '../../../../../eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -14,8 +14,8 @@ import { CarmaHttp2Service } from '../../../../../app/services/camaHttp2.service
 
 export class SignatureAddComponent implements OnInit {
     @Input() inputName: string;
-    @Input() input: UntypedFormControl;
-    @Input() form: UntypedFormGroup;
+    @Input() input: FormControl;
+    @Input() form: FormGroup;
 
     @Output() closeAddCertModal = new EventEmitter;
     public certSystemStore: string;

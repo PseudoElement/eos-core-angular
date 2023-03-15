@@ -10,7 +10,7 @@ import {
     HostListener,
 } from '@angular/core';
 import { BaseCardEditDirective } from './base-card-edit.component';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosUtils } from '../../eos-common/core/utils';
 import { InputControlService } from '../../eos-common/services/input-control.service';
@@ -25,6 +25,7 @@ import { DOCGROUP_DICT } from '../../eos-dictionaries/consts/dictionaries/docgro
 import { COLLISIONS_SEV_DICT } from '../../eos-dictionaries/consts/dictionaries/sev/sev-collisions';
 import { SEV_COLLISION_OPTIONS } from '../../eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
+import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
 
 @Component({
     selector: 'eos-card-edit',
@@ -43,7 +44,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
 
     @ViewChild('cardEditEl', { static: false }) baseCardEditRef: BaseCardEditDirective;
 
-    form: UntypedFormGroup;
+    form: FormGroup;
     inputs: any;
     newData: any = {};
     isChanged: boolean;
@@ -60,12 +61,17 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         private _rulesSrv: EosSevRulesService,
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
+        private _eosCommonOverride: EosCommonOverriveService
     ) {
         this.subscriptions = [];
     }
     /**
      * return new data, used by parent component
      */
+
+    get expression() {
+        return this._eosCommonOverride.checkCardElementFroCardEditComponent(this.dictionaryId);
+    }
     getNewData(): any {
         this._setInitialData();
         const newData = EosUtils.deepUpdate(Object.assign({}, this.data), this.newData);

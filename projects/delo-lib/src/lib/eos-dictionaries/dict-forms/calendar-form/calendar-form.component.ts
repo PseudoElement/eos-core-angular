@@ -1,5 +1,5 @@
 import { DATE_INPUT_PATERN } from '../../../eos-common/consts/common.consts';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Component, OnInit, OnChanges, Injector, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 // import { BsLocaleService } from 'ngx-bootstrap';
@@ -60,7 +60,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     @Output() onSaveChanges: EventEmitter<any> = new EventEmitter<any>();
     @Input() due = null;
 
-    form: UntypedFormGroup;
+    form: FormGroup;
     inputs: InputBase<any>[];
 
     selectedDate = new Date();

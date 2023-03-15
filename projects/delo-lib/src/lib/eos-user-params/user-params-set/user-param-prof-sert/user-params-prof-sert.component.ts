@@ -253,7 +253,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        return this.apiSrv.read(query)
+        return this.apiSrv.read<USER_CERT_PROFILE>(query)
         .then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
             this.getInfoForDBSerts().then(() => {
@@ -275,7 +275,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        return this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
+        return this.apiSrv.read<USER_CERT_PROFILE>(query).then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
             if (this.DBserts) {
                 this.DBserts.forEach((el) => { this.notDataSert(el); });

@@ -6,7 +6,7 @@
     <div class="dnd-container">
         <div class="dnd-content">
             <!-- <p>Исходный список</p> -->
-            <div class="dnd-bag"
+            <!-- <div class="dnd-bag"
                 id="availableList"
                 [dragula]="BAG_NAME"
                 [(dragulaModel)]="availableList">
@@ -17,7 +17,7 @@
                     [ngClass]="{'highlighted': (item === selection.available), disabled: false, 'deleted': item.obj.DELETED }">
                     <span class="text" *ngIf="!item.obj.DELETED || withDel">{{options.showKeys ? item?.key + ' ': ''}}{{item?.title}}</span>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="dnd-driver" style="height: 10px;">

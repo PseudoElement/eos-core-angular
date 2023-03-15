@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { RC_USER } from '../shared-user-param/consts/rc.consts';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { IOpenClassifParams } from '../../../eos-common/interfaces/interfaces';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
 import { FormHelperService } from '../../shared/services/form-helper.services';
@@ -31,7 +31,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     prepInputsAttach;
     flagEdit: boolean;
     public inputs;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     public allData;
     public disabledFlagDelite = false;
     public dopRec: Array<any> = null;

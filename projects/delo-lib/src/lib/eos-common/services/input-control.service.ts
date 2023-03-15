@@ -1,6 +1,6 @@
 import { NOT_EMPTY_MULTYSTRING } from './../consts/common.consts';
 import {Injectable} from '@angular/core';
-import {AbstractControl, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 
 import {InputBase} from '../core/inputs/input-base';
 import {EosDictService} from '../../eos-dictionaries/services/eos-dict.service';
@@ -79,7 +79,7 @@ export class InputControlService {
                 this._addInput(group, inputs[input]);
             }
         });
-        return new UntypedFormGroup(group);
+        return new FormGroup(group);
     }
 
     /**
@@ -100,7 +100,7 @@ export class InputControlService {
             let errMessage: string = null;
             const value = control.value;
             if (value && value instanceof Date) {
-                const group = <UntypedFormGroup>control.parent;
+                const group = <FormGroup>control.parent;
                 if (group) {
                     const compareCtrl = group.controls[commparePath];
                     if (compareCtrl && compareCtrl.value && compareCtrl.value instanceof Date && !isNaN(compareCtrl.value.getTime())) {
@@ -121,7 +121,7 @@ export class InputControlService {
                     }
                 }
             } else {
-                const group = <UntypedFormGroup>control.parent;
+                const group = <FormGroup>control.parent;
                 if (group) {
                     const compareCtrl = group.controls[commparePath];
                     if (compareCtrl && compareCtrl.invalid) {
@@ -186,7 +186,7 @@ export class InputControlService {
         const validators = [];
 
         if (input.disabled) {
-            group[input.key] = new UntypedFormControl({value: value, disabled: true}, validators);
+            group[input.key] = new FormControl({value: value, disabled: true}, validators);
         } else {
             if (input.controlType === E_FIELD_TYPE.date) {
                 validators.push(this.dateValueValidator());
@@ -219,7 +219,7 @@ export class InputControlService {
                 validators.push(Validators.maxLength(input.length));
             }
 
-            group[input.key] = new UntypedFormControl(value, validators);
+            group[input.key] = new FormControl(value, validators);
         }
     }
 

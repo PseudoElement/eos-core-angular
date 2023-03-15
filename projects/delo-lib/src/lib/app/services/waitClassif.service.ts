@@ -88,7 +88,7 @@ export class WaitClassifService {
             });
     }
 
-    openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
+    openClassif(params: IOpenClassifParams, flag?: boolean): Promise<string> {
 
         let url: string = '';
         if (params.classif === 'USER_LISTS') {

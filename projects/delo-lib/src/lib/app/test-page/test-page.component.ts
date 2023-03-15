@@ -4,7 +4,7 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 import { PipRX } from '../../eos-rest/services/pipRX.service';
 import { DELO_BLOB } from '../../eos-rest/interfaces/structures';
 import { IBaseInput } from '../../eos-common/interfaces';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { InputBase } from '../../eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
@@ -97,7 +97,7 @@ export class TestPageComponent implements OnInit, OnChanges {
 
     date: Date = new Date();
 
-    form: UntypedFormGroup;
+    form: FormGroup;
     inputs: InputBase<any>[];
     data = {};
 

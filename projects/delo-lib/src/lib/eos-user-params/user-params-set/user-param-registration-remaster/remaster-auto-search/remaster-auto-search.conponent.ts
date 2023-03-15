@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import {UntypedFormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 
 import {Subject} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
 
     @Output() pushChange: EventEmitter<any> = new EventEmitter();
     public inputs;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     public searchString;
     private prepareDefaultForm;
     private prepareInputs;

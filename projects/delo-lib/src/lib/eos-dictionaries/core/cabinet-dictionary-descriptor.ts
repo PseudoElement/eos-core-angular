@@ -135,12 +135,12 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     getRelated(rec: CABINET): Promise<any> {
         const reqs = [
             this.apiSrv.read({ 'FOLDER': PipRX.criteries({ 'ISN_CABINET': rec.ISN_CABINET + '' }) }),
-            this.apiSrv.read({ 'DEPARTMENT': [rec.DUE] })
+            this.apiSrv.read<DEPARTMENT>({ 'DEPARTMENT': [rec.DUE] })
                 .then(([department]: DEPARTMENT[]) => {
                     return this.getOwners(department.DEPARTMENT_DUE, rec.ISN_CABINET)
                         .then((owners) => [department, owners]);
                 }),
-            this.apiSrv.read({ 'USER_CABINET': PipRX.criteries({ 'ISN_CABINET': rec.ISN_CABINET + '' }) })
+            this.apiSrv.read<USER_CABINET>({ 'USER_CABINET': PipRX.criteries({ 'ISN_CABINET': rec.ISN_CABINET + '' }) })
                 .then((userCabinet: USER_CABINET[]) => {
                     this.prepareForEdit(userCabinet);
                     const userIds = userCabinet.map((u2c) => u2c.ISN_LCLASSIF);

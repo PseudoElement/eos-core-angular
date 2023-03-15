@@ -1,0 +1,45 @@
+<div class="card-content-wrapper">
+    <ng-container *ngFor="let node of template">
+        <ng-container *ngTemplateOutlet="content; context: {node: node}"></ng-container>
+    </ng-container>
+    <ng-template #content let-node="node">
+        <ng-container [ngSwitch]="node.type">
+            <ng-container *ngSwitchCase="'div'">
+                <ng-container *ngTemplateOutlet="div; context: {node: node}"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'label'">
+                <ng-container *ngTemplateOutlet="label; context: {node: node}"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'span'">
+                <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'input'">
+                <ng-container *ngTemplateOutlet="input; context: {node: node}"></ng-container>
+            </ng-container>
+        </ng-container>
+    </ng-template>
+    <ng-template #div let-node="node">
+        <div [style]="node?.style">
+            <ng-container *ngIf="node.content">
+                <ng-container *ngFor="let n of node.content">
+                    <ng-container *ngTemplateOutlet="content; context: {node: n}"></ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+    </ng-template>
+    <ng-template #span let-node="node">
+        <span></span>
+        <ng-container *ngIf="node.content">
+            <ng-container *ngFor="let n of node.content">
+                <ng-container *ngTemplateOutlet="content; context: {node: n}"></ng-container>
+            </ng-container>
+        </ng-container>
+    </ng-template>
+    <ng-template #label let-node="node">
+        <label>{{node.text}}</label>
+    </ng-template>
+    <ng-template #input let-node="node">
+        <eos-dynamic-input [style]="node?.style"  [input]="inputs['rec.' + node.name]" [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+    </ng-template>
+</div>

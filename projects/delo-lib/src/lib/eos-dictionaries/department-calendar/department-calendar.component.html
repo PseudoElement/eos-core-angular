@@ -1,0 +1,39 @@
+<div class="department-calendar-modal">
+    <header>
+        <div class="modal-header">
+            <h4 class="xl-font primary-text pull-left">{{ getTitleLabel() }}</h4>
+            <div class="action-wrapper">
+                <div class="pull-right">
+                    <button
+                        class="btn btn-primary-light"
+                        aria-hidden="true"
+                        (click)="hideModal()"
+                        tooltip="Закрыть"
+                        placement="bottom"
+                        [delay]="tooltipDelay"
+                        containerClass="tooltip-info"
+                    >
+                        <span class="eos-icon eos-icon-close-blue small"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="spinner-container text-center" *ngIf="isUpdating">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+    <div class="modal-body" *ngIf="!isUpdating">
+        <div class="l-font pull-left full-width">
+            <span>{{ getNodeTitle() }}</span>
+        </div>
+        <div class="form-card-body">
+            <eos-calendar-form #formElement
+                (onSaveChanges)="onSaveChanges($event)"
+                [due]="due"
+            > </eos-calendar-form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary-full pull-right" (click)="hideModal()">Закрыть</button>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, Output, Injector} from '@angular/core';
-import {UntypedFormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
 import {EosMessageService} from '../../eos-common/services/eos-message.service';
@@ -112,7 +112,7 @@ class CopyPropWarning  {
 })
 
 export class CopyPropertiesComponent implements OnDestroy {
-    @Input() form: UntypedFormGroup;
+    @Input() form: FormGroup;
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 

@@ -67,6 +67,7 @@ import { EosInstrumentsModule } from '../eos-instruments/eos-instruments.module'
 import { AbsoluteRigthServiceLib } from '../eos-rest/addons/absoluteRigth.service';
 import { ExetentionsRigthsServiceLib } from '../eos-rest/addons/extentionsRigts.service';
 import { ExetentionsUserParamsLib } from '../eos-rest/addons/ExtentionsUserParamsLib.service';
+import { EosCommonOverriveService } from './services/eos-common-overrive.service';
 /* end guards */
 
 @NgModule({
@@ -140,6 +141,7 @@ import { ExetentionsUserParamsLib } from '../eos-rest/addons/ExtentionsUserParam
         AbsoluteRigthServiceLib,
         ExetentionsRigthsServiceLib,
         ExetentionsUserParamsLib,
+        EosCommonOverriveService
     ],
 })
 

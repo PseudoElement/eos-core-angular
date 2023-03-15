@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -45,8 +45,8 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     public prepareDataMailResive;
     public inputs;
     public inputsMailResive;
-    public form: UntypedFormGroup;
-    public formMailResuve: UntypedFormGroup;
+    public form: FormGroup;
+    public formMailResuve: FormGroup;
     public listForAccordion: Array<Accordion> = [];
     public templRenderMailResive;
     public flagEdit: boolean = false;
@@ -272,7 +272,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             }
         }
     }
-    returnClass(node, form: UntypedFormGroup): string {
+    returnClass(node, form: FormGroup): string {
         let str = '';
         let key = 'rec.' + node.key;
         if (key === 'rec.RCSEND_REGISTRATION_NUMBER') {

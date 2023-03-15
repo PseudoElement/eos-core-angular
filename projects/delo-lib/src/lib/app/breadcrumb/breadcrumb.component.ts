@@ -20,6 +20,9 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { UserSelectNode } from '../../eos-user-select/list-user-select/user-node-select';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 
+import { E_RECORD_ACTIONS } from '../../eos-dictionaries/';
+import { NpCounterOverrideService } from '../../eos-rest';
+
 @Component({
     selector: 'eos-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
@@ -47,6 +50,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     private routeName: number;
     private ngUnsubscribe: Subject<any> = new Subject();
 
+    inlineRightSandwich: boolean = true;
     constructor(
         private _breadcrumbsSrv: EosBreadcrumbsService,
         private _router: Router,
@@ -56,6 +60,7 @@ export class BreadcrumbsComponent implements OnDestroy {
         private _rtSrv: RtUserSelectService,
         private _eaps: EosAccessPermissionsService,
         private _appContext: AppContext,
+        private _npOverrideSrv: NpCounterOverrideService
     ) {
         _breadcrumbsSrv.breadcrumbs$
             .pipe(
@@ -76,7 +81,9 @@ export class BreadcrumbsComponent implements OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((state) => this.infoOpened = state[1]);
+            .subscribe((state) => {
+                this.infoOpened = state[1];
+            });
 
         this._dictSrv.openedNode$
             .pipe(
@@ -96,6 +103,11 @@ export class BreadcrumbsComponent implements OnDestroy {
                         }
                     }
                     this.isEditEnabled = (!n.isDeleted || Features.cfg.canEditLogicDeleted) && this.isEditGranted && this._calcisEditable(n);
+                    this.isEditEnabled = this._dictSrv.dictionatyOverrideSrv.accessActionEdit(n,  this.isEditEnabled, this._dictSrv.currentDictionary.id);
+                    if (n.dictionaryId === 'organization') {
+                        const allCheck: any = [n];
+                        this.isEditEnabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.edit, this.isEditEnabled, allCheck);
+                    }
                 }
             });
 
@@ -184,6 +196,7 @@ export class BreadcrumbsComponent implements OnDestroy {
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
         this.showPushpin = _actRoute.data.showPushpin;
         this.showInfoAct = _actRoute.data && _actRoute.data.showSandwichInBreadcrumb;
+        this.inlineRightSandwich = this.showInfoAct && this._sandwichSrv.treeIsBlocked;
     }
 
 }

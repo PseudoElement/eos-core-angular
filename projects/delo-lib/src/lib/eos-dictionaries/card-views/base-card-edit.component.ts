@@ -1,5 +1,5 @@
 import { Input, Injector, OnDestroy, OnInit, AfterViewInit, Directive } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { Subscription } from 'rxjs';
@@ -26,7 +26,7 @@ enum TabStatus {
 
 @Directive()
 export class BaseCardEditDirective implements OnDestroy, OnInit, AfterViewInit {
-    @Input() form: UntypedFormGroup;
+    @Input() form: FormGroup;
     @Input() inputs: any;
     @Input() data: any;
     @Input() editMode: boolean;

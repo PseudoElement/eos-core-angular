@@ -10,16 +10,25 @@ import { GENDERS, REPLACE_FIELDS } from '../consts/dictionaries/department.const
 import { EMAIL, NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from '../../eos-common/core/inputs/buttons-input';
-import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
-import {EosBroadcastChannelService} from './eos-broadcast-channel.service';
+import { DictionaryDescriptorService } from '../core/dictionary-descriptor.service';
+import { EosBroadcastChannelService } from './eos-broadcast-channel.service';
 import { MAIL_FORMATS } from '../consts/dictionaries/contact.consts';
 import { ToggleInput } from '../../eos-common/core/inputs/toggle-input';
 import { NumberIncrementInput } from '../../eos-common/core/inputs/number-increment-input';
 import { RadioInput } from '../../eos-common/core/inputs/radio-input';
+import { EosDictService } from './eos-dict.service';
+import { DictionaryOverrideService } from '../../eos-rest';
+
 
 @Injectable()
 export class EosDataConvertService {
 
+    constructor(
+        private _dictOverrideSrv: DictionaryOverrideService,
+        private dctSrv: EosDictService
+    ) {
+
+    }
     static listToCommaList(list: string[]): string {
         if (!list || list.length === 0) {
             return null;
@@ -38,10 +47,10 @@ export class EosDataConvertService {
      * @param data node data
      */
     getInputs(
-            fieldsDescription: any[],
-            data: any, editMode = true,
-            dictSrv?: DictionaryDescriptorService,
-            channelSrv?: EosBroadcastChannelService
+        fieldsDescription: any[],
+        data: any, editMode = true,
+        dictSrv?: DictionaryDescriptorService,
+        channelSrv?: EosBroadcastChannelService
     ) {
         const inputs: any = {};
         if (fieldsDescription) {
@@ -75,7 +84,7 @@ export class EosDataConvertService {
                                         groupLabel: descr[_key].groupLabel
                                     });
                                     inputs[_dict + '.' + _key].controlType = E_FIELD_TYPE.select2;
-                                break;
+                                    break;
                                 case E_FIELD_TYPE.dictLink:
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
@@ -95,7 +104,7 @@ export class EosDataConvertService {
                                         groupLabel: descr[_key].groupLabel
                                     });
                                     inputs[_dict + '.' + _key].controlType = E_FIELD_TYPE.dictLink;
-                                break;
+                                    break;
 
                                 case E_FIELD_TYPE.numberIncrement:
                                     inputs[_dict + '.' + _key] = new NumberIncrementInput({
@@ -145,7 +154,7 @@ export class EosDataConvertService {
                                         uniqueInDict: descr[_key].uniqueInDict,
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey] === void 0 ? descr[_key].default :
-                                        data[_dict][descr[_key].foreignKey],
+                                            data[_dict][descr[_key].foreignKey],
                                         length: descr[_key].length,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
@@ -174,7 +183,7 @@ export class EosDataConvertService {
                                                                 uniqueInDict: descr[_dataKey].uniqueInDict,
                                                                 forNode: descr[_dataKey].forNode,
                                                                 value: data[_dict][descr[_dataKey].foreignKey]
-                                                                || descr[_dataKey].default,
+                                                                    || descr[_dataKey].default,
                                                                 length: descr[_dataKey].length,
                                                                 disabled: !editMode,
                                                                 password: descr[_dataKey].password,
@@ -189,17 +198,17 @@ export class EosDataConvertService {
                                                                 required: descr[_dataKey].required,
                                                                 forNode: descr[_dataKey].forNode,
                                                                 value: data[_dict][descr[_key].foreignKey] === void 0 ? descr[_key].default :
-                                                                data[_dict][descr[_key].foreignKey],
+                                                                    data[_dict][descr[_key].foreignKey],
                                                                 disabled: !editMode,
                                                             });
                                                             break;
                                                     }
                                                 }
                                             });
-                                    });
+                                        });
                                     break;
-                                    case E_FIELD_TYPE.number:
-                               /* case E_FIELD_TYPE.string:
+                                case E_FIELD_TYPE.number:
+                                /* case E_FIELD_TYPE.string:
                                     inputs[_dict + '.' + _key] = new StringText({
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
@@ -229,14 +238,14 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.toggle:
-                                inputs[_dict + '.' + _key] = new ToggleInput({
-                                    key: _dict + '.' + descr[_key].foreignKey,
-                                    label: descr[_key].title,
-                                    forNode: descr[_key].forNode,
-                                    value: !!data[_dict][descr[_key].foreignKey],
-                                    disabled: !editMode,
-                                });
-                                break;
+                                    inputs[_dict + '.' + _key] = new ToggleInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        forNode: descr[_key].forNode,
+                                        value: !!data[_dict][descr[_key].foreignKey],
+                                        disabled: !editMode,
+                                    });
+                                    break;
                                 case E_FIELD_TYPE.boolean:
                                     inputs[_dict + '.' + _key] = new CheckboxInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
@@ -712,6 +721,10 @@ export class EosDataConvertService {
                                     break;
                             }
                         });
+                        break;
+                    case 'extensions':
+                        // формируем доп поля для справочников
+                        this._dictOverrideSrv.getFieldsForInputs(inputs, data, this.dctSrv.currentDictionary.id, editMode);
                         break;
                 }
             });

@@ -63,7 +63,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                 }
             });
             if (organizIds.length) {
-                return this.apiSrv.read({ ORGANIZ_CL: organizIds }).then((org: ORGANIZ_CL[]) => {
+                return this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: organizIds }).then((org: ORGANIZ_CL[]) => {
                     org.forEach((o: ORGANIZ_CL) => {
                         const s: SEV_PARTICIPANT = mapLinksOrganiz.get(o.DUE);
                         s.DELETED = o.DELETED;
@@ -97,7 +97,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
     }
 
     getRelated(data): Promise<any> {
-        return this.apiSrv.read({
+        return this.apiSrv.read<SEV_PARTICIPANT_RULE>({
             SEV_PARTICIPANT_RULE: {
                 criteries: {
                     ISN_PARTICIPANT: data.ISN_LCLASSIF,
@@ -108,7 +108,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
             sev_partisipant.forEach((rule: SEV_PARTICIPANT_RULE) => {
                 sev_ruleID.push(rule.ISN_RULE);
             });
-            return this.apiSrv.read({
+            return this.apiSrv.read<SEV_RULE>({
                 SEV_RULE: sev_ruleID
             }).then((sev_rule: SEV_RULE[]) => {
                 if (sev_rule.length) {

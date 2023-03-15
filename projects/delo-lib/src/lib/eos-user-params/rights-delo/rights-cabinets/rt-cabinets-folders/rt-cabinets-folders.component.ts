@@ -15,7 +15,7 @@ import { CardsClass, Cabinets } from '../helpers/cards-class';
 import { RigthsCabinetsServices } from '../../../shared/services/rigths-cabinets.services';
 import { EosMessageService } from '../../../../eos-common/services/eos-message.service';
 import { DropdownInput } from '../../../../eos-common/core/inputs/select-input';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
 @Component({
@@ -30,7 +30,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     @Output() changes = new EventEmitter();
     public limitCard: boolean = false;
     public currentCabinet: Cabinets;
-    form: UntypedFormGroup;
+    form: FormGroup;
     selectCabinetInput: DropdownInput = new DropdownInput({
         key: 'selectedCabinet',
         options: [],

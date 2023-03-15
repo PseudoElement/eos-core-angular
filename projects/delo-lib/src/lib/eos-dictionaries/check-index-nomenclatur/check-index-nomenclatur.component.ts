@@ -1,7 +1,7 @@
 
 import {Component, OnDestroy, OnInit, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 import { IBaseInput } from '../../eos-common/interfaces';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputBase } from '../../eos-common/core/inputs/input-base';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { PipRX, DEPARTMENT } from '../../eos-rest';
@@ -37,7 +37,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     @Output() onOpen: EventEmitter<boolean> = new EventEmitter<boolean>();
     @ViewChild('settingsWindow', { static: true }) settingsWindow: ElementRef;
     @ViewChild('redactWindow', { static: true }) redactWindow: ElementRef;
-    searchForm: UntypedFormGroup;
+    searchForm: FormGroup;
     inputs: InputBase<any>[];
     forWhom: number = 0;
     where: number = 0;

@@ -592,7 +592,7 @@ export class UserParamsService {
         if (!limitTechUser && curUser) {
             return Promise.resolve(false);
         }
-        return this._pipRx.read({
+        return this._pipRx.read<USER_CL>({
             USER_CL: {
                 criteries: {
                     DELO_RIGHTS: '1%',

@@ -42,7 +42,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     }
     constructor(
         //  private _sandwichSrv: EosSandwichService,
-        private _selectedUser: RtUserSelectService,
+        public _selectedUser: RtUserSelectService,
         private _storageSrv: EosStorageService,
         private _router: Router,
         private _errSrv: ErrorHelperServices,

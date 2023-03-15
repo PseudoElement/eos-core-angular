@@ -113,7 +113,7 @@ export class RemasterService {
       });
     }
 
-    getLink_Type() {
+    getLink_Type(): any {
         const query = {
             LINK_CL: { ar: true }
         };

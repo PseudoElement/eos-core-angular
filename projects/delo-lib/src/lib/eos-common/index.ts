@@ -14,9 +14,9 @@ export * from "./messages/messages.component";
 export * from "./spinner/spinner.component";
 export * from "./directives/unic-validator.directive";
 export * from "./directives/click-mode.directive";
-/* export * from "./directives/add-controls.directive"; */
+export * from "./directives/add-controls.directive";
 export * from "./pipes/eos-date.pipe";
-/* export * from "./components/eos-common-dynamic/eos-common-dynamic.component"; */
+export * from "./eos-common-dynamic/eos-common-dynamic.component";
 export * from "./photo-uploader/photo-uploader.component";
 export * from "./pagination-user-select/pagination-user-select.component";
 export * from "./input-cleaner/input-cleaner.directive";

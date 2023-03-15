@@ -4,7 +4,7 @@ import { WaitClassifService } from '../../../app/services/waitClassif.service';
 import { USER_CL, PipRX } from '../../../eos-rest';
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
 import { InputParamControlService } from '../../../eos-user-params/shared/services/input-param-control.service';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormHelperService } from '../../../eos-user-params/shared/services/form-helper.services';
 import { FILTER_PROTOCOL } from '../../../eos-user-params/user-params-set/shared-user-param/consts/filter-users.const';
 import { InputControlService } from '../../../eos-common/services/input-control.service';
@@ -31,7 +31,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   isShell: boolean = false;
   filterBtn: boolean = false;
   fields = CREATE_USER_INPUTS;
-  filterForm: UntypedFormGroup;
+  filterForm: FormGroup;
   inputs;
   searchModel = {};
   public tooltipDelay = TOOLTIP_DELAY_VALUE;

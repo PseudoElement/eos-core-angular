@@ -1,6 +1,6 @@
 import { EosUtils } from '../../../eos-common/core/utils';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-parameters.const';
-import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { CONTEXT_RC_PARAM } from './../shared/consts/context-rc-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, OnDestroy, Input } from '@angular/core';
@@ -17,7 +17,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     @Input() btnError;
     masDisable: any[] = [];
     masDisableContextChoice: any[] = [];
-    formContextChoice: UntypedFormGroup;
+    formContextChoice: FormGroup;
     formReadonli: boolean;
     hiddenFilesContext = false;
     hiddenInputRadioResolution: boolean;
@@ -50,10 +50,10 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     ngOnInit() {
         this.queryObj = this.getObjQueryInputsField(['CONTEXT_SECTIONS_ENABLED']);
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
-        this.formContextChoice = new UntypedFormGroup({
-            contextFile: new UntypedFormControl(true),
-            contextRC: new UntypedFormControl('rc'),
-            contextResolution: new UntypedFormControl(true)
+        this.formContextChoice = new FormGroup({
+            contextFile: new FormControl(true),
+            contextRC: new FormControl('rc'),
+            contextResolution: new FormControl(true)
         });
         this.initContext();
     }

@@ -39,7 +39,7 @@ export class OrganizationsCardEditGroupComponent extends BaseCardEditDirective i
         return Promise.resolve(true);
     }
     upDateChildren() {
-        return this.apiSrv.read({
+        return this.apiSrv.read<ORGANIZ_CL>({
             ORGANIZ_CL: {
                 criteries: {
                     DUE: this.data.rec.DUE + '_%'

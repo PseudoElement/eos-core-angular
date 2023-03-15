@@ -1,7 +1,7 @@
 import { Component, EventEmitter, /* Input, */ OnInit, Output, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { AUNTEFICATION_CONTROL_INPUT } from '../../eos-user-params/shared/consts/auntefication-param.consts';
 import { IInputParamControl, IParamUserCl } from '../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
 /* import { BaseParamCurentDescriptor } from 'eos-user-params/base-param/shared/base-param-curent.descriptor'; */
 import { UserParamsService } from '../../eos-user-params/shared/services/user-params.service';
@@ -41,7 +41,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
     public inputsInfo: any;
     public inputs;
     public _descSrv;
-    public form: UntypedFormGroup;
+    public form: FormGroup;
     public storeParams = new Set();
     public errorPass: boolean = false;
     public disableSave: boolean = false;
@@ -279,7 +279,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-    onChangeAuntef($event) {
+    onChangeAuntef() {
         this.form.get('SELECT_AUTENT').patchValue(this.autentif.nativeElement.value);
         const autent = this.form.get('SELECT_AUTENT').value;
         this.maxLoginLength = autent === 0 ? '12' : '64';
@@ -702,7 +702,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
         }
         this.newLogin = false;
     }
-    cancelValues(inputs, form: UntypedFormGroup) {
+    cancelValues(inputs, form: FormGroup) {
         form.controls['pass'].patchValue(inputs['pass'].value, { emitEvent: false });
         form.controls['passRepeated'].patchValue(inputs['passRepeated'].value, { emitEvent: false });
         form.controls['ID_USER'].patchValue(inputs['ID_USER'].value, { emitEvent: false });

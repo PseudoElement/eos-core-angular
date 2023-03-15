@@ -10,7 +10,7 @@ import { AppContext } from '../../../eos-rest/services/appContext.service';
 export class RigthsCabinetsServices {
     public cardsArray: CardsClass[] = [];
     public user_id;
-    public changeCabinets = new Subject();
+    public changeCabinets = new Subject<CardsClass>();
     public submitRequest = new Subject();
     constructor(
         private _pipRx: PipRX,
@@ -25,7 +25,7 @@ export class RigthsCabinetsServices {
         });
     }
     getCabinets(due, isn): Promise<any> {
-        return this._pipRx.read(this.criterCabinet(due)).then((cabinets: CABINET[]) => {
+        return this._pipRx.read<CABINET>(this.criterCabinet(due)).then((cabinets: CABINET[]) => {
             const queryString = [];
             queryString.push(...this.gitStringQueryUserCabinets(cabinets));
             if (queryString.length) {

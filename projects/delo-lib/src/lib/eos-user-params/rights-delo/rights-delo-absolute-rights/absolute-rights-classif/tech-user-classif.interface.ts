@@ -11,6 +11,7 @@ export interface ITechUserClassifConst {
     key: number;
     label: string;
     expandable: E_TECH_USER_CLASSIF_CONTENT;
+    useInProject?: string;
 }
 export interface IConfigUserTechClassif {
     apiInstance: 'DEPARTMENT' | 'DOCGROUP_CL' | 'RUBRIC_CL';
