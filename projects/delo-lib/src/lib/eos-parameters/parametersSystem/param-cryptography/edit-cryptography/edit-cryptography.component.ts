@@ -33,6 +33,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     certSystemAddress: string;
     listStores: IListStores[];
     currentSelectNode: IListStores;
+    openModal = false;
     public editCertId: number;
     public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL];
     public tableHeader: ITableHeader[] = [
@@ -51,7 +52,6 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _modalSrv: BsModalService,
-        // private _certStoresService: CertStoresService,
         private _msgSrv: EosMessageService,
         private _cermaHttp2Srv: CarmaHttp2Service,
     ) {}
@@ -89,14 +89,18 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                     }
                 });
                 if (flag) {
+                    this.form.controls['rec.ProfileName'].setErrors(null);
                     this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
                 } else {
                     this.form.controls['rec.ProfileName'].setErrors(null);
                 }
             } else {
+                this.form.controls['rec.ProfileName'].setErrors(null);
                 this.form.controls['rec.ProfileName'].setErrors({ isRequired: undefined });
             }
         });
+        console.log('this.form', this.form.invalid);
+        
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
@@ -158,6 +162,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     cancelModal() {
         this.editCertId = undefined;
         this.modalWordRef.hide();
+        this.openModal = false;
     }
     submitModal() {
         const cert = this.form.controls['rec.CertStores'];
@@ -188,9 +193,11 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
         this.editCertId = undefined;
         this.updateTableList(newItem);
         this.modalWordRef.hide();
+        this.openModal = false;
     }
     private _openModal() {
         this.modalWordRef = this._modalSrv.show(this.modalStorage, { class: 'modalCrypto', ignoreBackdropClick: true });
+        this.openModal = true;
     }
     onChangeSelect($event) {
         this.certSystemAddress = '';

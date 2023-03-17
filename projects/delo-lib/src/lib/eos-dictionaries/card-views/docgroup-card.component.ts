@@ -216,7 +216,10 @@ export class DocgroupCardComponent extends BaseCardEditDirective implements OnCh
 
         const viewRef = this.addControl.viewContainerRef;
         viewRef.clear();
-        const component_ = this._resolver.resolveComponentFactory(this._docgRoupOverrideService.autoregComponent);
+        let component_;
+        if (this._docgRoupOverrideService.autoregComponent) {
+            component_ = this._resolver.resolveComponentFactory(this._docgRoupOverrideService.autoregComponent);
+        }
         if (component_) {
             const component: any = viewRef.createComponent(component_);
             this._docgRoupOverrideService.setInstanseData(component, this);

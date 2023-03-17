@@ -6,12 +6,12 @@
         <div class="header-button-wrap">
             <button class="btn btn-primary header-button" (click)="cancel()">ОТМЕНИТЬ
             </button>
-            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="statusBtnSub">СОХРАНИТЬ
+            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="this.form.invalid">СОХРАНИТЬ
             </button>
         </div>
     </div>
     <div style="padding: 20px;">
-        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly || openModal"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.InitString']" [form]="form"  [readonly]="inputs['rec.InitString'].readonly"></eos-dynamic-input>
     </div>
     <div class="collection-profile-table">
@@ -45,7 +45,7 @@
     <main class="modalWord-content-edit">
         <div class="input-wrap" style="margin-bottom: 14px;">
             <label for="selectStores" style="color: #969696;">
-                СТРОКА ИНИЦИАЛИЗАЦИИ
+                РАСПОЛОЖЕНИЕ ХРАНИЛИЩА
             </label>
             <br>
             <div class="eos-select">
@@ -71,7 +71,7 @@
                 <input class="form-control m-font"
                     id="adress"
                     type="text"
-                    placeholder="Адрес хранилища"
+                    placeholder="Укажите адрес хранилища"
                     autocomplete="off"
                     [(ngModel)]="certSystemAddress"
                 >
@@ -85,7 +85,7 @@
         </div>
         <div style="margin-top: 20px; color: #969696;">
             <label >
-                НУЖНО УКАЗАТЬ НАЗВАНИЕ ПОЛЯ
+                ХРАНИЛИЩА
             </label>
         </div>
         <div class="list-stores">

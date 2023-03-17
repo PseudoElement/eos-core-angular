@@ -313,7 +313,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                             this.arrDeloRight = strNewDeloRight.split('');
                         }
                         this.listRight.forEach((node: NodeAbsoluteRight) => {
-                            if (node.touched && node.key === '2') {
+                            if (node.touched && node.key === '2' && !node.contentProp) {
                                 const sendMethod = node.value === 1 ? 'POST' : 'DELETE';
                                 if (sendMethod === 'POST') {
                                     const q = {

@@ -123,7 +123,6 @@ export class ParamConversionComponent extends BaseParamComponent {
                 this.prepareData.rec[key] = newConverter[key] === null || newConverter[key] === undefined ? '' : newConverter[key];
             }
         });
-        this.prepareData.rec['ServerURL'] = '';
     }
     updateFormForPrepare() {
         Object.keys(this.prepareData.rec).forEach((key) => {

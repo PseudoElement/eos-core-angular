@@ -28,3 +28,8 @@ export interface ITableData {
     tableHeader: ITableHeader[];
     data: any[];
 }
+export interface ITableSettings {
+    hiddenCheckBox?: boolean;
+    maxHeightTable?: string;
+    selectedRow?: boolean;
+}

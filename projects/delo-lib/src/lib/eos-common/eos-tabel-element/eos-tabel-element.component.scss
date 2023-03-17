@@ -21,6 +21,7 @@
         border-bottom: 1px solid #e6e6e6;
         border-top-color: transparent;
         display: flex;
+        min-height: 48px;
         .checkbox-inline {
             width: 48px;
             height: 48px;
@@ -56,5 +57,12 @@
             border-radius: 2px;
             color: #ffffff;
         }
+    }
+    .margin-not-checkbox {
+        padding-left: 16px;
+    }
+    .selected-row {
+        border: 2px solid #2196F3;
+        background-color: #E3F2FD;
     }
 }

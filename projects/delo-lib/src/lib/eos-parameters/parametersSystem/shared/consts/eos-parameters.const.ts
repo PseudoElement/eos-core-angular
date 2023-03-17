@@ -21,6 +21,10 @@ export const EOS_PARAMETERS_TAB = [{
     url: 'param-lib',
     visible: true
 }, {
+    title: 'Хранилище файлов',
+    url: 'param-libs',
+    visible: true
+}, {
     title: 'Поиск',
     url: 'search',
     visible: true
@@ -41,10 +45,6 @@ export const EOS_PARAMETERS_TAB = [{
     url: 'web',
     visible: true
 }, {
-    title: 'Протоколирование',
-    url: 'logging',
-    visible: true
-}, {
     title: 'Криптография',
     url: 'cryptography'
 }, {
@@ -52,6 +52,10 @@ export const EOS_PARAMETERS_TAB = [{
     url: 'email',
     visible: true
 }, {
+    title: 'Протоколирование',
+    url: 'logging',
+    visible: true
+},  {
     title: 'Текущая организация',
     url: 'now-organiz',
     visible: true

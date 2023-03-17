@@ -1,6 +1,6 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ITableBtn, ITableData, ITableHeader } from '../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 /* import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts'; */
 
 export interface IOrderTable {
@@ -17,6 +17,7 @@ export interface IOrderTable {
 export class TabelElementComponent implements OnInit {
     @Input() tabelData: ITableData;
     @Input() edit: boolean;
+    @Input() settings?: ITableSettings;
     @Output() btnAction = new EventEmitter();
     @Output() elementsSelect = new EventEmitter();
     @Output() orderHead = new EventEmitter<IOrderTable>();
@@ -25,6 +26,10 @@ export class TabelElementComponent implements OnInit {
     public isLoading = false;
     public buttons: ITableBtn[] = [];
     public countSelected = 0;
+    public selectIdLast = '';
+    get showCheckBox() {
+        return !this.settings?.hiddenCheckBox;
+    }
     constructor() {}
     ngOnInit(): void {
         this.colomns = this.tabelData.tableHeader;
@@ -34,6 +39,9 @@ export class TabelElementComponent implements OnInit {
                 this.countSelected++;
             }
         });
+    }
+    getClassHidden(): string {
+        return this.showCheckBox ? '' : 'margin-not-checkbox';
     }
     getDisabledBtn(btnElem: ITableBtn) {
         return typeof(btnElem.disable) === 'boolean' ? btnElem.disable : this.edit;
@@ -127,5 +135,38 @@ export class TabelElementComponent implements OnInit {
             default:
                 return this.edit ? 'eos-adm-icon-checkbox-square-minus-blue' : 'eos-adm-icon-checkbox-square-minus-grey';
         }
+    }
+    getTableStyle() {
+        const style = {};
+        if (this.settings) {
+            Object.keys(this.settings).forEach((key) => {
+                switch (key) {
+                    case 'maxHeightTable':
+                        style['max-height'] = this.settings[key];
+                        style['overflow'] = 'auto';
+                        break;
+                    default:
+                        break;
+                }
+            });
+            return style;
+        } else {
+            return style;
+        }
+    }
+    clickElem($event) {
+        if (this.settings?.selectedRow) {
+            this.selectIdLast = '' + $event.key;
+        }
+    }
+    getClassRow(row) {
+        let classRow = '';
+        if ('' + row.key === '' + this.selectIdLast) {
+            classRow += 'selected-row ';
+        }
+        if (!this.showCheckBox) {
+            classRow += 'margin-not-checkbox ';
+        }
+        return classRow;
     }
 }

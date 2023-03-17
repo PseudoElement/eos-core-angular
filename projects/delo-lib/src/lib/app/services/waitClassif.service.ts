@@ -112,7 +112,9 @@ export class WaitClassifService {
         } else if (params.classif === 'COMMON_LIST') {
             url = COMMON_LIST;
         } else {
-            url = this._prepareUrl(params, flag);
+            setTimeout(() => {
+                url = this._prepareUrl(params, flag);
+            }, 0);
         }
         return new Promise((resolve, reject) => {
             let w;
