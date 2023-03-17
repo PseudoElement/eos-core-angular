@@ -34,7 +34,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
     public editData;
     public tableHeader: ITableHeader[] = [
         {
-            title: 'Название',
+            title: 'Наименование',
             id: 'ProfileName',
             order: 'asc',
             style: {width: '100%'}
