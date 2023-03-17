@@ -52,7 +52,6 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _modalSrv: BsModalService,
-        // private _certStoresService: CertStoresService,
         private _msgSrv: EosMessageService,
         private _cermaHttp2Srv: CarmaHttp2Service,
     ) {}
@@ -90,14 +89,18 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                     }
                 });
                 if (flag) {
+                    this.form.controls['rec.ProfileName'].setErrors(null);
                     this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
                 } else {
                     this.form.controls['rec.ProfileName'].setErrors(null);
                 }
             } else {
+                this.form.controls['rec.ProfileName'].setErrors(null);
                 this.form.controls['rec.ProfileName'].setErrors({ isRequired: undefined });
             }
         });
+        console.log('this.form', this.form.invalid);
+        
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next();

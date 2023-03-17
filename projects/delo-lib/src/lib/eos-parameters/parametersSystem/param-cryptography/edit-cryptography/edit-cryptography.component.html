@@ -6,7 +6,7 @@
         <div class="header-button-wrap">
             <button class="btn btn-primary header-button" (click)="cancel()">ОТМЕНИТЬ
             </button>
-            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="statusBtnSub">СОХРАНИТЬ
+            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="this.form.invalid">СОХРАНИТЬ
             </button>
         </div>
     </div>
