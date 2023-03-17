@@ -11,7 +11,7 @@
         </div>
     </div>
     <div style="padding: 20px;">
-        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly || openModal"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.InitString']" [form]="form"  [readonly]="inputs['rec.InitString'].readonly"></eos-dynamic-input>
     </div>
     <div class="collection-profile-table">

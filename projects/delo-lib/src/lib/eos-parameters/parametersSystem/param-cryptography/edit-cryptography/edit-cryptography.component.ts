@@ -33,6 +33,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     certSystemAddress: string;
     listStores: IListStores[];
     currentSelectNode: IListStores;
+    openModal = false;
     public editCertId: number;
     public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL];
     public tableHeader: ITableHeader[] = [
@@ -158,6 +159,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     cancelModal() {
         this.editCertId = undefined;
         this.modalWordRef.hide();
+        this.openModal = false;
     }
     submitModal() {
         const cert = this.form.controls['rec.CertStores'];
@@ -188,9 +190,11 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
         this.editCertId = undefined;
         this.updateTableList(newItem);
         this.modalWordRef.hide();
+        this.openModal = false;
     }
     private _openModal() {
         this.modalWordRef = this._modalSrv.show(this.modalStorage, { class: 'modalCrypto', ignoreBackdropClick: true });
+        this.openModal = true;
     }
     onChangeSelect($event) {
         this.certSystemAddress = '';
