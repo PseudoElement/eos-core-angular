@@ -1,0 +1,81 @@
+<div *ngIf="inputs" class="input-param-wrapper input-param-search-wrapper">
+  <eos-param-header
+    #headerElement
+    [title]="titleHeader"
+    (submitForm)="btnDisabled ? cancel() : preSubmit()"
+    (cancelForm)="cancel()"
+    [statusBtnSub]="btnError"
+    [editBtn]="!stayEdit"
+    (editForm)="edit()"
+  ></eos-param-header>
+      <div>
+        <div class="title-under-conversion-table">
+          <div>
+            <span>Доступные хралилища</span>
+          </div>
+          <div>
+              <span (click)="openAccordion(1)" class="icon eos-adm-icon small float-right pull-right"
+                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordFirst, 'eos-adm-icon-arrow-v-blue-top': closeAcordFirst}"></span>
+          </div>
+        </div>
+      <div class="style-to-table">
+        <eos-tabel-element
+          [hidden]="closeAcordFirst"
+          [edit]="false"
+          [tabelData]="tabelData"
+          [settings]="settingsTable"
+          (elementsSelect)="selectElement($event)">
+        </eos-tabel-element>
+      </div>
+      <div class="title-under-conversion-table">
+        <div>
+          <span>Хранение файлов</span>
+        </div>
+        <div>
+            <span (click)="openAccordion(2)" class="icon eos-adm-icon small float-right pull-right"
+                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': closeAcordSecond}"></span>
+        </div>
+      </div>
+      <div [hidden]="closeAcordSecond" class="param-input-group">
+        <eos-dynamic-input
+          [input]="inputs['rec.CommonName']"
+          [form]="form"
+        ></eos-dynamic-input>
+        <div style="display: flex;">
+          <eos-dynamic-input
+            class="padding-item-left"
+            [input]="inputs['rec.CommonDirectory']"
+            [form]="form"
+          ></eos-dynamic-input>
+          <div style="margin-top: 5px;" class="padding-item-right">
+            <span>Макс. размер файлов (МБ)</span>
+            <eos-dynamic-input  [input]="inputs['rec.MaxFileSize']" [form]="form"  [readonly]="inputs['rec.MaxFileSize'].readonly"></eos-dynamic-input>
+          </div>
+        </div>
+      </div>
+      <div class="title-under-conversion-table">
+        <div>
+          <span>Временные файлы</span>
+        </div>
+        <div>
+            <span (click)="openAccordion(3)" class="icon eos-adm-icon small float-right pull-right"
+                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordthree, 'eos-adm-icon-arrow-v-blue-top': closeAcordthree}"></span>
+        </div>
+      </div>
+      <div [hidden]="closeAcordthree" class="param-input-group">
+        <eos-dynamic-input
+          [input]="inputs['rec.FdulzName']"
+          [form]="form"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+          [input]="inputs['rec.FdulzDirectory']"
+          [form]="form"
+        ></eos-dynamic-input>
+        <div style="margin-top: 5px;" >
+          <span>Срок хранения временных файлов (мин.)</span>
+          <eos-dynamic-input  [input]="inputs['rec.Expiration']" [form]="form"  [readonly]="inputs['rec.Expiration'].readonly"></eos-dynamic-input>
+        </div>
+      </div>
+      
+  </div>
+</div>

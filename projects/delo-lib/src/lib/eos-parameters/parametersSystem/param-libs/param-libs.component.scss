@@ -1,0 +1,49 @@
+.mar-right-second {
+
+    margin-right: 20px;
+}
+.mar-right-first {
+
+    margin-right: 60px;
+}
+.mar-right-select {
+    margin-right: 20px;
+}
+.eos-adm-dynamic-input-select-files {
+    display: inline-block;
+}
+.padding-item-left {
+    width: 70%;
+    padding-right: 8px;
+}
+
+.padding-item-right {
+    width: 30%;
+    padding-left: 8px;
+}
+.title-under-table {
+    width: 100%;
+    font-size: 18px;
+    padding-right: 16px;
+    padding-left: 16px;
+    margin-bottom: 16px;
+    margin-top: 12px;
+    div {
+        border-bottom: 1px solid #e6e6e6;
+        width: 100%;
+    }
+}
+
+.title-under-conversion-table {
+    width: calc(100% - 32px);
+    font-size: 18px;
+    margin: 16px;
+    display: flex;
+    div {
+        border-bottom: 1px solid #e6e6e6;
+        width: 100%;
+    }
+}
+.style-to-table {
+    border-bottom: 1px solid #e6e6e6;
+}

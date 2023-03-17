@@ -24,8 +24,8 @@
     </div>
     <!-- название столбцов -->
     <div>
-        <div class="header-table-param">
-            <div style="padding-left: 12px;margin-right: 9px;" class="checkbox-inline">
+        <div class="header-table-param" [ngClass]="getClassHidden()">
+            <div  *ngIf="showCheckBox" style="padding-left: 12px;margin-right: 9px;" class="checkbox-inline">
                 <label class="checkbox" >
                     <input [checked]="getAllCheck()" [disabled]="!edit" type="checkbox" (change)="toggleAllMarks($event)">
                     <div>
@@ -45,7 +45,7 @@
                     {{col.title}}
                 </span>
                 <div >
-                    <span class="order-icon">
+                    <span *ngIf="col.order" class="order-icon">
                         <span class="icon eos-adm-icon small"
                         [ngClass]="getBtnOrder(col)">
                         </span>
@@ -55,9 +55,9 @@
         </div>
     </div>
     <!-- Переданные элементы -->
-    <div class="eos-rows-table">
-        <div class="display-element-item" *ngFor="let row of tabelData.data">
-            <div style="padding-left: 12px;" class="checkbox-inline">
+    <div class="eos-rows-table" [ngStyle]="getTableStyle()">
+        <div class="display-element-item" *ngFor="let row of tabelData.data" (click)="clickElem(row)" [ngClass]="getClassRow(row)">
+            <div *ngIf="showCheckBox" style="padding-left: 12px;" class="checkbox-inline">
                 <label>
                     <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">
                     <span></span>
@@ -65,8 +65,8 @@
             </div>
             <div *ngFor="let colomn of colomns"
                 class="header-table-title"
-                [ngStyle]="getStyle(colomn)"
-                (click)="orderByField(colomn)">
+                [ngClass]="{'margin-not-checkbox': hiddenCheckBox }"
+                [ngStyle]="getStyle(colomn)">
                 <span class="text">
                     {{getElement(colomn, row)}}
                 </span>

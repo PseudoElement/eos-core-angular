@@ -40,6 +40,7 @@ import { ParamCryptographyComponent } from './parametersSystem/param-cryptograph
 import { EditCryptographyComponent } from './parametersSystem/param-cryptography/edit-cryptography/edit-cryptography.component';
 import { ParamEmailComponent } from './parametersSystem/param-email/param-email.component';
 import { ParamEmailCardComponent } from './parametersSystem/param-email/param-email-card/param-email-card.component';
+import { ParamLibsComponent } from './parametersSystem/param-libs/param-libs.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { ParamEmailCardComponent } from './parametersSystem/param-email/param-em
         ParamCryptographyComponent,
         EditCryptographyComponent,
         ParamEmailComponent,
-        ParamEmailCardComponent
+        ParamEmailCardComponent,
+        ParamLibsComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent,

@@ -3915,6 +3915,12 @@ export interface IDG_FILE_CATEGORY {
     DUE_NODE_DG: string;
 }
 
+export interface LIB_LIBRARY {
+    ISN_LIBRARY: number;
+    NAME: string;
+    DESCRIPTION: string;
+}
+
 export interface FILE_CATEGORY_CL extends IEnt, IStamp {
     ISN_LCLASSIF: number;
     NAME: string;

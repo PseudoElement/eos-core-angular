@@ -69,3 +69,13 @@ export interface ICryptographyParams {
     ProfileName: string;
 }
 
+export interface IFilesParams {
+    EdmsParm: string;
+    Library: ILibrary;
+    MaxFileSize: number;
+}
+export interface IFdulzParams {
+    Expiration: number;
+    Library: ILibrary;
+}
+
