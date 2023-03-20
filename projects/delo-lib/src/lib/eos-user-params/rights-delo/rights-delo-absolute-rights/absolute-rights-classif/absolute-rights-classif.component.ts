@@ -364,7 +364,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             const arr = this.curentUser['TECH_RIGHTS'].split('');
             this._extentionsRigts.updateRigth(arr);
             // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
-            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 47);
+            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         /* if (!this._appContext.cbBase) {
