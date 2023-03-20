@@ -41,15 +41,34 @@
         .sort-name{
             display: flex;
             align-items: center;
-            width: 80%;
+            width: 100%;
             border-bottom: 1px solid #ededed;
             cursor: pointer;
         }
+        .height-show-doc-list {
+            height: 150px;
+            overflow: auto;
+        }
         .show_doc_list {
+            display: flex;
             list-style-type: none;
             font-size: 16px;
             font-weight: 500;
             margin-bottom: 3px;
+            .first-tables {
+                width: 70%; 
+                border-right: 1px solid #ededed;
+                text-overflow: ellipsis;
+                overflow-x: hidden;
+                cursor: default;
+            }
+            .second-tables {
+                width: 30%;
+                text-overflow: ellipsis;
+                overflow-x: hidden;
+                padding-left: 10px;
+                cursor: default;
+            }
         }
     }
 }

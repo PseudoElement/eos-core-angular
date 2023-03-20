@@ -4,6 +4,9 @@ import { PipRX } from '../../eos-rest';
 import { ORGANIZ_CL } from '../../eos-rest';
 import { Subject } from 'rxjs';
 import { Validators } from '@angular/forms';
+import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.service';
+import { ConfirmWindowService } from '../../eos-common/index';
+import { CONFIRM_MEDO_NODE_UPDATE_DIRECTORY } from '../../app/consts/confirms.const';
 
 @Component({
     selector: 'eos-medo-node-card',
@@ -13,6 +16,7 @@ import { Validators } from '@angular/forms';
 export class MedoNodeCardComponent extends BaseCardEditDirective implements OnInit, OnDestroy {
     showDoc: boolean;
     showDocOrgList: ORGANIZ_CL[] = [];
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     hashPass: string = 'хеш пароля';
     public flagSort: boolean = false;
     public type1: string = 'password';
@@ -26,6 +30,7 @@ export class MedoNodeCardComponent extends BaseCardEditDirective implements OnIn
     }
     constructor(injector: Injector,
         private _apiSrv: PipRX,
+        private _confirmSrv: ConfirmWindowService,
         ) {
         super(injector);
     }
@@ -36,7 +41,7 @@ export class MedoNodeCardComponent extends BaseCardEditDirective implements OnIn
         return this.medoPass === '' && !this.data.rec['ISN_LCLASSIF'];
     }
     ngOnInit(): void {
-        this.showDoc = true;
+        this.showDoc = false;
         if (!this.data.rec['ISN_LCLASSIF']) {
             this.inputs['rec.PASSWORD'].required = true;
             this.form.controls['rec.PASSWORD'].setValidators([Validators.required]);
@@ -56,17 +61,79 @@ export class MedoNodeCardComponent extends BaseCardEditDirective implements OnIn
     onAfterLoadRelated() {
         super.onAfterLoadRelated();
     }
+    public confirmSave(): Promise<boolean> {
+        if (this.dictSrv.currentNode && this.data.rec['DIRECTORY'] !== this.dictSrv.currentNode.data.rec._orig['DIRECTORY']) {
+            return this._confirmSrv.confirm2(CONFIRM_MEDO_NODE_UPDATE_DIRECTORY).then((res) => {
+                if (res && res.result === 2) {
+                    return Promise.resolve(true);
+                } else {
+                    return Promise.resolve(false);
+                }
+            });
+        } else {
+            return Promise.resolve(true); 
+        }
+    }
     getOrganizWithTypeMedo() {
         if (this.data && this.data.rec && this.data.rec['ISN_LCLASSIF']) {
-            this._apiSrv.read({
-                ORGANIZ_CL: {
+            const allAray = [];
+            allAray.push(this._apiSrv.read({
+                MEDO_PARTICIPANT: {
                     criteries: {
-                        'CONTACT.MEDO_ID': this.data.rec['ISN_LCLASSIF'],
+                        'ISN_MAIN_NODE': this.data.rec['ISN_LCLASSIF'],
                     }
                 }
-            })
-            .then((data: any[]) => {
-                this.showDocOrgList = data;
+            }));
+            allAray.push(this._apiSrv.read({
+                MEDO_PARTICIPANT: {
+                    criteries: {
+                        'ISN_DSP_NODE ': this.data.rec['ISN_LCLASSIF'],
+                    }
+                }
+            }))
+            Promise.all(allAray)
+            .then((data) => {
+                if (data[0].length > 0 || data[1].length > 0) {
+                    const allIsnOrganiz = [];
+                    data[0].forEach((d) => {
+                        allIsnOrganiz.push(d['ISN_ORGANIZ']); 
+                    });
+                    data[1].forEach((d) => {
+                        allIsnOrganiz.push(d['ISN_ORGANIZ']); 
+                    });
+                    const promAll = [];
+                    promAll.push(this._apiSrv.read({
+                        ORGANIZ_CL: {
+                            criteries: {
+                                'ISN_NODE': allIsnOrganiz.join('|'),
+                            }
+                        }
+                    }));
+                    promAll.push( this._apiSrv.read({
+                        CONTACT: {
+                            criteries: {
+                                'ISN_CONTACT': allIsnOrganiz.join('|'),
+                            }
+                        }
+                    }));
+                   Promise.all(promAll)
+                   .then((data) => {
+                        const contact = new Map<number, string>();
+                        if (data[1].length > 0) {
+                            data[1].forEach((cont) => {
+                                contact.set(cont['ISN_CONTACT'], cont['MEDO_ID']);
+                            });
+                        }
+                        if (data[0].length > 0 && data[1].length > 0) {
+                            data[0].forEach((org) => {
+                                if (contact.has(org['ISN_NODE'])) {
+                                    org['MEDO_ID'] = contact.get(org['ISN_NODE']);
+                                }
+                            });
+                        }
+                        this.showDocOrgList = data[0];
+                   });
+                }
             });
         }
     }

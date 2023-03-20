@@ -409,3 +409,21 @@ export const CONFIRM_DEPCALENDAR_CREATE: IConfirmWindow2 = {
         {title: 'Нет', result: BUTTON_RESULT_NO, },
     ]
 };
+export const CONFIRM_CREATE_USER_TYPE_4: IConfirmWindow2 = {
+    title: 'Предупреждение',
+    body: `Пользователь '{{Username}}' не найден в домене. Вход в систему такому пользователю может быть запрещен. Создать учетную запись пользователя?`,
+    buttons: [
+            {title: 'Да', result: 1, isDefault: true, },
+            {title: 'Нет', result: 2, },
+    ],
+};
+export const CONFIRM_MEDO_NODE_UPDATE_DIRECTORY: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Изменился каталог обмена. Необходимо перенастроить фоновые задачи МЭДО на данном узле.Продолжить?',
+    bodyAfterList: '',
+    buttons: [
+        {title: 'Отменить', result: 1},
+        {title: 'Сохранить',  result: 2, isDefault: true},
+    ],
+};
