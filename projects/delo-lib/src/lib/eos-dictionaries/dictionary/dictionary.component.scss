@@ -42,6 +42,7 @@
         height: calc(100vh - 96px);
         overflow-x: auto;
         overflow-y: auto;
+        box-shadow: inset 0 10px 5px 0 rgba(0, 0, 0, 0.1);
         // border-right: 1px solid $border-color-main-theme;
         &.has-spinner {
             display: flex;
@@ -54,6 +55,7 @@
         border-left-width: 1px;
         border-left-style: solid;
         z-index: 3;
+        box-shadow: inset 0 10px 5px 0 rgba(0, 0, 0, 0.1);
         .info-spinner {
             width: 100%;
             text-align: center;
