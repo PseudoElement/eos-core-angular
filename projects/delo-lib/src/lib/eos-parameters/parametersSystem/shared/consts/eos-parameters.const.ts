@@ -16,12 +16,12 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Работа с файлами',
     url: 'files',
     visible: true
-}, {
+},/*  {
     title: 'Хранение файлов',
     url: 'param-lib',
     visible: true
-}, {
-    title: 'Хранилище файлов',
+}, */ {
+    title: 'Хранение файлов',
     url: 'param-libs',
     visible: true
 }, {
