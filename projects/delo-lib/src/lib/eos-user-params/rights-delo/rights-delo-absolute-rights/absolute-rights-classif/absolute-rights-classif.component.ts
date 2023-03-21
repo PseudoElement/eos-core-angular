@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { NodeAbsoluteRight } from '../node-absolute';
-import { IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { INodeDocsTreeCfg, IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { RightClassifNode } from './absolute-rights-classif-node';
 import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
@@ -14,6 +14,7 @@ import { UserParamsService } from '../../../../eos-user-params/shared/services/u
 import { PipRX } from '../../../../eos-rest';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
 import { ExetentionsRigthsServiceLib } from '../../../../eos-rest/addons/extentionsRigts.service';
+import { E_CLASSIF_ID } from './tech-user-classif.consts';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -35,6 +36,28 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     strNewCards: any;
     listClassif: RightClassifNode[] = [];
     private _techUserRigts: ITechUserClassifConst[] = [];
+    private allCopyElem = [
+        {
+            title: 'Подразделения',
+            key: 10,
+            disable: false
+        },
+        {
+            title: 'Номенклатура дел',
+            key: 14,
+            disable: false
+        },
+        {
+            title: 'Кабинеты',
+            key: 18,
+            disable: false
+        },
+        {
+            title: 'Процедура передачи документов',
+            key: 29,
+            disable: false
+        }
+    ];
     get isCheckedSide() {
         let type = null;
         let count = 0;
@@ -109,6 +132,52 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     }
     createEntyti<T>(ent: any, typeName: string): T {
         return this._userParmSrv.createEntyti<T>(ent, typeName);
+    }
+    /* 
+    * 10 - Подразделения, 14 - Номенклатура дел, 18 - Кабинеты, 29 - Процедура передачи документов
+    */
+    copyButtonView(key): boolean {
+        return [10, 14, 18, 29].indexOf(key) >= 0; 
+    }
+    getListCopy(key) {
+        const massDisable = [];
+        this.listClassif.forEach((item) => {
+            if ([10, 14, 18, 29].indexOf(item.key) >= 0 && item.value === 0) {
+                massDisable.push(item.key);
+            }
+        });
+        this.allCopyElem.forEach((elem) => {
+            massDisable.indexOf(elem.key)
+            if (massDisable.indexOf(elem.key) >= 0) {
+                elem.disable = true;
+            }
+        });
+        return this.allCopyElem.filter((item) => item.key !== key);
+    }
+    async copyWhere(elem, node) {
+        if (!elem.disable) {
+            const infoToCopy = this.listClassif.filter((item) => item.key === elem.key)[0];
+            if (infoToCopy.listContent.length === 0) {
+                await infoToCopy.createListContent(infoToCopy.listUserTech, infoToCopy.listContent);
+            }
+            const templistUserTech = JSON.parse(JSON.stringify(infoToCopy.listUserTech));
+            const templistContent = [];
+            infoToCopy.listContent.forEach((content) => {
+                const cfg: INodeDocsTreeCfg = {
+                    due: content['DUE'],
+                    label: content.label,
+                    allowed: !!content.isAllowed,
+                    data: content.data,
+                };
+                templistContent.push(cfg)
+            });
+            
+            templistUserTech.forEach((item) => {
+                item['CLASSIF_ID'] = E_CLASSIF_ID[node['key'].toString()];
+                item['FUNC_NUM'] = node['key'];
+            });
+            node.copyInstance(templistUserTech, templistContent);
+        }
     }
     getConfig (mode: E_TECH_USER_CLASSIF_CONTENT): IConfigUserTechClassif {
         switch (mode) {

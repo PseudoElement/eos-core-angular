@@ -52,10 +52,39 @@
                         placement="right"
                         containerClass="tooltip-info"
                         [disabled]="!node.curentSelectedNode || !editMode || selectedNode.control.disabled"
-                        (click)="[node.DeleteInstance(), hideToolTip()]"
-                    >
+                        (click)="[node.DeleteInstance(), hideToolTip()]">
                         <span class="eos-adm-icon small" [ngClass]="{'eos-adm-icon-bin-forever-blue': editMode, 'eos-adm-icon-bin-forever-grey': !editMode || selectedNode.control.disabled}"></span>
                     </button>
+                    <div 
+                        *ngIf="copyButtonView(node.key)"
+                        class="btn-group"
+                        dropdown
+                        [isDisabled]="!editMode || selectedNode.control.disabled"
+                        container="body">
+                        <button
+                            dropdownToggle
+                            [tooltip]="!editMode || selectedNode.control.disabled ? '' : 'Скопировать от...'"
+                            placement="bottom"
+                            container="body"
+                            triggers="hover"
+                            containerClass="tooltip-info"
+                            class="btn">
+                            <span
+                                class="eos-adm-icon small"
+                                [disabled]="!editMode || selectedNode.control.disabled"
+                                [ngClass]="{'eos-adm-icon-copy-blue': editMode, 'eos-adm-icon-copy-grey': !editMode}">
+                            </span>
+                        </button>
+                        <ul *dropdownMenu class="dropdown-menu" role="menu">
+                            <li *ngFor="let copy of getListCopy(node.key)" class="menuitem" style="padding: 0px 10px;" role="menuitem">
+                                <a class="dropdown-item menu-link"
+                                    [ngClass]="[copy.disable ? 'disabled' : '']"
+                                    (click)="copyWhere(copy, node)">
+                                    <span class="item-title m-font">{{copy.title}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <eos-list-doc-tree
