@@ -3,7 +3,7 @@ import { NodeAbsoluteRight } from '../node-absolute';
 import { INodeDocsTreeCfg, IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { RightClassifNode } from './absolute-rights-classif-node';
-import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
+import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif, E_TECH_RIGHTS, ETypeTechRight } from './tech-user-classif.interface';
 import { UserParamApiSrv } from '../../../../eos-user-params/shared/services/user-params-api.service';
 import { OPEN_CLASSIF_DEPARTMENT_ONLI_NODE, OPEN_CLASSIF_DOCGROUP_CL_ONLI_NODE, OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE, OPEN_CLASSIF_CARDINDEX } from '../../../../app/consts/query-classif.consts';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
@@ -36,25 +36,31 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     strNewCards: any;
     listClassif: RightClassifNode[] = [];
     private _techUserRigts: ITechUserClassifConst[] = [];
+    private copyPrav = [
+        E_TECH_RIGHTS.Subdivisions, 
+        E_TECH_RIGHTS.CaseNomenclature,
+        E_TECH_RIGHTS.Cabinets,
+        E_TECH_RIGHTS.ProcedureForSubmittingDocuments
+    ];
     private allCopyElem = [
         {
             title: 'Подразделения',
-            key: 10,
+            key: E_TECH_RIGHTS.Subdivisions,
             disable: false
         },
         {
             title: 'Номенклатура дел',
-            key: 14,
+            key: E_TECH_RIGHTS.CaseNomenclature,
             disable: false
         },
         {
             title: 'Кабинеты',
-            key: 18,
+            key: E_TECH_RIGHTS.Cabinets,
             disable: false
         },
         {
             title: 'Процедура передачи документов',
-            key: 29,
+            key: E_TECH_RIGHTS.ProcedureForSubmittingDocuments,
             disable: false
         }
     ];
@@ -133,16 +139,13 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     createEntyti<T>(ent: any, typeName: string): T {
         return this._userParmSrv.createEntyti<T>(ent, typeName);
     }
-    /* 
-    * 10 - Подразделения, 14 - Номенклатура дел, 18 - Кабинеты, 29 - Процедура передачи документов
-    */
-    copyButtonView(key): boolean {
-        return [10, 14, 18, 29].indexOf(key) >= 0; 
+    copyButtonView(key: ETypeTechRight): boolean {
+        return this.copyPrav.indexOf(key) >= 0; 
     }
-    getListCopy(key) {
+    getListCopy(key: ETypeTechRight) {
         const massDisable = [];
         this.listClassif.forEach((item) => {
-            if ([10, 14, 18, 29].indexOf(item.key) >= 0 && item.value === 0) {
+            if (this.copyPrav.indexOf(item.key) >= 0 && item.value === 0) {
                 massDisable.push(item.key);
             }
         });
@@ -448,10 +451,10 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             }
         } */
         this._techUserRigts.forEach((item: ITechUserClassifConst) => {
-            if (item.key === 1 && techListLim.length !== 0) {
+            if (item.key === E_TECH_RIGHTS.Users && techListLim.length !== 0) {
                 item.label = 'Пользователи (доступ ограничен)';
             }
-            if (item.key === 35) {
+            if (item.key === E_TECH_RIGHTS.EmailBuffer) {
                 item.label = this._appContext.cbBase ? 'Концентратор' : 'Буфер электронных сообщений';
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
