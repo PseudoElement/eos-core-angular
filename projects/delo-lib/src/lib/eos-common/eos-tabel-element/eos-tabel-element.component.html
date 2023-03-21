@@ -36,6 +36,7 @@
             <div *ngFor="let col of colomns"
                 class="header-table-title"
                 [ngStyle]="getStyle(col)"
+                [ngClass]="[edit ? '' : 'disable-header-table-title']"
                 (click)="orderByField(col)">
                 <span class="text"
                     tooltip="Упорядочить"

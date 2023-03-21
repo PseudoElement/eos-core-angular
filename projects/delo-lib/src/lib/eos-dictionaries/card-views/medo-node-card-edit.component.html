@@ -32,7 +32,7 @@
                 [readonly]="!editMode"
                 autocomplete="off">
             </eos-dynamic-input>
-            <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-adm-icon small" [ngClass]="editMode ? 'eos-adm-icon-show-blue' : 'eos-adm-icon-show-grey'"></span>
+            <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
         </div>
     </div>
         
@@ -41,16 +41,36 @@
         [readonly]="!editMode"
         ></eos-dynamic-input>
         <div class="doc_card_wrapper"> 
-            <div *ngIf="showDocOrgList" class="doc-wr">
+            <div *ngIf="showDocOrgList.length > 0" class="doc-wr">
                 <div class="doc-list">
-                    <span class="doc-item" (click)="openDoc()">Используется в группах документов<span
+                    <span class="doc-item" (click)="openDoc()">Используется в организациях<span
                             class="eos-icon small" [ngClass]="showClass"></span></span>
                 </div>
                 <div *ngIf="showDoc">
-                    <ul>
-                        <span class="sort-name" (click)="sortDoc()">Название<span class="eos-icon small"
-                                [ngClass]="classSort"></span></span>
-                        <li class="show_doc_list" *ngFor="let doc of showDocOrgList">{{doc.CLASSIF_NAME}}</li>
+                    <div class="sort-name" (click)="sortDoc()">
+                        <div style="width: 70%;">
+                            Название
+                            <span class="eos-icon small"[ngClass]="classSort"></span>
+                        </div>
+                        <div style="width: 30%;">Идентификатор МЭДО</div>
+                    </div>
+                    <ul class="height-show-doc-list">
+                        <li class="show_doc_list" *ngFor="let doc of showDocOrgList">
+                            <div 
+                                class="first-tables"
+                                tooltip="{{doc.CLASSIF_NAME}}"
+                                placement="bottom"
+                                container="body"
+                                containerClass="tooltip-info"
+                                [delay]="tooltipDelay">{{doc.CLASSIF_NAME}}</div>
+                            <div class="second-tables"
+                                tooltip="{{doc['MEDO_ID'] || ''}}"
+                                placement="bottom"
+                                container="body"
+                                containerClass="tooltip-info"
+                                [delay]="tooltipDelay"
+                            >{{doc['MEDO_ID'] || ''}}</div> 
+                        </li>
                     </ul>
                 </div>
             </div>

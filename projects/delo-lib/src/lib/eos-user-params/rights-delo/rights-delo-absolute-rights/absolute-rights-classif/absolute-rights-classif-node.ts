@@ -14,10 +14,13 @@ export class RightClassifNode {
     isLoading: boolean;
     isShell: Boolean = false;
     disableItem: boolean = true;
+    get listUserTech() {
+        return this._listUserTech;
+    }
     set isExpanded(v: boolean) {
         this._isExpanded = v;
         if (v && this._listUserTech.length && !this.listContent.length) {
-            this._createListContent(this._listUserTech, this.listContent);
+            this.createListContent(this._listUserTech, this.listContent);
         }
     }
     get isExpanded() {
@@ -292,6 +295,27 @@ export class RightClassifNode {
             }
         }
     }
+    copyInstance(listUserTech, listContent) {
+        this.isShell = true;
+        this._deletAll();
+        listUserTech.forEach((newTechRight) => {
+            this.parentNode.pushChange({
+                method: 'POST',
+                due: newTechRight.DUE,
+                funcNum: this.key,
+                data: newTechRight,
+            });
+            this._listUserTech.push(newTechRight);
+            this._component.userTechList.push(newTechRight);
+        });
+        const newList = [];
+        listContent.forEach((cfg) => {
+            newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
+        });
+        this.listContent = this.listContent.concat(newList);
+        this._component.Changed.emit();
+        this.isShell = false;
+    }
     select(node: NodeDocsTree) {
         if (node.DUE === '0.' && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) {
             this.curentSelectedNode = null;
@@ -309,13 +333,13 @@ export class RightClassifNode {
         });
         this._component.Changed.emit();
     }
-    private _createListContent(userTech: any[], listContent: NodeDocsTree[]) {
+    public createListContent(userTech: any[], listContent: NodeDocsTree[]): Promise<any> {
         this.isLoading = true;
         const arr = [];
         userTech.forEach(i => {
             arr.push(i['DUE']);
         });
-        this._component.getEntyti(arr.join('||'), this._config)
+        return this._component.getEntyti(arr.join('||'), this._config)
             .then(data => {
                 data.forEach(item => {
                     const uT = userTech.find(i => i['DUE'] === item['DUE']);

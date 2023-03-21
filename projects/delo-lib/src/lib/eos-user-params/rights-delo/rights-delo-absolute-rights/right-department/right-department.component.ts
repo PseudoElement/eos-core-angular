@@ -11,6 +11,7 @@ import { OPEN_CLASSIF_DEPARTMENT_FULL, OPEN_CLASSIF_DEPARTMENT_SEND_CB } from '.
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { EosStorageService } from '../../../../app/services/eos-storage.service';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
+import { ETypeDeloRight } from '../absolute-rights.consts';
 
 @Component({
     selector: 'eos-right-absolute-department',
@@ -407,8 +408,8 @@ export class RightDepertmentComponent implements OnInit {
     // только для исполнения поручений, спрашиваем на создание права ркпд
     // Проверка 'Создание РКПД' по ключу, вместо поиска по индексу в массиве
     confirmPkpd() {
-        const rkpdRight = this.listRigth.filter((right) => right.key === '28')[0];
-        if (this.selectedNode.key === '31' && this.selectedNode.isCreate && !rkpdRight.control.value) {
+        const rkpdRight = this.listRigth.filter((right) => right.key === ETypeDeloRight.CreationOfRKPD)[0];
+        if (this.selectedNode.key === ETypeDeloRight.ProjectExecution && this.selectedNode.isCreate && !rkpdRight.control.value) {
             return new Promise((res, rej) => {
                 if (confirm('У пользователя нет права \'Создание РКПД\'. Добавить его?')) {
                     res(true);
@@ -469,7 +470,7 @@ export class RightDepertmentComponent implements OnInit {
         this.Changed.emit('del');
     }
     emitDeleteRcpd() {
-        if (this.selectedNode.key === '31' && this.selectedNode.value === 0 && this.listRigth[9].control.value) {
+        if (this.selectedNode.key === ETypeDeloRight.ProjectExecution && this.selectedNode.value === 0 && this.listRigth[9].control.value) {
             this.emitDeletedRc.emit();
         }
     }
@@ -528,7 +529,14 @@ export class RightDepertmentComponent implements OnInit {
         });
     }
     get getAllDep() {
-        const rightsAllDep = ['4', '24', '25', '33', '34', '35'];
+        const rightsAllDep: string[] = [
+            ETypeDeloRight.EnteringResolutions,
+            ETypeDeloRight.ReadingRKpersonalizedAccess,
+            ETypeDeloRight.ReadingPersonalAccessFiles,
+            ETypeDeloRight.ReadingStrictAccessFiles,
+            ETypeDeloRight. ReadingEvents,
+            ETypeDeloRight.WorkingWithEvents
+        ];
         return this.selectedNode && (rightsAllDep.indexOf(this.selectedNode.key) !== -1);
     }
     checkAllDep() {

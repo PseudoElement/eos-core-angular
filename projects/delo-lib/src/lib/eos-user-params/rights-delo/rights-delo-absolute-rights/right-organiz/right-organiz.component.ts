@@ -10,6 +10,7 @@ import { RestError } from '../../../../eos-rest/core/rest-error';
 import { OPEN_CLASSIF_ORGANIZ_FULL } from '../../../../app/consts/query-classif.consts';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
+import { ETypeDeloRight } from '../absolute-rights.consts';
 
 @Component({
     selector: 'eos-right-absolute-organiz-depart',
@@ -180,8 +181,8 @@ export class RightDepertOrganizComponent implements OnInit {
     // только для исполнения поручений, спрашиваем на создание права ркпд
     // Проверка 'Создание РКПД' по ключу, вместо поиска по индексу в массиве
     confirmPkpd() {
-        const rkpdRight = this.listRigth.filter((right) => right.key === '28')[0];
-        if (this.selectedNode.key === '31' && this.selectedNode.isCreate && !rkpdRight.control.value) {
+        const rkpdRight = this.listRigth.filter((right) => right.key === ETypeDeloRight.CreationOfRKPD)[0];
+        if (this.selectedNode.key === ETypeDeloRight.ProjectExecution && this.selectedNode.isCreate && !rkpdRight.control.value) {
             return new Promise((res, rej) => {
                 if (confirm('У пользователя нет права \'создание РКПД\', создать его?')) {
                     res(true);
@@ -213,7 +214,7 @@ export class RightDepertOrganizComponent implements OnInit {
         this.Changed.emit('del');
     }
     emitDeleteRcpd() {
-        if (this.selectedNode.key === '5' && this.selectedNode.value === 0 && this.listRigth[8].control.value) {
+        if (this.selectedNode.key === ETypeDeloRight.ExecutionOfOrders && this.selectedNode.value === 0 && this.listRigth[8].control.value) {
             this.emitDeletedRc.emit();
         }
     }

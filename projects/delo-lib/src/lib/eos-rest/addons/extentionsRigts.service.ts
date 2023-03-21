@@ -33,7 +33,7 @@ export class ExetentionsRigthsServiceLib {
     }
     public updateRigthTabs(): void {}
     public getTechRigth(): string {
-        return '111111111111111111110011111111111111100010100001011';
+        return '111111111111111111110011111111111111100010100011011';
     }
     public disableNode(selectNode: NodeAbsoluteRight, techRight: string): void { }
 }

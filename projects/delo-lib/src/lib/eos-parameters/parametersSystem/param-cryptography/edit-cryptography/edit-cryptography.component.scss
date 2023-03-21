@@ -14,6 +14,12 @@
         label {
             text-transform: uppercase;
         }
+        .not-upper {
+            text-transform: none;
+            font-size: 18px;
+            line-height: 26px;
+            font-weight: 400;
+        }
     }
     .eos-adm-table-title-button {
         padding: 10px 15px;

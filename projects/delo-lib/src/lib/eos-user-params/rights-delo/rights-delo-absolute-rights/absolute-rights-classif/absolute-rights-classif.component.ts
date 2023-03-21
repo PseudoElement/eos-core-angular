@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { NodeAbsoluteRight } from '../node-absolute';
-import { IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { INodeDocsTreeCfg, IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { RightClassifNode } from './absolute-rights-classif-node';
-import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
+import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif, E_TECH_RIGHTS, ETypeTechRight } from './tech-user-classif.interface';
 import { UserParamApiSrv } from '../../../../eos-user-params/shared/services/user-params-api.service';
 import { OPEN_CLASSIF_DEPARTMENT_ONLI_NODE, OPEN_CLASSIF_DOCGROUP_CL_ONLI_NODE, OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE, OPEN_CLASSIF_CARDINDEX } from '../../../../app/consts/query-classif.consts';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
@@ -14,6 +14,7 @@ import { UserParamsService } from '../../../../eos-user-params/shared/services/u
 import { PipRX } from '../../../../eos-rest';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
 import { ExetentionsRigthsServiceLib } from '../../../../eos-rest/addons/extentionsRigts.service';
+import { E_CLASSIF_ID } from './tech-user-classif.consts';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -35,6 +36,34 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     strNewCards: any;
     listClassif: RightClassifNode[] = [];
     private _techUserRigts: ITechUserClassifConst[] = [];
+    private copyPrav = [
+        E_TECH_RIGHTS.Subdivisions, 
+        E_TECH_RIGHTS.CaseNomenclature,
+        E_TECH_RIGHTS.Cabinets,
+        E_TECH_RIGHTS.ProcedureForSubmittingDocuments
+    ];
+    private allCopyElem = [
+        {
+            title: 'Подразделения',
+            key: E_TECH_RIGHTS.Subdivisions,
+            disable: false
+        },
+        {
+            title: 'Номенклатура дел',
+            key: E_TECH_RIGHTS.CaseNomenclature,
+            disable: false
+        },
+        {
+            title: 'Кабинеты',
+            key: E_TECH_RIGHTS.Cabinets,
+            disable: false
+        },
+        {
+            title: 'Процедура передачи документов',
+            key: E_TECH_RIGHTS.ProcedureForSubmittingDocuments,
+            disable: false
+        }
+    ];
     get isCheckedSide() {
         let type = null;
         let count = 0;
@@ -109,6 +138,49 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     }
     createEntyti<T>(ent: any, typeName: string): T {
         return this._userParmSrv.createEntyti<T>(ent, typeName);
+    }
+    copyButtonView(key: ETypeTechRight): boolean {
+        return this.copyPrav.indexOf(key) >= 0; 
+    }
+    getListCopy(key: ETypeTechRight) {
+        const massDisable = [];
+        this.listClassif.forEach((item) => {
+            if (this.copyPrav.indexOf(item.key) >= 0 && item.value === 0) {
+                massDisable.push(item.key);
+            }
+        });
+        this.allCopyElem.forEach((elem) => {
+            massDisable.indexOf(elem.key)
+            if (massDisable.indexOf(elem.key) >= 0) {
+                elem.disable = true;
+            }
+        });
+        return this.allCopyElem.filter((item) => item.key !== key);
+    }
+    async copyWhere(elem, node) {
+        if (!elem.disable) {
+            const infoToCopy = this.listClassif.filter((item) => item.key === elem.key)[0];
+            if (infoToCopy.listContent.length === 0) {
+                await infoToCopy.createListContent(infoToCopy.listUserTech, infoToCopy.listContent);
+            }
+            const templistUserTech = JSON.parse(JSON.stringify(infoToCopy.listUserTech));
+            const templistContent = [];
+            infoToCopy.listContent.forEach((content) => {
+                const cfg: INodeDocsTreeCfg = {
+                    due: content['DUE'],
+                    label: content.label,
+                    allowed: !!content.isAllowed,
+                    data: content.data,
+                };
+                templistContent.push(cfg)
+            });
+            
+            templistUserTech.forEach((item) => {
+                item['CLASSIF_ID'] = E_CLASSIF_ID[node['key'].toString()];
+                item['FUNC_NUM'] = node['key'];
+            });
+            node.copyInstance(templistUserTech, templistContent);
+        }
     }
     getConfig (mode: E_TECH_USER_CLASSIF_CONTENT): IConfigUserTechClassif {
         switch (mode) {
@@ -364,7 +436,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             const arr = this.curentUser['TECH_RIGHTS'].split('');
             this._extentionsRigts.updateRigth(arr);
             // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
-            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 47);
+            this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         /* if (!this._appContext.cbBase) {
@@ -379,10 +451,10 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             }
         } */
         this._techUserRigts.forEach((item: ITechUserClassifConst) => {
-            if (item.key === 1 && techListLim.length !== 0) {
+            if (item.key === E_TECH_RIGHTS.Users && techListLim.length !== 0) {
                 item.label = 'Пользователи (доступ ограничен)';
             }
-            if (item.key === 35) {
+            if (item.key === E_TECH_RIGHTS.EmailBuffer) {
                 item.label = this._appContext.cbBase ? 'Концентратор' : 'Буфер электронных сообщений';
             }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));

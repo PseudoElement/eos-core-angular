@@ -11,6 +11,7 @@ import { OPEN_CLASSIF_DEPARTMENT_FULL } from '../../../../app/consts/query-class
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { EosStorageService } from '../../../../app/services/eos-storage.service';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
+import { ETypeDeloRight } from '../absolute-rights.consts';
 
 @Component({
     selector: 'eos-right-absolute-depart-organiz',
@@ -209,8 +210,8 @@ export class RightOrganizDepertComponent implements OnInit {
     // this.selectedNode.key === '31'
     // Проверка 'Создание РКПД' по ключу, вместо поиска по индексу в массиве
     confirmPkpd() {
-        const rkpdRight = this.listRigth.filter((right) => right.key === '28')[0];
-        if (this.selectedNode.key === '31' && this.selectedNode.isCreate && !rkpdRight.control.value) {
+        const rkpdRight = this.listRigth.filter((right) => right.key === ETypeDeloRight.CreationOfRKPD)[0];
+        if (this.selectedNode.key === ETypeDeloRight.ProjectExecution && this.selectedNode.isCreate && !rkpdRight.control.value) {
             return new Promise((res, rej) => {
                 if (confirm('У пользователя нет права \'Создание РКПД\', создать его?')) {
                     res(true);
@@ -289,7 +290,11 @@ export class RightOrganizDepertComponent implements OnInit {
         });
     }
     get getAllDep() {
-        return this.selectedNode && (this.selectedNode.key === '4' || this.selectedNode.key === '24' || this.selectedNode.key === '25' || this.selectedNode.key === '33');
+        return this.selectedNode &&
+        (this.selectedNode.key === ETypeDeloRight.EnteringResolutions ||
+        this.selectedNode.key === ETypeDeloRight.ReadingRKpersonalizedAccess ||
+        this.selectedNode.key === ETypeDeloRight.ReadingPersonalAccessFiles ||
+        this.selectedNode.key === ETypeDeloRight.ReadingStrictAccessFiles);
     }
     checkAllDep() {
         return this.getAllDep && this.selectedNode.value === 2 ? true : false;

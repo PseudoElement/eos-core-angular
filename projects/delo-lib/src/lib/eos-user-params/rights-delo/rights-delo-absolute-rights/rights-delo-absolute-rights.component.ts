@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
-import { CONTROL_ALL_NOTALL } from './absolute-rights.consts';
+import { CONTROL_ALL_NOTALL, ETypeDeloRight } from './absolute-rights.consts';
 import { InputParamControlService } from '../../../eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
@@ -194,7 +194,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         if (this._appContext.limitCardsUser.length > 0) {
             let arr;
             /* if (this._appContext.cbBase) { */
-                arr = ['0', '1', '2', '3', '18', '23', '29'];
+                arr = [
+                    ETypeDeloRight.SystemTechnologist,
+                    ETypeDeloRight.SearchInAllFileCabinets,
+                    ETypeDeloRight.SendingDocumentsToRegisters,
+                    ETypeDeloRight.ViewAllOrders,
+                    ETypeDeloRight.BulkDeletionOfAds,
+                    ETypeDeloRight.ReadingFilesInAllFileCabinets,
+                    ETypeDeloRight.UploadingInformationToSSTU
+                ];
             /* } else {
                 arr = ['0', '1', '2', '3', '18', '23', '29'];
             } */
@@ -491,11 +499,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
             ) {
                 this._deleteAllDep(item);
-                if (item.key === '4') {
+                if (item.key === ETypeDeloRight.EnteringResolutions) {
                     this.arrNEWDeloRight[26] = '0';
                     this.resolutionsRights = +this.arrNEWDeloRight[26];
                 }
-                if (item.key === '22') {
+                if (item.key === ETypeDeloRight.IntroductionOfDraftResolutions) {
                     this.arrNEWDeloRight[27] = '0';
                     this.projectResol = +this.arrNEWDeloRight[27];
                 }
@@ -513,7 +521,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             // if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
             //     this._deleteAllOrgType(item);
             // }
-            if (item !== this.selectedNode && (item.isCreate || item.key === '8')) {
+            if (item !== this.selectedNode && (item.isCreate || item.key === ETypeDeloRight.EditingOrganizationsAndCitizens)) {
                 this.selectNode(item);
             }
             if (item.value === 1 && item.contentProp === 5) {
@@ -614,13 +622,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     checkRcpd($event, item: NodeAbsoluteRight) {
         if ($event.target.tagName === 'SPAN' && this.editMode) {
             const flag = item.control.value;
-            if (item.key === '31') {
+            if (item.key === ETypeDeloRight.ProjectExecution) {
                 this.checkRcpdDelete(flag);
             }
-            if (item.key === '28') {
+            if (item.key === ETypeDeloRight.CreationOfRKPD) {
                 this.checkExecOrder(flag);
             }
-            if (item.key === '18' &&  !this._appContext.limitCardsUser.length) {
+            if (item.key === ETypeDeloRight.BulkDeletionOfAds &&  !this._appContext.limitCardsUser.length) {
                 setTimeout(() => this.checkGroupDelRK(flag), 500);
             }
         }
@@ -636,7 +644,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     } // '5' '28'
     checkRcpdDelete(flag: boolean) {
         if (!flag) {
-            if (this.returnElemListRight('28').value) {
+            if (this.returnElemListRight(ETypeDeloRight.CreationOfRKPD).value) {
                 return new Promise((res) => {
                     if (confirm(this.DELETE_RCPD)) {
                         res(true);
@@ -645,25 +653,25 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 }).then(f => {
                     if (f) {
-                        this.returnElemListRight('28').control.patchValue(false);
-                        this.returnElemListRight('28').value = 0;
-                        this._deleteAllDocGroup(this.returnElemListRight('28'));
+                        this.returnElemListRight(ETypeDeloRight.CreationOfRKPD).control.patchValue(false);
+                        this.returnElemListRight(ETypeDeloRight.CreationOfRKPD).value = 0;
+                        this._deleteAllDocGroup(this.returnElemListRight(ETypeDeloRight.CreationOfRKPD));
                     }
                 });
             }
         }
     }
     createRcpdD() {
-        this.returnElemListRight('28').control.patchValue(true);
-        this.returnElemListRight('28').control.markAsTouched();
-        this.returnElemListRight('28').value = 1;
-        this.selectNode(this.returnElemListRight('28'));
+        this.returnElemListRight(ETypeDeloRight.CreationOfRKPD).control.patchValue(true);
+        this.returnElemListRight(ETypeDeloRight.CreationOfRKPD).control.markAsTouched();
+        this.returnElemListRight(ETypeDeloRight.CreationOfRKPD).value = 1;
+        this.selectNode(this.returnElemListRight(ETypeDeloRight.CreationOfRKPD));
     }
     checkExecOrder(flag: boolean) {
         setTimeout(() => {
             return new Promise((res, rej) => {
                 if (flag) {
-                    if (this.returnElemListRight('31').control.value) {
+                    if (this.returnElemListRight(ETypeDeloRight.ProjectExecution).control.value) {
                         res(false);
                     } else {
                         const f = confirm(this.CREATE_RCPD);
@@ -676,10 +684,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
             }).then(answer => {
                 if (answer) {
-                    this.returnElemListRight('31').control.patchValue(true);
-                    this.returnElemListRight('31').control.markAsTouched();
-                    this.returnElemListRight('31').value = 1;
-                    this.selectNode(this.returnElemListRight('31'));
+                    this.returnElemListRight(ETypeDeloRight.ProjectExecution).control.patchValue(true);
+                    this.returnElemListRight(ETypeDeloRight.ProjectExecution).control.markAsTouched();
+                    this.returnElemListRight(ETypeDeloRight.ProjectExecution).value = 1;
+                    this.selectNode(this.returnElemListRight(ETypeDeloRight.ProjectExecution));
                 }
             });
         }, 500);
@@ -701,12 +709,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
     }
     changedAll($event) {
-        /* if (this._appContext.cbBase) { */
+        /* if (this._appContext.cbBase) { */ ETypeDeloRight.SystemTechnologist
             const pos_in = this.curentUser.TECH_RIGHTS.indexOf('1');
             if (pos_in === -1 || pos_in >= 37) {
-                this.returnElemListRight('0').control.patchValue(false);
-                this.returnElemListRight('0').value = 0;
-                this._deleteAllClassif(this.returnElemListRight('0'));
+                this.returnElemListRight(ETypeDeloRight.SystemTechnologist).control.patchValue(false);
+                this.returnElemListRight(ETypeDeloRight.SystemTechnologist).value = 0;
+                this._deleteAllClassif(this.returnElemListRight(ETypeDeloRight.SystemTechnologist));
             }
         /* } else {
             const mas_rigth = this.curentUser.TECH_RIGHTS.split('');
@@ -827,7 +835,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             /*
                 Проверка: правило контрольности
             */
-            if (node.key === '14' && !(+this.curentUser['USER_PARMS_HASH']['RC_CTRL'])) {
+            if (node.key === ETypeDeloRight.PuttingOnControl && !(+this.curentUser['USER_PARMS_HASH']['RC_CTRL'])) {
                 continue;
             }
             if (this.arrDeloRight[+node['key']] === ' ') {
@@ -1000,7 +1008,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return allowed;
     }
     private _checkKey(node): boolean {
-        const impMsgRights = ['24', '25', '33', '34', '35']; /* node.key === '4' || */
+        const impMsgRights = [
+            ETypeDeloRight.ReadingRKpersonalizedAccess,
+            ETypeDeloRight.ReadingPersonalAccessFiles,
+            ETypeDeloRight.ReadingStrictAccessFiles,
+            ETypeDeloRight.ReadingEvents,
+            ETypeDeloRight.WorkingWithEvents
+        ]; /* node.key === '4' || */
         return impMsgRights.indexOf(node.key) !== -1;
     }
     private _checkCreateNotEmpty(): boolean {
@@ -1028,7 +1042,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return allowed;
     }
     private _checkKeyOrgan(node): boolean {
-        return node.key === '4' || node.key === '5' || node.key === '10' || node.key === '11';
+        return  node.key === ETypeDeloRight.EnteringResolutions ||
+                node.key === ETypeDeloRight.ExecutionOfOrders ||
+                node.key === ETypeDeloRight.ApprovalOfProjects ||
+                node.key === ETypeDeloRight.ProjectSigning;
     }
     private _checkCreateNotEmptyOrgan(): boolean {
         let allowed = false;
