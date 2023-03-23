@@ -6,18 +6,20 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 if (environment.production) {
-  enableProdMode();
+    enableProdMode();
 }
 /* заглушка на загрузку плагинов , убрать когда плагины переведут на новый сборщик */
 try {
-  Manager.loadPlugins({ targets: ['tech_tasks', 'tech_tools'] }).then(() => {
-      onlyOneDinamic();
-  });
+    Manager.loadPlugins({ targets: ['tech_tasks', 'tech_tools'] }).then(() => {
+        onlyOneDinamic();
+    });
 } catch (error) {
-  onlyOneDinamic();
-  console.log('err', error);
+    onlyOneDinamic();
+    console.log('err', error);
 }
 
 function onlyOneDinamic() {
-  platformBrowserDynamic().bootstrapModule(AppModule);
+    platformBrowserDynamic().bootstrapModule(AppModule);
 }
+
+onlyOneDinamic()

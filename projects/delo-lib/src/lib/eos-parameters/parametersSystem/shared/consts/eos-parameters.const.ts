@@ -55,7 +55,7 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Протоколирование',
     url: 'logging',
     visible: true
-},  {
+}, {
     title: 'Текущая организация',
     url: 'now-organiz',
     visible: true
@@ -67,6 +67,11 @@ export const EOS_PARAMETERS_TAB = [{
 {
     title: 'Архивное хранилище',
     url: 'unloading-arch',
+    visible: true
+},
+{
+    title: 'Лицензирование',
+    url: 'licensing',
     visible: true
 }
 ];

@@ -41,6 +41,7 @@ import { EditCryptographyComponent } from './parametersSystem/param-cryptography
 import { ParamEmailComponent } from './parametersSystem/param-email/param-email.component';
 import { ParamEmailCardComponent } from './parametersSystem/param-email/param-email-card/param-email-card.component';
 import { ParamLibsComponent } from './parametersSystem/param-libs/param-libs.component';
+import { EosParamLicensingComponent } from './parametersSystem/eos-param-licensing/eos-param-licensing.component';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { ParamLibsComponent } from './parametersSystem/param-libs/param-libs.com
         EditCryptographyComponent,
         ParamEmailComponent,
         ParamEmailCardComponent,
-        ParamLibsComponent
+        ParamLibsComponent,
+        EosParamLicensingComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent,
