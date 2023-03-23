@@ -104,3 +104,10 @@ function render(mountPoint: string) {
 2. Перенос стилей в сборку либы - bandle-scss
 3. Копирование ресурсов в сборку либы - copy-assets
 4. Выполнить npm run build-box
+
+
+
+<h1>Внимание!</h1>
+<h2>Во всех ts файлах импорты должны быть относительными!!!!!!!!!!!!!!!!!!!</h2>
+<span>Не верно: import { EosMessageService } from 'eos-common/index';</span>
+<span>Верно: import { EosMessageService } from '../../eos-common/index';</span>
