@@ -113,6 +113,25 @@ export class CertStoresService {
             this.updateFormControl$.next(this.createStringForUpdate());
         }
     }
+    updateStores(update: IListStores, editElem) {
+        if (this.unicStoreName.has(this.parseName(update))) {
+            this.msgSrv.addNewMessage(CARMA_UNIC_VALUE);
+        } else {
+            this.unicStoreName.forEach((item) => {
+                if (item === this.parseName(editElem)) {
+                    item = this.parseName(update);
+                }
+            })
+            this.listsCetsStores.forEach((item) => {
+                if (this.parseName(item) === this.parseName(editElem)) {
+                    item['Address'] = update['Address'];
+                    item['Location'] = update['Location'];
+                    item['Name'] = update['Name'];
+                }
+            });
+            this.updateFormControl$.next(this.createStringForUpdate());
+        }
+    }
     showListCertNode(): Promise<any> {
         const curName = this.currentSelectedNode && this.currentSelectedNode.Name;
         let name;

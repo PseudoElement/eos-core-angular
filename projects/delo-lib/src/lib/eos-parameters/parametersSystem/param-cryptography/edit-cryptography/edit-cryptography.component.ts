@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, OnInit, TemplateRef, ViewChild, Input, OnDestroy } from '@angular/core';
 import { CRYPTO_PARAM_BTN_TABEL } from '../../../../eos-parameters/parametersSystem/shared/consts/cryptography.const';
-import { ITableBtn, ITableData, ITableHeader } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { FormGroup } from '@angular/forms';
 import { CarmaHttp2Service } from '../../../../app/services/camaHttp2.service';
@@ -46,6 +46,9 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
         iconDisable: 'eos-adm-icon-info-grey',
         id: 'show'
     },];
+    public settingsTable: ITableSettings = {
+        selectedRow: true
+    };
     public tableHeader: ITableHeader[] = [
         {
             title: 'Хранилище',

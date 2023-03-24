@@ -25,6 +25,7 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     orderBy: boolean = true;
     isCarma: boolean = false;
     CertStoresModal = false;
+    public updateItem;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
@@ -99,6 +100,14 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     }
     addStores() {
         this.CertStoresModal = true;
+        this.updateItem = undefined;
+        this.addCertStoresModal.show();
+    }
+    redactStores() {
+        this.CertStoresModal = true;
+        this.updateItem = this.CurrentSelect;
+        console.log(this.updateItem);
+        
         this.addCertStoresModal.show();
     }
     deleteStores() {

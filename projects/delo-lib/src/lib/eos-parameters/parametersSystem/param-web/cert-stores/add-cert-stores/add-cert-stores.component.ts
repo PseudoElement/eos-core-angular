@@ -1,6 +1,6 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CertStoresService } from '../../cert-stores.service';
-// import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { EosMessageService } from '../../../../../eos-common/services/eos-message.service';
 import { IListStores } from '../../../shared/consts/web.consts';
 import { CarmaHttp2Service } from '../../../../../app/services/camaHttp2.service';
 
@@ -9,7 +9,8 @@ import { CarmaHttp2Service } from '../../../../../app/services/camaHttp2.service
     selector: 'eos-add-cert-stores',
     templateUrl: 'add-cert-stores.component.html'
 })
-export class AddCertStoresComponent {
+export class AddCertStoresComponent implements OnInit {
+    @Input() UpdateItem;
     @Output() closeAddCertModal = new EventEmitter;
     titleHeader = 'Выберите хранилища сертификатов';
     certSystemStore: string = 'sslm';
@@ -20,10 +21,19 @@ export class AddCertStoresComponent {
     constructor(
         private certStoresService: CertStoresService,
         private carmeHttp2srv: CarmaHttp2Service,
-        // private msgSrv: EosMessageService
+        private msgSrv: EosMessageService
     ) { }
+    ngOnInit() {
+        if (this.UpdateItem) {
+            this.searchStore();
+        }
+    }
     submit() {
-        this.certStoresService.addStores(this.currentSelectNode);
+        if (this.UpdateItem) {
+            this.certStoresService.updateStores(this.currentSelectNode, this.UpdateItem);
+        } else {
+            this.certStoresService.addStores(this.currentSelectNode);
+        }
         this.closeAddCertModal.emit();
     }
     cancel() {
@@ -50,7 +60,11 @@ export class AddCertStoresComponent {
                 }
                 this.listStores = listStores;
             }).catch(e => {
-                console.log(e);
+                this.msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка приложения!',
+                    msg: e.message ? e.message : e,
+                });
             });
         }
         if (this.certSystemStore === 'sss') {
@@ -71,7 +85,11 @@ export class AddCertStoresComponent {
                 this.listStores = listStores;
                 return stores;
             }).catch(e => {
-                console.log(e);
+                this.msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка приложения!',
+                    msg: e.message ? e.message : e,
+                });
             });
         }
     }
