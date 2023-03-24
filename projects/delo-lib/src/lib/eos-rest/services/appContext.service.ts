@@ -114,7 +114,7 @@ export class AppContext {
         });
         const oCurrentUser = p.read<USER_CL>({
             CurrentUser: ALL_ROWS,
-            expand: 'USERDEP_List,USERSECUR_List,USER_VIEW_List,USER_TECH_List',
+            expand: 'USERDEP_List,USERSECUR_List,USER_VIEW_List,USER_TECH_List,USER_PARMS_List',
             _moreJSON: { ParamsDic: null }
         })
             .then(([d]) => {

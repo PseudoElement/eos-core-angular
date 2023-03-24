@@ -8,6 +8,7 @@ import { EosMessageService } from '../../../eos-common/services/eos-message.serv
 import { /* PARM_NOT_CARMA_SERVER, */ /* PARM_ERR_OPEN_CERT_STORES, */ CARMA_UNIC_VALUE } from '../shared/consts/eos-parameters.const';
 import { IListStores } from '../shared/consts/web.consts';
 import { CarmaHttp2Service } from '../../../app/services/camaHttp2.service';
+import { AppContext } from '../../../eos-rest';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -32,7 +33,8 @@ export class CertStoresService {
     constructor(
         //    private carmaService: CarmaHttpService,
         private carmaHttp2Srv: CarmaHttp2Service,
-        private msgSrv: EosMessageService
+        private msgSrv: EosMessageService,
+        private _appContext: AppContext
     ) {
         this._currentSelectedNode$ = new Subject();
         this.updateFormControl$ = new Subject();
@@ -265,8 +267,19 @@ export class CertStoresService {
         });
     }
     private initCarmaServer() {
-        const initString = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
-        return this.carmaHttp2Srv.connectWrapper(initString, this.initCarmaStores);
+        let addr;
+        if (this.formControlInitString) {
+            addr = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
+        } else {
+            let cryptoStr;
+            this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
+                if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
+                    cryptoStr = params['PARM_VALUE'];
+                }
+            });
+            addr = cryptoStr ? cryptoStr : 'http://localhost:8080//"';
+        }
+        return this.carmaHttp2Srv.connectWrapper(addr, this.initCarmaStores);
         // return this.carmaHttp2Srv.connect(initString, this.initCarmaStores);
     }
     private checkMarkNode() {

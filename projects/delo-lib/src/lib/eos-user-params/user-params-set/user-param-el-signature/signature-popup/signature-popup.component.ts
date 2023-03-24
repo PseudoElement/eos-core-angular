@@ -71,7 +71,7 @@ export class SignaturePopupComponent implements OnInit {
         });
     }
     getItems() {
-        this.certStoresService.formControlInit = this.form.controls['CRYPTO_INITSTR'];
+        // this.certStoresService.formControlInit = this.form.controls['CRYPTO_INITSTR'];
         let certStores = [];
         if (typeof this.form.controls[this.inputName].value === 'string' && this.form.controls[this.inputName].value !== '') {
             certStores = this.form.controls[this.inputName].value.split('\t');

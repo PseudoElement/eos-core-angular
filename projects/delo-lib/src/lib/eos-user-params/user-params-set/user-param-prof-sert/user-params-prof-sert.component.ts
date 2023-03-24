@@ -138,9 +138,16 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.currentUser = this._userSrv.curentUser;
                 this.selectedSertificatePopup = null;
+                let cryptoStr;
+                this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
+                    if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
+                        cryptoStr = params['PARM_VALUE'];
+                    }
+                });
+                const addr = cryptoStr ? cryptoStr : 'SERVER="http://localhost:8080"';
                 const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
                 this.loadSert = true;
-                this.carma2Srv.connectWrapper('', store)
+                this.carma2Srv.connectWrapper(addr, store)
                 .then((res) => {
                     this.isCarma = true;
                     this.isLoading = false;
