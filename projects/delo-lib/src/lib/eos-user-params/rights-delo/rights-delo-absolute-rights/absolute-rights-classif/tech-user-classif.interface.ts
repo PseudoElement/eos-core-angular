@@ -41,7 +41,8 @@ export enum E_TECH_RIGHTS {
     AddressTypes = 47, // Типы адреса
     BackgroundTaskManagement = 48, // Управление фоновыми задачами
     DirectoriesMEDO = 50, // Справочники МЭДО
-    DocumentTypes = 51 // Виды документов
+    DocumentTypes = 51, // Виды документов
+    SettingGeneralLists = 52, // Настройка общих списков
 }
 export type ETypeTechRight = E_TECH_RIGHTS;
 
