@@ -537,6 +537,8 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.renameBaseDepartment:
                     _enabled = this._eaps.checkBaseDepartmentRight();
                     break;
+                case E_RECORD_ACTIONS.certifUC:
+                    break;
                 default:
                     const {enabled, show} = this._dictSrv.npOverrideSrv.checkActiveMenuButtons(button.type, this, opts)
                     _enabled = enabled;

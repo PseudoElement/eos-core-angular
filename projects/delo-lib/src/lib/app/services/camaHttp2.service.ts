@@ -35,7 +35,7 @@ export class CarmaHttp2Service {
             }
         });
     }
-    public EnumCertificates(location, address, name): Promise<string[]> {
+    public EnumCertificates(location, address, name): Promise<any> {
         if (location === '') {
             location = 'sscu';
         }

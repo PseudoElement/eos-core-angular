@@ -57,7 +57,7 @@
     </div>
     <!-- Переданные элементы -->
     <div class="eos-rows-table" [ngStyle]="getTableStyle()">
-        <div class="display-element-item" *ngFor="let row of tabelData.data" (click)="clickElem(row)" [ngClass]="getClassRow(row)">
+        <div class="display-element-item" *ngFor="let row of tabelData.data" (click)="clickElem(row)" [ngClass]="getClassRow(row)" (dblclick)="dbClickToRow(row)">
             <div *ngIf="showCheckBox" style="padding-left: 12px;" class="checkbox-inline">
                 <label>
                     <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">

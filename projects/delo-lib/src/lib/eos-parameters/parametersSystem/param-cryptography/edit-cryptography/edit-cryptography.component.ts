@@ -25,6 +25,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     @Output() submitEmit = new EventEmitter();
     @Output() cancelEmit = new EventEmitter();
     @ViewChild('modalStorage') modalStorage: TemplateRef<any>;
+    @ViewChild('infoCrypto') template: TemplateRef<any>;
     edit = true;
     nameProfile: string;
     initStr: string;
@@ -35,13 +36,26 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     currentSelectNode: IListStores;
     openModal = false;
     public editCertId: number;
-    public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL];
+    public InfoSert: Array<string> = [];
+    public modalRef: BsModalRef | null;
+    public currentName: string;
+    public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL, {
+        tooltip: 'Просмотреть',
+        disable: true,
+        iconActiv: 'eos-adm-icon-info-blue',
+        iconDisable: 'eos-adm-icon-info-grey',
+        id: 'show'
+    },];
     public tableHeader: ITableHeader[] = [
         {
             title: 'Хранилище',
             id: 'name',
             order: 'asc',
-            style: {width: '100%'}
+            style: {
+                width: '100%',
+                '-webkit-user-select': 'none',
+                'user-select': 'none'
+            }
         },
     ];
     public tabelData: ITableData = {
@@ -131,6 +145,9 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                 break;
             case 'deleted':
                 this.tabelData.data = this.updateToDelete(this.tabelData.data);
+                break;
+            case 'show':
+                this.showCert();
                 break;
             default:
                 break;
@@ -240,7 +257,11 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                     this.currentSelectNode = null;
                 }
             }).catch(e => {
-                console.log(e);
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка приложения!',
+                    msg: e.message ? e.message : e,
+                });
             });
         }
         if (this.certSystemStore === 'sss') {
@@ -295,6 +316,9 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                 case 'edit':
                     elem.disable = !($event.length === 1);
                     break;
+                case 'show':
+                    elem.disable = !($event.length === 1);
+                    break;
                 default:
                     break;
             }
@@ -311,4 +335,29 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
             }
         });
     }
+    showCert(row?) {
+        let param;
+        if (!row) {
+            const list = this.tabelData.data.filter((item) => item.check)[0];
+            param = list['name'].split(':');
+        } else {
+            param = row['name'].split(':');
+        }
+        this._cermaHttp2Srv.EnumCertificates(param[0], this.certSystemAddress || '', param[1]).then(data => {
+            if (data && data.errorMessage === 'DONE') {
+                this.InfoSert = data.certificates;
+                this.modalRef = this._modalSrv.show(this.template, { class: 'modal-mode' });
+            }
+        }).catch(e => {
+            this.InfoSert = [];
+            this.modalRef = this._modalSrv.show(this.template, { class: 'modal-mode' });
+        });
+    }
+    dbClickRow($event) {
+        this.showCert($event);
+    }
+    showCertInfo(certId: string) {
+        this._cermaHttp2Srv.showCertInfo(certId);
+    }
+    
 }
