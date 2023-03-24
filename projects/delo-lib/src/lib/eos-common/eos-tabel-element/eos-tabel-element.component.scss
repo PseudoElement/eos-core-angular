@@ -42,6 +42,7 @@
         display: flex;
         padding: 6px 0 6px 0;
         line-height: 23.4px;
+        cursor: pointer;
     }
     .counter-table {
         align-self: center;
@@ -67,5 +68,6 @@
     .selected-row {
         border: 2px solid #2196F3;
         background-color: #E3F2FD;
+        padding: 4px 0;
     }
 }

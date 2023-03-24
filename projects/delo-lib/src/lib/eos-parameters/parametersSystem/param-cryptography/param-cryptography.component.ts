@@ -64,7 +64,6 @@ export class ParamCryptographyComponent extends BaseParamComponent {
     init() {
         return this.getAppSetting<ICryptographyParams>(this.paramReceive)
         .then(Receive => {
-            console.log('data', Receive);
             Object.keys(Receive).forEach((key) => {
                 if (typeof(+key) === 'number' && !isNaN(+key)) {
                     this.maxKey = +key;

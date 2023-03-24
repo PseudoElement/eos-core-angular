@@ -26,13 +26,24 @@
         </button>
         <button
             class="btn"
+            #dTolltip="bs-tooltip"
+            tooltip="Редактировать"
+            placement="bottom"
+            containerClass="tooltip-info"
+            (click)="redactStores()"
+            [disabled]="!CurrentSelect || !editMode"
+        >
+                <span class="eos-adm-icon eos-adm-icon-edit-blue small"  [ngClass]="{'eos-adm-icon-edit-blue': editMode, 'eos-adm-icon-edit-grey': !editMode}"></span>
+        </button>
+        <button
+            class="btn"
             tooltip="Просмотреть"
             placement="bottom"
             containerClass="tooltip-info"
             (click)="showCert()"
             [disabled]="!CurrentSelect || !editMode"
         >
-                <span class="eos-adm-icon eos-adm-icon-show-blue small"  [ngClass]="{'eos-adm-icon-show-blue': editMode, 'eos-adm-icon-show-grey': !editMode}"></span>
+                <span class="eos-adm-icon small"  [ngClass]="{'eos-adm-icon-info-blue': editMode, 'eos-adm-icon-info-grey': !editMode}"></span>
         </button>
     </div>
     <div class="cert-param">
@@ -152,9 +163,9 @@
         aria-labelledby="dialog-sizes-name1"
     >
         <div class="modal-dialog" [ngStyle]="{'margin-left.px': offsetLeftModal}">
-            <div class="modal-content">
+            <div class="modal-content" *ngIf="CertStoresModal">
                     <eos-add-cert-stores
-                        *ngIf="CertStoresModal"
+                        [UpdateItem]="updateItem"
                         (closeAddCertModal)="closeAddCertModal()"
                     >
                     </eos-add-cert-stores>

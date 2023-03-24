@@ -21,6 +21,7 @@ export class TabelElementComponent implements OnInit {
     @Output() btnAction = new EventEmitter();
     @Output() elementsSelect = new EventEmitter();
     @Output() orderHead = new EventEmitter<IOrderTable>();
+    @Output() dbClickRow = new EventEmitter();
     public title;
     public colomns: ITableHeader[] = [];
     public isLoading = false;
@@ -168,5 +169,8 @@ export class TabelElementComponent implements OnInit {
             classRow += 'margin-not-checkbox ';
         }
         return classRow;
+    }
+    dbClickToRow(row) {
+        this.dbClickRow.emit(row);
     }
 }
