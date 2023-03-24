@@ -21,6 +21,7 @@ export class TabelElementComponent implements OnInit {
     @Output() btnAction = new EventEmitter();
     @Output() elementsSelect = new EventEmitter();
     @Output() orderHead = new EventEmitter<IOrderTable>();
+    @Output() clickToRow = new EventEmitter();
     @Output() dbClickRow = new EventEmitter();
     public title;
     public colomns: ITableHeader[] = [];
@@ -159,6 +160,7 @@ export class TabelElementComponent implements OnInit {
         if (this.settings?.selectedRow) {
             this.selectIdLast = '' + $event.key;
         }
+        this.clickToRow.emit([$event]);
     }
     getClassRow(row) {
         let classRow = '';

@@ -16,7 +16,7 @@ export class SignatureAddComponent implements OnInit {
     @Input() inputName: string;
     @Input() input: FormControl;
     @Input() form: FormGroup;
-
+    @Input() InputToRedact;
     @Output() closeAddCertModal = new EventEmitter;
     public certSystemStore: string;
     public certSystemAddress: string;
@@ -98,6 +98,7 @@ export class SignatureAddComponent implements OnInit {
     }
     onChangeSelect($event) {
         this.certSystemAddress = '';
+        this.searchStore();
     }
 
     submit() {
@@ -111,14 +112,14 @@ export class SignatureAddComponent implements OnInit {
     init() {
         this.certSystemStore = this.mapBtnName.get(this.inputName);
         this.sheckSelect = this.mapBtnName.get(this.inputName);
-
+        if (this.InputToRedact) {
+            this.certSystemStore = this.InputToRedact;
+        }
     }
     ngOnInit() {
         setTimeout(() => {
             this.init();
-            if (this.certSystemStore === 'sscu') {
-                this.searchStore();
-            }
+            this.searchStore();
         }, 0);
     }
 
