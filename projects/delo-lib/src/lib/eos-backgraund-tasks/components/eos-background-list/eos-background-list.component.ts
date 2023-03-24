@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ETypeFon, IFonLists } from '../../../eos-backgraund-tasks/interface';
-import {DISABLED_LIST_ITEM} from '../../../app/consts/messages.consts';
 
 @Component({
   selector: 'eos-eos-background-list',
@@ -35,9 +34,4 @@ export class EosBackgroundListComponent implements OnInit {
       console.log('Ошибка в загрузке плагина');
     }
   }
-
-  getHint(): string {
-    return this.disabled ? DISABLED_LIST_ITEM : '';
-  }
-
 }
