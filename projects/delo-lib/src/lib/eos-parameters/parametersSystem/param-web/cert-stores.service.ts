@@ -181,6 +181,17 @@ export class CertStoresService {
     public showCert(certId: string): void {
         this.carmaHttp2Srv.showCertInfo(certId);
     }
+    public parseName(elem): string {
+        if (elem.Location === 'sslm') {
+            const address = String(elem.Address).trim();
+            if (address.length) {
+                return `${elem.Location}:${address}\\${elem.Name}`;
+            }
+            return `${elem.Location}:${elem.Name}`;
+        } else {
+            return `${elem.Location}:${elem.Name}`;
+        }
+    }
     private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
         listCertStores.forEach((str: string) => {
@@ -237,17 +248,6 @@ export class CertStoresService {
             }, elem));
         });
         return a;
-    }
-    private parseName(elem): string {
-        if (elem.Location === 'sslm') {
-            const address = String(elem.Address).trim();
-            if (address.length) {
-                return `${elem.Location}:${address}\\${elem.Name}`;
-            }
-            return `${elem.Location}:${elem.Name}`;
-        } else {
-            return `${elem.Location}:${elem.Name}`;
-        }
     }
     private _orderByField() {
         this.listsCetsStores.sort((a: IListCertStotes, b: IListCertStotes) => {

@@ -40,8 +40,8 @@
                             Адрес хранилища
                         </label>
                 <div>
-                    <input class="form-control m-font" id="adress" type="text" placeholder="Адрес хранилища" autocomplete="off" [(ngModel)]="certSystemAddress">
-                    <button class="adres-search btn" (click)="searchStore()">
+                    <input [disabled]="certSystemStore === 'sscu'" class="form-control m-font" id="adress" type="text" [placeholder]="certSystemStore === 'sscu' ? 'Адрес хранилища' : 'Введите имя компьютера (по умолчанию - локальный компьютер)'" autocomplete="off" [(ngModel)]="certSystemAddress">
+                    <button [disabled]="certSystemStore === 'sscu'" class="adres-search btn" (click)="searchStore()">
                                 <span class="eos-adm-icon eos-adm-icon-search-blue small"></span>
                             </button>
                 </div>

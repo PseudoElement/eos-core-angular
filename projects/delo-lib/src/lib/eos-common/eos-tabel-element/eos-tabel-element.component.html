@@ -57,14 +57,14 @@
     </div>
     <!-- Переданные элементы -->
     <div class="eos-rows-table" [ngStyle]="getTableStyle()">
-        <div class="display-element-item" *ngFor="let row of tabelData.data" (click)="clickElem(row)" [ngClass]="getClassRow(row)" (dblclick)="dbClickToRow(row)">
+        <div class="display-element-item" *ngFor="let row of tabelData.data" [ngClass]="getClassRow(row)" (dblclick)="dbClickToRow(row)">
             <div *ngIf="showCheckBox" style="padding-left: 12px;" class="checkbox-inline">
                 <label>
                     <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">
                     <span></span>
                 </label>
             </div>
-            <div *ngFor="let colomn of colomns"
+            <div (click)="clickElem(row)" *ngFor="let colomn of colomns"
                 class="header-table-title"
                 [ngClass]="{'margin-not-checkbox': hiddenCheckBox }"
                 [ngStyle]="getStyle(colomn)">
