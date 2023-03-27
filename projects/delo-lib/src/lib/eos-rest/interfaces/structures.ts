@@ -315,6 +315,10 @@ export interface SEV_PARTICIPANT extends ILinearCL {
      * список используемых для участников СЭВ правил
      */
     SEV_PARTICIPANT_RULE_List: SEV_PARTICIPANT_RULE[];
+    /* 
+    * Имя организации
+    */
+    ORGANIZ_CL_NAME: string;
 }
 
 /**
