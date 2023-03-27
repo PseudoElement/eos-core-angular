@@ -1,15 +1,41 @@
 .resolution-category-card{
     .resolution-card{
         display: flex;
+        align-items: center;
+        height: 28px;
+        margin-bottom: 20px;
     }
     .resolution-card-day{
         margin: 0 5px;
+        height: 28px;
     }
+    .eos-dynamic-input{
+        .input-increment-inline-block {
+            box-sizing: border-box;
+            border: 1px solid #e6e6e6;
+            height: 28px;
+        }
+        .input-increment{
+            height: 100%;
+            padding: 0;
+            border: none;
+        }
+        input{
+            height: 100%;
+        }
+        .form-control-static{
+            box-sizing: border-box;
+            height: 28px;
+            min-height: auto;
+            padding: 3px 8px;
+        }
+    } 
     .resolution-card-note textarea {
         height: 75px;
     }
     .resolution-card-day-label{
-        padding-top: 11px;
+        line-height:28px;
+        margin: 0;
         font-size: 14px;
     }
 }
