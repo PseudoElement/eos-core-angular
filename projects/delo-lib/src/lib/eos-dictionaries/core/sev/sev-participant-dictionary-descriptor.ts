@@ -67,6 +67,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                     org.forEach((o: ORGANIZ_CL) => {
                         const s: SEV_PARTICIPANT = mapLinksOrganiz.get(o.DUE);
                         s.DELETED = o.DELETED;
+                        s.ORGANIZ_CL_NAME = o.CLASSIF_NAME;
                     });
                     return sev_part;
                 });

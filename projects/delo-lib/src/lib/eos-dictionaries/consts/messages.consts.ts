@@ -267,6 +267,10 @@ export const WARN_DUP_USER_DL: IMessage = {
     title: 'Предупреждение:',
     msg: 'ДЛ уже ассоциировано с другим пользователем.'
 };
-
+export const MESSAGE_TO_RENAME_ORGANIZATION_SEV: IMessage = {
+    type: 'warning',
+    title: '',
+    msg: 'Изменилось название участника СЭВ в справочнике \"Организации\". Сохраните текущую карточку'
+};
 
 

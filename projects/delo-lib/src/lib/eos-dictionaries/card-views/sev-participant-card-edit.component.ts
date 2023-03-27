@@ -2,7 +2,7 @@ import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.com
 import { Component, Injector, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { BaseCardEditDirective } from './base-card-edit.component';
 import { PipRX, SEV_ASSOCIATION, SEV_RULE, SEV_PARTICIPANT_RULE } from '../../eos-rest';
-import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV } from '../../eos-dictionaries/consts/messages.consts';
+import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV, MESSAGE_TO_RENAME_ORGANIZATION_SEV } from '../../eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ALL_ROWS, _ES } from '../../eos-rest/core/consts';
@@ -81,6 +81,10 @@ export class SevParticipantCardEditComponent extends BaseCardEditDirective imple
                         i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF'], isDeleted: true });
                     }
                 });
+                if (this.getValue('rec.CLASSIF_NAME') !== this.data.rec['ORGANIZ_CL_NAME']) {
+                    this._msgSrv.addNewMessage(MESSAGE_TO_RENAME_ORGANIZATION_SEV);
+                    this.setValue('rec.CLASSIF_NAME', this.data.rec['ORGANIZ_CL_NAME']);
+                }
             });
         this._readDBLists();
     }
