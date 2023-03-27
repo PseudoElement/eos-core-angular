@@ -82,7 +82,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         title: 'ID MEDO связки',
         type: 'string',
         length: 64,
-        default: 'LT00000000'
+        default: ''
     }
 ],
 
