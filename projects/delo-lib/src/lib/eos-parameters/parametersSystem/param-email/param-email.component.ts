@@ -1,5 +1,5 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
-import { Component, Injector, Input} from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { IOrderTable } from '../../../eos-common/eos-tabel-element/eos-tabel-element.component';
 import { ISettingEmailCommon, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';

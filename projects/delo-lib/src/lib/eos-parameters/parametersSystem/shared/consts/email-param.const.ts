@@ -2,16 +2,16 @@ import { EMAIL } from '../../../../eos-dictionaries/consts/input-validation';
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 
 export const EmailEncryptionType = [
-    {value: 1, title: 'None'},
+    {value: 1, title: 'Нет'},
     {value: 2, title: 'TLS'},
     {value: 3, title: 'STARTTLS'}
 ];
 export const EmailAuthenticationType = [
-    {value: 1, title: 'Password'},
-    {value: 2, title: 'EncryptedPassword'},
+    {value: 1, title: 'Обычный пароль'},
+    {value: 2, title: 'Зашифрованный пароль'},
     {value: 3, title: 'Kerberos'},
     {value: 4, title: 'NTLM'},
-    {value: 5, title: 'None'}
+    {value: 5, title: 'Нет'}
 ];
 export const EMAIL_PARAM: IBaseParameters = {
     id: 'email',

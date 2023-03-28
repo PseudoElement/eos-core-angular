@@ -8,7 +8,7 @@
         <div class="header-button-wrap">
             <button class="btn btn-primary header-button" (click)="cancel()">ОТМЕНИТЬ
             </button>
-            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="statusBtnSub">СОХРАНИТЬ
+            <button class="btn btn-primary-full header-button" (click)="submit()" [disabled]="this.form.invalid">СОХРАНИТЬ
             </button>
         </div>
     </div>
@@ -22,7 +22,7 @@
                 [readonly]="inputs['rec.EmailAccount'].readonly"
                 (onControlBlur)="inputAllElem($event.keyCode, true)">
             </eos-dynamic-input>
-            <div class="dynamic-input-wrapper base-text-input text-pass-input pass-width padding-right">
+            <div style="margin: -5px 0 0 20px;" class="dynamic-input-wrapper base-text-input text-pass-input pass-width padding-right">
                 <label>ПАРОЛЬ</label>
                 <div class="vision">
                     <input class="form-control m-font" maxlength="64"

@@ -116,8 +116,6 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                 this.form.controls['rec.ProfileName'].setErrors({ isRequired: undefined });
             }
         });
-        console.log('this.form', this.form.invalid);
-        
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
