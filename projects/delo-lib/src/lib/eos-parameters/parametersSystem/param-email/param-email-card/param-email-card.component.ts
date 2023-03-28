@@ -1,6 +1,8 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ISettingEmailReceive, ISettingEmailSend, IUploadParam } from '../../../../eos-parameters/interfaces/app-setting.interfaces';
 import { DEFAULT_EMAIL_PARAM } from '../../../../eos-parameters/parametersSystem/shared/consts/email-param.const';
 import { ParamApiSrv } from '../../../../eos-parameters/parametersSystem/shared/service/parameters-api.service';
@@ -12,8 +14,9 @@ import { ParamApiSrv } from '../../../../eos-parameters/parametersSystem/shared/
     styleUrls: ['./param-email-card.component.scss']
 
 })
-export class ParamEmailCardComponent implements OnInit {
+export class ParamEmailCardComponent implements OnInit, OnDestroy {
     @Input() form: FormGroup;
+    @Input() allData: any[];
     @Input() inputs;
     @Input() dataProfile;
     @Input() prepareData;
@@ -25,18 +28,48 @@ export class ParamEmailCardComponent implements OnInit {
     public data = {
         ProfileName: ''
     };
-    public title = 'Редактирование профиля электронной почты';
+    public title;
     get typeInput(): string {
         return !this.form.controls['rec.Password'].value ? 'text' : this.type1;
     }
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(private _paramApiSrv: ParamApiSrv) {}
     ngOnInit(): void {
         this.isLoading = true;
         if (this.dataProfile) {
+            this.title = 'Редактирование профиля электронной почты';
             this.editProfile();
         } else {
+            this.title = 'Создание профиля электронной почты';
             this.addProfile();
         }
+        this.form.controls['rec.ProfileName'].valueChanges
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((state: string) => {
+            if (state) {
+                let flag = false;
+                this.allData.forEach((item) => {
+                    if (item['ProfileName'] === state && (!this.dataProfile || this.dataProfile['key'] !== item['key'])) {
+                        flag = true;
+                    }
+                });
+                if (flag) {
+                    this.form.controls['rec.ProfileName'].setErrors(null);
+                    this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
+                } else {
+                    this.form.controls['rec.ProfileName'].setErrors(null);
+                }
+            } else {
+                this.form.controls['rec.ProfileName'].setErrors(null);
+                this.form.controls['rec.ProfileName'].setErrors({ isRequired: undefined });
+            }
+        });
+    }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
     cancel() {
         this.cancelEmit.next();
