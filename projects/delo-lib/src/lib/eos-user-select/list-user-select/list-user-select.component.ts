@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterContentChecked, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -34,15 +34,17 @@ import { SettingManagementComponent } from './setting-management/setting-managem
 import { FormGroup } from '@angular/forms';
 import { LIST_USER_CABINET } from '../../eos-user-select/shered/consts/list-user.const';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
-import { ShowTooltipService } from '../../app/services/add-tooltip.service';
 interface TypeBread {
     action: number;
+}
+interface ISDISABLED {
+    [name:string]: boolean;
 }
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
 })
-export class ListUserSelectComponent implements OnDestroy, OnInit {
+export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
     @ViewChild('listContent', { static: false }) listContent;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     currentState: boolean[];
@@ -68,6 +70,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     shadow: boolean = false;
     deleteOwnUser: any;
     CabinetOptions = [];
+    isDisableObj: ISDISABLED = {}
     public inputs: any;
     public form: FormGroup;
     get showCloseQuickSearch() {
@@ -141,10 +144,39 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _srhSrv: SearchServices,
         private _appContext: AppContext,
         private _inputCtrlSrv: InputParamControlService,
-        public showTooltipService: ShowTooltipService
     ) {
 
     }
+    
+    @HostListener('window:resize', ['$event.target'])
+    checkIsDisabled() {
+        this.listUsers.forEach(el => {
+            const idDueName = el.id + 'DueName'
+            const htmlElement = document.getElementById(idDueName);
+            if(htmlElement){
+                (htmlElement.offsetWidth < htmlElement.scrollWidth) ? 
+                this.isDisableObj[idDueName] = false : 
+                this.isDisableObj[idDueName] = true;
+            } else {
+                this.isDisableObj[idDueName] = true;
+            }
+
+            const idDep = el.id + 'Dep'
+            const htmlElement2 = document.getElementById(idDep);
+            if(htmlElement2){
+                (htmlElement2.offsetWidth < htmlElement2.scrollWidth) ? 
+                this.isDisableObj[idDep] = false : 
+                this.isDisableObj[idDep] = true;
+            } else {
+                this.isDisableObj[idDep] = true;
+            }
+        })
+    }
+
+    ngAfterContentChecked() {
+        if(this.listUsers) this.checkIsDisabled();
+    }
+    
     ngOnInit() {
         this.rtUserService.clearHash();
         if (this._storage.getItem('onlyView') !== undefined) {
