@@ -148,14 +148,15 @@
                                 </span>
                                 <span 
                                     #twoColomnElement
-                                    [isDisabled]="showTooltipService.calcIsDisabled(twoColomnElement, user.fullDueName)"
+                                    id="{{user.id}}DueName"
                                     class="user-list-two-colomn"
-                                    tooltip="{{user.fullDueName}}"
                                     [delay]="tooltipDelay"
                                     placement="bottom"
                                     [ngClass]="{'last-tooltip' : last }"
                                     containerClass="tooltip-info"
                                     container="body"
+                                    tooltip="{{ user.fullDueName}}"
+                                    [isDisabled]="isDisableObj[twoColomnElement.id]"
                                 >
                                     <span *ngIf="!user.deep"
                                         class="eos-adm-icon eos-adm-icon-Techuser-Grey small icon-user"></span>
@@ -170,9 +171,10 @@
                                 </span>
                                 <ng-template #depUser>
                                     <span 
-                                        [isDisabled]="showTooltipService.calcIsDisabled(firstColomnElement, user.department)"
-                                        class="user-list-first-colomn"
                                         #firstColomnElement
+                                        id="{{user.id}}Dep"
+                                        [isDisabled]="isDisableObj[firstColomnElement.id]"
+                                        class="user-list-first-colomn"
                                         tooltip="{{user.department}}"
                                         placement="bottom"
                                         containerClass="tooltip-info"
