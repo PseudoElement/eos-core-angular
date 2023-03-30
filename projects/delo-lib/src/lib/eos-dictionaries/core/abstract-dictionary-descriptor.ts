@@ -566,7 +566,7 @@ export abstract class AbstractDictionaryDescriptor {
         return Promise.resolve(selectedNodes);
     }
 
-    checknodeAfterPaste(selectedNodes, confirmSrv): Promise<any> {
+    checknodeAfterPaste(selectedNodes, confirmSrv, dueTo?): Promise<any> {
         const sopData = {
             type: null,
             id: null,
@@ -602,7 +602,7 @@ export abstract class AbstractDictionaryDescriptor {
                                     deletingNodes.push(node);
                                 }
                             });
-                            if (list.length) {
+                            if (list.length && (this.id !== 'departments' || dueTo !== selectedNodes[0]['parentId'])) {
                                 const warnDeletion: IConfirmWindow2 = Object.assign({}, WARN_ELEMENTS_ARE_RELATED, { bodyList: list });
                                 return confirmSrv.confirm2(warnDeletion).then(() => {
                                     if (logicalDeletion.length) {
