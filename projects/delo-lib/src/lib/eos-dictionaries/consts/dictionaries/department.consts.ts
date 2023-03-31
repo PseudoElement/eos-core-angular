@@ -414,7 +414,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     },
     quickViewFields: ['photo', 'fullTitle', 'DUTY', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'IS_NODE', 'POST_H', 'SURNAME',
         'CARD_NAME', 'CARD_FLAG', 'CODE', 'NOTE', 'IS_NODE', 'printInfo', 'user', 'cabinet',
-        'sev', 'nametitle', 'organization'], // title is in shortQuickViewFields
+        'sev', 'nametitle', 'organization', 'PARENT_DUE'], // title is in shortQuickViewFields
     shortQuickViewFields: ['firstName', 'fathersName', 'lastName', 'nametitle'],
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',

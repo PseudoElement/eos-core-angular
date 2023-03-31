@@ -98,7 +98,13 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             this._router.navigate(['spravochniki', 'cabinet', this.nodeDataFull.cabinet.ISN_CABINET, 'view']);
         });
     }
-
+    redirectToDepartment($event): void {
+        $event.preventDefault();
+        this.dictSrv.deleteDict(1);
+        setTimeout(() => {
+            this._router.navigate(['spravochniki', 'departments', this.nodeDataFull.rec.PARENT_DUE]);
+        });
+    }
     getRole(value: number): string {
         let sRole = this.roles.find((elem) => elem.value === value);
         if (!sRole) {
