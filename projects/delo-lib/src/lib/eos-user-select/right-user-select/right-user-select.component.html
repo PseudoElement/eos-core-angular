@@ -2,17 +2,17 @@
     <div *ngSwitchCase="'main'">
         <div class="rt-user">
             <div class="rt-avatar" *ngIf="DueInfo else unset">
-                <div class="avatar-wr">
+                <div *ngIf="isPhoto" class="avatar-wr">
                     <a class="av-link" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
                         <!-- <img *ngIf="isPhoto"
                             class="avatar-img"
                             [ngStyle]="{'background-image': urlPhoto}"
                             alt="Фотография должностного лица"> -->
                         <span class="avatar-img" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
-                        <span class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-adm-icon eos-adm-icon-Man-Blue small"></span>
+                        <!-- <span class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-adm-icon eos-adm-icon-Man-Blue small"></span> -->
                     </a>
                 </div>
-                <div class="avatar-title">
+                <div [ngStyle]= "{'padding-left':  isPhoto ? '20px' : '0px' }" class="avatar-title">
                     <a (click)="writeRecentUrl()" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
                 </div>
             </div>

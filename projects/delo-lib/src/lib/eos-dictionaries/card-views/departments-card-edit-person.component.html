@@ -14,7 +14,7 @@
         class="clearfix tab" id="tab0">
         <div class="col-1 pull-left">
             <div class="current-image" [ngStyle]="{'background-image': photo}">
-                <span *ngIf="!photo" class="current-image-no-user" [ngClass] ="!photo ? 'eos-adm-icon eos-adm-icon-Man-Blue small' : ''"></span>
+                <span *ngIf="!photo" class="current-image-no-user" [ngClass] ="!photo ? 'eos-adm-icon eos-adm-icon-DeepUser-Grey small' : ''"></span> <!-- DeepUser -->
                 <div class="photo-uploader" *ngIf="editMode">
                     <eos-photo-uploader [disableEdit]="!editMode"
                         (onBeforeModal)="onBeforeModalPhoto($event)"
