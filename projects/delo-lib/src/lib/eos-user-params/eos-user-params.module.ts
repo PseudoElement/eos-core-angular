@@ -87,6 +87,7 @@ import { AbsolutRigthExampleComponent } from '../eos-rest/addons/components/abso
 import { UserBaseParamsComponent } from '../eos-rest/addons/components/userBaseParams.component';
 import { UserParamsExample } from '../eos-rest/addons/components/userParamsExample.component';
 import { UserParamsRegistration } from '../eos-rest/addons/components/userParamsRegistration.component';
+import { InlineScaningParamsComponent } from './user-params-set/inline-scanning/inline-scaning-params.component';
 
 @NgModule({
     declarations: [
@@ -154,7 +155,8 @@ import { UserParamsRegistration } from '../eos-rest/addons/components/userParams
         AbsolutRigthExampleComponent,
         UserBaseParamsComponent,
         UserParamsExample,
-        UserParamsRegistration
+        UserParamsRegistration,
+        InlineScaningParamsComponent
     ],
     entryComponents: [
         AddGrifComponent

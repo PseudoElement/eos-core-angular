@@ -88,6 +88,11 @@
                 <eos-user-param-shablony [hidden]="appMode.arm" [mainUser]="editingUserIsn">
                 </eos-user-param-shablony>
             </ng-container>
+            <ng-container *ngSwitchCase="'inline-scanning'">
+                <eos-inline-scaning-params
+                        [mainUser]="mainUser"
+                ></eos-inline-scaning-params>
+            </ng-container>
         </div>
     </ng-container>
 </div>

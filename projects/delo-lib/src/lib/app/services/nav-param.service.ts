@@ -6,7 +6,7 @@ import { BehaviorSubject , Subject} from 'rxjs';
 
 export class NavParamService {
     public _subscriBtnTree =  new Subject();
-    searchPages: string[] = ['registration', 'cabinets', 'rc', 'dictionary', 'el-signature', 'prof-sert', 'visualization', 'ext-exch', 'external-application', 'other'];
+    searchPages: string[] = ['registration', 'cabinets', 'rc', 'dictionary', 'el-signature', 'prof-sert', 'visualization', 'ext-exch', 'external-application', 'other', 'inline-scanning'];
     private _changeStateSandwich$ = new BehaviorSubject(true);
     private _changeStateRightSandwich$ = new BehaviorSubject(false);
     private _blockStateRightSandwich$ = new BehaviorSubject(false);
