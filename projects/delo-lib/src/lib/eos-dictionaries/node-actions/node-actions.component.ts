@@ -518,7 +518,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && (marketN && marketN.length > 0);
                     if (_enabled && dueTo) {
                         _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
-                        if (marketN[0].parentId === dueTo) { // если мы вырезали то нельзя вставлять в том же месте
+                        if (this.dictionary.descriptor.id !== 'departments' && marketN[0].parentId === dueTo) {
                             _enabled = false;
                         }
                     }

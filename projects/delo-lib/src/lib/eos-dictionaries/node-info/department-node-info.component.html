@@ -2,8 +2,8 @@
     <div class="opened-node-wrapper">
         <div *ngIf="nodeDataFull && nodeDataFull.rec && nodeDataFull.rec['IS_NODE']"
             class="content-block">
-            <div class="head-wrapper">
-                    <div class="current-image usual-border" [ngStyle]="{'background-image': photo}">
+            <div class="head-wrapper" [ngClass]="photo === null ? 'name-not-img' : ''">
+                    <div *ngIf="photo !== null" class="current-image usual-border" [ngStyle]="{'background-image': photo}">
                             <span class="current-image-no-user" [ngClass] ="!photo ? 'eos-adm-icon eos-adm-icon-Man-Blue small' : ''"></span>
                     </div>
                 <div class="info l-font">
@@ -43,7 +43,9 @@
 
                 <div class="field">
                     <p class="field-title unimportant-text s-font">ПОДРАЗДЕЛЕНИЕ</p>
-                    <p class="field-value m-font">{{department}}</p>
+                    <p class="field-value m-font">
+                        <a (click)="redirectToDepartment($event)">{{department}}</a>
+                    </p>
                 </div>
 
                 <div class="field">
