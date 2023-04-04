@@ -179,6 +179,7 @@ export interface USERSRCH {
     USERDEP_List?: string;
     USER_ORGANIZ_List?: string;
     DELO_RIGHTS?: string;
+    SURNAME_PATRON?: string;
 }
 
 export interface USERSRCHFORM {
