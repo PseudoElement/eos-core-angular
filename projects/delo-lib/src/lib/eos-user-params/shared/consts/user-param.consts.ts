@@ -106,11 +106,12 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'email-address',
         disabled: false,
     },
-    /* {
+    {
         title: 'Права в поточном сканировании',
         url: 'inline-scaning',
         disabled: false,
-    }, */
+        hidden: true
+    },
     {
         title: 'Протокол',
         url: 'protocol',

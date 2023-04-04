@@ -119,8 +119,14 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
                 this.pageId = param['field-id'];
                 this.codeList = undefined;
                 this.flagEdit = false;
-                if (this.accordionList[4].disabled === true && this.pageId === 'inline-scaning') {
-                    this._router.navigate(['user_param']);
+                let flagRedirect = false;
+                this.accordionList[2].subList.forEach((item) => {
+                    if (item['url'] === 'inline-scanning' && item.disabled) {
+                        flagRedirect = true;
+                    }
+                });
+                if (flagRedirect && this.pageId === 'inline-scaning') {
+                    this._router.navigate(['/user-params-set', 'registration']);
                 }
                 const IS_SEARCH_PANEL = this._navSrv.searchPages.includes(this.pageId);
                 this.kindRightPanel = IS_SEARCH_PANEL ? 'SEARCH_PARAMS' : '';
@@ -617,7 +623,7 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
             this.accordionList[2].disabled = true;
             this.accordionList[3].disabled = true;
             this.accordionList[4].disabled = true;
-            // this.accordionList[6].disabled = true;
+            this.accordionList[6].disabled = true;
             //    this.accordionList[1].isOpen = false;
             this.accordionList[2].isOpen = false;
             //    this.hideIcon = true;
@@ -627,7 +633,7 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
                 this.accordionList[1].disabled = true;
                 this.accordionList[2].disabled = true;
                 this.accordionList[3].disabled = true;
-                // this.accordionList[6].disabled = true;
+                this.accordionList[6].disabled = true;
                 this.accordionList[1].isOpen = false;
                 this.accordionList[2].isOpen = false;
                 this.hideIcon = true;
@@ -636,13 +642,21 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
                 this.accordionList[1].disabled = false;
                 this.accordionList[2].disabled = false;
                 this.accordionList[3].disabled = false;
-                // this.accordionList[6].disabled = false;
+                this.accordionList[6].disabled = false;
                 this.hideIcon = false;
             }
             if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
-                this.accordionList[4].disabled = false;
+                this.accordionList[2].subList.forEach((item) => {
+                    if (item['url'] === 'inline-scanning') {
+                        item.disabled = false;
+                    }
+                });
             } else {
-                this.accordionList[4].disabled = true;
+                this.accordionList[2].subList.forEach((item) => {
+                    if (item['url'] === 'inline-scanning') {
+                        item.disabled = true;
+                    }
+                });
             }
         }
         if (this._userParamService.curentUser === undefined) {

@@ -109,7 +109,7 @@
 
 <ng-template #itemListTree let-item="item">
     <accordion>
-        <accordion-group class="param-field-wrap" panelClass="param-field" [isDisabled]="!item.subList"
+        <accordion-group *ngIf="!item.hidden" class="param-field-wrap" panelClass="param-field" [isDisabled]="!item.subList"
             [(isOpen)]="item.isOpen" [ngClass]="item.disabled ? 'disable' : ''">
             <div accordion-heading>
                 {{item.title}}
@@ -126,7 +126,7 @@
 
 <ng-template #itemList let-item="item">
     <accordion>
-        <accordion-group class="param-field-wrap" panelClass="param-field" [isDisabled]="!item.subList"
+        <accordion-group *ngIf="!item.hidden"  class="param-field-wrap" panelClass="param-field" [isDisabled]="!item.subList"
             [(isOpen)]="item.isOpen" [ngClass]="item.disabled ? 'disable' : ''"
             [routerLink]="['/user-params-set', item.url]" routerLinkActive="active-link">
             <div accordion-heading>

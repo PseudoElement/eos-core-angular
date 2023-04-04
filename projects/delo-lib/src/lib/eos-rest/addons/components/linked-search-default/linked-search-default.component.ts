@@ -19,7 +19,6 @@ export class ExtendsLinkedSearch implements OnInit, OnChanges {
     constructor() {
     }
     ngOnInit() {
-        console.log('test', Boolean(this.form?.controls['rec.LINKED_SEARCHYEAR']));
         this.isLoading = true;
     }
     ngOnChanges(changes: SimpleChanges): void {
