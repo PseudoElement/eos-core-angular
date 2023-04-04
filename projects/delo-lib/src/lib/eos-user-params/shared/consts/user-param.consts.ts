@@ -47,6 +47,10 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         title: 'Передача',
         url: 'other'
     },
+    {
+        title: 'Поточное сканирование',
+        url: 'inline-scanning'
+    }
     /* @task165408 удаление настроек толстяка
     {
         title: 'Шаблоны',
@@ -106,6 +110,7 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         title: 'Права в поточном сканировании',
         url: 'inline-scaning',
         disabled: false,
+        hidden: true
     },
     {
         title: 'Протокол',

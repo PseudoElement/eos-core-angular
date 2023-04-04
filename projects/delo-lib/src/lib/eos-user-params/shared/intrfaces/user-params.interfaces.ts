@@ -25,6 +25,7 @@ export interface IParamAccordionList {
     subList?: IParamAccordionList[];
     isOpen?: boolean;
     disabled?: boolean;
+    hidden?: boolean;
 }
 
 export interface IUserSettingsModes {

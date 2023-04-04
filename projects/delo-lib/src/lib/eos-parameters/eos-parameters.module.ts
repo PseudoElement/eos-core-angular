@@ -42,6 +42,7 @@ import { ParamEmailComponent } from './parametersSystem/param-email/param-email.
 import { ParamEmailCardComponent } from './parametersSystem/param-email/param-email-card/param-email-card.component';
 import { ParamLibsComponent } from './parametersSystem/param-libs/param-libs.component';
 import { EosParamLicensingComponent } from './parametersSystem/eos-param-licensing/eos-param-licensing.component';
+import { ParamInlineScanningComponent } from './parametersSystem/inline-scanning/param-dictionaries.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { EosParamLicensingComponent } from './parametersSystem/eos-param-licensi
         ParamEmailComponent,
         ParamEmailCardComponent,
         ParamLibsComponent,
-        EosParamLicensingComponent
+        EosParamLicensingComponent,
+        ParamInlineScanningComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent,

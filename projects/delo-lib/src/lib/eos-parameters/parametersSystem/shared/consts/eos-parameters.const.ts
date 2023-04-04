@@ -52,6 +52,9 @@ export const EOS_PARAMETERS_TAB = [{
     url: 'email',
     visible: true
 }, {
+    title: 'Поточное сканирование',
+    url: 'inline-scanning',
+}, {
     title: 'Протоколирование',
     url: 'logging',
     visible: true

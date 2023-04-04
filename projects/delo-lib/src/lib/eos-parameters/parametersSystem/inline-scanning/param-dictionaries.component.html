@@ -1,0 +1,75 @@
+<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="btnDisabled ? cancel() : preSubmit(); cancelEdit()"
+        (cancelForm)="cancel(); cancelEdit()"
+        [statusBtnSub]="btnError"
+        [editBtn]="true"
+        (editForm)="edit()"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <div style="display: flex;">
+            <eos-dynamic-input
+                style="width: 50%;"
+                [input]="inputs['rec.DEFAULT_VISUALITY']"
+                [form]="form"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                style="width: 50%; padding-left: 20px;"
+                [input]="inputs['rec.LOCAL_SSCAN']"
+                [form]="form"
+            ></eos-dynamic-input>
+        </div>
+        <div style="display: flex;">
+            <eos-dynamic-input
+                style="width: 50%;"
+                [input]="inputs['rec.ACCESS_VISUALITY']"
+                [form]="form"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                style="width: 50%; padding-left: 20px;"
+                [input]="inputs['rec.NETWORK_SSCAN']"
+                [form]="form"
+            ></eos-dynamic-input>
+        </div>
+        <div style="display: flex;">
+            <eos-dynamic-input
+                style="width: 50%;"
+                [input]="inputs['rec.SITE_MRSCAN']"
+                [form]="form"
+                [readonly]="form.controls['rec.SITE_MRSCAN_CHECK'].value"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                style="width: 50%; padding: 28px 0 0 20px;"
+                [input]="inputs['rec.SITE_MRSCAN_CHECK']"
+                [form]="form"
+            ></eos-dynamic-input>
+        </div>
+        <div style="display: flex;">
+            <eos-dynamic-input
+                style="width: 50%;"
+                [input]="inputs['rec.LOCAL_MRSCAN']"
+                [form]="form"
+                [readonly]="form.controls['rec.LOCAL_MRSCAN_CHECK'].value"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                style="width: 50%; padding: 28px 0 0 20px;"
+                [input]="inputs['rec.LOCAL_MRSCAN_CHECK']"
+                [form]="form"
+            ></eos-dynamic-input>
+        </div>
+        <div style="display: flex;">
+            <eos-dynamic-input
+                style="width: 50%;"
+                [input]="inputs['rec.NETWORK_MRSCAN']"
+                [form]="form"
+                [readonly]="form.controls['rec.NETWORK_MRSCAN_CHECK'].value"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                style="width: 50%; padding: 28px 0 0 20px;"
+                [input]="inputs['rec.NETWORK_MRSCAN_CHECK']"
+                [form]="form"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+</div>
