@@ -221,6 +221,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
             const hiddenUrls = new Map<string, boolean>([
                 ['external-application', true],
                 ['patterns', true],
+                ['inline-scanning', true],
             ]);
             redirectToRegistration(hiddenUrls);
         } else if (this.appMode.cbr) {
@@ -231,6 +232,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                 ['visualization', true],
                 ['external-application', true],
                 ['patterns', true],
+                ['inline-scanning', true],
                 ['el-signature', true] // для ВИБР убираю вкладку Электронная подпись
             ]);
             redirectToRegistration(hiddenUrls);
