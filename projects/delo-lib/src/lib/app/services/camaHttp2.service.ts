@@ -11,7 +11,20 @@ export class CarmaHttp2Service {
     ) {
         this.clientCarma = null;
     }
-
+    public connect(connectStirng: string, stores: any): Promise<any> {
+        return new Promise((res, rej) => {
+            try {
+                this.clientCarma = new CarmaHttp(connectStirng, stores, true);
+                this.clientCarma.Initialize();
+                this.carmaInitialized = true;
+                res(true);
+            } catch (e) {
+                this.clientCarma = null;
+                this.errHalper.errorHandler(e);
+                rej(e);
+            }
+        });
+    }
     public connectWrapper(connectStirng: string, stores: any) {
         return new Promise((resolve, reject) => {
             try {
@@ -26,32 +39,38 @@ export class CarmaHttp2Service {
     public getStores(store: any): Promise<any> {
         return new Promise((res, rej) => {
             if (this.clientCarma && this.carmaInitialized) {
-                this.clientCarma.request(store, (data) => {
-                    res(data);
-                }, null);
+                this.clientCarma.GetCertInfoAsync(store, res, rej);
             } else {
                 this.errHalper.errorHandler({ code: 2000, message: 'Сервис КАРМА недоступен' });
                 rej({ code: 2000, message: 'Проверьте соединение с кармой' });
             }
         });
     }
-    public EnumCertificates(location, address, name): Promise<any> {
+    public EnumStoresAsync(location: string, address: string): Promise<any> {
+        return new Promise((res, rej) => {
+            if (this.clientCarma && this.carmaInitialized) {
+                this.clientCarma.EnumStoresAsync(location, address, res, rej);
+            } else {
+                this.errHalper.errorHandler({ code: 2000, message: 'Сервис КАРМА недоступен' });
+                rej({ code: 2000, message: 'Проверьте соединение с кармой' });
+            }
+        });
+    }
+    public EnumCertificates(location, address, name): Promise<string[]> {
         if (location === '') {
             location = 'sscu';
         }
         if (name === '') {
             name = 'MY';
         }
-        const store = {
-            mode: 38,
-            storeAddress:
-            {
-                location: location,
-                address: address,
-                name: name
+        return new Promise((res, rej) => {
+            if (this.clientCarma && this.carmaInitialized) {
+                this.clientCarma.EnumCertificatesAsync(location, address, name, undefined, res, rej);
+            } else {
+                this.errHalper.errorHandler({ code: 2000, message: 'Сервис КАРМА недоступен' });
+                rej({ code: 2000, message: 'Проверьте соединение с кармой' });
             }
-        };
-        return this.getStores(store);
+        });
     }
 
     public getServiceInfo() {
@@ -104,13 +123,13 @@ export class CarmaHttp2Service {
         if (address) {
             objstore['address'] = address;
         }
-        const store = {
+        /* const store = {
             mode: 37,
             storeAddress: objstore
-        };
-        return this.getStores(store).then(data => {
-            if (data && data.stores) {
-                return data.stores;
+        }; */
+        return this.EnumStoresAsync(location, address).then(data => {
+            if (data) {
+                return data;
             }
         });
     }
@@ -121,17 +140,5 @@ export class CarmaHttp2Service {
             this.errHalper.errorHandler({ code: 2000, message: 'Проверьте соединение с кармой' });
         }
     }
-    private connect(connectStirng: string, stores: any) {
-        try {
-            this.clientCarma = new CarmaHttp(connectStirng, stores, true);
-            this.clientCarma.InitializeAsync(() => {
-                this.carmaInitialized = true;
-            }, () => {
-                this.carmaInitialized = false;
-            });
-        } catch (e) {
-            this.clientCarma = null;
-            this.errHalper.errorHandler(e);
-        }
-    }
+    
 }

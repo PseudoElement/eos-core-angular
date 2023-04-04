@@ -161,6 +161,8 @@ export class WaitClassifService {
         });
     }
     private _createUrlDict(url, params: IOpenClassifParams) {
+        console.log('_createUrlDict');
+        
         if (params.id === 'CITIZEN_dict') {
             url = CITIZEN_dict;
             url += `#rc_id=` + params.user_id;

@@ -224,8 +224,8 @@ export class SearchServices {
                 query.USER_CL.criteries['USER_CL.Removed'] = `false`;
                 break;
             default:
-                if (params.LOGIN) {
-                    query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;
+                if (params.SURNAME_PATRON) {
+                    query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME_PATRON}"`;
                 }
                 break;
         }

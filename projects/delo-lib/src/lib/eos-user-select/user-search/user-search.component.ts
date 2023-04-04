@@ -433,7 +433,7 @@ export class UserSearchComponent implements OnInit  {
                 this.fastSearch = true;
                 const strSearch = this.srchString.trim().replace(this.SEARCH_INCORRECT_SYMBOLS, '');
                 if (strSearch) {
-                    const queryF = this.srhSrv.getQueryForFilter({ LOGIN: strSearch });
+                    const queryF = this.srhSrv.getQueryForFilter({ SURNAME_PATRON: strSearch });
                     this.users_pagination.resetConfig();
                     this.quickSearchKey.emit(queryF);
                     this._setItemsSearchUsers(null, this.srchString, 0);
