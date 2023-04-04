@@ -12,7 +12,7 @@ import { PipRX, DEPARTMENT, USER_CL, LIST_ITEMS } from '../../../eos-rest';
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
 
 import { EosMessageService } from '../../../eos-common/services/eos-message.service';
-import { IMessage } from '../../../eos-common/interfaces';
+import { IMessage, IOpenClassifParams } from '../../../eos-common/interfaces';
 import { RestError } from '../../../eos-rest/core/rest-error';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
@@ -20,24 +20,29 @@ import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { ErrorHelperServices } from '../../../eos-user-params/shared/services/helper-error.services';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { DOCUMENT } from '@angular/common';
-// import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
 const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 @Component({
     selector: 'eos-param-create-user',
     templateUrl: 'createUser.component.html',
+    styleUrls:['create-windows-cb.scss'],
     providers: [BsModalService],
 })
 export class CreateUserComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
     @ViewChild('templatePassword', { static: true }) templatePassword: ElementRef;
     @ViewChild('classifName') classifName;
+    @ViewChild('SURNAME_PATRON') SURNAME_PATRON;
+    @ViewChild('NOTE') NOTE;
+    @ViewChild('OS') OS: ElementRef;
+
     modalRef: BsModalRef;
     isLoading: boolean = true;
     data = {};
     fields = CREATE_USER_INPUTS;
     inputs;
     form: FormGroup;
+    formCB: FormGroup;
     titleHeader = 'Новый пользователь';
     btnDisabled: boolean = true;
     isShell: Boolean = false;
@@ -52,7 +57,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     password: string = '';
     repitedPassword: string = '';
     cbBase: boolean;
-    loginMaxLength: number = 64;
+    loginMaxLength: number = 256;
     techUserTooltip: string = 'К техническим пользователям невозможно привязать должностное лицо';
     type = 'password';
     type_repeat = 'password';
@@ -73,11 +78,16 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         .set(3, '3')
         .set(4, '4');
 
-    private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
+    private _idsForModalDictDep: string[] = [];
     private _defaultDepDue: string;
     private _sysParamsDueOrganiz: string = undefined;
     private _depDueLinkOrg: string = undefined;
     private _searchLexem: string = '';
+    private osChecked: boolean;
+    public department = {
+        NOTE: null,
+        TECH_DUE_DEP: null
+    };
 
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -93,8 +103,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         private changeDetection: ChangeDetectorRef,
         private _userSettingsService: UserSettingsService,
         @Inject(DOCUMENT) private readonly documentRef: Document,
-    ) {
-    }
+    ) {}
 
     get validPassword() {
         return this.password.length && (this.password === this.repitedPassword);
@@ -201,14 +210,16 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this._errorSrv.errorHandler(e);
                 this.closedModal.emit();
             });
-        this._userSettingsService.readDepartments().then(x => { // @task157113 читаем подразделение по дефолту и организацию из параметров (если надо)
+
+        this._userSettingsService.readDepartments()
+        .then(x => {
             const { sections } = x;
             this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
             if (this._defaultDepDue.length === 0) {
                 this._pipeSrv.read({
                     DELO_OWNER: 1
                 }).then(org => {
-                    if (org.length > 0) { // задана организация по умолчанию
+                    if (org.length > 0) {
                         this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
                         this._readSysParamsOrg();
                     }
@@ -246,14 +257,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
 
-    createUser(): boolean {
-        const d = this.data;
-        if (d['dueDL'] === undefined && !this.techUser) {
-            return false;
-        }
-        return true;
-    }
-
     startSubmit() {
         this.submit().then(() => {
             console.log('ok');
@@ -261,6 +264,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.checkError(e);
         });
     }
+    
     async submit() {
         const _combine = combineLatest([
             this.modalService.onShow,
@@ -268,51 +272,45 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.modalService.onHide,
             this.modalService.onHidden,
         ]).subscribe(() => this.changeDetection.markForCheck());
-        if (this.createUser() || this.cbBase) {
+
+        if(this.cbBase){
+            this.createUserCB(_combine);
+        } else {
+            this.createUserDelo(_combine);
+        }
+    }
+
+    async createUserDelo(_combine: Subscription){
+        if (this.accessCreateUser()) {
             const url = this._createUrlForSop();
             this.btnDisabled = true;
             this.isLoading = true;
-
-            const addUser = async (addUrl: string, withLogin: boolean = false) => {
-                try {
-                    const createRequest = {
-                        method: 'POST',
-                        requestUri: addUrl,
-                    };
-                    const id: any = await this._pipeSrv.batch([createRequest], '');
-                    const isn = Number(id) || id[0].value || id[0].value[0];
-
-                    if (withLogin) {
-                        const changeLoginUrl = this._createUrlChangeLOgin(isn);
-                        const changeLoginRequest = {
-                            method: 'POST',
-                            requestUri: changeLoginUrl,
-                        };
-                        await this._pipeSrv.batch([changeLoginRequest], '');
-                    }
-
-                    this.afterCreate(isn);
-                } catch (e) {
-                    this.checkError(e);
+            const userType = this.data['USER_TYPE'];
+            if (userType === '0' || userType === '3') {
+                const objConfig = { 
+                    ignoreBackdropClick: true, 
+                    keyboard: false, 
+                    class: 'gray modal-sm passModal' 
                 }
-            };
-
-            if (this.data['USER_TYPE'] === '0' || this.data['USER_TYPE'] === '3') {
                 this.enterPassword = true;
+
                 this.subscriptions.push(this.modalService.onHidden.subscribe(async (reason: string) => {
                     this.enterPassword = false;
                     if (this.validPassword) {
-                        await addUser(url, true);
+                        await this.addUser(url, true);
                     }
                     this.unsubscribe();
                 }));
+
                 this.subscriptions.push(_combine);
-                this.modalRef = this.modalService.show(this.templatePassword, { ignoreBackdropClick: true, keyboard: false, class: 'gray modal-sm passModal' });
+                this.modalRef = this.modalService.show(this.templatePassword, objConfig);
                 this.documentRef.getElementById('inpPass').focus();
-            } else if (this.data['USER_TYPE'] === '2') {
-                await addUser(url, true);
-            } else if (this.data['USER_TYPE'] === '1' || this.data['USER_TYPE'] === '4') {
-                if (this.form.controls['classifName'].value.indexOf('\\') < 0) {
+
+            } else if (userType=== '2') {
+                await this.addUser(url, true);
+            } else if (userType === '1' || userType === '4') {
+
+                if (!this.form.controls['classifName'].value.includes('\\')) {
                     const m: IMessage = {
                         type: 'warning',
                         title: 'Предупреждение',
@@ -322,7 +320,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage(m);
                     return;
                 }
-                await addUser(url, true);
+                await this.addUser(url, true);
             }
         } else {
             const m: IMessage = {
@@ -333,34 +331,115 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(m);
         }
     }
-    closeSubModal() {
-        this.password = '';
-        this.repitedPassword = '';
-        this.btnDisabled = false;
-        this.isLoading = false;
-        this.enterPassword = false;
-        this.modalRef.hide();
-    }
-    checkError(e) {
-        const m: IMessage = {
-            type: 'danger',
-            title: 'Ошибка создания пользователя',
-            msg: '',
-        };
-        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-            this._errorSrv.errorHandler(e);
-            this.closedModal.emit();
+
+    async createUserCB(_combine: Subscription){
+        if (this.OS.nativeElement.checked && !this.form.controls['classifName'].value.includes('\\')) {
+            const m: IMessage = {
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Имя пользователя не соответствует шаблону для ОС-авторизации.',
+            };
+            this._msgSrv.addNewMessage(m);
+            return;
         }
-        if (e instanceof RestError && e.code === 500) {
-            m.msg = e.message || 'Пользователь с таким логином уже существует';
+        const objConfig = { 
+            ignoreBackdropClick: true, 
+            keyboard: false, 
+            class: 'gray modal-sm passModal' 
+        }
+
+        this.osChecked = this.OS.nativeElement.checked;
+        const url = this.createUrlForCB();
+        this.btnDisabled = true;
+        this.isLoading = true;
+        this.enterPassword = true;
+        this.subscriptions.push(_combine);
+
+        this.modalRef = this.modalService.show(this.templatePassword, objConfig);
+        this.documentRef.getElementById('inpPass').focus();
+
+        this.subscriptions.push(this.modalService.onHidden.subscribe(async (reason: string) => {
+            this.enterPassword = false;
+            if (this.validPassword) {
+                await this.addUser(url, true);
+            }
+            this.unsubscribe();
+        }));
+    }
+    
+    accessCreateUser(): boolean {
+        const d = this.data;
+        if (d['dueDL'] === undefined && !this.techUser) {
+            return false;
+        }
+        return true;
+    }
+
+    private _createUrlForSop() {
+        const d = this.data;
+        let url = 'CreateUserCl?';
+        url += `classifName='${d['classifName'] ? encodeURI(('' + d['classifName']).toUpperCase()) : ''}'`;
+        url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
+        url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
+        // url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
+        url += `&isn_user_copy_from=0`; // если не выбран пользователь для копирования передаем '0'
+        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
+        return url;
+    }
+
+    private createUrlForCB() {
+        let url = 'CreateUserCl?';
+        url += `classifName='${encodeURI(this.form.controls['classifName'].value.toUpperCase())}'`;
+        url += `&SURNAME_PATRON=${this.form.controls['SURNAME_PATRON'].value}`
+        url += `&role='...'`;
+        url += `&NOTE=${this.department.NOTE}`
+        url += `&TECH_DUE_DEP=${this.department.TECH_DUE_DEP}`
+        url += `&isn_user_copy_from=0`;
+        url += `&userType=${(this.osChecked ? '4' : '3')}`
+        return url;
+    }
+
+    async addUser(addUrl: string, withLogin: boolean = false) {
+        try {
+            const createRequest = {
+                method: 'POST',
+                requestUri: addUrl,
+            };
+
+            const id: any = await this._pipeSrv.batch([createRequest], '');
+            const isn = Number(id) || id[0].value || id[0].value[0];
+
+            if (withLogin) {
+                const changeLoginUrl = this._createUrlChangeLOgin(isn);
+                const changeLoginRequest = {
+                    method: 'POST',
+                    requestUri: changeLoginUrl,
+                };
+                await this._pipeSrv.batch([changeLoginRequest], '');
+            }
+
+            this.afterCreate(isn);
+        } catch (e) {
+            this.checkError(e);
+        }
+    };
+
+    private _createUrlChangeLOgin(id: number): string {
+        const d = this.data;
+        let url = 'ChangeLogin?';
+        url += `isn_user=${id}`;
+        if (this.cbBase) {
+            url += `&userType=${(this.osChecked ? '4' : '3')}`
         } else {
-            m.msg = e.message ? e.message : e;
+            url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
         }
-        this._msgSrv.addNewMessage(m);
-        this.btnDisabled = false;
-        this.isLoading = false;
-        this.enterPassword = false;
+        url += `&classifName='${d['classifName'] ? encodeURI(('' + d['classifName']).toUpperCase()) : ''}'`;
+        if (this.password) {
+            url += `&pass='${this.password}'`;
+        }
+        return url;
     }
+
     afterCreate(isn: number) {
         const copyId = (this.data['ISN_USER_COPY'] || this.data['USER_TEMPLATES']);
         let promise: Promise<any> = Promise.resolve();
@@ -382,7 +461,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._router.navigate(['user-params-set'], {
                 queryParams: { isn_cl: isn, is_create: true }
             });
-        })
+            })
             .catch((e) => {
                 this.checkError(e);
                 this._userParamSrv.ProtocolService(this.isn_prot, 3);
@@ -391,14 +470,50 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     queryParams: { isn_cl: isn, is_create: true }
                 });
             });
-
     }
+
+    private _createUrlForCopySop(isn: number, copyId: number): string {
+        const url = `UserRightsCopy?users=${isn}&user=${copyId}&rights=1010111100`;
+        return url;
+    }
+
+    checkError(e) {
+        const m: IMessage = {
+            type: 'danger',
+            title: 'Ошибка создания пользователя',
+            msg: '',
+        };
+        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+            this._errorSrv.errorHandler(e);
+            this.closedModal.emit();
+        }
+        if (e instanceof RestError && e.code === 500) {
+            m.msg = e.message || 'Пользователь с таким логином уже существует';
+        } else {
+            m.msg = e.message ? e.message : e;
+        }
+        this._msgSrv.addNewMessage(m);
+        this.btnDisabled = false;
+        this.isLoading = false;
+        this.enterPassword = false;
+    }
+
+    closeSubModal() {
+        this.password = '';
+        this.repitedPassword = '';
+        this.btnDisabled = false;
+        this.isLoading = false;
+        this.enterPassword = false;
+        this.modalRef.hide();
+    }
+
     unsubscribe() {
         this.subscriptions.forEach((subscription: Subscription) => {
             subscription.unsubscribe();
         });
         this.subscriptions = [];
     }
+
     cancel() {
         this.closedModal.emit();
     }
@@ -407,18 +522,20 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.form.controls['DUE_DEP_NAME'].patchValue('');
         this.departmentData = null;
         delete this.data['dueDL'];
-        // delete this.data['SELECT_ROLE'];
     }
+
     cleanDueCopy() {
         this.data['ISN_USER_COPY'] = undefined;
         this.form.get('USER_COPY').patchValue('');
     }
+
     selectDepartment(status) {
         if (status) {
             this.showDepChoose();
         }
     }
-    delSelectUser($event?) { // удаление от кого копировать
+
+    delSelectUser($event?) {
         if ($event && $event.keyCode === 46 && this.data['ISN_USER_COPY']) {
             this.data['ISN_USER_COPY'] = undefined;
             this.form.get('USER_COPY').patchValue('');
@@ -427,6 +544,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.form.get('USER_COPY').patchValue('');
         }
     }
+
     selectUser(access) {
         if (!access) {
             const openUserCl = {
@@ -450,19 +568,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 });
         }
     }
+
     setVision(flag?) {
-        if (flag) {
-            this.type = 'text';
-        } else {
-            this.type_repeat = 'text';
-        }
+        flag ? this.type = 'text' : this.type_repeat = 'text';
     }
+
     resetVision(flag?) {
-        if (flag) {
-            this.type = 'password';
-        } else {
-            this.type_repeat = 'password';
-        }
+        flag ? this.type = 'password': this.type_repeat = 'password';
     }
 
     searchDL() {
@@ -678,6 +790,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     private _getUserCl(isn) {
         const queryUser = {
             USER_CL: {
@@ -688,80 +801,101 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         };
         return this._pipeSrv.read<USER_CL>(queryUser);
     }
-    private _createUrlForSop() {
-        const d = this.data;
-        // const isn_user_copy_from = (d['ISN_USER_COPY'] || d['USER_TEMPLATES']) || '0';
-        let url = 'CreateUserCl?';
-        url += `classifName='${d['classifName'] ? encodeURI(('' + d['classifName']).toUpperCase()) : ''}'`;
-        url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
-        url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
-        // url += `&isn_user_copy_from=${isn_user_copy_from}`; // если не выбран пользователь для копирования передаем '0'
-        url += `&isn_user_copy_from=0`; // если не выбран пользователь для копирования передаем '0'
-        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
-        //   url += `&delo_rights=0`;
-        return url;
-    }
-
-    private _createUrlForCopySop(isn: number, copyId: number): string {
-        const url = `UserRightsCopy?users=${isn}&user=${copyId}&rights=1010111100`;
-        return url;
-    }
-
-    private _createUrlChangeLOgin(id: number): string {
-        const d = this.data;
-        let url = 'ChangeLogin?';
-        url += `isn_user=${id}`;
-        url += `&userType=${d['USER_TYPE'] ? d['USER_TYPE'] : 0}`;
-        url += `&classifName='${d['classifName'] ? encodeURI(('' + d['classifName']).toUpperCase()) : ''}'`;
-        if (this.password) {
-            url += `&pass='${this.password}'`;
-        }
-        return url;
-    }
+    
 
     private _subscribe() {
-        const f = this.form;
-        f.get('teсhUser').valueChanges
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
-            .subscribe(data => {
-                this.techUser = data;
-                if (data) {
-                    this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue('');
-                    // f.get('DUE_DEP_NAME').patchValue('');
-                    // f.get('DUE_DEP_NAME').disable();
-                    // f.get('SELECT_ROLE').patchValue('');
-                    // f.get('SELECT_ROLE').disable();
-                    delete this.data['dueDL'];
-                    // delete this.data['SELECT_ROLE'];
-                    this.departmentData = null;
-                } else {
-                    f.get('DUE_DEP_NAME').enable();
-                    // f.get('SELECT_ROLE').enable();
-                }
-            });
-
-        f.valueChanges
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
-            .subscribe(d => {
-                // tslint:disable-next-line:forin
-                for (const c in d) {
-                    if (c !== 'teсhUser') {
-                        this.data[c] = d[c];
+        if(!this.cbBase){
+            const f = this.form;
+            f.get('teсhUser').valueChanges
+                .pipe(
+                    takeUntil(this.ngUnsubscribe)
+                )
+                .subscribe(data => {
+                    this.techUser = data;
+                    if (data) {
+                        this.form.get(this.inputs['DUE_DEP_NAME'].key).patchValue('');
+                        delete this.data['dueDL'];
+                        this.departmentData = null;
+                    } else {
+                        f.get('DUE_DEP_NAME').enable();
                     }
-                    this.btnDisabled = this.form.invalid;
-                }
-                if (this.form.controls['classifName'].value.length === this.loginMaxLength) {
+                });
+    
+            f.valueChanges
+                .pipe(
+                    takeUntil(this.ngUnsubscribe)
+                )
+                .subscribe(d => {
+                    for (const c in d) {
+                        if (c !== 'teсhUser') {
+                            this.data[c] = d[c];
+                        }
+                        this.btnDisabled = this.form.invalid;
+                    }
+                    if (this.form.controls['classifName'].value.length === this.loginMaxLength) {
+                        this.classifName.show();
+                    } else {
+                        this.classifName.hide();
+                    }
+                    // const enteredLogin = this.form.controls['classifName'].value;
+                    // enteredLogin.length === this.loginMaxLength ? this.classifName.show() : this.classifName.hide();
+
+                    this.loginMaxLength = this.form.get('USER_TYPE') && `${this.form.get('USER_TYPE').value}` === '0' ? 12 : 256;
+                });
+            this._setDueDeNameSubscription();
+        } else {
+            const formCB = this.form;
+            formCB.valueChanges
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(data => {
+                if (this.classifName && data['classifName'].length === this.loginMaxLength) {
                     this.classifName.show();
                 } else {
-                    this.classifName.hide();
+                    this.classifName?.hide(); 
                 }
-                this.loginMaxLength = this.form.get('USER_TYPE') && `${this.form.get('USER_TYPE').value}` === '0' ? 12 : 64;
-            });
-        this._setDueDeNameSubscription();
+
+                if (this.SURNAME_PATRON && data['SURNAME_PATRON'].length === 64) {
+                    this.SURNAME_PATRON.show();
+                } else {
+                    this.SURNAME_PATRON?.hide(); 
+                }
+                this.btnDisabled = false;
+            })
+        }
+    }
+
+    changeNote(el:HTMLInputElement){
+        this.department = {
+            NOTE: el.value,
+            TECH_DUE_DEP: null
+        }
+    }
+
+    public async chooseDepartment() {
+        const params: IOpenClassifParams = {
+            classif: 'DEPARTMENT',
+            return_due: true,
+            skipDeleted: true,
+            selectMulty: false,
+            selectLeafs: false,
+        }
+        try {
+            const departmentDue: string = await  this._waitClassifSrv.openClassif(params);
+            const department: DEPARTMENT[] = await this._pipeSrv.read({ DEPARTMENT: {criteries: {DUE: departmentDue}}});
+            this.department = {
+                NOTE: department[0].CLASSIF_NAME,
+                TECH_DUE_DEP: department[0].DUE
+            };
+
+        } catch(err) {
+            const m: IMessage = {
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Окно было закрыто, до того как было выбрано подразделение!',
+            };
+            this._msgSrv.addNewMessage(m);
+            return '';
+        }
     }
 
     private _setDueDeNameSubscription() {
