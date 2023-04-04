@@ -90,8 +90,8 @@ export class SignaturePopupComponent implements OnInit {
     showCert(template: TemplateRef<any>, list: IListCertStotes) {
         this.currentName = `${list.Location} ${list.Name}`;
         this.certStoresService.showListCertNode().then(data => {
-            if (data && data.errorMessage === 'DONE') {
-                this.InfoSert = data.certificates;
+            if (data) {
+                this.InfoSert = data;
                 this.modalRef = this._modalService.show(template, { class: 'modal-mode' });
             }
         }).catch(e => {

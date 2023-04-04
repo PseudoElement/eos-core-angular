@@ -8,7 +8,6 @@ import { of, Subject } from 'rxjs';
 // import { catchError } from 'rxjs/operators';
 
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CarmaHttpService } from '../../../app/services/carmaHttp.service';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import {
     PARM_CANCEL_CHANGE,
@@ -49,8 +48,6 @@ interface SertInfo {
     templateUrl: 'user-params-prof-sert.component.html',
     providers: [CarmaHttp2Service]
 })
-
-
 export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     @Input() mainUser?;
     @Input() isCurrentSettings?: boolean;
@@ -106,7 +103,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     private DBserts: USER_CERT_PROFILE[] = [];
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
-        public certStoresService: CarmaHttpService,
+        public certStoresService: CarmaHttp2Service,
         private _userSrv: UserParamsService,
         /* private _modalService: BsModalService, */
         private apiSrv: PipRX,
@@ -317,16 +314,37 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             return this.stableGetInfo();
         }
     }
-    stableGetInfo() {
+    async stableGetInfo() {
         const arrRequestSerts = [];
-        this.DBserts.forEach(sert => {
-            // arrRequestSerts.push(this.certStoresService.GetCertInfo2(sert['ID_CERTIFICATE']));
-            arrRequestSerts.push(this.carma2Srv.GetCertInfo(sert['ID_CERTIFICATE']));
-        });
-        return Promise.all(arrRequestSerts).then(data => {
-            if (data) {
-                data.forEach((infoSert, index) => {
-                    if (!infoSert.errorCode) {
+        for (let index = 0; index < this.DBserts.length; index++) {
+            const ans = await this.certStoresService.getStores(this.DBserts[index]['ID_CERTIFICATE'])
+            .then((data) => {
+                return data;
+            })
+            .catch((e) => {
+                console.log('error', e);
+                return { code: 2000, message: 'Проверьте соединение с кармой' };
+            });
+            arrRequestSerts.push(ans);
+        }
+        // return Promise.reject();
+        /* return Promise.all(arrRequestSerts).then(data => { */
+            arrRequestSerts.forEach((infoSert, index) => {
+                if (!infoSert.errorCode && !infoSert.code) {
+                    if (infoSert['certInfo']) {
+                        this.listsSertInfo.push({
+                            who: infoSert['certInfo']['Issuer'],
+                            sn: infoSert['certInfo']['Serial'],
+                            whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                            data: infoSert,
+                            selected: false,
+                            id: this.DBserts[index]['ID_CERTIFICATE'],
+                            key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                            create: false,
+                            delete: false,
+                            valid: this.parceValid(infoSert['certInfo']['Validity']),
+                        });
+                    } else {
                         this.listsSertInfo.push({
                             who: infoSert['Issuer'],
                             sn: infoSert['Serial'],
@@ -339,14 +357,16 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                             delete: false,
                             valid: this.parceValid(infoSert['Validity']),
                         });
-                    } else {
-                        this.notDataSert(this.DBserts[index]);
                     }
-                });
-            }
+                } else {
+                    this.notDataSert(this.DBserts[index]);
+                }
+            });
+            return Promise.resolve();
+            /* });
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-        });
+        }); */
     }
     bettaGetInfo() {
         const arrRequestSerts = [];

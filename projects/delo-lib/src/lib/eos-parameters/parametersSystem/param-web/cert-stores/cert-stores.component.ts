@@ -33,14 +33,7 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
         //    private msgSrv: EosMessageService
     ) { }
     ngOnInit() {
-        this.formControlStores = this.certStoresService.formControl;
-        let certStores = [];
-        if (typeof this.formControlStores.value === 'string') {
-            certStores = this.formControlStores.value.split('\t');
-        }
-
-        this.certStoresService.initCarma(certStores);
-        this.listCertStores = this.certStoresService.getListCetsStores;
+        this.init();
         this.certStoresService.getCurrentSelectedNode$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -87,7 +80,7 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     showCert() {
         if (this.editMode) {
             this.certStoresService.showListCertNode().then(data => {
-                this.listCertNode = data.certificates;
+                this.listCertNode = data;
                 this.InfoCertModal.show();
             }).catch(e => {
                 console.log(e);
@@ -113,7 +106,17 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     deleteStores() {
         this.formControlStores.patchValue(this.certStoresService.deleteStores());
     }
+    init() {
+        this.formControlStores = this.certStoresService.formControl;
+        let certStores = [];
+        if (typeof this.formControlStores.value === 'string') {
+            certStores = this.formControlStores.value.split('\t');
+        }
+        this.certStoresService.initCarma(certStores);
+        this.listCertStores = this.certStoresService.getListCetsStores;
+    }
     closeAddCertModal() {
+        this.init();
         this.addCertStoresModal.hide();
         this.CertStoresModal = false;
     }

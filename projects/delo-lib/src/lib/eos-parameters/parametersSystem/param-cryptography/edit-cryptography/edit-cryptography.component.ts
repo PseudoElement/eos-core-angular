@@ -345,13 +345,21 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
             param = row['name'].split(':');
         }
         this._cermaHttp2Srv.EnumCertificates(param[0], this.certSystemAddress || '', param[1]).then(data => {
-            if (data && data.errorMessage === 'DONE') {
-                this.InfoSert = data.certificates;
+            if (data) {
+                this.InfoSert = data;
                 this.modalRef = this._modalSrv.show(this.template, { class: 'modal-mode' });
+                this.openModal = true;
+                this._modalSrv.onHide.subscribe(() => {
+                    this.openModal = false;
+                });
             }
         }).catch(e => {
             this.InfoSert = [];
             this.modalRef = this._modalSrv.show(this.template, { class: 'modal-mode' });
+            this.openModal = true;
+            this._modalSrv.onHide.subscribe(() => {
+                this.openModal = false;
+            });
         });
     }
     dbClickRow($event) {

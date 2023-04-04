@@ -43,6 +43,8 @@ export class AddCertStoresComponent implements OnInit {
         this.certSystemAddress = '';
     }
     searchStore() {
+        const addr = this.certStoresService.formControlInit.value ? this.certStoresService.formControlInit.value : 'http://localhost:8080//';
+        this.carmeHttp2srv.connect(addr, []);
         if (this.certSystemStore === 'sslm') {
             this.carmeHttp2srv.EnumStores(this.certSystemStore, this.certSystemAddress).then(stores => {
                 const listStores = [];

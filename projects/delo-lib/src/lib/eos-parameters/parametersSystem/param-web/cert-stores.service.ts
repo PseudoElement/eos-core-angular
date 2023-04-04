@@ -57,6 +57,9 @@ export class CertStoresService {
     set formControlInit(formControl: AbstractControl) {
         this.formControlInitString = formControl;
     }
+    get formControlInit() {
+        return this.formControlInitString;
+    }
     initCarma(listCertStores: string[]) {
         this.createInitCarmaStores(listCertStores);
         this.listsCetsStores = this.createListCetsStores();
@@ -266,21 +269,24 @@ export class CertStoresService {
             }
         });
     }
-    private initCarmaServer() {
+    private async initCarmaServer() {
         let addr;
-        if (this.formControlInitString) {
+        /* if (this.formControlInitString) {
             addr = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
-        } else {
+        } else { */
             let cryptoStr;
             this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
                 if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
                     cryptoStr = params['PARM_VALUE'];
                 }
             });
-            addr = cryptoStr ? cryptoStr : 'http://localhost:8080//"';
-        }
-        return this.carmaHttp2Srv.connectWrapper(addr, this.initCarmaStores);
-        // return this.carmaHttp2Srv.connect(initString, this.initCarmaStores);
+            if (!cryptoStr) {
+                const crypto = await this._appContext.get99UserParms('CRYPTO_INITSTR');
+                cryptoStr = crypto['PARM_VALUE'];
+            }
+            addr = cryptoStr ? cryptoStr : 'http://localhost:8080//';
+        /* } */
+        return this.carmaHttp2Srv.connect(addr, this.initCarmaStores);
     }
     private checkMarkNode() {
         let check = false;
