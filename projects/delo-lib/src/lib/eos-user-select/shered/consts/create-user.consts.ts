@@ -51,6 +51,19 @@ export const CREATE_USER_INPUTS = [
         options: [],
         default: '...'
     },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'SURNAME_PATRON',
+        label: 'ФИО:',
+        required: false,
+        value: ''
+    },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'NOTE',
+        label: 'Подразделение:',
+        value: '',
+    },
 ];
 
 export const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {

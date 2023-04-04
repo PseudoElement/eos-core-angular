@@ -2,16 +2,20 @@
     margin-top: 100px;
     width: 800px!important;
     height: 342px;
+
     .log {
         display: inline-block;
     }
+
     main {
         background: $white;
         padding: 20px;
+
         eos-dynamic-input {
             font-size: 14px;
             display: inline-block;
         }
+
         .create-user-login-input {
             width: 675px;
             height: 81px;
@@ -22,12 +26,14 @@
                 }
             }
         }
+
         .base-department-input {
             input {
                 background: $light-grey-1;
                 width: 363px;
                 cursor: default;
             }
+
             .icon-add-department {
                 cursor: pointer;
                 display: inline-block;
@@ -35,21 +41,26 @@
                 margin-bottom: -7px;
             }
         }
+        
         .base-input-role {
             input {
                 width: 363px;
             }
         }
+
         .base-template-input {
             padding-left: 32px;
+
             input {
                 width: 363px;
             }
+
             p.form-control-static {
                 width: 363px;
             }
         }
     }
+
     .shell {
         width: 100%;
         height: 100%;
@@ -59,14 +70,17 @@
         left: 0;
         z-index: 2000;
     }
+
     .create-user-wr {
         position: relative;
+
         span {
             position: absolute;
             right: 10px;
             top: 5px;
         }
     }
+
     .flex-wr {
         display: flex;
         >:last-child {
@@ -74,15 +88,18 @@
         }
     }
 }
+
 /* класс который убирает залезание текста на кнопки */
-.name-limitation-max{
+.name-limitation-max {
     padding-right: 65px;
 }
-.spiner-div{
+
+.spiner-div {
     padding-top: 120px;
     height: 293px;
     text-align: center;
 }
+
 .type-user {
     display: flex;
     align-items: self-start;
@@ -95,7 +112,6 @@
         }
     }
 }
-
 
 .passModal {
     width: 384px;
@@ -135,6 +151,7 @@
         text-transform: uppercase;
         mix-blend-mode: normal;
         position: relative;
+        
         span {
             height: 25px;
         }
@@ -172,6 +189,7 @@
     }
 
 }
+
 .preview {
     position: fixed;
     z-index: 1050;
