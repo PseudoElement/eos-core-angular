@@ -95,7 +95,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     }
     
     async getNameOrganization(): Promise<string> {
-        const result: DELO_OWNER[] = await this.pipRX.read({ DELO_OWNER: {criteries: ''}});
+        const result: DELO_OWNER[] = await this.pipRX.read({ DELO_OWNER: { criteries: '', top: 1, skip: 0 }});
         return result[0].NAME;
     }
 
