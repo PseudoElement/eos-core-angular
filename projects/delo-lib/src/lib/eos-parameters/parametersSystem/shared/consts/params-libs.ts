@@ -62,6 +62,6 @@ export const TABLE_HEADER_FILES: ITableHeader[] = [
     {
       title: 'Точка монтирования',
       id: 'MOUNT_NAME',
-      style: {width: '160px'}
+      style: {width: 'calc(100% - (230px + 70px + 270px)'}
     },
   ];

@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, RouterStateSnapshot} from '@angular/router';
 import { PipRX } from '../../../eos-rest';
 import { RigthsCabinetsServices } from '../../../eos-user-params/shared/services/rigths-cabinets.services';
@@ -12,6 +12,8 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ECellToAll, ITableBtn, ITableData, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { TABLE_HEADER_BTN_TABEL, TABLE_HEADER_BTN_TABEL_SECOND, TABLE_HEADER_CARD } from './right-card-files.const';
 
 @Component({
     selector: 'eos-card-files',
@@ -20,13 +22,18 @@ import { Subject } from 'rxjs';
 })
 
 export class RightsCardFilesComponent implements OnInit, OnDestroy {
+    @ViewChild('firstTable', { static: false }) firstTable;
     public isLoading = true;
-    public flagChangeCards;
+    public flagChangeCards: boolean;
     public mainArrayCards = [];
     public currentCard: CardsClass;
     public flagEdit: boolean = false;
     public flagBacground: boolean = false;
     public loadCabinets: boolean = false;
+    public closeAcordFirst = false;
+    public closeAcordSecond = false;
+    public arrayBtn: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL];
+    public arrayBtnSecond: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL_SECOND];
     get titleHeader() {
         if (this._userSrv.curentUser) {
             if (this._userSrv.curentUser.isTechUser) {
@@ -39,6 +46,17 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     private flagGrifs: boolean;
     private userId: number;
     private _ngUnsubscribe: Subject<any> = new Subject();
+    public tabelData: ITableData = {
+        tableBtn: this.arrayBtn,
+        tableHeader: [...TABLE_HEADER_CARD],
+        data: []
+    };
+    public settingsTable: ITableSettings = {
+        hiddenCheckBox: true,
+        maxHeightTable: '300px',
+        selectedRow: true,
+        count: true
+    }
     // private indexDeleted: Array<number> = [];
     constructor(
         private _rightsCabinetsSrv: RigthsCabinetsServices,
@@ -61,6 +79,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         .subscribe((rout: RouterStateSnapshot) => {
             this._userParamsSetSrv.submitSave = this.submit(true);
         });
+        this.updateBtn();
     }
     updateInit () {
         this._userSrv.getUserIsn({
@@ -103,24 +122,67 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 });
             });
             this._userParamsSetSrv.setChangeState({ isChange: change });
+            this.updateFirstTable();
         }
     }
 
     init(): Promise<any> {
         return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
             this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
+            this.updateFirstTable();
             this.currentCard = null;
-            if (this.mainArrayCards.length) {
-                this.selectCurentCard(this.mainArrayCards[0]);
-            }
             this.isLoading = false;
+            if (this.tabelData.data.length) {
+                this.selectCurentCard(this.tabelData.data[0]);
+                
+            }
         }).catch(e => {
             this.isLoading = false;
             this._errorSrv.errorHandler(e);
             //   this.sendMessage('Предупреждение', 'Ошибка соединения');
         });
     }
-
+    btnAction($event) {
+        switch ($event) {
+            case 'add':
+                this.addCards();
+                break; 
+            case 'main':
+                this.homeCardMoov();
+                break;
+            case 'deleted':
+                this.removeCards();
+                break;
+            default:
+                break;
+        }
+    }
+    btnActionSecond($event) {
+        switch ($event) {
+            case 'add':
+                this.addCards();
+                break; 
+            case 'main':
+                this.homeCardMoov();
+                break;
+            case 'deleted':
+                this.removeCards();
+                break;
+            default:
+                break;
+        }
+    }
+    updateFirstTable() {
+        this.mainArrayCards.forEach((card) => {
+            card['key'] = card['data']['DUE'];
+            if (card['data']['HOME_CARD'] === 1) {
+                card['Icons'] = {type: ECellToAll.icon, info: ['eos-adm-icon-keyfile-grey']};
+            } else {
+                card['Icons'] = undefined;
+            }
+        });
+        this.tabelData.data = this.mainArrayCards;
+    }
     addCards(): void {
         this.flagBacground = true;
         this._whaitSrv.openClassif(OPEN_CLASSIF_CARDINDEX).then((dueCards: string) => {
@@ -234,6 +296,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 this.currentCard = card;
                 this.currentCard.current = true;
                 this.loadCabinets = false;
+                this.firstTable.selectIdLast = card['key'];
                 this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
             });
         } else {
@@ -244,6 +307,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.currentCard.current = true;
             this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
         }
+        this.updateBtn();
     }
     removeCards() {
         if (!this.currentCard || !this.currentCard.data.HOME_CARD) {
@@ -455,6 +519,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     edit(event) {
         if (this.flagGrifs) {
             this.flagEdit = event;
+            this.updateBtn();
         } else {
             this._router.navigate(['user-params-set/', 'access-limitation'],
                 {
@@ -471,6 +536,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         if (!event) { // если event === true то не нужно загружать данные снова так сохранение идёт перед переходом
             this.updateInit();
         }
+        this.updateBtn();
     }
     sendMessage(tittle: string, msg: string) {
         this._msgSrv.addNewMessage({
@@ -479,5 +545,29 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             msg: msg,
         });
     }
-
+    openAccordion(flagOpen: number) {
+        switch (flagOpen) {
+          case 1:
+            this.closeAcordFirst = !this.closeAcordFirst;
+            break;
+          case 2:
+            this.closeAcordSecond = !this.closeAcordSecond;
+            break;
+        }
+    }
+    updateBtn() {
+        this.arrayBtn.forEach((btn) => {
+            switch (btn.id) {
+                case 'add':
+                    btn.disable = !this.flagEdit;
+                    break;
+                case 'main':
+                    btn.disable = !this.currentCard || !this.flagEdit || !this.currentCard?.allowed;
+                    break;
+                case 'deleted':
+                    btn.disable = !this.currentCard || !this.flagEdit || !this.currentCard?.allowed;
+                    break;
+            }
+        });
+    }
 }

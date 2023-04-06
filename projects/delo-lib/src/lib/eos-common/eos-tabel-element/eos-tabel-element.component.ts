@@ -1,6 +1,6 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ECellToAll, ICellInfo, ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 /* import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts'; */
 
 export interface IOrderTable {
@@ -12,38 +12,56 @@ export interface IOrderTable {
     selector: 'eos-tabel-element',
     templateUrl: 'eos-tabel-element.component.html',
     styleUrls: ['./eos-tabel-element.component.scss']
-
 })
-export class TabelElementComponent implements OnInit {
+export class TabelElementComponent implements OnInit, AfterContentInit {
     @Input() tabelData: ITableData;
     @Input() edit: boolean;
     @Input() settings?: ITableSettings;
     @Output() btnAction = new EventEmitter();
-    @Output() elementsSelect = new EventEmitter();
+    @Output() elementsSelect = new EventEmitter<any[]>();
     @Output() orderHead = new EventEmitter<IOrderTable>();
     @Output() clickToRow = new EventEmitter();
     @Output() dbClickRow = new EventEmitter();
+    @ViewChild('headerTable', {static: false}) headerTable: ElementRef;
+    @ViewChild('fixetColoms', {static: false}) fixetColoms: ElementRef;
+    @ViewChild('notFixetColoms', {static: false}) notFixetColoms: ElementRef;
     public title;
     public colomns: ITableHeader[] = [];
     public isLoading = false;
     public buttons: ITableBtn[] = [];
     public countSelected = 0;
     public selectIdLast = '';
+    public widthAll = 0;
+    public widthFixed = 0;
+    types = ECellToAll;
     get showCheckBox() {
         return !this.settings?.hiddenCheckBox;
     }
     constructor() {}
     ngOnInit(): void {
         this.colomns = this.tabelData.tableHeader;
+        this.colomns.forEach((col, index) => {
+            if (col.style['min-width'] && !col['fixed']) {
+                this.widthAll += +col.style['min-width'].replace('px', '');
+            }
+        });
         this.buttons = this.tabelData.tableBtn;
         this.tabelData.data.forEach((item) => {
             if (item.check) {
                 this.countSelected++;
             }
         });
+        
+    }
+    ngAfterContentInit(): void {
+        setTimeout(() => {
+            this.isLoading = true; 
+        }, 0);
     }
     getClassHidden(): string {
-        return this.showCheckBox ? '' : 'margin-not-checkbox';
+        let strClass = '';
+        strClass += this.showCheckBox ? '' : 'margin-not-checkbox';
+        return strClass ;
     }
     getDisabledBtn(btnElem: ITableBtn) {
         return typeof(btnElem.disable) === 'boolean' ? btnElem.disable : this.edit;
@@ -115,13 +133,62 @@ export class TabelElementComponent implements OnInit {
     getStyle(header: ITableHeader): any {
         return header.style ? header.style : {};
     }
+    getStyleTd(header: ITableHeader): any {
+        return header.style ? header.style : {};
+    }
+    scrollbarHeight() {
+        if (this.notFixetColoms) {
+            const height = (this.notFixetColoms.nativeElement.offsetHeight - this.notFixetColoms.nativeElement.clientHeight) + 'px';
+            return {height: height}
+        } else {
+            return undefined;
+        }
+    }
+    
     selected($event, element) {
         element.check = $event.target.checked;
         $event.target.checked ? this.countSelected++ : this.countSelected--;
         this.elementsSelect.emit(this.tabelData.data.filter((elem) => elem.check));
     }
-    getElement<T>(header: ITableHeader, element: T): string {
-        return element[header.id];
+    getType(header, element): ECellToAll {
+        if (typeof(element[header.id]) === 'string') {
+            return undefined;
+        } else if(typeof(element[header.id]) === 'object') {
+            return element[header.id].type;
+        }
+    }
+    getElement<T>(header: ITableHeader, element: T): ICellInfo | string {
+        if (typeof(element[header.id]) === 'string') {
+            return element[header.id];
+        } else if(typeof(element[header.id]) === 'object') {
+            switch (element[header.id].type) {
+                case ECellToAll.icon:
+                    return {type: element[header.id].type, info: element[header.id].info}
+                case ECellToAll.checkbox:
+                    return {type: element[header.id].type, info: {check: element[header.id]['check'], click: element[header.id]['click'], disabled: element[header.id]['disabled']}}
+                case ECellToAll.buttons:
+                    return '';
+                default:
+                    break;
+            }
+        }
+    }
+    getColomsNotFixed() {
+        return this.colomns.filter((item) => !item.fixed);
+    }
+    getColomsFixed() {
+        return this.colomns.filter((item) => item.fixed);
+    }
+    onListScroll($event) {
+        if (this.headerTable) {
+            this.headerTable.nativeElement.scrollLeft = $event.srcElement.scrollLeft;
+        }
+        if (this.fixetColoms) {
+            this.fixetColoms.nativeElement.scrollTop = $event.srcElement.scrollTop;
+        }
+    }
+    scrollFixed($event) {
+        this.notFixetColoms.nativeElement.scrollTop = $event.srcElement.scrollTop;
     }
     getflagChecked(): string {
         const count = this.tabelData.data.length;
@@ -140,12 +207,26 @@ export class TabelElementComponent implements OnInit {
     }
     getTableStyle() {
         const style = {};
+        if (this.getColomsFixed().length) {
+            style['margin-left'] = '-2px';
+        }
         if (this.settings) {
             Object.keys(this.settings).forEach((key) => {
                 switch (key) {
                     case 'maxHeightTable':
                         style['max-height'] = this.settings[key];
                         style['overflow'] = 'auto';
+                        /* style['max-width'] = '100%'; */
+                        // style['overflow-x'] = 'hidden';
+                        if (this.widthAll) {
+                            style['width'] = this.widthAll + 'px';
+                        }
+                        break;
+                    case 'paddingBottom':
+                        style['padding-bottom'] = this.settings[key];
+                        break;
+                    case 'minWidth':
+                        style['min-width'] = this.settings[key];
                         break;
                     default:
                         break;
@@ -159,6 +240,7 @@ export class TabelElementComponent implements OnInit {
     clickElem($event) {
         if (this.settings?.selectedRow) {
             this.selectIdLast = '' + $event.key;
+            this.elementsSelect.emit([$event]);
         }
         this.clickToRow.emit([$event]);
     }
