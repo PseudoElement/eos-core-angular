@@ -3,10 +3,8 @@
         <div class="right-classif-node ">
             <label class="classif-list-tech-user checkbox" [ngClass]="{'disabled': !editMode || limitedTehnologist}">
                 <input [disabled]="!editMode || limitedTehnologist" type="checkbox" [checked]="isCheckedSide" (change)="updateFlagDictionaries()">
-                <div>
-                    <span class="eos-adm-icon small" [ngClass]="getflagChecked"></span>
-                    Все справочники и опции
-                </div>
+                <span class="eos-adm-icon small" [ngClass]="getflagChecked"></span>
+                Все справочники и опции
             </label>
         </div>
     </div>
