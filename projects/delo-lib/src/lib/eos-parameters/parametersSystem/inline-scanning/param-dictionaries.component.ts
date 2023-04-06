@@ -27,7 +27,6 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
         });
     }
     subscr() {
-        this.form.controls[''].valueChanges
         this.subscriptions.push(
             this.form.controls['rec.SITE_MRSCAN_CHECK'].valueChanges
             .subscribe(newValue => {
@@ -61,9 +60,6 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
         );
     }
     updateField() {
-       /*  console.log('>>>', this.form.controls['SITE_MRSCAN'].value);
-        console.log('>>>', this.form.controls['NETWORK_MRSCAN'].value);
-        console.log('>>>', this.form.controls['LOCAL_MRSCAN'].value); */
         if (this.form.controls['rec.SITE_MRSCAN'].value === 'localhost') {
             this.form.controls['rec.SITE_MRSCAN'].setValue('Модуль', { emitEvent: false });
             this.form.controls['rec.SITE_MRSCAN_CHECK'].setValue(true, { emitEvent: false });

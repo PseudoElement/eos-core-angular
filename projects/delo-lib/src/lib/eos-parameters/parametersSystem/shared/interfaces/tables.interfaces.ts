@@ -17,6 +17,7 @@ export interface ITableHeader {
     */
     order?: 'none' | 'asc' | 'desc';
     id: string;
+    fixed?: boolean; // при включении использовать min-width в style
     style?: any;
 }
 export interface ITableInfData {
@@ -29,7 +30,20 @@ export interface ITableData {
     data: any[];
 }
 export interface ITableSettings {
-    hiddenCheckBox?: boolean;
-    maxHeightTable?: string;
-    selectedRow?: boolean;
+    hiddenCheckBox?: boolean; // спрятать чекбоксы выбора
+    maxHeightTable?: string; // максимальная высоты таблицы
+    selectedRow?: boolean; // есть возможность выбрать строчку
+    count?: boolean; // отображать общее количество, если не выбрано то будет отображаться количество выбранных
+    paddingBottom?: string;
+    widthAllTable?: boolean;
+}
+export enum ECellToAll  {
+    icon,
+    checkbox,
+    radio,
+    buttons
+};
+export interface ICellInfo {
+    type?: ECellToAll,
+    info: any
 }

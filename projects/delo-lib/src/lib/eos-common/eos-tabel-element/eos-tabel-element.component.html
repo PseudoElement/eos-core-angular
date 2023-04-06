@@ -17,28 +17,25 @@
                 <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(button)"></span>
             </button>
         </div>
-        <div class="counter-table">
+        <div *ngIf="!settings?.count" class="counter-table">
             <span>Выбрано</span>
             <span class="counter">{{countSelected}}</span>
         </div>
+        <div *ngIf="settings?.count" class="counter-table">
+            <span>Записей</span>
+            <span class="counter">{{tabelData.data.length}}</span>
+        </div>
     </div>
+    
     <!-- название столбцов -->
-    <div>
-        <div class="header-table-param" [ngClass]="getClassHidden()">
-            <div  *ngIf="showCheckBox" style="padding-left: 12px;margin-right: 9px;" class="checkbox-inline">
-                <label class="checkbox" >
-                    <input [checked]="getAllCheck()" [disabled]="!edit" type="checkbox" (change)="toggleAllMarks($event)">
-                    <div>
-                        <span class="eos-adm-icon small" [ngClass]="getflagChecked()"></span> <!--  -->
-                    </div>
-                </label>
-            </div>
-            <div *ngFor="let col of colomns"
+    <div class="all-table">
+        <div *ngIf="getColomsFixed().length" class="header-table-param fixed-coloms" style="margin-right: -20px;">
+            <div *ngFor="let col of getColomsFixed()"
                 class="header-table-title"
                 [ngStyle]="getStyle(col)"
                 [ngClass]="[edit ? '' : 'disable-header-table-title']"
                 (click)="orderByField(col)">
-                <span class="text"
+                <span class="text table-hidder"
                     tooltip="Упорядочить"
                     placement="bottom"
                     container="body"
@@ -54,24 +51,133 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Переданные элементы -->
-    <div class="eos-rows-table" [ngStyle]="getTableStyle()">
-        <div class="display-element-item" *ngFor="let row of tabelData.data" [ngClass]="getClassRow(row)" (dblclick)="dbClickToRow(row)">
-            <div *ngIf="showCheckBox" style="padding-left: 12px;" class="checkbox-inline">
-                <label>
-                    <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">
-                    <span></span>
+        <div class="header-table-param get-colomn-border" #headerTable style="overflow: inherit;" [ngClass]="getClassHidden()">
+            <div *ngIf="showCheckBox" style="padding: 12px 0 0 16px;" class="checkbox-inline">
+                <label class="checkbox" >
+                    <input [checked]="getAllCheck()" [disabled]="!edit" type="checkbox" (change)="toggleAllMarks($event)">
+                    <div>
+                        <span class="eos-adm-icon small" [ngClass]="getflagChecked()"></span>
+                    </div>
                 </label>
             </div>
-            <div (click)="clickElem(row)" *ngFor="let colomn of colomns"
+            <div *ngFor="let col of getColomsNotFixed()"
                 class="header-table-title"
-                [ngClass]="{'margin-not-checkbox': hiddenCheckBox }"
-                [ngStyle]="getStyle(colomn)">
-                <span class="text">
-                    {{getElement(colomn, row)}}
+                [ngStyle]="getStyle(col)"
+                [ngClass]="[edit ? '' : 'disable-header-table-title']"
+                (click)="orderByField(col)">
+                <span class="text table-hidder"
+                    tooltip="Упорядочить"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info">
+                    {{col.title}}
                 </span>
+                <div >
+                    <span *ngIf="col.order" class="order-icon">
+                        <span class="icon eos-adm-icon small"
+                        [ngClass]="getBtnOrder(col)">
+                        </span>
+                    </span>
+                </div>
             </div>
+        </div>
+            <!-- Переданные элементы -->
+            <div style="display: flex;">
+                <!-- Фиксированные колонки -->
+                <div>
+                    <div 
+                        #fixetColoms
+                        style="overflow: clip auto;"
+                        *ngIf="getColomsFixed().length"
+                        class="fixed-coloms-body"
+                        (scroll)="scrollFixed($event)"
+                        [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}" style="margin-right: -20px;">
+                        <div class="display-element-item"  *ngFor="let row of tabelData.data" [ngClass]="getClassRow(row)" style="margin-right: -17px; padding-right: 17px;">
+                            <div (click)="clickElem(row)" *ngFor="let colomn of getColomsFixed()"
+                                class="header-table-title colomn-style-td"
+                                [ngStyle]="getStyleTd(colomn)">
+                                <ng-container [ngSwitch]="getType(colomn, row)">
+                                    <ng-container *ngSwitchCase="types.icon">
+                                        <div style="height: 24px;">
+                                            <span *ngFor="let icon of getElement(colomn, row).info"
+                                                class="eos-adm-icon small "
+                                                [ngClass]="icon"
+                                            ></span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="types.checkbox">
+                                        <div style="height: 24px;" class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="types.radio">
+                                        <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
+                                    </ng-container>
+                                    <ng-container *ngSwitchDefault>
+                                        <span class="text table-hidder">
+                                            {{getElement(colomn, row)}}
+                                        </span>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div *ngIf="isLoading" [ngStyle]="scrollbarHeight(colomn)">
+                        </div>
+                    </div>
+                </div>
+                <div
+                    #notFixetColoms
+                    class="eos-rows-table"
+                    (scroll)="onListScroll($event)"
+                    style="max-width: 100%; overflow: auto; width: 100%; box-shadow: -15px 4px 10px 4px rgba(34, 60, 80, 0.14);"
+                    [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}">
+                    <div 
+                        class="display-element-item not-fixed-row-body"
+                        *ngFor="let row of tabelData.data"
+                        [ngClass]="getClassRow(row)"
+                        (dblclick)="dbClickToRow(row)"
+                        [ngStyle]="getTableStyle()">
+                        <div *ngIf="showCheckBox" style="padding: 8px 0 0 16px;" class="checkbox-inline">
+                            <label>
+                                <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">
+                                <span></span>
+                            </label>
+                        </div>
+                        <div (click)="clickElem(row)" *ngFor="let colomn of getColomsNotFixed()"
+                            class="header-table-title colomn-style-td"
+                            [ngStyle]="getStyleTd(colomn)">
+                            <ng-container [ngSwitch]="getType(colomn, row)">
+                                <ng-container *ngSwitchCase="types.icon">
+                                    <div style="height: 24px;">
+                                        <span *ngFor="let icon of getElement(colomn, row).info"
+                                            class="eos-adm-icon small "
+                                            [ngClass]="icon"
+                                        ></span>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="types.checkbox">
+                                    <div style="height: 24px;" class="checkbox-inline">
+                                        <label>
+                                            <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="types.radio">
+                                    <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>
+                                    <span class="text table-hidder">
+                                        {{getElement(colomn, row)}}
+                                    </span>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 </div>
