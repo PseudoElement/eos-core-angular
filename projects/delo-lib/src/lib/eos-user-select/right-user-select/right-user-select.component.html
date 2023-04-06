@@ -24,7 +24,8 @@
                         <label class="checkbox disabled minus-checkbox ">
                             <input [attr.checked]="'checked'" disabled  type="checkbox" readonly="readonly" class="readonly">
                             <span class="eos-adm-icon eos-adm-icon-checkbox-black"></span>
-                            Технический пользователь</label>
+                            Технический пользователь
+                        </label>
                     </div>
                 </div>
             </ng-template>
@@ -37,7 +38,15 @@
                 </div>
                 <div class='info-note'>
                     <span class="rt-grey">Подразделение</span>
-                    <span class="rt-role-name" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'Не указано'}}</span>
+                    <span class="rt-role-name" *ngIf="CurrentUser">
+                        <a  
+                            (click)="writeRecentUrl()" 
+                            [routerLink]="['/spravochniki','cabinet', UserCabinetInfo[0].CABINET_LIST.ISN_CABINET, 'view', '0']"   
+                            class="cabinet-title"
+                        >
+                            {{ departments }}
+                        </a>
+                    </span>
                 </div>
             </div>
 

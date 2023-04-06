@@ -16,7 +16,8 @@ import { EosDictService } from '../../eos-dictionaries/services/eos-dict.service
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-
+import { PipRX } from '../../eos-rest/services/pipRX.service';
+import { DELO_OWNER } from '../../eos-rest/interfaces/structures';
 @Component({
     selector: 'eos-department-node-info',
     templateUrl: 'department-node-info.component.html',
@@ -43,6 +44,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         private _breadcrumbsSrv: EosBreadcrumbsService,
         private dictSrv: EosDictService,
         private _router: Router,
+        private pipRX: PipRX
     ) {
         super();
         this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
@@ -55,12 +57,19 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         });
     }
 
-    ngOnChanges() {
+    async ngOnChanges() {
         super.ngOnChanges();
 
         this.boss = null;
         if (this.node) {
+
             if ((!this.node.data.rec['IS_NODE']) && (this.node.children)) {
+                if (this.node.parent.id === '0.') {
+                    this.department = await this.getNameOrganization();
+                } else {
+                    this.department = this.node.parent.getParentData('FULLNAME', 'rec', 'CLASSIF_NAME');
+                }
+
                 const dict = new EosDictionary('departments', this._descrSrv);
                 dict.descriptor.getBoss(this.node.id)
                     .then((boss) => {
@@ -71,12 +80,9 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             } else {
                 if (this.node.parent) {
                     if (this.node.parent.id === '0.') {
-                        this.department = '...';
+                        this.department = await this.getNameOrganization();
                     } else {
-                        // this.department = this.node.parent.getParentData('FULLNAME', 'rec') ||
-                        //     this.node.parent.getParentData('CLASSIF_NAME', 'rec');
                         this.department = this.node.parent.getParentData('FULLNAME', 'rec', 'CLASSIF_NAME');
-                        // this.node.parent.getParentData('CLASSIF_NAME', 'rec');
                     }
                     if (this.node.data.photo && this.node.data.photo.url) {
                         this.photo = this.node.data.photo.url;
@@ -87,10 +93,17 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             }
         }
     }
+    
+    async getNameOrganization(): Promise<string> {
+        const result: DELO_OWNER[] = await this.pipRX.read({ DELO_OWNER: { criteries: '', top: 1, skip: 0 }});
+        return result[0].NAME;
+    }
+
     ngOnDestroy() {
         this._unsebscribe.next();
         this._unsebscribe.complete();
     }
+
     redirectToEditCabinet($event): void {
         $event.preventDefault();
         this.dictSrv.deleteDict(1);
@@ -98,6 +111,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             this._router.navigate(['spravochniki', 'cabinet', this.nodeDataFull.cabinet.ISN_CABINET, 'view']);
         });
     }
+
     redirectToDepartment($event): void {
         $event.preventDefault();
         this.dictSrv.deleteDict(1);
@@ -105,6 +119,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             this._router.navigate(['spravochniki', 'departments', this.nodeDataFull.rec.PARENT_DUE]);
         });
     }
+
     getRole(value: number): string {
         let sRole = this.roles.find((elem) => elem.value === value);
         if (!sRole) {
@@ -140,7 +155,6 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         }
     }
 
-
     toTranslit(text: string): string {
         return text.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
             function (all, ch, space, words, i) {
@@ -171,6 +185,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
 
         return res;
     }
+
     openCardOrganiz() {
         this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit, params: {outside: true}});
     }

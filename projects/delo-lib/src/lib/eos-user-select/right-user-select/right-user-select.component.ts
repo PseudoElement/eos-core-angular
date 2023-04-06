@@ -41,7 +41,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         return this._appContext.CurrentUser.IS_SECUR_ADM || !this.CurrentUser.isEditable;
     }
     constructor(
-        //  private _sandwichSrv: EosSandwichService,
         public _selectedUser: RtUserSelectService,
         private _storageSrv: EosStorageService,
         private _router: Router,
@@ -54,6 +53,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         this.flagSustem = false;
         this.opened = false;
         this.showDep = false;
+
         this._selectedUser.changerUser
             .pipe(
                 takeUntil(this.destroySubsriber)
@@ -69,10 +69,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                     this._selectedUser.updateSettings = false;
                 }
                 if (currentUser && this.ctf['id'] !== currentUser.id) {
-                    // if (this.flagRtBlock) {
-                    //     this.chooseTemplate = 'spinner';
-                    //     this.geyInfo();
-                    // }
                     this.chooseTemplate = 'spinner';
                     this.geyInfo(currentUser);
                     this.ctf = currentUser;
@@ -84,7 +80,8 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                 }
             });
     }
-    geyInfo(currentUser) {
+
+    async geyInfo(currentUser) {
         let isn;
         if (currentUser['deep'] && currentUser['deep'] !== 'null') {
             isn = currentUser['deep'];
@@ -95,13 +92,8 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             this.getInfo();
             this.showDep = false;
         }
-        this._extensionsUser.loadDepartments(this.CurrentUser.data.TECH_DUE_DEP || '').then(deep => {
-            if (deep !== null) {
-                this.departments = deep;
-            } else {
-                this.departments = this.CurrentUser.data.NOTE || 'Не указано';
-            }
-        });
+        const deep = await this._extensionsUser.loadDepartments(this.CurrentUser.deep);
+        this.departments = (deep !== null) ? deep : (this.CurrentUser.data.NOTE || 'Не указано');
     }
 
     parseSustemParam(parseParam) {
@@ -111,6 +103,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     writeRecentUrl() {
         this._storageSrv.setItem(RECENT_URL, this._router.url);
     }
+
     getInfo(isnDue?): void {
         let isn_cabinet = null;
         if (!isnDue) {
@@ -167,7 +160,8 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                             this.chooseTemplate = 'main';
                             this.hashUsers();
                         });
-                }).catch(error => {
+                })
+                .catch(error => {
                     this._errSrv.errorHandler(error);
                 });
         }

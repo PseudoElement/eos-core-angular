@@ -3935,3 +3935,14 @@ export interface FILE_CATEGORY_CL extends IEnt, IStamp {
     DELETED: number;
 }
 
+export interface DELO_OWNER {
+    DUE_ORGANIZ: string;
+    ISN_DELO_OWNER: number;
+    ISN_ORGANIZ: number;
+    ISN_OWNER: number;
+    NAME: string;
+    ORG_ID: null;
+    SYS_ID: string;
+    SYS_NAME: string;
+    SYS_VERSION: string;
+}
