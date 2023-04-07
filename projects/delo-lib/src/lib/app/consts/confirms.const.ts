@@ -78,8 +78,8 @@ export const CONFIRM_ADD_DL_UPDATE_CAB: IConfirmWindow2 = {
     title: 'Подтверждение переноса',
     body: '',
     buttons: [
-        {title: 'Да', result: 1, },
-        {title: 'Нет', result: 2, isDefault: true},
+        {title: 'Нет', result: 2 },
+        {title: 'Да', result: 1, isDefault: true},
     ]
 };
 
@@ -353,8 +353,8 @@ export const CONFIRM_HARD_DELET_CABINET: IConfirmWindow2 = {
     body: 'Для владельцев кабинета:',
     bodyAfterList: 'существуют записи в папках. Удалить кабинет вместе с папками?',
     buttons: [
-        {title: 'Отменить', result: 1, isDefault: true, },
-        {title: 'Удалить',  result: 2, },
+        {title: 'Отменить', result: 1 },
+        {title: 'Удалить',  result: 2, isDefault: true},
     ],
 };
 export const ERROR_LOGIN: IConfirmWindow2 = {
