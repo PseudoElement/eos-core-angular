@@ -81,7 +81,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditDirective imple
                         i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF'], isDeleted: true });
                     }
                 });
-                if (this.getValue('rec.CLASSIF_NAME') !== this.data.rec['ORGANIZ_CL_NAME']) {
+                if (this.data.rec['CLASSIF_NAME'] && this.getValue('rec.CLASSIF_NAME') !== this.data.rec['ORGANIZ_CL_NAME']) {
                     this._msgSrv.addNewMessage(MESSAGE_TO_RENAME_ORGANIZATION_SEV);
                     this.setValue('rec.CLASSIF_NAME', this.data.rec['ORGANIZ_CL_NAME']);
                 }
