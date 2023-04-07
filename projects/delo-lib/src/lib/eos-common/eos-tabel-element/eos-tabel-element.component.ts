@@ -157,7 +157,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             return element[header.id].type;
         }
     }
-    getElement<T>(header: ITableHeader, element: T): ICellInfo | string {
+    getElement(header: ITableHeader, element: any): ICellInfo | string {
         if (typeof(element[header.id]) === 'string') {
             return element[header.id];
         } else if(typeof(element[header.id]) === 'object') {
