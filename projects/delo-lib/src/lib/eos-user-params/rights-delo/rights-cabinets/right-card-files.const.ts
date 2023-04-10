@@ -106,21 +106,21 @@ export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
 
 export const TABLE_HEADER_BTN_TABEL = [
     {
-        tooltip: 'Добавить',
+        tooltip: 'Добавить картотеку',
         disable: true,
         iconActiv: 'eos-adm-icon-plus-blue',
         iconDisable: 'eos-adm-icon-plus-grey',
         id: 'add'
     },
     {
-        tooltip: 'Главный',
+        tooltip: 'Установить главную картотеку',
         disable: true,
         iconActiv: 'eos-adm-icon-keyfile-blue',
         iconDisable: 'eos-adm-icon-keyfile-grey',
         id: 'main'
     },
     {
-        tooltip: 'Удалить',
+        tooltip: 'Удалить картотеку',
         disable: true,
         iconActiv: 'eos-adm-icon-bin-forever-blue',
         iconDisable: 'eos-adm-icon-bin-forever-grey',
@@ -129,7 +129,7 @@ export const TABLE_HEADER_BTN_TABEL = [
 ];
 export const TABLE_HEADER_BTN_TABEL_SECOND = [
     {
-        tooltip: 'Главный',
+        tooltip: 'Установить главный кабинет',
         disable: true,
         iconActiv: 'eos-adm-icon-keyfile-blue',
         iconDisable: 'eos-adm-icon-keyfile-grey',
