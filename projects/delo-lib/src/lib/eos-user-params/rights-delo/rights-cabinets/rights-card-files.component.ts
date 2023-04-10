@@ -53,7 +53,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     };
     public settingsTable: ITableSettings = {
         hiddenCheckBox: true,
-        maxHeightTable: '300px',
+        maxHeightTable: '200px',
         selectedRow: true,
         count: true
     }

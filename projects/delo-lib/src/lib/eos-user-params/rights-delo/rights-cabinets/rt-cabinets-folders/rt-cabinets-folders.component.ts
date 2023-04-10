@@ -52,7 +52,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     };
     public settingsTableSecond: ITableSettings = {
         hiddenCheckBox: true,
-        maxHeightTable: '250px',
+        maxHeightTable: '200px',
         selectedRow: true,
         count: true,
         widthAllTable: true,
