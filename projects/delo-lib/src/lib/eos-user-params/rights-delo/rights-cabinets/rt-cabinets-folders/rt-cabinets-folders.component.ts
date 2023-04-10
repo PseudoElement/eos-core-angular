@@ -37,6 +37,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     public limitCard: boolean = false;
     public currentCabinet: Cabinets;
     public closeAcordSecond = false;
+    public isLoading = true;
     form: FormGroup;
     public arrayBtnSecond: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL_SECOND];
     selectCabinetInput: DropdownInput = new DropdownInput({
@@ -279,6 +280,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     changeFolders(key): void {
         if (key === 'HIDE_INACCESSIBLE' || key === 'HIDE_INACCESSIBLE_PRJ') {
             this.currentCabinet.data[key] = +!this.currentCabinet.data[key];
+            this.updateDataFolder(this.card.cabinets);
             this.changes.emit();
             return;
         }
@@ -374,8 +376,6 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             } else {
                 cab['Icons'] = undefined;
             }
-            cab['HIDE_INACCESSIBLE'] = cab['data']['HIDE_INACCESSIBLE'];
-            cab['HIDE_INACCESSIBLE_PRJ'] = cab['data']['HIDE_INACCESSIBLE_PRJ'];
             TABLE_HEADER_CARD_SECOND.forEach((col) => {
                 if (col.id.indexOf('FOLDERS_AVAILABLE') !== -1) {
                     cab[col.id] = {type: ECellToAll.checkbox, check: false, click: () => {this.changeFolders(col.id.replace('FOLDERS_AVAILABLE_', ''))}};
