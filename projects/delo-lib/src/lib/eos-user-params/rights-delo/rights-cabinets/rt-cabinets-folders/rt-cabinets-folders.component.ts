@@ -149,7 +149,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         item.disable = !Boolean(this.currentCabinet);
                         break;
                     case 'main':
-                        item.disable = !Boolean(this.currentCabinet) || this.currentCabinet['Icons'] !== undefined;
+                        item.disable = !Boolean(this.currentCabinet) || this.currentCabinet['Icons'] !== undefined || !Boolean(this.currentCabinet.data['FOLDERS_AVAILABLE']);
                         break;
                     case 'copy':
                         item.disable = !Boolean(this.currentCabinet);
@@ -281,6 +281,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         if (key === 'HIDE_INACCESSIBLE' || key === 'HIDE_INACCESSIBLE_PRJ') {
             this.currentCabinet.data[key] = +!this.currentCabinet.data[key];
             this.updateDataFolder(this.card.cabinets);
+            this.updateBtn();
             this.changes.emit();
             return;
         }
@@ -309,6 +310,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             this.currentCabinet.data.HOME_CABINET = 1;
             this._updateSelect(true);
         }
+        this.updateBtn();
         this.updateDataFolder(this.card.cabinets);
         this.changes.emit();
     }
