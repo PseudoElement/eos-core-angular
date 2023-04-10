@@ -330,7 +330,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 this.currentCard = null;
             }
         } else {
-            this.sendMessage('Предупреждение', 'Не определена главная картотека');
+            this.sendMessage('Предупреждение', 'Нельзя удалить главную картотеку');
         }
         this.checkGlobalChanges();
     }
