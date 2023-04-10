@@ -32,7 +32,7 @@ export class ParamUnloadingComponent extends BaseParamComponent {
   }
   init(): Promise<any> {
     const allRequest = [];
-    allRequest.push(this.getData({'GetLibLibraries': ALL_ROWS }));
+    allRequest.push(this.getData({'LIB_LIBRARY': ALL_ROWS }));
     allRequest.push(this.getAppSetting<IArchivist>(this.paramUpload));
     return Promise.all(allRequest)
     .then(([libLibrary, Archivist]) => {
