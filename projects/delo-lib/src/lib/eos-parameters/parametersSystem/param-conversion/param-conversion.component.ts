@@ -33,7 +33,7 @@ export class ParamConversionComponent extends BaseParamComponent {
     }
     init(): Promise<any> {
         const allRequest = [];
-        allRequest.push(this.getData({'GetLibLibraries': ALL_ROWS }));
+        allRequest.push(this.getData({'LIB_LIBRARY': ALL_ROWS }));
         allRequest.push(this.getAppSetting<IConverterParam>(this.paramConverter));
         return Promise.all(allRequest)
         .then(([libLibrary, Converter]) => {
