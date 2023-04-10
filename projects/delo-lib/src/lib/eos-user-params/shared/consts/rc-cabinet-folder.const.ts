@@ -21,14 +21,18 @@ export const RC_CABINET_FOLDER_LIST = [
         title: 'На рассмотрении'
     }, {
         key: 6,
+        charKey: '6',
+        title: 'В дело'
+    }, {
+        key: 7,
         charKey: '7',
         title: 'Управление проектами'
     }, {
-        key: 7,
+        key: 8,
         charKey: '8',
         title: 'На визировании'
     }, {
-        key: 8,
+        key: 9,
         charKey: '9',
         title: 'На подписи'
     }
