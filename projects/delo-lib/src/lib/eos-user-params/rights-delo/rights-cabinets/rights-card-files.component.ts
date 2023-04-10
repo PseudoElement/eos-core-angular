@@ -12,8 +12,9 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { ECellToAll, ITableBtn, ITableData, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { ECellToAll, ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { TABLE_HEADER_BTN_TABEL, TABLE_HEADER_BTN_TABEL_SECOND, TABLE_HEADER_CARD } from './right-card-files.const';
+import { IOrderTable } from '../../../eos-common/index';
 
 @Component({
     selector: 'eos-card-files',
@@ -123,6 +124,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             });
             this._userParamsSetSrv.setChangeState({ isChange: change });
             this.updateFirstTable();
+            const sorterColomn = this.getHowSortedColomn();
+            this.orderHead(sorterColomn);
         }
     }
 
@@ -130,6 +133,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
             this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
             this.updateFirstTable();
+            const sorterColomn = this.getHowSortedColomn();
+            this.orderHead(sorterColomn);
             this.currentCard = null;
             this.isLoading = false;
             if (this.tabelData.data.length) {
@@ -141,6 +146,15 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(e);
             //   this.sendMessage('Предупреждение', 'Ошибка соединения');
         });
+    }
+    getHowSortedColomn(): ITableHeader {
+        let sorterColomn: ITableHeader; 
+        this.tabelData.tableHeader.forEach((item) => {
+            if (item.order === 'asc' || item.order === 'desc') {
+                sorterColomn = item;
+            }
+        });
+        return sorterColomn;
     }
     btnAction($event) {
         switch ($event) {
@@ -182,6 +196,31 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             }
         });
         this.tabelData.data = this.mainArrayCards.filter((item) => {return !item.deleted});
+    }
+    orderHead($event: IOrderTable) {
+        if ($event['id'] === 'Icons') {
+            this.tabelData.data = this.tabelData.data.sort((a, b) => {
+                const first = a[$event.id] ? 1 : 0;
+                const second = b[$event.id] ? 1 : 0;
+                if (first > second) {
+                    return $event.order === 'desc' ? -1 : 1;
+                } else if (first < second) {
+                    return $event.order === 'desc' ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+        } else {
+            this.tabelData.data = this.tabelData.data.sort((a, b) => {
+                if (a[$event.id] > b[$event.id]) {
+                    return $event.order === 'desc' ? -1 : 1;
+                } else if (a[$event.id] < b[$event.id]) {
+                    return $event.order === 'desc' ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+        }
     }
     addCards(): void {
         this.flagBacground = true;

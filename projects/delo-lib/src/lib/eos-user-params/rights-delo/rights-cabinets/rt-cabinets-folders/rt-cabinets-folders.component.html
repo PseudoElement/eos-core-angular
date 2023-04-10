@@ -16,7 +16,8 @@
                 [tabelData]="tabelDataSecond"
                 [settings]="settingsTableSecond"
                 (btnAction)="btnActionSecond($event)"
-                (clickToRow)="selectCurentCardSecond($event[0])"> 
+                (clickToRow)="selectCurentCardSecond($event[0])"
+                (orderHead)="orderHead($event)"> 
             </eos-tabel-element>
     </div>
     <div class="cabinets-empty" *ngIf="!card.cabinets.length">

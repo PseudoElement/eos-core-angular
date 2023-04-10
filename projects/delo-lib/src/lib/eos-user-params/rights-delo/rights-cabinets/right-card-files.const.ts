@@ -2,14 +2,16 @@ import { ITableHeader } from "../../../eos-parameters/parametersSystem/shared/in
 
 export const TABLE_HEADER_CARD: ITableHeader[] = [
     {
-      title: 'Гл...',
+      title: 'Главный',
       id: 'Icons',
-      style: {width: '62px'}
+      order: 'none',
+      style: {width: '80px'}
     },
     {
       title: 'Наименование',
       id: 'cardTitle',
-      style: {width: 'calc(100% - 62px)'}
+      order: 'asc',
+      style: {width: 'calc(100% - 80px)'}
     },
 ];
 export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
@@ -17,12 +19,14 @@ export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
       title: 'Гл...',
       id: 'Icons',
       fixed: true,
-      style: {'min-width': '58px'}
+      order: 'none',
+      style: {'min-width': '80px'}
     },
     {
       title: 'Наименование',
       id: 'cabTitle',
       fixed: true,
+      order: 'asc',
       style: {'min-width': '200px'}
     },
     {

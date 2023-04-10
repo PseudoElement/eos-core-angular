@@ -20,9 +20,10 @@ import { DropdownInput } from '../../../../eos-common/core/inputs/select-input';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
-import { ECellToAll, ITableBtn, ITableData, ITableSettings } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { ECellToAll, ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { TABLE_HEADER_BTN_TABEL_SECOND, TABLE_HEADER_CARD_SECOND } from '../right-card-files.const';
 import { RC_CABINET_FOLDER_LIST } from '../../../shared/consts/rc-cabinet-folder.const';
+import { IOrderTable } from '../../../../eos-common/index';
 @Component({
     selector: 'eos-cabinets-folders',
     templateUrl: 'rt-cabinets-folders.component.html',
@@ -190,6 +191,31 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 break;
         }
         this.updateDataFolder(this.card.cabinets);
+    }
+    orderHead($event: IOrderTable) {
+        if ($event['id'] === 'Icons') {
+            this.tabelDataSecond.data = this.tabelDataSecond.data.sort((a, b) => {
+                const first = a[$event.id] ? 1 : 0;
+                const second = b[$event.id] ? 1 : 0;
+                if (first > second) {
+                    return $event.order === 'desc' ? -1 : 1;
+                } else if (first < second) {
+                    return $event.order === 'desc' ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+        } else {
+            this.tabelDataSecond.data = this.tabelDataSecond.data.sort((a, b) => {
+                if (a[$event.id] > b[$event.id]) {
+                    return $event.order === 'desc' ? -1 : 1;
+                } else if (a[$event.id] < b[$event.id]) {
+                    return $event.order === 'desc' ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+        }
     }
     insertToCurent() {
         if (localStorage.getItem('copyParamsFOLDER_AVAILABLE') !== undefined) {
@@ -369,6 +395,15 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     getHide(cabinet) {
         return !this.disabledCabinetInAcces(cabinet);
     }
+    getHowSortedColomn(): ITableHeader {
+        let sorterColomn: ITableHeader; 
+        this.tabelDataSecond.tableHeader.forEach((item) => {
+            if (item.order === 'asc' || item.order === 'desc') {
+                sorterColomn = item;
+            }
+        });
+        return sorterColomn;
+    }
     updateDataFolder(cabinets: Cabinets[]) {
         cabinets.forEach((cab) => {
             cab['key'] = cab['data']['ISN_CABINET'];
@@ -394,5 +429,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             });
         });
         this.tabelDataSecond.data = cabinets;
+        const sorterColomn = this.getHowSortedColomn();
+        this.orderHead(sorterColomn);
     }
 }
