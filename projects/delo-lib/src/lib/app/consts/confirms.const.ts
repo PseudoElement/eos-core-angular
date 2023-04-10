@@ -210,8 +210,8 @@ export const CONFIRM_OPERATION_HARDDELETE: IConfirmWindow2 = {
     body: 'Вы действительно хотите навсегда удалить записи:',
     // bodyAfterList: 'Продолжить?',
     buttons: [
-        {title: 'Отменить', result: 1, isDefault: true, },
-        {title: 'Удалить',  result: 2, },
+        {title: 'Отменить', result: 1, },
+        {title: 'Удалить',  result: 2, isDefault: true },
     ],
 };
 export const CONFIRM_OPERATION_NOMENKL_CLOSED: IConfirmWindow2 = {
