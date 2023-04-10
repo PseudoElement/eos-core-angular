@@ -39,7 +39,6 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     public closeAcordSecond = false;
     form: FormGroup;
     public arrayBtnSecond: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL_SECOND];
-    public copyParams;
     selectCabinetInput: DropdownInput = new DropdownInput({
         key: 'selectedCabinet',
         options: [],
@@ -155,7 +154,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         item.disable = !Boolean(this.currentCabinet);
                         break;
                     case 'insert':
-                        item.disable = !Boolean(this.currentCabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === undefined;
+                        item.disable = !Boolean(this.currentCabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === null;
                         break;
                     case 'checked-cabinet':
                         item.disable = false;
