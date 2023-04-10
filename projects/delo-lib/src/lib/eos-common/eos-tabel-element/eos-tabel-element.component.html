@@ -29,14 +29,14 @@
     
     <!-- название столбцов -->
     <div class="all-table">
-        <div *ngIf="getColomsFixed().length" class="header-table-param fixed-coloms" style="margin-right: -20px;">
+        <div *ngIf="getColomsFixed().length" class="header-table-param fixed-coloms" style="margin-right: -20px; position: relative;">
             <div *ngFor="let col of getColomsFixed()"
                 class="header-table-title"
                 [ngStyle]="getStyle(col)"
                 [ngClass]="[edit ? '' : 'disable-header-table-title']"
                 (click)="orderByField(col)">
                 <span class="text table-hidder"
-                    tooltip="Упорядочить"
+                    [tooltip]="col.title"
                     placement="bottom"
                     container="body"
                     containerClass="tooltip-info">
@@ -50,8 +50,10 @@
                     </span>
                 </div>
             </div>
+            <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 21px; box-shadow: 6px -3px 4px 3px rgba(34, 60, 80, 0.2);">
+            </div>
         </div>
-        <div class="header-table-param get-colomn-border" #headerTable style="overflow: inherit;" [ngClass]="getClassHidden()">
+        <div class="header-table-param get-colomn-border" #headerTable style="overflow: inherit; position: relative;" [ngClass]="getClassHidden()">
             <div *ngIf="showCheckBox" style="padding: 12px 0 0 16px;" class="checkbox-inline">
                 <label class="checkbox" >
                     <input [checked]="getAllCheck()" [disabled]="!edit" type="checkbox" (change)="toggleAllMarks($event)">
@@ -66,7 +68,7 @@
                 [ngClass]="[edit ? '' : 'disable-header-table-title']"
                 (click)="orderByField(col)">
                 <span class="text table-hidder"
-                    tooltip="Упорядочить"
+                    [tooltip]="col.title"
                     placement="bottom"
                     container="body"
                     containerClass="tooltip-info">
@@ -84,11 +86,13 @@
             <!-- Переданные элементы -->
             <div style="display: flex;">
                 <!-- Фиксированные колонки -->
-                <div>
+                <div *ngIf="getColomsFixed().length" style="position: relative;">
+                    <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 1px; box-shadow: 6px 3px 4px 3px rgba(34, 60, 80, 0.2);">
+                    </div>
                     <div 
                         #fixetColoms
                         style="overflow: clip auto;"
-                        *ngIf="getColomsFixed().length"
+
                         class="fixed-coloms-body"
                         (scroll)="scrollFixed($event)"
                         [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}" style="margin-right: -20px;">
@@ -98,7 +102,7 @@
                                 [ngStyle]="getStyleTd(colomn)">
                                 <ng-container [ngSwitch]="getType(colomn, row)">
                                     <ng-container *ngSwitchCase="types.icon">
-                                        <div style="height: 24px;">
+                                        <div style="height: 24px; line-height: 0;">
                                             <span *ngFor="let icon of getElement(colomn, row).info"
                                                 class="eos-adm-icon small "
                                                 [ngClass]="icon"
@@ -132,9 +136,9 @@
                     #notFixetColoms
                     class="eos-rows-table"
                     (scroll)="onListScroll($event)"
-                    style="max-width: 100%; overflow: auto; width: 100%; box-shadow: -15px 4px 10px 4px rgba(34, 60, 80, 0.14);"
+                    style="max-width: 100%; overflow: auto; width: 100%; position: relative; min-height: 200px;"
                     [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}">
-                    <div 
+                    <div
                         class="display-element-item not-fixed-row-body"
                         *ngFor="let row of tabelData.data"
                         [ngClass]="getClassRow(row)"
@@ -151,7 +155,7 @@
                             [ngStyle]="getStyleTd(colomn)">
                             <ng-container [ngSwitch]="getType(colomn, row)">
                                 <ng-container *ngSwitchCase="types.icon">
-                                    <div style="height: 24px;">
+                                    <div style="height: 24px; line-height: 0;">
                                         <span *ngFor="let icon of getElement(colomn, row).info"
                                             class="eos-adm-icon small "
                                             [ngClass]="icon"
@@ -177,7 +181,7 @@
                             </ng-container>
                         </div>
                     </div>
-                </div>
+            </div>
         </div>
     </div>
 </div>

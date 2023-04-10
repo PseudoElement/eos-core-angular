@@ -53,7 +53,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     };
     public settingsTable: ITableSettings = {
         hiddenCheckBox: true,
-        maxHeightTable: '300px',
+        maxHeightTable: '200px',
         selectedRow: true,
         count: true
     }
@@ -181,7 +181,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 card['Icons'] = undefined;
             }
         });
-        this.tabelData.data = this.mainArrayCards;
+        this.tabelData.data = this.mainArrayCards.filter((item) => {return !item.deleted});
     }
     addCards(): void {
         this.flagBacground = true;
@@ -296,7 +296,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 this.currentCard = card;
                 this.currentCard.current = true;
                 this.loadCabinets = false;
-                this.firstTable.selectIdLast = card['key'];
+                if (this.firstTable) {
+                    this.firstTable.selectIdLast = card['key'];
+                }
                 this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
             });
         } else {
@@ -306,6 +308,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.currentCard = card;
             this.currentCard.current = true;
             this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
+            if (this.firstTable) {
+                this.firstTable.selectIdLast = card['key']; 
+            }
         }
         this.updateBtn();
     }

@@ -37,9 +37,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     public limitCard: boolean = false;
     public currentCabinet: Cabinets;
     public closeAcordSecond = false;
+    public isLoading = true;
     form: FormGroup;
     public arrayBtnSecond: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL_SECOND];
-    public copyParams;
     selectCabinetInput: DropdownInput = new DropdownInput({
         key: 'selectedCabinet',
         options: [],
@@ -52,7 +52,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     };
     public settingsTableSecond: ITableSettings = {
         hiddenCheckBox: true,
-        maxHeightTable: '250px',
+        maxHeightTable: '200px',
         selectedRow: true,
         count: true,
         widthAllTable: true,
@@ -155,7 +155,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         item.disable = !Boolean(this.currentCabinet);
                         break;
                     case 'insert':
-                        item.disable = !Boolean(this.currentCabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === undefined;
+                        item.disable = !Boolean(this.currentCabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === null;
                         break;
                     case 'checked-cabinet':
                         item.disable = false;
@@ -280,6 +280,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     changeFolders(key): void {
         if (key === 'HIDE_INACCESSIBLE' || key === 'HIDE_INACCESSIBLE_PRJ') {
             this.currentCabinet.data[key] = +!this.currentCabinet.data[key];
+            this.updateDataFolder(this.card.cabinets);
             this.changes.emit();
             return;
         }
@@ -375,8 +376,6 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             } else {
                 cab['Icons'] = undefined;
             }
-            cab['HIDE_INACCESSIBLE'] = cab['data']['HIDE_INACCESSIBLE'];
-            cab['HIDE_INACCESSIBLE_PRJ'] = cab['data']['HIDE_INACCESSIBLE_PRJ'];
             TABLE_HEADER_CARD_SECOND.forEach((col) => {
                 if (col.id.indexOf('FOLDERS_AVAILABLE') !== -1) {
                     cab[col.id] = {type: ECellToAll.checkbox, check: false, click: () => {this.changeFolders(col.id.replace('FOLDERS_AVAILABLE_', ''))}};

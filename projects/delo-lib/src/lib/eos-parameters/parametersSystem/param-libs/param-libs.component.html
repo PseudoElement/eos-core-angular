@@ -15,7 +15,7 @@
           </div>
           <div>
               <span (click)="openAccordion(1)" class="icon eos-adm-icon small float-right pull-right"
-                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordFirst, 'eos-adm-icon-arrow-v-blue-top': closeAcordFirst}"></span>
+                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordFirst, 'eos-adm-icon-arrow-v-blue-top': !closeAcordFirst}"></span>
           </div>
         </div>
       <div class="style-to-table">
@@ -32,7 +32,7 @@
         </div>
         <div>
             <span (click)="openAccordion(2)" class="icon eos-adm-icon small float-right pull-right"
-                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': closeAcordSecond}"></span>
+                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': !closeAcordSecond}"></span>
         </div>
       </div>
       <div [hidden]="closeAcordSecond" class="param-input-group">
@@ -58,7 +58,7 @@
         </div>
         <div>
             <span (click)="openAccordion(3)" class="icon eos-adm-icon small float-right pull-right"
-                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordthree, 'eos-adm-icon-arrow-v-blue-top': closeAcordthree}"></span>
+                [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordthree, 'eos-adm-icon-arrow-v-blue-top': !closeAcordthree}"></span>
         </div>
       </div>
       <div [hidden]="closeAcordthree" class="param-input-group">

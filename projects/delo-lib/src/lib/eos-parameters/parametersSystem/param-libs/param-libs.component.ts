@@ -38,7 +38,7 @@ export class ParamLibsComponent extends BaseParamComponent {
   };
   public settingsTable: ITableSettings = {
     hiddenCheckBox: true,
-    maxHeightTable: '100px',
+    maxHeightTable: '200px',
     selectedRow: true
   }
   constructor(injector: Injector) {
