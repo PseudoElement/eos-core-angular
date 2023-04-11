@@ -15,21 +15,21 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CardsClass, Cabinets } from '../helpers/cards-class';
 import { RigthsCabinetsServices } from '../../../shared/services/rigths-cabinets.services';
-import { EosMessageService } from '../../../../eos-common/services/eos-message.service';
+// import { EosMessageService } from '../../../../eos-common/services/eos-message.service';
 import { DropdownInput } from '../../../../eos-common/core/inputs/select-input';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
-import { ECellToAll, ITableBtn, ITableData, ITableSettings } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { ECellToAll, ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { TABLE_HEADER_BTN_TABEL_SECOND, TABLE_HEADER_CARD_SECOND } from '../right-card-files.const';
 import { RC_CABINET_FOLDER_LIST } from '../../../shared/consts/rc-cabinet-folder.const';
+import { IOrderTable } from '../../../../eos-common/index';
 @Component({
     selector: 'eos-cabinets-folders',
     templateUrl: 'rt-cabinets-folders.component.html',
     styleUrls: ['rt-cabinets-folders.component.scss']
 })
 export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
-
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
     @Output() changes = new EventEmitter();
@@ -103,7 +103,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     private unSubscribe: Subject<any> = new Subject();
     constructor(
         private _rtCabintsSrv: RigthsCabinetsServices,
-        private _msgSrv: EosMessageService,
+        // private _msgSrv: EosMessageService,
         private inputCtrlSrv: InputControlService,
         private _appContext: AppContext,
     ) {
@@ -149,7 +149,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         item.disable = !Boolean(this.currentCabinet);
                         break;
                     case 'main':
-                        item.disable = !Boolean(this.currentCabinet) || this.currentCabinet['Icons'] !== undefined;
+                        item.disable = !Boolean(this.currentCabinet) || this.currentCabinet['Icons'] !== undefined || !Boolean(this.currentCabinet.data['FOLDERS_AVAILABLE']);
                         break;
                     case 'copy':
                         item.disable = !Boolean(this.currentCabinet);
@@ -158,6 +158,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         item.disable = !Boolean(this.currentCabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === null;
                         break;
                     case 'checked-cabinet':
+                        item.disable = false;
+                        break;
+                    case 'expand':
                         item.disable = false;
                         break;
                 }
@@ -188,8 +191,56 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 this.updateToAll();
                 this.checkHomeCard();
                 break;
+            case 'expand':
+                this.updateExpand();
+                this.tabelDataSecond.tableBtn.forEach((btn) =>{
+                    if (btn.id === 'expand') {
+                        btn.active = !btn.active;
+                    }
+                });
+                break;
         }
         this.updateDataFolder(this.card.cabinets);
+    }
+    updateExpand() {
+        this.tabelDataSecond.tableHeader.forEach((item) => {
+            switch (item.id) {
+                case 'Icons':
+                    item.style = item.style['width'] ? {'min-width': '80px', 'max-width': '80px'} : {'width': '80px', 'max-width': '80px'}
+                    item.fixed = !item.fixed;
+                    break;
+                case 'cabTitle':
+                    item.style = item.style['width'] ? {'min-width': '200px'} : {'width': '160px'}
+                    item.fixed = !item.fixed;
+                    break;
+                default:
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '50px'}
+                    break;
+            }
+        });
+        if (this.secondTable) {
+            this.secondTable.ngOnInit();
+        }
+    }
+    orderHead($event: IOrderTable) {
+        this.tabelDataSecond.data = this.tabelDataSecond.data.sort((a, b) => {
+            let first;
+            let second;
+            if ($event['id'] === 'Icons') {
+                first = a[$event.id] ? 1 : 0;
+                second = b[$event.id] ? 1 : 0;
+            } else {
+                first = a[$event.id];
+                second = b[$event.id];
+            }
+            if (first > second) {
+                return $event.order === 'desc' ? -1 : 1;
+            } else if (first < second) {
+                return $event.order === 'desc' ? 1 : -1;
+            } else {
+                return 0;
+            }
+        });
     }
     insertToCurent() {
         if (localStorage.getItem('copyParamsFOLDER_AVAILABLE') !== undefined) {
@@ -209,6 +260,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             }
         });
         if (flag) {
+            if (this.checkHomeCard() && !this.card.cabinets[0].data.HOME_CABINET) {
+                this.card.cabinets[0].data.HOME_CABINET = 1;
+            }
             this.card.cabinets.forEach((cab) => {
                 cab.data.FOLDERS_AVAILABLE = strFolder;
             });
@@ -244,6 +298,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             }
             this.changes.emit();
         }
+        if (this.checkHome && !this.mainCabinets() && !this.currentCabinet.data.HOME_CABINET) {
+            this.currentCabinet.data.HOME_CABINET = 1;
+            this._updateSelect(true);
+        }
     }
     ngOnInit() {
         // this.setFolders(this.card.cabinets[0]);
@@ -266,9 +324,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     flag = false;
                 }
             });
-            if (flag) {
+            return flag;
+            /* if (flag) {
                 this.alertWarning();
-            }
+            } */
         }
     }
     updateCardLimit(newCabinets) {
@@ -281,6 +340,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         if (key === 'HIDE_INACCESSIBLE' || key === 'HIDE_INACCESSIBLE_PRJ') {
             this.currentCabinet.data[key] = +!this.currentCabinet.data[key];
             this.updateDataFolder(this.card.cabinets);
+            this.updateBtn();
             this.changes.emit();
             return;
         }
@@ -303,12 +363,13 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         if (!this.checkHome && this.currentCabinet.data.HOME_CABINET) {
             this.currentCabinet.data.HOME_CABINET = 0;
             this._updateSelect(true);
-            this.alertWarning();
+            // this.alertWarning();
         }
         if (this.checkHome && !this.mainCabinets() && !this.currentCabinet.data.HOME_CABINET) {
             this.currentCabinet.data.HOME_CABINET = 1;
             this._updateSelect(true);
         }
+        this.updateBtn();
         this.updateDataFolder(this.card.cabinets);
         this.changes.emit();
     }
@@ -327,9 +388,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 }
             });
         } else {
-            if (!this.currentCabinet.data.HOME_CABINET) {
+            /* if (!this.currentCabinet.data.HOME_CABINET) {
                 this.alertWarning();
-            }
+            } */
         }
         this.changes.emit();
         this._updateSelect(true);
@@ -338,14 +399,15 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     /* setFolders(cabinet): void {
         this.currentCabinet = cabinet;
     } */
-    alertWarning() {
+    /* Пока убираю старые сообщения */
+    /* alertWarning() {
         this._msgSrv.addNewMessage({
             type: 'warning',
             title: 'Предупреждение',
             msg: 'Назначьте главный кабинет',
             dismissOnTimeout: 6000
         });
-    }
+    } */
     ngOnDestroy() {
           this.unSubscribe.next();
           this.unSubscribe.complete();
@@ -366,6 +428,15 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     }
     getHide(cabinet) {
         return !this.disabledCabinetInAcces(cabinet);
+    }
+    getHowSortedColomn(): ITableHeader {
+        let sorterColomn: ITableHeader; 
+        this.tabelDataSecond.tableHeader.forEach((item) => {
+            if (item.order === 'asc' || item.order === 'desc') {
+                sorterColomn = item;
+            }
+        });
+        return sorterColomn;
     }
     updateDataFolder(cabinets: Cabinets[]) {
         cabinets.forEach((cab) => {
@@ -392,5 +463,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             });
         });
         this.tabelDataSecond.data = cabinets;
+        const sorterColomn = this.getHowSortedColomn();
+        this.orderHead(sorterColomn);
     }
 }

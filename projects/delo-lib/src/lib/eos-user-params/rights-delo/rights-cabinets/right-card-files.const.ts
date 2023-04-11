@@ -2,104 +2,108 @@ import { ITableHeader } from "../../../eos-parameters/parametersSystem/shared/in
 
 export const TABLE_HEADER_CARD: ITableHeader[] = [
     {
-      title: 'Гл...',
+      title: 'Главный',
       id: 'Icons',
-      style: {width: '62px'}
+      order: 'none',
+      style: {width: '80px'}
     },
     {
       title: 'Наименование',
       id: 'cardTitle',
-      style: {width: 'calc(100% - 62px)'}
+      order: 'asc',
+      style: {width: 'calc(100% - 80px)'}
     },
 ];
 export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
     {
-      title: 'Гл...',
+      title: 'Главный',
       id: 'Icons',
-      fixed: true,
-      style: {'min-width': '58px'}
+      fixed: false,
+      order: 'none',
+      style: {'width': '80px'}
     },
     {
       title: 'Наименование',
       id: 'cabTitle',
-      fixed: true,
-      style: {'min-width': '200px'}
+      fixed: false,
+      order: 'asc',
+      style: {'width': '160px'}
     },
     {
         title: 'Поступившие',
         id: 'FOLDERS_AVAILABLE_1',
         style: {
-            'min-width': '140px',
+            'width': '50px',
         }
     },
     {
         title: 'На исполнении',
         id: 'FOLDERS_AVAILABLE_2',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'На контроле',
         id: 'FOLDERS_AVAILABLE_3',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'У руководства',
         id: 'FOLDERS_AVAILABLE_4',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'На рассмотрении',
         id: 'FOLDERS_AVAILABLE_5',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'В дело',
         id: 'FOLDERS_AVAILABLE_6',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'Управление проектами',
         id: 'FOLDERS_AVAILABLE_7',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'На визировании',
         id: 'FOLDERS_AVAILABLE_8',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'На подписании',
         id: 'FOLDERS_AVAILABLE_9',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'РК. Учитывать ограничение доступа по грифам и группам документов',
         id: 'HIDE_INACCESSIBLE',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
     {
         title: 'РКПД. Учитывать права.',
         id: 'HIDE_INACCESSIBLE_PRJ',
         style: {
-            'min-width': '130px',
+            'width': '50px',
         }
     },
 ];
@@ -162,5 +166,14 @@ export const TABLE_HEADER_BTN_TABEL_SECOND = [
         iconActiv: 'eos-adm-icon-done-blue',
         iconDisable: 'eos-adm-icon-done-grey',
         id: 'checked-cabinet'
+    },
+    {
+        tooltip: 'Развернутый вид',
+        disable: true,
+        iconActiv: 'eos-adm-icons-expand-blue',
+        iconDisable: 'eos-adm-icons-expand-grey',
+        id: 'expand',
+        activeIcon: 'eos-adm-icons-expand-white',
+        active: false
     },
 ];

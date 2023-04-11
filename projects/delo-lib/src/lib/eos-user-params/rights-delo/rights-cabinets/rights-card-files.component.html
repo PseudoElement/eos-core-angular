@@ -2,7 +2,7 @@
     <eos-user-params-header
         [editMode]="flagEdit"
         [title]='titleHeader'
-        (submitEmit)='submit($event)'
+        (submitEmit)='preSubmit($event)'
         (cancelEmit)='cancel($event)'
         (editEmit)='edit($event)'
     ></eos-user-params-header>
@@ -26,63 +26,11 @@
                     [tabelData]="tabelData"
                     [settings]="settingsTable"
                     (btnAction)="btnAction($event)"
-                    (elementsSelect)="selectCurentCard($event[0])">
+                    (elementsSelect)="selectCurentCard($event[0])"
+                    (orderHead)="orderHead($event)">
                 </eos-tabel-element>
             </div>
-            <!-- <div class="title-under-user-card-table">
-                <div>
-                  <span>Кабинеты</span>
-                </div>
-                <div>
-                    <span (click)="openAccordion(2)" class="icon eos-adm-icon small float-right pull-right"
-                      [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': closeAcordSecond}"></span>
-                </div>
-              </div>
-              <div class="style-to-table">
-                  <eos-tabel-element
-                      #secondTable
-                      [hidden]="closeAcordSecond"
-                      [edit]="flagEdit"
-                      [tabelData]="tabelDataSecond"
-                      [settings]="settingsTableSecond"
-                      (btnAction)="btnActionSecond($event)"
-                  </eos-tabel-element>
-              </div> -->
-        <!-- <div class="card-left">
-            <div class="title-cards">
-                <span>Картотеки</span>
-            </div>
-            <div class="card-btn">
-                <button class="btn btn-primary-light" [disabled]="!flagEdit" (click)="addCards()" tooltip="Добавить картотеку" placement="bottom" container="body" containerClass="tooltip-info" triggers="hover:click"><span
-                        class="eos-adm-icon  small"
-                        [ngClass]="flagEdit ? 'eos-adm-icon-plus-blue' : 'eos-adm-icon-plus-grey'"
-                    ></span>
-                </button>
-                <button [disabled]="!currentCard || !flagEdit || !currentCard?.allowed" class="btn btn-primary-light" (click)="removeCards()" tooltip="Удалить картотеку" placement="bottom" containerClass="tooltip-info" triggers="hover:click" container="body"><span
-                        class="eos-adm-icon small"
-                        [ngClass]="flagEdit && currentCard?.allowed  ? 'eos-adm-icon-bin-forever-blue' : 'eos-adm-icon-bin-forever-grey'"></span>
-                </button>
-                <button [disabled]="!currentCard || !flagEdit || !currentCard?.allowed" class="btn btn-primary-light" (click)="homeCardMoov()" tooltip="Главная" container="body" placement="bottom" containerClass="tooltip-info" triggers="hover:click"><span
-                        class="eos-adm-icon  small"
-                        [ngClass]="flagEdit && currentCard?.allowed ? 'eos-adm-icon-keyfile-blue' : 'eos-adm-icon-keyfile-grey'"
-                    ></span>
-                </button>
-            </div>
-            <div class="card-wrr">
-                <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
-                    <span *ngIf='card.logDelet && !card.deleted' class="icon eos-adm-icon small eos-adm-icon-bin-grey position-card-bin-icon"></span>
-                    <span
-                        *ngIf='!card.deleted'
-                        class="cards-item"
-                        [ngClass]="{'homeCard': card.data.HOME_CARD, 'card-delet-elem': card.logDelet}"
-                        (click)='selectCurentCard(card)'>
-                        {{card.cardName}}
-                    </span>
-                </div>
-            </div>
-        </div> -->
         <eos-cabinets-folders *ngIf="currentCard && !loadCabinets"  [card]="currentCard" [flagEdit]="flagEdit" (changes)="checkGlobalChanges()"></eos-cabinets-folders>
-
     </div>
     <div class="user-input-group sp" *ngIf="isLoading">
         <eos-spinner size="lg"></eos-spinner>

@@ -109,3 +109,12 @@ export const CONFIRM_UNAVAILABLE_SYSTEMS_AFTER_BLOCK: IConfirmWindow2 = {
     ],
     manualCR: true,
 };
+export const CONFIRM_MAIN_CABINET_IN_CARTOTEK: IConfirmWindow2 = {
+    title: '',
+    body: 'В главной картотеке не назначен главный кабинет. Продолжить сохранение',
+    buttons: [
+            {title: 'Да', result: 1, isDefault: true, },
+            {title: 'Нет', result: 2, isDefault: true, },
+    ],
+    manualCR: true,
+};

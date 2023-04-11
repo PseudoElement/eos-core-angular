@@ -4,6 +4,8 @@ export interface ITableBtn {
     iconActiv: string; // иконка доступа
     iconDisable: string; // иконка когда кнопка не доступна
     id: string; // id кнопки будет использоваться в возврате
+    active?: boolean; // активна ли кнопка
+    activeIcon?: string; // какая Иконка будет использоваться при активной кнопке
 }
 export interface ITableSetting {
     selected?: boolean; // можно ли отмечать строки

@@ -8,7 +8,7 @@
                 [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': !closeAcordSecond}"></span>
         </div>
         </div>
-        <div class="style-to-table">
+        <div class="style-to-table" *ngIf="isLoading">
             <eos-tabel-element
                 #secondTable
                 [hidden]="closeAcordSecond"
@@ -16,7 +16,8 @@
                 [tabelData]="tabelDataSecond"
                 [settings]="settingsTableSecond"
                 (btnAction)="btnActionSecond($event)"
-                (clickToRow)="selectCurentCardSecond($event[0])"> 
+                (clickToRow)="selectCurentCardSecond($event[0])"
+                (orderHead)="orderHead($event)"> 
             </eos-tabel-element>
     </div>
     <div class="cabinets-empty" *ngIf="!card.cabinets.length">
