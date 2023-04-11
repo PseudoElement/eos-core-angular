@@ -260,6 +260,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             }
         });
         if (flag) {
+            if (this.checkHomeCard() && !this.card.cabinets[0].data.HOME_CABINET) {
+                this.card.cabinets[0].data.HOME_CABINET = 1;
+            }
             this.card.cabinets.forEach((cab) => {
                 cab.data.FOLDERS_AVAILABLE = strFolder;
             });
@@ -295,6 +298,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             }
             this.changes.emit();
         }
+        if (this.checkHome && !this.mainCabinets() && !this.currentCabinet.data.HOME_CABINET) {
+            this.currentCabinet.data.HOME_CABINET = 1;
+            this._updateSelect(true);
+        }
     }
     ngOnInit() {
         // this.setFolders(this.card.cabinets[0]);
@@ -317,9 +324,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     flag = false;
                 }
             });
-            if (flag) {
-                // this.alertWarning();
-            }
+            return flag;
+            /* if (flag) {
+                this.alertWarning();
+            } */
         }
     }
     updateCardLimit(newCabinets) {
