@@ -56,7 +56,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     }
     ngAfterContentInit(): void {
         setTimeout(() => {
-            this.isLoading = true; 
+            this.isLoading = true;
         }, 0);
     }
     getClassHidden(): string {
@@ -74,6 +74,13 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             return btn.activeIcon;
         } else {
             return btn.iconActiv;
+        }
+    }
+    tootipShow(width, widthParent, title: string) {
+        if (this.isLoading && width && widthParent && width.offsetWidth > widthParent.offsetWidth) {
+            return title;
+        } else {
+            return '';
         }
     }
     getAllCheck() {
