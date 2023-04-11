@@ -8,7 +8,7 @@
                 [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': !closeAcordSecond}"></span>
         </div>
         </div>
-        <div class="style-to-table">
+        <div class="style-to-table" *ngIf="isLoading">
             <eos-tabel-element
                 #secondTable
                 [hidden]="closeAcordSecond"

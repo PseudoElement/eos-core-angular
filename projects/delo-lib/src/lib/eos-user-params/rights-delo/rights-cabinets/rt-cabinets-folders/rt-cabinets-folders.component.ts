@@ -30,7 +30,6 @@ import { IOrderTable } from '../../../../eos-common/index';
     styleUrls: ['rt-cabinets-folders.component.scss']
 })
 export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
-
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
     @Output() changes = new EventEmitter();
@@ -161,6 +160,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     case 'checked-cabinet':
                         item.disable = false;
                         break;
+                    case 'expand':
+                        item.disable = false;
+                        break;
                 }
             });
         } else {
@@ -189,33 +191,56 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 this.updateToAll();
                 this.checkHomeCard();
                 break;
+            case 'expand':
+                this.updateExpand();
+                this.tabelDataSecond.tableBtn.forEach((btn) =>{
+                    if (btn.id === 'expand') {
+                        btn.active = !btn.active;
+                    }
+                });
+                break;
         }
         this.updateDataFolder(this.card.cabinets);
     }
-    orderHead($event: IOrderTable) {
-        if ($event['id'] === 'Icons') {
-            this.tabelDataSecond.data = this.tabelDataSecond.data.sort((a, b) => {
-                const first = a[$event.id] ? 1 : 0;
-                const second = b[$event.id] ? 1 : 0;
-                if (first > second) {
-                    return $event.order === 'desc' ? -1 : 1;
-                } else if (first < second) {
-                    return $event.order === 'desc' ? 1 : -1;
-                } else {
-                    return 0;
-                }
-            });
-        } else {
-            this.tabelDataSecond.data = this.tabelDataSecond.data.sort((a, b) => {
-                if (a[$event.id] > b[$event.id]) {
-                    return $event.order === 'desc' ? -1 : 1;
-                } else if (a[$event.id] < b[$event.id]) {
-                    return $event.order === 'desc' ? 1 : -1;
-                } else {
-                    return 0;
-                }
-            });
+    updateExpand() {
+        this.tabelDataSecond.tableHeader.forEach((item) => {
+            switch (item.id) {
+                case 'Icons':
+                    item.style = {'width': '80px'}
+                    item.fixed = !item.fixed;
+                    break;
+                case 'cabTitle':
+                    item.style = item.style['width'] ? {'min-width': '200px'} : {'width': '160px'}
+                    item.fixed = !item.fixed;
+                    break;
+                default:
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '50px'}
+                    break;
+            }
+        });
+        if (this.secondTable) {
+            this.secondTable.ngOnInit();
         }
+    }
+    orderHead($event: IOrderTable) {
+        this.tabelDataSecond.data = this.tabelDataSecond.data.sort((a, b) => {
+            let first;
+            let second;
+            if ($event['id'] === 'Icons') {
+                first = a[$event.id] ? 1 : 0;
+                second = b[$event.id] ? 1 : 0;
+            } else {
+                first = a[$event.id];
+                second = b[$event.id];
+            }
+            if (first > second) {
+                return $event.order === 'desc' ? -1 : 1;
+            } else if (first < second) {
+                return $event.order === 'desc' ? 1 : -1;
+            } else {
+                return 0;
+            }
+        });
     }
     insertToCurent() {
         if (localStorage.getItem('copyParamsFOLDER_AVAILABLE') !== undefined) {

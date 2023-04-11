@@ -11,9 +11,11 @@
                 [tooltip]="button.tooltip"
                 placement="bottom"
                 [disabled]="getDisabledBtn(button)"
+                triggers="hover"
                 container="body"
                 containerClass="tooltip-info"
-                (click)="clickToButton(button)">
+                (click)="clickToButton(button)"
+                [ngClass]="{'active-background': button.active && !getDisabledBtn(button)}">
                 <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(button)"></span>
             </button>
         </div>
@@ -163,7 +165,7 @@
                                     </div>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="types.checkbox">
-                                    <div style="height: 24px;" class="checkbox-inline">
+                                    <div style="height: 24px; margin-top: -8px;" class="checkbox-inline">
                                         <label>
                                             <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
                                             <span></span>

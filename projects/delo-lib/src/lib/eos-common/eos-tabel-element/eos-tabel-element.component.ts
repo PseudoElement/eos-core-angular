@@ -32,13 +32,14 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     public countSelected = 0;
     public selectIdLast = '';
     public widthAll = 0;
-    public widthFixed = 0;
     types = ECellToAll;
     get showCheckBox() {
         return !this.settings?.hiddenCheckBox;
     }
     constructor() {}
     ngOnInit(): void {
+        this.widthAll = 0;
+        this.colomns = [];
         this.colomns = this.tabelData.tableHeader;
         this.colomns.forEach((col, index) => {
             if (col.style['min-width'] && !col['fixed']) {
@@ -69,6 +70,8 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     checkBtnIcons(btn: ITableBtn): string {
         if (btn.disable) {
             return btn.iconDisable;
+        } else if(btn.active) {
+            return btn.activeIcon;
         } else {
             return btn.iconActiv;
         }

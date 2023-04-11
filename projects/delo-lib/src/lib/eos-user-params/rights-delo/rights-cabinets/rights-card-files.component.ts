@@ -198,29 +198,24 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.tabelData.data = this.mainArrayCards.filter((item) => {return !item.deleted});
     }
     orderHead($event: IOrderTable) {
-        if ($event['id'] === 'Icons') {
-            this.tabelData.data = this.tabelData.data.sort((a, b) => {
-                const first = a[$event.id] ? 1 : 0;
-                const second = b[$event.id] ? 1 : 0;
-                if (first > second) {
-                    return $event.order === 'desc' ? -1 : 1;
-                } else if (first < second) {
-                    return $event.order === 'desc' ? 1 : -1;
-                } else {
-                    return 0;
-                }
-            });
-        } else {
-            this.tabelData.data = this.tabelData.data.sort((a, b) => {
-                if (a[$event.id] > b[$event.id]) {
-                    return $event.order === 'desc' ? -1 : 1;
-                } else if (a[$event.id] < b[$event.id]) {
-                    return $event.order === 'desc' ? 1 : -1;
-                } else {
-                    return 0;
-                }
-            });
-        }
+        this.tabelData.data = this.tabelData.data.sort((a, b) => {
+            let first;
+            let second;
+            if ($event['id'] === 'Icons') {
+                first = a[$event.id] ? 1 : 0;
+                second = b[$event.id] ? 1 : 0;
+            } else {
+                first = a[$event.id];
+                second = b[$event.id];
+            }
+            if (first > second) {
+                return $event.order === 'desc' ? -1 : 1;
+            } else if (first < second) {
+                return $event.order === 'desc' ? 1 : -1;
+            } else {
+                return 0;
+            }
+        });
     }
     addCards(): void {
         this.flagBacground = true;
