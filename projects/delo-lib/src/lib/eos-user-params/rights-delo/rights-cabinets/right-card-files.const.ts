@@ -16,7 +16,7 @@ export const TABLE_HEADER_CARD: ITableHeader[] = [
 ];
 export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
     {
-      title: 'Гл...',
+      title: 'Главный',
       id: 'Icons',
       fixed: false,
       order: 'none',

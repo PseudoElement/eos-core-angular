@@ -14,7 +14,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ECellToAll, ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { TABLE_HEADER_BTN_TABEL, TABLE_HEADER_BTN_TABEL_SECOND, TABLE_HEADER_CARD } from './right-card-files.const';
-import { IOrderTable } from '../../../eos-common/index';
+import { ConfirmWindowService, IOrderTable } from '../../../eos-common/index';
+import { CONFIRM_MAIN_CABINET_IN_CARTOTEK } from '../../../eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-card-files',
@@ -69,6 +70,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _appContext: AppContext,
         private _userParamsSetSrv: UserParamsService,
+        private _confirmSrv: ConfirmWindowService,
     ) { }
      // чтобы подписка происходила только 1 перенёс основной код из ngOnInit
      ngOnInit() {
@@ -78,7 +80,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             takeUntil(this._ngUnsubscribe)
             )
         .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamsSetSrv.submitSave = this.submit(true);
+            this._userParamsSetSrv.submitSave = this.preSubmit(true);
         });
         this.updateBtn();
     }
@@ -376,6 +378,32 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this._rightsCabinetsSrv.cardsArray = this._rightsCabinetsSrv.cardsArray.filter((card: CardsClass) => {
             return this.currentCard && card.data.DUE !== this.currentCard.data.DUE;
         });
+    }
+    preSubmit(event) {
+        let flag = false;
+        this.mainArrayCards.forEach((card) => {
+            if (card['data']['HOME_CARD'] === 1) {
+                flag = true;
+                card['cabinets'].forEach((cab) => {
+                    if (cab['data']['HOME_CABINET']) {
+                        flag = false;
+                    }
+                });
+            }
+        });
+        if (flag) {
+            return this._confirmSrv.confirm2(CONFIRM_MAIN_CABINET_IN_CARTOTEK)
+            .then((button) => {
+                if (button && button['result'] === 1) {
+                    return this.submit(event);
+                }
+            })
+            .catch((error) => {
+                console.log('error', error);
+            });
+        } else {
+            return this.submit(event);
+        }
     }
     /*
     * если сохраняем через кнопку то в event лежит false если при переходе то true

@@ -19,7 +19,7 @@
             </div>
             <div>
                 <span (click)="openAccordion()" class="icon eos-adm-icon small float-right pull-right"
-                    [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': !openAcord, 'eos-adm-icon-arrow-v-blue-top': openAcord}"></span>
+                    [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': openAcord, 'eos-adm-icon-arrow-v-blue-top': !openAcord}"></span>
             </div>
         </div>
         <div *ngIf="!openAcord">

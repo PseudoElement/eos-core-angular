@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CardsClass, Cabinets } from '../helpers/cards-class';
 import { RigthsCabinetsServices } from '../../../shared/services/rigths-cabinets.services';
-import { EosMessageService } from '../../../../eos-common/services/eos-message.service';
+// import { EosMessageService } from '../../../../eos-common/services/eos-message.service';
 import { DropdownInput } from '../../../../eos-common/core/inputs/select-input';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
@@ -103,7 +103,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     private unSubscribe: Subject<any> = new Subject();
     constructor(
         private _rtCabintsSrv: RigthsCabinetsServices,
-        private _msgSrv: EosMessageService,
+        // private _msgSrv: EosMessageService,
         private inputCtrlSrv: InputControlService,
         private _appContext: AppContext,
     ) {
@@ -206,7 +206,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         this.tabelDataSecond.tableHeader.forEach((item) => {
             switch (item.id) {
                 case 'Icons':
-                    item.style = {'width': '80px'}
+                    item.style = item.style['width'] ? {'min-width': '80px', 'max-width': '80px'} : {'width': '80px', 'max-width': '80px'}
                     item.fixed = !item.fixed;
                     break;
                 case 'cabTitle':
@@ -318,7 +318,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 }
             });
             if (flag) {
-                this.alertWarning();
+                // this.alertWarning();
             }
         }
     }
@@ -355,7 +355,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         if (!this.checkHome && this.currentCabinet.data.HOME_CABINET) {
             this.currentCabinet.data.HOME_CABINET = 0;
             this._updateSelect(true);
-            this.alertWarning();
+            // this.alertWarning();
         }
         if (this.checkHome && !this.mainCabinets() && !this.currentCabinet.data.HOME_CABINET) {
             this.currentCabinet.data.HOME_CABINET = 1;
@@ -380,9 +380,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 }
             });
         } else {
-            if (!this.currentCabinet.data.HOME_CABINET) {
+            /* if (!this.currentCabinet.data.HOME_CABINET) {
                 this.alertWarning();
-            }
+            } */
         }
         this.changes.emit();
         this._updateSelect(true);
@@ -391,14 +391,15 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     /* setFolders(cabinet): void {
         this.currentCabinet = cabinet;
     } */
-    alertWarning() {
+    /* Пока убираю старые сообщения */
+    /* alertWarning() {
         this._msgSrv.addNewMessage({
             type: 'warning',
             title: 'Предупреждение',
             msg: 'Назначьте главный кабинет',
             dismissOnTimeout: 6000
         });
-    }
+    } */
     ngOnDestroy() {
           this.unSubscribe.next();
           this.unSubscribe.complete();

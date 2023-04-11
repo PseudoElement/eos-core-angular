@@ -2,7 +2,7 @@
     <eos-user-params-header
         [editMode]="flagEdit"
         [title]='titleHeader'
-        (submitEmit)='submit($event)'
+        (submitEmit)='preSubmit($event)'
         (cancelEmit)='cancel($event)'
         (editEmit)='edit($event)'
     ></eos-user-params-header>
