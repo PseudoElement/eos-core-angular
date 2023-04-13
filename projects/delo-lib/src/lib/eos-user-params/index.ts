@@ -14,5 +14,5 @@ export * from './user-params-set/shared-user-param/services/remaster-service';
 export * from './shared/services/form-helper.services';
 export * from './shared/consts/rc-cabinet-folder.const';
 export * from './user-params-set/shared-user-param/consts/visualization.consts';
-export * from './user-params-set/shared-user-param/consts/remaster-email.const';
+export * from './user-params-set/shared-user-param/consts/remaster-email/remaster-email.const';
 export * from './rights-delo/rights-delo-absolute-rights/absolute-rights.consts';

@@ -13,9 +13,7 @@ export class RemasterService {
     constructor(
        private _apiSrv: PipRX,
        private _msg: EosMessageService,
-    ) {
-
-    }
+    ) {}
 
     getOrgGroupNameDUE(node: any): Promise<any> {
         const query = {
@@ -54,6 +52,7 @@ export class RemasterService {
             });
         });
     }
+
     getScanShablonBarCode(): Promise<any> {
         const query = {
             DOC_TEMPLATES: {

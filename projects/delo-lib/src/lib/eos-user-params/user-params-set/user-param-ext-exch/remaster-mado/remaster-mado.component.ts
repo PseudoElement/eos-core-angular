@@ -6,7 +6,7 @@ import { InputControlService } from '../../../../eos-common/services/input-contr
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
-import { REMASTER_MADO } from '../../../../eos-user-params/user-params-set/shared-user-param/consts/remaster-email.const';
+import { REMASTER_MADO } from '../../shared-user-param/consts/remaster-email/remaster-email-mado.const';
 
 @Component({
     selector: 'eos-remaster-mado',

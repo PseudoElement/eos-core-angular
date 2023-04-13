@@ -4,28 +4,17 @@ import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { REGISTRATION_REMASTER_USER, REGISTRATION_MAILRESIVE } from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
+import { REGISTRATION_REMASTER_USER, REGISTRATION_MAILRESIVE } from '../../shared-user-param/consts/remaster-email/remaster-email.const';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { IFieldDescriptor } from '../../../../eos-dictionaries/interfaces';
-import { IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers, IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
 import { AccordionPanelComponent } from 'ngx-bootstrap';
 import { SearchService } from '../.././shared-user-param/services/search-service';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
-export interface TreeItem {
-    title: string;
-    key: string;
-    isOpen: boolean;
-    children: Array<any>;
-    parent?: TreeItem;
-}
-
-export interface Accordion {
-    title: string;
-    tree: TreeItem[];
-}
+import { TreeItem, Accordion } from '../../shared-user-param/interface/email-tree.interface';
 
 @Component({
     selector: 'eos-remaster-email',
@@ -34,8 +23,8 @@ export interface Accordion {
 })
 
 export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit {
-    fieldsConst = JSON.parse(JSON.stringify(REGISTRATION_REMASTER_USER)) ;
-    fieldsConstMailResive = JSON.parse(JSON.stringify(REGISTRATION_MAILRESIVE));
+    fieldsConst: IBaseUsers = JSON.parse(JSON.stringify(REGISTRATION_REMASTER_USER)) ;
+    fieldsConstMailResive: IBaseUsers = JSON.parse(JSON.stringify(REGISTRATION_MAILRESIVE));
     public preparedItemForInputs: any;
     public preparedItemForInputsMailREsive: any;
     public prepareInputs;
@@ -128,6 +117,12 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             });
     }
 
+    setNewValInputs() {
+        Object.keys(this.form.controls).forEach(inp => {
+            this.inputs[inp].value = this.form.controls[inp].value;
+        });
+    }
+
     ngAfterViewInit() {
         this._arPanels = this._panels.toArray();
         this._searchService.emailExtChangeObservable.pipe( // открытие панели
@@ -165,11 +160,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
-    setNewValInputs() {
-        Object.keys(this.form.controls).forEach(inp => {
-            this.inputs[inp].value = this.form.controls[inp].value;
-        });
-    }
+
     initEmail() {
         if (!this._appContext.cbBase) {
             this.fieldsConst.fields.splice(4, 0,
@@ -189,6 +180,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
             );
         }
+
         this.preparedItemForInputs = this.parse_Create(this.fieldsConst.fields, 'userData', 'RCSEND');
         this.prepareInputs = this.formHelp.getObjectInputFields(this.fieldsConst.fields);
         this.prepareData = this.formHelp.convData(this.preparedItemForInputs);
@@ -203,6 +195,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         this.sliceArrayForTemplate();
         this.subscriberFormRcSend();
     }
+
     initMailResive() {
         this.preparedItemForInputsMailREsive = this.parse_Create(this.fieldsConstMailResive.fields, 'userData', 'MAILRECEIVE');
         this.prepareInputsMailREsive = this.formHelp.getObjectInputFields(this.fieldsConstMailResive.fields);
@@ -218,7 +211,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         this.subscriberFormMailResive();
     }
 
-    parse_Create(fields, nameProperty: string, nameFieldDB: string) {
+    parse_Create(fields: IFieldDescriptor[], nameProperty: string, nameFieldDB: string) {
         const obj = {};
         fields.forEach((field: IFieldDescriptor) => {
             this.hashKeyDBString.set(field.key, field.keyPosition);
@@ -230,6 +223,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 const keyValue = this[nameProperty][nameFieldDB].charAt(field.keyPosition);
                 obj[field.key] = keyValue === '0' || keyValue === '' ? false : true;
             }
+
         });
         return obj;
     }
@@ -272,6 +266,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             }
         }
     }
+
     returnClass(node, form: FormGroup): string {
         let str = '';
         let key = 'rec.' + node.key;
@@ -293,6 +288,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         }
         return str;
     }
+
     createTree(fields) {
         const TreeObj: TreeItem[] = [];
         let tree;
@@ -301,6 +297,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         });
         return tree;
     }
+
     getTree(TreeObj: TreeItem[], field: IFieldDescriptor) {
         if (field.parent === null) {
             TreeObj.push({
@@ -317,6 +314,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         }
         return TreeObj;
     }
+
     checkItem(item: TreeItem, field: IFieldDescriptor) {
         if (item.key === field.parent) {
             item.children.push({
@@ -334,6 +332,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             }
         }
     }
+
     sliceArrayForTemplate(): void {
         let count = 8;
         let separator = 13;
@@ -348,6 +347,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(count, separator) });
         this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(separator) });
     }
+
     triggerNode(node: TreeItem): void {
         node.isOpen = !node.isOpen;
     }
@@ -360,11 +360,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             this.setParent(node, value);
         }
     }
+
     triggerMailReceive(node: TreeItem) {
         if (node.key === 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT' || node.key === 'MAILRECEIVE_TAKE_RUBRICS_RK') {
             this.enabelDisabelMailResive(node);
         }
     }
+
     setParent(node: TreeItem, val?) {
         if (!val) {
             val = this.form.controls['rec.' + node.key].value;
@@ -378,6 +380,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             this.enabelDisabelRcSend(node);
         }
     }
+
     disableForm() {
         const addresInput = this.form.controls['rec.RCSEND_ADDRESSEES'].value;
         const resolutionInput = this.form.controls['rec.RCSEND_RESOLUTIONS'].value;
@@ -471,6 +474,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             }
         }
     }
+
     setValueChildren(node: TreeItem, val: boolean) {
         if (val) {
             this.form.controls['rec.' + node.key].patchValue(true);
@@ -481,6 +485,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             this.setValueChildren(field, val);
         });
     }
+
     alwaysDisabledMethod() {
         this.fieldsConst.disabledFields.forEach(key => {
             this.form.controls['rec.' + key].disable({ emitEvent: false });
@@ -510,7 +515,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         });
     }
 
-
     subscriberFormMailResive() {
         this.formMailResuve.valueChanges.subscribe(data => {
             Object.keys(data).forEach(key => {
@@ -534,6 +538,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         });
 
     }
+
     createNewStringRcSend(key, value) {
         const position = this.hashKeyDBString.get(key.substring(4));
         if (this.setRcSend.has(key.substring(4))) {
@@ -542,11 +547,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             this.updateStringRcSend(position, value, 'stringRCSEND');
         }
     }
+
     updateStringRcSend(pos, val, nameProperty) {
         const rc = this[nameProperty].split('');
         rc.splice(pos, 1, val ? 1 : 0);
         this[nameProperty] = rc.join('');
     }
+
     updateStringRcSendKeyParentMoreOne(pos, val) {
         const position = String(pos).split('.');
         if (val === '0') {
@@ -604,6 +611,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         this.updateStringRcSend(+position[1], bool2, 'stringMailResive');
         this.updateStringRcSend(+position[2], bool3, 'stringMailResive');
     }
+
     emitChange() {
         const obj = {
             'rec.RCSEND': this.stringRCSEND,
@@ -629,6 +637,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             this.pushChenge.emit(false);
         }
     }
+
     CancelForm() {
         Object.keys(this.formMailResuve.controls).forEach(inp => {
             if (this.inputsMailResive[inp].value !== this.formMailResuve.controls[inp].value) {
@@ -645,6 +654,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
         this.sliceArrayForTemplate();
         this.OpenParamsReg = false;
     }
+
     cancel() {
         this.CancelForm();
         this.alwaysDisabledMethod();
@@ -673,11 +683,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             this.disableFormMailResive();
         });
     }
+
     fillFormDefaultValues() {
         Object.keys(this.prepareDefaultForm).forEach((item: string) => {
             this.form.controls['rec.' + item].patchValue(this.prepareDefaultForm[item]);
         });
     }
+
     fillFormMailReceive() {
         Object.keys(this.prepareDefaultFormMailREceive).forEach((item: string) => {
             this.formMailResuve.controls['rec.' + item].patchValue(this.prepareDefaultFormMailREceive[item]);
