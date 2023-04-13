@@ -854,6 +854,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 return true;
             }
         });
+        item.deleteChangesWeigth();
         list.forEach(li => {
             item.pushChange({
                 method: 'DELETE',
