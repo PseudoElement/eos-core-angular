@@ -27,6 +27,7 @@
                 [isCurrentSettings]="isCurrentSettings"
             ></eos-remaster-email>
         </div>
+
         <div [hidden]="currTabName !== 'СЭВ'" class="clearfix">
             <eos-remaster-seb
                 (pushChange)='emitChangesSab($event)'
@@ -36,6 +37,7 @@
                 [isCurrentSettings]="isCurrentSettings"
             ></eos-remaster-seb>
         </div>
+
         <div [hidden]="currTabName !== 'МЭДО'" class="clearfix">
             <eos-remaster-mado
                 (pushChange)='emitChangesMado($event)'
@@ -44,14 +46,57 @@
                 [isCurrentSettings]="isCurrentSettings"
             ></eos-remaster-mado>
         </div>
+
         <div [hidden]="currTabName !== 'ЕПП'" class="clearfix">
             <remaster-epp 
                 (pushChange)='emitChangesEpp($event)'
                 [userData]='hash'
                 [defaultValues]='defaultValues'
                 [appMode]="appMode"
-                [isCurrentSettings]="isCurrentSettings"></remaster-epp>
+                [isCurrentSettings]="isCurrentSettings"
+            ></remaster-epp>
         </div>
+
+        <div *ngIf="_appContext.cbBase" [hidden]="currTabName !== 'ЛК'" class="clearfix">
+            <eos-remaster-lk
+                (pushChenge)="getChangesCbChannel($event, 'LK')"
+                [appMode]="appMode"
+                [userData]='hash'
+                [defaultValues]='defaultValues'
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-remaster-lk>
+        </div>
+
+        <div *ngIf="_appContext.cbBase" [hidden]="currTabName !== 'ЕПВВ'" class="clearfix">
+            <eos-remaster-epvv
+                (pushChenge)="getChangesCbChannel($event, 'EPVV')"
+                [appMode]="appMode"
+                [userData]='hash'
+                [defaultValues]='defaultValues'
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-remaster-epvv>
+        </div>
+
+        <div *ngIf="_appContext.cbBase" [hidden]="currTabName !== 'СДС'" class="clearfix">
+            <eos-remaster-sds
+                (pushChenge)="getChangesCbChannel($event, 'SDS')"
+                [appMode]="appMode"
+                [userData]='hash'
+                [defaultValues]='defaultValues'
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-remaster-sds>
+        </div>
+
+        <div *ngIf="_appContext.cbBase" [hidden]="currTabName !== 'АС ПСД'" class="clearfix">
+            <eos-remaster-aspsd
+                (pushChenge)="getChangesCbChannel($event, 'ASPSD')"
+                [appMode]="appMode"
+                [userData]='hash'
+                [defaultValues]='defaultValues'
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-remaster-aspsd>
+        </div> 
+
     </div>
     <div class="sp" *ngIf="!isLoading">
         <eos-spinner size="lg"></eos-spinner>

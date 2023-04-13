@@ -65,8 +65,12 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
-        private _appContext: AppContext,
+        public _appContext: AppContext,
     ) {
+        if(this._appContext.cbBase){
+            const cbChannel = ['ЛК', 'ЕПВВ', 'СДС', 'АС ПСД'];        
+            this.fieldGroupsForExhcExt = [].concat(this.fieldGroupsForExhcExt, cbChannel)
+        }
         this._userSrv.canDeactivateSubmit$
         .pipe(
             takeUntil(this.ngUnsubscribe)
@@ -76,11 +80,10 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         });
         this.notInVersion = Features.cfg.variant !== 2;
     }
+
     ngOnInit() {
         this.editFlag = !!this.isCurrentSettings;
-        /* if (this.openingTab && Number(this.openingTab) && Number(this.openingTab) <= this.fieldGroupsForExhcExt.length) {
-            this.currTab = Number(this.openingTab) - 1;
-        } */
+
         if (!this.notInVersion) {
             this.fieldGroupsForExhcExt.push('ЕПП');
         }
@@ -95,6 +98,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             });
         }
         this.currTabName = this.fieldGroupsForExhcExt[0];
+
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.defaultValues = this.defaultUser;
@@ -117,22 +121,25 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
                 });
             })
             .catch(err => {
+                this._errorSrv.errorHandler(err);
             });
         }
     }
+
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
+
     get btnDisabled(): boolean {
         if (this.EmailChangeFlag || this.SabChangeFlag ||  this.MadoChangeFlag) {
             return true;
         }
         return false;
     }
+
     setTab(tab: string) {
         this.currTabName = tab;
-        // this.currTab = this.allFieldGroupsForExhcExt.indexOf(tab);
     }
 
     getChanges($event) {
@@ -152,6 +159,30 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this.newValuesMap.delete('RECEIP_EMAIL');
         }
         this._pushState();
+    }
+
+    getChangesCbChannel($event, channel: string) {
+        const RCSEND_CHANNEL = 'RCSEND_' + channel;
+        const MAILRECEIVE_CHANNEL = 'MAILRECEIVE_' + channel;
+        const value = $event[0];
+        if (this.defaultUser) {
+            this.EmailChangeValue = $event[1];
+        }
+        if (value) {
+            this.EmailChangeFlag = true;
+            value.forEach(val => {
+                this.newValuesMap.set(val['key'], val.value);
+            });
+        } else {
+            this.EmailChangeFlag = false;
+            this.newValuesMap.delete(RCSEND_CHANNEL);
+            this.newValuesMap.delete(MAILRECEIVE_CHANNEL);
+        }
+        this._pushState();
+    }
+
+    private _pushState() {
+        this._userSrv.setChangeState({ isChange: this.btnDisabled });
     }
 
     emitChangesSab($event) {
@@ -203,6 +234,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         this.editFlag = event;
         this._RemasterService.editEmit.next(this.editFlag);
     }
+
     submit(event): Promise<any> {
         if (this.defaultUser) {
             this.defaultUserSubmit();
@@ -224,6 +256,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this._RemasterService.submitEmit.next();
         });
     }
+
     defaultSetFlagBtn() {
         this.getChanges(false);
         this.emitChangesSab(false);
@@ -271,7 +304,5 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     default(event) {
         this._RemasterService.defaultEmit.next(this.currTabName);
     }
-    private _pushState() {
-        this._userSrv.setChangeState({ isChange: this.btnDisabled });
-    }
+
 }
