@@ -119,8 +119,12 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             )
             .subscribe((changedCard: CardsClass) => {
                 this.card = changedCard;
+                this.isLoading = false;
                 // this.setFolders(this.card.cabinets[0]);
                 this._updateSelect();
+                setTimeout(() => {
+                    this.isLoading = true;
+                }, 0);
             });
     }
     disabledCabinetInAccesPrj(cabinet) {
