@@ -94,13 +94,13 @@
                     <div 
                         #fixetColoms
                         style="overflow: clip auto;"
-
                         class="fixed-coloms-body"
                         (scroll)="scrollFixed($event)"
                         [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}" style="margin-right: -20px;">
                         <div class="display-element-item"  *ngFor="let row of tabelData.data" [ngClass]="getClassRow(row)" style="margin-right: -17px; padding-right: 17px;">
-                            <div (click)="clickElem(row)" *ngFor="let colomn of getColomsFixed()"
+                            <div (click)="clickElem(row)" #trFP *ngFor="let colomn of getColomsFixed()"
                                 class="header-table-title colomn-style-td"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
                                 [ngStyle]="getStyleTd(colomn)">
                                 <ng-container [ngSwitch]="getType(colomn, row)">
                                     <ng-container *ngSwitchCase="types.icon">
@@ -123,7 +123,14 @@
                                         <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
                                     </ng-container>
                                     <ng-container *ngSwitchDefault>
-                                        <span class="text table-hidder">
+                                        <span 
+                                            #trF
+                                            class="text table-hidder"
+                                            [tooltip]="tootipShow(trF, trFP, getElement(colomn, row))"
+                                            placement="bottom"
+                                            containerClass="tooltip-info"
+                                            container="body"
+                                            triggers="hover">
                                             {{getElement(colomn, row)}}
                                         </span>
                                     </ng-container>
@@ -152,8 +159,9 @@
                                 <span></span>
                             </label>
                         </div>
-                        <div (click)="clickElem(row)" *ngFor="let colomn of getColomsNotFixed()"
+                        <div (click)="clickElem(row)" #trNFP *ngFor="let colomn of getColomsNotFixed()"
                             class="header-table-title colomn-style-td"
+                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
                             [ngStyle]="getStyleTd(colomn)">
                             <ng-container [ngSwitch]="getType(colomn, row)">
                                 <ng-container *ngSwitchCase="types.icon">
@@ -176,7 +184,14 @@
                                     <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
                                 </ng-container>
                                 <ng-container *ngSwitchDefault>
-                                    <span class="text table-hidder">
+                                    <span 
+                                        #trNF
+                                        class="text table-hidder"
+                                        [tooltip]="tootipShow(trNF, trNFP, getElement(colomn, row)) || ''"
+                                        placement="bottom"
+                                        containerClass="tooltip-info"
+                                        container="body"
+                                        triggers="hover">
                                         {{getElement(colomn, row)}}
                                     </span>
                                 </ng-container>

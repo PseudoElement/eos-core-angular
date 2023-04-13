@@ -210,7 +210,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     item.fixed = !item.fixed;
                     break;
                 case 'cabTitle':
-                    item.style = item.style['width'] ? {'min-width': '200px'} : {'width': '160px'}
+                    item.style = item.style['width'] ? {'min-width': '230px', 'max-width': '230px'} : {'width': '160px'}
                     item.fixed = !item.fixed;
                     break;
                 default:
