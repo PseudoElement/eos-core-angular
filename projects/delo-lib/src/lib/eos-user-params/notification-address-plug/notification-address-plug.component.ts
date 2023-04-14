@@ -14,7 +14,7 @@ export class NotificationAddressPlugComponent implements AfterViewInit, OnDestro
 
     ngAfterViewInit(): void {
         try {
-            Manager.loadPlugins({ 'target': 'NotificationsSettings', mountPoint: 'notification-settings-plugin' });
+            Manager.loadPlugins({ 'target': 'NotificationSettings', mountPoint: 'notification-settings-plugin' });
         } catch (e) {
             this._msg.addNewMessage({ "title": "Ошибка", "type": "danger", "msg": e?.message || e })
         }
