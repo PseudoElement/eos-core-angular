@@ -86,7 +86,7 @@
                     <span *ngIf="disableLoginSearch;else fullDueNameSort"  class="user-list-fifth-column likeLink mar-left">ФИО</span>
                    <ng-template #fullDueNameSort>
                        <span class="user-list-fifth-column likeLink mar-left" (click)="sortPageList('fullDueName')">ФИО
-                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
+                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked && !_apiSrv.sortDelUsersd" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
                        </span>
                    </ng-template>
                     <span *ngIf="disableLoginSearch;else logSort"
@@ -104,11 +104,11 @@
                     <ng-template #dueSort>
                         <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
                         (click)="sortPageList('fullDueName')">Должностное лицо
-                        <!--  @166034 убираем признак сортировки в столбце ДЛ
-                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked"
+                        <!--  @166034 убираем признак сортировки в столбце ДЛ -->
+                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked && _apiSrv.flagDelitedPermanantly"
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                        </span>
-                        -->
+                        <!-- </span> -->
+                       
                     </span>
                     </ng-template>
                     <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && _apiSrv.sortDelUsers !== true); else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
@@ -140,7 +140,11 @@
                                 <span class="user-list-fifth-column">{{user.data.SURNAME_PATRON}}</span>
                                 <span class="user-list-fourth-colomn">{{user.login}}</span>
                                 <span class="user-list-third-colomn">
-                                    <span *ngIf="user.deleted" class="eos-adm-icon eos-adm-icon-bin-forever-grey small"></span>
+                                    <span *ngIf="user.deleted" class="eos-adm-icon eos-adm-icons-user-deleted-grey small"
+                                        tooltip="Удалён"
+                                        placement="bottom"
+                                        containerClass="tooltip-info"
+                                        container="body"></span>
                                     <span *ngIf="user.blockedUser && !user.deleted"
                                         class="eos-adm-icon eos-adm-icon-Blockeduser-Yellow  small"></span>
                                     <span *ngIf="user.blockedSystem && !user.deleted"
@@ -158,9 +162,9 @@
                                     tooltip="{{ user.fullDueName}}"
                                     [isDisabled]="isDisableObj[twoColomnElement.id]"
                                 >
-                                    <span *ngIf="!user.deep"
+                                    <span *ngIf="!user.deep && !user.deleted"
                                         class="eos-adm-icon eos-adm-icon-Techuser-Grey small icon-user"></span>
-                                    <span *ngIf="user.deep"
+                                    <span *ngIf="user.deep && !user.deleted"
                                         class="eos-adm-icon eos-adm-icon-DeepUser-Black small icon-user"></span>
                                     {{ user.fullDueName}}
                                 </span>
