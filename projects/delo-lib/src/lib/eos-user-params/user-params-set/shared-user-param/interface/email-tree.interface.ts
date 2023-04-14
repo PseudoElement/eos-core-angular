@@ -1,3 +1,4 @@
+import { IBaseUsers } from "../../../shared/intrfaces/user-params.interfaces";
 
 export interface TreeItem {
     title: string;
@@ -11,4 +12,11 @@ export interface TreeItem {
 export interface Accordion {
     title: string;
     tree: TreeItem[];
+}
+
+export interface ConfigChannelCB {
+    nameEN: string;
+    nameRU: string;
+    fieldsConst: IBaseUsers;
+    fieldsConstMailResive: IBaseUsers;
 }

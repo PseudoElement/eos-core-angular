@@ -16,12 +16,12 @@
         </ng-template>
 
         <ng-template #treeNodeTmpl let-node="node" let-mar="m">
-            <div [hidden]="node.key === 'RCSEND_LK_HIDE_OPERATION_SEND_EMAIL' && appMode && (appMode.arm || appMode.cbr)">
+            <div [hidden]="node.key === SEND_EMAIL && appMode && (appMode.arm || appMode.cbr)">
                 <div 
                     [ngStyle]="{'margin-left.px': mar}"
                     class="input_wrapper" 
                 >
-                    <div  class="user-group-form" *ngIf="node.key === 'RCSEND_LK_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO'">
+                    <div  class="user-group-form" *ngIf="node.key === SEND_RADIO">
                         <span class="set-header bold">Включать в паспорт:</span><br><br>
                         <span>Для «многопунктовых» документов</span>
                     </div>
