@@ -1,5 +1,6 @@
-import { IBaseUsers} from '../../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers} from '../../../../shared/intrfaces/user-params.interfaces';
 const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
+
 export const REGISTRATION_REMASTER_USER: IBaseUsers = {
     id: 'registration',
     title: 'Регистрация',
@@ -54,12 +55,19 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             parent: null,
         },
         {
-            key: 'RCSEND_REPORT_THE_DELIVERY_OF_THIS_MESSAGE',
+            key: 'RCSEND_EMAIL',
             type: 'boolean',
-            title: 'Сообщить о доставке этого сообщения',
-            keyPosition: 5,
+            title: 'Скрыть операцию отправки по e-mail без подготовки',
+            keyPosition: 1,
             parent: null,
         },
+        // {
+        //     key: 'RCSEND_REPORT_THE_DELIVERY_OF_THIS_MESSAGE',
+        //     type: 'boolean',
+        //     title: 'Сообщить о доставке этого сообщения',
+        //     keyPosition: 5,
+        //     parent: null,
+        // }, 
         {
             key: 'RCSEND_REQUIRES_REGISTRATION_NOTICE_OR_OPT_OUT',
             type: 'boolean',
@@ -1148,7 +1156,7 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             parent: 'RCSEND_ORDERS'
         },
     ],
-};
+}; // Внешний обмен Эл. почта
 
 export const REGISTRATION_MAILRESIVE: IBaseUsers = {
     id: 'registration',
@@ -1263,7 +1271,7 @@ export const REGISTRATION_MAILRESIVE: IBaseUsers = {
             parent: null,
         },
     ]
-};
+}; // Внешний обмен Эл. почта -> Параметры регистрации
 
 export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
     id: 'registration',
@@ -1380,6 +1388,7 @@ export const REGISTRATION_ADDRESSES: IBaseUsers = {
         },
     ]
 };
+
 export const REGISTRATION_SCAN: IBaseUsers = {
     id: 'registration',
     title: 'Регистрация',
@@ -1441,6 +1450,7 @@ export const REGISTRATION_SCAN: IBaseUsers = {
         },
     ]
 };
+
 export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
     id: 'registration',
     title: 'Регистрация',
@@ -1670,87 +1680,6 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             ],
             keyPosition: 10,
         },
-    ]
-};
-
-export const REGISTRATION_SEB: IBaseUsers =  {
-    id: 'ext-app',
-    title: 'Внешний обмен',
-    apiInstance: 'USER_PARMS',
-    fields: [{
-        key: 'SEV_HIDE_SENDING',
-        type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ" в приложении Документы'
-    },
-    {
-        key: 'SEV_ALLOW_DELIVERY',
-        type: 'boolean',
-        title: 'Учитывать вид отправки'
-    },
-    {
-        key: 'ARM_SEV_DLG',
-        type: 'radio',
-        title: '',
-        readonly: false,
-        options: [
-            {value: 'YES', title: 'С диалогом'},
-            {value: 'NO', title: 'Без диалога'}
-        ]
-    },
-    ]
-};
-
-export const REMASTER_MADO: IBaseUsers =  {
-    id: 'ext-app',
-    title: 'Внешний обмен',
-    apiInstance: 'USER_PARMS',
-    fields: [{
-        key: 'MEDO_DELETE_MESSAGE_AFTER_REGISTRATION',
-        type: 'boolean',
-        title: 'Удалять сообщения после регистрации'
-    },
-    {
-        key: 'MEDO_DELETE_MESSAGE_AFTER_REFUSAL_REGISTRATION',
-        type: 'boolean',
-        title: 'Удалять сообщения после отказа от регистрации'
-    },
-    {
-        key: 'MEDO_ATTACH_DOC_PASSPORT_TO_RC',
-        type: 'boolean',
-        title: 'Прикреплять к РК паспорт документа'
-    },
-    {
-        key: 'MEDO_RECEIVE_RUBRIC_CHECK',
-        type: 'boolean',
-        title: 'Принимать рубрики РК и определять их по:',
-    },
-    {
-        key: 'MEDO_RECEIVE_RUBRIC_RC_AND_IDENTIFY_BY',
-        type: 'radio',
-        title: '',
-        readonly: false,
-        options: [
-            {value: '1', title: 'Коду'},
-            {value: '2', title: 'Наименованию'},
-            {value: '3', title: 'Коду и наименованию'}
-        ],
-        parent: 'MEDO_RECEIVE_RUBRIC_CHECK'
-    },
-    {
-        key: 'MEDO_ADD_CITIZEN_TO_ORGANIZ',
-        type: 'boolean',
-        title: 'Автоматически добавлять организации и представителей в справочник "Организации"'
-    },
-    {
-        key: 'ARM_MEDO_HIDE',
-        type: 'boolean',
-        title: 'Скрыть команду отправки'
-    },
-    {
-        key: 'ARM_MEDO_DLG',
-        type: 'boolean',
-        title: 'Всегда показывать диалог с параметрами при отправке сообщений'
-    }
     ]
 };
 

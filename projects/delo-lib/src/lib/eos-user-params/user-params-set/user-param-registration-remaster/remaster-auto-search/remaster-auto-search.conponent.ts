@@ -1,15 +1,15 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import {REGISTRATION_AUTO_SEARCH} from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
-import {InputControlService } from '../../../../eos-common/services/input-control.service';
+import { REGISTRATION_AUTO_SEARCH } from '../../shared-user-param/consts/remaster-email/remaster-email.const';
+import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
-import {FormHelperService} from '../../../shared/services/form-helper.services';
-import {RemasterService} from '../../shared-user-param/services/remaster-service';
-import {LINK_CL} from '../../../../eos-rest/interfaces/structures';
+import { FormHelperService } from '../../../shared/services/form-helper.services';
+import { RemasterService} from '../../shared-user-param/services/remaster-service';
+import { LINK_CL } from '../../../../eos-rest/interfaces/structures';
 import { IUserSettingsModes } from '../../../../eos-user-params/shared/intrfaces/user-params.interfaces';
 
  @Component({

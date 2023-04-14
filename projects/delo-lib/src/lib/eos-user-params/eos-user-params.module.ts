@@ -77,6 +77,10 @@ import { UserParamExtendExchComponent } from './user-params-set/user-param-ext-e
 import { RemasterSebComponent } from './user-params-set/user-param-ext-exch/remaster-seb/remaster-seb.component';
 import { RemasterEmailComponent } from './user-params-set/user-param-ext-exch/remaster-email/remaster-email.component';
 import { RemasterMadoComponent } from './user-params-set/user-param-ext-exch/remaster-mado/remaster-mado.component';
+import { RemasterLkComponent } from './user-params-set/user-param-ext-exch/remaster-lk/remaster-lk.component';
+import { RemasterEpvvComponent } from './user-params-set/user-param-ext-exch/remaster-epvv/remaster-epvv.component';
+import { RemasterSdsComponent } from './user-params-set/user-param-ext-exch/remaster-sds/remaster-sds.component';
+import { RemasterAspsdComponent } from './user-params-set/user-param-ext-exch/remaster-aspsd/remaster-aspsd.component';
 
 import { CurrentUserSetComponent } from './current-user-set/current-user-set.component';
 import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.module';
@@ -156,7 +160,11 @@ import { InlineScaningParamsComponent } from './user-params-set/inline-scanning/
         UserBaseParamsComponent,
         UserParamsExample,
         UserParamsRegistration,
-        InlineScaningParamsComponent
+        InlineScaningParamsComponent,
+        RemasterLkComponent,
+        RemasterEpvvComponent,
+        RemasterSdsComponent,
+        RemasterAspsdComponent
     ],
     entryComponents: [
         AddGrifComponent

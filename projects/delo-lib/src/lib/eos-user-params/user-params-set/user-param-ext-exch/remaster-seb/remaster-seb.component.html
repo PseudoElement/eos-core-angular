@@ -1,19 +1,18 @@
 <div class="user-group-form">
     <ng-container *ngIf="appMode.arm || !isCurrentSettings || appMode.tk">
-        <div class="section-title">
-            <span>Отправлять сообщения в АРМ "ДелоWeb":</span>
-        </div>
         <eos-dynamic-input
             [input]="inputs['rec.ARM_SEV_DLG']"
             [form]="form"
             [readonly]="false"
         ></eos-dynamic-input><br>
     </ng-container>
+
     <eos-dynamic-input
         [input]="inputs['rec.SEV_HIDE_SENDING']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input><br>
+
     <eos-dynamic-input
         [input]="inputs['rec.SEV_ALLOW_DELIVERY']"
         [form]="form"

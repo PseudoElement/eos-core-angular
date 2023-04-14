@@ -1,19 +1,20 @@
-import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import {REGISTRATION_ADDRESSES} from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
-import {InputControlService} from '../../../../eos-common/services/input-control.service';
-import {EosDataConvertService} from '../../../../eos-dictionaries/services/eos-data-convert.service';
-import {FormHelperService} from '../../../shared/services/form-helper.services';
-import {RemasterService} from '../../shared-user-param/services/remaster-service';
-import {IOpenClassifParams} from '../../../../eos-common/interfaces/interfaces';
+import { REGISTRATION_ADDRESSES } from '../../shared-user-param/consts/remaster-email/remaster-email.const';
+import { InputControlService } from '../../../../eos-common/services/input-control.service';
+import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
+import { FormHelperService } from '../../../shared/services/form-helper.services';
+import { RemasterService } from '../../shared-user-param/services/remaster-service';
+import { IOpenClassifParams } from '../../../../eos-common/interfaces/interfaces';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from '../../../../eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../../../eos-user-params/shared/services/helper-error.services';
 import { IUserSettingsModes } from '../../../../eos-user-params/shared/intrfaces/user-params.interfaces';
+
 @Component({
     selector: 'eos-remaster-addresses',
     styleUrls: ['remaster-addresses.conponent.scss'],

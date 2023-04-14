@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { REGISTRATION_SCAN } from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
+import { REGISTRATION_SCAN } from '../../shared-user-param/consts/remaster-email/remaster-email.const';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';

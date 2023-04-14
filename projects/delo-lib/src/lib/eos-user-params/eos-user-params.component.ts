@@ -8,25 +8,19 @@ import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from '../app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
 import { IParamAccordionList, IUserSettingsModes } from './shared/intrfaces/user-params.interfaces';
-// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-// import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
 import { EosStorageService } from '../app/services/eos-storage.service';
 import { AppContext } from '../eos-rest/services/appContext.service';
 import { PipRX, ICancelFormChangesEvent } from '../eos-rest';
 import { ErrorHelperServices } from './shared/services/helper-error.services';
 import { MESSAGE_SAVE_ON_LEAVE } from '../eos-dictionaries/consts/confirm.consts';
-import { REGISTRATION_DOP_OPERATION, REGISTRATION_ADDRESSES, REGISTRATION_AUTO_SEARCH, REGISTRATION_RC } from '../eos-user-params/user-params-set/shared-user-param/consts/remaster-email.const';
-import {
-    CABINETS_USER_FOLDERS, CABINETS_USER_ASSIGMENTS
-} from '../eos-user-params/user-params-set/shared-user-param/consts/cabinets.consts';
-import {
-    RC_USER
-} from '../eos-user-params/user-params-set/shared-user-param/consts/rc.consts';
-import {
-    DIRECTORIES_USER
-} from '../eos-user-params/user-params-set/shared-user-param/consts/directories.consts';
-import { REMASTER_MADO, REGISTRATION_SEB, REGISTRATION_SCAN } from '../eos-user-params/user-params-set/shared-user-param/consts/remaster-email.const';
+import { REGISTRATION_DOP_OPERATION, REGISTRATION_ADDRESSES, REGISTRATION_AUTO_SEARCH, REGISTRATION_RC } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email.const';
+import { CABINETS_USER_FOLDERS, CABINETS_USER_ASSIGMENTS } from '../eos-user-params/user-params-set/shared-user-param/consts/cabinets.consts';
+import { RC_USER } from '../eos-user-params/user-params-set/shared-user-param/consts/rc.consts';
+import { DIRECTORIES_USER} from '../eos-user-params/user-params-set/shared-user-param/consts/directories.consts';
+import { REGISTRATION_SCAN } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email.const';
+import { REGISTRATION_SEB } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email-seb.const';
+import { REMASTER_MADO } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email-mado.const';
 import { ELECTRONIC_SIGNATURE } from '../eos-user-params/user-params-set/shared-user-param/consts/electronic-signature';
 import { VISUALIZATION_USER } from '../eos-user-params/user-params-set/shared-user-param/consts/visualization.consts';
 import { OTHER_USER_REESTR } from '../eos-user-params/user-params-set/shared-user-param/consts/other.consts';

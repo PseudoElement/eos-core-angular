@@ -100,7 +100,13 @@ export class UserParamsService {
 
     ) { }
     getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
-        const defaultExpand: string = 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List';
+        const defaultExpand: string = `USER_PARMS_List,
+                                       USERCARD_List/USER_CABINET_List,
+                                       USER_RIGHT_DOCGROUP_List,
+                                       USERDEP_List,
+                                       USERCARD_List/USER_CARD_DOCGROUP_List,
+                                       NTFY_USER_EMAIL_List,
+                                       USER_TECH_List`;
         let isn: number;
         let expand: string;
         expand = cfg && cfg.expand ? cfg.expand : defaultExpand;
@@ -113,13 +119,16 @@ export class UserParamsService {
             this._router.navigate(['user_param']);
             return Promise.reject(false);
         }
+
         const queryUser = {
             [`USER_CL(${isn})`]: ALL_ROWS,
             _moreJSON : { CanTech: null },
             expand: expand
         };
+
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = cfg && cfg.shortSys ? this.fetchSysParams() : Promise.resolve([]);
+
         return Promise.all([_user, _sys])
             .then(([user, sys]) => {
                 this._userContext = user[0];
@@ -174,6 +183,7 @@ export class UserParamsService {
                 return false;
             });
     }
+
     fetchSysParams() {
         const querySys = {
             USER_PARMS: {
@@ -288,6 +298,7 @@ export class UserParamsService {
             throw new Error();
         });
     }
+    
     createEntyti<T extends IEnt>(ent: any, typeName: string): T {
         ent.__metadata = { __type: typeName };
         return ent;

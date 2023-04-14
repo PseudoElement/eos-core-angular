@@ -1,30 +1,32 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Inject, Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AccordionPanelComponent } from 'ngx-bootstrap';
 
-import { REGISTRATION_REMASTER_USER, REGISTRATION_MAILRESIVE } from '../../shared-user-param/consts/remaster-email/remaster-email.const';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
+import { SearchService } from '../../shared-user-param/services/search-service';
+
 import { IFieldDescriptor } from '../../../../eos-dictionaries/interfaces';
 import { IBaseUsers, IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
-import { AccordionPanelComponent } from 'ngx-bootstrap';
-import { SearchService } from '../.././shared-user-param/services/search-service';
-import { AppContext } from '../../../../eos-rest/services/appContext.service';
-import { TreeItem, Accordion } from '../../shared-user-param/interface/email-tree.interface';
+import { TreeItem, Accordion, ConfigChannelCB } from '../../shared-user-param/interface/email-tree.interface';
 
 @Component({
-    selector: 'eos-remaster-email',
-    templateUrl: 'remaster-email.component.html',
+    template: '',
     providers: [FormHelperService],
 })
 
-export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit {
-    fieldsConst: IBaseUsers = JSON.parse(JSON.stringify(REGISTRATION_REMASTER_USER)) ;
-    fieldsConstMailResive: IBaseUsers = JSON.parse(JSON.stringify(REGISTRATION_MAILRESIVE));
+export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewInit {
+    public MAILRECEIVE: string;
+    public RCSEND: string;
+
+    public fieldsConst: IBaseUsers;
+    public fieldsConstMailResive: IBaseUsers;
+
     public preparedItemForInputs: any;
     public preparedItemForInputsMailREsive: any;
     public prepareInputs;
@@ -41,19 +43,18 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     public flagEdit: boolean = false;
     public templRender: TreeItem[] = [];
     public OpenParamsReg: boolean;
+
     @Input() appMode: IUserSettingsModes;
     @Input() userData;
     @Input() defaultValues;
     @Input() isCurrentSettings?: boolean;
     @Output() pushChenge = new EventEmitter<any>();
+
     public mapDefault: any = {};
     private hashKeyDBString = new Map();
     private mapNewValue = new Map();
     private mapNewValueMailResive = new Map();
-    private setRcSend = new Set()
-        .add('RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO')
-        .add('RCSEND_RESOLUTIONS_RADIO')
-        .add('RCSEND_ADDRESSEES_RADIO');
+    private setRcSend = new Set();
     private stringRCSEND;
     private stringMailResive;
     private ErrorRcSend = false;
@@ -62,21 +63,24 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     private prepareDefaultForm: any;
     private prepareDefaultFormMailREceive: any;
 
-    private setMailResive = new Set()
-        .add('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO')
-        .add('MAILRECEIVE_TAKE_RUBRICS_RK_RADIO');
+    private setMailResive = new Set();
 
     private _arPanels: AccordionPanelComponent[];
     @ViewChildren(AccordionPanelComponent) private _panels: QueryList<AccordionPanelComponent>;
-
     constructor(
         private formHelp: FormHelperService,
         private dataSrv: EosDataConvertService,
         private inputCtrlSrv: InputControlService,
         private _RemasterService: RemasterService,
         private _searchService: SearchService,
-        private _appContext: AppContext,
+        @Inject(Object) private configChannel : ConfigChannelCB,
     ) {
+        this.fieldsConst = JSON.parse(JSON.stringify(this.configChannel.fieldsConst));
+        this.fieldsConstMailResive = JSON.parse(JSON.stringify(this.configChannel.fieldsConstMailResive));
+
+        this.MAILRECEIVE = `MAILRECEIVE_${this.configChannel.nameEN}`;
+        this.RCSEND = `RCSEND_${this.configChannel.nameEN}`;
+
         this._RemasterService.cancelEmit
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -84,25 +88,28 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             .subscribe(() => {
                 this.cancel();
             });
+
         this._RemasterService.defaultEmit
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((tab) => {
-                if (tab === 'Эл. почта') {
+                if (tab === this.configChannel.nameRU) {
                     this.default();
                 }
             });
+
         this._RemasterService.submitEmit
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(() => {
                 this.setNewValInputs();
-                this.flagEdit = false;
+                this.flagEdit = false; 
                 this.form.disable({ emitEvent: false });
                 this.formMailResuve.disable({ emitEvent: false });
             });
+
         this._RemasterService.editEmit
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -125,9 +132,10 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
 
     ngAfterViewInit() {
         this._arPanels = this._panels.toArray();
-        this._searchService.emailExtChangeObservable.pipe( // открытие панели
-            takeUntil(this.ngUnsubscribe)
-        )
+        this._searchService.emailExtChangeObservable
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(panelIndex => {
                 setTimeout(() => {
                     this._arPanels[panelIndex].isOpen = true;
@@ -136,15 +144,24 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     ngOnInit() {
+        this.setMailResive
+        .add(`${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`)
+        .add(`${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`);
+
+        this.setRcSend
+        .add(`${this.RCSEND}_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO`)
+        .add(`${this.RCSEND}_RESOLUTIONS_RADIO`)
+        .add(`${this.RCSEND}_ADDRESSEES_RADIO`);
+
         this.initEmail();
         this.initMailResive();
         this.itCurrentSettingsCheck();
-        this.stringRCSEND = this.userData['RCSEND'];
-        this.stringMailResive = this.userData['MAILRECEIVE'];
+
+        this.stringRCSEND = this.userData[`${this.RCSEND}`];
+        this.stringMailResive = this.userData[`${this.MAILRECEIVE}`];
         this.mapDefault = {
-            RCSEND: this.defaultValues['RCSEND'],
-            MAILRECEIVE: this.defaultValues['MAILRECEIVE'],
-            RECEIP_EMAIL: this.defaultValues['RECEIP_EMAIL'],
+            [`${this.RCSEND}`]: this.defaultValues[`${this.RCSEND}`],
+            [`${this.MAILRECEIVE}`]: this.defaultValues[`${this.MAILRECEIVE}`],
         };
     }
 
@@ -162,83 +179,68 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     initEmail() {
-        if (!this._appContext.cbBase) {
-            this.fieldsConst.fields.splice(4, 0,
-                {
-                    key: 'RCSEND1',
-                    type: 'boolean',
-                    title: 'Организации',
-                    keyPosition: 171,
-                    parent: null,
-                },
-                {
-                    key: 'RCSEND2',
-                    type: 'boolean',
-                    title: 'Гражданину',
-                    keyPosition: 172,
-                    parent: null,
-                }
-            );
-        }
-
-        this.preparedItemForInputs = this.parse_Create(this.fieldsConst.fields, 'userData', 'RCSEND');
+        this.preparedItemForInputs = this.parse_Create(this.fieldsConst.fields, 'userData', `${this.RCSEND}`);
         this.prepareInputs = this.formHelp.getObjectInputFields(this.fieldsConst.fields);
+
         this.prepareData = this.formHelp.convData(this.preparedItemForInputs);
         this.inputs = this.dataSrv.getInputs(this.prepareInputs, { rec: this.preparedItemForInputs });
+
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-        if (this.isCurrentSettings) {
-            this.form.enable({ emitEvent: false });
-        } else {
-            this.form.disable({ emitEvent: false });
-        }
+
+        this.isCurrentSettings ? this.form.enable({ emitEvent: false }) :
+                                 this.form.disable({ emitEvent: false });
+
         this.templRender = this.createTree(this.fieldsConst.fields);
+
         this.sliceArrayForTemplate();
         this.subscriberFormRcSend();
-    }
+    } 
 
     initMailResive() {
-        this.preparedItemForInputsMailREsive = this.parse_Create(this.fieldsConstMailResive.fields, 'userData', 'MAILRECEIVE');
+        this.preparedItemForInputsMailREsive = this.parse_Create(this.fieldsConstMailResive.fields, 'userData', `${this.MAILRECEIVE}`);
         this.prepareInputsMailREsive = this.formHelp.getObjectInputFields(this.fieldsConstMailResive.fields);
         this.prepareDataMailResive = this.formHelp.convData(this.preparedItemForInputsMailREsive);
         this.inputsMailResive = this.dataSrv.getInputs(this.prepareInputsMailREsive, { rec: this.preparedItemForInputsMailREsive });
         this.formMailResuve = this.inputCtrlSrv.toFormGroup(this.inputsMailResive);
-        if (this.isCurrentSettings) {
-            this.formMailResuve.enable({ emitEvent: false });
-        } else {
-            this.formMailResuve.disable({ emitEvent: false });
-        }
+        
+        this.isCurrentSettings ? this.formMailResuve.enable({ emitEvent: false }):
+                                 this.formMailResuve.disable({ emitEvent: false });
         this.templRenderMailResive = this.createTree(this.fieldsConstMailResive.fields);
         this.subscriberFormMailResive();
     }
 
     parse_Create(fields: IFieldDescriptor[], nameProperty: string, nameFieldDB: string) {
         const obj = {};
+        
         fields.forEach((field: IFieldDescriptor) => {
+
             this.hashKeyDBString.set(field.key, field.keyPosition);
+
             if (field.type === 'radio') {
                 this.parseRadioType(obj, field, nameProperty, nameFieldDB);
-            } else if (field.type === 'string') {
-                obj[field.key] = this[nameProperty]['RECEIP_EMAIL'] ? this[nameProperty]['RECEIP_EMAIL'] : '';
             } else {
                 const keyValue = this[nameProperty][nameFieldDB].charAt(field.keyPosition);
                 obj[field.key] = keyValue === '0' || keyValue === '' ? false : true;
             }
-
         });
         return obj;
     }
 
     parseRadioType(obj, field: IFieldDescriptor, nameProperty: string, nameFieldDB: string) {
+        obj[field.key] = String(-1);
         const mapValue = new Map();
         const parseKeyPositionRadio = String(field.keyPosition).split('.');
+
         parseKeyPositionRadio.forEach(val => {
             mapValue.set(val, this[nameProperty][nameFieldDB].charAt(val));
         });
 
         if (parseKeyPositionRadio.length > 2) {
+
             const parentKey_1 = String(mapValue.get(parseKeyPositionRadio[0]));
             const parentKey_2 = String(mapValue.get(parseKeyPositionRadio[1]));
             const parentKey_3 = String(mapValue.get(parseKeyPositionRadio[2]));
+
             if (parentKey_1 === '0' && parentKey_2 === '0' && parentKey_3 === '1') {
                 obj[field.key] = String(-1);
             }
@@ -265,25 +267,26 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 obj[field.key] = String(1);
             }
         }
+
     }
 
     returnClass(node, form: FormGroup): string {
         let str = '';
         let key = 'rec.' + node.key;
-        if (key === 'rec.RCSEND_REGISTRATION_NUMBER') {
-            key = 'rec.RCSEND_DOCUMENT_AUTHOR';
+        if (key === `rec.${this.RCSEND}_REGISTRATION_NUMBER`) {
+            key = `rec.${this.RCSEND}_DOCUMENT_AUTHOR`;
         }
         if (node.isOpen) {
             if (!form.controls[key].disabled) {
-                str = 'eos-adm-icon-open-folder-blue';
+                str = `eos-adm-icon-open-folder-blue`;
             } else {
-                str = 'eos-adm-icon-open-folder-grey';
+                str = `eos-adm-icon-open-folder-grey`;
             }
         } else {
             if (!form.controls[key].disabled) {
-                str = 'eos-adm-icon-close-folder-blue';
+                str = `eos-adm-icon-close-folder-blue`;
             } else {
-                str = 'eos-adm-icon-close-folder-grey';
+                str = `eos-adm-icon-close-folder-grey`;
             }
         }
         return str;
@@ -299,13 +302,15 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     getTree(TreeObj: TreeItem[], field: IFieldDescriptor) {
+        const readonly = field.readonly || false;
         if (field.parent === null) {
             TreeObj.push({
                 title: field.title,
                 key: field.key,
                 isOpen: false,
                 children: [],
-                parent: null
+                parent: null,
+                readonly
             });
         } else {
             TreeObj.forEach((item: TreeItem) => {
@@ -316,13 +321,15 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     checkItem(item: TreeItem, field: IFieldDescriptor) {
+        const readonly = field.readonly || false;
         if (item.key === field.parent) {
             item.children.push({
                 title: field.title,
                 key: field.key,
                 isOpen: false,
                 children: [],
-                parent: item
+                parent: item,
+                readonly
             });
         } else {
             if (item.children.length) {
@@ -334,162 +341,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     sliceArrayForTemplate(): void {
-        let count = 8;
-        let separator = 13;
+        const count = 6;
+        const separator = 11;  
+
         this.listForAccordion = [];
-        if (!this._appContext.cbBase) {
-            count = 10;
-            separator = 15;
-        }
-        // @task165408 убирание настроек толстяка
-        // изначально this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(0, 8) });
         this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, count) });
         this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(count, separator) });
         this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(separator) });
-    }
-
-    triggerNode(node: TreeItem): void {
-        node.isOpen = !node.isOpen;
-    }
-
-    triggerChildren(node: TreeItem): void {
-        const key = node.key;
-        const value = this.form.controls['rec.' + key].value;
-        this.setValueChildren(node, value);
-        if (value) {
-            this.setParent(node, value);
-        }
-    }
-
-    triggerMailReceive(node: TreeItem) {
-        if (node.key === 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT' || node.key === 'MAILRECEIVE_TAKE_RUBRICS_RK') {
-            this.enabelDisabelMailResive(node);
-        }
-    }
-
-    setParent(node: TreeItem, val?) {
-        if (!val) {
-            val = this.form.controls['rec.' + node.key].value;
-        }
-        if (node.parent && val) {
-            const key = node.parent.key;
-            this.form.controls['rec.' + key].patchValue(val);
-            this.setParent(node.parent, val);
-        }
-        if (node.key === 'RCSEND_ADDRESSEES' || node.key === 'RCSEND_RESOLUTIONS') {
-            this.enabelDisabelRcSend(node);
-        }
-    }
-
-    disableForm() {
-        const addresInput = this.form.controls['rec.RCSEND_ADDRESSEES'].value;
-        const resolutionInput = this.form.controls['rec.RCSEND_RESOLUTIONS'].value;
-        if (!addresInput) {
-            this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].disable({ emitEvent: false });
-        } else {
-            this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].enable({ emitEvent: false });
-        }
-        if (!resolutionInput) {
-            this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].disable({ emitEvent: false });
-        } else {
-            this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].enable({ emitEvent: false });
-        }
-    }
-
-    disableFormMailResive() {
-        const addresInput = this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT'].value;
-        const resolutionInput = this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK'].value;
-        if (!addresInput) {
-            this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].disable({ emitEvent: false });
-        } else {
-            this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].enable({ emitEvent: false });
-        }
-        if (!resolutionInput) {
-            this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].disable({ emitEvent: false });
-        } else {
-            this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].enable({ emitEvent: false });
-        }
-    }
-
-    getDefaultValue(key: string, type: 'rcSend' | 'mailReceive') {
-        if (type === 'rcSend') {
-            if (!this.prepareDefaultForm) {
-                this.prepareDefaultForm = this.parse_Create(this.fieldsConst.fields, 'mapDefault', 'RCSEND');
-            }
-            return this.prepareDefaultForm[key].toString();
-        }
-        if (type === 'mailReceive') {
-            if (!this.prepareDefaultFormMailREceive) {
-                this.prepareDefaultFormMailREceive = this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', 'MAILRECEIVE');
-            }
-            return this.prepareDefaultFormMailREceive[key].toString();
-        }
-    }
-
-    enabelDisabelRcSend(tree: TreeItem) {
-        const value = this.form.controls['rec.' + tree.key].value;
-
-        if (tree.key === 'RCSEND_ADDRESSEES') {
-            if (value) {
-                const defaultValue = this.getDefaultValue('RCSEND_ADDRESSEES_RADIO', 'rcSend');
-                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].enable();
-                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].patchValue(defaultValue);
-            } else {
-                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].patchValue('');
-                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].disable();
-            }
-        }
-        if (tree.key === 'RCSEND_RESOLUTIONS') {
-            if (value) {
-                const defaultValue = this.getDefaultValue('RCSEND_RESOLUTIONS_RADIO', 'rcSend');
-                this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].enable();
-                this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].patchValue(defaultValue);
-            } else {
-                this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].patchValue('');
-                this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].disable();
-            }
-        }
-    }
-
-    enabelDisabelMailResive(tree: TreeItem) {
-        const value = this.formMailResuve.controls['rec.' + tree.key].value;
-        if (tree.key === 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT') {
-            if (value) {
-                const defaultValue = this.getDefaultValue('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO', 'mailReceive');
-                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].enable();
-                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue(defaultValue === '' ? '0' : defaultValue);
-            } else {
-                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue('');
-                this.formMailResuve.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].disable();
-            }
-        }
-        if (tree.key === 'MAILRECEIVE_TAKE_RUBRICS_RK') {
-            if (value) {
-                const defaultValue = this.getDefaultValue('MAILRECEIVE_TAKE_RUBRICS_RK_RADIO', 'mailReceive');
-                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].enable();
-                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue(defaultValue === '' ? '0' : defaultValue);
-            } else {
-                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue('');
-                this.formMailResuve.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].disable();
-            }
-        }
-    }
-
-    setValueChildren(node: TreeItem, val: boolean) {
-        if (val) {
-            this.form.controls['rec.' + node.key].patchValue(true);
-        } else {
-            this.form.controls['rec.' + node.key].patchValue(false);
-        }
-        node.children.forEach((field: TreeItem) => {
-            this.setValueChildren(field, val);
-        });
-    }
-
-    alwaysDisabledMethod() {
-        this.fieldsConst.disabledFields.forEach(key => {
-            this.form.controls['rec.' + key].disable({ emitEvent: false });
-        });
     }
 
     subscriberFormRcSend() {
@@ -506,12 +364,148 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
             });
             const dataVal = this.userData !== null ? this.userData : this.defaultValues;
-            if (dataVal['RCSEND'] !== this.stringRCSEND || this.mapNewValue.size > 0) {
+            if (dataVal[`${this.RCSEND}`] !== this.stringRCSEND || this.mapNewValue.size > 0) {
                 this.ErrorRcSend = true;
             } else {
                 this.ErrorRcSend = false;
             }
             this.emitChange();
+        });
+    }
+
+    triggerNode(node: TreeItem): void {
+        node.isOpen = !node.isOpen;
+    }
+
+    triggerChildren(node: TreeItem): void {
+        const key = node.key;
+        const value = this.form.controls['rec.' + key].value;
+        this.setValueChildren(node, value);
+        if (value) {
+            this.setParent(node, value);
+        }
+    }
+
+    triggerMailReceive(node: TreeItem) {
+        if (node.key === `${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT` || node.key === `${this.MAILRECEIVE}_TAKE_RUBRICS_RK`) {
+            this.enabelDisabelMailResive(node);
+        }
+    }
+
+    enabelDisabelMailResive(tree: TreeItem) {
+        const value = this.formMailResuve.controls['rec.' + tree.key].value;
+        if (tree.key === `${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT`) {
+            if (value) {
+                const defaultValue = this.getDefaultValue(`${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`, 'mailReceive');
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].enable();
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].patchValue(defaultValue === '' ? '0' : defaultValue);
+            } else {
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].patchValue('');
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].disable();
+            }
+        }
+        if (tree.key === `${this.MAILRECEIVE}_TAKE_RUBRICS_RK`) {
+            if (value) {
+                const defaultValue = this.getDefaultValue(`${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`, 'mailReceive');
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].enable();
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].patchValue(defaultValue === '' ? '0' : defaultValue);
+            } else {
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].patchValue('');
+                this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].disable();
+            }
+        }
+    }
+
+    setParent(node: TreeItem, val?) {
+        if (!val) {
+            val = this.form.controls['rec.' + node.key].value;
+        }
+        if (node.parent && val) {
+            const key = node.parent.key;
+            this.form.controls['rec.' + key].patchValue(val);
+            this.setParent(node.parent, val);
+        }
+        if (node.key === `${this.RCSEND}_ADDRESSEES` || node.key === `${this.RCSEND}_RESOLUTIONS`) {
+            this.enabelDisabelRcSend(node);
+        }
+    }
+
+    disableForm() {
+        const addresInput = this.form.controls[`rec.${this.RCSEND}_ADDRESSEES`].value;
+        const resolutionInput = this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS`].value;
+
+        (!addresInput) ? this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].disable({ emitEvent: false }) :
+                         this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].enable({ emitEvent: false });
+
+        (!resolutionInput) ? this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].disable({ emitEvent: false }) :
+                             this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].enable({ emitEvent: false });
+    }
+
+    disableFormMailResive() {
+        const addresInput = this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT`].value;
+        const resolutionInput = this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK`].value;
+
+        (!addresInput) ? this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].disable({ emitEvent: false }) :
+                        this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].enable({ emitEvent: false });
+        
+        (!resolutionInput) ? this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].disable({ emitEvent: false }) : 
+                             this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].enable({ emitEvent: false });
+    }
+
+    getDefaultValue(key: string, type: 'rcSend' | 'mailReceive') {
+        if (type === 'rcSend') {
+            if (!this.prepareDefaultForm) {
+                this.prepareDefaultForm = this.parse_Create(this.fieldsConst.fields, 'mapDefault', `${this.RCSEND}`);
+            }
+            return this.prepareDefaultForm[key].toString();
+        }
+        if (type === 'mailReceive') {
+            if (!this.prepareDefaultFormMailREceive) {
+                this.prepareDefaultFormMailREceive = this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', `${this.MAILRECEIVE}`);
+            }
+            return this.prepareDefaultFormMailREceive[key].toString();
+        }
+    }
+
+    enabelDisabelRcSend(tree: TreeItem) {
+        const value = this.form.controls['rec.' + tree.key].value;
+
+        if (tree.key === `${this.RCSEND}_ADDRESSEES`) {
+            if (value) {
+                const defaultValue = this.getDefaultValue(`${this.RCSEND}_ADDRESSEES_RADIO`, 'rcSend');
+                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].enable();
+                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].patchValue(defaultValue);
+            } else {
+                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].patchValue('');
+                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].disable();
+            }
+        }
+        if (tree.key === `${this.RCSEND}_RESOLUTIONS`) {
+            if (value) {
+                const defaultValue = this.getDefaultValue(`${this.RCSEND}_RESOLUTIONS_RADIO`, 'rcSend');
+                this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].enable();
+                this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].patchValue(defaultValue);
+            } else {
+                this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].patchValue('');
+                this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].disable();
+            }
+        }
+    }
+
+    setValueChildren(node: TreeItem, val: boolean) {
+        if (val) {
+            this.form.controls['rec.' + node.key].patchValue(true);
+        } else {
+            this.form.controls['rec.' + node.key].patchValue(false);
+        }
+        node.children.forEach((field: TreeItem) => {
+            this.setValueChildren(field, val);
+        });
+    }
+
+    alwaysDisabledMethod() {
+        this.fieldsConst.disabledFields?.forEach(key => {
+            this.form.controls['rec.' + key].disable({ emitEvent: false });
         });
     }
 
@@ -529,7 +523,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
             });
             const dataVal = this.userData !== null ? this.userData : this.defaultValues;
-            if (dataVal['MAILRECEIVE'] !== this.stringMailResive) {
+            if (dataVal[`${this.MAILRECEIVE}`] !== this.stringMailResive) {
                 this.ErrorMailRecive = true;
             } else {
                 this.ErrorMailRecive = false;
@@ -614,23 +608,18 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
 
     emitChange() {
         const obj = {
-            'rec.RCSEND': this.stringRCSEND,
-            'rec.MAILRECEIVE': this.stringMailResive,
-            'rec.RECEIP_EMAIL': this.form.controls['rec.RECEIP_EMAIL'].value,
+            [`rec.${this.RCSEND}`]: this.stringRCSEND,
+            [`rec.${this.MAILRECEIVE}`]: this.stringMailResive,
         };
         if (this.ErrorMailRecive || this.ErrorRcSend) {
             this.pushChenge.emit([[
                 {
-                    key: 'RCSEND',
+                    key: `${this.RCSEND}`,
                     value: this.stringRCSEND
                 },
                 {
-                    key: 'MAILRECEIVE',
+                    key: `${this.MAILRECEIVE}`,
                     value: this.stringMailResive
-                },
-                {
-                    key: 'RECEIP_EMAIL',
-                    value: this.form.controls['rec.RECEIP_EMAIL'].value,
                 },
             ], obj]);
         } else {
@@ -674,8 +663,8 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     default() {
-        this.prepareDefaultForm = this.prepareDefaultForm ? this.prepareDefaultForm : this.parse_Create(this.fieldsConst.fields, 'mapDefault', 'RCSEND');
-        this.prepareDefaultFormMailREceive = this.prepareDefaultFormMailREceive ? this.prepareDefaultFormMailREceive : this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', 'MAILRECEIVE');
+        this.prepareDefaultForm = this.prepareDefaultForm ? this.prepareDefaultForm : this.parse_Create(this.fieldsConst.fields, 'mapDefault', `${this.RCSEND}`);
+        this.prepareDefaultFormMailREceive = this.prepareDefaultFormMailREceive ? this.prepareDefaultFormMailREceive : this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', `${this.MAILRECEIVE}`);
         this.fillFormDefaultValues();
         this.fillFormMailReceive();
         setTimeout(() => {
@@ -697,3 +686,4 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
 }
+

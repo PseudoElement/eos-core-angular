@@ -1,14 +1,14 @@
-import {Component, Input, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import {REGISTRATION_SEB} from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
-import {InputControlService} from '../../../../eos-common/services/input-control.service';
-import {EosDataConvertService} from '../../../../eos-dictionaries/services/eos-data-convert.service';
-import {FormHelperService} from '../../../shared/services/form-helper.services';
-import {RemasterService} from '../../shared-user-param/services/remaster-service';
+import { REGISTRATION_SEB } from '../../shared-user-param/consts/remaster-email/remaster-email-seb.const';
+import { InputControlService } from '../../../../eos-common/services/input-control.service';
+import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
+import { FormHelperService } from '../../../shared/services/form-helper.services';
+import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { IUserSettingsModes } from '../../../../eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-seb',
@@ -46,7 +46,8 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
         .subscribe(() => {
             this.cancel();
         });
-        this._RemasterService.defaultEmit
+
+        this._RemasterService.defaultEmit        
         .pipe(
             takeUntil(this.ngUnsub)
         )
@@ -55,6 +56,7 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
                 this.default();
             }
         });
+
         this._RemasterService.submitEmit
         .pipe(
             takeUntil(this.ngUnsub)
@@ -64,6 +66,7 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
             this.flagEdit = false;
             this.form.disable({emitEvent: false});
         });
+
         this._RemasterService.editEmit
         .pipe(
             takeUntil(this.ngUnsub)
@@ -73,6 +76,13 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
             this.form.enable({emitEvent: false});
         });
     }
+
+    setNewValInputs() {
+        Object.keys(this.form.controls).forEach(inp => {
+            this.inputs[inp].value = this.form.controls[inp].value;
+        });
+    }
+
     ngOnInit() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
@@ -83,11 +93,7 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
         }
         this.subscribeChange();
     }
-    setNewValInputs() {
-        Object.keys(this.form.controls).forEach(inp => {
-            this.inputs[inp].value = this.form.controls[inp].value;
-        });
-    }
+
     pretInputs() {
         this.prapareData =  this.formHelp.parse_Create(REGISTRATION_SEB.fields, this.userData);
         this.prepareInputs = this.formHelp.getObjectInputFields(REGISTRATION_SEB.fields);
@@ -104,6 +110,7 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
                 this.countError++;
             }
           });
+
           if (this.countError) {
                this.pushChange.emit([{
                 btn: this.countError > 0,
@@ -153,7 +160,6 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
     }
     cancel() {
         if (this.btnDisabled) {
-         //   this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
