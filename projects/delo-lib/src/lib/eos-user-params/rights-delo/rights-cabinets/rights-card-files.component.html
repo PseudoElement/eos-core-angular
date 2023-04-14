@@ -6,6 +6,9 @@
         (cancelEmit)='cancel($event)'
         (editEmit)='edit($event)'
     ></eos-user-params-header>
+    <div class="user-input-group sp" *ngIf="isLoading">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
     <div *ngIf="!isLoading">
         <!-- <div *ngIf="!flagEdit" class="bacgr-edit"></div> -->
         <div>
@@ -31,8 +34,5 @@
                 </eos-tabel-element>
             </div>
         <eos-cabinets-folders *ngIf="currentCard && !loadCabinets"  [card]="currentCard" [flagEdit]="flagEdit" (changes)="checkGlobalChanges()"></eos-cabinets-folders>
-    </div>
-    <div class="user-input-group sp" *ngIf="isLoading">
-        <eos-spinner size="lg"></eos-spinner>
     </div>
 </div>
