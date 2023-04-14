@@ -88,6 +88,7 @@ import { UserBaseParamsComponent } from '../eos-rest/addons/components/userBaseP
 import { UserParamsExample } from '../eos-rest/addons/components/userParamsExample.component';
 import { UserParamsRegistration } from '../eos-rest/addons/components/userParamsRegistration.component';
 import { InlineScaningParamsComponent } from './user-params-set/inline-scanning/inline-scaning-params.component';
+import { NotificationAddressPlugComponent } from './notification-address-plug/notification-address-plug.component';
 
 @NgModule({
     declarations: [
@@ -156,7 +157,8 @@ import { InlineScaningParamsComponent } from './user-params-set/inline-scanning/
         UserBaseParamsComponent,
         UserParamsExample,
         UserParamsRegistration,
-        InlineScaningParamsComponent
+        InlineScaningParamsComponent,
+        NotificationAddressPlugComponent,
     ],
     entryComponents: [
         AddGrifComponent

@@ -1,8 +1,7 @@
 <div *ngIf="!isLoading" class="user-params-set" [ngClass]="{'user-show-right': isShowRightAccordion}">
     <ng-container [ngSwitch]="pageId">
         <ng-container *ngSwitchCase="'email-address'">
-            <eos-params-email-address (emailAddres)="myFuntion($event)" (redactEmail)="redactEmailAddres($event)"
-                #emailChenge></eos-params-email-address>
+            <notificationl-address-plug></notificationl-address-plug>
         </ng-container>
         <ng-container *ngSwitchCase="'base-param'">
             <ng-container *ngIf="this._appContext.cbBase; else baseP">
