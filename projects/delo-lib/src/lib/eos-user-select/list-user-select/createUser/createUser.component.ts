@@ -342,29 +342,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(m);
             return;
         }
-        const objConfig = { 
-            ignoreBackdropClick: true, 
-            keyboard: false, 
-            class: 'gray modal-sm passModal' 
-        }
 
         this.osChecked = this.OS.nativeElement.checked;
         const url = this.createUrlForCB();
+        await this.addUser(url);
+
         this.btnDisabled = true;
         this.isLoading = true;
         this.enterPassword = true;
-        this.subscriptions.push(_combine);
-
-        this.modalRef = this.modalService.show(this.templatePassword, objConfig);
-        this.documentRef.getElementById('inpPass').focus();
-
-        this.subscriptions.push(this.modalService.onHidden.subscribe(async (reason: string) => {
-            this.enterPassword = false;
-            if (this.validPassword) {
-                await this.addUser(url, true);
-            }
-            this.unsubscribe();
-        }));
     }
     
     accessCreateUser(): boolean {
