@@ -38,8 +38,6 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
         this.subscriptions.push(
             this.form.controls['rec.SITE_MRSCAN_CHECK'].valueChanges
             .subscribe(newValue => {
-                console.log('dfdfgdfg');
-                
                 if (newValue) {
                     this.form.controls['rec.SITE_MRSCAN'].setValue('Модуль');
                 } else {
@@ -70,7 +68,6 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
         );
     }
     updateField() {
-        console.log('updateField', this.form.controls['rec.SITE_MRSCAN'].value);
         if (this.form.controls['rec.SITE_MRSCAN'].value === 'localhost') {
             this.form.controls['rec.SITE_MRSCAN'].setValue('Модуль', { emitEvent: false });
             this.form.controls['rec.SITE_MRSCAN_CHECK'].setValue(true, { emitEvent: false });
