@@ -36,7 +36,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     flagFirstGetInfo: boolean = true;
-    public departments = '';
+    public departments: string;
     get disableLink() {
         return this._appContext.CurrentUser.IS_SECUR_ADM || !this.CurrentUser.isEditable;
     }
@@ -92,8 +92,11 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             this.getInfo();
             this.showDep = false;
         }
-        const deep = await this._extensionsUser.loadDepartments(this.CurrentUser.deep);
-        this.departments = (deep !== null) ? deep : (this.CurrentUser.data.NOTE || 'Не указано');
+        this.departments = 'Не указано';
+        if (!this.CurrentUser.deleted && this.CurrentUser.deep) {
+            const deep = await this._extensionsUser.loadDepartments(this.CurrentUser.deep);
+            this.departments = (deep !== null) ? deep : (this.CurrentUser.data.NOTE || 'Не указано');
+        } 
     }
 
     parseSustemParam(parseParam) {

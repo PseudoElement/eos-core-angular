@@ -33,19 +33,20 @@
                 <div class="info-role">
                     <span class="rt-grey">Роль</span>
                     <span class="rt-role-name" *ngIf="CurrentUser">
-                                {{role}}
-                            </span>
+                        {{role}}
+                    </span>
                 </div>
                 <div class='info-note'>
                     <span class="rt-grey">Подразделение</span>
                     <span class="rt-role-name" *ngIf="CurrentUser">
-                        <a  
+                        <a  *ngIf="CurrentUser.deep else emptyDepartments"
                             (click)="writeRecentUrl()" 
                             [routerLink]="['/spravochniki','cabinet', UserCabinetInfo[0].CABINET_LIST.ISN_CABINET, 'view', '0']"   
                             class="cabinet-title"
                         >
-                            {{ departments }}
+                        {{ departments }}
                         </a>
+                        <ng-template #emptyDepartments>{{ departments }}</ng-template>
                     </span>
                 </div>
             </div>

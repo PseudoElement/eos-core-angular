@@ -7,7 +7,7 @@ export class ExetentionsUserParamsLib {
     constructor(
         private pipRX: PipRX,
     ) {}
-    public async loadDepartments(value: string): Promise<any> {
+    public async loadDepartments(value: string): Promise<string> {
         this.NOTE = '';
         let due = value.split('.').map(el => el += '.');
         due.pop();
