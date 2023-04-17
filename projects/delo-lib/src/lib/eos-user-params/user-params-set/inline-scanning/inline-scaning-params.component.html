@@ -2,7 +2,7 @@
     <eos-user-params-header
         [editMode]="editFlag"
         [title]='titleHeader'
-        
+        [errorSave]="form.status === 'INVALID'"
         [defaultBtn]='true'
         [isCurrentSettings]="isCurrentSettings"
         (submitEmit)='submit($event)'
@@ -22,7 +22,7 @@
         </div>
         <div class="user-input-group-scanning margin-scanning-row">
             <eos-dynamic-input class="inline-block first-scanning" [input]="inputs['rec.LOCAL_MRSCAN']" [form]="form" [readonly]="form.controls['rec.LOCAL_MRSCAN_CHECKBOX'].value"></eos-dynamic-input>
-            <eos-dynamic-input style="padding-top: 9px;" class="inline-block second-scanning" [input]="inputs['rec.LOCAL_MRSCAN_CHECKBOX']" [form]="form"></eos-dynamic-input>
+            <eos-dynamic-input style="padding-top: 27px;" class="inline-block second-scanning" [input]="inputs['rec.LOCAL_MRSCAN_CHECKBOX']" [form]="form"></eos-dynamic-input>
         </div>
     </div>
 </div>

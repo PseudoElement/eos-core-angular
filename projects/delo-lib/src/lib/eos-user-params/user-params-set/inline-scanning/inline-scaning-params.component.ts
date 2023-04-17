@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { /* debounceTime,  */takeUntil } from 'rxjs/operators';
 
 
@@ -57,7 +57,16 @@ export class InlineScaningParamsComponent implements OnInit, OnDestroy {
             takeUntil(this.ngUnsubscribe)
         )
         .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamsSetSrv.submitSave = this.submit();
+            if (this.form.status !== 'INVALID') {
+                this._userParamsSetSrv.submitSave = this.submit();
+            } else {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: '',
+                    msg: `Нельзя сохранить некорректные данные.`,
+                });
+                this._userParamsSetSrv.submitSave = Promise.resolve('error');
+            }
         });
     }
     ngOnInit() {
@@ -101,6 +110,7 @@ export class InlineScaningParamsComponent implements OnInit, OnDestroy {
             this.form.controls['rec.LOCAL_MRSCAN_CHECKBOX'].setValue(true, { emitEvent: false });
             this.form.controls['rec.LOCAL_MRSCAN'].setValue('Локальный', { emitEvent: false });
         }
+        this.form.controls['rec.LOCAL_MRSCAN'].setValidators(Validators.required);
         this.disableForEditAllForm(this.editFlag);
     }
     getObjectInputFields(fields) {
