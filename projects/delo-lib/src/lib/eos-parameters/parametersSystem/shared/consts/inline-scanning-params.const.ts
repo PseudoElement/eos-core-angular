@@ -28,17 +28,20 @@ export const INLINE_SCANNING_PARAM: IBaseParameters = {
         {
             key: 'SITE_MRSCAN',
             type: 'string',
-            title: 'Адрес сайта MRScan'
+            title: 'Адрес сайта MRScan',
+            required: true,
         },
         {
             key: 'LOCAL_MRSCAN',
             type: 'string',
-            title: 'Адрес локального MRScan.Server'
+            title: 'Адрес локального MRScan.Server',
+            required: true,
         },
         {
             key: 'NETWORK_MRSCAN',
             type: 'string',
-            title: 'Адрес сетевого MRScan.Server'
+            title: 'Адрес сетевого MRScan.Server',
+            required: true,
         },
         {
             key: 'SITE_MRSCAN_CHECK',

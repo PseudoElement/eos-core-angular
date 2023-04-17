@@ -2,7 +2,7 @@
     <eos-param-header
         [title]="titleHeader"
         (submitForm)="btnDisabled ? cancel() : preSubmit(); cancelEdit()"
-        (cancelForm)="cancel(); cancelEdit()"
+        (cancelForm)="cancelEdit()"
         [statusBtnSub]="btnError"
         [editBtn]="true"
         (editForm)="edit()"

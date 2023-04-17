@@ -2,6 +2,7 @@ import { Component, Injector, Input } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 // import { PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { INLINE_SCANNING_PARAM } from '../shared/consts/inline-scanning-params.const';
+import { Validators } from '@angular/forms';
 
 @Component({
     selector: 'eos-param-inline-scanning',
@@ -18,13 +19,20 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
         .then(() => {
             this.updateField();
             this.cancelEdit();
-            this.subscr();
         })
         .catch(err => {
             if (err.code !== 434) {
                 console.log(err);
             }
         });
+    }
+    async init() {
+        await super.init();
+        this.subscr();
+        this.updateField();
+        this.form.controls['rec.SITE_MRSCAN'].setValidators(Validators.required);
+        this.form.controls['rec.NETWORK_MRSCAN'].setValidators(Validators.required);
+        this.form.controls['rec.LOCAL_MRSCAN'].setValidators(Validators.required);
     }
     subscr() {
         this.subscriptions.push(
@@ -87,6 +95,7 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
         });
     }
     cancelEdit() {
+        super.cancel();
         this.masDisable = [];
         Object.keys(this.form.controls).forEach(key => {
             if (!this.form.controls[key].disabled) {
@@ -94,7 +103,6 @@ export class ParamInlineScanningComponent extends BaseParamComponent {
             }
         });
         this.form.disable({ emitEvent: false });
-        this.updateField();
     }
     preSubmit() {
         delete this.updateData['SITE_MRSCAN_CHECK'];

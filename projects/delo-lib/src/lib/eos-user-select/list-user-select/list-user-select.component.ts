@@ -345,11 +345,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }
-        if ((this._apiSrv.flagDelitedPermanantly === true || this._apiSrv.flagTehnicalUsers === true) && this._apiSrv.configList.shooseTab === 0) {
+        if ((this._apiSrv.flagDelitedPermanantly !== true || this._apiSrv.flagTehnicalUsers !== true) && this._apiSrv.configList.shooseTab === 0) {
             this.titleCurrentDue = 'Все подразделения';
         }
-        if (this._apiSrv.flagDelitedPermanantly === true && this._apiSrv.configList.shooseTab === 1) {
-            this.titleCurrentDue = '';
+        if (this._apiSrv.flagDelitedPermanantly === true) {
+            this.titleCurrentDue = this._apiSrv.configList.shooseTab === 1 ? '' : 'Удаленные пользователи';
         }
         // this.flagScan = null; убираю из-за сканирования
         this.flagChecked = null;
@@ -527,13 +527,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
         this.flagScan = true;
-        /* @166034 старое поведение
         if (this._apiSrv.flagDelitedPermanantly === true) {
             this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         } else {
             this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
         }
-        */
         this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.stateDeleteUsers === true) {

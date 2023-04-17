@@ -4,7 +4,7 @@
     height: 100%;
     .input-user-inline-scanning-body {
         padding-top: 20px;
-        padding-bottom: 20px;
+        padding-bottom: 60px;
         .user-input-group-scanning {
             padding-left: 5px;
             display: flex;
@@ -21,7 +21,12 @@
             margin-top: 20px;
         }
         eos-dynamic-input {
-            eos-dynamic-input-checkbox{
+            eos-dynamic-input-checkbox {
+                label {
+                    font-size: 14px;
+                }
+            }
+            eos-dynamic-input-string {
                 label {
                     font-size: 14px;
                 }
