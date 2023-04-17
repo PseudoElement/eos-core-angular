@@ -133,7 +133,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
 
     init(): Promise<any> {
         this.isLoading = true;
-        return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
+        return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then( async (user_cards: USERCARD[]) => {
             this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
             this.updateFirstTable();
             const sorterColomn = this.getHowSortedColomn();
@@ -144,13 +144,17 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             if (this.tabelData.data.length) {
                 const Home = this.tabelData.data.filter((item) => item['data']['HOME_CARD'] === 1);
                 if (Home[0]) {
-                    this.selectCurentCard(Home[0]);
+                    await this.selectCurentCard(Home[0]);
                 }
                 if (curent[0] && curent[0]['key'] !== Home[0]['key']) {
-                    this.selectCurentCard(curent[0]);
+                    await this.selectCurentCard(curent[0]);
                 } else if(Home[0]['key'] !== this.tabelData.data[0]['key']) {
-                    this.selectCurentCard(this.tabelData.data[0]);
+                    await this.selectCurentCard(this.tabelData.data[0]);
                 }
+            }
+            this.isLoading = false;
+            if (this.firstTable) {
+                this.firstTable.selectIdLast = this.currentCard['key'];
             }
         }).catch(e => {
             this.isLoading = false;
@@ -328,10 +332,10 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         });
     }
 
-    selectCurentCard(card: CardsClass) {
+    async selectCurentCard(card: CardsClass) {
         if (!card.cabinets.length) {
             this.loadCabinets = true;
-            this._rightsCabinetsSrv.getCabinets(card.data.DUE, card.data.ISN_LCLASSIF).then(infoCabinets => {
+            await this._rightsCabinetsSrv.getCabinets(card.data.DUE, card.data.ISN_LCLASSIF).then(infoCabinets => {
                 if (infoCabinets) {
                     card.createCabinets(infoCabinets);
                 }
