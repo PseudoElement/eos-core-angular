@@ -112,7 +112,7 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="types.checkbox">
-                                        <div style="height: 24px;" class="checkbox-inline">
+                                        <div style="height: 24px; padding-left: 0px;" class="checkbox-inline" >
                                             <label>
                                                 <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
                                                 <span></span>
@@ -173,7 +173,7 @@
                                     </div>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="types.checkbox">
-                                    <div style="height: 24px; margin-top: -8px;" class="checkbox-inline">
+                                    <div style="height: 24px; margin-top: -8px; padding-left: 0;" class="checkbox-inline">
                                         <label>
                                             <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
                                             <span></span>

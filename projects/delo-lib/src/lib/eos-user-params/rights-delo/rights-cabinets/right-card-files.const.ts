@@ -2,38 +2,39 @@ import { ITableHeader } from "../../../eos-parameters/parametersSystem/shared/in
 
 export const TABLE_HEADER_CARD: ITableHeader[] = [
     {
+        title: 'Наименование',
+        id: 'cardTitle',
+        order: 'asc',
+        style: {width: 'calc(100% - 173px)'}
+    },
+    {
       title: 'Главный',
       id: 'Icons',
       order: 'none',
-      style: {width: '80px'}
+      style: {width: '173px'}
     },
-    {
-      title: 'Наименование',
-      id: 'cardTitle',
-      order: 'asc',
-      style: {width: 'calc(100% - 80px)'}
-    },
+    
 ];
 export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
     {
-      title: 'Главный',
-      id: 'Icons',
-      fixed: false,
-      order: 'none',
-      style: {'width': '80px'}
-    },
-    {
       title: 'Наименование',
       id: 'cabTitle',
-      fixed: false,
+      fixed: true,
       order: 'asc',
-      style: {'width': '160px'}
+      style: {'width': '204px'}
+    },
+    {
+        title: 'Главный',
+        id: 'Icons',
+        fixed: true,
+        order: 'none',
+        style: {'width': '58px'}
     },
     {
         title: 'Поступившие',
         id: 'FOLDERS_AVAILABLE_1',
         style: {
-            'width': '50px',
+            'width': '66px',
         }
     },
     {
