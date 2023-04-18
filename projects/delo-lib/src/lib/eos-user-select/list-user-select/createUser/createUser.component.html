@@ -190,8 +190,7 @@
 </ng-container>
 
 <ng-template #createWindowCB>
-    <div class="someClass" [formGroup]="form">
-    
+    <div [formGroup]="form">
         <div class="line">
             <label class="line-title">ФИО: </label>
             <div class='required-emptiness' [ngClass]="{'required' : !this.form.get('SURNAME_PATRON').value}">
