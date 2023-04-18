@@ -292,7 +292,13 @@ bs-dropdown-container {
             margin-top: 0px;
         }
     }
-
+    .params-nav-list {
+        ul {
+            li:first-child{
+                box-shadow: none;
+            }
+        }
+    }
     .left {
         position: absolute;
         top: 45px;

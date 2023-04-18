@@ -210,12 +210,16 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         this.tabelDataSecond.tableHeader.forEach((item) => {
             switch (item.id) {
                 case 'Icons':
-                    item.style = item.style['width'] ? {'min-width': '80px', 'max-width': '80px'} : {'width': '80px', 'max-width': '80px'}
-                    item.fixed = !item.fixed;
+                    item.style = item.style['width'] ? {'min-width': '58px', 'max-width': '58px'} : {'width': '58px', 'max-width': '58px'}
+                    // item.fixed = !item.fixed;
                     break;
                 case 'cabTitle':
-                    item.style = item.style['width'] ? {'min-width': '230px', 'max-width': '230px'} : {'width': '160px'}
-                    item.fixed = !item.fixed;
+                    item.style = item.style['width'] ? {'min-width': '204px', 'max-width': '204px'} : {'width': '204px'}
+                    // item.fixed = !item.fixed;
+                    break;
+                case 'FOLDERS_AVAILABLE_1':
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '66px'}
+                    // item.fixed = !item.fixed;
                     break;
                 default:
                     item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '50px'}
