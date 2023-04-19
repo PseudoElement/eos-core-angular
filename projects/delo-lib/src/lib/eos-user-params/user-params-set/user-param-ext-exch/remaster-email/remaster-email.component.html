@@ -40,7 +40,7 @@
                     <eos-dynamic-input
                         (change) = "node.children.length ? triggerChildren(node): setParent(node)"
                         [input]="inputs['rec.' + node.key]"
-                        [readonly]="false"
+                        [readonly]="node.readonly"
                         [form]="form"
                     ></eos-dynamic-input>
                 </div>
@@ -79,7 +79,7 @@
                     <eos-dynamic-input
                         [input]="inputsMailResive['rec.' + node.key]"
                         [form]="formMailResuve"
-                        [readonly]="false"
+                        [readonly]="node.readonly"
                         (change)="triggerMailReceive(node)"
                     ></eos-dynamic-input>
                 </div>

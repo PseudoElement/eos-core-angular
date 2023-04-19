@@ -221,7 +221,12 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 obj[field.key] = this[nameProperty]['RECEIP_EMAIL'] ? this[nameProperty]['RECEIP_EMAIL'] : '';
             } else {
                 const keyValue = this[nameProperty][nameFieldDB].charAt(field.keyPosition);
-                obj[field.key] = keyValue === '0' || keyValue === '' ? false : true;
+
+                if (field.key === 'MAILRECEIVE_ORIGINAL_IN_ELECTRONIC_FORM' && !this._appContext.cbBase){
+                    obj[field.key] = true;
+                } else {
+                    obj[field.key] = keyValue === '0' || keyValue === '' ? false : true;
+                }
             }
 
         });
@@ -299,13 +304,21 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     getTree(TreeObj: TreeItem[], field: IFieldDescriptor) {
+        let readonly = field.readonly || false;
+        const cbBase = this._appContext.cbBase;
+
+        if(!cbBase && field.key === 'MAILRECEIVE_ORIGINAL_IN_ELECTRONIC_FORM') {
+            readonly = true;
+        }
+
         if (field.parent === null) {
             TreeObj.push({
                 title: field.title,
                 key: field.key,
                 isOpen: false,
                 children: [],
-                parent: null
+                parent: null,
+                readonly
             });
         } else {
             TreeObj.forEach((item: TreeItem) => {
@@ -316,13 +329,15 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     checkItem(item: TreeItem, field: IFieldDescriptor) {
+        const readonly = field.readonly || false;
         if (item.key === field.parent) {
             item.children.push({
                 title: field.title,
                 key: field.key,
                 isOpen: false,
                 children: [],
-                parent: item
+                parent: item,
+                readonly
             });
         } else {
             if (item.children.length) {

@@ -1270,6 +1270,14 @@ export const REGISTRATION_MAILRESIVE: IBaseUsers = {
             keyPosition: 14,
             parent: null,
         },
+        {
+            key: 'MAILRECEIVE_ORIGINAL_IN_ELECTRONIC_FORM',
+            type: 'boolean',
+            title: 'Взводить флаг "Оригинал в эл. виде" для РК с признаком "Без досылки бум. экз.',
+            keyPosition: 17,
+            readonly: false,
+            parent: null,
+        },
     ]
 }; // Внешний обмен Эл. почта -> Параметры регистрации
 
