@@ -7,7 +7,7 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     fields: [{
         key: 'SEV_HIDE_SENDING',
         type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ" в приложении Документы'
+        title: 'Скрыть операцию "Отправить сообщение СЭВ"' /* в приложении Документы */
     },
     {
         key: 'SEV_ALLOW_DELIVERY',
@@ -17,7 +17,7 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     {
         key: 'ARM_SEV_DLG',
         type: 'boolean',
-        title: 'Отправлять сообщения в АРМ "ДелоWeb"',
+        title: 'Скрыть операцию отправки по СЭВ без подготовки',
     },
     ]
 };

@@ -1281,7 +1281,7 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'AUTOSEND',
             type: 'boolean',
-            title: 'Вызывать функцию "Переслать документ" в приложении Документы'
+            title: 'Вызывать функцию "Переслать документ"' /*  в приложении Документы */
         },
         {
             key: 'AUTOLOAD_TO_EXEC_CURR_CAB',
