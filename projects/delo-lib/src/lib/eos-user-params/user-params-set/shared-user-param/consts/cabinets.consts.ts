@@ -259,7 +259,7 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         {
             key: 'RESOLUTION_DATE',
             type: 'radio',
-            title: 'Дата поручения в приложении Документы:',
+            title: 'Дата поручения:', /* в приложении Документы */
             options: [
                 {value: 'TODAY', title: 'Сегодня'},
                 {value: 'LAST', title: 'От предыдущей резолюции'},
@@ -409,7 +409,7 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         {
             key: 'RESOLUTION_PRINT',
             type: 'boolean',
-            title: 'Доступна печать поручения в приложении Документы',
+            title: 'Доступна печать поручения', /* в приложении Документы */
         },
         ],
     fieldsDefaultValue: [

@@ -1165,14 +1165,14 @@ bs-dropdown-container {
                 .control {
                     margin-top: 20px;
                     eos-dynamic-input {
-                        padding-top: 20px;
+                        padding-top: 5px;
                         margin-left: 15px;
                     }
                 }
                 & > div:nth-child(2) {
-                    .control-state {
+                    /* .control-state {
                         margin-left: 15px;
-                    }
+                    } */
                 }
                 & > div:nth-child(3) {
                     & > div {
@@ -1261,7 +1261,9 @@ bs-dropdown-container {
 
                     &:nth-child(5) {
                         margin-bottom: 20px;
-
+                        & > div {
+                            margin-left: 0px;
+                        }
                         span.input-title {
                             width: 540px;
                             margin-right: 40px;
@@ -1277,6 +1279,9 @@ bs-dropdown-container {
             }
 
             .instructions {
+                .control-state-curent {
+                    padding-top: 0;
+                }
                 br {
                     display: none;
                 }
@@ -1288,6 +1293,9 @@ bs-dropdown-container {
                     }
                     .wr-input {
                         width: 90%;
+                    }
+                    > span {
+                        margin-bottom: 0;
                     }
                 }
                 div.user-group-form {
@@ -1319,12 +1327,15 @@ bs-dropdown-container {
                             @include style-other-button;
 
                             & > span:not(:last-child) {
-                                margin-left: 4px;
+                                margin-left: 10px;
+                                margin-bottom: 0;
                             }
-
                             .wr-input {
                                 width: 90%;
                             }
+                        }
+                        > div > span {
+                            margin-bottom: 0;
                         }
                     }
 
@@ -1349,7 +1360,7 @@ bs-dropdown-container {
 
                          & > div {
                             position: relative;
-                            margin-bottom: 30px;
+                            // margin-bottom: 30px;
 
                             & > span {
                                 @include style-title-bookmarks;
@@ -1390,6 +1401,7 @@ bs-dropdown-container {
                     &:nth-child(8) {
                         .add-to-juornal-radio {
                             @include set-margin-for-dynamic-ipnputs;
+                            padding-top: 0 !important;
                         }
 
                         .add-to-juornal-radio {
@@ -1414,10 +1426,11 @@ bs-dropdown-container {
                         & > span {
                             @include reset-style-title-bookmarks;
                             width: 180px !important;
-                            height: 16px;
+                            height: 44px;
                             overflow: hidden;
                             white-space: pre;
                             text-overflow: ellipsis;
+                            line-height: 12px !important;
                         }
 
                         & > div {
@@ -1426,10 +1439,10 @@ bs-dropdown-container {
                             height: 20px;
                         }
 
-                        &::before {
+                        /* &::before {
                             @include style-horizontal-line;
                             top: -10px;
-                        }
+                        } */
                     }
 
                     &:nth-child(12),

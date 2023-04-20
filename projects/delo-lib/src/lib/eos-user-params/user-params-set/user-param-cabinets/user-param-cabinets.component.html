@@ -93,7 +93,7 @@
     <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
         <div [hidden]="appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Дата поручения в приложении Документы:</span>
+                <span class="input-title">Дата поручения:</span> <!-- в приложении Документы -->
                 <div class="date-resolution">
                     <eos-dynamic-input [input]="inputs['rec.RESOLUTION_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
@@ -101,7 +101,7 @@
         </div>
         <div [hidden]="appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
-                <span class="author-res-title input-title">Автор резолюции в приложении Документы:</span>
+                <span class="author-res-title input-title">Автор резолюции:</span> <!--  в приложении Документы -->
                 <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.RESOLUTION_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
@@ -120,7 +120,7 @@
         </div>
         <div class="user-group-form">
             <span>Поручение при создании:</span>
-            <div [hidden]="appMode.cbr" class="control-state">
+            <div [hidden]="appMode.cbr" class="control-state control-state-curent">
                 <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CONTROL_STATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div><br>
             <eos-dynamic-input [input]="inputs['rec.PLAN_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>

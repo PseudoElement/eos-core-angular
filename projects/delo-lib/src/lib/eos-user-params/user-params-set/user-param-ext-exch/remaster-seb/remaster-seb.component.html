@@ -1,5 +1,8 @@
 <div class="user-group-form">
-    <ng-container *ngIf="appMode.arm || !isCurrentSettings || appMode.tk">
+    <ng-container > <!-- *ngIf="appMode.arm || !isCurrentSettings || appMode.tk" -->
+        <div style="margin-left: 5px;" class="section-title">
+            <span>Отправлять сообщения в АРМ "ДелоWeb":</span>
+        </div>
         <eos-dynamic-input
             [input]="inputs['rec.ARM_SEV_DLG']"
             [form]="form"
