@@ -136,6 +136,20 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     ngOnInit() {
+        this.fieldsConst.fields.forEach(el => {
+            el.key = el.key !== 'RECEIP_EMAIL' ? 'RCSEND_' + el.key : el.key;
+            el.parent = el.parent ? 'RCSEND_' + el.parent : el.parent;
+        })
+
+        this.fieldsConstMailResive.fields.forEach(el => {
+            el.key = 'MAILRECEIVE_' + el.key
+            el.parent = el.parent ? 'MAILRECEIVE_' + el.parent : el.parent;
+        })
+
+        if (!this._appContext.cbBase){
+            this.fieldsConstMailResive.disabledFields.push('MAILRECEIVE_ORIGINAL_IN_ELECTRONIC_FORM');
+        }
+
         this.initEmail();
         this.initMailResive();
         this.itCurrentSettingsCheck();
@@ -180,7 +194,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
             );
         }
-
         this.preparedItemForInputs = this.parse_Create(this.fieldsConst.fields, 'userData', 'RCSEND');
         this.prepareInputs = this.formHelp.getObjectInputFields(this.fieldsConst.fields);
         this.prepareData = this.formHelp.convData(this.preparedItemForInputs);
@@ -228,7 +241,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                     obj[field.key] = keyValue === '0' || keyValue === '' ? false : true;
                 }
             }
-
         });
         return obj;
     }
@@ -304,13 +316,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     getTree(TreeObj: TreeItem[], field: IFieldDescriptor) {
-        let readonly = field.readonly || false;
-        const cbBase = this._appContext.cbBase;
-
-        if(!cbBase && field.key === 'MAILRECEIVE_ORIGINAL_IN_ELECTRONIC_FORM') {
-            readonly = true;
-        }
-
         if (field.parent === null) {
             TreeObj.push({
                 title: field.title,
@@ -318,7 +323,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 isOpen: false,
                 children: [],
                 parent: null,
-                readonly
             });
         } else {
             TreeObj.forEach((item: TreeItem) => {
@@ -329,7 +333,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     checkItem(item: TreeItem, field: IFieldDescriptor) {
-        const readonly = field.readonly || false;
         if (item.key === field.parent) {
             item.children.push({
                 title: field.title,
@@ -337,7 +340,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
                 isOpen: false,
                 children: [],
                 parent: item,
-                readonly
             });
         } else {
             if (item.children.length) {
@@ -502,8 +504,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     alwaysDisabledMethod() {
-        this.fieldsConst.disabledFields.forEach(key => {
-            this.form.controls['rec.' + key].disable({ emitEvent: false });
+        this.disabledMethod(this.fieldsConst, this.form);
+        this.disabledMethod(this.fieldsConstMailResive, this.formMailResuve);
+    }
+    
+    private disabledMethod(fields: IBaseUsers, form: FormGroup) {
+        fields.disabledFields.forEach(key => {
+            form.controls['rec.' + key].disable({ emitEvent: false });
         });
     }
 
