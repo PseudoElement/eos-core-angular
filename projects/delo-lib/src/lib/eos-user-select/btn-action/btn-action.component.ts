@@ -18,7 +18,6 @@ import {
     UserLists,
     Unlock,
     ViewDisableUser,
-    CommonTechLists,
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { EosStorageService } from '../../app/services/eos-storage.service';
@@ -176,9 +175,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             case 'ViewDisableUser':
                 this.checkBtnViewDisableUser();
                 break;
-            case 'CommonTechLists':
-                this.checkCommonTechLists();
-                break;
             case 'UserSession':
             default:
                 console.log('not Action');
@@ -278,9 +274,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             }
         }
         this._btnAccess.checkAccess(OpenStreamScanSystem, this);
-    }
-    checkCommonTechLists() {
-        this._btnAccess.checkAccess(CommonTechLists, this);
     }
     checkBtnOpenSumProtocol(): void {
         if (this.limitCards.length) {

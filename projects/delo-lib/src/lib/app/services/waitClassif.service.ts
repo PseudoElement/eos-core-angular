@@ -22,11 +22,9 @@ const NEW_VIEW_URL: string = '../classifChoose/cl?';
 // const URL_PATH = '../classifChoose/cl?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
-const StdText: string = '../WebRC/Pages/StdText.html';
 const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
-const COMMON_LIST: string = '../WebRC/Pages/CommonLists.html';
 const SharingLists: string = '../WebRC/Pages/SharingLists.html';
 
 @Injectable()
@@ -39,8 +37,6 @@ export class WaitClassifService {
         };
     }
 
-    // 'DOCGROUP_CL', 'DOCGROUP_INDEX_UNIQUE'
-    // NOMENKL_CL, CHANGE_E_DOCUMENT - returns DELO_EXISTS, USE_IN_DEFAULTS
     canChangeClassifRequest(type: string, oper: string, args: any): Promise<any> {
         const qargs = Object.assign({ type: type, oper: oper }, args);
         const query = { args: qargs };
@@ -98,8 +94,6 @@ export class WaitClassifService {
             }
         } else if (params.classif === 'TECH_LISTS') {
             url = TECH_LISTS;
-        } else if (params.classif === 'StdText') {
-            url = this.stdTextUrl(StdText, params);
         } else if (params.classif === 'SharingLists') {
             url = this.sharingListsUrl(SharingLists, params);
         } else if (params.classif === 'gop_rc') {
@@ -109,13 +103,12 @@ export class WaitClassifService {
             if (params.id) {
                 url += `#type=` + params.id;
             }
-        } else if (params.classif === 'COMMON_LIST') {
-            url = COMMON_LIST;
         } else {
             setTimeout(() => {
                 url = this._prepareUrl(params, flag);
             }, 0);
         }
+
         return new Promise((resolve, reject) => {
             let w;
             let flagPar = false;
@@ -135,13 +128,6 @@ export class WaitClassifService {
                 });
             });
 
-            /* const w = openPopup(url, function (event, str) {
-                if (str !== '') {
-                    return resolve(str);
-                }
-                return reject();
-            }); */
-
             const checkDialClosed = setInterval(function () {
                 try {
                     if (!w || w['closed']) {
@@ -160,6 +146,7 @@ export class WaitClassifService {
             }, 500);
         });
     }
+
     private _createUrlDict(url, params: IOpenClassifParams) {
         console.log('_createUrlDict');
         
@@ -197,31 +184,11 @@ export class WaitClassifService {
         }
         return url;
     }
+    
     private getSymbol(url: string) {
         return url.indexOf('?') === -1 ? '?' : '&';
     }
-    private stdTextUrl(url, params: IOpenClassifParams) {
-        if (params.isn_user !== undefined && params.isn_user !== null) {
-            url += this.getSymbol(url) + `isn_user=${params.isn_user}`;
-        }
-        if (params.clUser === true) {
-            url += this.getSymbol(url) + `clUser=${params.clUser}`;
-        }
-        // if (params.form !== undefined && params.form !== null) {
-        //     url += `&form=${params.form}`;
-        // }
-        if (params.idText !== undefined && params.idText !== null) {
-            url += this.getSymbol(url) + `id=${params.idText}`;
-            url += this.getSymbol(url) + `name=${params.idText}`;
-        }
-        if (params.formText !== undefined && params.formText !== null) {
-            url += this.getSymbol(url) + `form=${params.formText}`;
-        }
-        if (params.selected !== undefined && params.selected !== null) {
-            url += this.getSymbol(url) + `select=${params.selected}`;
-        }
-        return url;
-    }
+
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url: string = '';
@@ -270,6 +237,4 @@ export class WaitClassifService {
 
         return url;
     }
-
-
 }

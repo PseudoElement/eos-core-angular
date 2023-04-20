@@ -645,18 +645,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         /* }, 0); */
     }
 
-    CommonTechLists() {
-        const param: IOpenClassifParams = {
-            classif: 'COMMON_LIST',
-        };
-        this.shadow = true;
-        this._waitCl.openClassif(param).then(data => {
-            this.shadow = false;
-        }).catch(error => {
-            this.shadow = false;
-        });
-    }
-
     UserLists() {
         const selectedUsers = this.listUsers.filter((user) => user.isChecked);
         if (selectedUsers.length === 1) {
@@ -673,20 +661,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.shadow = false;
             });
         }
-    }
-
-    GeneralLists() {
-        const param: IOpenClassifParams = {
-            classif: 'StdText',
-            clUser: true,
-            isn_user: -99,
-        };
-        this.shadow = true;
-        this._waitCl.openClassif(param).then(data => {
-            this.shadow = false;
-        }).catch(error => {
-            this.shadow = false;
-        });
     }
 
     OpenSumProtocol() {
