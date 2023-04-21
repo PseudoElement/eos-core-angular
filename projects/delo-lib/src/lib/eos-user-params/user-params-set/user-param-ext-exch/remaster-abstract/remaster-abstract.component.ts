@@ -78,8 +78,22 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         this.fieldsConst = JSON.parse(JSON.stringify(this.configChannel.fieldsConst));
         this.fieldsConstMailResive = JSON.parse(JSON.stringify(this.configChannel.fieldsConstMailResive));
 
-        this.MAILRECEIVE = `MAILRECEIVE_${this.configChannel.nameEN}`;
         this.RCSEND = `RCSEND_${this.configChannel.nameEN}`;
+        this.MAILRECEIVE = `MAILRECEIVE_${this.configChannel.nameEN}`;
+
+        this.fieldsConst.fields.forEach(el => {
+            el.key = this.RCSEND + '_' + el.key;
+            el.parent = el.parent ? this.RCSEND + '_' + el.parent : el.parent;
+
+            if(el.key === this.RCSEND + '_EMAIL') {
+                el.title = el.title.replace('e-mail', this.configChannel.nameRU )
+            }
+        })
+
+        this.fieldsConstMailResive.fields.forEach(el => {
+            el.key = this.MAILRECEIVE + '_' + el.key
+            el.parent = el.parent ? this.MAILRECEIVE + '_' + el.parent : el.parent;
+        })
 
         this._RemasterService.cancelEmit
             .pipe(
@@ -144,6 +158,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     ngOnInit() {
+
         this.setMailResive
         .add(`${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`)
         .add(`${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`);
@@ -341,8 +356,12 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     sliceArrayForTemplate(): void {
-        const count = 6;
-        const separator = 11;  
+        let count = 5;
+        let separator = 10;  
+        if (this.configChannel.nameEN === 'LK') {
+            count = 6;
+            separator = 11;  
+        }
 
         this.listForAccordion = [];
         this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, count) });
