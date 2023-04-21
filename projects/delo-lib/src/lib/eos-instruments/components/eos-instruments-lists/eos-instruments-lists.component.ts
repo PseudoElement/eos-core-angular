@@ -9,8 +9,6 @@ import { EosAdmToolsService } from '../../../eos-instruments/services/EosAdmTool
   styleUrls: ['./eos-instruments-lists.component.scss']
 })
 
-
-
 export class EosInstrumentsListsComponent implements OnInit {
   // containerInstrument
   @ViewChild('containerInstrument') containerInstrument: ElementRef;

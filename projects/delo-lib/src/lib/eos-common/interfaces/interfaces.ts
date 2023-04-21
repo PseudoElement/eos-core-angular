@@ -33,7 +33,8 @@ export interface IOpenClassifParams {
     criteriesName?: string;
     user_id?: number;
     clUser?: boolean;
-    from_classif?: boolean; // параметр который говорит что окно было открыто из ангулар
+    /** говорит что окно было открыто из ангулар */
+    from_classif?: boolean;
     // для STDText
     isn_user?: number;
     curdue?: string;

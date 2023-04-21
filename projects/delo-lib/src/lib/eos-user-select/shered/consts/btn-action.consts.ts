@@ -116,18 +116,6 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
     isActive: false,
 };
 
-export const CommonTechLists: BtnActionFields = {
-    name: 'CommonTechLists',
-    title: 'Ведение общих и технологических списков',
-    disabledClass: 'eos-adm-icon eos-adm-icon-template-grey small',
-    enableClass: 'eos-adm-icon eos-adm-icon-template-blue small',
-    tooltip: 'Ведение общих и технологических списков',
-    disabled: false,
-    activeClass: 'eos-adm-icon eos-adm-icon-template-blue small',
-    activeBtnClass: '',
-    isActive: false,
-};
-
 export const UserLists: BtnActionFields = {
     name: 'UserLists',
     title: 'Ведение списков пользователя',
@@ -136,18 +124,6 @@ export const UserLists: BtnActionFields = {
     tooltip: 'Ведение списков пользователя',
     disabled: false,
     activeClass: 'eos-adm-icon eos-adm-icon-citizen-blue small',
-    activeBtnClass: '',
-    isActive: false,
-};
-
-export const GeneralLists: BtnActionFields = {
-    name: 'GeneralLists',
-    title: 'Ведение общих списков стандартных текстов',
-    disabledClass: 'eos-adm-icon eos-adm-icon-text-list-grey small',
-    enableClass: 'eos-adm-icon eos-adm-icon-text-list-blue small',
-    tooltip: 'Ведение общих списков стандартных текстов',
-    disabled: false,
-    activeClass: 'eos-adm-icon eos-adm-icon-text-list-blue small',
     activeBtnClass: '',
     isActive: false,
 };
@@ -291,10 +267,8 @@ export const Allbuttons: BtnAction = {
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
-        CommonTechLists,
         UserLists,
         SettingsManagement,
-        GeneralLists,
         UsersStats,
         USER_SESSION,
         Protocol,
