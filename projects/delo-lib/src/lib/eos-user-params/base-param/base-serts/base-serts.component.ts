@@ -7,7 +7,6 @@ import { UserParamsService } from '../../../eos-user-params/shared/services/user
 import { ICertificateInit } from '../../../eos-common/interfaces';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import { EosMessageService } from '../../../eos-common/services/eos-message.service';
-import { of } from 'rxjs';
 import { /* PARM_CANCEL_CHANGE, */ PARM_SUCCESS_SAVE,  PARM_ERROR_DB, PARM_ERROR_CARMA } from '../../user-params-set/shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-base-serts',
@@ -223,11 +222,7 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
     }
     show(id: string) {
        const ids = this.stateSerts[id];
-        this.carma2Srv.ShowCert(ids)
-        .catch((e) => {
-            this._msg.addNewMessage(PARM_ERROR_CARMA);
-            return of(null);
-        });
+        this.carma2Srv.ShowCert(ids);
     }
     checkVersion(): boolean {
         const arrVersion = this.carma2Srv.getServiceInfo().carmaVersion.split('.');

@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 /* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
 
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 // import { catchError } from 'rxjs/operators';
 
 import { UserParamsService } from '../../shared/services/user-params.service';
@@ -441,10 +441,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
 
     openCarmWindow(idSert) {
         this.carma2Srv.ShowCert(String(idSert))
-            .catch((e) => {
-                this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-                return of(null);
-            });
     }
 
 
