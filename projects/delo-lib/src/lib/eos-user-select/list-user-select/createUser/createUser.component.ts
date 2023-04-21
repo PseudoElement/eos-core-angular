@@ -264,7 +264,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.checkError(e);
         });
     }
-    
+
     async submit() {
         const _combine = combineLatest([
             this.modalService.onShow,
@@ -287,10 +287,10 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.isLoading = true;
             const userType = this.data['USER_TYPE'];
             if (userType === '0' || userType === '3') {
-                const objConfig = { 
-                    ignoreBackdropClick: true, 
-                    keyboard: false, 
-                    class: 'gray modal-sm passModal' 
+                const objConfig = {
+                    ignoreBackdropClick: true,
+                    keyboard: false,
+                    class: 'gray modal-sm passModal'
                 }
                 this.enterPassword = true;
 
@@ -351,7 +351,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.enterPassword = true;
     }
-    
+
     accessCreateUser(): boolean {
         const d = this.data;
         if (d['dueDL'] === undefined && !this.techUser) {
@@ -534,7 +534,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         if (!access) {
             const openUserCl = {
                 ...OPEN_CLASSIF_USER_CL,
-                search_query: this._apiSrv.configList.titleDue,
                 selectMulty: false,
                 skipDeleted: null,
             };
@@ -786,7 +785,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         };
         return this._pipeSrv.read<USER_CL>(queryUser);
     }
-    
+
 
     private _subscribe() {
         if(!this.cbBase){
@@ -805,7 +804,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         f.get('DUE_DEP_NAME').enable();
                     }
                 });
-    
+
             f.valueChanges
                 .pipe(
                     takeUntil(this.ngUnsubscribe)
@@ -836,13 +835,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 if (this.classifName && data['classifName'].length === this.loginMaxLength) {
                     this.classifName.show();
                 } else {
-                    this.classifName?.hide(); 
+                    this.classifName?.hide();
                 }
 
                 if (this.SURNAME_PATRON && data['SURNAME_PATRON'].length === 64) {
                     this.SURNAME_PATRON.show();
                 } else {
-                    this.SURNAME_PATRON?.hide(); 
+                    this.SURNAME_PATRON?.hide();
                 }
                 this.btnDisabled = false;
             })
