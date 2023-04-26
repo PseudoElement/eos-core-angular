@@ -61,14 +61,31 @@
                     [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
                     [readonly]="!editMode"
                     [disabled] = "formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
-                <button
+                
+                <eos-dynamic-input [input]="inputs['IS_SECUR_ADM']" [form]="form"  [readonly]="appctx" tooltip="Администратор системы"  placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
+            </div><br>
+            <div style="display: flex;">
+                <div style="width: 653px"> <!--  -->
+                    <label style="width: 100%;">РОЛЬ ВИБР</label>
+                    <textarea 
+                        style="width: 100%;height: 72px;max-height: 72px;padding: 6px 8px 10px 8px; background-color: #fafafa; border-color: #e6e6e6;"
+                        type="text"
+                        class="input disabled area"
+                        placeholder="..."
+                        disabled
+                        [(ngModel)]="controls['SELECT_ROLE_VIBR'].value">
+                    </textarea>
+                </div>
+                
+                <div>
+                    <button
                     class="btn btn-cb"
                     [disabled]="!getCbRole"
                     (click)="getTemplateUser(cbRole, 'roles')"
                     [ngClass]="{'btn-primary': editMode, 'btn-light': !editMode}"
-                >Настроить роль</button>
-                <eos-dynamic-input [input]="inputs['IS_SECUR_ADM']" [form]="form"  [readonly]="appctx" tooltip="Администратор системы"  placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
-            </div><br>
+                    >Настроить</button>
+                </div>
+            </div>
             <!-- Доступ к системам 1-й ряд -->
             <span class="l-font">Доступ к системам</span>
             <hr>
