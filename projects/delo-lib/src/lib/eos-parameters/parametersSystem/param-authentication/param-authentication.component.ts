@@ -42,7 +42,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 this.afterInitRC();
                 this._handleExternalAuth();
             }).catch(err => {
-                if (err.code !== 434) {
+                if (err.code !== 401) {
                     console.log(err);
                 }
             });
@@ -60,7 +60,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                     this.cancelEdit();
                 })
                 .catch(err => {
-                    if (err.code !== 434) {
+                    if (err.code !== 401) {
                         console.log(err);
                     }
                 });

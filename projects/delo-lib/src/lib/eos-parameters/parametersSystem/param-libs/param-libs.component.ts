@@ -47,7 +47,7 @@ export class ParamLibsComponent extends BaseParamComponent {
       .then(() => {
         this.cancel();
       }).catch(err => {
-        if (err.code !== 434) {
+        if (err.code !== 401) {
           console.log(err);
         }
         this._errorSrv.errorHandler(err);
@@ -216,7 +216,7 @@ export class ParamLibsComponent extends BaseParamComponent {
           /* this.afterCreate(); */
         })
         .catch(err => {
-          if (err.code !== 434) {
+          if (err.code !== 401) {
             console.log(err);
           }
           this._errorSrv.errorHandler(err);
