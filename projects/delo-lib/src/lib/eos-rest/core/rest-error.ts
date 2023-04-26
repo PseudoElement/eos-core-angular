@@ -14,6 +14,7 @@ export class RestError {
                 case 0:
                     this.message = 'Ошибка соединения';
                     break;
+                case 401:
                 case 434:
                     this.message = 'Ошибка авторизации';
                     break;

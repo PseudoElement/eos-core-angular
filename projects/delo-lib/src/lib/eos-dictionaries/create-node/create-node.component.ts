@@ -94,7 +94,7 @@ export class CreateNodeComponent {
                 }
             }).catch(e => {
                 this.cardEditRef.isChanged = false;
-                if (e.code && e.code === 434) {
+                if (e.code && e.code === 401) {
                     this.cardEditRef.isChanged = false;
                     this._confirmSrv
                     .confirm2(ERROR_LOGIN)
@@ -126,7 +126,7 @@ export class CreateNodeComponent {
         this._dictSrv.addNode(data)
             .then((node: EosDictionaryNode) => this._afterAdding(node, hide))
             .catch((err) => {
-                if (err.code && err.code === 434) {
+                if (err.code && err.code === 401) {
                     this.cardEditRef.isChanged = false;
                     this._confirmSrv
                     .confirm2(ERROR_LOGIN)

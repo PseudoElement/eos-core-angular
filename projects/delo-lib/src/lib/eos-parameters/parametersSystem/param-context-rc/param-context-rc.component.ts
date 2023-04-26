@@ -83,7 +83,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 this.formContextChoice.disable({ emitEvent: false });
             })
             .catch(err => {
-                if (err.code !== 434) {
+                if (err.code !== 401) {
                     console.log(err);
                 }
             });

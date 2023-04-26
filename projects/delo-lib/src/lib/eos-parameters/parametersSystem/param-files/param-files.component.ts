@@ -70,7 +70,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                 this.prepInputsAttach = this.prepareInputField(FILES_PARAM.fieldsChild);
                 this.afterInit();
             }).catch(err => {
-                if (err.code !== 434) {
+                if (err.code !== 401) {
                     console.log(err);
                 }
             });
@@ -242,7 +242,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                     this.afterInit();
                 })
                 .catch(err => {
-                    if (err.code !== 434) {
+                    if (err.code !== 401) {
                         console.log(err);
                     }
                 });
@@ -386,7 +386,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                         this.afterInit();
                     })
                     .catch(err => {
-                        if (err.code !== 434) {
+                        if (err.code !== 401) {
                             console.log(err);
                         }
                     });

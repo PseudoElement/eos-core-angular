@@ -11,6 +11,7 @@ export class ErrorService /*implements IErrorService*/ {
     errorHandler(err) {
         if (err.http) {
             switch (err.http.status) {
+                case 401:
                 case 434:
                     if (!this.LostConnectionAlerted) {
                         /* alert('Потеря соединения.');*/

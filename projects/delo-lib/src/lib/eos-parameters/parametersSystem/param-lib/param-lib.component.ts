@@ -35,7 +35,7 @@ export class ParamLibComponent extends BaseParamComponent {
         this.afterCreate();
         this.LibParamInit();
       }).catch(err => {
-        if (err.code !== 434) {
+        if (err.code !== 401) {
           console.log(err);
         }
       });
@@ -172,7 +172,7 @@ export class ParamLibComponent extends BaseParamComponent {
           this.afterCreate();
         })
         .catch(err => {
-          if (err.code !== 434) {
+          if (err.code !== 401) {
             console.log(err);
           }
         });

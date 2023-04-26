@@ -468,7 +468,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             title: 'Ошибка создания пользователя',
             msg: '',
         };
-        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+        if (e instanceof RestError && (e.code === 401 || e.code === 0)) {
             this._errorSrv.errorHandler(e);
             this.closedModal.emit();
         }
