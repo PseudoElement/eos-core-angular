@@ -184,9 +184,11 @@
         </div>
         <div [hidden]="appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Показывать в окне поручения:</span>
-                <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <span class="input-title">Показывать в поручении:</span>
+                <div class="show-reply-readed" style="display: flex;">
+                    <eos-dynamic-input [ngStyle]="{'margin-right': '10px'}" [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div> 
             </div>
         </div>
         <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
