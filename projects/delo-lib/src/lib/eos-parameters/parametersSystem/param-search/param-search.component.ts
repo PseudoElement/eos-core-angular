@@ -91,7 +91,7 @@ export class ParamSearchComponent extends BaseParamComponent {
                     this.indexKing = this.form.controls['rec.INDEXKIND'].value;
                 })
                 .catch(err => {
-                    if (err.code !== 434) {
+                    if (err.code !== 401) {
                         console.log(err);
                     }
                 });

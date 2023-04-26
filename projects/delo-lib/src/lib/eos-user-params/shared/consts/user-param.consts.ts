@@ -200,3 +200,4 @@ export const HTML_TEMPLATE_SHORT_REPORT = `
 `;
 
 
+export const NOT_SEARCH_TREE = "Все подразделения";

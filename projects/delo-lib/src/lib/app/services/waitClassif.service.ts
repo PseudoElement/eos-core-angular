@@ -26,7 +26,7 @@ const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const SharingLists: string = '../WebRC/Pages/SharingLists.html';
-
+const CERT_INFO = "../CertInfo";
 @Injectable()
 export class WaitClassifService {
     private isCtrl = null;
@@ -103,6 +103,8 @@ export class WaitClassifService {
             if (params.id) {
                 url += `#type=` + params.id;
             }
+        } else if (params.classif === "CERT_INFO") {
+            url = CERT_INFO;
         } else {
             setTimeout(() => {
                 url = this._prepareUrl(params, flag);
@@ -148,8 +150,6 @@ export class WaitClassifService {
     }
 
     private _createUrlDict(url, params: IOpenClassifParams) {
-        console.log('_createUrlDict');
-        
         if (params.id === 'CITIZEN_dict') {
             url = CITIZEN_dict;
             url += `#rc_id=` + params.user_id;
@@ -184,7 +184,7 @@ export class WaitClassifService {
         }
         return url;
     }
-    
+
     private getSymbol(url: string) {
         return url.indexOf('?') === -1 ? '?' : '&';
     }

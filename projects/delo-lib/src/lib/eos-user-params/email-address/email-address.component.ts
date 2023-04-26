@@ -632,7 +632,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     }
 
     private cathError(e) {
-        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+        if (e instanceof RestError && (e.code === 401 || e.code === 0)) {
             return undefined;
         } else {
             const errMessage = e.message ? e.message : e;

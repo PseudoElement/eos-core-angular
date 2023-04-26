@@ -807,16 +807,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.patchCbRoles();
             this.queryRoles = [];
         } else {
-            if (this.startRolesCb.length) {
-                const str = this.startRolesCb.length > 1 ? this.startRolesCb[0].role + ' ...' : this.startRolesCb[0].role;
-                this.controls['SELECT_ROLE'].options = [{
-                    title: str,
-                    value: str
-                }];
-                this.controls['SELECT_ROLE'].value = str;
-            } else {
-                this.controls['SELECT_ROLE'].value = this._userParamSrv.hashUserContext['CATEGORY'];
-            }
+            // if (this.startRolesCb.length) {
+            //     const str = this.startRolesCb.length > 1 ? this.startRolesCb[0].role + ' ...' : this.startRolesCb[0].role;
+            //     this.controls['SELECT_ROLE'].options = [{
+            //         title: str,
+            //         value: str
+            //     }];
+            //     this.controls['SELECT_ROLE'].value = str;
+            // } else {
+            //     this.controls['SELECT_ROLE'].value = this._userParamSrv.hashUserContext['CATEGORY'];
+            // }
+            this.controls['SELECT_ROLE'].value = this._userParamSrv.hashUserContext['CATEGORY'];
             this.currentCbFields = JSON.parse(JSON.stringify(this.startRolesCb));
         }
         this.singleOwnerCab = this.initSingleOwnerCab;
@@ -869,15 +870,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         //     this.formControls.controls['SELECT_ROLE'].patchValue(null);
         //     this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
         // } else {
-        let str = '';
-        if (this.currentCbFields.length > 1) {
-            str = this.currentCbFields[0].role + ' ...';
-        } else if (this.currentCbFields.length === 1) {
-            str = this.currentCbFields[0].role;
-        }
-        if (str) {
-            this.formControls.controls['SELECT_ROLE'].patchValue(str);
-        }
+        // let str = '';
+        // if (this.currentCbFields.length > 1) {
+        //     str = this.currentCbFields[0].role + ' ...';
+        // } else if (this.currentCbFields.length === 1) {
+        //     str = this.currentCbFields[0].role;
+        // }
+        // if (str) {
+        //     this.formControls.controls['SELECT_ROLE'].patchValue(str);
+        // }
         // }
     }
     checkMeinControlAccess($event, data) {
@@ -1037,27 +1038,31 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         this._pushState();
     }
-
+    updateFieldCbToSet(CbFields): string {
+        const ans = [];
+        CbFields.forEach((r, index) => {
+            // const name = r.dueName ? ' (' + r.dueName + ')' : '';
+            const rol: string = r.role + name + ' (' + (index + 1) + '-я роль)';
+            ans.push(rol)
+        });
+        return ans.join('\n');
+    }
     patchCbRoles() {
-        let str = '';
+        /* let str = '';
         if (this.currentCbFields.length === 1) {
             str = this.currentCbFields[0].role;
         } else if (this.currentCbFields.length !== 0) {
             str = this.currentCbFields[0].role + ' ...';
-        }
-        this.controlField[1].options = [{
-            title: str,
-            value: str
-        }];
-        this.controlField[1].value = str;
+        } */
+        this.controlField[2].value = this.updateFieldCbToSet(this.currentCbFields);
         if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         }
-        const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
-        if (this.currentCbFields.length === 0 && standartRole.indexOf(this.formControls.controls['SELECT_ROLE'].value) > -1) {
-            this.controlField[1].value = this.formControls.controls['SELECT_ROLE'].value;
-        }
-        this.controlField[0].value = false;
+        // const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
+        /* if (this.currentCbFields.length === 0 && standartRole.indexOf(this.formControls.controls['SELECT_ROLE'].value) > -1) {
+            this.controlField[2].value = this.formControls.controls['SELECT_ROLE'].value;
+        } */
+        // this.controlField[0].value = false;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.cancelValues(this.controls, this.formControls);
     }

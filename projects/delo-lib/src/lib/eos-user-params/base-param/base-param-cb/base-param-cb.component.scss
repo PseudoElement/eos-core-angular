@@ -113,8 +113,9 @@
         }
         .btn-cb {
             padding: 8px 10px;
-            height: 35px;
-            margin-right: 81px;
+            height: 32px;
+            margin-left: 28px;
+            margin-top: 25px;
         }
         .mt-ceck {
             margin-top: 30px;
@@ -224,13 +225,12 @@
         width: 40%;
     }
     }
-
-
 }
 .serts {
     top: 30%;
 }
 .roles {
     top: 10%;
-    width: 1400px;
+    width: 1400px !important;
+    max-width: 100% !important;
 }

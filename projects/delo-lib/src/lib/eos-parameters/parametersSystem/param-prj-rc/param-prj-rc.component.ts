@@ -40,7 +40,7 @@ export class ParamPrjRcComponent extends BaseParamComponent implements OnInit, O
                     this.subscribeUnputs();
                 })
                 .catch(err => {
-                    if (err.code !== 434) {
+                    if (err.code !== 401) {
                         console.log(err);
                     }
                 });

@@ -1030,7 +1030,7 @@ export class EosDictService {
                     // let success = true;
                     results.forEach((result) => {
                         if (result && result.error) {
-                            if (result.error.code !== 434) {
+                            if (result.error.code !== 401) {
                                 this._msgSrv.addNewMessage({
                                     type: 'warning',
                                     title: 'Ошибка удаления "' + result.record['CLASSIF_NAME'] + '"',
@@ -1991,7 +1991,7 @@ export class EosDictService {
             updatingInfo: false,
             updatingList: false,
         });
-        if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
+        if (err instanceof RestError && (err.code === 401 || err.code === 0)) {
             // this._router.navigate(['login'], {
             //     queryParams: {
             //         returnUrl: this._router.url

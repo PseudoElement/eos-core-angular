@@ -20,7 +20,7 @@ export class ParamDictionariesComponent extends BaseParamComponent {
             this.cancelEdit();
         })
         .catch(err => {
-            if (err.code !== 434) {
+            if (err.code !== 401) {
                 console.log(err);
             }
         });

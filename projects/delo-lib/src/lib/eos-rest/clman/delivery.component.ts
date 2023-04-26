@@ -59,7 +59,7 @@ export class DeliveryComponent implements OnInit {
             }
         );*/
         // потеря соединения при чтении
-        this.pip.read({ ErrorMirror_GetError: PipRX.args({ code: 434, msg: 'What?' }) })
+        this.pip.read({ ErrorMirror_GetError: PipRX.args({ code: 401, msg: 'What?' }) })
             .then(() => {
                 alert('пустой результат не ошибка');
             });

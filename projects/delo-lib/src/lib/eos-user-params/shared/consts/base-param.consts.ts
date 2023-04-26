@@ -71,6 +71,11 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         required: true,
     },
     {
+        controlType: E_FIELD_TYPE.text,
+        key: 'SELECT_ROLE_VIBR',
+        label: 'РОЛЬ ВИБР',
+    },
+    {
         controlType: E_FIELD_TYPE.autosearch,
         key: 'DUE_DEP_NAME',
         label: 'ДОЛЖНОСТНОЕ ЛИЦО',

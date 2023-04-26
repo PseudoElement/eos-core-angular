@@ -41,7 +41,7 @@
                 margin-bottom: -7px;
             }
         }
-        
+
         .base-input-role {
             input {
                 width: 363px;
@@ -65,7 +65,7 @@
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, .3);
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
         z-index: 2000;
@@ -151,7 +151,7 @@
         text-transform: uppercase;
         mix-blend-mode: normal;
         position: relative;
-        
+
         span {
             height: 25px;
         }

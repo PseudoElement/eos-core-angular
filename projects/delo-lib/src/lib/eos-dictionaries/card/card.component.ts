@@ -277,7 +277,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this._save(_data)
                         .then((node: EosDictionaryNode) => this._afterSaving(node))
                         .catch((err) => {
-                            if (err.code && err.code === 434) {
+                            if (err.code && err.code === 401) {
                                 this.cardEditRef.isChanged = false;
                                 this.isChanged = false;
                                 this._errSrv.errorHandler(err);

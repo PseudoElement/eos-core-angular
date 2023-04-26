@@ -52,7 +52,7 @@ export class UsersPermissionGuard implements CanActivate {
             }
 
         }).catch((err) => {
-            if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
+            if (err instanceof RestError && (err.code === 401 || err.code === 0)) {
                 // если нас открыли с настроек пользователя, то редиректим на завершение сессии
                 if (state.url.indexOf('/user_param/current-settings') !== -1) {
                     this._confirmSrv

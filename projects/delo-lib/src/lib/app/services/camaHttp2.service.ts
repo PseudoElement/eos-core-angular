@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { EDS_GET_ID_FN } from '../../eos-user-params/shared/intrfaces';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
+import { WaitClassifService } from './waitClassif.service';
 
 declare function CarmaHttp(initStr: string, stores: any, async: boolean): void;
 @Injectable()
@@ -8,6 +10,7 @@ export class CarmaHttp2Service {
     carmaInitialized = false;
     constructor(
         private errHalper: ErrorHelperServices,
+        private openClassif: WaitClassifService
     ) {
         this.clientCarma = null;
     }
@@ -81,16 +84,16 @@ export class CarmaHttp2Service {
 
     public ShowCert(certId: string) {
         if (this.clientCarma) {
-            return new Promise((resolve, reject) => {
-                const res = this.clientCarma.ShowCert(certId);
-                resolve(res);
+            this.setFnCertId(certId);
+            return this.openClassif.openClassif({ "classif": "CERT_INFO" }).catch((e) => {
+                console.log(e);
             });
         }
     }
 
     public GetCertInfo(certId) {
         return new Promise((resolve, reject) => {
-           const res = this.clientCarma.GetCertInfo(certId);
+            const res = this.clientCarma.GetCertInfo(certId);
             resolve(res);
         });
     }
@@ -98,8 +101,8 @@ export class CarmaHttp2Service {
     public GetCertInfoP(certId) {
         return new Promise((resolve, reject) => {
             const res = this.clientCarma.GetCertInfoP(certId);
-             resolve(res);
-         });
+            resolve(res);
+        });
     }
 
     public GetCertInfoMulty(certIds) {
@@ -134,11 +137,21 @@ export class CarmaHttp2Service {
         });
     }
     public showCertInfo(certId: string): void {
-        if (this.clientCarma && this.carmaInitialized) {
-            this.clientCarma.ShowCert(certId);
-        } else {
-            this.errHalper.errorHandler({ code: 2000, message: 'Проверьте соединение с кармой' });
-        }
+        this.setFnCertId(certId);
+        this.openClassif.openClassif({ "classif": "CERT_INFO" }).catch((e) => {
+            console.log(e);
+        });
+        // if (this.clientCarma && this.carmaInitialized) {
+        //     this.clientCarma.ShowCert(certId);
+        // } else {
+        //     this.errHalper.errorHandler({ code: 2000, message: 'Проверьте соединение с кармой' });
+        // }
     }
-    
+
+    private setFnCertId(certId) {
+        window[EDS_GET_ID_FN.getEdsCertId] = () => {
+            return certId;
+        };
+    }
+
 }

@@ -413,7 +413,7 @@ export class PipRX extends PipeUtils {
             restError = new RestError({ http: err });
         }
 
-        if (restError.code === (434 || 0)) {
+        if (restError.code === (401 || 0)) {
             const event = {
                 isChanged: false,
                 error: restError,

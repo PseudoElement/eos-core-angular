@@ -22,7 +22,7 @@ export class EosErrorHandler implements ErrorHandler {
         console.error('Unhandled error', error);
         try {
             if (error['rejection'] && error['rejection'] instanceof RestError) {
-                if (error['rejection']['code'] && +error['rejection']['code'] === 434) {
+                if (error['rejection']['code'] && +error['rejection']['code'] === 401) {
                     // console.log('this._router', this._router);
                     this._confirmSrv
                     .confirm2(ERROR_LOGIN)

@@ -11,6 +11,7 @@ import { InputControlService } from '../../../eos-common/services/input-control.
 import { EosDataConvertService } from '../../../eos-dictionaries/services/eos-data-convert.service';
 import { TOOLTIP_DELAY_VALUE } from '../../../eos-common/services/eos-tooltip.service';
 import { DatePickerStyleFixes } from '../../../eos-common/type/const.type';
+import { NOT_SEARCH_TREE } from '../../../eos-user-params/index';
 
 @Component({
   selector: 'eos-filter-protocol',
@@ -115,7 +116,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   }
 
   selectUserEdit() {
-    OPEN_CLASSIF_USER_CL['search_query'] = this._apiSrv.configList.titleDue;
+    const srh_query = this._apiSrv.configList.titleDue !== NOT_SEARCH_TREE ? this._apiSrv.configList.titleDue : "";
+    OPEN_CLASSIF_USER_CL['search_query'] = srh_query;
     OPEN_CLASSIF_USER_CL['selectMulty'] = true;
     OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
@@ -141,7 +143,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   }
 
   selectUserWho() {
-   OPEN_CLASSIF_USER_CL['search_query'] = this._apiSrv.configList.titleDue;
+   const srh_query = this._apiSrv.configList.titleDue !== NOT_SEARCH_TREE ? this._apiSrv.configList.titleDue : "";
+   OPEN_CLASSIF_USER_CL['search_query'] = srh_query;
    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
    OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
