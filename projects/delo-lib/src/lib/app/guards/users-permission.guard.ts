@@ -31,9 +31,6 @@ export class UsersPermissionGuard implements CanActivate {
                 return true;
             }
             const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[0] === '1';
-            if (this._userProfile.IS_SECUR_ADM === 1) {
-                return true;
-            }
             if (this._apCtx.cbBase) {
                 if (!access) {
                     this._msgSrv.addNewMessage({
