@@ -31,6 +31,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     public buttons: ITableBtn[] = [];
     public countSelected = 0;
     public selectIdLast = '';
+    public currentRow: any;
     public widthAll = 0;
     types = ECellToAll;
     get showCheckBox() {
@@ -52,7 +53,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
                 this.countSelected++;
             }
         });
-        
+
     }
     ngAfterContentInit(): void {
         setTimeout(() => {
@@ -154,7 +155,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             return undefined;
         }
     }
-    
+
     selected($event, element) {
         element.check = $event.target.checked;
         $event.target.checked ? this.countSelected++ : this.countSelected--;
@@ -251,6 +252,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
         if (this.settings?.selectedRow) {
             this.selectIdLast = '' + $event.key;
             this.elementsSelect.emit([$event]);
+            this.currentRow = $event;
         }
         this.clickToRow.emit([$event]);
     }
