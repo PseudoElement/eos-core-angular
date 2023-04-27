@@ -410,7 +410,8 @@ export const commonMeta = {
             PROTECTED: _t.i,
             WEIGHT: _t.i,
             CLASSIF_NAME: _t.s,
-            NOTE: _t.s
+            NOTE: _t.s,
+            E_SENDING_FLAG: _t.i
         },
         readonly: [
 

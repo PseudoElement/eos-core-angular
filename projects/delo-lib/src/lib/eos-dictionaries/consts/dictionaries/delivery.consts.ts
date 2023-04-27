@@ -9,9 +9,15 @@ export const DELIVERY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     visible: true,
     iconName: 'eos-adm-icon-save-send-blue',
     fields: [...LINEAR_TEMPLATE.fields,
+        {
+            key: 'E_SENDING_FLAG',
+            title: 'ЭЛЕКТРОННАЯ ОТПРАВКА',
+            type: 'boolean',
+        },
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
         uniqueInDict: true,
         length: 64,
     })],
+    editFields: ['CLASSIF_NAME', 'E_SENDING_FLAG', 'NOTE'],
 });
