@@ -30,17 +30,8 @@ export class UsersPermissionGuard implements CanActivate {
             if (state.url.indexOf('/user_param/current-settings') !== -1) {
                 return true;
             }
-            const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[0] === '1';
-            if (this._apCtx.cbBase) {
-                if (!access) {
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение:',
-                        msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
-                    });
-                }
-                return access;
-            } else  {
+            if (!this._apCtx.cbBase) {
+                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[0] === '1';
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -50,18 +41,19 @@ export class UsersPermissionGuard implements CanActivate {
                 }
                 return access;
             }
+            return true;
 
         }).catch((err) => {
             if (err instanceof RestError && (err.code === 401 || err.code === 0)) {
                 // если нас открыли с настроек пользователя, то редиректим на завершение сессии
                 if (state.url.indexOf('/user_param/current-settings') !== -1) {
                     this._confirmSrv
-                    .confirm2(ERROR_LOGIN)
-                    .then((confirmed) => {
-                        if (confirmed) {
-                            document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
-                        }
-                    });
+                        .confirm2(ERROR_LOGIN)
+                        .then((confirmed) => {
+                            if (confirmed) {
+                                document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
+                            }
+                        });
                 } else {
                     document.location.assign('../');
                 }
