@@ -15,7 +15,7 @@ export const KEY_RIGHT_TECH = {
         name: 'Пользователи'
     },
     'user-params-set': {
-        key: "user-params-set",
+        key: E_TECH_RIGHT.Users,
         name: 'Пользователи'
     },
     'services': {
