@@ -199,7 +199,7 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         const redirectToRegistration = (hiddenUrls: Map<string, boolean>) => {
             if (hiddenUrls && hiddenUrls.size) {
                 if (this.listSettings) {
-                    this.listSettings = this.listSettings.filter((subItem) => !hiddenUrls.has(subItem.url));
+                    this.listSettings = this.listSettings.filter((subItem) => !hiddenUrls.has(subItem.url) && subItem.url !== 'inline-scanning');
                 }
                 if (hiddenUrls.has(this.paramId)) {
                     this._router.navigate([
