@@ -58,9 +58,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
-                return this.currentUser.CLASSIF_NAME + '- Ведение адресов электронной почты';
+                return this.currentUser.CLASSIF_NAME + '- Настройка оповещений / уведомлений';
             }
-            return `${this.currentUser['DUE_DEP_SURNAME']} - Ведение адресов электронной почты`;
+            return `${this.currentUser['DUE_DEP_SURNAME']} - Настройка оповещений / уведомлений`;
         }
         return '';
     }

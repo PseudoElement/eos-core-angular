@@ -102,7 +102,7 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         disabled: false,
     },
     {
-        title: 'Ведение адресов электронной почты',
+        title: 'Настройка оповещений / уведомлений',
         url: 'email-address',
         disabled: false,
     },
