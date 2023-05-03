@@ -41,10 +41,8 @@ export class ParamUnloadingComponent extends BaseParamComponent {
       this.inputs = this.getInputs();
       this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
       this.inputs['rec.Name'].options = [];
-      Object.keys(libLibrary[0]).forEach((key) => {
-        if (key !== '__metadata') {
-          this.inputs['rec.Name'].options.push({value: key, title: libLibrary[0][key]});
-        }
+      libLibrary.forEach((item) => {
+        this.inputs['rec.Name'].options.push({value: item['NAME'], title: item['DESCRIPTION']});
       });
       if (Archivist) {
         if (Archivist.Library) {
