@@ -76,6 +76,7 @@ export interface IFieldDescriptor {
     pattern?: RegExp;
     required?: boolean;
     isUnique?: boolean;
+    unique?: boolean;
     uniqueInDict?: boolean;
     options?: ISelectOption[];
     height?: number;

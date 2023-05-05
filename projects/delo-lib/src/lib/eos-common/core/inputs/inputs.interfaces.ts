@@ -12,6 +12,7 @@ export interface IBaseInput {
     readonly?: boolean;
     isUnique?: boolean;     // Значение должно быть уникальным в пределах вершины.
     uniqueInDict?: boolean; // Значение должно быть уникальным в пределах справочника.
+    unique?: boolean;
     hideLabel?: boolean;
     forNode?: boolean;
     options?: any[];

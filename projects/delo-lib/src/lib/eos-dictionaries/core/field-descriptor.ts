@@ -13,6 +13,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly required?: boolean;
     readonly isUnique?: boolean;
     readonly uniqueInDict?: boolean;
+    readonly unique?: boolean;
     readonly options?: ISelectOption[];
     readonly height?: number;
     readonly vistype?: E_VISIBLE_TIPE;
@@ -51,6 +52,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         this.required = !!data.required;
 
         this.isUnique = !!data.isUnique;
+        this.unique = !!data.unique;
 
         this.uniqueInDict = !!data.uniqueInDict;
         this.minValue = data.minValue;

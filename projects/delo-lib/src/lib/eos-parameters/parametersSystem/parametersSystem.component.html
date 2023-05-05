@@ -136,6 +136,14 @@
                 [btnError] = "disableSave"
             ></eos-param-email>
         </ng-container>
+        <ng-container *ngSwitchCase="'sms'">
+            <sms-gateway
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></sms-gateway>
+        </ng-container>
         <ng-container *ngSwitchCase="'licensing'">
             <lib-eos-param-licensing
                 (formChanged)="recordChanged($event)"

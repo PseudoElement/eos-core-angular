@@ -252,7 +252,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 length: field.length,
                 options: field.options,
                 readonly: !!field.readonly,
-                formatDbBinary: !!field.formatDbBinary
+                formatDbBinary: !!field.formatDbBinary,
+                required: field.required,
             };
         });
         return inputs;

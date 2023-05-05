@@ -12,6 +12,7 @@ export class InputBase<T> {
     pattern: RegExp;
     readonly: boolean;
     isUnique: boolean;
+    unique: boolean;
     uniqueInDict: boolean;
     hideLabel: boolean;
     forNode: boolean;
@@ -39,6 +40,7 @@ export class InputBase<T> {
         readonly?: boolean,
         isUnique?: boolean,
         uniqueInDict?: boolean,
+        unique?: boolean,
         hideLabel?: boolean,
         forNode?: boolean,
         options?: any[],
@@ -74,5 +76,6 @@ export class InputBase<T> {
         this.isGroup = options.isGroup;
         this.minValue = options.minValue;
         this.maxValue = options.maxValue;
+        this.unique = options?.unique;
     }
 }

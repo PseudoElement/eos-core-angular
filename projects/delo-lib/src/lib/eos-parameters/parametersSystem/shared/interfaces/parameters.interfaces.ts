@@ -1,3 +1,5 @@
+import { ITableData } from "./tables.interfaces";
+
 export interface IParamBese {
     id: string;
     apiInstance: string;
@@ -32,4 +34,47 @@ export interface ISelectOption {
 export interface AdditionalInputs {
     input: string;
     readonly: boolean;
+}
+export enum APP_SETTINGS_SMS {
+    namespace = "Eos.Platform.Settings.Sms",
+    typename = "SmsCfg"
+}
+
+export interface AppSettingsSmsGateWay {
+    ProfileName: string;
+    Endpoint: string;
+    Login: string;
+    Password: AppSettingsPassword;
+    UrlTemplate: string;
+}
+
+export interface AppSettingsPassword {
+    Key: string | null;
+    Value?: string | null
+}
+
+export type AppSettingsFields = string;
+
+export interface ResultAppSettings {
+    [key: string]: AnyType
+    default?: AnyType
+}
+
+export interface AnyType {
+    [key: string]: string | any;
+}
+
+export interface BaseTableData extends ITableData {
+    data: BaseDataRow[]
+}
+
+export interface BaseDataRow {
+    [key: string]: any,
+    [num: number]: any,
+    key: string | number
+}
+export enum DEFAULT_APP_SETTINGS_BTN {
+    add = "add",
+    edit = "edit",
+    deleted = "deleted"
 }
