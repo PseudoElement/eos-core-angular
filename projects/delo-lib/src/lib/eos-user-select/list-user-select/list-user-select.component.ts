@@ -147,15 +147,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ) {
 
     }
-    
+
     @HostListener('window:resize', ['$event.target'])
     checkIsDisabled() {
         this.listUsers.forEach(el => {
             const idDueName = el.id + 'DueName'
             const htmlElement = document.getElementById(idDueName);
             if(htmlElement){
-                (htmlElement.offsetWidth < htmlElement.scrollWidth) ? 
-                this.isDisableObj[idDueName] = false : 
+                (htmlElement.offsetWidth < htmlElement.scrollWidth) ?
+                this.isDisableObj[idDueName] = false :
                 this.isDisableObj[idDueName] = true;
             } else {
                 this.isDisableObj[idDueName] = true;
@@ -164,8 +164,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             const idDep = el.id + 'Dep'
             const htmlElement2 = document.getElementById(idDep);
             if(htmlElement2){
-                (htmlElement2.offsetWidth < htmlElement2.scrollWidth) ? 
-                this.isDisableObj[idDep] = false : 
+                (htmlElement2.offsetWidth < htmlElement2.scrollWidth) ?
+                this.isDisableObj[idDep] = false :
                 this.isDisableObj[idDep] = true;
             } else {
                 this.isDisableObj[idDep] = true;
@@ -176,7 +176,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ngAfterContentChecked() {
         if(this.listUsers) this.checkIsDisabled();
     }
-    
+
     ngOnInit() {
         this.rtUserService.clearHash();
         if (this._storage.getItem('onlyView') !== undefined) {
@@ -468,6 +468,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this.createUserModal.content.closedModal.subscribe(() => {
             setTimeout(() => {
                 this.createUserModal.hide();
+                const id = this._route.params['value'].nodeId;
+                this.initView(id ? id : '0.');
             });
         });
     }
