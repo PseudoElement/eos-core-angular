@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { AppSettingsEditCardService } from '../../../../eos-parameters/parametersSystem/shared/service/app-settings-edit-card.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 const passwordKey = "rec.Password";
 const profileName = "rec.ProfileName";
 
