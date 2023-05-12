@@ -25,7 +25,7 @@ const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 @Component({
     selector: 'eos-param-create-user',
     templateUrl: 'createUser.component.html',
-    styleUrls:['create-windows-cb.scss'],
+    styleUrls: ['create-windows-cb.scss'],
     providers: [BsModalService],
 })
 export class CreateUserComponent implements OnInit, OnDestroy {
@@ -103,7 +103,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         private changeDetection: ChangeDetectorRef,
         private _userSettingsService: UserSettingsService,
         @Inject(DOCUMENT) private readonly documentRef: Document,
-    ) {}
+    ) { }
 
     get validPassword() {
         return this.password.length && (this.password === this.repitedPassword);
@@ -212,20 +212,20 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             });
 
         this._userSettingsService.readDepartments()
-        .then(x => {
-            const { sections } = x;
-            this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
-            if (this._defaultDepDue.length === 0) {
-                this._pipeSrv.read({
-                    DELO_OWNER: 1
-                }).then(org => {
-                    if (org.length > 0) {
-                        this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
-                        this._readSysParamsOrg();
-                    }
-                });
-            }
-        });
+            .then(x => {
+                const { sections } = x;
+                this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
+                if (this._defaultDepDue.length === 0) {
+                    this._pipeSrv.read({
+                        DELO_OWNER: 1
+                    }).then(org => {
+                        if (org.length > 0) {
+                            this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                            this._readSysParamsOrg();
+                        }
+                    });
+                }
+            });
     }
 
     loadUsersTemplats(params: Array<number>, map: Map<number, any>): Promise<any> {
@@ -273,14 +273,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.modalService.onHidden,
         ]).subscribe(() => this.changeDetection.markForCheck());
 
-        if(this.cbBase){
+        if (this.cbBase) {
             this.createUserCB(_combine);
         } else {
             this.createUserDelo(_combine);
         }
     }
 
-    async createUserDelo(_combine: Subscription){
+    async createUserDelo(_combine: Subscription) {
         if (this.accessCreateUser()) {
             const url = this._createUrlForSop();
             this.btnDisabled = true;
@@ -306,7 +306,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.modalRef = this.modalService.show(this.templatePassword, objConfig);
                 this.documentRef.getElementById('inpPass').focus();
 
-            } else if (userType=== '2') {
+            } else if (userType === '2') {
                 await this.addUser(url, true);
             } else if (userType === '1' || userType === '4') {
 
@@ -332,7 +332,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         }
     }
 
-    async createUserCB(_combine: Subscription){
+    async createUserCB(_combine: Subscription) {
         if (this.OS.nativeElement.checked && !this.form.controls['classifName'].value.includes('\\')) {
             const m: IMessage = {
                 type: 'warning',
@@ -345,11 +345,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
         this.osChecked = this.OS.nativeElement.checked;
         const url = this.createUrlForCB();
-        await this.addUser(url);
-
-        this.btnDisabled = true;
-        this.isLoading = true;
-        this.enterPassword = true;
+        await this.addUser(url)
     }
 
     accessCreateUser(): boolean {
@@ -443,17 +439,22 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.btnDisabled = false;
             this.isLoading = false;
             this.closedModal.emit();
-            this._router.navigate(['user-params-set'], {
-                queryParams: { isn_cl: isn, is_create: true }
-            });
-            })
+            if (!this.cbBase) {
+                this._router.navigate(['user-params-set'], {
+                    queryParams: { isn_cl: isn, is_create: true }
+                });
+            }
+
+        })
             .catch((e) => {
                 this.checkError(e);
                 this._userParamSrv.ProtocolService(this.isn_prot, 3);
                 this.closedModal.emit();
-                this._router.navigate(['user-params-set'], {
-                    queryParams: { isn_cl: isn, is_create: true }
-                });
+                if (!this.cbBase) {
+                    this._router.navigate(['user-params-set'], {
+                        queryParams: { isn_cl: isn, is_create: true }
+                    });
+                }
             });
     }
 
@@ -558,7 +559,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     resetVision(flag?) {
-        flag ? this.type = 'password': this.type_repeat = 'password';
+        flag ? this.type = 'password' : this.type_repeat = 'password';
     }
 
     searchDL() {
@@ -788,7 +789,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
 
     private _subscribe() {
-        if(!this.cbBase){
+        if (!this.cbBase) {
             const f = this.form;
             f.get('teсhUser').valueChanges
                 .pipe(
@@ -830,25 +831,25 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         } else {
             const formCB = this.form;
             formCB.valueChanges
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(data => {
-                if (this.classifName && data['classifName'].length === this.loginMaxLength) {
-                    this.classifName.show();
-                } else {
-                    this.classifName?.hide();
-                }
+                .pipe(takeUntil(this.ngUnsubscribe))
+                .subscribe(data => {
+                    if (this.classifName && data['classifName'].length === this.loginMaxLength) {
+                        this.classifName.show();
+                    } else {
+                        this.classifName?.hide();
+                    }
 
-                if (this.SURNAME_PATRON && data['SURNAME_PATRON'].length === 64) {
-                    this.SURNAME_PATRON.show();
-                } else {
-                    this.SURNAME_PATRON?.hide();
-                }
-                this.btnDisabled = false;
-            })
+                    if (this.SURNAME_PATRON && data['SURNAME_PATRON'].length === 64) {
+                        this.SURNAME_PATRON.show();
+                    } else {
+                        this.SURNAME_PATRON?.hide();
+                    }
+                    this.btnDisabled = false;
+                })
         }
     }
 
-    changeNote(el:HTMLInputElement){
+    changeNote(el: HTMLInputElement) {
         this.department = {
             NOTE: el.value,
             TECH_DUE_DEP: null
@@ -864,14 +865,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             selectLeafs: false,
         }
         try {
-            const departmentDue: string = await  this._waitClassifSrv.openClassif(params);
-            const department: DEPARTMENT[] = await this._pipeSrv.read({ DEPARTMENT: {criteries: {DUE: departmentDue}}});
+            const departmentDue: string = await this._waitClassifSrv.openClassif(params);
+            const department: DEPARTMENT[] = await this._pipeSrv.read({ DEPARTMENT: { criteries: { DUE: departmentDue } } });
             this.department = {
                 NOTE: department[0].CLASSIF_NAME,
                 TECH_DUE_DEP: department[0].DUE
             };
 
-        } catch(err) {
+        } catch (err) {
             const m: IMessage = {
                 type: 'warning',
                 title: 'Предупреждение',

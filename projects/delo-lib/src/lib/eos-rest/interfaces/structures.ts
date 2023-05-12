@@ -32,6 +32,10 @@ export interface DELIVERY_CL extends ILinearCL {
     * Вес элемента
     */
     WEIGHT: number;
+    /* 
+    * Электронная отправка
+    */
+    E_SENDING_FLAG: number;
 }
 
 /**

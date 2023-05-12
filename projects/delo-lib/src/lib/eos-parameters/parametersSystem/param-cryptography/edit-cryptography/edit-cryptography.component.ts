@@ -6,10 +6,11 @@ import { FormGroup } from '@angular/forms';
 import { CarmaHttp2Service } from '../../../../app/services/camaHttp2.service';
 import { IListStores } from '../../../../eos-parameters/parametersSystem/shared/consts/web.consts';
 import { Istore } from '../../../../app/services/carmaHttp.service';
-import { EosMessageService, IOrderTable } from '../../../../eos-common/index';
+import { EosMessageService, IOrderTable, TabelElementComponent } from '../../../../eos-common/index';
 import { CARMA_UNIC_VALUE } from '../../../../eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AppContext } from '../../../../eos-rest';
 
 @Component({
     selector: 'eos-edit-cryptography',
@@ -26,6 +27,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     @Output() cancelEmit = new EventEmitter();
     @ViewChild('modalStorage') modalStorage: TemplateRef<any>;
     @ViewChild('infoCrypto') template: TemplateRef<any>;
+    @ViewChild("tableRef") tableRef: TabelElementComponent;
     edit = true;
     nameProfile: string;
     initStr: string;
@@ -71,11 +73,11 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
         private _modalSrv: BsModalService,
         private _msgSrv: EosMessageService,
         private _cermaHttp2Srv: CarmaHttp2Service,
-    ) {}
-    ngOnInit() {
+        private _appContext: AppContext
+    ) { }
+    async ngOnInit() {
         this.init();
         const stores: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
-        this._cermaHttp2Srv.connectWrapper('', stores);
         if (this.dataProfile) {
             this.form.controls['rec.ProfileName'].setValue(this.dataProfile['ProfileName'], { emitEvent: false });
             this.form.controls['rec.InitString'].setValue(this.dataProfile['InitString'], { emitEvent: false });
@@ -91,31 +93,50 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
             this.prepareData.rec['InitString'] = '';
             this.prepareData.rec['CertStores'] = '';
         }
+        let cryptoStr = "";
+        this._appContext.reInit().then(async () => {
+            this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
+                if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
+                    cryptoStr = params['PARM_VALUE'];
+                }
+            });
+            if (!cryptoStr) {
+                const crypto = await this._appContext.get99UserParms('CRYPTO_INITSTR');
+                cryptoStr = crypto['PARM_VALUE'];
+            }
+            const addr = cryptoStr ? cryptoStr : "";
+
+            this._cermaHttp2Srv.connectWrapper(addr, stores, false).catch(e => {
+                console.log(e);
+            });
+        })
+
+
         this.updateTableList(this.prepareData.rec['CertStores']);
-        this.orderHead({id: this.tableHeader[0].id, order: this.tableHeader[0].order});
+        this.orderHead({ id: this.tableHeader[0].id, order: this.tableHeader[0].order });
         this.form.controls['rec.ProfileName'].valueChanges
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe((state: string) => {
-            if (state) {
-                let flag = false;
-                this.allData.forEach((item) => {
-                    if (item['ProfileName'] === state) {
-                        flag = true;
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((state: string) => {
+                if (state) {
+                    let flag = false;
+                    this.allData.forEach((item) => {
+                        if (item['ProfileName'] === state) {
+                            flag = true;
+                        }
+                    });
+                    if (flag) {
+                        this.form.controls['rec.ProfileName'].setErrors(null);
+                        this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
+                    } else {
+                        this.form.controls['rec.ProfileName'].setErrors(null);
                     }
-                });
-                if (flag) {
-                    this.form.controls['rec.ProfileName'].setErrors(null);
-                    this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
                 } else {
                     this.form.controls['rec.ProfileName'].setErrors(null);
+                    this.form.controls['rec.ProfileName'].setErrors({ isRequired: undefined });
                 }
-            } else {
-                this.form.controls['rec.ProfileName'].setErrors(null);
-                this.form.controls['rec.ProfileName'].setErrors({ isRequired: undefined });
-            }
-        });
+            });
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
@@ -161,7 +182,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
         this._openModal();
     }
     editWord() {
-        const cert = this.tabelData.data.filter((item) => item.check)[0];
+        const cert = this.tabelData.data.filter((item) => item.check)[0] || this.tableRef.currentRow;
         this.certSystemStore = cert['name'].split(':')[0];
         this.editCertId = cert['key'];
         this.searchStore();
@@ -195,7 +216,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
                         certArr[this.editCertId] = node.Location + ':' + node.Name;
                         item = certArr.join(' ');
                     }
-                    
+
                 } else {
                     this._msgSrv.addNewMessage(CARMA_UNIC_VALUE);
                 }
@@ -220,7 +241,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     onChangeSelect($event) {
         this.certSystemAddress = '';
     }
-    /* 
+    /*
     * Обновление
     */
     updateTableList(newItem: string) {
@@ -234,7 +255,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
             });
         }
     }
-    /* 
+    /*
     * Запрос на получение данных сертификатов
     */
     searchStore() {
@@ -289,7 +310,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
             });
         }
     }
-    /* 
+    /*
     * Выбор записи из таблицы Хранилище сертификатов на вход принимает весь список элементов
     */
     selectNode(list: IListStores) {
@@ -302,7 +323,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
             }
         });
     }
-    /* 
+    /*
     * Обновление доступности кнопок в зависимости от выбранных значений таблицы
     */
     selectElement($event) {
@@ -339,7 +360,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     showCert(row?) {
         let param;
         if (!row) {
-            const list = this.tabelData.data.filter((item) => item.check)[0];
+            const list = this.tabelData.data.filter((item) => item.check)[0] || this.tableRef.currentRow;
             param = list['name'].split(':');
         } else {
             param = row['name'].split(':');
@@ -368,5 +389,5 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     showCertInfo(certId: string) {
         this._cermaHttp2Srv.showCertInfo(certId);
     }
-    
+
 }

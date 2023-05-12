@@ -19,7 +19,31 @@ export const KEY_RIGHT_TECH = {
         name: 'Пользователи'
     },
     'services': {
-        key: E_TECH_RIGHT.BackgroundTasks,
+        key: "services",
         name: 'Сервисы'
+    },
+    'tools': {
+        key: "tools",
+        name: 'Инструменты'
+    },
+    'spravochniki': {
+        key: "spravochniki",
+        name: 'Справочники'
+    },
+    'SEV': {
+        key: "SEV",
+        name: 'Справочники СЭВ'
+    },
+    'nadzor': {
+        key: "nadzor",
+        name: 'Справочники'
+    },
+    'desk': {
+        key: "desk",
+        name: ''
+    },
+    'user-session': {
+        key: "user-session",
+        name: 'Сессии пользователей'
     },
 };

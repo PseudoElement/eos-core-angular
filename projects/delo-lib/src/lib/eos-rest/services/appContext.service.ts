@@ -147,8 +147,8 @@ export class AppContext {
             });
     }
 
-    reInit() {
-        this.init();
+    reInit(): Promise<any> {
+        return  this.init();
     }
     /** getClickModeSettings - метода обновления настроек вызова справочника */
     getClickModeSettings(value: string) {

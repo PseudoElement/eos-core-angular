@@ -51,6 +51,10 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Электронная почта',
     url: 'email',
     visible: true
+},  {
+    title: 'CMC-шлюз',
+    url: 'sms',
+    visible: true
 }, {
     title: 'Поточное сканирование',
     url: 'inline-scanning',

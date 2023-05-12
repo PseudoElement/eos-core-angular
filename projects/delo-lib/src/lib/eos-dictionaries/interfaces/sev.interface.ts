@@ -12,6 +12,7 @@ export interface IInputParamControl {
   pattern?: RegExp;
   readonly?: boolean;
   isUnique?: boolean;
+  unique?: boolean;
   uniqueInDict?: boolean;
   hideLabel?: boolean;
   forNode?: boolean;

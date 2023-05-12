@@ -65,6 +65,31 @@ export const CREATE_USER_INPUTS = [
         value: '',
     },
 ];
+export const CREATE_CB_USER_INPUTS = [
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'SURNAME_PATRON',
+        label: 'ФИО:',
+        required: true,
+        length: 60,
+        value: '',
+    },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'NOTE',
+        label: 'Подразделение:',
+        length: 255,
+        value: '',
+    },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'LOGIN',
+        label: 'Имя (Логин):',
+        required: true,
+        length: 12,
+        value: '',
+    },
+];
 
 export const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {
     classif: 'DEPARTMENT',

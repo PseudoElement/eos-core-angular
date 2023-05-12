@@ -26,7 +26,7 @@ const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const SharingLists: string = '../WebRC/Pages/SharingLists.html';
-const CERT_INFO = "../CertInfo";
+const CERT_INFO = "../CertInfo/index.html";
 @Injectable()
 export class WaitClassifService {
     private isCtrl = null;

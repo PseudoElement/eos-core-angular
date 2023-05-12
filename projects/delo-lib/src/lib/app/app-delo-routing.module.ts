@@ -35,6 +35,8 @@ import { EosBackgraundSingleComponent } from '../eos-backgraund-tasks/components
 import { EosInstrumentsListsComponent } from '../eos-instruments/components/eos-instruments-lists/eos-instruments-lists.component';
 import { EosInstrumentsSingleComponent } from '../eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
 import { CardFromComponent } from '../eos-dictionaries/card-from/card-from.component';
+import { AdministratorGuard } from './guards/administrator.guard';
+
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
 
@@ -164,23 +166,23 @@ const childrenDictionariesComponent: Routes = [{
 const routes: Routes = [
     {
         path: 'cardFrom',
-        canActivate: [AuthorizedGuard],
+        canActivate: [AuthorizedGuard, AdministratorGuard],
         children: childrenDictionariesComponent2
     },
     {
     path: 'spravochniki/SEV',
     data: { title: 'СЭВ', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     children: childrenDictionariesComponent,
 }, {
     path: 'spravochniki/nadzor',
     data: { title: 'Надзор', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     children: childrenDictionariesComponent,
 }, {
     path: 'spravochniki',
     data: { title: 'Справочники', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     children: childrenDictionariesComponent,
 }, {
     path: 'form',
@@ -190,13 +192,13 @@ const routes: Routes = [
         showBreadcrumb: true,
         showPushpin: true,
     },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     canDeactivate: [CanDeactivateGuard],
     children: formDictionariesComponent,
 }, {
     path: 'desk',
     data: { title: 'Главная', showInBreadcrumb: false },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     children: [{
         path: '',
         pathMatch: 'full',
@@ -242,7 +244,7 @@ const routes: Routes = [
     data: { title: 'user page' }
 }, {
     path: 'parameters',
-    canActivate: [AuthorizedGuard, SystemParamsGuard],
+    canActivate: [AuthorizedGuard, SystemParamsGuard, AdministratorGuard],
     data: {
         title: 'Параметры системы',
         showInBreadcrumb: false,
@@ -265,7 +267,7 @@ const routes: Routes = [
     ]
 }, {
     path: 'user-params-set',
-    canActivate: [AuthorizedGuard, UsersPermissionGuard],
+    canActivate: [AuthorizedGuard, UsersPermissionGuard, AdministratorGuard],
     children: [
         {
             path: '',
@@ -352,7 +354,7 @@ const routes: Routes = [
         },
         {
             path: 'user-session',
-            canActivate: [AuthorizedGuard],
+            canActivate: [AuthorizedGuard, AdministratorGuard],
             component: PluginReactComponent,
             data: {
                 title: 'Текущие сессии пользователей',
@@ -387,7 +389,7 @@ const routes: Routes = [
 {
     path: 'tools',
     data: { title: 'Инструменты', showInBreadcrumb: false },
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     children: [
         {
             path: '',
@@ -410,7 +412,7 @@ const routes: Routes = [
 {
     path: 'services',
     data: { title: 'Сервисы', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard/* , BackgroundTaskGuard */], // убраю проверку прав оставляю только проверку авторизации, если опять понадобятся то можно будет вернуть
+    canActivate: [AuthorizedGuard, AdministratorGuard/* , BackgroundTaskGuard */], // убраю проверку прав оставляю только проверку авторизации, если опять понадобятся то можно будет вернуть
     children: [
         {
             path: '',

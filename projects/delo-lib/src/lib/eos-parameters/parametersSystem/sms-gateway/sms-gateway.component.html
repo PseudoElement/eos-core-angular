@@ -1,0 +1,36 @@
+<div class="input-param-wrapper input-param-prj-wrapper">
+    <div [hidden]="showCard">
+        <eos-param-header
+            [title]="titleHeader"
+            (submitForm)="submit()"
+            (cancelForm)="cancelEdit()"
+            [statusBtnSub]="btnError"
+            [editBtn]="true"
+            (editForm)="edit()"
+        ></eos-param-header>
+        <div class="title-under-table">
+            <div>
+                <span>Профили СМС-шлюза</span>
+            </div>
+        </div>
+        <eos-tabel-element
+            *ngIf="tableData"
+            [edit]="!disableForm"
+            [tabelData]="tableData"
+            (btnAction)="actionTo($event)"
+            (elementsSelect)="selectElement($event)"
+            (orderHead)="orderHead($event)"
+        >
+        </eos-tabel-element>
+    </div>
+    <sms-gateway-card
+        *ngIf="showCard"
+        (submitEmit)="submitEmit($event)"
+        (cancelEmit)="cancelEmit($event)"
+        [form]="form"
+        [inputs]="inputs"
+        [dataProfile]="editData"
+        [prepareData]="prepareData"
+        [allData]="tableData.data"
+    ></sms-gateway-card>
+</div>

@@ -272,11 +272,6 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
             title: 'От предыдущей резолюции'
         },
         {
-            key: 'RESOLUTION_SELECT_AUTHOR',
-            type: 'boolean',
-            title: 'Вручную'
-        },
-        {
             key: 'CONTROLL_AUTHOR',
             type: 'string',
             title: '',
@@ -425,11 +420,6 @@ export const CABINETS_USER_ASSIGMENTS: IBaseUsers = {
         },
         {
             key: 'RESOLUTION_AUTHOR',
-            type: '',
-            title: '',
-        },
-        {
-            key: 'RESOLUTION_SELECT_AUTHOR',
             type: '',
             title: '',
         },

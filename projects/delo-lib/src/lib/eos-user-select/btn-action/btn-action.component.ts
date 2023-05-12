@@ -18,6 +18,7 @@ import {
     UserLists,
     Unlock,
     ViewDisableUser,
+    UsersStats
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { EosStorageService } from '../../app/services/eos-storage.service';
@@ -79,6 +80,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
                 this.updateBtns();
             }
         });
+        this.blockButtonForCb();
     }
     ngOnDestroy() {
         this._unSubscribe.next();
@@ -181,8 +183,17 @@ export class BtnActionComponent implements OnInit, OnDestroy {
                 break;
         }
     }
+    /* ЦБ блокируем кнопки если зашли под администратором системы */
+    blockButtonForCb() {
+        if (this.cbBlockSecurAdm()) {
+            UsersStats.disabled = true;
+        }
+    }
+    cbBlockSecurAdm() {
+       return this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 1;
+    }
     checkCreateBtn() {
-        if (this.limitCards.length) {
+        if (this.limitCards.length || this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM !== 1) {
             CreateUser.disabled = true;
         } else {
             CreateUser.disabled = false;
@@ -252,7 +263,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this._btnAccess.checkAccess(ViewDisableUser, this);
     }
     checkBtnOpenStreamSystem() {
-        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
+        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1 || this.cbBlockSecurAdm()) {
             OpenStreamScanSystem.disabled = true;
         } else {
             if (this.limitCards.length) {
@@ -276,7 +287,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this._btnAccess.checkAccess(OpenStreamScanSystem, this);
     }
     checkBtnOpenSumProtocol(): void {
-        if (this.limitCards.length) {
+        if (this.limitCards.length || this.cbBlockSecurAdm()) {
             SumProtocol.disabled = true;
             SumProtocol.isActive = false;
         } else {
@@ -285,7 +296,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this._btnAccess.checkAccess(SumProtocol, this);
     }
     checkBtnDefaultSettings(): void {
-        if (this.limitCards.length) {
+        if (this.limitCards.length || this.cbBlockSecurAdm()) {
             DefaultSettings.disabled = true;
             DefaultSettings.isActive = false;
         } else {
@@ -294,7 +305,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this._btnAccess.checkAccess(DefaultSettings, this);
     }
     checkWithLimitedUser(button: BtnActionFields): void {
-        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
+        if (!this.selectUser ||
+            this.selectUser.deleted ||
+            this.checkedUsers.length > 1 || this.cbBlockSecurAdm()) {
             button.disabled = true;
             button.isActive = false;
         } else {
@@ -311,7 +324,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkWithBlocketUSer(button: BtnActionFields) {
         const usersEdit = this.checkedUsers.some(user => !user.isEditable || user.deleted);
         const isOnlyBlocked = this.checkedUsers.every((user) => user.blockedUser || user.blockedSystem);
-        if (usersEdit || isOnlyBlocked) {
+        if (usersEdit || isOnlyBlocked || this.cbBlockSecurAdm()) {
             button.disabled = true;
             button.isActive = false;
         } else {
@@ -322,7 +335,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkWithUnlockUSer(button: BtnActionFields) {
         const onlyNotBlocked = this.checkedUsers.every(user => !user.blockedSystem && !user.blockedUser);
         const usersEdit = this.checkedUsers.some(user => !user.isEditable || user.deleted);
-        if (usersEdit || onlyNotBlocked) {
+        if (usersEdit || onlyNotBlocked || this.cbBlockSecurAdm()) {
             button.disabled = true;
             button.isActive = false;
         } else {
@@ -343,7 +356,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkWittAllUsers(button: BtnActionFields): void {
         // const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected) && user.isEditable);
         const usersEdit = this.listUsers.filter(user => (user.isChecked || user.isSelected));
-        if (usersEdit.length) {
+        if (usersEdit.length && !this.cbBlockSecurAdm()) {
             button.disabled = false;
         } else {
             button.disabled = true;
@@ -366,7 +379,10 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     OpenRightsSystemCaseDelo(button: BtnActionFields): void {
-        if (!this.selectUser || this.selectUser.deleted || this.checkedUsers.length > 1) {
+        if (!this.selectUser ||
+            this.selectUser.deleted ||
+            this.checkedUsers.length > 1
+            || this.cbBlockSecurAdm()) {
             button.disabled = true;
             button.isActive = false;
         } else {
@@ -374,7 +390,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     deleteForever(button: BtnActionFields): void {
-        if (!this.selectUser || this.selectUser.deleted) {
+        if (!this.selectUser || this.selectUser.deleted || (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM !== 1)) {
             button.disabled = true;
             button.isActive = false;
         } else {

@@ -83,10 +83,10 @@ export const BlockUser: BtnActionFields = {
 };
 export const OpenAddressManagementWindow: BtnActionFields = {
     name: 'OpenAddressManagementWindow',
-    title: 'Ведение адресов электронной почты',
+    title: 'Настройка оповещений / уведомлений',
     disabledClass: 'eos-adm-icon eos-adm-icon-A-Grey small',
     enableClass: 'eos-adm-icon eos-adm-icon-A-Blue small',
-    tooltip: 'Открыть окно ведения адресов электронной почты',
+    tooltip: 'Открыть окно настройки оповещений (уведомлений)',
     disabled: false,
     activeClass: 'eos-adm-icon eos-adm-icon-A-Blue small',
     activeBtnClass: '',

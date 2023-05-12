@@ -132,6 +132,8 @@ export class EosUtils {
                         case 'valueError':
                         case 'dateCompare':
                             return control.errors[key];
+                        case 'unique':
+                            return INPUT_ERROR_MESSAGES[key]
                         default:
                             // console.warn('unhandled error key', key);
                             return INPUT_ERROR_MESSAGES.default;

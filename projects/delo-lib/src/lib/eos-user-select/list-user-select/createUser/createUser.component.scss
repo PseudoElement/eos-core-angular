@@ -59,6 +59,34 @@
                 width: 363px;
             }
         }
+        .cb-field {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            &_label {
+                width: 20%;
+            }
+            &-value {
+                width: 60%;
+                position: relative;
+
+                .icon.eos-icon.eos-icon-close-blue {
+                    position: absolute;
+                    cursor: pointer;
+                    right: 2px;
+                    top: 5px;
+                }
+            }
+            &-department {
+                margin-left: 20px;
+                display: flex;
+                align-items: center;
+
+                .icon.eos-icon {
+                    cursor: pointer;
+                }
+            }
+        }
     }
 
     .shell {

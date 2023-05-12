@@ -4,14 +4,14 @@
         <span>{{title}}</span>
     </div>
     <div class="btn-table">
-        <div style="flex: 1;">
+        <div style="flex: 1; position: relative;">
             <button
                 *ngFor="let button of buttons"
                 class="btn"
                 [tooltip]="button.tooltip"
                 placement="bottom"
                 [disabled]="getDisabledBtn(button)"
-                triggers="hover"
+                triggers="hover:focus"
                 container="body"
                 containerClass="tooltip-info"
                 (click)="clickToButton(button)"
@@ -28,7 +28,7 @@
             <span class="counter">{{tabelData.data.length}}</span>
         </div>
     </div>
-    
+
     <!-- название столбцов -->
     <div class="all-table">
         <div *ngIf="getColomsFixed().length" class="header-table-param fixed-coloms" style="margin-right: -20px; position: relative;">
@@ -91,7 +91,7 @@
                 <div *ngIf="getColomsFixed().length" style="position: relative;">
                     <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 1px; box-shadow: 6px 3px 4px 3px rgba(34, 60, 80, 0.2);">
                     </div>
-                    <div 
+                    <div
                         #fixetColoms
                         style="overflow: clip auto;"
                         class="fixed-coloms-body"
@@ -123,7 +123,7 @@
                                         <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
                                     </ng-container>
                                     <ng-container *ngSwitchDefault>
-                                        <span 
+                                        <span
                                             #trF
                                             class="text table-hidder"
                                             [tooltip]="tootipShow(trF, trFP, getElement(colomn, row))"
@@ -184,7 +184,7 @@
                                     <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
                                 </ng-container>
                                 <ng-container *ngSwitchDefault>
-                                    <span 
+                                    <span
                                         #trNF
                                         class="text table-hidder"
                                         [tooltip]="tootipShow(trNF, trNFP, getElement(colomn, row)) || ''"
