@@ -148,6 +148,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
 
         if (!this._appContext.cbBase){
             this.fieldsConstMailResive.disabledFields.push('MAILRECEIVE_ORIGINAL_IN_ELECTRONIC_FORM');
+        } else {
+            this.fieldsConst.disabledFields.push('RCSEND_ADDRESSEES');
+            this.fieldsConst.disabledFields.push('RCSEND_ADDRESSEES_RADIO');
         }
 
         this.initEmail();
