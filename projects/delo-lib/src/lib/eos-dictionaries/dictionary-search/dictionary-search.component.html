@@ -6,7 +6,8 @@
         [container]="'body'"
         [isOpen]="this.dictId === 'citizens'"
         #full="bs-popover"
-        [outsideClick]="false">
+        [outsideClick]="false"
+    >
         <button [ngClass]="{'hidden': !hasFull, 'opened': isActiveButton()}"
             class="btn btn-primary-light search-btn"
             tooltip="Расширенный поиск"
@@ -42,10 +43,18 @@
     <div class="full-search-top usual-border">
         <span class="pull-left title xl-font">Область поиска</span>
         <div class="pull-right srch-btns">
-            <button style="background: transparent;" class="btn btn-primary s-font upper" type="button"  (click)="clearForm()" [disabled]="noSearchData">Сбросить</button>
-            <button [disabled]="regionForm?.invalid || noSearchData || !validFormSearch "
+            <button 
+                style="background: transparent;" 
+                class="btn btn-primary s-font upper" 
+                type="button"  
+                (click)="clearForm()" 
+                [disabled]="noSearchData"
+            >Сбросить</button>
+            <button 
+                [disabled]="regionForm?.invalid || noSearchData || !validFormSearch || isValidProtocolForm"
                 (click)="fullSearch()"
-                class="btn btn-primary-full s-font upper">Найти</button>
+                class="btn btn-primary-full s-font upper"
+            >Найти</button>
         </div>
     </div>
     <div class="full-search-settings-container usual-border">
@@ -259,22 +268,6 @@
                                     (click)="searchModel['DUTY'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                             </div>
                         </div>
-                        <!-- <div class="form-group unimportant-text col-250">
-                            <label class="s-font"
-                                for="fullPosition">{{fieldsDescription.rec['fullPosition']?.title}}</label>
-                            <div class="search-fld">
-                                <input id="fullPosition"
-                                    name="fullPosition"
-                                    type="text"
-                                    class="form-control light"
-                                    [(ngModel)]="searchModel['FULLNAME']"
-                                    placeholder="{{fieldsDescription.rec['fullPosition']?.title}}"
-                                    maxlength="{{fieldsDescription.rec['fullPosition']?.length}}">
-                                <a class="clear-btn"
-                                    [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                                    (click)="searchModel['FULLNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="form-group unimportant-text">
                         <label class="s-font"
@@ -318,21 +311,6 @@
                             (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
                 </div>
-                <!-- <div class="form-group unimportant-text">
-                    <label class="s-font"
-                           for="fullCabinet">{{fieldsDescription.rec['fullCabinet']?.title}}</label>
-                    <div class="search-fld">
-                        <input id="fullCabinet"
-                               name="fullCabinet"
-                               type="text"
-                               class="form-control light"
-                               [(ngModel)]="searchModel['fullCabinet']"
-                               placeholder="...">
-                        <a class="clear-btn"
-                           [ngClass]="{'hide': !searchModel['fullCabinet']}"
-                           (click)="searchModel['fullCabinet'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
-                    </div>
-                </div> -->
             </form>
         </div>
         <div *ngIf="currTab === 'department'"
@@ -970,44 +948,47 @@
 
     <!--FOR organization-->
     <div class="full-search-form" [hidden]="dictId !== 'organization'">
-        <div
-                class="tabs-wrapper usual-border">
-                <ul class="tabs">
-                    <li class="tab-item"
-                        *ngFor="let tab of modes"
-                        role="presentation"
-                        [ngClass]="{'active secondary-text': tab.key === currTab}"
-                        (click)="setTab(tab.key)">
-                        <span class="tab-title">{{tab.title}}</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="row" *ngIf="currTab === 'common'"
-                class="row">
-                <form id="organization">
-                    <button [disabled]="noSearchData"
-                        type="submit"
-                        (click)="fullSearch()"
-                        class="hidden-submit">Найти</button>
-                    <div class="form-group unimportant-text">
-                        <label class="s-font"
-                            for="organization-name">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
-                        <div class="search-fld">
-                            <input id="organization-name"
-                                name="organization-name"
-                                type="text"
-                                class="form-control light"
-                                [(ngModel)]="searchModel['CLASSIF_NAME']"
-                                placeholder="..."
-                                maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
-                            <a class="clear-btn"
-                                [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                                (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
-                        </div>
+        <div class="tabs-wrapper usual-border">
+            <ul class="tabs">
+                <li class="tab-item"
+                    *ngFor="let tab of modes"
+                    role="presentation"
+                    [ngClass]="{'active secondary-text': tab.key === currTab}"
+                    (click)="setTab(tab.key)">
+                    <span class="tab-title">{{tab.title}}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="currTab === 'common'" class="row">
+            <form id="organization">
+                <button [disabled]="noSearchData"
+                    type="submit"
+                    (click)="fullSearch()"
+                    class="hidden-submit"
+                >Найти</button>
+
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="organization-name">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="organization-name"
+                            name="organization-name"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['CLASSIF_NAME']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                     </div>
-                    <div class="form-group unimportant-text">
-                        <label class="s-font"
-                            for="organization-email">{{fieldsDescription.rec['EMAIL']?.title}}</label>
+                </div>
+
+                <div class="wrapper-double-fields">
+
+                    <div class="form-group unimportant-text elem-double-fields">
+                        <label class="s-font" for="organization-email">{{fieldsDescription.rec['EMAIL']?.title}}</label>
                         <div class="search-fld">
                             <input id="organization-email"
                                 name="organization-email"
@@ -1021,7 +1002,8 @@
                                 (click)="searchModel['EMAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
                         </div>
                     </div>
-                    <div class="form-group unimportant-text">
+
+                    <div class="form-group unimportant-text elem-double-fields" >
                         <label class="s-font"
                             for="organization-inn">{{fieldsDescription.rec['INN']?.title}}</label>
                         <div class="search-fld">
@@ -1034,14 +1016,19 @@
                                 maxlength="{{fieldsDescription.rec['INN']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['INN']}"
-                                (click)="searchModel['INN'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                                (click)="searchModel['INN'] = ''"
+                            >
+                                <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                            </a>
                         </div>
                     </div>
-                    <ng-content *ngTemplateOutlet="doprec"></ng-content>
-                </form>
-            </div>
-            <div *ngIf="currTab === 'medo'"
-            class="row">
+                </div>
+
+                <ng-content *ngTemplateOutlet="doprec"></ng-content>
+            </form>
+        </div>
+
+        <div *ngIf="currTab === 'medo'" class="row">
             <form id="organization">
                 <button [disabled]="noSearchData"
                     type="submit"
@@ -1109,6 +1096,79 @@
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CONTACT.MEDO_GLOBAL_ID']}"
                             (click)="searchModel['CONTACT.MEDO_GLOBAL_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div *ngIf="currTab === 'protocol'" class="row">
+            <form class="form-protocol" id="organization">
+
+                <button [disabled]="noSearchData"
+                    type="submit"
+                    (click)="fullSearch()"
+                    class="hidden-submit"
+                >Найти</button>
+
+                <div class="calendar-wrapper unimportant-text">
+                    <eos-dynamic-input 
+                        class="s-font" 
+                        [input]="protocolSerchInputs['FROM']" 
+                        [form]="protocolForm"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+
+                    <eos-dynamic-input 
+                        class="s-font" 
+                        [input]="protocolSerchInputs['TO']" 
+                        [form]="protocolForm"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+                </div>
+
+                <eos-dynamic-input
+                    class="s-font param-line-wrapper unimportant-text" 
+                    [input]="protocolSerchInputs['USER']" 
+                    [form]="protocolForm"
+                    [readonly]="true"
+                    (onClickChoose)="showDepChoose()" 
+                ></eos-dynamic-input>
+
+                <div class="form-group unimportant-text">
+                    <label class="s-font" for="operation">Операция</label>
+                    <div class="search-fld operation-field">
+                        <input #operation
+                            id="operation"
+                            name="operation"
+                            type="text"
+                            readonly
+                            [(ngModel)]="selectedOperation.valueToInput"
+                            class="form-control light operation-input"
+                            placeholder="..."
+                        >
+                        <div class="input-button-wrapper">
+                            <div
+                                *ngIf="operation.value"
+                                class="clear-btn clear-button input-button"
+                                (click)="clearSelectOperation()"
+                            >
+                                <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                            </div>
+                            <div 
+                                class="show-select-menu-button input-button" 
+                                [popover]="selectOperation"
+                                containerClass="select-popover"
+                                [placement]="bottom"
+                                (click)="changeFlagSelectPopover()"
+                            >
+                                <span class="eos-adm-icon small"
+                                [ngClass]="{
+                                    'eos-adm-icon-arrow-v-blue-bottom': !flagSelectPopover, 
+                                    'eos-adm-icon-arrow-v-blue-top': flagSelectPopover
+                                    }"
+                                ></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -1347,18 +1407,42 @@
         <div class="search-fld dop_rec" *ngIf="formSearch">
             <ng-container>
                 <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'text'" class="no-margin"
-                    [input]="inputs['rec.text']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+                    [input]="inputs['rec.text']" [form]="formSearch" [readonly]="false"
+                ></eos-dynamic-input>
                 <!-- <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'decimal'" class="no-margin"
                     [input]="inputs['rec.decimal']" [form]="formSearch" [readonly]="false"></eos-dynamic-input> -->
 
-                    <eos-search-input-string *ngIf="arType?.AR_TYPE === 'decimal'" class="no-margin"
-                    [input]="inputs['rec.decimal']" [form]="formSearch" [readonly]="false"></eos-search-input-string>
+                <eos-search-input-string *ngIf="arType?.AR_TYPE === 'decimal'" class="no-margin"
+                    [input]="inputs['rec.decimal']" [form]="formSearch" [readonly]="false"
+                ></eos-search-input-string>
 
                 <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'date'" class="no-margin date"
-                    [input]="inputs['rec.date']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+                    [input]="inputs['rec.date']" [form]="formSearch" [readonly]="false"
+                ></eos-dynamic-input>
+
                 <eos-dynamic-input *ngIf="arType?.AR_TYPE === 'flag'" class="no-margin"
-                    [input]="inputs['rec.flag']" [form]="formSearch" [readonly]="false"></eos-dynamic-input>
+                    [input]="inputs['rec.flag']" [form]="formSearch" [readonly]="false"
+                ></eos-dynamic-input>
             </ng-container>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #selectOperation>
+    <div 
+        class="operation-item" 
+        *ngFor="let operation of allOperation"
+        id="operation.OPER_DESCRIBE"
+        (click)="togleOperation(operation)"
+    >
+        <div class="wrapper-checkbox">
+            <span 
+                class="eos-adm-icon small"
+                [ngClass]="{
+                    'eos-adm-icon-checkbox-blue': checkOperationIsSelected(operation.DESCRIBTION)
+                }"
+            ></span>
+        </div>
+        <p class="title-operation">{{operation.DESCRIBTION}}</p>
     </div>
 </ng-template>

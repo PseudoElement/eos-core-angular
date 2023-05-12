@@ -1009,8 +1009,10 @@ export interface DEPARTMENT extends IHierCL, IStamp {
     EXPEDITION_FLAG: number;
     MEDO_ID: string;
 
-    // Запись не проверенна
+    /** Запись не проверенна */ 
     UNREAD_FLAG: number;
+
+    ISN_LCLASSIF?: number;
 }
 
 /**
@@ -2605,6 +2607,7 @@ export interface PROT_NAME extends IEnt {
      * Описание
      */
     DESCRIPTION: string;
+    DESCRIBTION: string;
     /**
      * Примечание
      */

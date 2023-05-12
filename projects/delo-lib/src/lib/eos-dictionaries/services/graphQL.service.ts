@@ -35,4 +35,20 @@ export class GraphQLService {
           body: JSON.stringify({query: string})
       });
     }
+    
+    query(queryParam: string) {
+        return fetch('../CoreHost/Gql/Query', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: `query{${queryParam}}`})
+        });
+    }
+
+    mutation(mutationParam: string) {
+        return fetch('../CoreHost/Gql/Query', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: `mutation{${mutationParam}}`})
+        });
+    }
 }

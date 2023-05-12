@@ -47,11 +47,14 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   }
 
   constructor(
-    private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService,
-    private _pipeSrv: PipRX, public _apiSrv: UserParamApiSrv, private inpSrv: InputControlService,
-    private formHelp: FormHelperService, private dataConv: EosDataConvertService
-  ) {
-  }
+    private _waitClassifSrv: WaitClassifService, 
+    private _inputCtrlSrv: InputParamControlService,
+    private _pipeSrv: PipRX, 
+    public _apiSrv: UserParamApiSrv, 
+    private inpSrv: InputControlService,
+    private formHelp: FormHelperService, 
+    private dataConv: EosDataConvertService
+  ) {}
 
   @HostListener('document:click', ['$event'])
   onClick() {

@@ -1,4 +1,3 @@
-
 export interface DeleteGroupDoc {
     isnFileCategory: number;
     isnNodeDg: number;
@@ -65,4 +64,102 @@ export interface ResponseFecth {
 export interface ErrFech {
     message: string;
     stack: string;
+}
+
+export interface ResponseProto {
+        suboperId: string;
+        operDescribe: string;
+        operComment: string;
+        isnProtInfo: number;
+        userIsn: number;
+        timeStamp: string
+        tableId: string;
+        refIsn: number
+        operId: string
+}
+
+export interface SearchQueryOrganization {
+    ISN_HIGH_NODE?: string;
+    DUE?: string;
+    LAYER?: string;
+    branch: object;
+    contact: object;
+    medo: object;
+    organiz: object;
+    protocol: Protocol
+}
+
+export interface Protocol {
+    FROM: string;
+    OPER_DESCRIBE: string;
+    TO: string;
+    USER_ISN: number;
+}
+
+export interface ResponseProt {
+    data: {
+        protsPg: {
+            items: ResponseProtItem[];
+        }
+    };
+    errors?: any[];
+}
+
+export interface ResponseProtItem {
+    suboperId: string;
+    operDescribe: string;
+    operComment: string;
+    isnProtInfo: number |  null;
+    userIsn: number;
+    timeStamp: string
+    tableId: string;
+    refIsn: number;
+    operId: string;
+}
+
+export interface ResponseOrganizationItems {
+    due: string;
+    isnNode: number;
+    isnHighNode: number;
+    layer: number;
+    isNode: number;
+    weight: number;
+    classifName: string;
+    classifNameSearch: string;
+    protected: number;
+    fullname: object,
+    zipcode: string;
+    city: string;
+    address: string;
+    note: object,
+    okpo: object,
+    inn: object,
+    isnRegion: object,
+    okonh: object,
+    lawAdress: object,
+    isnOrganizType: object,
+    sertificat: object,
+    isnAddrCategory: object,
+    code: object,
+    ogrn: object,
+    termExec: object,
+    termExecType: object,
+    insDate: object,
+    insWho: object,
+    updDate: object,
+    updWho: object,
+    deleted: number;
+    mailForAll: number;
+    newRecord: number;
+    parentNode: {
+      due: string;
+    }
+}
+
+export interface ResponseOrganization {
+    data: {
+        organizClsPg: {
+          items: ResponseOrganizationItems[];
+        }
+      }
 }
