@@ -733,11 +733,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     gt(): any {
-        const delo = this.formAccess.get('0').value;
-        const delo_web_delo = this.formAccess.get('0-1').value;
+        // const delo = this.formAccess.get('0').value;
+        // const delo_web_delo = this.formAccess.get('0-1').value;
         const delo_web = this.formAccess.get('delo_web').value;
         return {
-            delo, delo_web_delo, delo_web
+            delo_web
         };
     }
     edit() {
@@ -745,15 +745,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.editMode = !this.editMode;
         this.editModeF();
         this.checRadioB();
-        if (this.gt()['delo_web_delo']) {
-            this.checkMeinControlAccess({ target: { checked: true } }, '0-1');
-        } else if (this.gt()['delo_web']) {
+        if (this.gt()['delo_web']) {
             this.checkMeinControlAccess({ target: { checked: true } }, 'delo_web');
-        } else if (this.gt()['delo']) {
-            this.checkMeinControlAccess({ target: { checked: true } }, '0');
+
         } else {
-            this._toggleFormControl(this.formAccess.controls['0'], false);
-            this._toggleFormControl(this.formAccess.controls['0-1'], false);
+            // this._toggleFormControl(this.formAccess.controls['0'], false);
+            // this._toggleFormControl(this.formAccess.controls['0-1'], false);
             this._toggleFormControl(this.formAccess.controls['delo_web'], false);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
@@ -773,16 +770,16 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     checkMeinControlAccess($event, data) {
         if (data === '0') {
-            this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
+            //  this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['delo_web'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         } else if (data === '0-1') {
-            this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
+            //  this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['delo_web'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         } else {
-            this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
-            this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
+            //this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
+            // this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
             if (this.LicenzeInfo.length > 0 && $event.target.checked) {
                 if (this.actualLicenz.indexOf('1-27') !== -1) {
                     this._toggleFormControl(this.formAccess.controls['1-27'], false);
@@ -819,7 +816,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
             this.formAccess.controls['26'].disable({ emitEvent: false });
             this.formAccess.controls['26'].patchValue(false, { emitEvent: false });
-            ['2', '5', '15', '17', '21', '23', '25'].forEach(numberControl => {
+            ['2', '5', '15', '17', '23', '25'].forEach(numberControl => {
                 this._toggleFormControl(this.formAccess.controls[numberControl], false);
             });
         }
@@ -828,9 +825,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this._toggleFormControl(this.formAccess.controls[numberControl], false);
             });
             this._toggleFormControl(this.formAccess.controls['23'], true);
-            this._toggleFormControl(this.formAccess.controls['21'], true);
+            //this._toggleFormControl(this.formAccess.controls['21'], true);
             this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
-            this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
+            // this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
         }
         if (this.gt()['delo_web_delo']) {
             this.disableAccessSyst(false);
@@ -1030,18 +1027,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     private patchVal() {
-        ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
+        ['2', '5', '15', '17', '23', '25', '26'].forEach(numberControl => {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
         });
     }
 
     private disableAccessSyst(flag) {
         if (flag) {
-            ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
+            ['2', '5', '15', '17', '23', '25', '26'].forEach(numberControl => {
                 this._toggleFormControl(this.formAccess.controls[numberControl], true);
             });
         } else {
-            ['2', '5', '15', '17', '21', '23', '25', '26'].forEach(numberControl => {
+            ['2', '5', '15', '17', '23', '25', '26'].forEach(numberControl => {
                 this._toggleFormControl(this.formAccess.controls[numberControl], false);
             });
         }
@@ -1068,12 +1065,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         arr.forEach((val, index) => {
             switch (index) {
                 case 0:
-                    if (data['0-1'].value) {
+                    if (data['0-1']?.value) {
                         newArr['0'] = '1';
                         newArr['1'] = '1';
                     } else {
                         newArr['1'] = '0';
-                        if (data['0'].value) {
+                        if (data['0']?.value) {
                             newArr['0'] = data['0'].value ? '1' : '0';
                         }
                     }

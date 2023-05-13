@@ -80,7 +80,7 @@ export const USER_SEARCH = {
         {
             type: 'boolean',
             key: '25',
-            title: 'АРМ руководителя',
+            title: 'Мобильное приложение',
             value: '0'
         },
         {
@@ -119,12 +119,12 @@ export const USER_SEARCH = {
             title: 'ЭП и шифрование',
             value: '0'
         },
-        {
-            type: 'boolean',
-            key: '21',
-            title: 'EOS Desktop Service',
-            value: '0'
-        },
+        // {
+        //     type: 'boolean',
+        //     key: '21',
+        //     title: 'EOS Desktop Service',
+        //     value: '0'
+        // },
         {
             type: 'select',
             key: 'DELO_RIGHTS',

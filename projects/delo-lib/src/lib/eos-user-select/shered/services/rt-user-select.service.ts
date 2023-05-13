@@ -55,22 +55,22 @@ export class RtUserSelectService {
             ActualUsers: 0,
             Expired: '-',
         },
-        APM: {
+        MobileApp: {
             id: 26,
-            label: 'АРМ руководителя',
+            label: 'Мобильное приложение',
             checked: false,
             Users: 0,
             ActualUsers: 0,
             Expired: '-',
         },
-        EOS: {
-            id: 22,
-            label: 'EOS Desktop Service',
-            checked: false,
-            Users: 0,
-            ActualUsers: 0,
-            Expired: '-',
-        },
+        // EOS: {
+        //     id: 22,
+        //     label: 'EOS Desktop Service',
+        //     checked: false,
+        //     Users: 0,
+        //     ActualUsers: 0,
+        //     Expired: '-',
+        // },
         SCAN: {
             id: 3,
             label: 'Сканирование',

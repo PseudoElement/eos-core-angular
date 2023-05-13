@@ -96,7 +96,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         if (!this.CurrentUser.deleted && this.CurrentUser.deep) {
             const deep = await this._extensionsUser.loadDepartments(this.CurrentUser.deep);
             this.departments = (deep !== null) ? deep : (this.CurrentUser.data.NOTE || 'Не указано');
-        } 
+        }
     }
 
     parseSustemParam(parseParam) {
@@ -221,8 +221,8 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             }
         }
 
-        split[25] === '1' ? this._selectedUser.ArraySystemHelper.APM.checked = true : this._selectedUser.ArraySystemHelper.APM.checked = false;
-        split[21] === '1' ? this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUser.ArraySystemHelper.EOS.checked = false;
+        split[25] === '1' ? this._selectedUser.ArraySystemHelper.MobileApp.checked = true : this._selectedUser.ArraySystemHelper.MobileApp.checked = false;
+        // split[21] === '1' ? this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUser.ArraySystemHelper.EOS.checked = false;
         split[2] === '1' ? this._selectedUser.ArraySystemHelper.SCAN.checked = true : this._selectedUser.ArraySystemHelper.SCAN.checked = false;
         split[3] === '1' ? this._selectedUser.ArraySystemHelper.Pscan.checked = true : this._selectedUser.ArraySystemHelper.Pscan.checked = false;
         split[5] === '1' ? this._selectedUser.ArraySystemHelper.Shif.checked = true : this._selectedUser.ArraySystemHelper.Shif.checked = false;
