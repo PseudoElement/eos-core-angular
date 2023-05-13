@@ -2753,9 +2753,10 @@ bs-dropdown-container {
             & > div.tabs-wrapper {
                 ul.tabs {
                     font-weight: normal;
+                    width: 100%;
 
                     li.tab-item {
-                        width: 152px;
+                        max-width: 152px;
                         border: 1px solid $tab-CB;
                         background-color: $sidebar-bg-CB;
 
