@@ -1861,7 +1861,11 @@ bs-dropdown-container {
 
         //вкладка Внешний обмен
         eos-ext-exch {
-            eos-remaster-email {
+            eos-remaster-email,
+            eos-remaster-aspsd,
+            eos-remaster-epvv,
+            eos-remaster-lk,
+            eos-remaster-sds {
                 div.accordion-position {
                     max-height: calc(100vh - 205px);
 
