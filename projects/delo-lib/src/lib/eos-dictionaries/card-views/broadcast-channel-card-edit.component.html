@@ -38,20 +38,16 @@
                         <eos-dynamic-input [input]="inputs['rec.SMTP_EMAIL']"
                                            [form]="form"
                                            [readonly]="!editMode"
-
-
                                            ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
                                            [form]="form"
                                            [readonly]="!editMode"
-
                                            ></eos-dynamic-input>
                         <!-- <span> -->
                             <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
                                                [form]="form"
                                                [disabled]="(+authMethod === 0)"
                                                [readonly]="!editMode || (+authMethod === 0)"
-
                                                ></eos-dynamic-input>
                         <!-- </span> -->
                         <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
@@ -91,27 +87,24 @@
                         <eos-dynamic-input [input]="inputs['rec.POP3_SERVER']"
                                            [form]="form"
                                            [readonly]="!editMode"
-
                                            ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_LOGIN']"
                                            [form]="form"
                                            [readonly]="!editMode"
-
                                            ></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_ENCRYPTION']"
                                            [form]="form"
                                            [readonly]="!editMode"
-
                                            ></eos-dynamic-input>
                     </td>
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.POP3_PORT']"
                                            [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
+                                           [readonly]="!editMode"
+                                           style="margin-top: -55px;"></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.POP3_PASSWORD']"
                                            [form]="form"
                                            [readonly]="!editMode"
-
                                            ></eos-dynamic-input>
                     </td>
                 </tr>
