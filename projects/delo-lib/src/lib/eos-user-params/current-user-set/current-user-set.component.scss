@@ -293,7 +293,7 @@ bs-dropdown-container {
         }
     }
     .eos-adm-icon.eos-adm-icon-checkbox-blue {
-        background-image: url("../assets/icons/Checkbox-Grey.svg");
+        background-image: url("../assets/icons/Checkbox-Grey.svg") !important;
     }
     .params-nav-list {
         ul {
@@ -611,7 +611,7 @@ bs-dropdown-container {
                         }
 
                         span.eos-adm-icon-arrow-v-blue-bottom {
-                            background-image: url("../assets/icons/Arrow-V-UserSettings-Grey.svg");
+                            background-image: url("../assets/icons/Arrow-V-UserSettings-Grey.svg") !important;
                         }
                     }
 
@@ -1026,6 +1026,13 @@ bs-dropdown-container {
                                 }
                             }
                             div.inputs-inline:nth-child(1) {
+                                & > span {
+                                    background: none;
+                                    border-bottom: none;
+                                    font-size: 14px;
+                                    color: #505050;
+                                    width: 90px;
+                                }
                                 & > eos-dynamic-input {
                                     width: calc(30% - 47px) !important;
                                 }
