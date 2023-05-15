@@ -292,6 +292,9 @@ bs-dropdown-container {
             margin-top: 0px;
         }
     }
+    .eos-adm-icon.eos-adm-icon-checkbox-blue {
+        background-image: url("../assets/icons/Checkbox-Grey.svg");
+    }
     .params-nav-list {
         ul {
             li:first-child{
@@ -1001,7 +1004,7 @@ bs-dropdown-container {
 
                         &.search-link-wrapper {
                             padding: 15px 20px;
-                            max-width: 690px;
+                            max-width: 100%;
                             br {
                                 display: none;
                             }
@@ -1031,7 +1034,17 @@ bs-dropdown-container {
                                     width: calc(70% - 47px) !important;
                                 }
                             }
-                            div.inputs-inline:nth-child(3) {
+                            extension-user-params-registration {
+                                eos-extends-linked-search-default {
+                                    div {
+                                        justify-content: end !important;
+                                        eos-dynamic-input {
+                                            width: calc(30% - 47px) !important;
+                                        }
+                                    }
+                                }
+                            }
+                            div.inputs-inline:nth-child(2) {
                                 & > span {
                                     color: red !important;
                                 }
@@ -1041,7 +1054,7 @@ bs-dropdown-container {
                                 }
                             }
                             div.right-input-pos {
-                                justify-content: flex-start;
+                                justify-content: end;
                                 margin-right: 0;
 
                                 &:nth-child(3) {
@@ -1055,7 +1068,7 @@ bs-dropdown-container {
 
                                 &:nth-child(4) {
                                     & > eos-dynamic-input {
-                                        width: calc(50% + 91px) !important;
+                                        width: calc(100% - 210px) !important;
                                     }
                                 }
                             }
