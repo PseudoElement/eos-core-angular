@@ -151,11 +151,21 @@ export class RightOrganizDepertComponent implements OnInit {
 
                 const newNodes: NodeDocsTree[] = [];
                 data.forEach((dep: DEPARTMENT) => {
+                    let maxWeight = 0;
+                    let counrRow = new Set();
+                    this.curentUser.USERDEP_List.forEach((userDep) => {
+                        if (userDep.DUE === dep['DUE']) {
+                            maxWeight = userDep['WEIGHT'];
+                        }
+                        if (userDep['DUE'] !== '0.') {
+                            counrRow.add(userDep['DUE']);
+                        }
+                    });
                     const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: -1,
+                        WEIGHT: maxWeight || counrRow.size,
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -167,7 +177,7 @@ export class RightOrganizDepertComponent implements OnInit {
                             dep: dep,
                             userDep: newUserDep,
                         },
-                        weight: this._getNewWeight(),
+                        weight: maxWeight || counrRow.size,
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     const newNode = new NodeDocsTree(cfg, undefined, undefined, this.getLogElem(dep));
@@ -181,7 +191,7 @@ export class RightOrganizDepertComponent implements OnInit {
                 });
                 this.confirmPkpd();
                 this.listUserDep = this.listUserDep.concat(newNodes);
-                this._changeWeight();
+                // this._changeWeight();
                 this.selectedNode.isCreate = false;
                 this.isShell = false;
                 this.Changed.emit();
@@ -250,7 +260,7 @@ export class RightOrganizDepertComponent implements OnInit {
         // удаляем weightChanges для удаленной записи
         this.selectedNode.filterWeightChanges(this.selectedDep.DUE);
         this.selectedDep = null;
-        this._changeWeight();
+        // this._changeWeight();
         this.Changed.emit('del');
     }
     /* emitDeleteRcpd() {
@@ -485,7 +495,7 @@ export class RightOrganizDepertComponent implements OnInit {
     setMain() {
         if (this.selectedDep.weight !== 1) {
             this.selectedDep.weight = 0;
-            this._changeWeight();
+            // this._changeWeight();
             this.Changed.emit('setMain');
         }
     }
@@ -499,15 +509,15 @@ export class RightOrganizDepertComponent implements OnInit {
     //     });
     //     return w;
     // }
-    private _getNewWeight(): number {
-        if (this.userDepFuncNumber && this.userDepFuncNumber.length) {
-            this.userDepFuncNumber.sort((nodeA, nodeB) => nodeA.WEIGHT - nodeB.WEIGHT);
-            return this.userDepFuncNumber[this.userDepFuncNumber.length - 1].WEIGHT + 1;
-            // return this.userDepFuncNumber.length + 1;
-        } else {
-            return 1;
-        }
-    }
+    // private _getNewWeight(): number {
+    //     if (this.userDepFuncNumber && this.userDepFuncNumber.length) {
+    //         this.userDepFuncNumber.sort((nodeA, nodeB) => nodeA.WEIGHT - nodeB.WEIGHT);
+    //         return this.userDepFuncNumber[this.userDepFuncNumber.length - 1].WEIGHT + 1;
+    //         // return this.userDepFuncNumber.length + 1;
+    //     } else {
+    //         return 1;
+    //     }
+    // }
 
     private _sortWeight(): void {
         if (this.funcNum !== 3) {
@@ -515,26 +525,26 @@ export class RightOrganizDepertComponent implements OnInit {
         }
     }
 
-    private _changeWeight(): void {
-        this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
-        this.listUserDep.forEach((node: NodeDocsTree, index: number) => {
-            if (node.weight !== (index + 1) || node.data.userDep['WEIGHT'] < 1) {
-                node.weight = index + 1;
-                if (node.weight !== node.data.userDep['WEIGHT'] ) {
-                    // удаляем предыдущие изменения веса
-                    this.selectedNode.checkWeightChanges(node);
-                    // добавляем новый вес
-                    this.selectedNode.addWeightChanges(node);
-                    this.curentUser['USERDEP_List'].forEach(li => {
-                        if (li.FUNC_NUM === this.funcNum && li.DUE === node.DUE) {
-                            li.WEIGHT = node.weight;
-                        }
-                    });
-                    return;
-                }
-            }
-        });
-    }
+    // private _changeWeight(): void {
+    //     this.listUserDep.sort((nodeA: NodeDocsTree, nodeB: NodeDocsTree) => nodeA.weight - nodeB.weight);
+    //     this.listUserDep.forEach((node: NodeDocsTree, index: number) => {
+    //         if (node.weight !== (index + 1) || node.data.userDep['WEIGHT'] < 1) {
+    //             node.weight = index + 1;
+    //             if (node.weight !== node.data.userDep['WEIGHT'] ) {
+    //                 // удаляем предыдущие изменения веса
+    //                 this.selectedNode.checkWeightChanges(node);
+    //                 // добавляем новый вес
+    //                 this.selectedNode.addWeightChanges(node);
+    //                 this.curentUser['USERDEP_List'].forEach(li => {
+    //                     if (li.FUNC_NUM === this.funcNum && li.DUE === node.DUE) {
+    //                         li.WEIGHT = node.weight;
+    //                     }
+    //                 });
+    //                 return;
+    //             }
+    //         }
+    //     });
+    // }
     private _checkRepeat(arrDep: DEPARTMENT[]) {
         this.listUserDep.forEach((node: NodeDocsTree) => {
             const index = arrDep.findIndex((doc: DEPARTMENT) => doc.DUE === node.DUE);

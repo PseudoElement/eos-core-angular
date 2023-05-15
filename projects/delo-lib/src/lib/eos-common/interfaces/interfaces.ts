@@ -49,7 +49,7 @@ export interface IOpenClassifParams {
     nameText?: string;
     formText?: string;
     can_tech?: boolean; // отображение пользователей только из разрешённых картотек
-    datas?: {rc_id?: string[], due?: string[]};
+    datas?: {rc_id?: string[], due?: string[]}; // добавлено для корусели в Организациях
     dl_from?: string;
     dl_to?: string;
     /* 

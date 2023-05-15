@@ -5,19 +5,46 @@
     </div>
     <div class="btn-table">
         <div style="flex: 1; position: relative;">
-            <button
-                *ngFor="let button of buttons"
-                class="btn"
-                [tooltip]="button.tooltip"
-                placement="bottom"
-                [disabled]="getDisabledBtn(button)"
-                triggers="hover:focus"
-                container="body"
-                containerClass="tooltip-info"
-                (click)="clickToButton(button)"
-                [ngClass]="{'active-background': button.active && !getDisabledBtn(button)}">
-                <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(button)"></span>
-            </button>
+            <ng-container *ngFor="let button of buttons">
+                <button
+                    *ngIf="!button.notView"
+                    #itemTooltip="bs-tooltip"
+                    class="btn"
+                    [tooltip]="button.children ? '' : button.tooltip"
+                    placement="bottom"
+                    [disabled]="getDisabledBtn(button)"
+                    triggers="hover:focus"
+                    container="body"
+                    containerClass="tooltip-info"
+                    (click)="itemTooltip.hide(); clickToButton(button)"
+                    [ngClass]="{'active-background': button.active && !getDisabledBtn(button)}">
+                    <div 
+                        style="width: 100%;"
+                        *ngIf="button.children"
+                        dropdown
+                        class="btn-group"
+                        #dropdown="bs-dropdown"
+                        (mouseenter) = "dropdown.show();"
+                        (mouseleave) = "dropdown.hide();">
+                        <!--Icons button for tree and ADD-->
+                        <div style="width: 100%;" dropdownToggle>
+                            <span class="eos-adm-icon small get" [ngClass]="checkBtnIcons(button)"></span>
+                        </div>
+                        <ul
+                            class="dropdown-menu create-menu"
+                            style="top: 30px; left: -5px"
+                            role="menu">
+                            <li *ngFor="let elem of button.children"
+                                role="menuitem"
+                                class="menuitem">
+                                <a class="dropdown-item m-font"
+                                    (click)="dropdown.hide(); clickToButton(elem)"><span class="title m-font">{{elem.title}}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <span *ngIf="!button.children" class="eos-adm-icon small get" [ngClass]="checkBtnIcons(button)"></span>
+                </button>
+            </ng-container>
         </div>
         <div *ngIf="!settings?.count" class="counter-table">
             <span>Выбрано</span>
@@ -25,7 +52,7 @@
         </div>
         <div *ngIf="settings?.count" class="counter-table">
             <span>Записей</span>
-            <span class="counter">{{tabelData.data.length}}</span>
+            <span class="counter">{{getCountRow()}}</span>
         </div>
     </div>
 
@@ -39,7 +66,7 @@
                 (click)="orderByField(col)">
                 <span class="text table-hidder"
                     [tooltip]="col.title"
-                    placement="bottom"
+                    placement="auto"
                     container="body"
                     containerClass="tooltip-info">
                     {{col.title}}
@@ -97,11 +124,15 @@
                         class="fixed-coloms-body"
                         (scroll)="scrollFixed($event)"
                         [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}" style="margin-right: -20px;">
-                        <div class="display-element-item"  *ngFor="let row of tabelData.data" [ngClass]="getClassRow(row)" style="margin-right: -17px; padding-right: 17px;">
+                        <div 
+                            class="display-element-item"
+                            *ngFor="let row of tabelData.data let i = index"
+                            [ngClass]="getClassRow(row)"
+                            style="margin-right: -17px; padding-right: 17px;">
                             <div (click)="clickElem(row)" #trFP *ngFor="let colomn of getColomsFixed()"
                                 class="header-table-title colomn-style-td"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-                                [ngStyle]="getStyleTd(colomn)">
+                                [ngStyle]="getStyleTd(colomn, i)">
                                 <ng-container [ngSwitch]="getType(colomn, row)">
                                     <ng-container *ngSwitchCase="types.icon">
                                         <div style="height: 24px; line-height: 0;">
@@ -112,15 +143,26 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="types.checkbox">
-                                        <div style="height: 24px; padding-left: 0px;" class="checkbox-inline" >
+                                        <div style="height: 24px; padding-left: 0px;" class="checkbox-inline table-hidder" >
                                             <label>
-                                                <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
+                                                <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']($event)" [checked]="getElement(colomn, row).info['check']">
                                                 <span></span>
                                             </label>
+                                            {{getElement(colomn, row).info['title']}}
                                         </div>
                                     </ng-container>
-                                    <ng-container *ngSwitchCase="types.radio">
-                                        <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
+                                    <ng-container *ngSwitchCase="types.buttons">
+                                        <div style="margin-top: -5px;">
+                                            <button 
+                                                class="btn btn-primary" 
+                                                *ngFor="let btn of getElement(colomn, row).info"
+                                                [ngStyle]="{'min-width': btn.width}"
+                                                [disabled]="btn.disabled"
+                                                [ngClass]="{'btn-primary-full': btn.active}"
+                                                (click)="btn['click']($event)">
+                                                {{btn.title}}
+                                            </button>
+                                        </div>
                                     </ng-container>
                                     <ng-container *ngSwitchDefault>
                                         <span
@@ -130,6 +172,7 @@
                                             placement="bottom"
                                             containerClass="tooltip-info"
                                             container="body"
+                                            [ngStyle]="{'font-weight': row['bold'] ? 'bold' : 'normal'}"
                                             triggers="hover">
                                             {{getElement(colomn, row)}}
                                         </span>
@@ -149,11 +192,11 @@
                     [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}">
                     <div
                         class="display-element-item not-fixed-row-body"
-                        *ngFor="let row of tabelData.data"
+                        *ngFor="let row of tabelData.data let i = index"
                         [ngClass]="getClassRow(row)"
                         (dblclick)="dbClickToRow(row)"
                         [ngStyle]="getTableStyle()">
-                        <div *ngIf="showCheckBox" style="padding: 8px 0 0 16px;" class="checkbox-inline">
+                        <div *ngIf="showCheckBox" style="padding: 8px 0 0 16px;" class="checkbox-inline checkbox-to-select">
                             <label>
                                 <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">
                                 <span></span>
@@ -162,7 +205,7 @@
                         <div (click)="clickElem(row)" #trNFP *ngFor="let colomn of getColomsNotFixed()"
                             class="header-table-title colomn-style-td"
                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-                            [ngStyle]="getStyleTd(colomn)">
+                            [ngStyle]="getStyleTd(colomn, i)">
                             <ng-container [ngSwitch]="getType(colomn, row)">
                                 <ng-container *ngSwitchCase="types.icon">
                                     <div style="height: 24px; line-height: 0;">
@@ -173,15 +216,26 @@
                                     </div>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="types.checkbox">
-                                    <div style="height: 24px; margin-top: -8px; padding-left: 0;" class="checkbox-inline">
+                                    <div style="height: 24px; margin-top: -8px; padding-left: 0;" class="checkbox-inline table-hidder">
                                         <label>
-                                            <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']()" [checked]="getElement(colomn, row).info['check']">
-                                            <span></span>
+                                            <input type="checkbox" [disabled]="getElement(colomn, row).info['disabled'] || !edit" (change)="getElement(colomn, row).info['click']($event)" [checked]="getElement(colomn, row).info['check']">
+                                            <span style="margin-right: 0;"></span>
                                         </label>
+                                        {{getElement(colomn, row).info['title']}}
                                     </div>
                                 </ng-container>
-                                <ng-container *ngSwitchCase="types.radio">
-                                    <ng-container *ngTemplateOutlet="span; context: {node: node}"></ng-container>
+                                <ng-container *ngSwitchCase="types.buttons">
+                                    <div style="margin-top: -5px;">
+                                        <button 
+                                            class="btn btn-primary" 
+                                            *ngFor="let btn of getElement(colomn, row).info"
+                                            [disabled]="btn.disabled"
+                                            [ngStyle]="{'min-width': btn.width}"
+                                            [ngClass]="{'btn-primary-full': btn.active}"
+                                            (click)="btn['click']($event)">
+                                            {{btn.title}}
+                                        </button>
+                                    </div>
                                 </ng-container>
                                 <ng-container *ngSwitchDefault>
                                     <span
@@ -191,6 +245,7 @@
                                         placement="bottom"
                                         containerClass="tooltip-info"
                                         container="body"
+                                        [ngStyle]="{'font-weight': row['bold'] ? 'bold' : 'normal'}"
                                         triggers="hover">
                                         {{getElement(colomn, row)}}
                                     </span>

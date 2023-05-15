@@ -4,7 +4,9 @@ import { IOpenClassifParams } from '../../eos-common/interfaces';
 import { PipRX } from '../../eos-rest';
 
 declare function openPopup(url: string, callback?: Function): boolean;
-
+declare class Delo {
+    static Carousel: (flag: boolean) => any;
+}
 const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
@@ -85,7 +87,15 @@ export class WaitClassifService {
     }
 
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<string> {
-
+        let carouselInSilentMode: any;
+        try {
+            carouselInSilentMode = Delo.Carousel(true);
+            if (params.datas) {
+                carouselInSilentMode = Delo.Carousel.prototype;
+            } 
+        } catch (error) {
+            console.log('не найден модуль для карусели');  
+        }
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
             url = USER_LISTS;
@@ -119,6 +129,9 @@ export class WaitClassifService {
                 window['dontCheckExistPopUp'] = true;
             }
             setTimeout(() => {
+                if (carouselInSilentMode && params.datas) {
+                    carouselInSilentMode.carouselDataToLs(url, params.datas);
+                }
                 w = openPopup(url, function (event, str) {
                     if (flagPar) {
                         delete window['dontCheckExistPopUp'];

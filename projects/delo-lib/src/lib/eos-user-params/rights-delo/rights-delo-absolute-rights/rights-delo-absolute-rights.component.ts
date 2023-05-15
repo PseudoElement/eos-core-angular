@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
-import { CONTROL_ALL_NOTALL, ETypeDeloRight } from './absolute-rights.consts';
+import { ABSOLUTE_RIGHTS_BTN_TABEL_SECOND, CONTROL_ALL_NOTALL, ETypeDeloRight } from './absolute-rights.consts';
 import { InputParamControlService } from '../../../eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
@@ -23,6 +23,9 @@ import { EosStorageService } from '../../../app/services/eos-storage.service';
 import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { ExetentionsRigthsServiceLib } from '../../../eos-rest/addons/extentionsRigts.service';
 import { AbsoluteRigthServiceLib } from '../../../eos-rest/addons/absoluteRigth.service';
+import { ITableData, ITableHeader, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { NavParamService } from '../../../app/services/nav-param.service';
+import { RughtDeloAbsRightService } from './right-delo-absolute-rights.service';
 /* import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces'; */
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -30,6 +33,7 @@ import { AbsoluteRigthServiceLib } from '../../../eos-rest/addons/absoluteRigth.
 })
 
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
+    @ViewChild('tableAuthorized', {static: false}) tableAuthorized;
     curentUser: IParamUserCl;
     btnDisabled: boolean = true;
     isLoading: boolean = false;
@@ -54,6 +58,20 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     resolutionsRights: number;
     projectResol: number;
     public editMode: boolean = false;
+    TABLE_HEADER_ABS_RIGHT: ITableHeader[] = [];
+    public authorizedRight = false;
+    public tabelData: ITableData = {
+        tableBtn: [],
+        tableHeader: [],
+        data: [],
+    };
+    public settingsTable: ITableSettings = {
+        hiddenCheckBox: true,
+        maxHeightTable: '650px',
+        count: true,
+        printTable: true
+    }
+    public leftSendwitch;
     get titleHeader() {
         if (this.curentUser) {
             if (this.curentUser.isTechUser) {
@@ -82,6 +100,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _appContext: AppContext,
         private _extentionsRigts: ExetentionsRigthsServiceLib,
         private _absRigthServ: AbsoluteRigthServiceLib,
+        private _navSrv: NavParamService,
+        private _rightDeloService: RughtDeloAbsRightService
     ) { }
     ngOnInit() {
         let expandStr = this.expandStr;
@@ -104,6 +124,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             )
         .subscribe((rout: RouterStateSnapshot) => {
             this._userParamsSetSrv.submitSave = this.submit('true');
+        });
+        this._navSrv.StateSandwich$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((state: boolean) => {
+            this.leftSendwitch = state;
         });
     }
     ngOnDestroy() {
@@ -158,11 +185,33 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         return array;
     } */
+    getContentProp() {
+        return this.selectedNode?.viewToAuthorized;
+    }
     init() {
         const ABS = this._absRigthServ.getAbsoluteRigth();
         if (this._appContext.cbBase) {
             ABS[2].label = 'Централизованная отправка документов';
         }
+        this.TABLE_HEADER_ABS_RIGHT = [];
+        this.TABLE_HEADER_ABS_RIGHT.push({
+            title: 'Участники документаоборота',
+            id: 'CLASSIF_NAME',
+            style: {'min-width': '360px', 'max-width': '360px'},
+            fixed: true
+        });
+        ABS.forEach((item) => {
+            if (item.viewToAuthorized) {
+                const newElem = {
+                    title: item.label,
+                    id: item.key,
+                    style: {'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions  ? '200px' : '140px'},
+                    data: item
+                }
+                this.TABLE_HEADER_ABS_RIGHT.push(newElem);
+            }
+        });
+        this.tabelData.tableHeader = this.TABLE_HEADER_ABS_RIGHT;
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -368,6 +417,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                             });
                             this.groupDelRK = [];
                         }
+                        this._rightDeloService.updateWeight(this.queryForSave);
                         return this.apiSrv.setData(this.queryForSave)
                             .then(() => {
                                 const contentProp = this.selectedNode.contentProp;
@@ -707,6 +757,47 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 return;
             }
         }
+    }
+    async absoluteTable() {
+        const paramsQuer = this._rightDeloService.getParamsToQuery(this.curentUser);
+        const allQuery = [];
+        if (paramsQuer['newMapDep'].length > 0) {
+            allQuery.push(this._userParamsSetSrv.getDepartmentFromUser(paramsQuer['newMapDep']));
+        } else {
+            allQuery.push(Promise.resolve([]));
+        }
+        if (paramsQuer['newMapOrg'].length > 0) {
+            allQuery.push(this._userParamsSetSrv.getOrganizFromUser(paramsQuer['newMapOrg']));
+            
+        } else {
+            allQuery.push(Promise.resolve([]));
+        }
+        const arrayAns = await Promise.all(allQuery);
+        this.tabelData.tableBtn = JSON.parse(JSON.stringify(ABSOLUTE_RIGHTS_BTN_TABEL_SECOND));
+        this._rightDeloService.curentUser = this.curentUser;
+        this._rightDeloService.listRight = this.listRight;
+        this._rightDeloService.tabelData = this.tabelData;
+        this.tabelData.data = this._rightDeloService.getNewRowToTable(arrayAns, this.tabelData.tableHeader, paramsQuer);
+        this._rightDeloService.updateBtn();
+        this.isLoading = true;
+        this.authorizedRight = true;
+    }
+    close(flag) {
+        this.authorizedRight = false;
+        if (flag) {
+            this._rightDeloService.updateCurentUser();
+            this.checkChange();   
+        } else {
+            this._rightDeloService.clearInfo();
+        }
+
+        this._rightDeloService.listRightNew.clear();
+    }
+    actionTo($event) {
+        this._rightDeloService.action($event);
+    }
+    selectElement($event) {
+        /*  */
     }
     changedAll($event) {
         /* if (this._appContext.cbBase) { */ ETypeDeloRight.SystemTechnologist

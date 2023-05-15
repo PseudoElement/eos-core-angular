@@ -93,6 +93,7 @@ import { UserParamsExample } from '../eos-rest/addons/components/userParamsExamp
 import { UserParamsRegistration } from '../eos-rest/addons/components/userParamsRegistration.component';
 import { InlineScaningParamsComponent } from './user-params-set/inline-scanning/inline-scaning-params.component';
 import { NotificationAddressPlugComponent } from './notification-address-plug/notification-address-plug.component';
+import { RughtDeloAbsRightService } from './rights-delo/rights-delo-absolute-rights/right-delo-absolute-rights.service';
 
 @NgModule({
     declarations: [
@@ -198,7 +199,8 @@ import { NotificationAddressPlugComponent } from './notification-address-plug/no
         CardRightSrv,
         ErrorHelperServices,
         FormHelperService,
-        SearchService
+        SearchService,
+        RughtDeloAbsRightService
     ]
 })
 export class EosUserParamsModule { }

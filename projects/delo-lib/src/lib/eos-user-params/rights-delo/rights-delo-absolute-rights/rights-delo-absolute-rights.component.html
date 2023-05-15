@@ -1,6 +1,15 @@
-<div class="input-user-absolute-rights-wrapper">
-    <eos-user-params-header [title]="titleHeader" [disableBtn]="btnDisabled" [editMode]="editMode"
-        (submitEmit)="submit()" (cancelEmit)="cancel()" (editEmit)="edit()"></eos-user-params-header>
+<div class="input-user-absolute-rights-wrapper" *ngIf="!authorizedRight; else authorized">
+    <eos-user-params-header 
+        [defaultBtn]="getContentProp()"
+        dafaultTitle="авторизованные права"   
+        [title]="titleHeader"
+        [disableBtn]="btnDisabled"
+        [editMode]="editMode"
+        (submitEmit)="submit()"
+        (cancelEmit)="cancel()"
+        (editEmit)="edit()"
+        (defaultEmit)="absoluteTable()">
+    </eos-user-params-header>
     <div class="input-user-absolute-rights">
         <div class="left-block-list-absolute-rights">
             <div class="list-card-files" *ngFor="let item of listRight" [ngClass]="{'highlighted': item.isSelected}">
@@ -116,4 +125,36 @@
 </ng-template>
 <ng-template #spiner>
     <eos-spinner size="lg" class="content-absolute"></eos-spinner>
+</ng-template>
+
+<ng-template #authorized>
+    <div 
+        style="width: calc(100% - 380px); background-color: white; height: 100px; position: absolute; left: 380px; height: calc(100vh - 130px);" 
+        [ngStyle]="{'width': leftSendwitch ? 'calc(100% - 400px)' : 'calc(100vw - 60px)', left: leftSendwitch ? '390px' : '40px'}">
+        <div style="display: flex; height: 48px;justify-content: space-between; padding: 0 16px 0 16px; line-height: 48px;">
+            <span style="color: #646464; font-size: 18px;">{{titleHeader}}</span>
+            <div style="display: flex;padding-top: 10px;">
+                <button
+                    style="width: 88px; height: 28px; margin-right: 8px;"
+                    class="btn btn-primary"
+                    (click)="close(false)">
+                    ОТМЕНИТЬ
+                </button>
+                <button
+                    style="width: 88px; height: 28px;"
+                    class="btn btn-primary-full"
+                    (click)="close(true)">
+                    ВЫБРАТЬ
+                </button>
+            </div>
+        </div>
+            <eos-tabel-element
+                [edit]="true"
+                [tabelData]="tabelData"
+                [settings]="settingsTable"
+                (btnAction)="actionTo($event)"
+                (elementsSelect)="selectElement($event)"
+                (orderHead)="orderHead($event)">
+            </eos-tabel-element>
+    </div>
 </ng-template>
