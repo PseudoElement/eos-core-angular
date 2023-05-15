@@ -124,7 +124,7 @@
         (Changed)="checkChange()"></extension-organization>
 </ng-template>
 <ng-template #spiner>
-    <eos-spinner size="lg" class="content-absolute"></eos-spinner>
+    <eos-spinner size="lg" class="content-absolute" [ngStyle]="{'right': listRight && listRight.length > 0 ? '23%' : '47%' }"></eos-spinner>
 </ng-template>
 
 <ng-template #authorized>
