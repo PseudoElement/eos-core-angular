@@ -12,7 +12,7 @@ import { EosAdmToolsService } from '../../../eos-instruments/services/EosAdmTool
 export class EosInstrumentsSingleComponent implements OnInit, OnDestroy {
 
   public readonly MOUNT_POINT = 'eos-admin-tools';
-  private deletedStyleIds = ["index.1-style"];
+  private deletedStyleIds = ["printFormPlugin"];
 
   constructor(private route: ActivatedRoute, private router: Router, private _navSrv: NavParamService, private _eosAdmTools: EosAdmToolsService) { }
   ngOnInit() {
