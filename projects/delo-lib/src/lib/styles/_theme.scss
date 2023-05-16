@@ -159,7 +159,9 @@
         display: none;
     }
 }
-
+.tooltip-info-white-space {
+    white-space: pre-wrap;
+}
 .tooltip-info,
 .tooltip-error {
     .tooltip-inner {
