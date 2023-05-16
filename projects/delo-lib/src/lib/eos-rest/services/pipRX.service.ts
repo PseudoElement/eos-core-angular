@@ -91,7 +91,7 @@ export class PipRX extends PipeUtils {
         this._cfg.dataApiUrl = this._cfg.apiBaseUrl + this._cfg.dataApi;
         this._cfg.authApiUrl = this._cfg.apiBaseUrl + this._cfg.authApi;
         this._cfg.templateApiUrl = this._cfg.apiBaseUrl + this._cfg.templateApi;
-        this._cfg.appSetting = '../CoreHost/appsettings';
+        this._cfg.appSetting = '../CoreHost/appsettings/api';
         this._cfg.metaMergeFuncList = [commonMergeMeta];
     }
 
