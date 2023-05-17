@@ -341,12 +341,21 @@ export class RightDepertmentComponent implements OnInit {
 
                 const newNodes: NodeDocsTree[] = [];
                 data.forEach((dep: DEPARTMENT) => {
+                    let maxWeight = 0;
+                    let counrRow = new Set();
+                    this.curentUser.USERDEP_List.forEach((userDep) => {
+                        if (userDep.DUE === dep['DUE']) {
+                            maxWeight = userDep['WEIGHT'];
+                        }
+                        if (userDep['DUE'] !== '0.') {
+                            counrRow.add(userDep['DUE']);
+                        }
+                    });
                     const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        // WEIGHT: (this.funcNum === 3 /* && this._appContext.cbBase */) ? null : this._getMaxWeight(),
-                        WEIGHT: this.funcNum === 3 ? null : -1,
+                        WEIGHT: this.funcNum === 3 ? null : maxWeight || counrRow.size,
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -358,7 +367,7 @@ export class RightDepertmentComponent implements OnInit {
                             dep: dep,
                             userDep: newUserDep,
                         },
-                        weight: this._getNewWeight(),
+                        weight: maxWeight || counrRow.size,
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     let flag;
@@ -380,7 +389,7 @@ export class RightDepertmentComponent implements OnInit {
                 });
                 this.confirmPkpd();
                 this.listUserDep = this.listUserDep.concat(newNodes);
-                this._changeWeight();
+                // this._changeWeight();
                 this.selectedNode.isCreate = false;
                 this.isShell = false;
                 this.Changed.emit();
@@ -465,7 +474,7 @@ export class RightDepertmentComponent implements OnInit {
         // удаляем weightChanges для удаленной записи
         this.selectedNode.filterWeightChanges(this.selectedDep.DUE);
         this.emitDeleteRcpd();
-        this._changeWeight();
+        // this._changeWeight();
         this.selectedDep = null;
         this.Changed.emit('del');
     }
@@ -613,7 +622,7 @@ export class RightDepertmentComponent implements OnInit {
             ISN_LCLASSIF: this._userParmSrv.userContextId,
             DUE: '0.',
             FUNC_NUM: this.funcNum,
-            WEIGHT: null,
+            WEIGHT: 0,
             DEEP: 1,
             ALLOWED: null,
         }, 'USERDEP');

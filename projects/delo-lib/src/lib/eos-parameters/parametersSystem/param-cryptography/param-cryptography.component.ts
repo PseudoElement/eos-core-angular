@@ -2,7 +2,7 @@ import { Component, Injector, Input } from '@angular/core';
 import { ICryptographyParams, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { BsModalRef } from 'ngx-bootstrap';
 import { BaseParamComponent } from '../shared/base-param.component';
-import { CRYPTO_PARAM, CRYPTO_PARAM_BTN_TABEL } from '../shared/consts/cryptography.const';
+import { CRYPTO_PARAM, CRYPTO_PARAM_BTN_TABEL_SECOND } from '../shared/consts/cryptography.const';
 import { ITableBtn, ITableData, ITableHeader } from '../shared/interfaces/tables.interfaces';
 import { ELEMENT_PROTECT_NOT_DELET, PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { IOrderTable } from '../../../eos-common/index';
@@ -26,7 +26,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
     public orderBy: boolean = true;
     public editElement = false;
     public disableForm = true;
-    public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL];
+    public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL_SECOND];
     public title = 'Хранилище сертификатов';
     public maxKey = 0;
     public showCard = false;

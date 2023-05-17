@@ -213,8 +213,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.initSingleOwnerCab = this.singleOwnerCab;
             });
         }
+        const baseInput = [...BASE_PARAM_CONTROL_INPUT];
+        /* 
+        * По логике в ЦБ может быть роль или роль вибр и одна из них должна быть заполнена если не заполнена ни одна то выдавать ошибку
+        */
+        baseInput.forEach((item) => {
+            if (item.key === 'SELECT_ROLE') {
+                item.required = false;
+            }
+        });
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS_CB, !this.editMode);
-        this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+        this.controlField = this._descSrv.fillValueControlField(baseInput, !this.editMode);
         this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
 
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
@@ -545,7 +554,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
             return Promise.resolve('error');
         }
-        if (this.cheackCtech()) {
+        if (this.cheackCtech() || this.checkRole()) {
             return Promise.resolve('error');
         }
         if (this._newData.get('IS_SECUR_ADM') && this.curentUser.TECH_RIGHTS && this.curentUser.TECH_RIGHTS[0] === '1') {
@@ -608,7 +617,27 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
+    /**
+     * метод checkRole
+     * проверяет перед сохранением, что у пользователя
+     * задана роль (поле SELECT_ROLE не пустое)
+     */
+    private checkRole(): boolean {
+        const role = this.formControls.get('SELECT_ROLE');
+        if (!role.value && !role.disabled) {
+            if (!this.controls['SELECT_ROLE_VIBR'].value) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение:',
+                    msg: 'Укажите пользователю роль',
+                    dismissOnTimeout: 6000,
+                });
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
     checkDLSurname(mas: any[]): Promise<any> {
         if (this._newData.get('SURNAME_PATRON')) {
             if (this.curentUser['SURNAME_PATRON'] === this.surnameDepartment) {

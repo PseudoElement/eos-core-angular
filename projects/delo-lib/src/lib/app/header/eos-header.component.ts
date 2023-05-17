@@ -105,6 +105,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     }
     logOut() {
         sessionStorage.removeItem('fromclassif');
+        sessionStorage.removeItem('color-theme');
         document.location.assign(URL_EXIT);
     }
     eiCl(id: any) {

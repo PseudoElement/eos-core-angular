@@ -20,6 +20,10 @@ export interface IInputParamControl {
   disabled?: boolean;
   data?: any;
   deleted?: boolean;
+  viewToAuthorized?: boolean; // данный флаг показывает будет поле отображаться в окне
+  optionBtn?: boolean; // флаг который говорит что эта таблица будет с снопками
+  checkBoxAll?: boolean; // указывает что в департаменте есть чекбокс "За всех"
+  onlyDL?: boolean; // можно добавлять только ДЛ
 }
 
 export interface ISelectOptionControl {

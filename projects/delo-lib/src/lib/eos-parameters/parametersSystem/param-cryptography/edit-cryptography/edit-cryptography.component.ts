@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, OnInit, TemplateRef, ViewChild, Input, OnDestroy } from '@angular/core';
-import { CRYPTO_PARAM_BTN_TABEL } from '../../../../eos-parameters/parametersSystem/shared/consts/cryptography.const';
+import { CRYPTO_PARAM_BTN_TABEL_FIRST } from '../../../../eos-parameters/parametersSystem/shared/consts/cryptography.const';
 import { ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { FormGroup } from '@angular/forms';
@@ -41,7 +41,7 @@ export class EditCryptographyComponent implements OnInit, OnDestroy {
     public InfoSert: Array<string> = [];
     public modalRef: BsModalRef | null;
     public currentName: string;
-    public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL, {
+    public arrayBtn: ITableBtn[] = [...CRYPTO_PARAM_BTN_TABEL_FIRST, {
         tooltip: 'Просмотреть',
         disable: true,
         iconActiv: 'eos-adm-icon-info-blue',

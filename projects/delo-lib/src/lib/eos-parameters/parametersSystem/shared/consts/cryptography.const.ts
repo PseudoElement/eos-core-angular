@@ -52,3 +52,49 @@ export const CRYPTO_PARAM_BTN_TABEL = [
         id: 'deleted'
     },
 ];
+export const CRYPTO_PARAM_BTN_TABEL_SECOND = [
+    {
+        tooltip: 'Добавить',
+        disable: true,
+        iconActiv: 'eos-adm-icon-plus-blue',
+        iconDisable: 'eos-adm-icon-plus-grey',
+        id: 'add'
+    },
+    {
+        tooltip: 'Редактировать',
+        disable: true,
+        iconActiv: 'eos-adm-icon-edit-blue',
+        iconDisable: 'eos-adm-icon-edit-grey',
+        id: 'edit'
+    },
+    {
+        tooltip: 'Удалить',
+        disable: true,
+        iconActiv: 'eos-adm-icon-bin-forever-blue',
+        iconDisable: 'eos-adm-icon-bin-forever-grey',
+        id: 'deleted'
+    },
+];
+export const CRYPTO_PARAM_BTN_TABEL_FIRST = [
+    {
+        tooltip: 'Добавить',
+        disable: true,
+        iconActiv: 'eos-adm-icon-plus-blue',
+        iconDisable: 'eos-adm-icon-plus-grey',
+        id: 'add'
+    },
+    {
+        tooltip: 'Редактировать',
+        disable: true,
+        iconActiv: 'eos-adm-icon-edit-blue',
+        iconDisable: 'eos-adm-icon-edit-grey',
+        id: 'edit'
+    },
+    {
+        tooltip: 'Удалить',
+        disable: true,
+        iconActiv: 'eos-adm-icon-bin-forever-blue',
+        iconDisable: 'eos-adm-icon-bin-forever-grey',
+        id: 'deleted'
+    },
+];

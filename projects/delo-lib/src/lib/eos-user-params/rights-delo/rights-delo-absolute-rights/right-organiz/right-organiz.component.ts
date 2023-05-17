@@ -135,12 +135,23 @@ export class RightDepertOrganizComponent implements OnInit {
                 }
 
                 const newNodes: NodeDocsTree[] = [];
+                let maxWeight = 0;
+                let counrRow = new Set();
                 data.forEach((dep: ORGANIZ_CL) => {
+                    this.curentUser['USER_ORGANIZ_List'].forEach((userDep) => {
+                        if (userDep.DUE === dep['DUE']) {
+                            maxWeight = userDep['WEIGHT'];
+                        }
+                        if (userDep['DUE'] !== '0.') {
+                            counrRow.add(userDep['DUE']);
+                        }
+                        
+                    });
                     const newUserDep: USER_ORGANIZ = this._userParmSrv.createEntyti<USER_ORGANIZ>({
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: this._getMaxWeight(),
+                        WEIGHT: maxWeight || counrRow.size,
                     }, 'USERDEP');
                     const cfg: INodeDocsTreeCfg = {
                         due: newUserDep.DUE,
@@ -241,15 +252,15 @@ export class RightDepertOrganizComponent implements OnInit {
         return [];
     }
 
-    private _getMaxWeight(): number {
-        let w = 0;
-        this.userDep.forEach(i => {
-            if (i.WEIGHT > w) {
-                w = i.WEIGHT;
-            }
-        });
-        return w;
-    }
+    // private _getMaxWeight(): number {
+    //     let w = 0;
+    //     this.userDep.forEach(i => {
+    //         if (i.WEIGHT > w) {
+    //             w = i.WEIGHT;
+    //         }
+    //     });
+    //     return w;
+    // }
     private _checkRepeat(arrDep: ORGANIZ_CL[]) {
         this.listUserDep.forEach((node: NodeDocsTree) => {
             const index = arrDep.findIndex((doc: ORGANIZ_CL) => doc.DUE === node.DUE);
