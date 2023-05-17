@@ -3,7 +3,7 @@
         <span>Получать реестр:</span>
         <eos-dynamic-input [input]="inputs[ 'rec.CUR_CABINET'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
-    <div class="user-input-group">
+    <div class="user-input-group eos-user-param-reestr-cb-margin">
         <eos-dynamic-input [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
@@ -13,7 +13,7 @@
         <eos-dynamic-input [input]="inputs[ 'rec.ORIG_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div><br>
-    <div [hidden]="appMode.arm" class="user-group-form" [ngStyle]="{'display': 'flex'}">
+    <div [hidden]="appMode.arm" class="user-group-form eos-user-param-reestr-cb-margin" [ngStyle]="{'display': 'flex'}">
         <div>
             <span>Форма печати реестра:</span>
             <div>
@@ -35,7 +35,7 @@
         <eos-dynamic-input [input]="inputs[ 'rec.REESTR_CB_WITHCOM'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
     <div *ngIf='errorHidden' class="user-group-form">
-        <div class="inputs-inline">
+        <div class="inputs-inline eos-user-param-reestr-cb-margin">
             <span class="input-title">Дата передачи документов не позднее ( дней ):</span>
             <eos-dynamic-input [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div><br>
