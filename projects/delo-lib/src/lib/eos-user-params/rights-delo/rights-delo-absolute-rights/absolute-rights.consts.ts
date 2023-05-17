@@ -155,7 +155,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 11
         key: ETypeDeloRight.AddingOrganizations,
-        label: 'Добавление организаций',
+        label: 'Добавление организаций и граждан',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
