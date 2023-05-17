@@ -2674,7 +2674,31 @@ bs-dropdown-container {
 
 .current-settings-CB {
     font-family: Tahoma, Geneva, Verdana, sans-serif;
-
+    .the-main-recipients-of-the-document-titles {
+        display: inline-block;
+        width: 100% !important;
+        padding: 6px 10px !important;
+        font-size: 18px !important;
+        color: #373737;
+        font-weight: normal !important;
+        background: none !important;
+        border-bottom: 1px solid #c4c4c4;
+    }
+    .input-user-other-rk-forwarding-wrapper.signature {
+        span.l-font {
+            display: inline-block;
+            width: 100% !important;
+            padding: 6px 10px !important;
+            font-size: 18px !important;
+            color: #373737;
+            font-weight: normal !important;
+            background: none !important;
+            border-bottom: 1px solid #c4c4c4;
+        }
+    }
+    .eos-user-param-reestr-cb-margin {
+        margin-left: 15px !important;
+    }
     div.left > .params-nav-list {
         width: 200px;
         min-width: 200px;
@@ -2884,6 +2908,9 @@ bs-dropdown-container {
                     &:nth-child(3) {
                         div.classifDep {
                             @include style-other-button($isCB: true);
+                            span {
+                                background-color: white !important;
+                            }
                         }
                     }
 
