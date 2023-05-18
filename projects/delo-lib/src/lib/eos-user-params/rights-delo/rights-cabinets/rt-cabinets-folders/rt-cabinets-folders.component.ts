@@ -218,11 +218,11 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     // item.fixed = !item.fixed;
                     break;
                 case 'FOLDERS_AVAILABLE_1':
-                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '66px'}
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '65px'}
                     // item.fixed = !item.fixed;
                     break;
                 default:
-                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '50px'}
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '49px'}
                     break;
             }
         });

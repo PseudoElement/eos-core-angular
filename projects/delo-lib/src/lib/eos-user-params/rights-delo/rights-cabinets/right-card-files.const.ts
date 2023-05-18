@@ -34,77 +34,77 @@ export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
         title: 'Поступившие',
         id: 'FOLDERS_AVAILABLE_1',
         style: {
-            'width': '66px',
+            'width': '65px',
         }
     },
     {
         title: 'На исполнении',
         id: 'FOLDERS_AVAILABLE_2',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'На контроле',
         id: 'FOLDERS_AVAILABLE_3',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'У руководства',
         id: 'FOLDERS_AVAILABLE_4',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'На рассмотрении',
         id: 'FOLDERS_AVAILABLE_5',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'В дело',
         id: 'FOLDERS_AVAILABLE_6',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'Управление проектами',
         id: 'FOLDERS_AVAILABLE_7',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'На визировании',
         id: 'FOLDERS_AVAILABLE_8',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'На подписании',
         id: 'FOLDERS_AVAILABLE_9',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'РК. Учитывать ограничение доступа по грифам и группам документов',
         id: 'HIDE_INACCESSIBLE',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
     {
         title: 'РКПД. Учитывать права.',
         id: 'HIDE_INACCESSIBLE_PRJ',
         style: {
-            'width': '50px',
+            'width': '49px',
         }
     },
 ];
