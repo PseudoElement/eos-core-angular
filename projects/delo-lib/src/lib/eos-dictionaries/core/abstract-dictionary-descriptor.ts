@@ -26,6 +26,7 @@ import { RestError } from '../../eos-rest/core/rest-error';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 import {IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import {WARN_ELEMENTS_ARE_RELATED } from '../../eos-dictionaries/consts/confirm.consts';
+import { GraphQLService } from 'eos-dictionaries/services/graphQL.service';
 
 
 export interface IDictionaryDescriptorRelatedInfo {
@@ -72,6 +73,7 @@ export abstract class AbstractDictionaryDescriptor {
     constructor(
         descriptor: IDictionaryDescriptor,
         apiSrv: PipRX,
+        public graphQl?: GraphQLService,
     ) {
         if (descriptor) {
             this.id = descriptor.id;

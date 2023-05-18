@@ -392,7 +392,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.protocolForm.valueChanges.subscribe((data) => {
             this.protocolSearchNameControl.forEach(el => {
                 if(el === 'FROM' || el === 'TO') {
-                    this.searchData['protocol'][el] = data[el]? `${data[el].toISOString()}`:     null;
+                    this.searchData['protocol'][el] = data[el]? `${data[el].toISOString()}` : null;
                 } else if (el === 'OPER_DESCRIBE') {
                     if(data['OPERATION']) {
                         let oper: string = '';
@@ -434,32 +434,38 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     async getAllOperation(): Promise<PROT_NAME[]> {
-        const allOperation: PROT_NAME[] = await this._pipRX.read({PROT_NAME: {criteries: {TABLE_ID: 'Z|A'}}})
+        try{
+            const allOperation: PROT_NAME[] = await this._pipRX.read({PROT_NAME: {criteries: {TABLE_ID: 'Z|A'}}})
         
-        const sortOperation = allOperation.sort((a, b) => {
-            if (a.DESCRIBTION.toLowerCase() < b.DESCRIBTION.toLowerCase()) {
-                return -1;
-              }
-              if (a.DESCRIBTION.toLowerCase() > b.DESCRIBTION.toLowerCase()) {
-                return 1;
-              }
-              return 0;
-        })
-
-        const unicOperation: PROT_NAME[] = [];
-        sortOperation.forEach((el) => {
-            if (el.DESCRIBTION) {
-                if(!unicOperation.length){
-                    unicOperation.push(el)
-                } else {
-                    const i = unicOperation.length - 1;
-                    if(!(unicOperation[i].DESCRIBTION === el.DESCRIBTION)) {
+            const sortOperation = allOperation.sort((a, b) => {
+                if (a.DESCRIBTION.toLowerCase() < b.DESCRIBTION.toLowerCase()) {
+                    return -1;
+                  }
+                  if (a.DESCRIBTION.toLowerCase() > b.DESCRIBTION.toLowerCase()) {
+                    return 1;
+                  }
+                  return 0;
+            })
+    
+            const unicOperation: PROT_NAME[] = [];
+            sortOperation.forEach((el) => {
+                if (el.DESCRIBTION) {
+                    if(!unicOperation.length){
                         unicOperation.push(el)
+                    } else {
+                        const i = unicOperation.length - 1;
+                        if(!(unicOperation[i].DESCRIBTION === el.DESCRIBTION)) {
+                            unicOperation.push(el)
+                        }
                     }
                 }
-            }
-        })
-        return unicOperation;
+            })
+            return unicOperation;
+        } catch (err) {
+            console.warn(err);
+            console.error('Error: Failed to get operation name.');
+            return [];
+        }
     }
 
     public changeFlagSelectPopover() {
@@ -471,7 +477,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
             this.selectedOperation.selectOption = this.selectedOperation.selectOption.filter(el => {
                 return el.DESCRIBTION !== operation.DESCRIBTION;
             })
-            this.createValueToInput();
+            this.createValueToInputOperation();
         } else {
             this.selectOperation(operation);
         }
@@ -490,10 +496,10 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     private selectOperation(operation: PROT_NAME) {
         this.selectedOperation.selectOption.push(operation);
-        this.createValueToInput()
+        this.createValueToInputOperation();
     }
 
-    private createValueToInput() {
+    private createValueToInputOperation() {
         this.selectedOperation.valueToInput = '';
         this.selectedOperation.selectOption.forEach(el => {
             if(this.selectedOperation.valueToInput.length) {
@@ -651,8 +657,14 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
             this.mode = 0;
         }
         if(this.dictId === 'organization' && this.searchData.srchMode === 'protocol') {
+            const date = new Date();
             Object.keys(this.protocolForm.controls).forEach(el => {
-                this.protocolForm.controls[el].patchValue('', { emitEvent: true })
+                if(el === 'FROM' || el === 'TO'){
+                    this.protocolForm.controls[el].patchValue(date, { emitEvent: true });
+                } else {
+                    this.protocolForm.controls[el].patchValue('', { emitEvent: true });
+                }
+
             })
             this.selectedOperation = {
                 valueToInput: '',

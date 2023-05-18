@@ -294,6 +294,9 @@
     .form-group .readonly {
         padding: 0!important;
     }
+    .required:after {
+        right: 36px!important;
+    }
 }
 
 .operation-field {
