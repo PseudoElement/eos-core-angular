@@ -32,11 +32,12 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     private windowView: Window;
     private windowScan: Window;
     get tooltip() {
-        if (this._appcontext.cbBase) {
+        return 'Вернуться на главную страницу';
+        /* if (this._appcontext.cbBase) {
             return 'Вернуться в САДД БР-Web';
         }   else {
             return 'Вернуться в Дело-Web';
-        }
+        } */
     }
     get showtitle(): boolean {
         return !!sessionStorage.getItem('fromclassif');
