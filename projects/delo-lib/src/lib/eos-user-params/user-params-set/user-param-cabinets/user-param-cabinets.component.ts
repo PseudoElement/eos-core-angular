@@ -24,6 +24,8 @@ import { RECENT_URL } from '../../../app/consts/common.consts';
 import { EosStorageService } from '../../../app/services/eos-storage.service';
 // import { CabinetsInformerComponent } from './cabinets-informer/cabinets-informer.component';
 import { IUserSettingsModes } from '../../../eos-user-params/shared/intrfaces/user-params.interfaces';
+declare function notifyOpener();
+
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -471,6 +473,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                         this.btnDisable = true;
                         this.flagEdit = false;
                     }
+                    notifyOpener();
                     // this.informerTabRef.submit(this.flagEdit);
                     // if (this.defaultTitle) {
                     //     this.defaultNotificatorRef.submit(this.flagEdit);
