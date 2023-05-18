@@ -89,7 +89,7 @@ export class WaitClassifService {
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<string> {
         let carouselInSilentMode: any;
         try {
-            carouselInSilentMode = Delo.Carousel(true);
+            // carouselInSilentMode = Delo.Carousel(true);
             if (params.datas) {
                 carouselInSilentMode = Delo.Carousel.prototype;
             } 
