@@ -82,6 +82,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        viewToAuthorized: true,
+        checkBoxAll: true,
         useInProject: 'delo,nadzor'
     },
     // {
@@ -101,6 +103,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject
         },
+        viewToAuthorized: true,
+        checkBoxAll: true,
         useInProject: 'delo,nadzor'
     },
     // {
@@ -120,6 +124,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -140,6 +145,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         },
+        viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -155,7 +161,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 11
         key: ETypeDeloRight.AddingOrganizations,
-        label: 'Добавление организаций',
+        label: 'Добавление организаций и граждан',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
@@ -210,6 +216,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -220,6 +227,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -230,6 +238,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         },
+        viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -240,6 +249,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         },
+        viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -281,6 +291,9 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
         },
+        viewToAuthorized: true,
+        optionBtn: true,
+        checkBoxAll: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -292,6 +305,9 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
         },
+        viewToAuthorized: true,
+        optionBtn: true,
+        checkBoxAll: true,
         useInProject: 'delo,nadzor'
     },
     {
@@ -303,6 +319,9 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
         },
+        viewToAuthorized: true,
+        optionBtn: true,
+        checkBoxAll: true,
         useInProject: 'delo,nadzor'
     },
     /* {
@@ -388,6 +407,8 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: false,
         },
+        viewToAuthorized: true,
+        checkBoxAll: true,
         useInProject: 'delo'
     },
     {
@@ -399,6 +420,9 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: false,
         },
+        viewToAuthorized: true,
+        checkBoxAll: true,
+        onlyDL: true,
         useInProject: 'delo'
     },
 ];
@@ -418,3 +442,169 @@ export const CONTROL_ALL_NOTALL: IInputParamControl = {
         }
     ]
 };
+
+export const ABSOLUTE_RIGHTS_BTN_TABEL_SECOND = [
+    {
+        tooltip: 'Добавить',
+        disable: false,
+        iconActiv: 'eos-adm-icon-plus-blue',
+        iconDisable: 'eos-adm-icon-plus-grey',
+        id: 'add',
+        children: [
+            {
+                title: 'Добавить ДЛ / Подразделение',
+                disable: false,
+                id: 'addDep'
+            },
+            {
+                title: 'Добавить организацию',
+                disable: false,
+                id: 'addOrg'
+            }
+        ]
+    },
+    {
+        tooltip: 'Удалить',
+        disable: true,
+        iconActiv: 'eos-adm-icon-bin-forever-blue',
+        iconDisable: 'eos-adm-icon-bin-forever-grey',
+        id: 'deleted'
+    },
+    
+    {
+        tooltip: 'Экспортировать',
+        disable: false,
+        iconActiv: 'eos-adm-icon-share-blue',
+        iconDisable: 'eos-adm-icon-share-grey',
+        id: 'export'
+    },
+    {
+        tooltip: 'Сортировка',
+        disable: false,
+        iconActiv: 'eos-adm-icon-custom-list-blue',
+        iconDisable: 'eos-adm-icon-custom-list-grey',
+        activeIcon: 'eos-adm-icon-custom-list-white',
+        id: 'sort'
+    },
+    {
+        tooltip: 'Опустить строку',
+        disable: false,
+        iconActiv: 'eos-adm-icon-arrow-v-blue-bottom',
+        iconDisable: 'eos-adm-icon-arrow-v-grey-bottom',
+        activeIcon: 'eos-adm-icon-arrow-v-white-bottom',
+        active: true,
+        notView: true,
+        id: 'down'
+    },
+    {
+        tooltip: 'Поднять строку',
+        disable: false,
+        iconActiv: 'eos-adm-icon-arrow-v-blue-top',
+        iconDisable: 'eos-adm-icon-arrow-v-grey-top',
+        activeIcon: 'eos-adm-icon-arrow-v-white-top',
+        active: true,
+        notView: true,
+        id: 'up'
+    }
+];
+export const HTML_ABSOLUT_RIGH_TITLE = '$TITLE';
+export const HTML_ABSOLUT_RIGH_HEADER = '$HEADERS';
+export const HTML_ABSOLUT_ROW = '$ROW'
+export const HTML_ABSOLUT_RIGH_DATE = '$DATA'
+export const HTML_ABSOLUT_RIGHT_REPORT = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>$HTML_ABSOLUT_RIGH_TITLE</title>
+    <style>
+        table {
+        margin: 1em;
+        border: 1px solid black;
+        border-collapse: collapse;
+        }
+        caption {
+        font-size: 22px;
+        font-weight: bold;
+        }
+        th {
+        border: 1px solid black;
+        font-size: 16px;
+        padding: .5em;
+        min-width: 100px;
+        max-width: 400px;
+        text-align: left;
+        }
+        td {
+        border: 1px solid black;
+        font-size: 16px;
+        padding: .5em;
+        min-width: 100px;
+        max-width: 400px;
+        word-wrap: break-word;
+        }
+        p {
+            font-size: 14px;
+            text-align: right;
+        }
+        /* прячем input checkbox */
+        input[type="checkbox"] {
+            display: none;
+        }
+        
+        /* стили для метки */
+        label {
+            color: #000;
+            cursor: default;
+            font-weight: normal;
+            line-height: 30px;
+            padding: 10px 0;
+            vertical-align: middle;
+        }
+        label:before {
+            content: " ";
+            color: #000;
+            display: inline-block;
+            font: 20px/30px Arial;
+            margin-right: 15px;
+            position: relative;
+            text-align: center;
+            text-indent: 0px;
+            width: 15px;
+            height: 15px;
+            background: #FFF;
+            border: 1px solid #e3e3e3;
+            border-image: initial;
+            vertical-align: middle;
+        }
+        input:checked + label:before {
+            content:'\u2713';
+            font-size: 15px;
+            line-height: 15px;
+            background: #2196f3 !important;
+        }
+        input:disabled + label:before {
+            background: white;
+            color: white;
+            border-color: black;
+        }
+    </style>
+    </head>
+    <body>
+
+    <table>
+        <caption>
+            ${HTML_ABSOLUT_RIGH_TITLE}
+            <br>
+            <p>
+                <i>${HTML_ABSOLUT_RIGH_DATE}</i>
+            </p>
+        </caption>
+        <tr>
+        ${HTML_ABSOLUT_RIGH_HEADER}
+        </tr>
+        ${HTML_ABSOLUT_ROW}
+    </table>
+    </body>
+    </html>
+`;

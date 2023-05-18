@@ -92,7 +92,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
                 return item !== 'МЭДО';
             });
         }
-        if (this._appContext.cbBase && (this.appMode.arm || this.appMode.cbr)) {
+        if (this._appContext.cbBase && (this.appMode.cbr)) { // this.appMode.arm || 
             this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
                 return item !== 'Эл. почта';
             });

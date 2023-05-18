@@ -1414,7 +1414,7 @@ export const NOTIFY_SENDER_IF_EMAIL_IS_VALID = {
 export const ORIGINAL_IN_ELECTRONIC_FORM = {
     key: 'ORIGINAL_IN_ELECTRONIC_FORM',
     type: 'boolean',
-    title: 'Взводить флаг "Оригинал в эл. виде" для РК с признаком "Без досылки бум. экз.',
+    title: 'Взводить флаг "Оригинал в эл. виде" для РК с признаком "Без досылки бум. экз."',
     keyPosition: 17,
     readonly: false,
     parent: null,

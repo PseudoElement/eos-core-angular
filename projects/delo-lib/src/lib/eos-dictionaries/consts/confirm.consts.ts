@@ -78,8 +78,8 @@ export const CONFIRM_SURNAME_REDACT: IConfirmWindow2 = {
     title: 'Подтвердите действие:',
     body: 'ФИО пользователя отличается от ФИО должностного лица. Сохранить новое ФИО пользователя?',
     buttons: [
-        {title: 'Да',  result: 1, },
-        {title: 'Нет', result: 2, isDefault: true, },
+        {title: 'Нет', result: 2},
+        {title: 'Да',  result: 1, isDefault: true},
     ],
 };
 

@@ -6,6 +6,8 @@ export interface ITableBtn {
     id: string; // id кнопки будет использоваться в возврате
     active?: boolean; // активна ли кнопка
     activeIcon?: string; // какая Иконка будет использоваться при активной кнопке
+    children?: any[]; // выпадашка из кнопки
+    notView?: boolean; // не показывать кнопку
 }
 export interface ITableSetting {
     selected?: boolean; // можно ли отмечать строки
@@ -38,6 +40,7 @@ export interface ITableSettings {
     count?: boolean; // отображать общее количество, если не выбрано то будет отображаться количество выбранных
     paddingBottom?: string;
     widthAllTable?: boolean;
+    printTable?: boolean; // раскрасить строки таблицы в разные цвета
 }
 export enum ECellToAll  {
     icon,

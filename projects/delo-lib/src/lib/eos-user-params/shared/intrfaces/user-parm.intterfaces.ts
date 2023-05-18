@@ -22,6 +22,10 @@ export interface IInputParamControl {
     data?: any;
     deleted?: boolean;
     useInProject?: string;
+    viewToAuthorized?: boolean;
+    optionBtn?: boolean;
+    checkBoxAll?: boolean;
+    onlyDL?: boolean;
 }
 
 export interface IInputParamControlForIndexRight {

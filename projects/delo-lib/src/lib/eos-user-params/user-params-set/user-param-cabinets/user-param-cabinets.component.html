@@ -93,7 +93,7 @@
     <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
         <div [hidden]="appMode.cbr" class="user-group-form">
             <div class="inputs-inline">
-                <span class="input-title">Дата поручения:</span> <!-- в приложении Документы -->
+                <span class="input-title">Дата резолюции:</span> <!-- в приложении Документы -->
                 <div class="date-resolution">
                     <eos-dynamic-input [input]="inputs['rec.RESOLUTION_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
@@ -190,7 +190,8 @@
                 </div>
             </div>
         </div>
-        <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br>
+        <!-- @ #170979 скрываю везде -->
+        <!-- <eos-dynamic-input [hidden]="appMode.cbr" [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input><br> -->
 
     </div>
     <!-- @task163710

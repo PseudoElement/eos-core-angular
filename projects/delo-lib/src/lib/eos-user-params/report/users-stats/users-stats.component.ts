@@ -209,20 +209,20 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this.subsystem.Search_code.ActualUsers = elem.ActualUsers;
                 this.subsystem.Search_code.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
             }
-            if (elem.Id === 22) {
-                this.subsystem.EOS.Users = elem.Users;
-                this.subsystem.EOS.ActualUsers = elem.ActualUsers;
-                this.subsystem.EOS.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
-            }
+            // if (elem.Id === 22) {
+            //     this.subsystem.EOS.Users = elem.Users;
+            //     this.subsystem.EOS.ActualUsers = elem.ActualUsers;
+            //     this.subsystem.EOS.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
+            // }
             // if (elem.Id === 24) {
             //     this.subsystem.MobNet.Users = elem.Users;
             //     this.subsystem.MobNet.ActualUsers = elem.ActualUsers;
             //     this.subsystem.MobNet.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
             // }
             if (elem.Id === 26) {
-                this.subsystem.APM.Users = elem.Users;
-                this.subsystem.APM.ActualUsers = elem.ActualUsers;
-                this.subsystem.APM.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
+                this.subsystem.MobileApp.Users = elem.Users;
+                this.subsystem.MobileApp.ActualUsers = elem.ActualUsers;
+                this.subsystem.MobileApp.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
             }
             if (elem.Id === 28) {
                 this.subsystem.delowebKL.Users = elem.Users;

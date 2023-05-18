@@ -148,8 +148,19 @@
         .class-icon-td {
             padding: 3px 0 0px 16px;
         }
+        .checkbox-to-select {
+            padding: 6px 0 0 14px !important;
+            background-color: #E3F2FD;
+            border-left: 2px solid #2196F3;
+            border-top: 2px solid #2196F3;
+            border-bottom: 2px solid #2196F3;
+        }
 	}
     .active-background {
         background-color: #2196F3 !important;
+        &:disabled {
+            opacity: 0.4;
+            background-color: #2196F3 !important;
+        }
     }
 }

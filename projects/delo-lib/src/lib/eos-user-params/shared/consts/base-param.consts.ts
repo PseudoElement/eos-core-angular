@@ -144,28 +144,28 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
         key: 'delo_web',
         label: 'ДЕЛО-WEB',
     },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '0',
-        label: 'ДЕЛО',
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '0-1',
-        label: 'ДЕЛО + ДЕЛО-WEB',
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '0',
+    //     label: 'ДЕЛО',
+    // },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '0-1',
+    //     label: 'ДЕЛО + ДЕЛО-WEB',
+    // },
     {
         controlType: E_FIELD_TYPE.radio,
         key: '1-27',
         label: '',
         options: [
             {
-                title: 'ЛГО',
-                value: '1'
+                title: 'Конкурентная',
+                value: '27'
             },
             {
-                title: 'КЛ',
-                value: '27'
+                title: 'Личная',
+                value: '1'
             }
         ]
     },
@@ -182,7 +182,7 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '25',
-        label: 'АРМ руководителя',
+        label: 'Мобильное приложение',
     },
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -214,11 +214,11 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
         key: '5',
         label: 'ЭП и шифрование',
     },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '21',
-        label: 'EOS Desktop Service',
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '21',
+    //     label: 'EOS Desktop Service',
+    // },
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '41',

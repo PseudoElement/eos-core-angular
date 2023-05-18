@@ -15,7 +15,7 @@ import { IPaginationConfig } from '../../../eos-common/interfaces';
 import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { ERROR_LOGIN } from '../../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
-import { RETURN_URL } from '../../../app/consts/common.consts';
+import { RETURN_URL, URL_LOGIN } from '../../../app/consts/common.consts';
 
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
@@ -81,7 +81,7 @@ export class UserParamApiSrv {
                     .confirm2(ERROR_LOGIN)
                     .then((confirmed) => {
                         if (confirmed) {
-                            document.location.assign('../CoreHost/auth/login' + RETURN_URL + document.location.href);
+                            document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
                         }
                     });
                     /* this._router.navigate(

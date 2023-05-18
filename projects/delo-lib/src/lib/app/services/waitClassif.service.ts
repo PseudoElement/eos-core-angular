@@ -4,7 +4,9 @@ import { IOpenClassifParams } from '../../eos-common/interfaces';
 import { PipRX } from '../../eos-rest';
 
 declare function openPopup(url: string, callback?: Function): boolean;
-
+declare class Delo {
+    static Carousel: (flag: boolean) => any;
+}
 const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
@@ -26,7 +28,7 @@ const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const SharingLists: string = '../WebRC/Pages/SharingLists.html';
-const CERT_INFO = "../CertInfo/index.html";
+const CERT_INFO = "../CertInfo/certview";
 @Injectable()
 export class WaitClassifService {
     private isCtrl = null;
@@ -85,7 +87,15 @@ export class WaitClassifService {
     }
 
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<string> {
-
+        let carouselInSilentMode: any;
+        try {
+            // carouselInSilentMode = Delo.Carousel(true);
+            if (params.datas) {
+                carouselInSilentMode = Delo.Carousel.prototype;
+            } 
+        } catch (error) {
+            console.log('не найден модуль для карусели');  
+        }
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
             url = USER_LISTS;
@@ -119,6 +129,9 @@ export class WaitClassifService {
                 window['dontCheckExistPopUp'] = true;
             }
             setTimeout(() => {
+                if (carouselInSilentMode && params.datas) {
+                    carouselInSilentMode.carouselDataToLs(url, params.datas);
+                }
                 w = openPopup(url, function (event, str) {
                     if (flagPar) {
                         delete window['dontCheckExistPopUp'];

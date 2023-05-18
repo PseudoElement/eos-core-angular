@@ -55,6 +55,9 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
         });
 
     }
+    getCountRow() {
+        return this.tabelData.data.filter((item) => !item.rowNotCount).length;
+    }
     ngAfterContentInit(): void {
         setTimeout(() => {
             this.isLoading = true;
@@ -144,8 +147,15 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     getStyle(header: ITableHeader): any {
         return header.style ? header.style : {};
     }
-    getStyleTd(header: ITableHeader): any {
-        return header.style ? header.style : {};
+    getStyleTd(header: ITableHeader, index: number): any {
+        const style = header.style ? header.style : {};
+        const flag = index % 2 === 1;
+        if (this.settings && this.settings['printTable'] && flag) {
+            style['background'] = '#E6E6E6';
+        } else {
+            style['background'] = 'white';
+        }
+        return style;
     }
     scrollbarHeight() {
         if (this.notFixetColoms) {
@@ -176,9 +186,18 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
                 case ECellToAll.icon:
                     return {type: element[header.id].type, info: element[header.id].info}
                 case ECellToAll.checkbox:
-                    return {type: element[header.id].type, info: {check: element[header.id]['check'], click: element[header.id]['click'], disabled: element[header.id]['disabled']}}
+                    return {type: element[header.id].type, info: {check: element[header.id]['check'], click: element[header.id]['click'], disabled: element[header.id]['disabled'], title: element[header.id]['title'] || ''}}
                 case ECellToAll.buttons:
-                    return '';
+                    const buttons = {
+                        type: element[header.id].type,
+                        info: []
+                    };
+                    if (element[header.id]['info']) {
+                        element[header.id]['info'].forEach((btn) => {
+                            buttons['info'].push(btn);
+                        });
+                    }
+                    return buttons;
                 default:
                     break;
             }

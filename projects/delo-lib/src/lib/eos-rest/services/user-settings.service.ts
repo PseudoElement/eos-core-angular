@@ -14,7 +14,7 @@ export class UserSettingsService {
         // 2022-11-16 16:25:54.100
         const DT: string = date.toISOString();
         const cfg = this._piperX.getConfig();
-        const URL = `${cfg.apiBaseUrl}CoreHost/user/usersettings?tableid=${tableId}&timestamp=${DT}`;
+        const URL = `${cfg.apiBaseUrl}CoreHost/usersettings/api?category=${tableId}&timestamp=${DT}`;
         return fetch(URL).then((response) => {
             return response.json();
         });

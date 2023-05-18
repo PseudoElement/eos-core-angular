@@ -151,7 +151,7 @@
                 }
             }
          }
-         
+
          .base-text-input {
              width: 250px;
              margin-left: 33px;
@@ -183,8 +183,18 @@
              width: 222px;
          }
          .icon-electronic {
-             margin-bottom: -8px;
-             margin-left: 10px;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            width: 189px;
+            height: 32px;
+            line-height: 16px;
+            font-weight: 400;
+            border: 2px #2196F3 solid;
+            background-color: white;
+            padding: 4px 4px 4px 8px;
+            font-size: 12px;
+            color: #2196F3;
          }
          .row-department-role {
              position: relative;
@@ -231,6 +241,16 @@
                 height: 70px;
             }
         }
+        .base-param-radio {
+            display: block;
+            eos-dynamic-input-radio {
+                display: block;
+                width: 422px;
+                div:nth-child(2) {
+                    margin-left: 74px;
+                }
+        }
+    }
      }
  }
 
@@ -244,8 +264,8 @@
      z-index: 2000;
  }
  .error-focus {
-    border-color: #f44336 !important; 
-    border-width: 2px; 
+    border-color: #f44336 !important;
+    border-width: 2px;
     box-shadow: none !important;
 }
 

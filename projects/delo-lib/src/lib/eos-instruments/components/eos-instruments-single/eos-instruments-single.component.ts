@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, /* Router */ } from '@angular/router';
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { EosAdmToolsService } from '../../../eos-instruments/services/EosAdmTools.service';
@@ -9,12 +9,12 @@ import { EosAdmToolsService } from '../../../eos-instruments/services/EosAdmTool
   templateUrl: './eos-instruments-single.component.html',
   styleUrls: ['./eos-instruments-single.component.scss']
 })
-export class EosInstrumentsSingleComponent implements OnInit {
+export class EosInstrumentsSingleComponent implements OnInit, OnDestroy {
 
   public readonly MOUNT_POINT = 'eos-admin-tools';
+  private deletedStyleIds = ["printFormPlugin"];
+
   constructor(private route: ActivatedRoute, private router: Router, private _navSrv: NavParamService, private _eosAdmTools: EosAdmToolsService) { }
-
-
   ngOnInit() {
     setTimeout(() => {
       this._navSrv._subscriBtnTree.next(true);
@@ -33,5 +33,13 @@ export class EosInstrumentsSingleComponent implements OnInit {
         console.log('Ошибка при загрузке', error);
       }
     });
+  }
+  ngOnDestroy(): void {
+    this.deletedStyleIds.forEach(ids => {
+        const elementsToRemove = document.querySelectorAll("style#" + ids);
+        elementsToRemove.forEach(element => {
+            element.remove();
+        });
+    })
   }
 }

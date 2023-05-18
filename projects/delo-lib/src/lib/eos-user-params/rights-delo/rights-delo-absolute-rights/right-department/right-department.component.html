@@ -35,7 +35,7 @@
             >
                 <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
             </button>
-            <button *ngIf="editMode && !selectedNode.control.disabled && funcNum !== 3"
+            <!-- <button *ngIf="editMode && !selectedNode.control.disabled && funcNum !== 3"
                 class="btn"
                 tooltip="В начало списка"
                 #setMainTooltip= 'bs-tooltip'
@@ -46,7 +46,7 @@
                 (click)="setMainTooltip.hide(); setMain()"
             >
                 <span class="eos-adm-icon eos-adm-icon-keyfile-blue small"></span>
-            </button>
+            </button> -->
         </div>
 
         <div *ngIf="selectedNode && selectedNode.contentProp === 8">

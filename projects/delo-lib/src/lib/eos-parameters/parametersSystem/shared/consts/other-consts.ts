@@ -10,7 +10,7 @@ export const OTHER_PARAM: IBaseParameters = {
             readonly: false,
             title: 'Сервер приложений и сервер «ДелоWEB»',
         },
-        {
+        /* {
             key: 'SEV_SERVER',
             type: 'string',
             readonly: false,
@@ -21,7 +21,7 @@ export const OTHER_PARAM: IBaseParameters = {
             type: 'string',
             readonly: false,
             title: 'Хранилище подсистемы СЭВ',
-        },
+        }, */
         {
             key: 'NOTIFY_MANAGMENT',
             type: 'string',
@@ -59,7 +59,7 @@ export const OTHER_PARAM_CB: IBaseParameters = {
             readonly: false,
             title: 'Сервер приложений и сервер «ДелоWEB»',
         },
-        {
+        /* {
             key: 'SEV_SERVER',
             type: 'string',
             readonly: true,
@@ -70,7 +70,7 @@ export const OTHER_PARAM_CB: IBaseParameters = {
             type: 'string',
             readonly: true,
             title: 'Хранилище подсистемы СЭВ',
-        },
+        }, */
         {
             key: 'NOTIFY_MANAGMENT',
             type: 'string',

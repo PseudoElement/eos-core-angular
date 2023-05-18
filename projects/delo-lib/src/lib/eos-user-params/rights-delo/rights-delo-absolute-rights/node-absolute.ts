@@ -10,7 +10,9 @@ export class NodeAbsoluteRight {
     touched: boolean = false;
     control: AbstractControl;
     ischeckedAll: boolean = false;
-
+    get viewToAuthorized(): boolean {
+        return this._constData.viewToAuthorized;
+    }
     get contentProp(): E_RIGHT_DELO_ACCESS_CONTENT {
         return this._constData.data['rightContent'];
     }
@@ -49,6 +51,7 @@ export class NodeAbsoluteRight {
     private _change: IChengeItemAbsolute[] = [];
     private _curentUser: IParamUserCl;
     private _weightChanges: IChengeItemAbsolute[] = [];
+    private __weightChangesOrg = [];
     constructor(node: IInputParamControl, v: number, con: AbstractControl, user: IParamUserCl) {
         this._constData = node;
         this._value = v;
@@ -122,6 +125,12 @@ export class NodeAbsoluteRight {
         if (this._weightChanges && this._weightChanges.length) {
             this._change.push(...this._weightChanges);
         }
+    }
+    sendWeightChange(query) {
+        this._weightChanges.push(query);
+    }
+    sendWeightchangeOrg(query) {
+        this.__weightChangesOrg.push(query);
     }
     addWeightChanges(node: NodeDocsTree) {
         this.touched = true;

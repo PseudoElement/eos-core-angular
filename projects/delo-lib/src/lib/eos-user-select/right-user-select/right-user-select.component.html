@@ -40,8 +40,8 @@
                     <span class="rt-grey">Подразделение</span>
                     <span class="rt-role-name" *ngIf="CurrentUser">
                         <a  *ngIf="CurrentUser.deep else emptyDepartments"
-                            (click)="writeRecentUrl()" 
-                            [routerLink]="['/spravochniki','cabinet', UserCabinetInfo[0].CABINET_LIST.ISN_CABINET, 'view', '0']"   
+                            (click)="writeRecentUrl()"
+                            [routerLink]="['/spravochniki','cabinet', UserCabinetInfo[0].CABINET_LIST.ISN_CABINET, 'view', '0']"
                             class="cabinet-title"
                         >
                         {{ departments }}
@@ -108,8 +108,8 @@
                     <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo_deloweb></eos-user-system>
                     <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebLGO></eos-user-system>
                     <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebKL></eos-user-system>
-                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.APM></eos-user-system>
-                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.EOS></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.MobileApp></eos-user-system>
+                    <!-- <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.EOS></eos-user-system> -->
                     <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.SCAN></eos-user-system>
                     <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Pscan></eos-user-system>
                     <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Shif></eos-user-system>
