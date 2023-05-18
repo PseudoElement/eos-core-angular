@@ -372,9 +372,9 @@ export class RughtDeloAbsRightService {
                     dep[header.id]['click'] = ($event) => {this.chechNewInfoDep(dep['DUE'], header.id, $event)};
                 }
             } else if (header.id !== 'CLASSIF_NAME') {
-                if (header['data'] && header['data']['onlyDL'] && dep['IS_NODE'] === 0) { // если в столбце должны быть только ДЛ то для подразделений пустота
+                if (header['data'] && header['data']['onlyDL'] && dep['IS_NODE'] === 0 && dep['key'] !== '0.') { // если в столбце должны быть только ДЛ то для подразделений пустота
                     dep[header.id] = '';
-                } else if ((!header['data'] || !header['data']['checkBoxAll']) && dep['key'] === '0.') { 
+                } else if ((!header['data'] || !header['data']['checkBoxAll']) && dep['key'] === '0.') {
                     dep[header.id] = '';
                 } else if (objectMap['mapDep'].get(dep['DUE'])) {
                     const toAllTitle = header.id === ETypeDeloRight.IntroductionOfDraftResolutions ? 'Рассылка проект. рез.' : 'За всех'
