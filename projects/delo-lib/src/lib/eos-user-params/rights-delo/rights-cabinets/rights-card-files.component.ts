@@ -155,6 +155,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             if (this.firstTable) {
                 this.firstTable.selectIdLast = this.currentCard['key'];
+                this.firstTable.scrollToRow(this.currentCard['key']);
             }
         }).catch(e => {
             this.isLoading = false;
