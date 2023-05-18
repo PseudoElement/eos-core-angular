@@ -28,6 +28,7 @@ export class RughtDeloAbsRightService {
     }
     addOrg() {
         const ORGANIZ = Object.assign({}, OPEN_CLASSIF_ORGANIZ_FULL);
+        ORGANIZ.skipDeleted = true;
         return this._waitClassifSrv.openClassif(ORGANIZ)
         .then((data) => {
             const newOrg = data.split('|');
