@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ECellToAll, ITableData, ITableHeader } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
-import { ETypeDeloRight, HTML_ABSOLUT_RIGHT_REPORT, HTML_ABSOLUT_RIGH_DATE, HTML_ABSOLUT_RIGH_HEADER, HTML_ABSOLUT_RIGH_TITLE, HTML_ABSOLUT_ROW } from './absolute-rights.consts';
+import { EQueryPosition, ETypeDeloRight, HTML_ABSOLUT_RIGHT_REPORT, HTML_ABSOLUT_RIGH_DATE, HTML_ABSOLUT_RIGH_HEADER, HTML_ABSOLUT_RIGH_TITLE, HTML_ABSOLUT_ROW, IAbsRightMapSet } from './absolute-rights.consts';
 import { E_RIGHT_DELO_ACCESS_CONTENT } from './right-delo.intefaces';
 import { NodeAbsoluteRight } from './node-absolute';
 import { IParamUserCl } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
@@ -19,7 +19,7 @@ export class RughtDeloAbsRightService {
     tabelData: ITableData;
     selectedRow = [];
     deloRights22;
-    paramsToQuery;
+    paramsToQuery: IAbsRightMapSet;
     maxWeightDep: number = -1;
     maxWeightOrg: number = -1;
     constructor(
@@ -69,7 +69,7 @@ export class RughtDeloAbsRightService {
                         */
                         Object.keys(org).forEach((key) => {
                             if (org[key] && org[key].type === ECellToAll.checkbox && key !== 'CLASSIF_NAME') {
-                                this.chechNewInfoOrg(org['key'], key, true);
+                                this.chechNewInfoOrg(org, key, true);
                                 org[key].check = true;
                             }
                         });
@@ -236,16 +236,16 @@ export class RughtDeloAbsRightService {
     getNewRowToTable(arrayAns, tableHeader: ITableHeader[], objectMap): any[] {
         const newData = [];
         this.selectedRow = [];
-        if (arrayAns[0].length > 0) {
-            arrayAns[0] = this.initWeightSortDep(arrayAns[0]);
+        if (arrayAns[EQueryPosition.department].length > 0) {
+            arrayAns[EQueryPosition.department] = this.initWeightSortDep(arrayAns[EQueryPosition.department]);
         }
-        if (arrayAns[1].length > 0) {
-            arrayAns[1] = this.initWeightSortOrg(arrayAns[1]);
+        if (arrayAns[EQueryPosition.organiz].length > 0) {
+            arrayAns[EQueryPosition.organiz] = this.initWeightSortOrg(arrayAns[EQueryPosition.organiz]);
         }
-        this.deloRights22 = '' + this.listRight.filter((r) => r.key === '22')[0].value;
+        this.deloRights22 = '' + this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[0].value;
         newData.push({'CLASSIF_NAME': 'Должностные лица и подразделения', 'bold': true, rowNotCount: true});
-        if (arrayAns && arrayAns[0]) {
-            arrayAns[0].forEach((dep) => {
+        if (arrayAns && arrayAns[EQueryPosition.department]) {
+            arrayAns[EQueryPosition.department].forEach((dep) => {
                 if (this.maxWeightDep < dep['ROW_WEIGHT']) {
                     this.maxWeightDep = dep['ROW_WEIGHT'];
                 }
@@ -258,9 +258,8 @@ export class RughtDeloAbsRightService {
             });
         }
         newData.push({'CLASSIF_NAME': 'Организации', 'bold': true, rowNotCount: true});
-        if (arrayAns && arrayAns[1]) {
-            
-            arrayAns[1].forEach((org) => {
+        if (arrayAns && arrayAns[EQueryPosition.organiz]) {
+            arrayAns[EQueryPosition.organiz].forEach((org) => {
                 if (this.maxWeightOrg < org['ROW_WEIGHT']) {
                     this.maxWeightOrg = org['ROW_WEIGHT'];
                 }
@@ -272,17 +271,17 @@ export class RughtDeloAbsRightService {
     }
     updateWeight(queryAll) {
         const alreadyWeight = new Map();
-        if (this.paramsToQuery && (this.paramsToQuery['mapOrgWeight'] || this.paramsToQuery['mapDepWeight'])) {
+        if (this.paramsToQuery && (this.paramsToQuery.mapOrgWeight || this.paramsToQuery.mapDepWeight)) {
             queryAll.forEach((query) => {
                 if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // лорганизации
-                    const weighNew = this.paramsToQuery['mapOrgWeight']['DUE'];
+                    const weighNew = this.paramsToQuery.mapOrgWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew && (query.method === 'POST' || query.method === 'MERGE')) {
                         query.data['WEIGHT'] = weighNew;
                         alreadyWeight.set(query.data['DUE'] + '_' + query.data['FUNC_NUM'], true);
                     }
                 }
                 if (query.requestUri && query.requestUri.indexOf('USERDEP_List') !== -1) { // подразделения
-                    const weighNew = this.paramsToQuery['mapDepWeight']['DUE'];
+                    const weighNew = this.paramsToQuery.mapDepWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew) {
                         query.data['WEIGHT'] = weighNew;
                         alreadyWeight.set(query.data['DUE'] + '_' + query.data['FUNC_NUM'], true);
@@ -290,13 +289,13 @@ export class RughtDeloAbsRightService {
                 }
             });
             this.curentUser.USERDEP_List.forEach((dep) => {
-                if (this.paramsToQuery['mapDepWeight'][dep['DUE']] && this.paramsToQuery['mapDepWeight'][dep['DUE']] !== dep['WEIGHT'] && !alreadyWeight.has(dep['DUE'] + '_' + dep['FUNC_NUM'])) {
-                    dep['WEIGHT'] = this.paramsToQuery['mapDepWeight'][dep['DUE']];
+                if (this.paramsToQuery.mapDepWeight[dep['DUE']] && this.paramsToQuery.mapDepWeight[dep['DUE']] !== dep['WEIGHT'] && !alreadyWeight.has(dep['DUE'] + '_' + dep['FUNC_NUM'])) {
+                    dep['WEIGHT'] = this.paramsToQuery.mapDepWeight[dep['DUE']];
                     queryAll.push({
                         requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USERDEP_List('${this.curentUser.ISN_LCLASSIF} ${dep['DUE']} ${dep['FUNC_NUM']}')`,
                         method: 'MERGE',
                         data: {
-                            WEIGHT: this.paramsToQuery['mapDepWeight'][dep['DUE']],
+                            WEIGHT: this.paramsToQuery.mapDepWeight[dep['DUE']],
                             DUE: dep['DUE'],
                             FUNC_NUM: dep['FUNC_NUM']
                         }
@@ -304,8 +303,8 @@ export class RughtDeloAbsRightService {
                 }
             });
             this.curentUser['USER_ORGANIZ_List'].forEach((org) => {
-                if (this.paramsToQuery['mapOrgWeight'][org['DUE']] &&
-                this.paramsToQuery['mapOrgWeight'][org['DUE']] !== org['WEIGHT'] &&
+                if (this.paramsToQuery.mapOrgWeight[org['DUE']] &&
+                this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['WEIGHT'] &&
                 !alreadyWeight.has(org['DUE'] + '_' + org['FUNC_NUM']) &&
                 this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === org.FUNC_NUM) !== -1) {
                     org['WEIGHT'] = this.paramsToQuery['mapOrgWeight'][org['DUE']];
@@ -313,7 +312,7 @@ export class RughtDeloAbsRightService {
                         requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USER_ORGANIZ_List('${this.curentUser.ISN_LCLASSIF} ${org['DUE']} ${org['FUNC_NUM']}')`,
                         method: 'MERGE',
                         data: {
-                            WEIGHT: this.paramsToQuery['mapOrgWeight'][org['DUE']],
+                            WEIGHT: this.paramsToQuery.mapOrgWeight[org['DUE']],
                             DUE: org['DUE'],
                             FUNC_NUM: org['FUNC_NUM']
                         }
@@ -372,9 +371,9 @@ export class RughtDeloAbsRightService {
                     dep[header.id]['click'] = ($event) => {this.chechNewInfoDep(dep['DUE'], header.id, $event)};
                 }
             } else if (header.id !== 'CLASSIF_NAME') {
-                if (header['data'] && header['data']['onlyDL'] && dep['IS_NODE'] === 0) { // если в столбце должны быть только ДЛ то для подразделений пустота
+                if (header['data'] && header['data']['onlyDL'] && dep['IS_NODE'] === 0 && dep['key'] !== '0.') { // если в столбце должны быть только ДЛ то для подразделений пустота
                     dep[header.id] = '';
-                } else if ((!header['data'] || !header['data']['checkBoxAll']) && dep['key'] === '0.') { 
+                } else if ((!header['data'] || !header['data']['checkBoxAll']) && dep['key'] === '0.') {
                     dep[header.id] = '';
                 } else if (objectMap['mapDep'].get(dep['DUE'])) {
                     const toAllTitle = header.id === ETypeDeloRight.IntroductionOfDraftResolutions ? 'Рассылка проект. рез.' : 'За всех'
@@ -445,11 +444,11 @@ export class RughtDeloAbsRightService {
     }
     chechNewInfoDep(due, funcNum, $event) {
         const checked = $event.target ? $event.target.checked : $event;
-        if(due === '0.' && funcNum === '22') { // Разрешить операцию рассылки проекта резолюции
+        if(due === '0.' && funcNum === ETypeDeloRight.IntroductionOfDraftResolutions) { // Разрешить операцию рассылки проекта резолюции
             this.deloRights22 = checked ? '2' : '1';
             return;
         }
-        if (due === '0.' && funcNum !== '22') { // если поставили галочку за всех то особое поведение
+        if (due === '0.' && funcNum !== ETypeDeloRight.IntroductionOfDraftResolutions) { // если поставили галочку за всех то особое поведение
             this.updateAllCheck(funcNum, checked);
         } else {
             this.updatePutchValue(due, funcNum, checked);
@@ -613,7 +612,7 @@ export class RughtDeloAbsRightService {
             }
         });
     }
-    getParamsToQuery(curentUser) {
+    getParamsToQuery(curentUser): IAbsRightMapSet {
         const newMapDep = [];
         const newMapOrg = [];
         const mapDep = new Map();
@@ -711,22 +710,21 @@ export class RughtDeloAbsRightService {
         /* 
         * Ососбое поведение для Разрешить операцию рассылки проекта резолюции
         */
-        const right = this.listRight.filter((r) => r.key === '22')[0];
+        const right = this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[0];
         if (this.deloRights22 !== '' + right.value) {
             right.value = +this.deloRights22;
         }
         this._userParmSrv.curentUser.USERDEP_List.forEach((depart) => {
-            if (this.paramsToQuery['mapDepWeight'][depart.DUE] !== undefined &&
-                this.paramsToQuery['mapDepWeight'][depart.DUE] !== depart.WEIGHT &&
+            if (this.paramsToQuery.mapDepWeight[depart.DUE] !== undefined &&
+                this.paramsToQuery.mapDepWeight[depart.DUE] !== depart.WEIGHT &&
                 this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === depart.FUNC_NUM) !== -1) {
                 const right = this.listRight.filter((r) => r.key === '' + (depart.FUNC_NUM - 1))[0];
-                console.log('right', right);
                 right.touched = true;
             }
         });
     }
     clearInfo() {
-        this.paramsToQuery = {};
+        this.paramsToQuery = undefined;
     }
     selectRow(item: string, $event) {
         if ($event.target.checked) {
@@ -800,12 +798,12 @@ export class RughtDeloAbsRightService {
         });
         this.tabelData.data[ind - whereMove] = this.tabelData.data[ind];
         this.tabelData.data[ind] = tempSecond;
-        if (itemMove.__metadata.__type === 'DEPARTMENT' && this.paramsToQuery['mapDepWeight'][itemMove['DUE']] !== undefined) {
-            this.paramsToQuery['mapDepWeight'][tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
-            this.paramsToQuery['mapDepWeight'][itemMove['DUE']] = itemMove['ROW_WEIGHT'];
-        } else if(this.paramsToQuery['mapOrgWeight'][this.selectedRow[0]['DUE']] !== undefined) {
-            this.paramsToQuery['mapOrgWeight'][tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
-            this.paramsToQuery['mapOrgWeight'][itemMove['DUE']] = itemMove['ROW_WEIGHT'];
+        if (itemMove.__metadata.__type === 'DEPARTMENT' && this.paramsToQuery.mapDepWeight[itemMove['DUE']] !== undefined) {
+            this.paramsToQuery.mapDepWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
+            this.paramsToQuery.mapDepWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
+        } else if(this.paramsToQuery.mapOrgWeight[this.selectedRow[0]['DUE']] !== undefined) {
+            this.paramsToQuery.mapOrgWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
+            this.paramsToQuery.mapOrgWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
         }
         this.updateBtn();
     }

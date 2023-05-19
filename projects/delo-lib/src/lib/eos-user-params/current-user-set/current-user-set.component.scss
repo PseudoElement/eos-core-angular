@@ -2698,6 +2698,17 @@ bs-dropdown-container {
     }
     .eos-user-param-reestr-cb-margin {
         margin-left: 15px !important;
+        &.inputs-inline {
+            > span {
+                float: left;
+                line-height: 22px;
+            }
+            eos-dynamic-input {
+                input {
+                    background-color: white;
+                }
+            }
+        }
     }
     div.left > .params-nav-list {
         width: 200px;

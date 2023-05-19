@@ -1,6 +1,7 @@
 import { E_RIGHT_DELO_ACCESS_CONTENT } from './right-delo.intefaces';
 import { IInputParamControl } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { E_FIELD_TYPE } from '../../../eos-dictionaries/interfaces';
+import { DEPARTMENT, ORGANIZ_CL } from '../../../eos-rest';
 
 export enum ETypeDeloRight {
     SystemTechnologist = '0', // Системный технолог
@@ -608,3 +609,27 @@ export const HTML_ABSOLUT_RIGHT_REPORT = `
     </body>
     </html>
 `;
+export interface IAbsRightMapSet {
+    newMapDep: string[];
+    newMapOrg: string[];
+    mapDep: Map<string, string>;
+    mapOrg: Map<string, string>;
+    mapDepInfo: Map<string, DEPARTMENT>;
+    mapOrgInfo: Map<string, ORGANIZ_CL>;
+    mapOrgWeight: any;
+    mapDepWeight: any;
+}
+export enum ALL_MAP_TO_ABS_RIGHT {
+    newMapDep = 'newMapDep', // тут храним все DUE подразделениq которые меня интересуют
+    newMapOrg= 'newMapOrg',// тут храним все DUE организаций которые меня интересуют
+    mapDep = 'mapDep', // сохраняем все FUNC_NUM
+    mapOrg = 'mapOrg', // сохраняем все FUNC_NUM
+    mapDepInfo = 'mapDepInfo', // сохраняем всю информацию 
+    mapOrgInfo = 'mapOrgInfo', // сохраняем всю информацию 
+    mapOrgWeight = 'mapOrgWeight', // сохраняем все веса организаций чтобы привести таблицу в норму
+    mapDepWeight = 'mapDepWeight', // сохраняем все веса департаментов чтобы привести таблицу в норму
+}
+export enum EQueryPosition {
+    department = 0,
+    organiz = 1
+}

@@ -38,6 +38,7 @@
                                 role="menuitem"
                                 class="menuitem">
                                 <a class="dropdown-item m-font"
+                                    eosClickMode
                                     (click)="dropdown.hide(); clickToButton(elem)"><span class="title m-font">{{elem.title}}</span></a>
                             </li>
                         </ul>
@@ -113,7 +114,7 @@
             </div>
         </div>
             <!-- Переданные элементы -->
-            <div style="display: flex;">
+            <div style="display: flex;" [ngStyle]="{'min-height': settings && settings['minHeightTable'] ? settings['minHeightTable'] : ''}">
                 <!-- Фиксированные колонки -->
                 <div *ngIf="getColomsFixed().length" style="position: relative;">
                     <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 1px; box-shadow: 6px 3px 4px 3px rgba(34, 60, 80, 0.2);">
@@ -128,7 +129,8 @@
                             class="display-element-item"
                             *ngFor="let row of tabelData.data let i = index"
                             [ngClass]="getClassRow(row)"
-                            style="margin-right: -17px; padding-right: 17px;">
+                            style="margin-right: -17px; padding-right: 17px;"
+                            [id]="row.key + 'fixed'">
                             <div (click)="clickElem(row)" #trFP *ngFor="let colomn of getColomsFixed()"
                                 class="header-table-title colomn-style-td"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
@@ -195,7 +197,8 @@
                         *ngFor="let row of tabelData.data let i = index"
                         [ngClass]="getClassRow(row)"
                         (dblclick)="dbClickToRow(row)"
-                        [ngStyle]="getTableStyle()">
+                        [ngStyle]="getTableStyle()"
+                        [id]="row.key + 'notFixed'">
                         <div *ngIf="showCheckBox" style="padding: 8px 0 0 16px;" class="checkbox-inline checkbox-to-select">
                             <label>
                                 <input type="checkbox" [disabled]="!edit" (change)="selected($event, row)" [checked]="row.check">

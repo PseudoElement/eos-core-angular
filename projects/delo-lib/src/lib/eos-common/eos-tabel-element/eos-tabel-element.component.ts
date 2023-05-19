@@ -55,6 +55,15 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
         });
 
     }
+    /* 
+    * Прокрутить таблицу до строки с ключом = key
+    */
+    scrollToRow(key: string) {
+        const el = document.getElementById(key + 'notFixed');
+        if (el) {
+            el.scrollIntoView(false);
+        }
+    }
     getCountRow() {
         return this.tabelData.data.filter((item) => !item.rowNotCount).length;
     }
