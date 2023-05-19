@@ -54,6 +54,7 @@ export enum E_RECORD_ACTIONS {
     copy,
     printNomenc,
     renameBaseDepartment,
+    epCertificateIsAppointed,
     // createRepresentative,
     // slantForForms,
     /* to be extended */
@@ -76,14 +77,18 @@ export interface IAction {
     activeIconClass: string;
     buttonClass: string;
     accessNeed: APS_DICT_GRANT;
-    iconText?: string; // Дополнительный текст к иконке (часть кнопки)
+    /** Дополнительный текст к иконке (часть кнопки) */
+    iconText?: string;
 
 }
 
 export interface IActionButton extends IAction {
-    isActive: boolean;  // нажата \ отжата
-    enabled: boolean;   // доступна для нажатия
-    show: boolean;      // видимость
+    /** нажата \ отжата */
+    isActive: boolean;
+    /** доступна для нажатия */
+    enabled: boolean; 
+    /** видимость */  
+    show: boolean;
 }
 
 export interface IActionUpdateOptions {

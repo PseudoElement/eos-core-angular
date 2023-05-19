@@ -10,6 +10,9 @@ import { EosUtils } from '../../eos-common/core/utils';
 import { DepartmentDictionaryDescriptor } from './department-dictionary-descriptor';
 import { FieldDescriptor } from './field-descriptor';
 import { ModeFieldSet } from './record-mode';
+import { ResponseOrganization, SearchQueryOrganization, ResponseProt } from '../interfaces/fetch.interface';
+import { protocolFetchParam } from '../services/protocol-fetch-param'
+import { converterFetchRequest } from '../services/converter-fetch-request';
 
 const inheritFiields = [
     'ISN_ADDR_CATEGORY',
@@ -38,12 +41,13 @@ class OrganizRecord extends TreeRecordDescriptor {
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     dopRec = [];
     modeList: IRecordModeDescription[];
-
+    private createFetchParam = new protocolFetchParam();
+    private converter = new converterFetchRequest();
+    
     public getFullSearchCriteries(data: any) {
         const srchMode = data['srchMode'];
         const criteries = super.getFullSearchCriteries(data[srchMode]);
-        const queries = { contact: null, medo: null, organiz: null, branch: null };
-
+        const queries = { contact: null, medo: null, organiz: null, branch: null, protocol: null };
         if (srchMode === 'medo') {
             if (criteries.hasOwnProperty('CONTACT.MEDO_ID')) {
                 queries.contact = {
@@ -70,6 +74,8 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                     }
                 }
             }
+        } else if (srchMode === 'protocol') {
+            queries.protocol = criteries;
         } else {
             if (criteries.hasOwnProperty('EMAIL')) {
                 const email = criteries.EMAIL;
@@ -95,10 +101,15 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     public getRoot(): Promise<any[]> {
         return this.getData({ criteries: { IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
     }
+
     public search(criteries: any[]): Promise<any> {
+        
         const queries = criteries[0];
         if (queries.medo || queries.contact) {
             return this.searchMedo(queries);
+        }
+        if (queries.protocol) {
+            return this.searchProto(queries);
         }
         if (queries.organiz) {
             const extQuery = this.getCriteriesBranch(queries);
@@ -132,6 +143,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
         return null;
     }
+
     public searchMedo(queries: { medo: any, contact: any }): Promise<any> {
         let queryMedo = null;
         let queryContact = null;
@@ -162,6 +174,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         } else {
             queryContact = Promise.resolve(null);
         }
+
         return Promise.all([queryMedo, queryContact]).then((data: [MEDO_PARTICIPANT[], ORGANIZ_CL[]]) => {
             if (flagmedo && flagorganiz) {
                 const ids = [];
@@ -197,6 +210,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             return [];
         });
     }
+
     public searchDopRec(criteries: any[]): Promise<any> {
         const vaslues = JSON.parse(criteries[0].DOP_REC);
         const newCriteries = {};
@@ -222,6 +236,31 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }).then(_d => {
             return _d;
         });
+    }
+
+    public async searchProto(queries: SearchQueryOrganization) {
+        const protReq: string = this.createFetchParam.prot(queries);
+        const requestProt = await this.graphQl.query(protReq);
+        if (requestProt.ok) {
+            const prot: ResponseProt = await requestProt.json();
+            if (prot.errors) {
+                console.error('Error: ', prot.errors[0].message);
+                return [];
+            } else {
+                if (prot.data.protsPg.items.length) {
+                    const organizReq = this.createFetchParam.organiz(prot.data.protsPg.items, queries);
+                    const requestOrganiz = await this.graphQl.query(organizReq);
+                    const organiz: ResponseOrganization = await requestOrganiz.json();
+                
+                    return this.converter.organizReq(organiz.data.organizClsPg.items);
+                } else {
+                    return [];
+                }
+            }
+        } else {
+            console.error('Error: status request: ', requestProt.status);
+            return [];
+        }
     }
 
     async getData(query?: any, order?: string, limit?: number): Promise<any[]> {
@@ -251,6 +290,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 return data;
             });
     }
+
     ar_Descript(): Promise<any> {
         return this.apiSrv.read({
             AR_DESCRIPT: {
@@ -333,6 +373,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
         return config;
     }
+
     public getRelatedFields2(tables: { table: string, order?: string }[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         return super.getRelatedFields2(tables, nodes, loadAll, ignoreMetadata).then(result => {
             if (result.hasOwnProperty('ADDR_CATEGORY_CL')) {
@@ -343,6 +384,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             return result;
         });
     }
+
     public updateUncheckCitizen(nodes: EosDictionaryNode[]): Promise<any> {
         const change = [];
         nodes.forEach(node => {

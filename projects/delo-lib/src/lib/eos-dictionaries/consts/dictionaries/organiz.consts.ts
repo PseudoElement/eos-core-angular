@@ -22,142 +22,156 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick , SEARCH_TYPES.full],
-    modeList: [{
-        key: 'common',
-        title: 'Основные',
-    }, {
-        key: 'medo',
-        title: 'Реквизиты МЭДО',
-    }],
-    fields: COMMON_FIELDS.concat([
-    {
-        key: ICONS_CONTAINER_SEV,
-        title: '',
-        type: 'icon_sev',
-        length: 5,
-        preferences: {
-            minColumnWidth: 45,
-            noLeftPadding: true,
-            inline: true,
+    modeList: [
+        {
+            key: 'common',
+            title: 'Основные',
+        },
+        {
+            key: 'medo',
+            title: 'Реквизиты МЭДО',
+        },
+        {
+            key: 'protocol',
+            title: 'Протокол ',
         }
-    },
-    {
-        key: 'DUE',
-        type: 'string',
-        title: 'Код Дьюи организации',
-        length: 248,
-    }, {
-        key: 'PARENT_DUE',
-        type: 'string',
-        title: 'Код родительской организации',
-        length: 248,
-    }, {
-        key: 'ISN_NODE',
-        type: 'number',
-        title: 'ISN организации',
-    }, {
-        key: 'ISN_HIGH_NODE',
-        title: 'Номер вышестоящ вершины',
-        type: 'number',
-    }, {
-        key: 'LAYER',
-        title: 'Номер уровня',
-        type: 'number',
-    }, {
-        key: 'IS_NODE',
-        title: 'Признак вершины',
-        type: 'number',
-    }, {
-        key: 'MAXDUE',
-        title: 'MAX значение кода Дьюи',
-        type: 'string',
-        pattern: NOT_EMPTY_STRING,
-        length: 248,
-    },
-    ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [
-    {
-        key: 'TERM_EXEC',
-        title: 'Срок исполнения',
-        length: 3,
-        minValue: 1,
-        maxValue: 999,
-        pattern: DIGIT3_PATTERN,
-        default: '',
-        type: 'numberIncrement',
-    },
-    {
-        key: 'TERM_EXEC_TYPE',
-        type: 'select',
-        title: '',
-        default: 3,
-        options: [
-            // {value: '', title: ''},
-            { value: 3, title: 'календарн.+' },
-            { value: 4, title: 'календарн.-' },
-            { value: 1, title: 'календарн.' },
-            { value: 2, title: 'рабоч.' },
-        ],
-    },
-    {
-        key: 'ISN_ADDR_CATEGORY',
-        type: 'select',
-        title: 'Категория',
-        length: 150,
-        //  required: true,
-        dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
-            dictionaryLink: {
-                pk: 'ISN_LCLASSIF',
-                fk: 'ISN_ADDR_CATEGORY',
-                label: 'CLASSIF_NAME',
+    ],
+    fields: COMMON_FIELDS.concat([
+        {
+            key: ICONS_CONTAINER_SEV,
+            title: '',
+            type: 'icon_sev',
+            length: 5,
+            preferences: {
+                minColumnWidth: 45,
+                noLeftPadding: true,
+                inline: true,
+            }
+        },
+        {
+            key: 'DUE',
+            type: 'string',
+            title: 'Код Дьюи организации',
+            length: 248,
+        }, 
+        {
+            key: 'PARENT_DUE',
+            type: 'string',
+            title: 'Код родительской организации',
+            length: 248,
+        }, 
+        {
+            key: 'ISN_NODE',
+            type: 'number',
+            title: 'ISN организации',
+        }, 
+        {
+            key: 'ISN_HIGH_NODE',
+            title: 'Номер вышестоящ вершины',
+            type: 'number',
+        }, 
+        {
+            key: 'LAYER',
+            title: 'Номер уровня',
+            type: 'number',
+        },
+        {
+            key: 'IS_NODE',
+            title: 'Признак вершины',
+            type: 'number',
+        }, 
+        {
+            key: 'MAXDUE',
+            title: 'MAX значение кода Дьюи',
+            type: 'string',
+            pattern: NOT_EMPTY_STRING,
+            length: 248,
+        },
+        ... Features.cfg.variant === EOSDICTS_VARIANT.CB ? [
+            {
+                key: 'TERM_EXEC',
+                title: 'Срок исполнения',
+                length: 3,
+                minValue: 1,
+                maxValue: 999,
+                pattern: DIGIT3_PATTERN,
+                default: '',
+                type: 'numberIncrement',
             },
-        options: [],
-        // default: 0,
-    },
-    ] : [],
-    {
-        key: 'NEW_RECORD',
-        title: 'Нов.',
-        type: 'new',
-        length: 1,
-    },
-    {
-        key: 'CONTACT.MEDO_ID',
-        title: 'Идентификатор организации',
-        type: 'string',
-        length: 255
-    },
-    {
-        key: 'CONTACT.MEDO_GLOBAL_ID',
-        title: 'Идентификатор организации в ГАС',
-        type: 'string',
-        length: 255
-    },
-    {
-        key: 'GATE',
-        title: 'АДРЕС МЭДО',
-        type: 'string',
-        length: 255
-    },
-    {
-        key: 'GATE_ID',
-        title: 'Идентификатор шлюза',
-        type: 'string',
-        length: 255
-    },
-    // COMMON_FIELD_ICONS_SEV,
-    Object.assign({}, COMMON_FIELD_NAME, {
-        title: 'Наименование организации',
-        groupLabel: 'Наименование группы',
-        length: 255,
-        preferences: <IFieldPreferences>{ hasIcon: true, },
-    }), /* {
-        key: 'CLASSIF_NAME_SEARCH',
-        title: 'Поиск наименование организации',
-        type: 'string',
-        length: 255,
-        pattern: NOT_EMPTY_STRING,
-    }*/
-        // ,
+            {
+                key: 'TERM_EXEC_TYPE',
+                type: 'select',
+                title: '',
+                default: 3,
+                options: [
+                    // {value: '', title: ''},
+                    { value: 3, title: 'календарн.+' },
+                    { value: 4, title: 'календарн.-' },
+                    { value: 1, title: 'календарн.' },
+                    { value: 2, title: 'рабоч.' },
+                ],
+            },
+            {
+                key: 'ISN_ADDR_CATEGORY',
+                type: 'select',
+                title: 'Категория',
+                length: 150,
+                //  required: true,
+                dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
+                    dictionaryLink: {
+                        pk: 'ISN_LCLASSIF',
+                        fk: 'ISN_ADDR_CATEGORY',
+                        label: 'CLASSIF_NAME',
+                    },
+                options: [],
+                // default: 0,
+            },
+            ] : [],
+        {
+            key: 'NEW_RECORD',
+            title: 'Нов.',
+            type: 'new',
+            length: 1,
+        },
+        {
+            key: 'CONTACT.MEDO_ID',
+            title: 'Идентификатор организации',
+            type: 'string',
+            length: 255
+        },
+        {
+            key: 'CONTACT.MEDO_GLOBAL_ID',
+            title: 'Идентификатор организации в ГАС',
+            type: 'string',
+            length: 255
+        },
+        {
+            key: 'GATE',
+            title: 'АДРЕС МЭДО',
+            type: 'string',
+            length: 255
+        },
+        {
+            key: 'GATE_ID',
+            title: 'Идентификатор шлюза',
+            type: 'string',
+            length: 255
+        },
+        // COMMON_FIELD_ICONS_SEV,
+        Object.assign({}, COMMON_FIELD_NAME, {
+            title: 'Наименование организации',
+            groupLabel: 'Наименование группы',
+            length: 255,
+            preferences: <IFieldPreferences>{ hasIcon: true, },
+        }),
+        /* {
+            key: 'CLASSIF_NAME_SEARCH',
+            title: 'Поиск наименование организации',
+            type: 'string',
+            length: 255,
+            pattern: NOT_EMPTY_STRING,
+        }*/
+                // ,
         // Object.assign({}, COMMON_FIELD_FULLNAME, {
         //     title: 'Полное наименование',
         //     type: 'string',
@@ -217,7 +231,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
             title: 'Доп. реквизит',
             type: 'string',
         },
-       // {
+        // {
         //     key: 'ISN_REGION',
         //     title: 'Регион',
         //     type: 'dictionary',
@@ -291,7 +305,28 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         //     title: 'Индекс СЭВ',
         //     type: 'dictionary',
         // }
+        {
+            key: 'FROM',
+            title: '',
+            type: 'string',
+        },
+        {
+            key: 'TO',
+            title: '',
+            type: 'string',
+        },
+        {
+            key: 'OPER_DESCRIBE',
+            title: '',
+            type: 'string',
+        },
+        {
+            key: 'USER_ISN',
+            title: '',
+            type: 'number',
+        }
     ]),
+
     treeFields: ['CLASSIF_NAME'],
     // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
     //     'MAIL_FOR_ALL', 'NOTE', 'OKPO', 'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
@@ -301,7 +336,20 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         // ... Features.cfg.SEV.isIndexesEnable ? ['sev'] : [],
     ],
     searchFields: ['CLASSIF_NAME'],
-    fullSearchFields: ['CLASSIF_NAME', 'EMAIL', 'INN', 'DOP_REC', 'CONTACT.MEDO_ID', 'GATE', 'GATE_ID', 'CONTACT.MEDO_GLOBAL_ID'],
+    fullSearchFields: [
+        'CLASSIF_NAME', 
+        'EMAIL', 
+        'INN', 
+        'DOP_REC', 
+        'CONTACT.MEDO_ID', 
+        'GATE', 
+        'GATE_ID', 
+        'CONTACT.MEDO_GLOBAL_ID',
+        'FROM',
+        'OPER_DESCRIBE',
+        'TO',
+        'USER_ISN',
+    ],
     // quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',
     //     'ISN_ORGANIZ_TYPE', 'SERTIFICAT',  'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'sev'],
     quickViewFields: ['FULLNAME',

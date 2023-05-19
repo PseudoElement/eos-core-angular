@@ -113,7 +113,7 @@ export class DictionaryDescriptorService {
                         res = new DepartmentDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'organization':
-                        res = new OrganizationDictionaryDescriptor(descr, this.apiSrv);
+                        res = new OrganizationDictionaryDescriptor(descr, this.apiSrv, this._GraphQLService);
                         break;
                     case 'broadcast-channel':
                         res = new BroadcastChanelDictionaryDescriptor(descr, this.apiSrv, this._channelSrv);

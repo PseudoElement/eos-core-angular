@@ -26,6 +26,7 @@ import { RestError } from '../../eos-rest/core/rest-error';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 import {IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import {WARN_ELEMENTS_ARE_RELATED } from '../../eos-dictionaries/consts/confirm.consts';
+import { GraphQLService } from 'eos-dictionaries/services/graphQL.service';
 
 
 export interface IDictionaryDescriptorRelatedInfo {
@@ -72,6 +73,7 @@ export abstract class AbstractDictionaryDescriptor {
     constructor(
         descriptor: IDictionaryDescriptor,
         apiSrv: PipRX,
+        public graphQl?: GraphQLService,
     ) {
         if (descriptor) {
             this.id = descriptor.id;
@@ -201,6 +203,12 @@ export abstract class AbstractDictionaryDescriptor {
         const _criteries = {};
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
+                if(fld.foreignKey === "FROM" 
+                    || fld.foreignKey === "TO" 
+                    || fld.foreignKey === "OPER_DESCRIBE" 
+                    || fld.foreignKey === "USER_ISN") {
+                    _criteries[fld.foreignKey] = data[fld.foreignKey];
+                } else 
                 if (fld.foreignKey !== 'CODE' &&
                     fld.foreignKey !== 'DOP_REC' &&
                     fld.foreignKey !== 'DUE_DOCGROUP' &&
@@ -309,10 +317,7 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     search(criteries: any[]): Promise<any[]> {
-        // console.log('search critery', criteries);
-
         const _search = criteries.map((critery) => this.getData(PipRX.criteries(critery)));
-
         return Promise.all(_search)
             .then((results) => [].concat(...results));
     }

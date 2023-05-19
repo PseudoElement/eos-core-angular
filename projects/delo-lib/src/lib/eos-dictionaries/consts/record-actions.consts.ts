@@ -632,6 +632,19 @@ export const RENAME_BASE_DIRECTORY: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+export const EP_CERTIFICATE_IS_APPOINTED: IAction = {
+    type: E_RECORD_ACTIONS.epCertificateIsAppointed,
+    group: E_ACTION_GROUPS.common,
+    title: 'Назначен сертификат ЭП',
+    hint: 'Назначен сертификат ЭП',
+    iconClass: 'eos-adm-icon eos-adm-icon-electronic-signature-blue small',
+    disabledIconClass: 'eos-adm-icon eos-adm-icon-electronic-signature-grey small',
+    hoverIconClass: 'eos-adm-icon eos-adm-icon-electronic-signature-dark-blue small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -669,6 +682,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTIONS_PROTVIEW_SECURITY,
     RECORD_ACTION_COPY,
     RECORD_ACTION_PASTE,
+    EP_CERTIFICATE_IS_APPOINTED,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];

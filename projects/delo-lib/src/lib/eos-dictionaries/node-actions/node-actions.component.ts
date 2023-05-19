@@ -73,6 +73,19 @@ export class NodeActionsComponent implements OnDestroy {
         return this._markedNodes.filter(node => !node.isSliced);
     }
 
+    get nodeIdCertificate() {
+        let isSertificate: boolean = false;
+        if ( this._markedNodes[this._markedNodes.length -1] && 
+             this._markedNodes[this._markedNodes.length -1].data.CONTACT_List) {
+                this._markedNodes.forEach(el => {
+                    if(el.data.CONTACT_List[0].ID_CERTIFICATE){
+                        isSertificate = true;
+                    }
+                })
+        }
+        return isSertificate;
+    }
+
     private ngUnsubscribe: Subject<any> = new Subject();
 
     private _userOrderCutMode: boolean = false;
@@ -177,26 +190,6 @@ export class NodeActionsComponent implements OnDestroy {
         this.moreButtons = MORE_RECORD_ACTIONS.map(act => this._actionToButton(act, opts));
     }
 
-    private _update() {
-        this.isTree = false;
-        if (this.dictionary) {
-            this.isTree = this.dictionary && (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.linear) &&
-                (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.custom);
-            if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.department) {
-                this.addMenu = DEPARTMENT_ADD_MENU;
-            } else if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.organiz) {
-                this.addMenu = ORGANIZ_ADD_MENU;
-            } else if (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.custom) {
-                this.addMenu = COMMON_ADD_MENU;
-            }
-            this.rubricUniqMenu = RUBRIC_UNIQ_ADD_MENU;
-
-            const opt: IActionUpdateOptions = this._buttonOptsCreate();
-            this.buttons.forEach(btn => this._updateButton(btn, opt));
-            this.moreButtons.forEach(btn => this._updateButton(btn, opt));
-        }
-    }
-
     private _buttonOptsCreate(): IActionUpdateOptions {
         if (!this.dictionary) {
             return null;
@@ -242,6 +235,37 @@ export class NodeActionsComponent implements OnDestroy {
             dictGrant: grant,
         };
         return opts;
+    }
+
+    private _actionToButton(action: IAction, opts: IActionUpdateOptions): IActionButton {
+        const _btn = Object.assign({
+            isActive: false,
+            enabled: false,
+            show: false
+        }, action);
+
+        this._updateButton(_btn, opts);
+        return _btn;
+    }
+
+    private _update() {
+        this.isTree = false;
+        if (this.dictionary) {
+            this.isTree = this.dictionary && (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.linear) &&
+                (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.custom);
+            if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.department) {
+                this.addMenu = DEPARTMENT_ADD_MENU;
+            } else if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.organiz) {
+                this.addMenu = ORGANIZ_ADD_MENU;
+            } else if (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.custom) {
+                this.addMenu = COMMON_ADD_MENU;
+            }
+            this.rubricUniqMenu = RUBRIC_UNIQ_ADD_MENU;
+
+            const opt: IActionUpdateOptions = this._buttonOptsCreate();
+            this.buttons.forEach(btn => this._updateButton(btn, opt));
+            this.moreButtons.forEach(btn => this._updateButton(btn, opt));
+        }
     }
 
     private _updateButton(button: IActionButton, opts: IActionUpdateOptions) {
@@ -539,6 +563,10 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.certifUC:
                     break;
+                case E_RECORD_ACTIONS.epCertificateIsAppointed:
+                    _enabled = this.nodeIdCertificate;
+                    _show = true;
+                    break;
                 default:
                     const {enabled, show} = this._dictSrv.npOverrideSrv.checkActiveMenuButtons(button.type, this, opts)
                     _enabled = enabled;
@@ -558,16 +586,7 @@ export class NodeActionsComponent implements OnDestroy {
         button.isActive = _active;
     }
 
-    private _actionToButton(action: IAction, opts: IActionUpdateOptions): IActionButton {
-        const _btn = Object.assign({
-            isActive: false,
-            enabled: false,
-            show: false
-        }, action);
 
-        this._updateButton(_btn, opts);
-        return _btn;
-    }
     private _checkNomenklHighestNode(enabled, btnType) {
         const activeNode = this.dictionary.descriptor.getActive();
         const isHighestNode = activeNode && activeNode.id === '0.';
@@ -584,6 +603,7 @@ export class NodeActionsComponent implements OnDestroy {
         }
         return enabled;
     }
+
     private _checkGranted(button: IActionButton, opts: IActionUpdateOptions): boolean {
         if (button.type === E_RECORD_ACTIONS.showDeleted) {
             /*

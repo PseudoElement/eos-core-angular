@@ -7,38 +7,49 @@ export enum EOSDICTS_VARIANT {
     CB, // ЦБ
     Nadzor, // Надзор
 }
+
 export interface IOESDictsFeatures {
     version: string;
     variant: EOSDICTS_VARIANT;
     departments: {
-        numcreation: boolean; /* галка Номерообразование */
-        reestr_send: boolean; /* галка Отправлять документы по реестрам */
-        gas_ps: boolean; /* ГАС ПС */
-        stamp: boolean; /* угловой штамп */
-        userCreateButton: boolean; /* кнопка "создать юзера" для ДЛ */
-        datesReq: boolean; /* требовать дату начала */
-        calendar_depart: boolean, /* Отображение колхозных справочников */
-        
+        /** галка Номерообразование */
+        numcreation: boolean;
+        /** галка Отправлять документы по реестрам */
+        reestr_send: boolean;
+        /** ГАС ПС */
+        gas_ps: boolean;
+        /** угловой штамп */
+        stamp: boolean;
+        /** кнопка "создать юзера" для ДЛ */
+        userCreateButton: boolean;
+        /** требовать дату начала */
+        datesReq: boolean;
+        /** Отображение колхозных справочников */
+        calendar_depart: boolean,
     };
     docgroups: IEOSFDocGroups;
     rkdefaults: IEOSRKDefaults;
     SEV: IEOSSevConfig;
     nodeList: IEOSNodeListPreferences;
     canEditLogicDeleted: boolean;
-
 }
 
 export enum E_LIST_ENUM_TYPE {
-    marked, // Только выделенные
-    allInFolder, // все в пределах родительской ноды
+    /** Только выделенные */
+    marked,
+    /**  все в пределах родительской ноды */
+    allInFolder,
 }
 export interface  IEOSNodeListPreferences {
-    enumerationType: E_LIST_ENUM_TYPE; // как перелистывать ноды (предыдущая\следущая)
+    /** как перелистывать ноды (предыдущая\следущая) */
+    enumerationType: E_LIST_ENUM_TYPE;
 }
 
 export interface IEOSSevConfig {
-    isIndexesEnable: boolean; /* Нужны ли Поля "индекс СЭВ" в справочниках, (SEV_ASSOCIATION)*/
-    isDictsEnabled: boolean; /* Доступны ли справочники СЭВ */
+    /** Нужны ли Поля "индекс СЭВ" в справочниках, (SEV_ASSOCIATION) */
+    isIndexesEnable: boolean;
+    /** Доступны ли справочники СЭВ */
+    isDictsEnabled: boolean;
 }
 
 export interface IEOSRKDefaults {
@@ -51,7 +62,6 @@ export interface IEOSRKDefaults {
 export interface IEOSFDocGroups {
     templates: IEOSFDocGroupsTemplates;
 }
-
 
 export interface IEOSTPLVariant {
     list: DGTplElement[];

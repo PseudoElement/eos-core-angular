@@ -61,10 +61,14 @@ export interface IDictionaryLink {
 }
 
 export interface IFieldPreferences {
-    minColumnWidth?: number; /* node-list style: min-width.px */
-    hasIcon?: boolean; /* flag for enable icon (department, docgroups) */
-    noLeftPadding?: boolean; /* flag for icons without padding (ex: sev) */
-    inline?: boolean; /* if true - hedden in customisable columns */
+    /** node-list style: min-width.px */
+    minColumnWidth?: number; 
+    /** flag for enable icon (department, docgroups) */
+    hasIcon?: boolean; 
+    /** flag for icons without padding (ex: sev) */
+    noLeftPadding?: boolean; 
+    /** if true - hedden in customisable columns */
+    inline?: boolean; 
 }
 export interface IFieldDescriptor {
     key: string;
@@ -197,4 +201,22 @@ export interface IDepartmentDictionaryDescriptor extends IDictionaryDescriptor {
     editFields: string[];
     listFields: string[];
     fullSearchFields: IRecordMode;
+}
+
+export interface SearchData{
+    cabinet?: any;
+    common?: any;
+    data?: any;
+    department?: any;
+    medo?: any;
+    person?: any;
+    protocol?: SearchProtocol
+    srchMode: string
+}
+
+export interface SearchProtocol {
+    FROM: string | null;
+    OPER_DESCRIBE: string | null;
+    TO: string | null;
+    USER_ISN:number | null;
 }

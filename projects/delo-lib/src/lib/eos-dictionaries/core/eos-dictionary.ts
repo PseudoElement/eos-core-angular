@@ -418,7 +418,6 @@ export class EosDictionary {
             .search(criteries)
             .then((data) => {
                 const nodes = this.updateNodes(data, true);
-                // this.setVisibleTitleRoot();
                 return Promise.all(nodes);
             });
     }
