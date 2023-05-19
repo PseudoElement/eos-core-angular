@@ -193,15 +193,19 @@
     <div [formGroup]="form">
         <div class="line">
             <label class="line-title">ФИО: </label>
-            <div class='required-emptiness' [ngClass]="{'required' : !this.form.get('SURNAME_PATRON').value}">
+            <div class='required-emptiness'
+            containerClass="tooltip-error"
+            placement="bottom"
+            [tooltip]="this.form.get('SURNAME_PATRON').value?.length === 0 ? 'Обязательное поле' : ''"
+            [ngClass]="{'required' : this.form.get('SURNAME_PATRON').value?.length === 0}">
                 <input 
                     #SURNAME_PATRON="bs-tooltip"
-                    [ngClass]="{'error': form.controls['SURNAME_PATRON'].value.length === 64}" 
+                    [ngClass]="{'error-new-user': form.controls['SURNAME_PATRON'].value.length === 64  || !this.form.get('SURNAME_PATRON').value}" 
                     [tooltip]="'Максимальная длина поля ' + '64' +' символов'"
                     [formControlName]="inputs['SURNAME_PATRON'].key"
                     id="inputs['SURNAME_PATRON'].key"
                     containerClass="tooltip-error"
-                    [maxlength]="64" 
+                    [maxlength]="64"
                     class=" form-control" 
                     placement="bottom" 
                     [readonly]="false" 
@@ -225,7 +229,7 @@
                     placeholder="..."
                     type="text"
                 />
-                <div class="choose-department" (click)="chooseDepartment()">
+                <div style="right: 6px" class="choose-department" (click)="chooseDepartment()">
                     <span class="eos-adm-icon eos-adm-icon-directory-book-blue small"></span> 
                 </div>
             </div>
@@ -233,10 +237,14 @@
 
         <div class="line" >
             <label class="line-title">Имя(Логин): </label>
-            <div class="required-emptiness" [ngClass]="{'required' : !this.form.get('classifName').value}">
+            <div class="required-emptiness"
+            containerClass="tooltip-error"
+            placement="bottom"
+            [tooltip]="this.form.get('classifName').value?.length === 0 ? 'Обязательное поле' : ''"
+            [ngClass]="{'required' : !this.form.get('classifName').value}">
                 <input 
                     #classifName="bs-tooltip"
-                    [ngClass]="{'error': form.controls['classifName'].value.length === loginMaxLength}" 
+                    [ngClass]="{'error-new-user': form.controls['classifName'].value.length === loginMaxLength || !this.form.get('classifName').value}" 
                     [tooltip]="'Максимальная длина поля ' + loginMaxLength +' символов'"
                     id="inputs['classifName'].key" 
                     [formControlName]="inputs['classifName'].key" 

@@ -114,10 +114,24 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     get disabledSubmit() {
-        if (this.form && (this.form.controls['classifName'].value).trim() === '') {
-            this.form.get('classifName').setErrors({ errorPattern: true });
+        if (this.cbBase) {
+            if (this.form && (this.form.controls['classifName'].value.trim() === '' || this.form.controls['SURNAME_PATRON'].value.trim() === '')) {
+                if (this.form && (this.form.controls['classifName'].value).trim() === '') {
+                    this.form.get('classifName').setErrors({ errorPattern: true });
+                }
+                if (this.form.controls['SURNAME_PATRON'].value.trim() === '') {
+                    this.form.get('SURNAME_PATRON').setErrors({ errorPattern: true });
+                }
+                return true;
+            }
+            return false
+        }else {
+            if (this.form && (this.form.controls['classifName'].value).trim() === '') {
+                this.form.get('classifName').setErrors({ errorPattern: true });
+            }
+            return this.btnDisabled || this.form.get('classifName').invalid;
         }
-        return this.btnDisabled || this.form.get('classifName').invalid;
+        
     }
 
     get checkUnreadFlag(): boolean {
