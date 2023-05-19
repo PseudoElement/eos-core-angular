@@ -587,15 +587,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && !meta) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
-                                        return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                        return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
                                             this._router.navigate(['/user-params-set/auntefication']);
                                         });
                                     } else {
-                                        return this.ConfirmAvSystems(accessStr, id, query);
+                                        return this.ConfirmAvSystems(accessStr, id, query, meta);
                                     }
                                 });
                             } else {
-                                return this.ConfirmAvSystems(accessStr, id, query);
+                                return this.ConfirmAvSystems(accessStr, id, query, meta);
                             }
                         }
                     });
@@ -658,41 +658,45 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
 
     }
 
-    ConfirmAvSystems(accessStr: string, id: number, query: any[]): Promise<any> {
+    ConfirmAvSystems(accessStr: string, id: number, query: any[], route?: string): Promise<any> {
         if (this.uncheckedAvSystems()) {
             return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
+                // меняем метод saveAfterSystems на saveData
+                // так как согласно таску 139328:
+                // "Разрешаем назначать роль пользователю без АДЛ"
+                // не имеет смысла проверка кабинета
                 if (res) {
-                    return this.saveAfterSystems(accessStr, id, query);
+                    return this.saveData(accessStr, id, query, route);
                 } else {
                     return;
                 }
             });
         }
-        return this.saveAfterSystems(accessStr, id, query);
+        return this.saveData(accessStr, id, query, route);
     }
 
-    saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
-        if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
-            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
-                if (cab/* || cab === undefined*/) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }).then(data => {
-                if (!data) {
-                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
-                    return;
-                } else {
-                    return this.saveData(accessStr, id, query);
-                }
-            });
-        } else {
-            return this.saveData(accessStr, id, query);
-        }
-    }
+    // saveAfterSystems(accessStr: string, id: number, query: any): Promise<any> {
+    //     if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+    //         return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
+    //             if (cab/* || cab === undefined*/) {
+    //                 return true;
+    //             } else {
+    //                 return false;
+    //             }
+    //         }).then(data => {
+    //             if (!data) {
+    //                 this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
+    //                 return;
+    //             } else {
+    //                 return this.saveData(accessStr, id, query);
+    //             }
+    //         });
+    //     } else {
+    //         return this.saveData(accessStr, id, query);
+    //     }
+    // }
 
-    saveData(accessStr: string, id: number, query: any): Promise<any> {
+    saveData(accessStr: string, id: number, query: any, route?: string): Promise<any> {
         this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
@@ -700,7 +704,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
                 this.cancel();
                 return; */
-                return this.sendData(query, accessStr);
+                return this.sendData(query, accessStr, route);
             } else {
                 const queryPas = [{
                     method: 'MERGE',
@@ -713,10 +717,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     if (+this.curentUser.USERTYPE !== 1) {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            return this.sendData(query, accessStr);
+                            return this.sendData(query, accessStr, route);
                         });
                     } else {
-                        return this.sendData(query, accessStr);
+                        return this.sendData(query, accessStr, route);
                     }
                 }).catch(error => {
                     this._errorSrv.errorHandler(error);
@@ -724,11 +728,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 });
             }
         } else {
-            return this.sendData(query, accessStr);
+            return this.sendData(query, accessStr, route);
         }
     }
 
-    sendData(query, accessStr): Promise<any> {
+    sendData(query, accessStr, route?): Promise<any> {
         return Promise.all([
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
@@ -741,10 +745,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role="${this._userParamSrv.curentUser.USERTYPE}"&isn_user_copy_from=0`
                     }], '')
                     .then(() => {
-                        return this.AfterSubmit(accessStr, query);
+                        return this.AfterSubmit(accessStr, query, route);
                     });
             } else {
-                return this.AfterSubmit(accessStr, query);
+                return this.AfterSubmit(accessStr, query, route);
             }
             }).catch(error => {
                 this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
@@ -752,7 +756,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this._errorSrv.errorHandler(error);
             });
     }
-    AfterSubmit(accessStr: string, query): Promise<any> {
+    AfterSubmit(accessStr: string, query, route?): Promise<any> {
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
@@ -761,6 +765,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.clearMap();
         this.startRolesCb = [];
         this.queryRoles = [];
+        if (route === 'true') {
+            return Promise.resolve();
+        }
         return this.GetUserData().then(() => {
             if (this.currentCbFields.length) {
                 this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
@@ -1083,6 +1090,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         }
+        this.controlField.forEach((field) => {
+            if (field.key === 'teсhUser') {
+                field.value = false;
+            }
+        });
         // const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
         /* if (this.currentCbFields.length === 0 && standartRole.indexOf(this.formControls.controls['SELECT_ROLE'].value) > -1) {
             this.controlField[2].value = this.formControls.controls['SELECT_ROLE'].value;
@@ -1168,6 +1180,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(data => {
+                console.log('data', data);
+                
                 if (data) {
                     this.curentUser.isTechUser = data;
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
@@ -1193,6 +1207,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 }
                             } else {
                                 this.curentUser.isTechUser = data;
+                                console.log('t1');
+                                
                                 f.get('teсhUser').setValue(false);
                             }
                         }).catch(error => {
@@ -1212,14 +1228,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
             });
         this.form.get('CLASSIF_NAME').valueChanges
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(data => {
-                if (f.get('teсhUser').value) {
-                    this.form.get('SURNAME_PATRON').patchValue(data, { emitEvent: false });
-                }
-            });
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(data => {
+            if (f.get('teсhUser').value) {
+                this.form.get('SURNAME_PATRON').patchValue(data, { emitEvent: false });
+            }
+        });
     }
     private messageAlert({ title, msg, type }: IMessage) {
         this._msgSrv.addNewMessage(
