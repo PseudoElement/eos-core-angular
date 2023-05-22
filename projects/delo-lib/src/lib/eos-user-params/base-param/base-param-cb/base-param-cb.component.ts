@@ -214,7 +214,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             });
         }
         const baseInput = [...BASE_PARAM_CONTROL_INPUT];
-        /* 
+        /*
         * По логике в ЦБ может быть роль или роль вибр и одна из них должна быть заполнена если не заполнена ни одна то выдавать ошибку
         */
         baseInput.forEach((item) => {
@@ -863,6 +863,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._pushState();
         this.editModeF();
     }
+    getSerts(template: TemplateRef<any>): void {
+        if (this.editMode) {
+            this.modalRef = this.modalService.show(template, { class: 'serts', ignoreBackdropClick: true });
+        }
+    }
     cancelValues(inputs, form: FormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
             form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
@@ -1180,8 +1185,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(data => {
-                console.log('data', data);
-                
                 if (data) {
                     this.curentUser.isTechUser = data;
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
@@ -1207,8 +1210,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 }
                             } else {
                                 this.curentUser.isTechUser = data;
-                                console.log('t1');
-                                
                                 f.get('teсhUser').setValue(false);
                             }
                         }).catch(error => {

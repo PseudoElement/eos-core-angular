@@ -267,6 +267,7 @@
                     [readonly]="formAccess.get('5').disabled"
                 ></eos-dynamic-input>
                 <button
+                    *ngIf="criptoView"
                     [disabled]="!editMode"
                     type="button"
                     (click)="getSerts(template)"
