@@ -122,8 +122,8 @@
                     <span
                         class="icon eos-adm-icon small icon-add-department span-avatar-icon"
                         [ngClass]="{
-                            'eos-adm-icon-avatar-blue': !curentUser.isTechUser && editMode,
-                            'eos-adm-icon-avatar-grey': curentUser.isTechUser || !editMode
+                            'eos-adm-icon-avatar-blue': editMode,
+                            'eos-adm-icon-avatar-grey': !editMode
                         }"
                         (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
                     >

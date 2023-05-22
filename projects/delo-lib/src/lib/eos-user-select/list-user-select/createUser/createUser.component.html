@@ -1,6 +1,6 @@
-<eos-param-header 
-    [title]="titleHeader" 
-    (submitForm)="startSubmit()" 
+<eos-param-header
+    [title]="titleHeader"
+    (submitForm)="startSubmit()"
     (cancelForm)="cancel()"
     [statusBtnSub]="disabledSubmit"
 ></eos-param-header>
@@ -11,100 +11,99 @@
             <div class="form-group create-user-login-input log" style="height: 115px;">
                 <label>ЛОГИН</label>
                 <div class="type-user">
-                    <div 
+                    <div
                         [ngClass]="{'required' : !this.form.get('classifName').value}"
-                        class='required-emptiness' 
+                        class='required-emptiness'
                     >
                         <form [formGroup]="form">
-                            <input 
-                                #classifName="bs-tooltip" 
+                            <input
+                                #classifName="bs-tooltip"
                                 [ngClass]="{'error': form.controls['classifName'].value.length === loginMaxLength}"
                                 [tooltip]="'Максимальная длина поля ' + loginMaxLength +' символов'"
-                                [formControlName]="inputs['classifName'].key" 
+                                [formControlName]="inputs['classifName'].key"
                                 containerClass="tooltip-error"
-                                [maxlength]="loginMaxLength" 
-                                class=" form-control" 
-                                placement="bottom" 
-                                [readonly]="false" 
-                                triggers="" 
+                                [maxlength]="loginMaxLength"
+                                class=" form-control"
+                                placement="bottom"
+                                [readonly]="false"
+                                triggers=""
                                 type="text"
                             />
                         </form>
                     </div>
                     <eos-dynamic-input
                         class="base-multiply-input base-template-input type-input"
-                        [input]="inputs['USER_TYPE']" 
+                        [input]="inputs['USER_TYPE']"
                         [readonly]="false"
-                        [form]="form" 
+                        [form]="form"
                     ></eos-dynamic-input>
                 </div>
-                <eos-dynamic-input 
+                <eos-dynamic-input
                     *ngIf="!cbBase"
                     style="display: inline-block;"
-                    [input]="inputs['teсhUser']" 
-                    [tooltip]="techUserTooltip" 
-                    [readonly]="false" 
+                    [input]="inputs['teсhUser']"
+                    [tooltip]="techUserTooltip"
+                    [readonly]="false"
                     placement="top"
                     [form]="form"
                 ></eos-dynamic-input>
             </div>
             <div [ngClass]="{'flex-wr': !cbBase}">
-                <eos-dynamic-input 
-                    (onEnterSearchEmptyResults)="showDepChooseEmpty()" 
-                    class="base-text-input base-input-role" 
-                    (onClickChoose)="showDepChoose()" 
+                <eos-dynamic-input
+                    (onEnterSearchEmptyResults)="showDepChooseEmpty()"
+                    class="base-text-input base-input-role"
+                    (onClickChoose)="showDepChoose()"
                     [input]="inputs['DUE_DEP_NAME']"
-                    [disabled]="isTechUser" 
-                    [form]="form" 
-                    eosClickMode 
+                    [form]="form"
+                    eosClickMode
                 ></eos-dynamic-input>
                 <eos-dynamic-input
-                    class="base-text-input base-input-role" 
+                    class="base-text-input base-input-role"
                     [input]="inputs['SELECT_ROLE']"
                     [readonly]="false"
-                    [form]="form" 
+                    [form]="form"
                 ></eos-dynamic-input>
             </div>
             <div
                 class="dynamic-input-wrapper inline-block base-department-input"
-                [formGroup]="form" 
+                [formGroup]="form"
             >
                 <label [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
                 <div class="create-user-wr" style="width: 363px">
-                    <input 
-                        class="form-control m-font inline-block  name-limitation-max" 
-                        readonly [formControlName]="inputs['USER_COPY'].key" 
-                        [placeholder]="inputs['USER_COPY'].label" 
+                    <input
+                        class="form-control m-font inline-block  name-limitation-max"
+                        readonly [formControlName]="inputs['USER_COPY'].key"
+                        [placeholder]="inputs['USER_COPY'].label"
                         (keyup)="delSelectUser($event)"
-                        [id]="inputs['USER_COPY'].key" 
+                        [id]="inputs['USER_COPY'].key"
                         autocomplete="off"
                         type="text"
                     >
-                    <span 
+                    <span
                         [ngClass]="{'eos-adm-icon-avatar-blue': !form.get('USER_TEMPLATES').value, 'eos-adm-icon-avatar-grey': form.get('USER_TEMPLATES').value}"
                         [ngStyle]="{'margin-right': !form.value['USER_COPY'] ? '0px' : '28px'}"
                         (click)="selectUser(form.get('USER_TEMPLATES').value)"
                         class="icon eos-adm-icon  small icon-add-department"
-                        eosClickMode 
+                        eosClickMode
                     ></span>
-                    <a 
-                        [ngClass]="{'hide': !form.value['USER_COPY']}" 
+                    <a
+                        [ngClass]="{'hide': !form.value['USER_COPY']}"
                         (click)="cleanDueCopy()"
                     >
                         <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
                     </a>
                 </div>
             </div>
-            <eos-dynamic-input 
+            <eos-dynamic-input
                 class="base-multiply-input base-template-input"
-                [input]="inputs['USER_TEMPLATES']" 
-                [form]="form" 
+                [input]="inputs['USER_TEMPLATES']"
+                [form]="form"
                 [readonly]="form.get('USER_COPY').value || checkUnreadFlag"
             ></eos-dynamic-input>
         </div>
     </div>
 </main>
-    
+
 <div *ngIf="isShell" class="shell"></div>
 
 <ng-template #spiner>
@@ -113,24 +112,24 @@
     </div>
 </ng-template>
 
-<ng-template 
-    #templatePassword 
+<ng-template
+    #templatePassword
     aria-labelledby="dialog-nested-name2"
-    role="dialog" 
-    tabindex="1" 
+    role="dialog"
+    tabindex="1"
 >
     <div class="modal-header">
         <h4 class="modal-title pull-left">Введите пароль</h4>
-        <button 
+        <button
             (click)="closeSubModal()"
-            class="btn btn-primary" 
-            type="button" 
+            class="btn btn-primary"
+            type="button"
         >
             <span>отменить</span>
         </button>
-        <button 
-            [disabled]="!validPassword" 
-            type="button" 
+        <button
+            [disabled]="!validPassword"
+            type="button"
             (click)="modalRef.hide()"
             class="btn btn-primary-full"
         >
@@ -143,42 +142,42 @@
             <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none; padding: 0;">
             <label>
                 <span>Пароль</span>
-                <input 
-                    aria-autocomplete="none" 
-                    [type]="type" 
-                    name="pass" 
-                    id="inpPass" 
+                <input
+                    aria-autocomplete="none"
+                    [type]="type"
+                    name="pass"
+                    id="inpPass"
                     class="passInput"
-                    [(ngModel)]="password" 
+                    [(ngModel)]="password"
                     autocomplete="off"
                 >
-                <span 
-                    class="eos-adm-icon small oko-vision oko-vision-l1" 
+                <span
+                    class="eos-adm-icon small oko-vision oko-vision-l1"
                     [ngClass]="'eos-adm-icon-show-blue'"
-                    (mousedown)='setVision(true)' 
+                    (mousedown)='setVision(true)'
                     (mouseup)='resetVision(true)'
                 ></span>
             </label>
 
             <label>
                 <span>Повторите пароль</span>
-                <input 
+                <input
                     [ngStyle]="{'border-color': !validPassword && (password.length || repitedPassword.length) ? 'red' : '#2196f3'}"
                     [tooltip]="!validPassword && (password.length || repitedPassword.length) ? 'Пароли не совпадают' : ''"
-                    class="passInput" style="margin-top: 5px;" 
+                    class="passInput" style="margin-top: 5px;"
                     [containerClass]="'tooltip-error'"
                     [(ngModel)]="repitedPassword"
-                    aria-autocomplete="none" 
-                    [type]="type_repeat" 
+                    aria-autocomplete="none"
+                    [type]="type_repeat"
                     autocomplete="off"
-                    placement="bottom" 
+                    placement="bottom"
                     name="repPass"
                 >
-                <span 
+                <span
                 class="eos-adm-icon small oko-vision"
                 [ngClass]="'eos-adm-icon-show-blue'"
-                (mousedown)='setVision()' 
-                (mouseup)='resetVision()' 
+                (mousedown)='setVision()'
+                (mouseup)='resetVision()'
                 ></span>
             </label>
         </form>
@@ -198,18 +197,18 @@
             placement="bottom"
             [tooltip]="this.form.get('SURNAME_PATRON').value?.length === 0 ? 'Обязательное поле' : ''"
             [ngClass]="{'required' : this.form.get('SURNAME_PATRON').value?.length === 0}">
-                <input 
+                <input
                     #SURNAME_PATRON="bs-tooltip"
-                    [ngClass]="{'error-new-user': form.controls['SURNAME_PATRON'].value.length === 64  || !this.form.get('SURNAME_PATRON').value}" 
+                    [ngClass]="{'error-new-user': form.controls['SURNAME_PATRON'].value.length === 64  || !this.form.get('SURNAME_PATRON').value}"
                     [tooltip]="'Максимальная длина поля ' + '64' +' символов'"
                     [formControlName]="inputs['SURNAME_PATRON'].key"
                     id="inputs['SURNAME_PATRON'].key"
                     containerClass="tooltip-error"
                     [maxlength]="64"
-                    class=" form-control" 
-                    placement="bottom" 
-                    [readonly]="false" 
-                    triggers="" 
+                    class=" form-control"
+                    placement="bottom"
+                    [readonly]="false"
+                    triggers=""
                     type="text"
                 />
             </div>
@@ -218,19 +217,19 @@
         <div class="line">
             <label class="line-title">Подразделение: </label>
             <div class="required-emptiness">
-                <input 
+                <input
                     #NOTE
                     [formControlName]="inputs['NOTE'].key"
                     [(ngModel)]="department.NOTE"
                     (input)="changeNote(NOTE)"
-                    id="inputs['NOTE'].key" 
-                    class="form-control" 
-                    [readonly]="false" 
+                    id="inputs['NOTE'].key"
+                    class="form-control"
+                    [readonly]="false"
                     placeholder="..."
                     type="text"
                 />
                 <div style="right: 6px" class="choose-department" (click)="chooseDepartment()">
-                    <span class="eos-adm-icon eos-adm-icon-directory-book-blue small"></span> 
+                    <span class="eos-adm-icon eos-adm-icon-directory-book-blue small"></span>
                 </div>
             </div>
         </div>
@@ -242,12 +241,12 @@
             placement="bottom"
             [tooltip]="this.form.get('classifName').value?.length === 0 ? 'Обязательное поле' : ''"
             [ngClass]="{'required' : !this.form.get('classifName').value}">
-                <input 
+                <input
                     #classifName="bs-tooltip"
-                    [ngClass]="{'error-new-user': form.controls['classifName'].value.length === loginMaxLength || !this.form.get('classifName').value}" 
+                    [ngClass]="{'error-new-user': form.controls['classifName'].value.length === loginMaxLength || !this.form.get('classifName').value}"
                     [tooltip]="'Максимальная длина поля ' + loginMaxLength +' символов'"
-                    id="inputs['classifName'].key" 
-                    [formControlName]="inputs['classifName'].key" 
+                    id="inputs['classifName'].key"
+                    [formControlName]="inputs['classifName'].key"
                     containerClass="tooltip-error"
                     [maxlength]="loginMaxLength"
                     class="form-control"

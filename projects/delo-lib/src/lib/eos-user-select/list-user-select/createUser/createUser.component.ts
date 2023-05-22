@@ -31,7 +31,7 @@ const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 export class CreateUserComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
     @ViewChild('templatePassword', { static: true }) templatePassword: ElementRef;
-    @ViewChild('classifName') classifName;
+    @ViewChild('classifName') classifName: any;
     @ViewChild('SURNAME_PATRON') SURNAME_PATRON;
     @ViewChild('NOTE') NOTE;
     @ViewChild('OS') OS: ElementRef;
@@ -125,13 +125,12 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 return true;
             }
             return false
-        }else {
+        } else {
             if (this.form && (this.form.controls['classifName'].value).trim() === '') {
                 this.form.get('classifName').setErrors({ errorPattern: true });
             }
             return this.btnDisabled || this.form.get('classifName').invalid;
         }
-        
     }
 
     get checkUnreadFlag(): boolean {
@@ -761,6 +760,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.departmentData = dep;
                 this.data['dueDL'] = dep['DUE'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME'], { emitEvent: false });
+                this.form.get('teсhUser').patchValue(false, { emitEvent: false });
                 this._searchLexem = dep['CLASSIF_NAME'];
                 if (!!this.departmentData.UNREAD_FLAG) {
                     this.form.controls['USER_TEMPLATES'].patchValue('', { emitEvent: false });
@@ -832,9 +832,9 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.btnDisabled = this.form.invalid;
                     }
                     if (this.form.controls['classifName'].value.length === this.loginMaxLength) {
-                        this.classifName.show();
+                        this.classifName?.show?.();
                     } else {
-                        this.classifName.hide();
+                        this.classifName?.hide?.();
                     }
                     // const enteredLogin = this.form.controls['classifName'].value;
                     // enteredLogin.length === this.loginMaxLength ? this.classifName.show() : this.classifName.hide();
@@ -848,15 +848,15 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.ngUnsubscribe))
                 .subscribe(data => {
                     if (this.classifName && data['classifName'].length === this.loginMaxLength) {
-                        this.classifName.show();
+                        this.classifName?.show?.();
                     } else {
-                        this.classifName?.hide();
+                        this.classifName?.hide?.();
                     }
 
                     if (this.SURNAME_PATRON && data['SURNAME_PATRON'].length === 64) {
-                        this.SURNAME_PATRON.show();
+                        this.classifName?.show?.();
                     } else {
-                        this.SURNAME_PATRON?.hide();
+                        this.classifName?.hide?.();
                     }
                     this.btnDisabled = false;
                 })

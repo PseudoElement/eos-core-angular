@@ -943,6 +943,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.dueDepName = dep['CLASSIF_NAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.formControls.get('DUE_DEP_NAME').setValue(dep['CLASSIF_NAME'], { emitEvent: false }); // @task161934 - изменение значения в поле
+                this.formControls.get('teсhUser').setValue(false);
                 this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE']; // @task161934 - данные для записи в БД
                 return this.getPhotoUser(dep['DUE']);

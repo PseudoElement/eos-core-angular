@@ -1002,6 +1002,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
                 this.dueDepName = dep['CLASSIF_NAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.formControls.get('teсhUser').setValue(false);
                 this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
                 this.currentCbFields = [];
@@ -1013,7 +1014,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     selectDepartment() {
-        if (!this.curentUser.isTechUser && this.editMode) {
+        if (this.editMode) {
             this.showDepartment();
         }
     }
