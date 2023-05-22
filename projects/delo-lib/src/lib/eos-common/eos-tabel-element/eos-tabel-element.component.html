@@ -9,6 +9,7 @@
                 <button
                     *ngIf="!button.notView"
                     #itemTooltip="bs-tooltip"
+                    eosClickMode
                     class="btn"
                     [tooltip]="button.children ? '' : button.tooltip"
                     placement="bottom"
