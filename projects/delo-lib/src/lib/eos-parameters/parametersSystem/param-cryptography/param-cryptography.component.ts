@@ -7,7 +7,7 @@ import { ITableBtn, ITableData, ITableHeader } from '../shared/interfaces/tables
 import { ELEMENT_PROTECT_NOT_DELET, PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { IOrderTable } from '../../../eos-common/index';
 import { Validators } from '@angular/forms';
-import { AppsettingsParams } from '../../../eos-common/consts/params.const';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
 
 
 
@@ -21,7 +21,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
     modalCollection: BsModalRef;
     public paramReceive: IUploadParam = {
         namespace: AppsettingsParams.Cryptography,
-        typename: 'CryptographyCfg'
+        typename: AppsettingsTypename.TCryptography
     };
     public masDisable: any[] = [];
     public orderBy: boolean = true;
@@ -60,6 +60,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
             if (err.code !== 401) {
                 console.log(err);
             }
+            this._errorSrv.errorHandler(err);
         });
     }
     init() {
@@ -76,14 +77,16 @@ export class ParamCryptographyComponent extends BaseParamComponent {
                     'key': key
                 });
             });
+        })
+        .catch(err => {
+            throw err;
+        })
+        .finally(() => {
             this.prepareDataParam();
             this.prepareData = this.convData([]);
             this.inputs = this.getInputs();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
             this.subscribeChangeForm();
-        })
-        .catch(err => {
-            throw err;
         });
     }
     edit() {
@@ -237,7 +240,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
         this.deletedElem.forEach((item) => {
             const deletCryptograp: IUploadParam = {
                 namespace: AppsettingsParams.Cryptography,
-                typename: 'CryptographyCfg',
+                typename: AppsettingsTypename.TCryptography,
                 instance: '' + item.key
             };
             allQuery.push(this.setAppSetting(deletCryptograp, {}));

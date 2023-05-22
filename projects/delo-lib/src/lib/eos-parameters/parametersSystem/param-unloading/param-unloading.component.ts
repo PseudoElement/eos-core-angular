@@ -5,7 +5,7 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { UNLOAD_PARAMS } from '../shared/consts/unload-achive.const';
-import { AppsettingsParams } from '../../../eos-common/consts/params.const';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
 
 @Component({
   selector: 'eos-param-unloading',
@@ -16,7 +16,7 @@ export class ParamUnloadingComponent extends BaseParamComponent {
   @Input() btnError;
   public paramUpload: IUploadParam = {
     namespace: AppsettingsParams.Archivist,
-    typename: 'ArchivistCfg',
+    typename: AppsettingsTypename.TArchivist,
     instance: 'Default'
   };
   masDisable: any[] = [];
@@ -64,8 +64,11 @@ export class ParamUnloadingComponent extends BaseParamComponent {
       this.subscribeChangeForm();
     })
     .catch((er) => {
-      console.log('er', er);
-      this._errorSrv.errorHandler({code: er.status, message: er.error});
+      this.prepareData = this.convData([]);
+      this.prepareDataParam();
+      this.inputs = this.getInputs();
+      this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+      this._errorSrv.errorHandler(er);
     });
   }
 
