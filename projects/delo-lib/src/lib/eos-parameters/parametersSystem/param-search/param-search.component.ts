@@ -7,7 +7,7 @@ import { BaseParamComponent } from './../shared/base-param.component';
 import { AbstractControl/* , Validators  */} from '@angular/forms';
 import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
 import { IElasticParams, IKafkaParams, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
-import { AppsettingsParams } from '../../../eos-common/consts/params.const';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
 
 const UPDATE_INDEXKIND: IConfirmWindow2 = {
     title: 'Предупреждение',
@@ -30,12 +30,12 @@ export class ParamSearchComponent extends BaseParamComponent {
     public paramPassword = '';
     public kafkaUpload: IUploadParam = {
         namespace: AppsettingsParams['Search.Indexer'],
-        typename: 'KafkaCfg',
+        typename: AppsettingsTypename.TKafka,
         instance: 'Default'
     };
     public ElasticUpload: IUploadParam = {
         namespace: AppsettingsParams['Search.Indexer'],
-        typename: 'ElasticCfg',
+        typename: AppsettingsTypename.TElastic,
         instance: 'Default'
     };
     public masDisable: any[] = [];

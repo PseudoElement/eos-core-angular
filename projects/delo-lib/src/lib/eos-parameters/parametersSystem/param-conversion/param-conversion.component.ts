@@ -5,7 +5,7 @@ import { CONVERSION_PARAM } from '../shared/consts/conversion.const';
 import { Validators } from '@angular/forms';
 import { IConverterParam, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
-import { AppsettingsParams } from '../../../eos-common/consts/params.const';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
 
 @Component({
     selector: 'eos-parameters-conversion',
@@ -18,7 +18,7 @@ export class ParamConversionComponent extends BaseParamComponent {
     public oldData: any;
     public paramConverter: IUploadParam = {
         namespace: AppsettingsParams.Converter,
-        typename: 'ConverterCfg',
+        typename: AppsettingsTypename.TConverter,
         instance: 'Default'
     };
     public openAcord = false;

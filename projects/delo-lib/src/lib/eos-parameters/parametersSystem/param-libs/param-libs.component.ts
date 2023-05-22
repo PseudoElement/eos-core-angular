@@ -5,17 +5,17 @@ import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { PARAMS_LIBS, TABLE_HEADER_FILES } from '../shared/consts/params-libs';
 import { ITableData, ITableSettings } from '../shared/interfaces/tables.interfaces';
-import { AppsettingsParams } from '../../../eos-common/consts/params.const';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
 
 const PARAM_COMMON: IUploadParam = {
   namespace: AppsettingsParams.Common,
-  typename: 'FilesCfg',
+  typename: AppsettingsTypename.TFiles,
   instance: 'Default'
 };
 
 const PARAM_FDULZ: IUploadParam = {
   namespace: AppsettingsParams.Fdulz,
-  typename: 'FdulzCfg',
+  typename: AppsettingsTypename.TFdulz,
   instance: 'Default'
 };
 
