@@ -1949,7 +1949,7 @@ bs-dropdown-container {
                                         &:nth-child(3),
                                         &:nth-child(5) {
                                             div.elem-input-radio {
-                                                width: 235px;
+                                                width: auto;
                                             }
                                         }
 
@@ -3000,7 +3000,11 @@ bs-dropdown-container {
 
         //вкладка Внешний обмен
         eos-ext-exch {
-            eos-remaster-email {
+            eos-remaster-email,
+            eos-remaster-aspsd,
+            eos-remaster-epvv,
+            eos-remaster-lk,
+            eos-remaster-sds {
                 div.accordion-position {
                     .panel-group {
                         .panel {
