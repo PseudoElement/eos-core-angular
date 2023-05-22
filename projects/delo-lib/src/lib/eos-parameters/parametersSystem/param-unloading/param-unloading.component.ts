@@ -5,6 +5,7 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { UNLOAD_PARAMS } from '../shared/consts/unload-achive.const';
+import { AppsettingsParams } from '../../../eos-common/consts/params.const';
 
 @Component({
   selector: 'eos-param-unloading',
@@ -14,7 +15,7 @@ import { UNLOAD_PARAMS } from '../shared/consts/unload-achive.const';
 export class ParamUnloadingComponent extends BaseParamComponent {
   @Input() btnError;
   public paramUpload: IUploadParam = {
-    namespace: 'Eos.Delo.Settings.Archivist',
+    namespace: AppsettingsParams.Archivist,
     typename: 'ArchivistCfg',
     instance: 'Default'
   };

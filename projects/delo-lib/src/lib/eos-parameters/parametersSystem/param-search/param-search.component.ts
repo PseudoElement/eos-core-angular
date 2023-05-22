@@ -7,6 +7,7 @@ import { BaseParamComponent } from './../shared/base-param.component';
 import { AbstractControl/* , Validators  */} from '@angular/forms';
 import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
 import { IElasticParams, IKafkaParams, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
+import { AppsettingsParams } from '../../../eos-common/consts/params.const';
 
 const UPDATE_INDEXKIND: IConfirmWindow2 = {
     title: 'Предупреждение',
@@ -28,12 +29,12 @@ export class ParamSearchComponent extends BaseParamComponent {
     public type1 = 'password';
     public paramPassword = '';
     public kafkaUpload: IUploadParam = {
-        namespace: 'Eos.Platform.Settings.Search.Indexer',
+        namespace: AppsettingsParams['Search.Indexer'],
         typename: 'KafkaCfg',
         instance: 'Default'
     };
     public ElasticUpload: IUploadParam = {
-        namespace: 'Eos.Platform.Settings.Search.Indexer',
+        namespace: AppsettingsParams['Search.Indexer'],
         typename: 'ElasticCfg',
         instance: 'Default'
     };
@@ -74,7 +75,7 @@ export class ParamSearchComponent extends BaseParamComponent {
                     this.setValidators();
                     this.indexKing = this.form.controls['rec.INDEXKIND'].value;
                 });
-                
+
             });
     }
     cancel() {

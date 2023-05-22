@@ -1,6 +1,7 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { AppsettingsParams } from '../../../../eos-common/consts/params.const';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ISettingEmailReceive, ISettingEmailSend, IUploadParam } from '../../../../eos-parameters/interfaces/app-setting.interfaces';
@@ -79,12 +80,12 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
     }
     editProfile() {
         const paramReceive: IUploadParam = {
-            namespace: 'Eos.Delo.Settings.Email',
+            namespace: AppsettingsParams.Email,
             typename: 'ReceiveCfg',
             instance: this.dataProfile['key']
         };
         const paramSend: IUploadParam = {
-            namespace: 'Eos.Delo.Settings.Email',
+            namespace: AppsettingsParams.Email,
             typename: 'SendCfg',
             instance: this.dataProfile['key']
         };

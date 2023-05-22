@@ -1,6 +1,7 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { Component, Injector, Input } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { AppsettingsParams } from '../../../eos-common/consts/params.const';
 import { IOrderTable } from '../../../eos-common/eos-tabel-element/eos-tabel-element.component';
 import { ISettingEmailCommon, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { BaseParamComponent } from '../shared/base-param.component';
@@ -17,15 +18,15 @@ import { ITableBtn, ITableData, ITableHeader } from '../shared/interfaces/tables
 export class ParamEmailComponent extends BaseParamComponent {
     @Input() btnError;
     public paramCommon: IUploadParam = {
-        namespace: 'Eos.Delo.Settings.Email',
+        namespace: AppsettingsParams.Email,
         typename: 'CommonCfg'
     };
     public paramReceive: IUploadParam = {
-        namespace: 'Eos.Delo.Settings.Email',
+        namespace: AppsettingsParams.Email,
         typename: 'ReceiveCfg',
     };
     public paramSend: IUploadParam = {
-        namespace: 'Eos.Delo.Settings.Email',
+        namespace: AppsettingsParams.Email,
         typename: 'SendCfg',
     };
     public masDisable: any[] = [];
@@ -250,7 +251,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         const allQuery = [];
         this.deletedElem.forEach((item) => {
             const deletCommon: IUploadParam = {
-                namespace: 'Eos.Delo.Settings.Email',
+                namespace: AppsettingsParams.Email,
                 typename: 'CommonCfg',
                 instance: '' + item.key
             };

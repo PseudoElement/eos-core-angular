@@ -7,6 +7,7 @@ import { ITableBtn, ITableData, ITableHeader } from '../shared/interfaces/tables
 import { ELEMENT_PROTECT_NOT_DELET, PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { IOrderTable } from '../../../eos-common/index';
 import { Validators } from '@angular/forms';
+import { AppsettingsParams } from '../../../eos-common/consts/params.const';
 
 
 
@@ -19,7 +20,7 @@ export class ParamCryptographyComponent extends BaseParamComponent {
     @Input() btnError;
     modalCollection: BsModalRef;
     public paramReceive: IUploadParam = {
-        namespace: 'Eos.Delo.Settings.Cryptography',
+        namespace: AppsettingsParams.Cryptography,
         typename: 'CryptographyCfg'
     };
     public masDisable: any[] = [];
@@ -229,13 +230,13 @@ export class ParamCryptographyComponent extends BaseParamComponent {
                 msg: er.message ? er.message : er
               });
         });
-        
+
     }
     submit(): Promise<any> {
         const allQuery = [];
         this.deletedElem.forEach((item) => {
             const deletCryptograp: IUploadParam = {
-                namespace: 'Eos.Delo.Settings.Cryptography',
+                namespace: AppsettingsParams.Cryptography,
                 typename: 'CryptographyCfg',
                 instance: '' + item.key
             };

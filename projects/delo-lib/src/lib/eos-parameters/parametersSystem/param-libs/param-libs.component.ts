@@ -5,15 +5,16 @@ import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { PARAMS_LIBS, TABLE_HEADER_FILES } from '../shared/consts/params-libs';
 import { ITableData, ITableSettings } from '../shared/interfaces/tables.interfaces';
+import { AppsettingsParams } from '../../../eos-common/consts/params.const';
 
 const PARAM_COMMON: IUploadParam = {
-  namespace: 'Eos.Delo.Settings.Common',
+  namespace: AppsettingsParams.Common,
   typename: 'FilesCfg',
   instance: 'Default'
 };
 
 const PARAM_FDULZ: IUploadParam = {
-  namespace: 'Eos.Delo.Settings.Fdulz',
+  namespace: AppsettingsParams.Fdulz,
   typename: 'FdulzCfg',
   instance: 'Default'
 };
@@ -68,7 +69,7 @@ export class ParamLibsComponent extends BaseParamComponent {
     .then(([libParam, libLibrary, common, fdulz]) => {
       const mapData = new Map<number, any>();
       libLibrary.forEach((item) => {
-        this.inputs['rec.CommonName'].options.push({value: item['NAME'], title: item['DESCRIPTION']}); 
+        this.inputs['rec.CommonName'].options.push({value: item['NAME'], title: item['DESCRIPTION']});
         this.inputs['rec.FdulzName'].options.push({value: item['NAME'], title: item['DESCRIPTION']});
         mapData.set(item.ISN_LIBRARY, {
           key:  item.ISN_LIBRARY,

@@ -5,6 +5,7 @@ import { CONVERSION_PARAM } from '../shared/consts/conversion.const';
 import { Validators } from '@angular/forms';
 import { IConverterParam, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
+import { AppsettingsParams } from '../../../eos-common/consts/params.const';
 
 @Component({
     selector: 'eos-parameters-conversion',
@@ -16,7 +17,7 @@ export class ParamConversionComponent extends BaseParamComponent {
     public masDisable: any[] = [];
     public oldData: any;
     public paramConverter: IUploadParam = {
-        namespace: 'Eos.Platform.Settings.Converter',
+        namespace: AppsettingsParams.Converter,
         typename: 'ConverterCfg',
         instance: 'Default'
     };
