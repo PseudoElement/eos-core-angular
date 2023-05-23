@@ -50,7 +50,7 @@ function OpenModel(url: string) {
     if (OPENED_WINDOW.EXPORT && !OPENED_WINDOW.EXPORT.closed) {
         OPENED_WINDOW.EXPORT.focus();
     } else {
-        OPENED_WINDOW.EXPORT = window.open(url, '_blank', 'width=900,height=700');
+        OPENED_WINDOW.EXPORT = window.open(url, '_blank', 'width=980,height=700');
         OPENED_WINDOW.EXPORT.blur();
     }
 }
