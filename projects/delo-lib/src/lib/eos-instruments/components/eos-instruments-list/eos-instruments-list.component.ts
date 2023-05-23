@@ -30,6 +30,12 @@ export class EosInstrumentsListComponent implements OnDestroy, OnInit {
           case 'CHANGE_DL':
             this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][28] !== '1';
             break;
+          case 'GeneralLists':
+            this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][51] !== '1';
+            break;
+          case 'CommonTechLists':
+            this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][51] !== '1';
+            break;
           default:
             this.disabled = !access;
             break;
