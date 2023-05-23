@@ -29,13 +29,14 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     @Input() isCurrentSettings?: boolean;
 
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    public fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО'];
+    public fieldGroupsForExhcExt: string[] = ['Эл. почта', 'СЭВ', 'МЭДО', 'ССТУ'];
     public currTabName = 'Эл. почта';
     // public currTab = 0;
     public hash: Map<any, string>;
     public defaultValues: any;
     public EmailChangeFlag: boolean = false;
     public SabChangeFlag: boolean = false;
+    public SstuChangeFlag: boolean = false;
     public MadoChangeFlag: boolean = false;
     public isLoading: boolean = false;
     public editFlag: boolean = false;
@@ -44,9 +45,11 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     private EmailChangeValue: any;
     private SabChangeValue: any;
     private MadoChangeValue: any;
+    private SstuChangeValue: any;
     private newValuesMap = new Map();
     private newValuesSab: Map<string, any> = new Map();
     private newValuesMado: Map<string, any> = new Map();
+    private newValuesSstu: Map<string, any> = new Map();
     private ngUnsubscribe: Subject<any> = new Subject();
     get titleHeader() {
         if (this.currentUser) {
@@ -132,7 +135,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
     }
 
     get btnDisabled(): boolean {
-        if (this.EmailChangeFlag || this.SabChangeFlag ||  this.MadoChangeFlag) {
+        if (this.EmailChangeFlag || this.SabChangeFlag ||  this.MadoChangeFlag || this.SstuChangeFlag) {
             return true;
         }
         return false;
@@ -215,6 +218,19 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         }
         this._pushState();
     }
+    emitChangesSstu($event) {
+        if (this.defaultUser) {
+            this.SstuChangeValue = $event[1];
+        }
+        if ($event) {
+            this.SstuChangeFlag = $event[0].btn;
+            this.newValuesSstu = $event[0].data;
+        } else {
+            this.SstuChangeFlag = false;
+            this.newValuesSstu.clear();
+        }
+        this._pushState();
+    }
 
     defaultUserSubmit() {
         let obj = {};
@@ -226,6 +242,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         }
         if (this.MadoChangeValue !== undefined) {
             obj = Object.assign(this.MadoChangeValue, obj);
+        }
+        if (this.SstuChangeValue !== undefined) {
+            obj = Object.assign(this.SstuChangeValue, obj);
         }
         this.DefaultSubmitEmit.emit(obj);
     }
@@ -261,6 +280,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         this.getChanges(false);
         this.emitChangesSab(false);
         this.emitChangesMado(false);
+        this.emitChangesSstu(false);
     }
 
     createObjRequest(): any[] {
@@ -275,6 +295,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             if (this.newValuesMado.size) {
                 req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesMado));
             }
+            if (this.newValuesSstu.size) {
+                req.concat(this._formHelper.CreateDefaultRequest(req, this.newValuesSstu));
+            }
         } else {
             const userId = this._userSrv.userContextId;
             if (this.newValuesMap.size) {
@@ -286,6 +309,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             if (this.newValuesMado.size) {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesMado, userId));
             }
+            if (this.newValuesSstu.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesSstu, userId));
+            }
         }
         return req;
     }
@@ -295,6 +321,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             this.getChanges(false);
             this.emitChangesSab(false);
             this.emitChangesMado(false);
+            this.emitChangesSstu(false);
             this._pushState();
         }
         this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
