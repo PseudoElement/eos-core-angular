@@ -402,13 +402,16 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     disableForm() {
-        const addresInput = this.form.controls['rec.RCSEND_ADDRESSEES'].value;
-        const resolutionInput = this.form.controls['rec.RCSEND_RESOLUTIONS'].value;
-        if (!addresInput) {
-            this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].disable({ emitEvent: false });
-        } else {
-            this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].enable({ emitEvent: false });
+        if (!this._appContext.cbBase){
+            const addresInput = this.form.controls['rec.RCSEND_ADDRESSEES'].value;
+            if (!addresInput) {
+                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].disable({ emitEvent: false });
+            } else {
+                this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].enable({ emitEvent: false });
+            }
         }
+        const resolutionInput = this.form.controls['rec.RCSEND_RESOLUTIONS'].value;
+
         if (!resolutionInput) {
             this.form.controls['rec.RCSEND_RESOLUTIONS_RADIO'].disable({ emitEvent: false });
         } else {
@@ -449,7 +452,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
     enabelDisabelRcSend(tree: TreeItem) {
         const value = this.form.controls['rec.' + tree.key].value;
 
-        if (tree.key === 'RCSEND_ADDRESSEES') {
+        if (tree.key === 'RCSEND_ADDRESSEES' && !this._appContext.cbBase) {
             if (value) {
                 const defaultValue = this.getDefaultValue('RCSEND_ADDRESSEES_RADIO', 'rcSend');
                 this.form.controls['rec.RCSEND_ADDRESSEES_RADIO'].enable();

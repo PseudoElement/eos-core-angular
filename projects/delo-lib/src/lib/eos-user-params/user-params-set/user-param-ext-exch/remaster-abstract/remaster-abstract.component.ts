@@ -158,7 +158,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     ngOnInit() {
-
         this.setMailResive
         .add(`${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`)
         .add(`${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`);
@@ -166,7 +165,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         this.setRcSend
         .add(`${this.RCSEND}_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO`)
         .add(`${this.RCSEND}_RESOLUTIONS_RADIO`)
-        .add(`${this.RCSEND}_ADDRESSEES_RADIO`);
+        .add(`${this.RCSEND}_ADDRESSEES_RADIO_SPEC_СHANNEL`);
 
         this.initEmail();
         this.initMailResive();
@@ -358,9 +357,9 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     sliceArrayForTemplate(): void {
         let count = 5;
         let separator = 10;  
-        if (this.configChannel.nameEN === 'LK') {
-            count = 6;
-            separator = 11;  
+        if (this.configChannel.nameEN === 'LK' || this.configChannel.nameEN === 'EPVV') {
+            count = 4;
+            separator = 9;  
         }
 
         this.listForAccordion = [];
@@ -450,11 +449,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     disableForm() {
-        const addresInput = this.form.controls[`rec.${this.RCSEND}_ADDRESSEES`].value;
         const resolutionInput = this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS`].value;
-
-        (!addresInput) ? this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].disable({ emitEvent: false }) :
-                         this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].enable({ emitEvent: false });
 
         (!resolutionInput) ? this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].disable({ emitEvent: false }) :
                              this.form.controls[`rec.${this.RCSEND}_RESOLUTIONS_RADIO`].enable({ emitEvent: false });
@@ -488,17 +483,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
 
     enabelDisabelRcSend(tree: TreeItem) {
         const value = this.form.controls['rec.' + tree.key].value;
-
-        if (tree.key === `${this.RCSEND}_ADDRESSEES`) {
-            if (value) {
-                const defaultValue = this.getDefaultValue(`${this.RCSEND}_ADDRESSEES_RADIO`, 'rcSend');
-                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].enable();
-                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].patchValue(defaultValue);
-            } else {
-                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].patchValue('');
-                this.form.controls[`rec.${this.RCSEND}_ADDRESSEES_RADIO`].disable();
-            }
-        }
         if (tree.key === `${this.RCSEND}_RESOLUTIONS`) {
             if (value) {
                 const defaultValue = this.getDefaultValue(`${this.RCSEND}_RESOLUTIONS_RADIO`, 'rcSend');

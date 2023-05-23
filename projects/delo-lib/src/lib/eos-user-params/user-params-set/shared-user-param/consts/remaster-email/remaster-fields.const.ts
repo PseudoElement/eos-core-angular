@@ -47,22 +47,6 @@ export const EMAIL = {
     keyPosition: 1,
     parent: null,
 };
-/** Краткое содержание */
-export const SUMMARY_CONTENT = {
-    key: 'SUMMARY_CONTENT',
-    type: 'boolean',
-    title: 'Краткое содержание',
-    keyPosition: 15,
-    parent: null,
-};
-/** ИНН у организации-адресата */
-export const INN_ADDRESSER_ORGANIZATION = {
-    key: 'INN_ADDRESSER_ORGANIZATION',
-    type: 'boolean',
-    title: 'ИНН у организации-адресата',
-    keyPosition: 77,
-    parent: null,
-};
 /** Требуется уведомление о регистрации или отказе от нее */
 export const REQUIRES_REGISTRATION_NOTICE_OR_OPT_OUT = {
     key: 'REQUIRES_REGISTRATION_NOTICE_OR_OPT_OUT',
@@ -129,6 +113,19 @@ export const ADDRESSEES_RADIO = {
         {value: '1', title: 'Все'}
     ],
     keyPosition: '169.170',
+    parent: null,
+};
+/** ADDRESSEES_RADIO_SPEC_CHANNEL */
+export const ADDRESSEES_RADIO_SPEC_CHANNEL = {
+    key: 'ADDRESSEES_RADIO_SPEC_CHANNEL',
+    type: 'radio',
+    title: '',
+    options: [
+        {value: '0', title: 'Адресату - информация о себе'},
+        {value: '1', title: 'Все'},
+        {value: '-1', title: 'Свои'}
+    ],
+    keyPosition: '169.170.171',
     parent: null,
 };
 /** Группа документов */
