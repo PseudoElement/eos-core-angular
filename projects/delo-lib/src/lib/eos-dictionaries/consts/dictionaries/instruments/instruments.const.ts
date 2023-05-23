@@ -250,7 +250,7 @@ export const CHANGE_DL: IFonLists = {
 
 export const COMMON_TECH_LIST: IFonLists = {
     id: 'CommonTechLists',// разобраться что ставить
-    title: 'Ведение общих и технологических списков',
+    title: 'Настройка общих и технологических списков',
     icon: 'eos-adm-icon-template-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
@@ -265,7 +265,7 @@ export const COMMON_TECH_LIST: IFonLists = {
 
 export const GENERAL_LISTS: IFonLists = {
     id: 'GeneralLists',
-    title: 'Ведение общих списков стандартных текстов',
+    title: 'Настройка общих списков стандартных текстов',
     icon: 'eos-adm-icon-text-list-blue',
     type: ETypeFon.popUp,
     checkAccess: () => Promise.resolve(true),
