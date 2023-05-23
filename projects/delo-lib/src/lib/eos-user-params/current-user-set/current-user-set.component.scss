@@ -585,6 +585,10 @@ bs-dropdown-container {
                                         background-image: url("../assets/icons/Radio-UserSettings-V-Black.svg");
                                     }
 
+                                    input[type="radio"][disabled]:checked + span {
+                                        background-image: url("../assets/icons/Radio-V-Grey.svg");
+                                    }
+
                                     input[type="radio"][disabled] + span {
                                         background-image: url("../assets/icons/Radio-UserSettings-Grey.svg");
                                     }
