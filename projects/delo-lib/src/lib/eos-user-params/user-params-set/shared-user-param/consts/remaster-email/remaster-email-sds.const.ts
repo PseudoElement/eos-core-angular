@@ -18,7 +18,7 @@ export const REGISTRATION_SDS: IBaseUsers = {
         'RCSEND_SDS_ORDERS_SYSTEM_NUMBER',
         'RCSEND_SDS_ORDERS_POINT_RESOLUTION',
         'RCSEND_SDS_ADDRESSEES',
-        'RCSEND_SDS_ADDRESSEES_RADIO'
+        'RCSEND_SDS_ADDRESSEES_RADIO_SPEC_CHANNEL'
     ],
     fields: [
         Fields.HIDE_OPERATION_SEND_EMAIL,
@@ -30,7 +30,7 @@ export const REGISTRATION_SDS: IBaseUsers = {
         Fields.RESOLUTIONS,
         Fields.RESOLUTIONS_RADIO,
         Fields.ADDRESSEES,
-        Fields.ADDRESSEES_RADIO,
+        Fields.ADDRESSEES_RADIO_SPEC_CHANNEL,
         Fields.GROUP_OF_DOCUMENTS,
         Fields.THE_COMPOSITION_OF_THE_DOCUMENT,
         Fields.SUMMARY,
