@@ -56,6 +56,16 @@
                 [isCurrentSettings]="isCurrentSettings"
             ></remaster-epp>
         </div>
+        <div [hidden]="currTabName !== 'ССТУ'" class="clearfix">
+            <eos-remaster-sstu
+                (pushChange)='emitChangesSstu($event)'
+                [userData]='hash'
+                [defaultValues]='defaultValues'
+                [appMode]="appMode"
+                [isCurrentSettings]="isCurrentSettings"
+            ></eos-remaster-sstu>
+            
+        </div>
 
         <div *ngIf="_appContext.cbBase" [hidden]="currTabName !== 'ЛК'" class="clearfix">
             <eos-remaster-lk
