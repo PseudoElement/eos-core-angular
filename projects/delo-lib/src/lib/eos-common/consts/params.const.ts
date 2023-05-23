@@ -1,5 +1,5 @@
 export enum AppsettingsParams {
-    Email = "Eos.Delo.Settings.Email",
+    Email = "Eos.Platform.Settings.Email",
     Converter = "Eos.Platform.Settings.Converter",
     Cryptography = "Eos.Delo.Settings.Cryptography",
     Common = "Eos.Delo.Settings.Common",
