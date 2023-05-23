@@ -42,7 +42,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     fields = CREATE_USER_INPUTS;
     inputs;
     form: FormGroup;
-    formCB: FormGroup;
     titleHeader = 'Новый пользователь';
     btnDisabled: boolean = true;
     isShell: Boolean = false;
