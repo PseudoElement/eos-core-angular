@@ -14,7 +14,8 @@
     flex-direction: column;
     position: relative;
 }
-.input-form-new-name{
+.input-form-new-name {
+    min-width: 600px;
     padding: 20px;
     .warning {
         display: block;
