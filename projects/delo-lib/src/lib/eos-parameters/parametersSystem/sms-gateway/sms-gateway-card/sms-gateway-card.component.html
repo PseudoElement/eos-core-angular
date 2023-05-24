@@ -50,7 +50,7 @@
                         [ngClass]="{ 'error-focus': errorPass, readonly: false }"
                         [type]="typeInput"
                         [readonly]="false"
-                        [placeholder]="dataProfile && dataProfile['Password'].value ? '*******' : ''"
+                        [placeholder]="dataProfile && dataProfile['Password']?.value ? '*******' : ''"
                         [tooltip]=""
                         placement="bottom"
                         containerClass="tooltip-error"

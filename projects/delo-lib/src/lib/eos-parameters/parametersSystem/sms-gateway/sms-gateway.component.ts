@@ -4,6 +4,7 @@ import { BaseParamForTable, BaseParamForTableComponent } from '../baseParamCompo
 import { APP_SETTINGS_SMS } from '../shared/interfaces/parameters.interfaces';
 import { PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
 import { ConfirmWindowService, IConfirmWindow2 } from '../../../eos-common/index';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
 export const CONFIRM_DELETE: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
@@ -48,9 +49,13 @@ export class SmsGatewayComponent extends BaseParamForTableComponent implements O
         const body: any = {};
         this.parameters.appSettingsFields.forEach(field => {
             if (field !== "Password") {
-                body[field] = this.form.controls["rec." + field].value;
+                body[field] = this.form.controls["rec." + field].value || "";
             } else {
-                body[field] = { Value: this.form.controls["rec." + field].value }
+                if (this.editData?.Password?.Key !== this.form.controls["rec." + field].value) {
+                    body[field] = { Value: this.form.controls["rec." + field].value }
+                } else {
+                    body[field] = { Key: this.form.controls["rec." + field].value }
+                }
             }
         })
         const key = ++this.maxKey;
@@ -107,30 +112,18 @@ export class SmsGatewayComponent extends BaseParamForTableComponent implements O
     }
 
     public checkUsedInstanceBeforeDelete() {
-        // this.pipRx.getAppSetting({
-        //     instance: "",
-        //     typename: "NotificationCfg",
-        //     namespace: "Eos.Platform.Settings.Notification"
-        // }).
-        return Promise.resolve().then(result => {
-            const res = {
-                Default: {
-                    SmsCfgInstanceId: 1
-                },
-                1: {
-                    SmsCfgInstanceId: 2
-                },
-                2: {
-                    SmsCfgInstanceId: 3
-                }
-            }
+        return this.pipRx.getAppSetting({
+            instance: "",
+            typename: AppsettingsTypename.TNotification,
+            namespace: AppsettingsParams.Notification
+        }).then(result => {
             const allPreDeleteNode = this.tableSrv.getDeleteNodes();
             const notDeletedNodes = [];
             const deletedNode = []
             allPreDeleteNode.forEach(node => {
                 let isDelete = true;
-                Object.keys(res).forEach(key => {
-                    if (res[key]?.SmsCfgInstanceId && +res[key].SmsCfgInstanceId === +node.instanse) {
+                Object.keys(result).forEach(key => {
+                    if (result[key]?.SmsCfgInstanceId && +result[key].SmsCfgInstanceId === +node.instanse) {
                         isDelete = false;
                     }
                 });

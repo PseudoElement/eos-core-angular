@@ -6,7 +6,8 @@ export enum AppsettingsParams {
     Fdulz = "Eos.Delo.Settings.Fdulz",
     "Search.Indexer" = "Eos.Platform.Settings.Search.Indexer",
     Archivist = "Eos.Delo.Settings.Archivist",
-    Sms = "Eos.Platform.Settings.Sms"
+    Sms = "Eos.Platform.Settings.Sms",
+    Notification = "Eos.Platform.Settings.Notification"
 }
 export enum AppsettingsTypename {
     TCryptography = "CryptographyCfg",
@@ -19,4 +20,5 @@ export enum AppsettingsTypename {
     TFdulz = "FdulzCfg",
     TKafka = "KafkaCfg",
     TElastic = "ElasticCfg",
+    TNotification = "NotificationCfg"
 }
