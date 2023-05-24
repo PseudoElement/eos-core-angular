@@ -1,60 +1,79 @@
-    .modal-open .modal {
-        overflow: visible;
+.modal-open .modal {
+    overflow: visible;
+}
+.signature{
+    padding: 20px;
+    eos-dynamic-input{
+        font-size: 14px;
     }
-    .signature{
-        padding: 20px;
-        eos-dynamic-input{
-            font-size: 14px;
-        }
+}
+
+.input-flex{
+    display: flex;
+    justify-content: space-between;
+    // padding-right: 10px;
+    align-items: center;
+    input{
+        width: 250px!important;
+    }
+    button{
+        width: 315px;
     }
 
-    .input-flex{
-        display: flex;
-        justify-content: space-between;
-        padding-right: 10px;
-        align-items: center;
-        input{
-            width: 250px!important;
-        }
-        button{
-            width: 315px;
-        }
-
-    }
-    .btn-hov{
-        button{
-            margin-top: 15px;
-            padding: 5px;
-            background-color: #fff;
-            /* border: none; */
-            color: #2196f3;
+}
+.btn-hov{
+    button{
+        margin-top: 15px;
+        padding: 5px;
+        background-color: #fff;
+        /* border: none; */
+        color: #2196f3;
+        border-color: #2196f3;
+        border: 1px solid;
+        &:hover{
+            color: #fff;
+            background-color: #2196f3;
             border-color: #2196f3;
-            border: 1px solid;
-            &:hover{
-                color: #fff;
-                background-color: #2196f3;
-                border-color: #2196f3;
-            }
         }
-        button[disabled], button[disabled]:hover{
-            border: 1px solid #999999;
-            background-color: #cccccc;
-            color: #666666;
-        }
+    }
+    button[disabled], button[disabled]:hover{
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
+    }
 
-        margin-bottom: 40px;
+    margin-bottom: 40px;
+}
+//.cust-input {
+//    input{
+//        background-color: aqua;
+//    }
+//}
+// .input-user-other-rk-forwarding-wrapper .inline-block {
+//     width: 315px;
+// }
+.input-user-other-rk-forwarding-wrapper {
+    .all-width-row {
+        width: 100%;
     }
-    //.cust-input {
-    //    input{
-    //        background-color: aqua;
-    //    }
-    //}
-    // .input-user-other-rk-forwarding-wrapper .inline-block {
-    //     width: 315px;
-    // }
-    .modal-mode{
-        width: 800px !important;
+    .all-width-row-first {
+        width: 100%;
+        margin-right: 10px;
+        input {
+            width: 100% !important;
+        }
     }
+    .all-width-row-second {
+        width: 100%;
+        margin-left: 10px;
+        input {
+            width: 100% !important;
+        }
+    }
+}
+.modal-mode{
+    width: 800px !important;
+}
 .checkbox-line{
     span{
         margin-right: 5px !important;
