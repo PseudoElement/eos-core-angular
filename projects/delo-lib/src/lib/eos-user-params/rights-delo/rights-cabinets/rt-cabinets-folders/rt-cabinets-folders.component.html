@@ -8,7 +8,7 @@
                 [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': !closeAcordSecond}"></span>
         </div>
         </div>
-        <div class="style-to-table" *ngIf="isLoading">
+        <div class="style-to-table" *ngIf="isLoading && card.cabinets.length > 0">
             <eos-tabel-element
                 #secondTable
                 [hidden]="closeAcordSecond"
@@ -20,7 +20,7 @@
                 (orderHead)="orderHead($event)"> 
             </eos-tabel-element>
     </div>
-    <div class="cabinets-empty" *ngIf="!card.cabinets.length">
+    <div [hidden]="closeAcordSecond" class="cabinets-empty" *ngIf="!card.cabinets.length">
         <p>Список кабинетов пуст!!!</p>
     </div>
 </div>
