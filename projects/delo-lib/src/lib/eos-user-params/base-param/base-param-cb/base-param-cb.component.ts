@@ -234,7 +234,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
         this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
-        this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
+        this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
         this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
         this.isLoading = false;
         this.setValidators();
@@ -700,10 +700,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
-                /* this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
-                this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
-                this.cancel();
-                return; */
                 return this.sendData(query, accessStr, route);
             } else {
                 const queryPas = [{
@@ -737,10 +733,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.apiSrvRx.batch(this.queryRoles, ''),
             this._apiSrv.setData(query)])
             .then(() => {
-
                 const newDl = this._newData.get('DUE_DEP_NAME');
                 if (newDl) {
-                    this.apiSrvRx.batch([{
+                    return this.apiSrvRx.batch([{
                         method: 'POST',
                         requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role="${this._userParamSrv.curentUser.USERTYPE}"&isn_user_copy_from=0`
                     }], '')
