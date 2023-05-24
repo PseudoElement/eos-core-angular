@@ -36,6 +36,7 @@ export interface ITableData {
 export interface ITableSettings {
     hiddenCheckBox?: boolean; // спрятать чекбоксы выбора
     maxHeightTable?: string; // максимальная высоты таблицы
+    minHeightTable?: string; // минимальная высота таблицы
     selectedRow?: boolean; // есть возможность выбрать строчку
     count?: boolean; // отображать общее количество, если не выбрано то будет отображаться количество выбранных
     paddingBottom?: string;
