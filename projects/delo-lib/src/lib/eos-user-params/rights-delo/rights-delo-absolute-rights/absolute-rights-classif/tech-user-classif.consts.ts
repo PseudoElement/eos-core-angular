@@ -233,12 +233,12 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         expandable: E_TECH_USER_CLASSIF_CONTENT.none,
         useInProject: 'delo,nadzor'
     },
-    {
-        key: E_TECH_RIGHTS.AddressTypes,
-        label: 'Типы адреса',
-        expandable: E_TECH_USER_CLASSIF_CONTENT.none,
-        useInProject: 'delo,nadzor'
-    },
+    // { /* скрываю типы адреса */
+    //     key: E_TECH_RIGHTS.AddressTypes,
+    //     label: 'Типы адреса',
+    //     expandable: E_TECH_USER_CLASSIF_CONTENT.none,
+    //     useInProject: 'nadzor'
+    // },
     {
         key: E_TECH_RIGHTS.FileCategories,
         label: 'Категории файлов',

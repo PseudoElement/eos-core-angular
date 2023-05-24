@@ -239,7 +239,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
                 this.formControls.get('DUE_DEP_NAME').setValue(this.dueDepName);
 
-                this.dueDepSurname = this.curentUser['DUE_DEP_SURNAME'];
+                this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
                 this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
                 this.isLoading = false;
 
@@ -671,7 +671,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return this._apiSrv.setData(query).then(() => {
             const newDl = this._newData.get('DUE_DEP_NAME');
             if (newDl) {
-                this.apiSrvRx.batch([{
+                return this.apiSrvRx.batch([{
                     method: 'POST',
                     requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role=${encodeURI(this.formControls.value.SELECT_ROLE)}&isn_user_copy_from=0`
                 }], '')
