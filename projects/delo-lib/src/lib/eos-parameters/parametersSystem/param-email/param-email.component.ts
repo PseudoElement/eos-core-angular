@@ -165,7 +165,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         });
         return newElem;
     }
-    submitEmit() {
+    async submitEmit() {
         const queryAll = [];
         const newEmailAcount = {
             EmailAccount: this.updateData['EmailAccount'] !== undefined ? this.updateData['EmailAccount'] : this.prepareData.rec['EmailAccount'],
@@ -207,23 +207,7 @@ export class ParamEmailComponent extends BaseParamComponent {
         queryAll.push(this.setAppSetting(newReceive, newEmailReceive));
         queryAll.push(this.setAppSetting(newSend, newEmailSend));
         return Promise.all(queryAll)
-        .then(() => {
-            if (this.editData) {
-                this.tabelData.data.forEach((item) => {
-                    if ('' + item.key === '' + this.editData.key) {
-                        item['EmailAccount'] = newEmailAcount.EmailAccount;
-                        item['Password'] = newEmailAcount['Password']['Value'] !== undefined ? newEmailAcount['Password']['Value'] : newEmailAcount['Password']['Key'];
-                        item['ProfileName'] = newEmailAcount.ProfileName;
-                    }
-                });
-            } else {
-                this.tabelData.data.push({
-                    'ProfileName': newEmailAcount['ProfileName'],
-                    'Password': newEmailAcount['Password']['Value'] ? newEmailAcount['Password']['Value'] : newEmailAcount['Password']['Key'],
-                    'EmailAccount': newEmailAcount['EmailAccount'],
-                    'key': this.maxKey
-                });
-            }
+        .then(async () => {
             this.showCard = false;
             this.maxKey++;
             this.updateData = {};
@@ -233,6 +217,24 @@ export class ParamEmailComponent extends BaseParamComponent {
                 this.formChanged.emit(false);
             }
             this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            const params = Object.assign({instance: newInstance}, this.paramCommon) ;
+            const ans = await this.getAppSetting<ISettingEmailCommon>(params);
+            if (this.editData) {
+                this.tabelData.data.forEach((item) => {
+                    if ('' + item.key === '' + this.editData.key) {
+                        item['EmailAccount'] = newEmailAcount.EmailAccount;
+                        item['Password'] = ans['Password']['Key'];
+                        item['ProfileName'] = newEmailAcount.ProfileName;
+                    }
+                });
+            } else {
+                this.tabelData.data.push({
+                    'ProfileName': newEmailAcount['ProfileName'],
+                    'Password': ans['Password']['Key'],
+                    'EmailAccount': newEmailAcount['EmailAccount'],
+                    'key': this.maxKey
+                });
+            }
         })
         .catch((error) => {
           this.msgSrv.addNewMessage({
