@@ -34,6 +34,10 @@ export interface ITableData {
     data: any[];
 }
 export interface ITableSettings {
+    headerStyle?: {
+        background: string,
+        border: string
+    }; // стили для header
     hiddenCheckBox?: boolean; // спрятать чекбоксы выбора
     maxHeightTable?: string; // максимальная высоты таблицы
     minHeightTable?: string; // минимальная высота таблицы
