@@ -69,7 +69,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         hiddenCheckBox: true,
         maxHeightTable: '650px',
         count: true,
-        printTable: true
+        printTable: true,
+        headerStyle: {
+            background: '#f5f5f5',
+            border: '#E6E6E6'
+        }
     }
     public leftSendwitch;
     get titleHeader() {

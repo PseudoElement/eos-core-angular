@@ -153,16 +153,41 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             }
         }
     }
-    getStyle(header: ITableHeader): any {
-        return header.style ? header.style : {};
+    getStyle(header: ITableHeader, row?: string): any {
+        const style =  header.style ? header.style : {}
+        if (row === 'header') {
+            if (this.settings && this.settings['headerStyle'] && this.settings['headerStyle']) {
+                if (this.settings['headerStyle']['background']) {
+                    style['background'] = this.settings['headerStyle']['background'];
+                }
+                if (this.settings['headerStyle']['border']) {
+                    style['border-right'] = '1px solid ' + this.settings['headerStyle']['border'];
+                    style['padding-left'] = '10px';
+                }
+            }
+        }
+        return style;
     }
-    getStyleTd(header: ITableHeader, index: number): any {
-        const style = header.style ? header.style : {};
-        const flag = index % 2 === 1;
+    getStyleTd(header: ITableHeader, index: number, row): any {
+        const style = header.style ? Object.assign({}, header.style) : {};
+        const flag = index % 2 === 0;
         if (this.settings && this.settings['printTable'] && flag) {
-            style['background'] = '#E6E6E6';
+            style['background'] = '#f5f5f5';
+            style['border-bottom'] = '1px solid #E6E6E6';
+            style['border-right'] = '0px';
         } else {
             style['background'] = 'white';
+            style['border-bottom'] = '1px solid #E6E6E6';
+            style['border-right'] = '0px';
+        }
+        if (row['heightCount']) {
+            style['height'] = +row['heightCount'] * 40 + 'px';
+            style['max-height'] = +row['heightCount'] * 40 + 'px';
+            style['display'] = 'flex';
+            style['align-items'] = 'flex-end';
+        }
+        if (row && row['background']) {
+            style['background'] = row['background'];
         }
         return style;
     }
@@ -195,7 +220,14 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
                 case ECellToAll.icon:
                     return {type: element[header.id].type, info: element[header.id].info}
                 case ECellToAll.checkbox:
-                    return {type: element[header.id].type, info: {check: element[header.id]['check'], click: element[header.id]['click'], disabled: element[header.id]['disabled'], title: element[header.id]['title'] || ''}}
+                    return {
+                        type: element[header.id].type,
+                        info: {check: element[header.id]['check'],
+                        click: element[header.id]['click'],
+                        disabled: element[header.id]['disabled'],
+                        title: element[header.id]['title'] || '',
+                        Icons: element[header.id]['Icons']
+                    }}
                 case ECellToAll.buttons:
                     const buttons = {
                         type: element[header.id].type,
@@ -244,10 +276,20 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
                 return this.edit ? 'eos-adm-icon-checkbox-square-minus-blue' : 'eos-adm-icon-checkbox-square-minus-grey';
         }
     }
-    getTableStyle() {
+    getTableStyle(row) {
         const style = {};
-        if (this.getColomsFixed().length) {
+        /* if (this.getColomsFixed().length) {
             style['margin-left'] = '-2px';
+        } */
+        /*  */
+        if (row && row['heightCount']) {
+            style['height'] = '' +row['heightCount'] * 40 +'px';
+            style['max-height'] = '' +row['heightCount'] * 40 +'px';
+            style['display'] = 'flex';
+            style['align-items'] = 'flex-end';
+        }
+        if (row && row['background']) {
+            style['background'] = row['background'];
         }
         if (this.settings) {
             Object.keys(this.settings).forEach((key) => {

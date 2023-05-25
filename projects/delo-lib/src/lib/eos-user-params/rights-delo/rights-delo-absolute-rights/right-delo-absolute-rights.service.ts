@@ -243,7 +243,7 @@ export class RughtDeloAbsRightService {
             arrayAns[EQueryPosition.organiz] = this.initWeightSortOrg(arrayAns[EQueryPosition.organiz]);
         }
         this.deloRights22 = '' + this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[0].value;
-        newData.push({'CLASSIF_NAME': 'Должностные лица и подразделения', 'bold': true, rowNotCount: true});
+        newData.push({'CLASSIF_NAME': 'Должностные лица и подразделения', rowNotCount: true, background: 'white'}); /* 'bold': true,  */
         if (arrayAns && arrayAns[EQueryPosition.department]) {
             arrayAns[EQueryPosition.department].forEach((dep) => {
                 if (this.maxWeightDep < dep['ROW_WEIGHT']) {
@@ -257,7 +257,7 @@ export class RughtDeloAbsRightService {
                 }
             });
         }
-        newData.push({'CLASSIF_NAME': 'Организации', 'bold': true, rowNotCount: true});
+        newData.push({'CLASSIF_NAME': 'Организации', rowNotCount: true, heightCount: 2, background: 'white'}); /* 'bold': true,  , 'style': {height: '80px'}*/
         if (arrayAns && arrayAns[EQueryPosition.organiz]) {
             arrayAns[EQueryPosition.organiz].forEach((org) => {
                 if (this.maxWeightOrg < org['ROW_WEIGHT']) {
@@ -328,6 +328,9 @@ export class RughtDeloAbsRightService {
         }
         if (dep['ROW_WEIGHT'] === undefined) {
 
+        }
+        if (dep['DELETED'] === 1) {
+            dep['style'] = {color: '#BABABA'}
         }
         tableHeader.forEach((header) => {
             const flagDisabled = dep['key'] !== '0.' && header['data'] && header['data']['checkBoxAll'] ? this.curentUser.USERDEP_List.findIndex((item) => item['DUE'] === '0.' && ('' + (item['FUNC_NUM'] - 1)) === header.id) !== -1 : false;
@@ -403,7 +406,8 @@ export class RughtDeloAbsRightService {
                         type: ECellToAll.checkbox,
                         check: Boolean(deep),
                         click: ($event) => {this.selectRow(dep, $event)},
-                        title: dep['CLASSIF_NAME']
+                        title: dep['CLASSIF_NAME'],
+                        Icons: dep['DELETED'] === 1 ? ['eos-adm-icon-bin-grey'] : undefined
                     };
                 }
             }
