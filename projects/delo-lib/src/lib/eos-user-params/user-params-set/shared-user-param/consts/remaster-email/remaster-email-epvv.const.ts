@@ -183,25 +183,25 @@ export const REGISTRATION_EPVV: IBaseUsers = {
     ]
 }
 
-export const REGISTRATION_MAILRESIVE_EPVV: IBaseUsers = {
-    id: 'registration',
-    title: 'Регистрация',
-    apiInstance: 'USER_PARMS',
-    fields: [
-        Fields.DELETE_POST_AFTER_REGISTRATION,
-        Fields.DELETE_POST_AFTER_CANCELING_REGISTRATION,
-        Fields.NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT,
-        Fields.NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO,
-        Fields.ATTACH_DOCUMENT_PASSPORT_TO_RK,
-        Fields.TAKE_RUBRICS_RK,
-        Fields.TAKE_RUBRICS_RK_RADIO,
-        Fields.ACCOMPANYING_DOCUMENTS,
-        Fields.AUTOMATICALLY_ADD_ORGANIZATIONS_AND_REPRESENTATIVES,
-        Fields.CHECK_EMAIL_MESSAGES,
-        Fields.CHECK_EMAIL_FILE_ATTACHMENTS,
-        Fields.CHECK_EMAIL_RESOLUTION,
-        Fields.NOTIFY_SENDER_IF_EMAIL_IS_NOT_VALID,
-        Fields.NOTIFY_SENDER_IF_EMAIL_IS_VALID,
-        Fields.ORIGINAL_IN_ELECTRONIC_FORM,
-    ]
-};
+// export const REGISTRATION_MAILRESIVE_EPVV: IBaseUsers = {
+//     id: 'registration',
+//     title: 'Регистрация',
+//     apiInstance: 'USER_PARMS',
+//     fields: [
+//         Fields.DELETE_POST_AFTER_REGISTRATION,
+//         Fields.DELETE_POST_AFTER_CANCELING_REGISTRATION,
+//         Fields.NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT,
+//         Fields.NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO,
+//         Fields.ATTACH_DOCUMENT_PASSPORT_TO_RK,
+//         Fields.TAKE_RUBRICS_RK,
+//         Fields.TAKE_RUBRICS_RK_RADIO,
+//         Fields.ACCOMPANYING_DOCUMENTS,
+//         Fields.AUTOMATICALLY_ADD_ORGANIZATIONS_AND_REPRESENTATIVES,
+//         Fields.CHECK_EMAIL_MESSAGES,
+//         Fields.CHECK_EMAIL_FILE_ATTACHMENTS,
+//         Fields.CHECK_EMAIL_RESOLUTION,
+//         Fields.NOTIFY_SENDER_IF_EMAIL_IS_NOT_VALID,
+//         Fields.NOTIFY_SENDER_IF_EMAIL_IS_VALID,
+//         Fields.ORIGINAL_IN_ELECTRONIC_FORM,
+//     ]
+// };

@@ -46,7 +46,7 @@
             </div>
         </ng-template>
 
-        <accordion *ngIf="templRenderMailResive" class="accordion-position-main">
+        <accordion *ngIf="templRenderMailResive && fieldsConstMailResive" class="accordion-position-main">
             <accordion-group [heading]="'Параметры регистрации'"  [isOpen]="OpenParamsReg" (isOpenChange)="isOpenChangeReciveAc($event)">
                 <span class="panel-icon eos-adm-icon eos-adm-icon-arrow-v-blue-bottom small" accordion-heading></span>
                 <div class="accord-wr" *ngFor="let item of templRenderMailResive">

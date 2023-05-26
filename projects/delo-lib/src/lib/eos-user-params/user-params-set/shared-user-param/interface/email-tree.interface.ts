@@ -18,5 +18,5 @@ export interface ConfigChannelCB {
     nameEN: string;
     nameRU: string;
     fieldsConst: IBaseUsers;
-    fieldsConstMailResive: IBaseUsers;
+    fieldsConstMailResive?: IBaseUsers;
 }
