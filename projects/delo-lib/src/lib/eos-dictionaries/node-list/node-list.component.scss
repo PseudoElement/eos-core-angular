@@ -119,7 +119,7 @@
     }
     &.list-heigth-2 {
         .eos-adm-node-list {
-            max-height: calc(100vh - 510px);
+            max-height: calc(100vh - 425px);
         }
     }
     &.list-heigth-3 {
@@ -190,11 +190,7 @@
 
 @media (min-width: 1600px) and (max-width: 1647px){
     .node-list-container {
-        &.list-heigth-1 {
-            .eos-adm-node-list {
-                max-height: calc(100vh - 410px);
-            }
-        }
+        
         &.list-heigth-2 {
             .eos-adm-node-list {
                 max-height: calc(100vh - 460px);
@@ -202,7 +198,46 @@
         }
         &.list-heigth-3 {
             .eos-adm-node-list {
-                max-height: calc(100vh - 510px);
+                max-height: calc(100vh - 425px);
+            }
+        }
+    }
+}
+@media (min-width: 1300px) and (max-width: 1647px) {
+    .node-list-container {
+        &.list-heigth-1 {
+            .eos-adm-node-list {
+                max-height: calc(100vh - 420px);
+            }
+        }
+    }
+}
+@media (min-width: 1000px) and (max-width: 1300px) {
+    .node-list-container {
+        &.list-heigth-1 {
+            .eos-adm-node-list {
+                max-height: calc(100vh - 420px);
+            }
+        }
+        &.list-heigth-2 {
+            .eos-adm-node-list {
+                max-height: calc(100vh - 523px);
+            }
+        }
+    }
+}
+
+@media (max-width: 1000px) {
+    
+    .node-list-container {
+        &.list-heigth-1 {
+            .eos-adm-node-list {
+                max-height: calc(100vh - 390px);
+            }
+        }
+        &.list-heigth-2 {
+            .eos-adm-node-list {
+                max-height: calc(100vh - 440px);
             }
         }
     }
