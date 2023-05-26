@@ -175,7 +175,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             style['background'] = '#f5f5f5';
             style['border-bottom'] = '1px solid #E6E6E6';
             style['border-right'] = '0px';
-        } else {
+        } else if(this.settings && this.settings['printTable']) {
             style['background'] = 'white';
             style['border-bottom'] = '1px solid #E6E6E6';
             style['border-right'] = '0px';
