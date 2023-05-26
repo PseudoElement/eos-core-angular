@@ -12,7 +12,7 @@ export const ENCRYPTION = {
     key: 'ENCRYPTION',
     type: 'boolean',
     title: 'Шифрование',
-    keyPosition: 1,
+    keyPosition: 2,
     parent: null,
 }
 /** Электронная подпись */
