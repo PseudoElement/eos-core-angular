@@ -11,7 +11,7 @@ import { DepartmentDictionaryDescriptor } from './department-dictionary-descript
 import { FieldDescriptor } from './field-descriptor';
 import { ModeFieldSet } from './record-mode';
 import { ResponseOrganization, SearchQueryOrganization, ResponseProt } from '../interfaces/fetch.interface';
-import { protocolFetchParam } from '../services/protocol-fetch-param'
+import { creatorGraphQlParam } from '../services/creator-graphQl-param'
 import { converterFetchRequest } from '../services/converter-fetch-request';
 
 const inheritFiields = [
@@ -41,7 +41,7 @@ class OrganizRecord extends TreeRecordDescriptor {
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     dopRec = [];
     modeList: IRecordModeDescription[];
-    private createFetchParam = new protocolFetchParam();
+    private createFetchParam = new creatorGraphQlParam();
     private converter = new converterFetchRequest();
     
     public getFullSearchCriteries(data: any) {
@@ -239,7 +239,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
 
     public async searchProto(queries: SearchQueryOrganization) {
-        const protReq: string = this.createFetchParam.prot(queries);
+        const protReq: string = this.createFetchParam.prot(queries.protocol);
         const requestProt = await this.graphQl.query(protReq);
         if (requestProt.ok) {
             const prot: ResponseProt = await requestProt.json();

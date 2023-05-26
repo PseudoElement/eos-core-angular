@@ -156,6 +156,7 @@
     }
     .form-group {
         margin-bottom: 20px;
+        width: 100%;
         &.col-250 {
             display: inline-block;
             width: 250px;
@@ -355,7 +356,6 @@
     display: flex;
     gap: 5px;
     align-items: center;
-    height: 32px;
     cursor: pointer;
     .title-operation{
         margin: 0;

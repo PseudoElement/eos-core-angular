@@ -220,3 +220,7 @@ export interface SearchProtocol {
     TO: string | null;
     USER_ISN:number | null;
 }
+
+export interface ProtoIdOperation {
+    [key:string] : string[]
+}
