@@ -169,7 +169,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         this.setRcSend
         .add(`${this.RCSEND}_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO`)
         .add(`${this.RCSEND}_RESOLUTIONS_RADIO`)
-        .add(`${this.RCSEND}_ADDRESSEES_RADIO_SPEC_СHANNEL`);
+        .add(`${this.RCSEND}_ADDRESSEES_RADIO`);
 
         this.initEmail();
         this.initMailResive();
@@ -247,7 +247,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     parseRadioType(obj, field: IFieldDescriptor, nameProperty: string, nameFieldDB: string) {
-        obj[field.key] = String(-1);
         const mapValue = new Map();
         const parseKeyPositionRadio = String(field.keyPosition).split('.');
 
@@ -256,7 +255,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         });
 
         if (parseKeyPositionRadio.length > 2) {
-
             const parentKey_1 = String(mapValue.get(parseKeyPositionRadio[0]));
             const parentKey_2 = String(mapValue.get(parseKeyPositionRadio[1]));
             const parentKey_3 = String(mapValue.get(parseKeyPositionRadio[2]));
