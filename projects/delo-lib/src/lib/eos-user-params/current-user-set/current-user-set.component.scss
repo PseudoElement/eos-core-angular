@@ -1905,11 +1905,10 @@ bs-dropdown-container {
                             accordion-group.panel {
                                 &:first-child {
                                     .accord-wr > div:last-child {
-                                        margin-top: 10px;
-                                        padding-left: 5px;
-
                                         div.receipe-email {
                                             width: 500px;
+                                            margin-top: 10px;
+                                            padding-left: 5px;
                                         }
                                     }
                                 }
