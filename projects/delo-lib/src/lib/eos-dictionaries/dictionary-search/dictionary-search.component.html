@@ -57,7 +57,7 @@
             >Найти</button>
         </div>
     </div>
-    <div class="full-search-settings-container usual-border">
+    <div *ngIf="visibleBranchOptions() || visibleDeletedOption() || visibleClosedDealsOption()" class="full-search-settings-container usual-border">
         <div *ngIf="visibleBranchOptions()">
             <label *ngFor="let but of radioTopButton" class="radio-inline">
                 <input type="radio" name="full-space" [value]="but.value" [(ngModel)]="mode">
@@ -825,125 +825,151 @@
 
     <!--FOR CITIZENS-->
     <div class="row full-search-form" [hidden]="dictId !== 'citizens' && dictId !== 'user_param'">
-        <form id="citizen">
+        <div class="tabs-wrapper usual-border" style="margin: 0; width: 100%;">
+            <ul class="tabs">
+                <li class="tab-item"
+                    *ngFor="let tab of modes"
+                    role="presentation"
+                    [ngClass]="{'active secondary-text': tab.key === currTab}"
+                    (click)="setTab(tab.key)">
+                    <span class="tab-title">{{tab.title}}</span>
+                </li>
+            </ul>
+        </div>
+        
+        <form id="citizen" *ngIf="currTab === 'common'">
             <button [disabled]="noSearchData"
                 type="submit"
                 (click)="fullSearch()"
-                class="hidden-submit">Найти</button>
-            <div class="form-group unimportant-text">
-                <label class="s-font"
-                    for="citizen-surname">{{fieldsDescription.rec['CITIZEN_SURNAME']?.title}}</label>
-                <div class="search-fld">
-                    <input id="citizen-surname"
-                        name="citizen-surname"
-                        type="text"
-                        class="form-control light"
-                        [(ngModel)]="searchModel['CITIZEN_SURNAME']"
-                        placeholder="..."
-                        maxlength="{{fieldsDescription.rec['CITIZEN_SURNAME']?.length}}"
-                        autofocus>
-                    <a class="clear-btn"
-                        [ngClass]="{'hide': !searchModel['CITIZEN_SURNAME']}"
-                        (click)="searchModel['CITIZEN_SURNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                class="hidden-submit"
+            >Найти</button>
+
+            <div class="wrapper-double-fields">
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="citizen-surname">{{fieldsDescription.rec['CITIZEN_SURNAME']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="citizen-surname"
+                            name="citizen-surname"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['CITIZEN_SURNAME']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['CITIZEN_SURNAME']?.length}}"
+                            autofocus>
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['CITIZEN_SURNAME']}"
+                            (click)="searchModel['CITIZEN_SURNAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="region-name">Регион</label>
+                    <div class="search-fld">
+                        <input id="region-name"
+                            onfocus="this.blur()"
+                            readonly
+                            name="region-name"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['REGION_NAME']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['REGION_NAME']?.length}}">
+                            <span
+                                class="action eos-adm-icon eos-adm-icon-directory-book-blue"
+                                style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
+                                container="body"
+                                placement="bottom"
+                                containerClass="tooltip-info"
+                                triggers="hover"
+                                eosClickMode
+                                tooltip="Выбрать" (click)="openDict()"></span>
+                        <a style="right: 30px;"
+                            class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['REGION_NAME']}"
+                            (click)="[searchModel['REGION_NAME'] = '', searchModel['ISN_REGION'] = '']"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                    </div>
                 </div>
             </div>
-            <div class="form-group unimportant-text">
-                <label class="s-font"
-                    for="citizen-sity">{{fieldsDescription.rec['CITIZEN_CITY']?.title}}</label>
-                <div class="search-fld">
-                    <input id="citizen-sity"
-                        name="citizen-sity"
-                        type="text"
-                        class="form-control light"
-                        [(ngModel)]="searchModel['CITIZEN_CITY']"
-                        placeholder="..."
-                        maxlength="{{fieldsDescription.rec['CITIZEN_CITY']?.length}}">
-                    <a class="clear-btn"
-                        [ngClass]="{'hide': !searchModel['CITIZEN_CITY']}"
-                        (click)="searchModel['CITIZEN_CITY'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+
+            <div class="wrapper-double-fields">
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="citizen-sity">{{fieldsDescription.rec['CITIZEN_CITY']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="citizen-sity"
+                            name="citizen-sity"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['CITIZEN_CITY']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['CITIZEN_CITY']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['CITIZEN_CITY']}"
+                            (click)="searchModel['CITIZEN_CITY'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="zipcode">{{fieldsDescription.rec['ZIPCODE']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="zipcode"
+                            name="zipcode"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['ZIPCODE']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['ZIPCODE']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['ZIPCODE']}"
+                            (click)="searchModel['ZIPCODE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                    </div>
                 </div>
             </div>
-            <div class="form-group unimportant-text">
-                <label class="s-font"
-                    for="citizen-addr">{{fieldsDescription.rec['CITIZEN_ADDR']?.title}}</label>
-                <div class="search-fld">
-                    <input id="citizen-addr"
-                        name="citizen-addr"
-                        type="text"
-                        class="form-control light"
-                        [(ngModel)]="searchModel['CITIZEN_ADDR']"
-                        placeholder="..."
-                        maxlength="{{fieldsDescription.rec['CITIZEN_ADDR']?.length}}">
-                    <a class="clear-btn"
-                        [ngClass]="{'hide': !searchModel['CITIZEN_ADDR']}"
-                        (click)="searchModel['CITIZEN_ADDR'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+
+            <div class="wrapper-double-fields">
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="citizen-addr">{{fieldsDescription.rec['CITIZEN_ADDR']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="citizen-addr"
+                            name="citizen-addr"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['CITIZEN_ADDR']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['CITIZEN_ADDR']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['CITIZEN_ADDR']}"
+                            (click)="searchModel['CITIZEN_ADDR'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="E_MAIL">{{fieldsDescription.rec['E_MAIL']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="E_MAIL"
+                            name="E_MAIL"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['E_MAIL']"
+                            placeholder="..."
+                            maxlength="{{fieldsDescription.rec['E_MAIL']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['E_MAIL']}"
+                            (click)="searchModel['E_MAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                    </div>
                 </div>
             </div>
-            <div class="form-group unimportant-text">
-                <label class="s-font"
-                    for="region-name">Регион</label>
-                <div class="search-fld">
-                    <input id="region-name"
-                        onfocus="this.blur()"
-                        readonly
-                        name="region-name"
-                        type="text"
-                        class="form-control light"
-                        [(ngModel)]="searchModel['REGION_NAME']"
-                        placeholder="..."
-                        maxlength="{{fieldsDescription.rec['REGION_NAME']?.length}}">
-                        <span
-                            class="action eos-adm-icon eos-adm-icon-directory-book-blue"
-                            style="position: absolute; right: 5px; width: 24px; height: 24px; top: 4px;cursor:pointer;"
-                            container="body"
-                            placement="bottom"
-                            containerClass="tooltip-info"
-                            triggers="hover"
-                            eosClickMode
-                            tooltip="Выбрать" (click)="openDict()"></span>
-                    <a style="right: 30px;"
-                        class="clear-btn"
-                        [ngClass]="{'hide': !searchModel['REGION_NAME']}"
-                        (click)="[searchModel['REGION_NAME'] = '', searchModel['ISN_REGION'] = '']"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
-                </div>
-            </div>
-            <div class="form-group unimportant-text">
-                <label class="s-font"
-                    for="zipcode">{{fieldsDescription.rec['ZIPCODE']?.title}}</label>
-                <div class="search-fld">
-                    <input id="zipcode"
-                        name="zipcode"
-                        type="text"
-                        class="form-control light"
-                        [(ngModel)]="searchModel['ZIPCODE']"
-                        placeholder="..."
-                        maxlength="{{fieldsDescription.rec['ZIPCODE']?.length}}">
-                    <a class="clear-btn"
-                        [ngClass]="{'hide': !searchModel['ZIPCODE']}"
-                        (click)="searchModel['ZIPCODE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
-                </div>
-            </div>
-            <div class="form-group unimportant-text">
-                <label class="s-font"
-                    for="E_MAIL">{{fieldsDescription.rec['E_MAIL']?.title}}</label>
-                <div class="search-fld">
-                    <input id="E_MAIL"
-                        name="E_MAIL"
-                        type="text"
-                        class="form-control light"
-                        [(ngModel)]="searchModel['E_MAIL']"
-                        placeholder="..."
-                        maxlength="{{fieldsDescription.rec['E_MAIL']?.length}}">
-                    <a class="clear-btn"
-                        [ngClass]="{'hide': !searchModel['E_MAIL']}"
-                        (click)="searchModel['E_MAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
-                </div>
-            </div>
+
             <ng-content *ngTemplateOutlet="doprec"></ng-content>
             <div class="form-group unimportant-text">
                 <label class="checkbox-inline"><input type="checkbox" name="seeNew" (change)="rest($event)" [(ngModel)]="settings.opts.onlyNew"><span></span><span class="m-font">Только новые</span></label>
             </div>
         </form>
+        <div *ngIf="currTab === 'protocol'">
+            <ng-container *ngTemplateOutlet="protocol" ></ng-container>
+        </div>
     </div>
 
     <!--FOR organization-->
@@ -1102,76 +1128,7 @@
         </div>
 
         <div *ngIf="currTab === 'protocol'" class="row">
-            <form class="form-protocol" id="organization">
-
-                <button [disabled]="noSearchData"
-                    type="submit"
-                    (click)="fullSearch()"
-                    class="hidden-submit"
-                >Найти</button>
-
-                <div class="calendar-wrapper unimportant-text">
-                    <eos-dynamic-input 
-                        class="s-font" 
-                        [input]="protocolSerchInputs['FROM']" 
-                        [form]="protocolForm"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-
-                    <eos-dynamic-input 
-                        class="s-font" 
-                        [input]="protocolSerchInputs['TO']" 
-                        [form]="protocolForm"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-                </div>
-
-                <eos-dynamic-input
-                    class="s-font param-line-wrapper unimportant-text" 
-                    [input]="protocolSerchInputs['USER']" 
-                    [form]="protocolForm"
-                    [readonly]="true"
-                    (onClickChoose)="showDepChoose()" 
-                ></eos-dynamic-input>
-
-                <div class="form-group unimportant-text">
-                    <label class="s-font" for="operation">Операция</label>
-                    <div class="search-fld operation-field">
-                        <input #operation
-                            id="operation"
-                            name="operation"
-                            type="text"
-                            readonly
-                            [(ngModel)]="selectedOperation.valueToInput"
-                            class="form-control light operation-input"
-                            placeholder="..."
-                        >
-                        <div class="input-button-wrapper">
-                            <div
-                                *ngIf="operation.value"
-                                class="clear-btn clear-button input-button"
-                                (click)="clearSelectOperation()"
-                            >
-                                <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
-                            </div>
-                            <div 
-                                class="show-select-menu-button input-button" 
-                                [popover]="selectOperation"
-                                containerClass="select-popover"
-                                [placement]="bottom"
-                                (click)="changeFlagSelectPopover()"
-                            >
-                                <span class="eos-adm-icon small"
-                                [ngClass]="{
-                                    'eos-adm-icon-arrow-v-blue-bottom': !flagSelectPopover, 
-                                    'eos-adm-icon-arrow-v-blue-top': flagSelectPopover
-                                    }"
-                                ></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <ng-container *ngTemplateOutlet="protocol" ></ng-container>
         </div>
     </div>
 
@@ -1426,6 +1383,78 @@
             </ng-container>
         </div>
     </div>
+</ng-template>
+
+<ng-template #protocol>
+    <form class="form-protocol">
+        <button [disabled]="noSearchData"
+            type="submit"
+            (click)="fullSearch()"
+            class="hidden-submit"
+        >Найти</button>
+
+        <div class="calendar-wrapper unimportant-text">
+            <eos-dynamic-input 
+                class="s-font" 
+                [input]="protocolSerchInputs['FROM']" 
+                [form]="protocolForm"
+                [readonly]="false"
+            ></eos-dynamic-input>
+
+            <eos-dynamic-input 
+                class="s-font" 
+                [input]="protocolSerchInputs['TO']" 
+                [form]="protocolForm"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+
+        <eos-dynamic-input
+            class="s-font param-line-wrapper unimportant-text" 
+            [input]="protocolSerchInputs['USER']" 
+            [form]="protocolForm"
+            [readonly]="true"
+            (onClickChoose)="showDepChoose()" 
+        ></eos-dynamic-input>
+
+        <div class="form-group unimportant-text">
+            <label class="s-font" for="operation">Операция</label>
+            <div class="search-fld operation-field">
+                <input #operation
+                    id="operation"
+                    name="operation"
+                    type="text"
+                    readonly
+                    [(ngModel)]="selectedOperation.valueToInput"
+                    class="form-control light operation-input"
+                    placeholder="..."
+                >
+                <div class="input-button-wrapper">
+                    <div
+                        *ngIf="operation.value"
+                        class="clear-btn clear-button input-button"
+                        (click)="clearSelectOperation()"
+                    >
+                        <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                    </div>
+                    <div 
+                        class="show-select-menu-button input-button" 
+                        [popover]="selectOperation"
+                        containerClass="select-popover"
+                        [placement]="bottom"
+                        (click)="changeFlagSelectPopover()"
+                    >
+                        <span class="eos-adm-icon small"
+                            [ngClass]="{
+                                'eos-adm-icon-arrow-v-blue-bottom': !flagSelectPopover, 
+                                'eos-adm-icon-arrow-v-blue-top': flagSelectPopover
+                                }"
+                        ></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </ng-template>
 
 <ng-template #selectOperation>

@@ -66,18 +66,6 @@ export interface ErrFech {
     stack: string;
 }
 
-export interface ResponseProto {
-        suboperId: string;
-        operDescribe: string;
-        operComment: string;
-        isnProtInfo: number;
-        userIsn: number;
-        timeStamp: string
-        tableId: string;
-        refIsn: number
-        operId: string
-}
-
 export interface SearchQueryOrganization {
     ISN_HIGH_NODE?: string;
     DUE?: string;
@@ -98,7 +86,9 @@ export interface Protocol {
 
 export interface ResponseProt {
     data: {
+        /** Получает страницу IProt для постраничного пейджинга. */
         protsPg: {
+            /** Список объектов. Поле предоставлено в дополнение к Relay. */
             items: ResponseProtItem[];
         }
     };
@@ -106,60 +96,184 @@ export interface ResponseProt {
 }
 
 export interface ResponseProtItem {
+    /** Подоперация. */
     suboperId: string;
+    /** Описание операции. */
     operDescribe: string;
+    /** Комментарий. */
     operComment: string;
+    /** Дополнительная информация. */
     isnProtInfo: number |  null;
+    /** Кто произвел операцию. */
     userIsn: number;
+    /** Дата операции. */
     timeStamp: string
+    /** Таблица. */
     tableId: string;
+    /** Объект. */
     refIsn: number;
+    /** Операция. */
     operId: string;
 }
 
 export interface ResponseOrganizationItems {
+    /** Код организации. */
     due: string;
+    /** ISN организации. */
     isnNode: number;
+    /** Номер вышестоящ вершины. */
     isnHighNode: number;
+    /** Номер уровня. */
     layer: number;
+    /** Признак вершины. */
     isNode: number;
+    /** Вес элемента. */
     weight: number;
+    /** Наименование организации. */
     classifName: string;
+    /** Поиск наим ие организации. */
     classifNameSearch: string;
+    /** Признак защиты от удаления. */
     protected: number;
+    /** Полное наименование. Полное наименование организации. */
     fullname: object,
+    /** Почтовый индекс. */
     zipcode: string;
+    /** Город. */
     city: string;
+    /** Почтовый адрес. */
     address: string;
+    /** Комментарий. */
     note: object,
+    /** ОКПО. */
     okpo: object,
+    /** ИНН. */
     inn: object,
+    /** Регион. */
     isnRegion: object,
+    /** ОКОНХ. */
     okonh: object,
+    /** Юридический Адресс. */
     lawAdress: object,
+    /** Форма Собственности. */
     isnOrganizType: object,
+    /** Регисрационное свидейтельство. */
     sertificat: object,
+    /** Категория адресата. */
     isnAddrCategory: object,
+    /** поле для формирования выписок для ЦБ. */
     code: object,
+    /** ОГРН. */
     ogrn: object,
+    /** Срок исполнения РК. */
     termExec: object,
+    /** Срок исполнения РК в каких днях. */
     termExecType: object,
+    /** Дата создания. */
     insDate: object,
+    /** Кто создал. */
     insWho: object,
+    /** Дата изменения. */
     updDate: object,
+    /** Кто изменил. */
     updWho: object,
+    /** Признак логического удаления. */
     deleted: number;
+    /** Признак использования E_MAIL для всех представителей. */
     mailForAll: number;
+    /** Признак новой записи. */
     newRecord: number;
+    /** OrganizCl_ParentNode_name. Ссылка через поле IsnHighNode. */
     parentNode: {
+        /** Код организации. */
       due: string;
     }
 }
 
 export interface ResponseOrganization {
     data: {
+        /** Получает страницу IOrganizCl для постраничного пейджинга. */
         organizClsPg: {
+            /** Список объектов. Поле предоставлено в дополнение к Relay. */
           items: ResponseOrganizationItems[];
+        }
+      }
+}
+
+export interface ResponseCitizenItems {
+    /** ISN гражданина. */
+    isnCitizen: number;
+    /** Фамилия И О. */
+    citizenSurname: string;
+    /** Фамилия И О в верхн регистре. */
+    citizenSurnameSearch: string;
+    /** Город. */
+    citizenCity: string;
+    /** Регион. */
+    isnRegion: number;
+    /** Город в верхн регистре. */
+    citizenCitySearch: string;
+    /** Почтовый индекс. */
+    zipcode: number;
+    /** Адрес. */
+    citizenAddr: string;
+    /** Признак защиты от удаления. Для СФ и Госдумы это поле также является признаком окабинеченности гражданина в виртуальной приемной. */
+    protected: number;
+    /** Вес элемента. */
+    weight: number;
+    /** Категория адресата. */
+    isnAddrCategory: number;
+    /** Телефон. */
+    phone: string;
+    /** Пол. 1 - м 0 - ж null - не определено. */
+    sex: number;
+    /** N Паспорта. */
+    nPasport: string;
+    /** Cерия. */
+    series: string;
+    /** Выдан. */
+    given: string;
+    /** ИНН. */
+    inn: string;
+    /** e_mail. */
+    eMail: string;
+    /** Требуется ЭП. */
+    edsFlag: number;
+    /** Требуется шифрование. */
+    encryptFlag: number;
+    /** Идентификатор сертификата. */
+    idCertificate: string;
+    /** Комментарий. */
+    note: string;
+    /** Почтовый формат. */
+    mailFormat: number;
+    /** Снилс. */
+    snils: string;
+    /** Дата создания. */
+    insDate: number;
+    /** Кто создал. */
+    insWho: number;
+    /** Дата изменения. */
+    updDate: number;
+    /** Кто изменил. */
+    updWho: number;
+    /** Признак логического удаления. */
+    deleted: number;
+    /** Регион. Ссылка через поле IsnRegion. */
+    regionCl: {
+        /** Код. */
+        due: string;
+    };
+    /** Признак новой записи. */
+    new: number;
+}
+
+export interface ResponseCitizens {
+    data: {
+        /** Получает страницу ICitizen для постраничного пейджинга. */
+        citizensPg: {
+            /** Список объектов. Поле предоставлено в дополнение к Relay. */
+          items: ResponseCitizenItems[];
         }
       }
 }

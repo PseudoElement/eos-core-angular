@@ -56,6 +56,16 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         'export', 'import', 'protViewSecurity'],
     keyField: 'ISN_CITIZEN',
     searchConfig: [SEARCH_TYPES.full],
+    modeList: [
+        {
+            key: 'common',
+            title: 'Основные',
+        },
+        {
+            key: 'protocol',
+            title: 'Протокол ',
+        }
+    ],
     fields: COMMON_FIELDS.concat([{
         key: 'ISN_CITIZEN',
         title: 'ISN',
@@ -192,13 +202,44 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         title: 'Доп. реквизит',
         type: 'string',
     },
-
-
+    {
+        key: 'FROM',
+        title: '',
+        type: 'string',
+    },
+    {
+        key: 'TO',
+        title: '',
+        type: 'string',
+    },
+    {
+        key: 'OPER_DESCRIBE',
+        title: '',
+        type: 'string',
+    },
+    {
+        key: 'USER_ISN',
+        title: '',
+        type: 'number',
+    }
     ]),
     treeFields: ['CITIZEN_SURNAME'],
     searchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE'],
     listFields: ['CITIZEN_SURNAME'],
-    fullSearchFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW', 'DOP_REC', 'E_MAIL'],
+    fullSearchFields: [
+        'CITIZEN_SURNAME', 
+        'CITIZEN_CITY', 
+        'ZIPCODE', 
+        'CITIZEN_ADDR', 
+        'ISN_REGION', 
+        'NEW', 
+        'DOP_REC', 
+        'E_MAIL',
+        'FROM',
+        'OPER_DESCRIBE',
+        'TO',
+        'USER_ISN',
+    ],
     quickViewFields: ['CITIZEN_SURNAME', 'DUE_REGION'],
     shortQuickViewFields: [],
     editFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ISN_REGION', 'ZIPCODE', 'CITIZEN_ADDR',
