@@ -28,13 +28,13 @@ export class EosInstrumentsListComponent implements OnDestroy, OnInit {
       this.list.checkAccess().then(access => {
         switch (this.list.id) {
           case 'CHANGE_DL':
-            this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][28] !== '1';
+            this.disabled = !this._appContext.CurrentUser['TECH_RIGHTS'] || this._appContext.CurrentUser['TECH_RIGHTS'][28] !== '1';
             break;
           case 'GeneralLists':
-            this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][51] !== '1';
+            this.disabled =  !this._appContext.CurrentUser['TECH_RIGHTS'] || this._appContext.CurrentUser['TECH_RIGHTS'][51] !== '1';
             break;
           case 'CommonTechLists':
-            this.disabled =  this._appContext.CurrentUser['TECH_RIGHTS'][51] !== '1';
+            this.disabled = !this._appContext.CurrentUser['TECH_RIGHTS'] || this._appContext.CurrentUser['TECH_RIGHTS'][51] !== '1';
             break;
           default:
             this.disabled = !access;
