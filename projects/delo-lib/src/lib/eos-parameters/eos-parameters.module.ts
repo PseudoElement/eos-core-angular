@@ -45,6 +45,7 @@ import { EosParamLicensingComponent } from './parametersSystem/eos-param-licensi
 import { ParamInlineScanningComponent } from './parametersSystem/inline-scanning/param-dictionaries.component';
 import { SmsGatewayComponent } from './parametersSystem/sms-gateway/sms-gateway.component';
 import { SmsGatewayCardComponent } from './parametersSystem/sms-gateway/sms-gateway-card/sms-gateway-card.component';
+import { ParamControlCache } from './parametersSystem/control-cache/control-cache.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { SmsGatewayCardComponent } from './parametersSystem/sms-gateway/sms-gate
         ParamInlineScanningComponent,
         SmsGatewayComponent,
         SmsGatewayCardComponent,
+        ParamControlCache
     ],
     entryComponents: [
         AuthenticationCollectionComponent,
