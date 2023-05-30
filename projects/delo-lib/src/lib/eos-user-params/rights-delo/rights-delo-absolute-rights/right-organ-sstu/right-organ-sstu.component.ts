@@ -2,13 +2,12 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { INodeDocsTreeCfg, IParamUserCl } from '../../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
-import { HttpClient } from '@angular/common/http';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { UserParamApiSrv } from '../../../../eos-user-params/shared/services/user-params-api.service';
 import { ORGANIZ_CL, USER_ORGANIZ } from '../../../../eos-rest/interfaces/structures';
 import { UserParamsService } from '../../../../eos-user-params/shared/services/user-params.service';
 import { EosMessageService } from '../../../../eos-common/index';
-import { RestError } from '../../../../eos-rest/core/rest-error';
+import { ALL_ROWS, PipRX } from '../../../../eos-rest';
 
 
 @Component({
@@ -34,7 +33,7 @@ export class RightDepertOrganizSstu implements OnInit {
     public listOrganizOld = [];
     public selectedOrg: NodeDocsTree;
     constructor(
-        private http: HttpClient,
+        private _pipRx: PipRX,
         private modalService: BsModalService,
         private apiSrv: UserParamApiSrv,
         private _userParmSrv: UserParamsService,
@@ -92,41 +91,27 @@ export class RightDepertOrganizSstu implements OnInit {
             node.viewAllowed = false;
         }
     }
-    getHttp_client(): HttpClient {
-        return this.http;
-    }
     async getAppSetting(): Promise<any[]> {
-        const req: any[] = await this.http.get('../CoreHost/sstu/get-organizations-to-select').toPromise<any>()
-        .then((data) => {
+        try {
+            const data: any[] = await this._pipRx.read({
+                ['../sstu/get-organizations-to-select']: ALL_ROWS
+            });
             const ans = [];
             if (Object.keys(data).length > 0) {
                 Object.keys(data).forEach((key) => {
                     ans.push({
                         DUE: key,
-                        CLASSIF_NAME: req['key'],
+                        CLASSIF_NAME: data['key'],
                     })
                 });
                 return ans;
             } else {
                 return [];
             }
-            
-        })
-        .catch((e) => {
-            if (e instanceof RestError && (e.code === 401 || e.code === 0)) {
-                return undefined;
-            } else {
-                const errMessage = e.message ? e.message : e;
-                this._msgSrv.addNewMessage({
-                    type: 'danger',
-                    title: 'Ошибка обработки. Ответ сервера:',
-                    msg: errMessage
-                });
-                return null;
-            }
-        });
+        } catch (e) {
+            return [];
+        }
         
-        return req;
     }
     openWindow(template) {
         if (this.listOrganizNew.length === 0) {
