@@ -115,19 +115,6 @@ export const ADDRESSEES_RADIO = {
     keyPosition: '169.170',
     parent: null,
 };
-/** ADDRESSEES_RADIO_SPEC_CHANNEL */
-export const ADDRESSEES_RADIO_SPEC_CHANNEL = {
-    key: 'ADDRESSEES_RADIO_SPEC_CHANNEL',
-    type: 'radio',
-    title: '',
-    options: [
-        {value: '0', title: 'Адресату - информация о себе'},
-        {value: '1', title: 'Все'},
-        {value: '-1', title: 'Свои'}
-    ],
-    keyPosition: '169.170.171',
-    parent: null,
-};
 /** Группа документов */
 export const GROUP_OF_DOCUMENTS = {
     key: 'GROUP_OF_DOCUMENTS',

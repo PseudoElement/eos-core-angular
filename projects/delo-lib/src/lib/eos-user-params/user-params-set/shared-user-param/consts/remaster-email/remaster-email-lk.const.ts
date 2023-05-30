@@ -20,7 +20,7 @@ export const REGISTRATION_LK: IBaseUsers = {
         'RCSEND_LK_ORDERS_POINT_RESOLUTION',
         'RCSEND_LK_SUMMARY',
         'RCSEND_LK_ADDRESSEES',
-        'RCSEND_LK_ADDRESSEES_RADIO_SPEC_CHANNEL',
+        'RCSEND_LK_ADDRESSEES_RADIO',
     ],
     fields: [
         Fields.HIDE_OPERATION_SEND_EMAIL,
@@ -31,7 +31,7 @@ export const REGISTRATION_LK: IBaseUsers = {
         Fields.RESOLUTIONS,
         Fields.RESOLUTIONS_RADIO,
         Fields.ADDRESSEES,
-        Fields.ADDRESSEES_RADIO_SPEC_CHANNEL,
+        Fields.ADDRESSEES_RADIO,
         Fields.GROUP_OF_DOCUMENTS,
         Fields.THE_COMPOSITION_OF_THE_DOCUMENT,
         Fields.SUMMARY,

@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, ViewChild, OnDestroy, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EosDictService } from '../services/eos-dict.service';
-import { E_DICT_TYPE, E_FIELD_SET, E_FIELD_TYPE, IRecordModeDescription, SearchFormSettings, SEARCHTYPE, SearchData } from '../../eos-dictionaries/interfaces';
+import { E_DICT_TYPE, E_FIELD_SET, E_FIELD_TYPE, IRecordModeDescription, SearchFormSettings, SEARCHTYPE, SearchData, ProtoIdOperation } from '../../eos-dictionaries/interfaces';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from '../../eos-dictionaries/consts/search-types';
 import { BaseCardEditDirective } from '../card-views/base-card-edit.component';
@@ -50,6 +50,10 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     public formSearch: FormGroup;
     public protocolForm: FormGroup;
     private protocolSearchNameControl: string[] = ['FROM', 'TO', 'USER_ISN', 'OPER_DESCRIBE'];
+    private protocolIdOperation: ProtoIdOperation = {
+        organization: ['Z', 'A'],
+        citizens: ['C']
+    }
     public protocolSerchInputs: any;
     public inputs;
     public radioTopButton = [];
@@ -122,7 +126,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     get noSearchData(): boolean {
-        try{
+        try {
             if(this.searchData.srchMode === 'protocol') {
                 let result: boolean = true;
                 const protocolKey = Object.keys(this.searchData.protocol);
@@ -181,7 +185,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.settings.lastSearch = SEARCHTYPE.full;
         this.settings.opts.mode = this.mode;
 
-        const model = (this.dictId === 'departments' || this.dictId === 'organization') ? this.searchData : this.getSearchModel();
+        const model = (this.dictId === 'departments' || this.dictId === 'organization' || this.dictId === 'citizens') ? this.searchData : this.getSearchModel();
         this.settings.full.data = model;
         if (this.searchValueDopRec) {
             this.searchModel['DOP_REC'] =  this.searchValueDopRec;
@@ -344,7 +348,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     private async initProtoSerchForm() {
         const defaulDate = new Date();
-        this.allOperation = await this.getAllOperation();
+        this.allOperation = await this.operation(this.protocolIdOperation[this.dictId]);
         const configProtocolSerchInput: IInputParamControl[] = [
             {
                 controlType: E_FIELD_TYPE.date,
@@ -433,34 +437,40 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
     }
 
-    async getAllOperation(): Promise<PROT_NAME[]> {
-        try{
-            const allOperation: PROT_NAME[] = await this._pipRX.read({PROT_NAME: {criteries: {TABLE_ID: 'Z|A'}}})
-        
-            const sortOperation = allOperation.sort((a, b) => {
-                if (a.DESCRIBTION.toLowerCase() < b.DESCRIBTION.toLowerCase()) {
-                    return -1;
-                  }
-                  if (a.DESCRIBTION.toLowerCase() > b.DESCRIBTION.toLowerCase()) {
-                    return 1;
-                  }
-                  return 0;
-            })
-    
-            const unicOperation: PROT_NAME[] = [];
-            sortOperation.forEach((el) => {
-                if (el.DESCRIBTION) {
-                    if(!unicOperation.length){
+    async operation(idOperations: string[]): Promise<PROT_NAME[]> {
+        const operation: PROT_NAME[] = await this.getProtOperation(idOperations);
+
+        const sortOperation = operation.sort((a, b) => {
+            if (a.DESCRIBTION.toLowerCase() < b.DESCRIBTION.toLowerCase()) {
+                return -1;
+              }
+              if (a.DESCRIBTION.toLowerCase() > b.DESCRIBTION.toLowerCase()) {
+                return 1;
+              }
+              return 0;
+        });
+
+        const unicOperation: PROT_NAME[] = [];
+        sortOperation.forEach((el) => {
+            if (el.DESCRIBTION) {
+                if(!unicOperation.length){
+                    unicOperation.push(el)
+                } else {
+                    const i = unicOperation.length - 1;
+                    if(!(unicOperation[i].DESCRIBTION === el.DESCRIBTION)) {
                         unicOperation.push(el)
-                    } else {
-                        const i = unicOperation.length - 1;
-                        if(!(unicOperation[i].DESCRIBTION === el.DESCRIBTION)) {
-                            unicOperation.push(el)
-                        }
                     }
                 }
-            })
-            return unicOperation;
+            }
+        })
+        return unicOperation;
+    }
+
+    async getProtOperation(param: string[]): Promise<PROT_NAME[]> {
+        try{
+            let criteies: string = param.join('|');
+            const allOperation: PROT_NAME[] = await this._pipRX.read({PROT_NAME: {criteries: {TABLE_ID: criteies}}})
+            return allOperation;
         } catch (err) {
             console.warn(err);
             console.error('Error: Failed to get operation name.');
@@ -656,7 +666,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         } else {
             this.mode = 0;
         }
-        if(this.dictId === 'organization' && this.searchData.srchMode === 'protocol') {
+        if ((this.dictId === 'organization' || this.dictId === 'citizens') && this.searchData.srchMode === 'protocol' && this.protocolForm) {
             const date = new Date();
             Object.keys(this.protocolForm.controls).forEach(el => {
                 if(el === 'FROM' || el === 'TO'){
@@ -683,7 +693,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     private getModelName(): string {
-        return (this.dictId === 'departments' || this.dictId === 'organization') ? this.currTab || 'department' : this.dictId;
+        return (this.dictId === 'departments' || 
+                this.dictId === 'organization' || 
+                this.dictId === 'citizens') ? this.currTab || 'department' : this.dictId;
     }
 
     private getSearchModel() {
@@ -696,6 +708,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     private initSearchForm() {
         this.dictionary = this._dictSrv.currentDictionary;
+        if (this.dictId === 'organization' || this.dictId === 'citizens' ) {
+            this.initProtoSerchForm();
+        }
         if (this.dictionary) {
             if (this.settings) {
                 if (this.settings.full.data) {
@@ -728,8 +743,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
             if (this.arDescript && this.arDescript.length) {
                 this.initFormDopRec();
             }
-            this.initProtoSerchForm();
-
             if (this.dictionary.descriptor.id === 'sev-rules') {
                 this.initFormRule(this.dictionary.descriptor.record.getFullSearchFields);
             }

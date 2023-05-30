@@ -155,7 +155,7 @@ export class DictionaryDescriptorService {
                         res = new CalendarDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'citizens':
-                        res = new CitizensDictionaryDescriptor(descr, this.apiSrv);
+                        res = new CitizensDictionaryDescriptor(descr, this.apiSrv, this._GraphQLService);
                         break;
                     case 'format':
                         res = new FormatDictionaryDescriptor(descr, this.apiSrv);

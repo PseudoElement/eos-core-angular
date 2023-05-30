@@ -1116,12 +1116,11 @@ export class EosDictService {
     }
 
     fullSearch(data: any, params: ISearchSettings) {
-
         try {
-            this.fixSearchSymbols(data);
+            data.srchMode === 'common' ? this.fixSearchSymbols(data.common) : null;
         } catch (e) {
+            console.error('Error: ', e)
         }
-
 
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
@@ -1136,7 +1135,6 @@ export class EosDictService {
             } else {
                 this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
             }
-
             return this._search(params.deleted);
         } else {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
@@ -1146,7 +1144,12 @@ export class EosDictService {
 
     fixSearchSymbols(data: any): any {
         for (const key in data) {
-            if (key !== 'srchMode' && data.hasOwnProperty(key) && key !== 'DOP_REC' && !data[key].hasOwnProperty('DOP_REC') && !data['RULE_KIND']) {
+            if (key !== 'srchMode' && 
+                data.hasOwnProperty(key) && 
+                key !== 'DOP_REC' && 
+                !data[key].hasOwnProperty('DOP_REC') && 
+                !data['RULE_KIND']
+            ) {
                 const list = data[key];
                 if (typeof list === 'string') {
                     data[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');

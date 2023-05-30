@@ -1,0 +1,38 @@
+<div
+    class="input-param-wrapper input-show-tables-cache"
+    *ngIf="inputs">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="btnDisabled ? cancel() : submit(); cancelEdit()"
+        [editBtn]="true"
+        (editForm)="edit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnError"
+    ></eos-param-header>
+    <div class="cache-body">
+        <div class="cache-button">
+            <button type="button" [disabled]="form.disabled" class="btn btn-primary upper" (click)='cacheClear()'>сбросить</button>
+                <!-- <button type="button" [disabled]="disabledBtn" class="btn btn-primary-full upper cust-btn" (click)="save()">СОХРАНИТЬ</button> -->
+        </div>
+        <div class="cache-date">
+            <span>Состояние Кэша на {{dateCache}}</span>
+        </div>
+        <div class="show-tables-cache" *ngIf="isLoading">
+            
+            <div *ngFor="let cache of allCashe" class="row-cash-info">
+                <div style="display: flex;">
+                    <div class="cache-item1">{{cache.Item1}}</div>
+                    <div class="cache-item2">{{cache.Item3}}</div>
+                    <div class="cache-item3">{{getFormatItem(cache.Item2)}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+
+
+
+

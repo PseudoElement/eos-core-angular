@@ -77,6 +77,11 @@ export const EOS_PARAMETERS_TAB = [{
     visible: true
 },
 {
+    title: 'Управление кэшем',
+    url: 'control-cache',
+    visible: true
+},
+{
     title: 'Лицензирование',
     url: 'licensing',
     visible: true
