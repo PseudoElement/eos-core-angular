@@ -1,12 +1,11 @@
-// Внешний обмен Эл. почта
-/** Скрыть операцию \"Отправить E-mail\" */
-export const HIDE_OPERATION_SEND_EMAIL = {
-    key: 'HIDE_OPERATION_SEND_EMAIL',
+/** Скрыть операцию отправки по e-mail без подготовки */
+export const EMAIL = {
+    key: 'EMAIL',
     type: 'boolean',
-    title: 'Скрыть операцию \"Отправить E-mail\"',
+    title: 'Скрыть операцию отправки по e-mail без подготовки',
     keyPosition: 0,
     parent: null,
-}
+};
 /** Шифрование */
 export const ENCRYPTION = {
     key: 'ENCRYPTION',
@@ -14,7 +13,7 @@ export const ENCRYPTION = {
     title: 'Шифрование',
     keyPosition: 1,
     parent: null,
-}
+};
 /** Электронная подпись */
 export const ELECTRONIC_SIGNATURE = {
     key: 'ELECTRONIC_SIGNATURE',
@@ -38,13 +37,13 @@ export const CONSIDER_THE_TYPE_OF_DISPATCH = {
     title: 'Учитывать вид отправки',
     keyPosition: 4,
     parent: null,
-}
-/** Скрыть операцию отправки по e-mail без подготовки */
-export const EMAIL = {
-    key: 'EMAIL',
+};
+/** Сообщить о доставке этого сообщения */
+export const REPORT_THE_DELIVERY_OF_THIS_MESSAGE = {
+    key: 'CONSIDER_THE_TYPE_OF_DISPATCH',
     type: 'boolean',
-    title: 'Скрыть операцию отправки по e-mail без подготовки',
-    keyPosition: 1,
+    title: 'Сообщить о доставке этого сообщения',
+    keyPosition: 5,
     parent: null,
 };
 /** Требуется уведомление о регистрации или отказе от нее */
@@ -171,7 +170,6 @@ export const DATE_OF_REGISTRATION = {
     keyPosition: 18,
     parent: 'REGISTRATION_NUMBER',
 };
-
 /** Гриф доступа */
 export const ACCESS_NECK = {
     key: 'ACCESS_NECK',
@@ -179,7 +177,6 @@ export const ACCESS_NECK = {
     title: 'Гриф доступа',
     keyPosition: 19,
     parent: null,
-
 };
 /** Рубрики */
 export const HEADINGS = {
@@ -219,46 +216,6 @@ export const DOCUMENT_AUTHOR = {
     type: 'boolean',
     title: 'Автор документа',
     keyPosition: 22,
-    parent: null,
-};
-/** Визы */
-export const VISAS = {
-    key: 'VISAS',
-    type: 'boolean',
-    title: 'Визы',
-    keyPosition: 53,
-    parent: null,
-};
-/** Адресаты */
-export const ADDRESSES = {
-    key: 'ADDRESSES',
-    type: 'boolean',
-    title: 'Адресаты',
-    keyPosition: 71,
-    parent: null,
-};
-/** Исполнитель документа */
-export const DOCUMENT_PERFORMER = {
-    key: 'DOCUMENT_PERFORMER',
-    type: 'boolean',
-    title: 'Исполнитель документа',
-    keyPosition: 98,
-    parent: null,
-};
-/** Поручения */
-export const ORDERS = {
-    key: 'ORDERS',
-    type: 'boolean',
-    title: 'Поручения',
-    keyPosition: 115,
-    parent: null,
-};
-/** Дополнительные реквизиты */
-export const ADDITIONAL_DETAILS = {
-    key: 'ADDITIONAL_DETAILS',
-    type: 'boolean',
-    title: 'Дополнительные реквизиты',
-    keyPosition: 165,
     parent: null,
 };
 /** Организация */
@@ -356,7 +313,6 @@ export const DOCUMENT_AUTHOR_ORGANIZATION_HAS_SIGNED = {
     title: 'Подписал',
     keyPosition: 34,
     parent: 'DOCUMENT_AUTHOR_ORGANIZATION'
-
 };
 /** ФИО */
 export const DOCUMENT_AUTHOR_ORGANIZATION_HAS_SIGNED_FULL_NAME = {
@@ -494,6 +450,14 @@ export const DOCUMENT_AUTHOR_CITIZEN_EMAIL_PHONE = {
     keyPosition: 52,
     parent: 'DOCUMENT_AUTHOR_CITIZEN'
 };
+/** Визы */
+export const VISAS = {
+    key: 'VISAS',
+    type: 'boolean',
+    title: 'Визы',
+    keyPosition: 53,
+    parent: null,
+};
 /** Организация */
 export const VISAS_ORGANIZATION = {
     key: 'VISAS_ORGANIZATION',
@@ -621,6 +585,14 @@ export const VISAS_ORGANIZATION_EXECUTIVE_DATE_OF_SIGNING = {
     title: 'Дата подписания',
     keyPosition: 70,
     parent: 'VISAS_ORGANIZATION_EXECUTIVE'
+};
+/** Адресаты */
+export const ADDRESSES = {
+    key: 'ADDRESSES',
+    type: 'boolean',
+    title: 'Адресаты',
+    keyPosition: 71,
+    parent: null,
 };
 /** Организация */
 export const ADDRESSES_ORGANIZATION = {
@@ -819,8 +791,16 @@ export const ADDRESSES_CITIZEN_EMAIL_PHONE = {
     key: 'ADDRESSES_CITIZEN_EMAIL_PHONE',
     type: 'boolean',
     title: 'E-mail, телефон',
-    keyPosition: 98,
+    keyPosition: 97,
     parent: 'ADDRESSES_CITIZEN'
+};
+/** Исполнитель документа */
+export const DOCUMENT_PERFORMER = {
+    key: 'DOCUMENT_PERFORMER',
+    type: 'boolean',
+    title: 'Исполнитель документа',
+    keyPosition: 98,
+    parent: null,
 };
 /** Организация */
 export const DOCUMENT_PERFORMER_ORGANIZATION = {
@@ -941,6 +921,14 @@ export const DOCUMENT_PERFORMER_ORGANIZATION_EXECUTIVE_ADDRESSED_POSITION = {
     title: 'Должность',
     keyPosition: 114,
     parent: 'DOCUMENT_PERFORMER_ORGANIZATION_EXECUTIVE_ADDRESSED'
+};
+/** Поручения */
+export const ORDERS = {
+    key: 'ORDERS',
+    type: 'boolean',
+    title: 'Поручения',
+    keyPosition: 115,
+    parent: null,
 };
 /** Системный номер */
 export const ORDERS_SYSTEM_NUMBER = {
@@ -1270,7 +1258,14 @@ export const OREDER_FILES = {
     keyPosition: 167,
     parent: 'ORDERS'
 };
-
+/** Дополнительные реквизиты */
+export const ADDITIONAL_DETAILS = {
+    key: 'ADDITIONAL_DETAILS',
+    type: 'boolean',
+    title: 'Дополнительные реквизиты',
+    keyPosition: 165,
+    parent: null,
+};
 
  // Внешний обмен Эл. почта -> Параметры регистрации
  /** Удалить сообщение после регистрации */
@@ -1403,4 +1398,3 @@ export const ORIGINAL_IN_ELECTRONIC_FORM = {
     readonly: false,
     parent: null,
 };
-

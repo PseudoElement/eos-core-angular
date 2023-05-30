@@ -8,9 +8,7 @@ import { SearchService } from '../.././shared-user-param/services/search-service
 
 import { ConfigChannelCB } from '../../shared-user-param/interface/email-tree.interface';
 
-import { REGISTRATION_EPVV//,
-    // REGISTRATION_MAILRESIVE_EPVV 
-} from '../../../user-params-set/shared-user-param/consts/remaster-email/remaster-email-epvv.const';
+import { REGISTRATION_EPVV } from '../../../user-params-set/shared-user-param/consts/remaster-email/remaster-email-epvv.const';
 import { RemasterAbstractComponent } from '../remaster-abstract/remaster-abstract.component';
 
 @Component({
@@ -33,7 +31,6 @@ export class RemasterEpvvComponent extends RemasterAbstractComponent {
             nameEN: 'EPVV',
             nameRU: 'ЕПВВ',
             fieldsConst: REGISTRATION_EPVV,
-            // fieldsConstMailResive: REGISTRATION_MAILRESIVE_EPVV
         }
         super(formHelp, dataSrv, inputCtrlSrv, _RemasterService, _searchService, configChannel);
         this.SEND_EMAIL = `${this.RCSEND}_HIDE_OPERATION_SEND_EMAIL`

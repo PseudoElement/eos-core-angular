@@ -22,7 +22,6 @@ export const REGISTRATION_EPVV: IBaseUsers = {
         'RCSEND_EPVV_ADDRESSEES_RADIO'
     ],
     fields: [
-        Fields.HIDE_OPERATION_SEND_EMAIL,
         Fields.EMAIL,
         Fields.CONSIDER_THE_TYPE_OF_DISPATCH,
         Fields.REQUIRES_REGISTRATION_NOTICE_OR_OPT_OUT,
