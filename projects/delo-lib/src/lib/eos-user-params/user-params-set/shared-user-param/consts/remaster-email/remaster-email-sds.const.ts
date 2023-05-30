@@ -21,7 +21,6 @@ export const REGISTRATION_SDS: IBaseUsers = {
         'RCSEND_SDS_ADDRESSEES_RADIO'
     ],
     fields: [
-        Fields.HIDE_OPERATION_SEND_EMAIL,
         Fields.EMAIL,
         Fields.COMPRESS_ATTACHED_FILES,
         Fields.CONSIDER_THE_TYPE_OF_DISPATCH,

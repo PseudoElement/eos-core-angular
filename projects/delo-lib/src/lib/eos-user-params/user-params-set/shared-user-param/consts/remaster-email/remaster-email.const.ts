@@ -20,7 +20,6 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
         'RCSEND_ORDERS_POINT_RESOLUTION',
     ],
     fields: [
-        Fields.HIDE_OPERATION_SEND_EMAIL,
         Fields.EMAIL,
         Fields.ENCRYPTION,
         Fields.ELECTRONIC_SIGNATURE,
