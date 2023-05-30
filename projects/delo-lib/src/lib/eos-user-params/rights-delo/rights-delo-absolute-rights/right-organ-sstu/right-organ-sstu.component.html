@@ -1,0 +1,87 @@
+<div class="right-org-sstu">
+    <div *ngIf="!isLoading; else spiner" class="right-dep-org-list-content">
+        <label *ngIf="editMode" style="text-align: center;">Организация</label>
+        <div>
+            <button *ngIf="editMode && !selectedNode.control.disabled"
+                class="btn"
+                tooltip="Добавить организацию"
+                placement="right"
+                [disabled]="checkFlag"
+                triggers="hover"
+                containerClass="tooltip-info"
+                (click)="openWindow(template)"
+                eosClickMode
+            >
+                <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
+            </button>
+            <button *ngIf="editMode && !selectedNode.control.disabled"
+                class="btn"
+                tooltip="Удалить организацию"
+                #itemTooltip= 'bs-tooltip'
+                placement="right"
+                triggers="hover"
+                containerClass="tooltip-info"
+                [disabled]="!selectedOrg"
+                (click)="itemTooltip.hide(); DeleteDep(selectedOrg)"
+            >
+                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
+            </button>
+        </div>
+        <div>
+            <div *ngIf="!checkFlag && listUserOrg.length > 0" class="over-tree-dep" [ngClass]="{'redact-tree-org': editMode}">
+                <eos-list-doc-tree
+                    class="tree-classif-node"
+                    [hideExpand]="true"
+                    [minusIcon]="true"
+                    [listNode]="listUserOrg"
+                    [editMode]="editMode"
+                    (select)="selectNode($event)"
+                    (checkedNode)="checkedNode($event)"
+                ></eos-list-doc-tree> <!-- если понадобиться вернуть дерево нужно просто раскоментировать -->
+            </div>
+            <div *ngIf="listUserOrg.length === 0" style="margin-top: 10px;margin-left: 20px;">
+                Все
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<ng-template #spiner>
+    <div class="spiner-wrapper">
+            <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #template>
+    <div style="width: 600px;" class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeWindow()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="create-new-node modal-body this-modal-body">
+        <div *ngFor="let item of listOrganizNew; let i = index" style="border-bottom: 1px solid #eeeeee ;">
+            <div style="display: flex;">
+                <label class="checkbox">
+                    <input 
+                        [checked]="item.select"
+                        [disabled]="false"
+                        type="checkbox"
+                        (change)="toggleChecked($event, item)">
+                    <div>
+                        <span class="eos-adm-icon small" [ngClass]="getflagChecked(item)"></span> <!--   -->
+                    </div>
+                </label>
+                <div style="margin-left: 20px;">
+                    <label>{{item.CLASSIF_NAME}}</label>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="updateElement()">Выбрать</button>
+        <button class="btn btn-primary-full" (click)="closeWindow()">Отменить</button>
+    </div>
+</ng-template>

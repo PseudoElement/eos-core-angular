@@ -95,6 +95,7 @@ import { InlineScaningParamsComponent } from './user-params-set/inline-scanning/
 import { NotificationAddressPlugComponent } from './notification-address-plug/notification-address-plug.component';
 import { RughtDeloAbsRightService } from './rights-delo/rights-delo-absolute-rights/right-delo-absolute-rights.service';
 import { RemasterSstuComponent } from './user-params-set/user-param-ext-exch/remaster-sstu/remaster-sstu.component';
+import { RightDepertOrganizSstu } from './rights-delo/rights-delo-absolute-rights/right-organ-sstu/right-organ-sstu.component';
 
 @NgModule({
     declarations: [
@@ -169,7 +170,8 @@ import { RemasterSstuComponent } from './user-params-set/user-param-ext-exch/rem
         RemasterSdsComponent,
         RemasterAspsdComponent,
         NotificationAddressPlugComponent,
-        RemasterSstuComponent
+        RemasterSstuComponent,
+        RightDepertOrganizSstu
     ],
     entryComponents: [
         AddGrifComponent

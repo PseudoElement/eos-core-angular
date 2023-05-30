@@ -67,7 +67,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     };
     public settingsTable: ITableSettings = {
         hiddenCheckBox: true,
-        maxHeightTable: '650px',
+        maxHeightTable: 'calc(100vh - 275px)',
+        minHeightTable: 'calc(100vh - 275px)',
         count: true,
         printTable: true,
         headerStyle: {
@@ -92,6 +93,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private GRUP_DEL_RK = 'Назначить права пользователю на выполнение операции «Удаление РК» в доступных ему картотеках?';
     private GRUP_NOT_DEL_RK = 'У пользователя назначены права на выполнение операции «Удаление РК» в доступных ему картотеках. Снять?';
     private expandStr = 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List';
+    private simpleBase = false; // тут хранится знание колхозная база или нет
     constructor(
         private _msgSrv: EosMessageService,
         private _userParamsSetSrv: UserParamsService,
@@ -115,8 +117,22 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         })
         .then(() => {
             const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-            this._userParamsSetSrv.checkGrifs(id).then(el => {
+            this._userParamsSetSrv.checkGrifs(id).then(async (el) => {
                 this.flagGrifs = el;
+                const data = await this.apiSrv.getData({
+                    DEPARTMENT: {
+                        criteries: {
+                            'DUE_LINK_ORGANIZ': 'isnotnull',
+                            'DELETED': 0
+                        },
+                        orderby: 'CLASSIF_NAME',
+                    }
+                });
+                const dueOrg = [];
+                data.forEach((item) => {
+                    dueOrg.push(item['DUE_LINK_ORGANIZ']);
+                });
+                this.simpleBase = data.length >= 2;
                 this.init();
             });
         })
@@ -194,6 +210,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     init() {
         const ABS = this._absRigthServ.getAbsoluteRigth();
+        if (this.simpleBase) {
+            ABS.forEach((item) => {
+                if (item.key === ETypeDeloRight.UploadingInformationToSSTU) {
+                    item.data.rightContent = E_RIGHT_DELO_ACCESS_CONTENT.organiz
+                }
+            });
+        }
         if (this._appContext.cbBase) {
             ABS[2].label = 'Централизованная отправка документов';
         }
@@ -550,7 +573,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz ||
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
-                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.organiz)
             ) {
                 this._deleteAllDep(item);
                 if (item.key === ETypeDeloRight.EnteringResolutions) {
@@ -561,9 +585,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this.arrNEWDeloRight[27] = '0';
                     this.projectResol = +this.arrNEWDeloRight[27];
                 }
-                if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
+                if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.organiz) {
                     this._deleteAllOrg(item);
-
                 }
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
@@ -916,6 +940,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
             case E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
+            case E_RIGHT_DELO_ACCESS_CONTENT.organiz:
                 if (this.selectedNode.value) {
                     setTimeout(() => {
                         this.rightContent = true;
@@ -1057,6 +1082,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 } else {
                     url = `/USER_ORGANIZ_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
                 }
+                break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.organiz:
+                url = `/USER_ORGANIZ_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
                 break;
         }
         let batch = {};
