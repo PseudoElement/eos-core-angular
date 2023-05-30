@@ -372,11 +372,11 @@ export class UserSearchComponent implements OnInit  {
         } else {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 17, '_');
         }
-        if (this.form.controls['rec.21'].value) {
-            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 21, '1');
-        } else {
-            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 21, '_');
-        }
+        // if (this.form.controls['rec.21'].value) {
+        //     avSystemsStr = this.SetAvSytemValue(avSystemsStr, 21, '1');
+        // } else {
+        //     avSystemsStr = this.SetAvSytemValue(avSystemsStr, 21, '_');
+        // }
         // if (this.form.controls['rec.23'].value) {
         //     avSystemsStr = this.SetAvSytemValue(avSystemsStr, 23, '1');
         // } else {
