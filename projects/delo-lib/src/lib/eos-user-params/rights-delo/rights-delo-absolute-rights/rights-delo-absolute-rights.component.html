@@ -120,12 +120,20 @@
     </div>
 </ng-template>
 <ng-template #organiz>
-    <!-- <div style="height: 100%;">
+    <div style="height: 100%;">
         <div style="height: 100%;position: relative;">
-            <eos-right-absolute-organiz-depart style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight"
-            (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)"></eos-right-absolute-organiz-depart>
+            <eos-right-absolute-organiz-sstu
+                style="width: 100%;"
+                [editMode]="editMode"
+                [selectedNode]="selectedNode"
+                [curentUser]="curentUser"
+                [listRigth]="listRight"
+                (Changed)="checkChange($event)"
+                (createRcpdD)="createRcpdD()"
+                (emitDeletedRc)="checkRcpdDelete(false)">
+            </eos-right-absolute-organiz-sstu>
         </div>
-    </div> -->
+    </div>
 </ng-template>
 <ng-template #editOrganiz>
     <eos-dynamic-input *ngIf="formGroupAll" class="inline-block" [input]="inputAll['all']" [form]="formGroupAll"

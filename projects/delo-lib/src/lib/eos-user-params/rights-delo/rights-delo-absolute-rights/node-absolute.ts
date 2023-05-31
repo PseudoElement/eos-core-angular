@@ -63,7 +63,8 @@ export class NodeAbsoluteRight {
         if (this._change.length && (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
             this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
             this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz ||
-            this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)) {
+            this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject ||
+            this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.organiz)) {
             const index = this._change.findIndex((item: IChengeItemAbsolute) => item.due === node.due);
             if (index >= 0) {
                 if (node.user_cl) {
