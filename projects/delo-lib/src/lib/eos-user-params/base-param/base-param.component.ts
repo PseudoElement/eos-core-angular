@@ -14,7 +14,7 @@ import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } 
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from '../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from './shared/base-param-curent.descriptor';
-import { OPEN_CLASSIF_DEPARTMENT } from '../../eos-user-select/shered/consts/create-user.consts';
+import { OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_FROM_TECH_DUE_DEP } from '../../eos-user-select/shered/consts/create-user.consts';
 import { UserParamApiSrv } from '../../eos-user-params/shared/services/user-params-api.service';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
@@ -28,6 +28,9 @@ import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-us
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT, CONFIRM_UNAVAILABLE_SYSTEMS } from '../../eos-dictionaries/consts/confirm.consts';
 
+export enum ESelectDepart {
+    selectOneElem = 0
+}
 const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 @Component({
     selector: 'eos-params-base-param',
@@ -96,7 +99,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     get isTechUser(): boolean {
         return this.formControls.get('teсhUser').value;
     }
-
+    get getSelectNote(): boolean {
+        return !this.form.controls['TECH_DUE_DEP'].value;
+    }
     constructor(
         private _router: Router,
         private _msgSrv: EosMessageService,
@@ -217,6 +222,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (data) {
                 this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
                 this.curentUser = this._userParamSrv.curentUser;
+                console.log('this.curentUser', this.curentUser);
                 if (this.curentUser.DUE_DEP) {
                     this.getPhotoUser(this.curentUser.DUE_DEP);
                 }
@@ -439,11 +445,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                             this.inputs['DUE_DEP_NAME'].data = ''; // @task161934 данные для сохранения юзера в inputs!!!
                             this.form.get('NOTE').patchValue('');
                         }
-                        newD['NOTE'] = '' + this.form.get('NOTE').value;
+                        newD['NOTE'] = '' + (this.form.get('NOTE').value || '');
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
                     if (key === 'TECH_DUE_DEP') {
-                        newD['NOTE'] = '' + this.form.get('NOTE').value;
+                        newD['NOTE'] = '' + (this.form.get('NOTE').value || '');
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
                     delete newD['DUE_DEP_NAME'];
@@ -896,7 +902,33 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.isShell = false;
             });
     }
-
+    public clearDepartNote() {
+        this.form.controls['NOTE'].setValue('');
+    }
+    public getDepartForTechDueDep() {
+        if (this.editMode && (!this.getSelectNote || !this.form.controls['NOTE'].value)) {
+            this.showDepartment();
+        }
+    }
+    public onKeyUp($event) {
+        this.form.controls['TECH_DUE_DEP'].setValue(null);
+    }
+    async showDepartment() {
+        this.isShell = true;
+        const openIcon = Object.assign({}, OPEN_CLASSIF_FROM_TECH_DUE_DEP);
+        try {
+            const dueDepart = await this._waitClassifSrv.openClassif(openIcon);
+            if (!dueDepart || dueDepart === '') {
+                throw new Error();
+            }
+            const depart = await this._userParamSrv.getDepartmentFromUser([dueDepart]);
+            this.form.controls['TECH_DUE_DEP'].setValue(depart[ESelectDepart.selectOneElem]['DUE']);
+            this.form.controls['NOTE'].setValue(depart[ESelectDepart.selectOneElem]['CLASSIF_NAME']);
+            this.isShell = false;
+        } catch (error) {
+            this.isShell = false;
+        }
+    }
     private _searchDLinSysParamsOrg() {
         this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
         this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
@@ -1107,6 +1139,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
+                    this.form.get('NOTE').patchValue(this.curentUser['NOTE']);
                     if (this.form.get('DUE_DEP_NAME').value) {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
@@ -1126,6 +1159,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     // this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     // this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
+                    this.form.get('NOTE').patchValue('');
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
                     // this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');

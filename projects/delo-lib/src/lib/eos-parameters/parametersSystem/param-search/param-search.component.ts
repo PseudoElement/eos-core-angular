@@ -52,7 +52,6 @@ export class ParamSearchComponent extends BaseParamComponent {
                 allRequest.push(this.getAppSetting<IElasticParams>(this.ElasticUpload));
                 return Promise.all(allRequest)
                 .then(([KafkaCfg, ElasticCfg]) => {
-                    console.log('form', this.form);
                     if (ElasticCfg) {
                         Object.keys(ElasticCfg).forEach((key) => {
                             this.form.controls['rec.ElasticCfg' + key].setValue(ElasticCfg[key], { emitEvent: false });

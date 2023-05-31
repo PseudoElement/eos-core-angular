@@ -103,6 +103,11 @@
              }
          }
      }
+     .base-input-note-dep {
+        input {
+            padding-right: 50px;
+        }
+     }
      .base-param-main {
          padding: 20px;
          max-height: calc(100vh - 260px);

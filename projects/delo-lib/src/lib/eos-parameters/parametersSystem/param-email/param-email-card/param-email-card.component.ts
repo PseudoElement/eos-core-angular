@@ -95,12 +95,12 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
         return Promise.all<[ISettingEmailReceive, ISettingEmailSend]>(allQueryGet)
         .then(([Receive, Send]) => {
             this.form.controls[`rec.ProfileName`].setValue(this.dataProfile['ProfileName'], { emitEvent: false });
-            this.form.controls[`rec.Password`].setValue(this.dataProfile['Password'], { emitEvent: false });
+            // this.form.controls[`rec.Password`].setValue(this.dataProfile['Password'], { emitEvent: false });
             this.form.controls[`rec.EmailAccount`].setValue(this.dataProfile['EmailAccount'], { emitEvent: false });
             this.prepareData.rec['ProfileName'] = this.dataProfile['ProfileName'];
             this.prepareData.rec['Password'] = this.dataProfile['Password'];
             this.prepareData.rec['EmailAccount'] = this.dataProfile['EmailAccount'];
-            this.emailPass = this.dataProfile['Password'];
+            // this.emailPass = this.dataProfile['Password'];
             Object.keys(Receive).forEach((key) => {
                 if (this.form.controls[`rec.${key}`]) {
                     this.form.controls[`rec.${key}`].setValue(Receive[key], { emitEvent: false });

@@ -100,6 +100,15 @@ export const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {
     selectLeafs: true,
     selectNodes: false,
 };
+export const OPEN_CLASSIF_FROM_TECH_DUE_DEP: IOpenClassifParams = {
+    classif: 'DEPARTMENT',
+    return_due: true,
+    id: '0.',
+    skipDeleted: true,
+    selectMulty: false,
+    selectLeafs: false,
+    selectNodes: true,
+};
 export const OPEN_CLASSIF_USER_CL: IOpenClassifParams = {
     classif: 'USER_CL',
     selectMulty: false,
