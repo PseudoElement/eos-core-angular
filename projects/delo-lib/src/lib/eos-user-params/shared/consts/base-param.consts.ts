@@ -114,7 +114,7 @@ export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.string,
         key: 'NOTE',
-        label: 'Департамент',
+        label: 'ПОДРАЗДЕЛЕНИЕ',
         length: 255
     },
 
