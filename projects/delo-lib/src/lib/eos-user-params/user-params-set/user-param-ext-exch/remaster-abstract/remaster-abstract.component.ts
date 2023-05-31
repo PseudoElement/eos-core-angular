@@ -162,17 +162,20 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     ngOnInit() {
-        this.setMailResive
-        .add(`${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`)
-        .add(`${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`);
-
+        if (this.fieldsConstMailResive) {
+            this.setMailResive
+            .add(`${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`)
+            .add(`${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`);
+        }
         this.setRcSend
         .add(`${this.RCSEND}_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO`)
         .add(`${this.RCSEND}_RESOLUTIONS_RADIO`)
         .add(`${this.RCSEND}_ADDRESSEES_RADIO`);
 
         this.initEmail();
-        this.initMailResive();
+        if (this.fieldsConstMailResive) {
+            this.initMailResive();
+        }
         this.itCurrentSettingsCheck();
 
         this.stringRCSEND = this.userData[`${this.RCSEND}`];
@@ -185,7 +188,9 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
 
     itCurrentSettingsCheck() {
         if (this.isCurrentSettings) {
-            this.disableFormMailResive();
+            if (this.fieldsConstMailResive) {
+                this.disableFormMailResive();
+            }
             this.disableForm();
             this.alwaysDisabledMethod();
         }
@@ -285,7 +290,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
                 obj[field.key] = String(1);
             }
         }
-
     }
 
     returnClass(node, form: FormGroup): string {
@@ -359,15 +363,15 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     sliceArrayForTemplate(): void {
-        let count = 5;
-        let separator = 10;  
+        let count = 4;
+        let separator = 9;  
         if (this.configChannel.nameEN === 'LK' || this.configChannel.nameEN === 'EPVV') {
-            count = 4;
-            separator = 9;  
+            count = 3;
+            separator = 8;  
         }
 
         this.listForAccordion = [];
-        this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(1, count) });
+        this.listForAccordion.push({ title: 'Общие параметры отправки сообщения', tree: this.templRender.slice(0, count) });
         this.listForAccordion.push({ title: 'Правила формирования паспорта', tree: this.templRender.slice(count, separator) });
         this.listForAccordion.push({ title: 'Реквизиты РК для отправки', tree: this.templRender.slice(separator) });
     }
@@ -460,7 +464,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     disableFormMailResive() {
-        if (this.formMailResuve) {
+        if (this.fieldsConstMailResive) {
             const addresInput = this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT`].value;
             const resolutionInput = this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK`].value;
     
@@ -572,39 +576,43 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     createNewStringMailResive(key, value) {
-        const position = this.hashKeyDBString.get(key.substring(4));
-        if (this.setMailResive.has(key.substring(4))) {
-            this.updateStringMailResiveKeyParentMoreOne(position, value);
-        } else {
-            this.updateStringRcSend(position, value, 'stringMailResive');
+        if (this.fieldsConstMailResive) {
+            const position = this.hashKeyDBString.get(key.substring(4));
+            if (this.setMailResive.has(key.substring(4))) {
+                this.updateStringMailResiveKeyParentMoreOne(position, value);
+            } else {
+                this.updateStringRcSend(position, value, 'stringMailResive');
+            }
         }
     }
 
     updateStringMailResiveKeyParentMoreOne(pos, value) {
-        const position = String(pos).split('.');
-        if (position.length > 2) {
-            if (value === '0') {
-                this.upSrtMailREsiveToolog(position, true, false, false);
-            }
-            if (value === '1') {
-                this.upSrtMailREsiveToolog(position, false, true, false);
-            }
-            if (value === '-1') {
-                this.upSrtMailREsiveToolog(position, false, false, true);
-            }
-            if (value === '') {
-                this.upSrtMailREsiveToolog(position, false, false, false);
-            }
-        } else {
-            if (value === '0') {
-                this.updateStringRcSend(+position[0], true, 'stringMailResive');
-                this.updateStringRcSend(+position[1], false, 'stringMailResive');
-            } else if (value === '') {
-                this.updateStringRcSend(+position[0], false, 'stringMailResive');
-                this.updateStringRcSend(+position[1], false, 'stringMailResive');
+        if (this.fieldsConstMailResive) {
+            const position = String(pos).split('.');
+            if (position.length > 2) {
+                if (value === '0') {
+                    this.upSrtMailREsiveToolog(position, true, false, false);
+                }
+                if (value === '1') {
+                    this.upSrtMailREsiveToolog(position, false, true, false);
+                }
+                if (value === '-1') {
+                    this.upSrtMailREsiveToolog(position, false, false, true);
+                }
+                if (value === '') {
+                    this.upSrtMailREsiveToolog(position, false, false, false);
+                }
             } else {
-                this.updateStringRcSend(+position[0], false, 'stringMailResive');
-                this.updateStringRcSend(+position[1], true, 'stringMailResive');
+                if (value === '0') {
+                    this.updateStringRcSend(+position[0], true, 'stringMailResive');
+                    this.updateStringRcSend(+position[1], false, 'stringMailResive');
+                } else if (value === '') {
+                    this.updateStringRcSend(+position[0], false, 'stringMailResive');
+                    this.updateStringRcSend(+position[1], false, 'stringMailResive');
+                } else {
+                    this.updateStringRcSend(+position[0], false, 'stringMailResive');
+                    this.updateStringRcSend(+position[1], true, 'stringMailResive');
+                }
             }
         }
     }
@@ -637,18 +645,20 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     CancelForm() {
-        Object.keys(this.formMailResuve.controls).forEach(inp => {
-            if (this.inputsMailResive[inp].value !== this.formMailResuve.controls[inp].value) {
-                this.formMailResuve.controls[inp].patchValue(this.inputsMailResive[inp].value, { emitEvent: false });
-            }
-        });
+        if (this.fieldsConstMailResive) {
+            Object.keys(this.formMailResuve.controls).forEach(inp => {
+                if (this.inputsMailResive[inp].value !== this.formMailResuve.controls[inp].value) {
+                    this.formMailResuve.controls[inp].patchValue(this.inputsMailResive[inp].value, { emitEvent: false });
+                }
+            });
+            this.formMailResuve.disable({ emitEvent: false });
+        }
         Object.keys(this.form.controls).forEach(inp => {
             if (this.inputs[inp].value !== this.form.controls[inp].value) {
                 this.form.controls[inp].patchValue(this.inputs[inp].value, { emitEvent: false });
             }
         });
         this.form.disable({ emitEvent: false });
-        this.formMailResuve.disable({ emitEvent: false });
         this.sliceArrayForTemplate();
         this.OpenParamsReg = false;
     }
@@ -694,10 +704,11 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     fillFormMailReceive() {
-        Object.keys(this.prepareDefaultFormMailREceive).forEach((item: string) => {
-            this.formMailResuve.controls['rec.' + item].patchValue(this.prepareDefaultFormMailREceive[item]);
-        });
+        if (this.fieldsConstMailResive) {
+            Object.keys(this.prepareDefaultFormMailREceive).forEach((item: string) => {
+                this.formMailResuve.controls['rec.' + item].patchValue(this.prepareDefaultFormMailREceive[item]);
+            });
+        }
     }
 
 }
-
