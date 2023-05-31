@@ -1086,7 +1086,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const ans = [];
         CbFields.forEach((r, index) => {
             // const name = r.dueName ? ' (' + r.dueName + ')' : '';
-            const rol: string = r.role + name + ' (' + (index + 1) + '-я роль)';
+            const rol: string = r.role + ' (' + (index + 1) + '-я роль)';
             ans.push(rol)
         });
         return ans.join('\n');
