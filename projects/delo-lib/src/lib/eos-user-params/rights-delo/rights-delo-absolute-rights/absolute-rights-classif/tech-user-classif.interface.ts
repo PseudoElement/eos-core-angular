@@ -65,3 +65,9 @@ export interface IConfigUserTechClassif {
     label: 'CLASSIF_NAME' | 'CARD_NAME';
     rootLabel?: string;
 }
+
+
+export enum ETypeRule {
+    no_right = "0",
+    have_right = "1"
+}

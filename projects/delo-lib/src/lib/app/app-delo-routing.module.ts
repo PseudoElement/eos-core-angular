@@ -36,6 +36,7 @@ import { EosInstrumentsListsComponent } from '../eos-instruments/components/eos-
 import { EosInstrumentsSingleComponent } from '../eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
 import { CardFromComponent } from '../eos-dictionaries/card-from/card-from.component';
 import { AdministratorGuard } from './guards/administrator.guard';
+import { SystemParamsChildGuard } from './guards/system-params-child.guard';
 
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
@@ -245,6 +246,7 @@ const routes: Routes = [
 }, {
     path: 'parameters',
     canActivate: [AuthorizedGuard, SystemParamsGuard, AdministratorGuard],
+    canActivateChild: [SystemParamsChildGuard],
     data: {
         title: 'Параметры системы',
         showInBreadcrumb: false,

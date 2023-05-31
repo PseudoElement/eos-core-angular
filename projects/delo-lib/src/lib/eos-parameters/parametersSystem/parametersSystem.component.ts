@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -7,12 +7,13 @@ import { takeUntil } from 'rxjs/operators';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 // import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 // import { ParamDescriptorSrv } from './shared/service/param-descriptor.service';
-import { EOS_PARAMETERS_TAB } from './shared/consts/eos-parameters.const';
+import { EOS_PARAMETERS_TAB, E_PARMS_PAGES } from './shared/consts/eos-parameters.const';
 import { NavParamService } from '../../app/services/nav-param.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { PipRX, ICancelFormChangesEvent } from '../../eos-rest';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { MESSAGE_SAVE_ON_LEAVE } from '../../eos-dictionaries/consts/confirm.consts';
+import { ETypeRule, E_TECH_RIGHTS } from '../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights-classif/tech-user-classif.interface';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -29,7 +30,6 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     constructor(
         private _navSrv: NavParamService,
         private _route: ActivatedRoute,
-        private _rout: Router,
         private _appContext: AppContext,
         private _apiSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
@@ -38,21 +38,6 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     ) {
         this._route.params.subscribe(params => {
             this.paramId = params['id'];
-            // проверяем право доступа "Текущая организация"
-            const access = this.disabledAutent({ url: this.paramId });
-            if (!access) {
-                this._rout.navigate(['parameters']);
-            }
-            const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
-            // если нет доступа к параметрам системы, но если есть доступ к "протоколированию" или к "Текущей организации"
-            if (techRights && techRights.charAt(25) === '0') {
-                // проверка доступа к "протоколированию"
-                if ((techRights.charAt(1) === '1' || techRights.charAt(29) === '1') && (this.paramId !== 'now-organiz' && this.paramId !== 'logging')) {
-                    this._rout.navigate(['parameters']);
-                    return;
-                }
-
-            }
         });
         this._navSrv.StateSandwich$
             .pipe(
@@ -72,21 +57,6 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             });
     }
     ngOnInit() {
-        const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
-        if (techRights && techRights.charAt(25) === '0') {
-            const protocolAndUsers = techRights.charAt(29) === '1' && techRights.charAt(0) === '1';
-            const nowOrganiz = techRights.charAt(1) === '1';
-            if (protocolAndUsers) {
-                this._rout.navigate(['parameters/logging']);
-                return;
-            }
-            if (nowOrganiz) {
-                this._rout.navigate(['parameters/now-organiz']);
-                return;
-            }
-
-        }
-        // console.log(!this.isChanged, this.disableSave);
     }
 
     ngOnDestroy() {
@@ -116,24 +86,25 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     disabledAutent(param): boolean {
 
         const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
-        if (!this._appContext.cbBase && techRights && techRights.charAt(25) === '0' && param.url !== 'now-organiz' && param.url !== 'logging') {
+        if (!this._appContext.cbBase && techRights && techRights.charAt(E_TECH_RIGHTS.SystemSettings - 1) === '0' && param.url !== E_PARMS_PAGES['now-organiz']
+            && param.url !== E_PARMS_PAGES.logging) {
             return false;
         }
         // проверяем право доступа "Текущая организация"
-        if (param.url === 'now-organiz' && (!techRights || (techRights && techRights.charAt(1) === '0'))) {
-            return false;
+        if (param.url === E_PARMS_PAGES['now-organiz'] && (techRights && techRights.charAt(E_TECH_RIGHTS.CurrentOrganization - 1) === ETypeRule.have_right)) {
+            return true;
         }
         // проверяем право доступа к Протоколированию и проверяем ограниченность технолога
-        const protocolAndUsers = techRights && techRights.charAt(29) === '0' && techRights.charAt(0) === '0';
-        // const protocolAndLimitUsers = techRights && techRights.charAt(29) === '0' && this._appContext.limitCardsUser.length;
-        if (param.url === 'logging' && (!techRights || protocolAndUsers/*  || protocolAndLimitUsers */)) {
-            return false;
+        if (param.url === E_PARMS_PAGES.logging
+            && (techRights && techRights[E_TECH_RIGHTS.SettingTheBrowsingProtocol - 1] === ETypeRule.have_right
+                && techRights[E_TECH_RIGHTS.Users - 1] === ETypeRule.have_right)) {
+            return true;
         }
         if (this._appContext.cbBase) {
             const limit = this._appContext.limitCardsUser.length;
-            const urlName = param.url === 'authentication';
-            const userAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[0];
-            const paramAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[25];
+            const urlName = param.url === E_PARMS_PAGES.authentication;
+            const userAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1];
+            const paramAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[E_TECH_RIGHTS.SystemSettings - 1];
             if (urlName) {
                 if (userAccess && !paramAccess) {
                     return true;

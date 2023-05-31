@@ -1,20 +1,41 @@
 import { IMessage } from '../../../../eos-common/interfaces';
-
+export enum E_PARMS_PAGES {
+    rc = "rc",
+    "prj-rc" = "prj-rc",
+    authentication = "authentication",
+    files = "files",
+    "param-libs" = "param-libs",
+    search = "search",
+    "context-rc" = "context-rc",
+    dictionaries = "dictionaries",
+    other = "other",
+    web = "web",
+    cryptography = "cryptography",
+    email = "email",
+    sms = "sms",
+    "inline-scanning" = "inline-scanning",
+    logging = "logging",
+    "now-organiz" = "now-organiz",
+    conversion = "conversion",
+    "unloading-arch" = "unloading-arch",
+    "control-cache" = "control-cache",
+    licensing = "licensing",
+}
 export const EOS_PARAMETERS_TAB = [{
     title: 'Работа с РК',
-    url: 'rc',
+    url: E_PARMS_PAGES.rc,
     visible: true
 }, {
     title: 'Работа с РКПД',
-    url: 'prj-rc',
+    url: E_PARMS_PAGES['prj-rc'],
     visible: true
 }, {
     title: 'Аутентификация',
-    url: 'authentication',
+    url: E_PARMS_PAGES.authentication,
     visible: true
 }, {
     title: 'Работа с файлами',
-    url: 'files',
+    url: E_PARMS_PAGES.files,
     visible: true
 },/*  {
     title: 'Хранение файлов',
@@ -22,68 +43,68 @@ export const EOS_PARAMETERS_TAB = [{
     visible: true
 }, */ {
     title: 'Хранение файлов',
-    url: 'param-libs',
+    url: E_PARMS_PAGES['param-libs'],
     visible: true
 }, {
     title: 'Поиск',
-    url: 'search',
+    url: E_PARMS_PAGES.search,
     visible: true
 }, {
     title: 'Контекст РК(РКПД)',
-    url: 'context-rc',
+    url: E_PARMS_PAGES['context-rc'],
     visible: true
 }, {
     title: 'Справочники',
-    url: 'dictionaries',
+    url: E_PARMS_PAGES.dictionaries,
     visible: true
 }, {
     title: 'Прочие',
-    url: 'other',
+    url: E_PARMS_PAGES.other,
     visible: true
 }, {
     title: 'WEB',
-    url: 'web',
+    url: E_PARMS_PAGES.web,
     visible: true
 }, {
     title: 'Криптография',
-    url: 'cryptography'
+    url: E_PARMS_PAGES.cryptography
 }, {
     title: 'Электронная почта',
-    url: 'email',
+    url: E_PARMS_PAGES.email,
     visible: true
-},  {
+}, {
     title: 'CMC-шлюз',
-    url: 'sms',
+    url: E_PARMS_PAGES.sms,
     visible: true
 }, {
     title: 'Поточное сканирование',
-    url: 'inline-scanning',
+    url: E_PARMS_PAGES['inline-scanning'],
 }, {
     title: 'Протоколирование',
-    url: 'logging',
+    url: E_PARMS_PAGES.logging,
     visible: true
 }, {
     title: 'Текущая организация',
-    url: 'now-organiz',
+    url: E_PARMS_PAGES['now-organiz'],
     visible: true
 }, {
     title: 'Служба конвертации',
-    url: 'conversion',
+    url: E_PARMS_PAGES.conversion,
     visible: true
 },
 {
     title: 'Архивное хранилище',
-    url: 'unloading-arch',
+    url: E_PARMS_PAGES['unloading-arch'],
     visible: true
 },
 {
     title: 'Управление кэшем',
-    url: 'control-cache',
+    url: E_PARMS_PAGES['control-cache'],
     visible: true
 },
 {
     title: 'Лицензирование',
-    url: 'licensing',
+    url: E_PARMS_PAGES.licensing,
     visible: true
 }
 ];
