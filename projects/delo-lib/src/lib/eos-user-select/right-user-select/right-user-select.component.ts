@@ -235,7 +235,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         this.flagSustem = true;
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean): void {
-        this._selectedUser.ArraySystemHelper.delo.checked = delo;
         this._selectedUser.ArraySystemHelper.delo_deloweb.checked = delo_deloweb;
         this._selectedUser.ArraySystemHelper.delowebLGO.checked = delowebLGO;
         this._selectedUser.ArraySystemHelper.delowebKL.checked = delowebKL;

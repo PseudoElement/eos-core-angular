@@ -169,11 +169,6 @@ export class EosReportUsersStatsComponent implements OnInit {
                     enablelLicenze++;
                 }
             }
-            if (elem.Id === 1) {
-                this.subsystem.delo.Users = elem.Users;
-                this.subsystem.delo.ActualUsers = elem.ActualUsers;
-                this.subsystem.delo.Expired = elem.Expired ? this.convertDate(elem.Expired.slice(0, elem.Expired.indexOf('T'))) : '-';
-            }
             if (elem.Id === 2) {
                 this.subsystem.delowebLGO.Users = elem.Users;
                 this.subsystem.delowebLGO.ActualUsers = elem.ActualUsers;

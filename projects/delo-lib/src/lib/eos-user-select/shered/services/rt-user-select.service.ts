@@ -23,14 +23,6 @@ export class RtUserSelectService {
     usersInfo: BtnActionFields;
     updateSettings: boolean = false;
     ArraySystemHelper = {
-        delo: {
-            id: 1,
-            label: 'Дело',
-            checked: false,
-            Users: 0,
-            ActualUsers: 0,
-            Expired: '-',
-        },
         delo_deloweb: {
             id: 0,
             label: 'Дело+Дело-WEB',
@@ -41,7 +33,7 @@ export class RtUserSelectService {
         },
         delowebLGO: {
             id: 2,
-            label: 'Дело-WEB(ЛГО)',
+            label: 'Дело-Web (личная)',
             checked: false,
             Users: 0,
             ActualUsers: 0,
@@ -49,7 +41,7 @@ export class RtUserSelectService {
         },
         delowebKL: {
             id: 28,
-            label: 'Дело-WEB(КЛ)',
+            label: 'Дело-Web (конкурентная)',
             checked: false,
             Users: 0,
             ActualUsers: 0,
