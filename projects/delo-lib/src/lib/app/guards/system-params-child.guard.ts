@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { E_PARMS_PAGES } from '../../eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 import { AppContext } from '../../eos-rest/services/appContext.service';
@@ -14,7 +14,7 @@ export class SystemParamsChildGuard implements CanActivateChild {
     get isCb() {
         return this.appCtx.cbBase
     }
-    constructor(public appCtx: AppContext) {
+    constructor(public appCtx: AppContext, private router: Router) {
 
     }
     canActivateChild(
@@ -24,7 +24,6 @@ export class SystemParamsChildGuard implements CanActivateChild {
         this.paramId = route.params['id'];
         this.techRights = this.appCtx.CurrentUser.TECH_RIGHTS || "";
         console.log(this.techRights);
-
         if (this.paramId === E_PARMS_PAGES.authentication) {
             return this.checkAuthentificationAccess();
         } else if (this.paramId === E_PARMS_PAGES.logging) {
@@ -63,7 +62,20 @@ export class SystemParamsChildGuard implements CanActivateChild {
         }
     }
     checkOtherTabsAccess(): boolean {
-        return this.isAccessSystemParams();
+        // return this.isAccessSystemParams();
+        if (!this.isAccessSystemParams()) {
+            if (this.checkAuthentificationAccess()) {
+                this.router.navigate(['parameters/authentication']);
+            }
+            if (this.checkLoggingAccess()) {
+                this.router.navigate(['parameters/logging']);
+            }
+            if (this.checkNowOrganizAccess()) {
+                this.router.navigate(['parameters/now-organiz']);
+            }
+            return false;
+        }
+        return true;
     }
     isAccessUsers(): boolean {
         return this.techRights[E_TECH_RIGHTS.Users - 1] === ETypeRule.have_right

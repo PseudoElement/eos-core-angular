@@ -91,14 +91,14 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             return false;
         }
         // проверяем право доступа "Текущая организация"
-        if (param.url === E_PARMS_PAGES['now-organiz'] && (techRights && techRights.charAt(E_TECH_RIGHTS.CurrentOrganization - 1) === ETypeRule.have_right)) {
-            return true;
+        if (param.url === E_PARMS_PAGES['now-organiz'] && (techRights && techRights.charAt(E_TECH_RIGHTS.CurrentOrganization - 1) === ETypeRule.no_right)) {
+            return false;
         }
         // проверяем право доступа к Протоколированию и проверяем ограниченность технолога
         if (param.url === E_PARMS_PAGES.logging
-            && (techRights && techRights[E_TECH_RIGHTS.SettingTheBrowsingProtocol - 1] === ETypeRule.have_right
-                && techRights[E_TECH_RIGHTS.Users - 1] === ETypeRule.have_right)) {
-            return true;
+            && (techRights && techRights[E_TECH_RIGHTS.SettingTheBrowsingProtocol - 1] === ETypeRule.no_right
+                || techRights[E_TECH_RIGHTS.Users - 1] === ETypeRule.no_right)) {
+            return false;
         }
         if (this._appContext.cbBase) {
             const limit = this._appContext.limitCardsUser.length;
