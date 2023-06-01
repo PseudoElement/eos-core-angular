@@ -9,7 +9,9 @@ import { USERDEP, USER_ORGANIZ } from '../../../eos-rest/interfaces/structures';
 import { WaitClassifService } from '../../../app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT_FULL, OPEN_CLASSIF_ORGANIZ_FULL } from '../../../app/consts/query-classif.consts';
 import { saveAs } from 'file-saver';
-
+enum EFindRight {
+    curentRight = 0
+}
 
 @Injectable()
 export class RughtDeloAbsRightService {
@@ -118,7 +120,7 @@ export class RughtDeloAbsRightService {
                         /* 
                         * Добавить её в массив
                         */
-                        const indexRep = this.tabelData.data.findIndex((item) => item['CLASSIF_NAME'] === 'Организации' && item['bold']);
+                        const indexRep = this.tabelData.data.findIndex((item) => item['CLASSIF_NAME'] === 'Организации' && item.rowNotCount);
                         this.tabelData.data.splice(indexRep, 0, dep);
                         /* 
                         * Установить все чекбоксы
@@ -242,7 +244,7 @@ export class RughtDeloAbsRightService {
         if (arrayAns[EQueryPosition.organiz].length > 0) {
             arrayAns[EQueryPosition.organiz] = this.initWeightSortOrg(arrayAns[EQueryPosition.organiz]);
         }
-        this.deloRights22 = '' + this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[0].value;
+        this.deloRights22 = '' + this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[EFindRight.curentRight].value;
         newData.push({'CLASSIF_NAME': 'Должностные лица и подразделения', rowNotCount: true, background: 'white'}); /* 'bold': true,  */
         if (arrayAns && arrayAns[EQueryPosition.department]) {
             arrayAns[EQueryPosition.department].forEach((dep) => {
@@ -669,11 +671,13 @@ export class RughtDeloAbsRightService {
     * Тут происходит перенос изменений из нового окна, в старые абсолютные права
     */
     updateCurentUser() {
+        let flagDeloRights = true;
         this.listRightNew.forEach((value, key) => {
-            const right = this.listRight.filter((r) => r.key === key.split('_')[1])[0];
+            const right = this.listRight.filter((r) => r.key === key.split('_')[1])[EFindRight.curentRight];
             if (right) {
                 if (!right.value) {
-                    right.value = 1;
+                    right.value = this.deloRights22 === '2' ? 2 : 1;
+                    flagDeloRights = false;
                 }
                 right.pushChange(value);
             }
@@ -714,15 +718,15 @@ export class RughtDeloAbsRightService {
         /* 
         * Ососбое поведение для Разрешить операцию рассылки проекта резолюции
         */
-        const right = this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[0];
-        if (this.deloRights22 !== '' + right.value) {
+        const right = this.listRight.filter((r) => r.key === ETypeDeloRight.IntroductionOfDraftResolutions)[EFindRight.curentRight];
+        if (flagDeloRights && this.deloRights22 !== '' + right.value) {
             right.value = +this.deloRights22;
         }
         this._userParmSrv.curentUser.USERDEP_List.forEach((depart) => {
             if (this.paramsToQuery.mapDepWeight[depart.DUE] !== undefined &&
                 this.paramsToQuery.mapDepWeight[depart.DUE] !== depart.WEIGHT &&
                 this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === depart.FUNC_NUM) !== -1) {
-                const right = this.listRight.filter((r) => r.key === '' + (depart.FUNC_NUM - 1))[0];
+                const right = this.listRight.filter((r) => r.key === '' + (depart.FUNC_NUM - 1))[EFindRight.curentRight];
                 right.touched = true;
             }
         });
