@@ -90,13 +90,6 @@
                 </div>
             </div>
         </div>
-        <!-- технический пользователь -->
-        <eos-dynamic-input
-            class="base-login-input"
-            [input]="controls['teсhUser']"
-            [form]="formControls"
-        ></eos-dynamic-input>
-
         <!-- должностное лицо и роль -->
         <div class="wrapper-password">
             <eos-dynamic-input
@@ -110,13 +103,50 @@
                 (onEnterSearchEmptyResults)="showDepChooseEmpty()"
             ></eos-dynamic-input>
         </div>
-
+        <!-- технический пользователь -->
+        <div class="base-login-input" style="display: flex; margin-top: -20px;">
+            <div style="position: relative;">
+                <eos-dynamic-input
+                    (keyup)="onKeyUp($event)"
+                    class="base-input-role base-input-note-dep"
+                    [input]="inputs['NOTE']"
+                    style="padding-right: 15px; width: 330px"
+                    [form]="form"
+                    [readonly]="!editMode || !formControls.get('teсhUser').value">
+                </eos-dynamic-input>
+                <div *ngIf="editMode && !!formControls.get('teсhUser').value">
+                    <span 
+                        *ngIf="getSelectNote && form.controls['NOTE'].value"
+                        style="position: absolute; top: 30px; right: 45px;"
+                        class="icon eos-adm-icon small"
+                        [ngClass]="{'eos-adm-icon-close-blue': getSelectNote}"
+                        (click)="clearDepartNote()"
+                        ></span>
+                    <span
+                        style="position: absolute; top: 30px; right: 20px;"
+                        class="icon eos-adm-icon small"
+                        [tooltip]="getSelectNote ? 'Введено вручную. Для выбора из справочника необходимо очистить.' : ''"
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        [ngClass]="{'eos-adm-icon-info-blue': getSelectNote, 'eos-adm-icon-directory-book-blue': !getSelectNote || !form.controls['NOTE'].value}"
+                        (click)="getDepartForTechDueDep()">
+                    </span> <!-- eos-adm-icon-directory-book-blue eos-adm-icon-info-blue -->
+                </div>
+            </div>
+            
+            <eos-dynamic-input
+            style="padding-top: 30px;"
+                [input]="controls['teсhUser']"
+                [form]="formControls"
+            ></eos-dynamic-input>
+        </div>
         <div class="wrapper">
             <!-- [ngStyle]="//{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}" -->
             <eos-dynamic-input
                 class="base-text-input base-input-role"
                 [input]="controls['SELECT_ROLE']"
-                style="padding-right: 15px; width: 230px"
+                style="padding-right: 15px; width: 330px"
                 [form]="formControls"
                 [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled"
             >

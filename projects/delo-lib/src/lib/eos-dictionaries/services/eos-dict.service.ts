@@ -520,7 +520,7 @@ export class EosDictService {
                     }
                 })
                     .then(fileDownload => {
-                        window.open(`../getfile.aspx/${fileDownload[0]['ISN_REF_FILE']}`);
+                        window.open(`../CoreHost/FOP/GetFile/${fileDownload[0]['ISN_REF_FILE']}`);
                     });
             })
             .catch(er => {

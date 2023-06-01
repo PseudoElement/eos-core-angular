@@ -13,7 +13,7 @@ import { BASE_PARAM_INPUTS_CB, BASE_PARAM_ACCESS_INPUT, BASE_PARAM_CONTROL_INPUT
 import { InputParamControlService } from '../../../eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl, IRoleCB } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from '../shared/base-param-curent.descriptor';
-import { OPEN_CLASSIF_DEPARTMENT } from '../../../eos-user-select/shered/consts/create-user.consts';
+import { OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_FROM_TECH_DUE_DEP } from '../../../eos-user-select/shered/consts/create-user.consts';
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
 import { EosMessageService } from '../../../eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
@@ -28,6 +28,7 @@ import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_RED
 import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param.consts';
+import { ESelectDepart } from '../base-param.component';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -98,6 +99,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     get appctx() {
         return this._appCtx.limitCardsUser.length;
+    }
+    get getSelectNote(): boolean {
+        return !this.form.controls['TECH_DUE_DEP'].value;
     }
     constructor(
         private _router: Router,
@@ -229,7 +233,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
-
+        if (this.inputs['NOTE'].value === 'null') {
+            this.inputs['NOTE'].value = '';
+        }
+        this.inputs['NOTE'].value = this.inputs['NOTE'].value || '';
+        console.log('this.inputs', this.inputs);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
@@ -446,18 +454,21 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     if (key === 'DUE_DEP_NAME') {
                         if (this.curentUser.isTechUser) {
                             this.inputs['DUE_DEP_NAME'].data = '';
-                            this.form.get('NOTE').patchValue('');
+                            // this.form.get('NOTE').patchValue('');
                         }
-                        newD['NOTE'] = '' + this.form.get('NOTE').value;
+                        newD['NOTE'] = '' + (this.form.get('NOTE').value || '');
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
                     if (key === 'TECH_DUE_DEP') {
-                        newD['NOTE'] = '' + this.form.get('NOTE').value;
+                        newD['NOTE'] = '' + (this.form.get('NOTE').value || '');
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
                     delete newD['DUE_DEP_NAME'];
                 });
             }
+            /* if (newD['TECH_DUE_DEP']) {
+                delete newD['NOTE'];
+            } */
             query.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${id})`,
@@ -1075,7 +1086,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const ans = [];
         CbFields.forEach((r, index) => {
             // const name = r.dueName ? ' (' + r.dueName + ')' : '';
-            const rol: string = r.role + name + ' (' + (index + 1) + '-я роль)';
+            const rol: string = r.role + ' (' + (index + 1) + '-я роль)';
             ans.push(rol)
         });
         return ans.join('\n');
@@ -1104,7 +1115,33 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.cancelValues(this.controls, this.formControls);
     }
-
+    public clearDepartNote() {
+        this.form.controls['NOTE'].setValue('');
+    }
+    public getDepartForTechDueDep() {
+        if (this.editMode && (!this.getSelectNote || !this.form.controls['NOTE'].value)) {
+            this.showDepartmentNote();
+        }
+    }
+    public onKeyUp($event) {
+        this.form.controls['TECH_DUE_DEP'].setValue(null);
+    }
+    async showDepartmentNote() {
+        this.isShell = true;
+        const openIcon = Object.assign({}, OPEN_CLASSIF_FROM_TECH_DUE_DEP);
+        try {
+            const dueDepart = await this._waitClassifSrv.openClassif(openIcon);
+            if (!dueDepart || dueDepart === '') {
+                throw new Error();
+            }
+            const depart = await this._userParamSrv.getDepartmentFromUser([dueDepart]);
+            this.form.controls['TECH_DUE_DEP'].setValue(depart[ESelectDepart.selectOneElem]['DUE']);
+            this.form.controls['NOTE'].setValue(depart[ESelectDepart.selectOneElem]['CLASSIF_NAME']);
+            this.isShell = false;
+        } catch (error) {
+            this.isShell = false;
+        }
+    }
     private patchVal() {
         ['2', '5', '15', '17',  '23', '25', '26'].forEach(numberControl => {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
@@ -1183,6 +1220,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
+                    this.form.get('NOTE').patchValue(this.curentUser['NOTE']);
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
@@ -1218,6 +1256,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 } else {
                     this.curentUser.isTechUser = data;
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
+                    this.form.get('NOTE').patchValue('');
                     // this.form.get('SURNAME_PATRON').patchValue(this.dueDepSurname, { emitEvent: false });
                     // this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     // this.formControls.controls['SELECT_ROLE'].enable();

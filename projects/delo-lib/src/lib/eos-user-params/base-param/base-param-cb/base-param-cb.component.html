@@ -92,11 +92,43 @@
             </div>
         </div>
         <!-- технический пользователь -->
-        <eos-dynamic-input
-            class="base-login-input"
-            [input]="controls['teсhUser']"
-            [form]="formControls"
-        ></eos-dynamic-input>
+        <div class="base-login-input" style="display: flex; margin-top: -5px;">
+            <div style="position: relative;">
+                <eos-dynamic-input
+                    (keyup)="onKeyUp($event)"
+                    class="base-input-role base-input-note-dep"
+                    [input]="inputs['NOTE']"
+                    style="padding-right: 15px; width: 330px"
+                    [form]="form"
+                    [readonly]="!editMode || !formControls.get('teсhUser').value">
+                </eos-dynamic-input>
+                <div *ngIf="editMode && !!formControls.get('teсhUser').value">
+                    <span 
+                        *ngIf="getSelectNote && form.controls['NOTE'].value"
+                        style="position: absolute; top: 30px; right: 45px;"
+                        class="icon eos-adm-icon small"
+                        [ngClass]="{'eos-adm-icon-close-blue': getSelectNote}"
+                        (click)="clearDepartNote()"
+                        ></span>
+                    <span
+                        style="position: absolute; top: 30px; right: 20px;"
+                        class="icon eos-adm-icon small"
+                        [tooltip]="getSelectNote ? 'Введено вручную. Для выбора из справочника необходимо очистить.' : ''"
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        [ngClass]="{'eos-adm-icon-info-blue': getSelectNote, 'eos-adm-icon-directory-book-blue': !getSelectNote || !form.controls['NOTE'].value}"
+                        (click)="getDepartForTechDueDep()">
+                    </span> <!-- eos-adm-icon-directory-book-blue eos-adm-icon-info-blue -->
+                </div>
+            </div>
+            
+            <eos-dynamic-input
+            style="padding-top: 30px;"
+                [input]="controls['teсhUser']"
+                [form]="formControls"
+            ></eos-dynamic-input>
+        </div>
         <!-- должностное лицо и роль -->
         <div class="base-login-input row-department-role">
             <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
@@ -110,6 +142,7 @@
                         class="icon eos-adm-icon small icon-bin-due-dep-base-cb eos-adm-icon-bin-grey"
                     ></span>
                     <input
+                        style="width: 550px;"
                         class="form-control m-font inline-block"
                         [ngClass]="{ 'delete-department': curentUser['DEPARTMENT_DELETE'] }"
                         readonly
