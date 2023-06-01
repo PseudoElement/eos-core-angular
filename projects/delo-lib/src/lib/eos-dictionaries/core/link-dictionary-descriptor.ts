@@ -95,8 +95,11 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         }
 
         return pSev.then(() => {
-            const changes = this.apiSrv.changeList([_newRec, ... _newPare || [], ... changeData]);
-
+            const t = [_newRec];
+            if (_newPare) {
+                t.push(_newPare);
+            }
+            const changes = this.apiSrv.changeList(t.concat(...changeData));
             if (changes) {
                 return this._appendCategoryOldChange(changes, data)
                     .then(() => {
