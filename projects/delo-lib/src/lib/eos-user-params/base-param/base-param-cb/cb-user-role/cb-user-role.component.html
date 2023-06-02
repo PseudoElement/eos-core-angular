@@ -1,24 +1,27 @@
 <div class="full-search-top usual-border">
     <span class="pull-left title xl-font">Настройка ролей</span>
     <div class="pull-right srch-btns">
-        <button class="btn btn-primary s-font upper" (click)="close()">Закрыть</button>
+        <button class="btn btn-primary s-font upper" (click)="close()">Отменить</button>
         <button class="btn btn-primary-full s-font upper" (click)="save()">Сохранить</button>
     </div>
 </div>
 <div class="modal-body-cb" *ngIf="deletRole">
     <div class="modal-b-cont-role">
         <div class="col-l">
-            <span class="long-title xl-font">Выберите роль:</span>
+            <span class="long-title xl-font">Выберите роль</span>
             <div class="info-block-cb-l" >
                 <div id="fixed" [dragula]='"fixed-bag"'>
-                    <div class="item-cb" *ngFor="let item of fixedFields" (click)="select(item, 3)" [ngClass]="{'highlighted': item === selectedFixedItem}">
-                        <i class="fa fa-lock unimportant-text lock-r"
-                            aria-hidden="true"></i>
-                        <span class="text-cb">{{item?.role}}</span>
+                    <div style="display: flex;" class="item-cb" *ngFor="let item of fixedFields" (click)="select(item, 3)" [ngClass]="{'highlighted': item === selectedFixedItem}">
+                        <div>
+                            <span class="eos-adm-icon small eos-adm-icon-lock-black"></span>
+                        </div>
+                        <div style="padding-top: 5px; margin-left: 5px;">
+                            <span class="text-cb">{{item?.role}}</span>
+                        </div>
                     </div>
                 </div>
                 <div id="basic" class="basic-cb" [dragula]='"bag-one"'[dragulaModel]="basicFields">
-                    <div class="item-cb" *ngFor="let item of basicFields" (click)="select(item, 1)" [ngClass]="{'highlighted': item === selectedBasicRole}">
+                    <div style="margin-left: 28px;" class="item-cb" *ngFor="let item of basicFields" (click)="select(item, 1)" [ngClass]="{'highlighted': item === selectedBasicRole}">
                         <span class="text-cb">{{item?.role}}</span>
                     </div>
                 </div>
@@ -42,12 +45,36 @@
             </span>
         </div>
         <div class="col-r">
-            <span class="long-title xl-font">Назначение роли:</span>
+            <span class="long-title xl-font">Назначение роли</span>
+            <div class="title-dir-role-button">
+                <div class="change-due">
+                    <button
+                        style="width: 47px;height: 47px;background: #f5f5f5;border: 0;"
+                        eosClickMode
+                        class="btn"
+                        [ngClass]="[btnChangeDue ? 'btn-primary' : 'btn-not-active']"
+                        [disabled]="!btnChangeDue"
+                        (click)="changeDueRole()"
+                        [tooltip]="'Изменить должностное лицо'"
+                        triggers="hover:focus"
+                        container="body"
+                        placement="bottom"
+                        containerClass="tooltip-info">
+                        <span [ngClass]="[btnChangeDue ? 'eos-adm-icon-DeepUser-Blue' : 'eos-adm-icon-DeepUser-Grey']" class="eos-adm-icon small get"></span>
+                    </button>
+                </div>
+            </div>
             <div class="modal-block-cb-r">
                 <div class="title-dir-role">
-                    <span><b>Роль</b></span>
-                    <span><b>ДЛ руководителя</b></span>
-                    <span><b>Помощники руководителя</b></span>
+                    <div class="text-cb-r">
+                        <span>Роль</span>
+                    </div>
+                    <div class="text-cb-r">
+                        <span>ДЛ руководителя</span>
+                    </div>
+                    <div class="text-cb-r">
+                        <span>Помощники руководителя</span>
+                    </div>
                 </div>
                 <div class="info-block-cb-r" [dragula]='"bag-one"'  [dragulaModel]="currentFields" id="current">
                     <div class="item-cb-r" id="cur-item" *ngFor="let item of currentFields" (click)="select(item, 2)" [ngClass]="{'highlighted': item === selectedCurrRole}">
@@ -62,11 +89,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="change-due">
-                <button class="btn s-font upper" [ngClass]="[btnChangeDue ? 'btn-primary' : 'btn-not-active']" [disabled]="!btnChangeDue" (click)="changeDueRole()">
-                    <span [ngClass]="[btnChangeDue ? 'eos-adm-icon-DeepUser-Blue' : 'eos-adm-icon-DeepUser-Grey']" class="eos-adm-icon icon-due"></span>
-                    Изменить должностное лицо</button>
             </div>
         </div>
     </div>
