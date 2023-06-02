@@ -9,7 +9,8 @@ import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.servi
 
 import { WaitClassifService } from '../../app/services/waitClassif.service';
 import { IOpenClassifParams } from '../../eos-common/interfaces';
-import { AR_DESCRIPT, DEPARTMENT, PROT_NAME, PipRX } from '../../eos-rest';
+import { AR_DESCRIPT, USER_CL, PROT_NAME } from '../../eos-rest/interfaces/structures';
+import { PipRX } from '../../eos-rest/services/pipRX.service';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../eos-dictionaries/services/eos-data-convert.service';
 import { DOP_REC, SEARCH_RADIO_BUTTON, SEARCH_RADIO_BUTTON_NOMENKL, SEV_PARTIPANT } from '../../eos-dictionaries/consts/dictionaries/_common';
@@ -96,7 +97,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
         this.subscriptions.push(this._dictSrv.searchInfo$.subscribe((_d) => this.clearForm()));
         this.subscriptions.push(this._dictSrv.reloadDopRec$.subscribe(() => this.updateDopRec()));
-        this.subscriptions.push(this._dictSrv.reloadDopRec$.subscribe(() => this.initProtoSerchForm()));
 
         if (this.dictionary.descriptor.id === 'sev-participant') {
             this._pipRX.read({
@@ -392,7 +392,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         ]
         this.protocolSerchInputs = this.controlService.generateInputs(configProtocolSerchInput);
         this.protocolForm = this._inputCtrlSrv.toFormGroup(this.protocolSerchInputs);
-        
+
         this.protocolForm.valueChanges.subscribe((data) => {
             this.protocolSearchNameControl.forEach(el => {
                 if(el === 'FROM' || el === 'TO') {
@@ -417,20 +417,20 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     async showDepChoose() {
-        const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {
-            classif: 'DEPARTMENT',
-            return_due: true,
+        const OPEN_CLASSIF_USER_CL: IOpenClassifParams = {
+            classif: 'USER_CL',
             skipDeleted: false,
             selectMulty: false,
             selectLeafs: true,
             selectNodes: false,
         };
         try {
-            const due: string = await this._classif.openClassif(OPEN_CLASSIF_DEPARTMENT)
-            const DEPARTMENT_User: DEPARTMENT[] = await this._pipRX.read({ DEPARTMENT: {criteries: {DUE: due}}});
-            if(DEPARTMENT_User[0]['CLASSIF_NAME']) {
-                this.protocolForm.controls['USER'].patchValue(DEPARTMENT_User[0]['CLASSIF_NAME'], { emitEvent: false });
-                this.protocolForm.controls['user_isn'].patchValue(DEPARTMENT_User[0]['ISN_NODE'], { emitEvent: true });
+            const isnClassif: string = await this._classif.openClassif(OPEN_CLASSIF_USER_CL);
+            const User: USER_CL[] = await this._pipRX.read({ USER_CL: {criteries: {ISN_LCLASSIF: isnClassif}}});
+
+            if (User[0]['SURNAME_PATRON']) {
+                this.protocolForm.controls['USER'].patchValue(User[0]['SURNAME_PATRON'], { emitEvent: false });
+                this.protocolForm.controls['user_isn'].patchValue(User[0]['ISN_LCLASSIF'], { emitEvent: true });
             }
         } catch(err) {
             console.error('Error: The user has not been selected.');
@@ -706,10 +706,10 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         return this.searchData[prop];
     }
 
-    private initSearchForm() {
+    private async initSearchForm() {
         this.dictionary = this._dictSrv.currentDictionary;
-        if (this.dictId === 'organization' || this.dictId === 'citizens' ) {
-            this.initProtoSerchForm();
+        if (this.dictId === 'organization' || this.dictId === 'citizens' && !this.protocolForm ) {
+            await this.initProtoSerchForm();
         }
         if (this.dictionary) {
             if (this.settings) {
