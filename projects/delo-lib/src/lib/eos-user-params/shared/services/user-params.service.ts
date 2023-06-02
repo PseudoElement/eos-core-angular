@@ -122,12 +122,12 @@ export class UserParamsService {
 
         const queryUser = {
             [`USER_CL(${isn})`]: ALL_ROWS,
-            _moreJSON : { CanTech: null },
+            _moreJSON: { CanTech: null },
             expand: expand
         };
 
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
-        const _sys = cfg && cfg.shortSys ? this.fetchSysParams() : Promise.resolve([]);
+        const _sys = this.fetchSysParams();
 
         return Promise.all([_user, _sys])
             .then(([user, sys]) => {
@@ -189,7 +189,7 @@ export class UserParamsService {
             USER_PARMS: {
                 criteries: {
                     ISN_USER_OWNER: '-99',
-                    PARM_NAME: 'CHANGE_PASS||CATEGORIES_FOR_USER'
+                    PARM_NAME: 'CHANGE_PASS||CATEGORIES_FOR_USER||USER_EDIT_AUDIT'
                 }
             }
         };
@@ -214,8 +214,8 @@ export class UserParamsService {
     ProtocolService(isn: number, kind: number): Promise<any> {
         const protocol = () => {
             const url = `../FOP/WriteUserAudit/${kind}/${isn}`;
-            const protocolParam = this._userContext.USER_PARMS_List.find((parm) => parm.PARM_NAME === 'USER_EDIT_AUDIT');
-            if (protocolParam && protocolParam.PARM_VALUE === 'YES') {
+            // const protocolParam = this._userContext.USER_PARMS_List.find((parm) => parm.PARM_NAME === 'USER_EDIT_AUDIT');
+            if (this._sysParams['USER_EDIT_AUDIT'] === 'YES') {
                 return this._pipRx.read({
                     [url]: ALL_ROWS
                     // http://localhost/x1807/UserInfo/UserOperations.asmx/WriteUserAudit?uisn=73337&event_kind=1
@@ -239,32 +239,32 @@ export class UserParamsService {
             expand: 'USER_PARMS_List',
             isn_cl: isn,
         })
-        .then(() => protocol())
-        .catch((e) => {
-            const errMessage = e.message ? e.message : e;
-            this._msgSrv.addNewMessage({
-                type: 'danger',
-                title: 'Ошибка протоколирования пользователя',
-                msg: errMessage,
+            .then(() => protocol())
+            .catch((e) => {
+                const errMessage = e.message ? e.message : e;
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка протоколирования пользователя',
+                    msg: errMessage,
+                });
             });
-        });
     }
 
     addRightsForCBRole(isn: number): Promise<any> {
         const changes = [];
         PipRX.invokeSop(changes, 'AdjustCbrUserRights', { isn_user: isn }, 'MERGE', false);
         return this._pipRx.batch(changes, '')
-        .then()
-        .catch((e) => {
-            if (e.code !== 200) {
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: 'Предупреждение',
-                    msg: 'Ошибка добавления прав для ЦБ роли',
-                    dismissOnTimeout: 6000,
-                });
-            }
-        });
+            .then()
+            .catch((e) => {
+                if (e.code !== 200) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Ошибка добавления прав для ЦБ роли',
+                        dismissOnTimeout: 6000,
+                    });
+                }
+            });
     }
 
     ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
@@ -274,31 +274,31 @@ export class UserParamsService {
             type: 'warning'
         };
         return this._pipSrv.getData<USER_CL>({ USER_CL: PipRX.criteries({ DUE_DEP: `${dep.DUE}` }) })
-        .then((u: USER_CL[]) => {
-            if (this._appContext.limitCardsUser.length > 0) {
-                if (this._appContext.limitCardsUser.indexOf(dep.DEPARTMENT_DUE) !== -1) { // проверку написать на существующего пользователя
-                    if (!u.length) {
-                        return dep;
+            .then((u: USER_CL[]) => {
+                if (this._appContext.limitCardsUser.length > 0) {
+                    if (this._appContext.limitCardsUser.indexOf(dep.DEPARTMENT_DUE) !== -1) { // проверку написать на существующего пользователя
+                        if (!u.length) {
+                            return dep;
+                        } else {
+                            mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+                        }
                     } else {
-                        mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+                        mess.msg = `Выбранное ДЛ ${dep.CLASSIF_NAME} не принадлежит разрешенным Вам подразделениям.`;
                     }
                 } else {
-                    mess.msg = `Выбранное ДЛ ${dep.CLASSIF_NAME} не принадлежит разрешенным Вам подразделениям.`;
+                    if (!u.length) {
+                        return dep;
+                    }
+                    mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+                    if (isn && u[0]['ISN_LCLASSIF'] === this.userContextId) {
+                        mess.msg = `Пользователь ${this.curentUser.SURNAME_PATRON} уже ассоциирован с выбранным ДЛ`;
+                    }
                 }
-            } else {
-                if (!u.length) {
-                    return dep;
-                }
-                mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
-                if (isn && u[0]['ISN_LCLASSIF'] === this.userContextId) {
-                    mess.msg = `Пользователь ${this.curentUser.SURNAME_PATRON} уже ассоциирован с выбранным ДЛ`;
-                }
-            }
-            this._msgSrv.addNewMessage(mess);
-            throw new Error();
-        });
+                this._msgSrv.addNewMessage(mess);
+                throw new Error();
+            });
     }
-    
+
     createEntyti<T extends IEnt>(ent: any, typeName: string): T {
         ent.__metadata = { __type: typeName };
         return ent;
@@ -394,21 +394,26 @@ export class UserParamsService {
     }
 
     getCabinetOwnUser(isnCabinet): Promise<any> {
-        return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: {
-            criteries: {
-                ISN_CABINET: isnCabinet,
+        return this._pipRx.read<DEPARTMENT>({
+            DEPARTMENT: {
+                criteries: {
+                    ISN_CABINET: isnCabinet,
+                }
             }
-        }});
+        });
     }
 
     getUserCbRoles(due: string): Promise<any> {
         this.asistMansStr = '';
         const reqs = [
-            this._pipRx.read({CBR_USER_ROLE: {
-                criteries: {DUE_PERSON: due}
-            }}),
-            this._pipRx.read({CBR_USER_ROLE: {
-                    criteries: {ISN_USER: this.curentUser.ISN_LCLASSIF},
+            this._pipRx.read({
+                CBR_USER_ROLE: {
+                    criteries: { DUE_PERSON: due }
+                }
+            }),
+            this._pipRx.read({
+                CBR_USER_ROLE: {
+                    criteries: { ISN_USER: this.curentUser.ISN_LCLASSIF },
                 },
                 orderby: 'WEIGHT',
             })
@@ -417,7 +422,7 @@ export class UserParamsService {
             const asistMansData = data[0].filter(el => el.ISN_USER !== this.curentUser.ISN_LCLASSIF && (el.KIND_ROLE === 4 || el.KIND_ROLE === 5)).map(el => el.ISN_USER);
             if (asistMansData.length > 0) {
                 return this.getUserCl(asistMansData).then((users: USER_CL[]) => {
-                    const sortUsers =  users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
+                    const sortUsers = users.sort((a, b) => a.SURNAME_PATRON > b.SURNAME_PATRON ? 1 : -1);
                     sortUsers.forEach(user => {
                         if (this.asistMansStr.indexOf(user.SURNAME_PATRON) === -1) {
                             this.asistMansStr += `${user.SURNAME_PATRON}(${user.NOTE})\n`;
@@ -440,7 +445,7 @@ export class UserParamsService {
     ParseRoles(roles: any[]): Promise<any> {
         const arrRoles = roles.filter(role => role.DUE_PERSON !== null).map(due => due.DUE_PERSON);
         if (arrRoles.length) {
-            return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: arrRoles}).then((dueName: any) => {
+            return this._pipRx.read<DEPARTMENT>({ DEPARTMENT: arrRoles }).then((dueName: any) => {
                 const dueNames = new Map<string, string>();
                 dueName.forEach((dep) => dueNames.set(dep.DUE, dep.CLASSIF_NAME));
                 return Promise.resolve(this.parseData(roles, dueNames));
@@ -450,16 +455,18 @@ export class UserParamsService {
         }
     }
 
-    parseData(data: any[], dueNames?: Map<string, string>): any[]  {
+    parseData(data: any[], dueNames?: Map<string, string>): any[] {
         const currentCbFields = [];
         data.forEach(el => {
             if (el.KIND_ROLE === 4 || el.KIND_ROLE === 5) {
-                currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: dueNames.get(el.DUE_PERSON),
-                due: el.DUE_PERSON, isnRole: el.ISN_USER_ROLE});
+                currentCbFields.push({
+                    role: KIND_ROLES_CB[el.KIND_ROLE - 1], dueName: dueNames.get(el.DUE_PERSON),
+                    due: el.DUE_PERSON, isnRole: el.ISN_USER_ROLE
+                });
             } else if (this.asistMansStr && (el.KIND_ROLE === 1 || el.KIND_ROLE === 2 || el.KIND_ROLE === 3)) {
-                currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr, isnRole: el.ISN_USER_ROLE});
+                currentCbFields.push({ role: KIND_ROLES_CB[el.KIND_ROLE - 1], asistMan: this.asistMansStr, isnRole: el.ISN_USER_ROLE });
             } else {
-                currentCbFields.push({role: KIND_ROLES_CB[el.KIND_ROLE - 1], isnRole: el.ISN_USER_ROLE});
+                currentCbFields.push({ role: KIND_ROLES_CB[el.KIND_ROLE - 1], isnRole: el.ISN_USER_ROLE });
             }
         });
         return currentCbFields;
@@ -493,7 +500,7 @@ export class UserParamsService {
                 if (queryRoles.filter(elem => JSON.stringify(newElem) === JSON.stringify(elem)).length === 0) {
                     queryRoles.push(newElem);
                 }
-           }
+            }
         });
         startRolesCb.forEach((old, index) => {
             const kindRole = KIND_ROLES_CB.indexOf(old.role);
@@ -535,7 +542,7 @@ export class UserParamsService {
         return queryRoles;
     }
 
-    getUserCl(isn: number|number[]) {
+    getUserCl(isn: number | number[]) {
         let queryUser;
         if (typeof isn === 'number') {
             queryUser = {
@@ -591,7 +598,7 @@ export class UserParamsService {
         }
     }
 
-    getSysTechUser(curUser: {oldRights: string[], newRights: string[], editUser: IParamUserCl} = null, checkedUser = this.checkedUsers): Promise<any> {
+    getSysTechUser(curUser: { oldRights: string[], newRights: string[], editUser: IParamUserCl } = null, checkedUser = this.checkedUsers): Promise<any> {
         let limitTechUser = false;
         let checkedUsersIsn = '';
         if (!curUser) {
@@ -668,7 +675,7 @@ export class UserParamsService {
      * @method createShortReportHtml создает html файл
      * кратких сведений о выбранных пользователях
      */
-     createShortReportHtml(data) {
+    createShortReportHtml(data) {
         let htmlUserData = '';
         let aboutInfo = 'о выбранных пользователях';
         if (data && data.length) {
@@ -695,7 +702,7 @@ export class UserParamsService {
             .replace(HTML_TEMPLATE_DATA, htmlUserData)
             .replace(HTML_TEMPLATE_DATE, time);
 
-        const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
+        const blobHtml = new Blob([html], { type: 'text/html;charset=utf-8' });
         saveAs(blobHtml, `${htmlTitle}.html`);
     }
 
@@ -716,7 +723,7 @@ export class UserParamsService {
         return this._pipRx.getHttp_client().get(url, options)
             .toPromise()
             .then((html) => {
-                const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
+                const blobHtml = new Blob([html], { type: 'text/html;charset=utf-8' });
                 saveAs(blobHtml, `${title}.html`);
             });
     }
