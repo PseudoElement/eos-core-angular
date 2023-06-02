@@ -43,7 +43,7 @@ export class BaseParamForTableComponent extends BaseParamComponent implements On
 
     ngOnInit(): void {
         this.pipRx.getAppSetting(this.parameters.appsettingsParams).then((result: ResultAppSettings) => {
-            this.tableSrv.getTableRow(result);
+            this.tableSrv.getTableRow(result, this.tableData?.data || []);
             this.tableData = this.tableSrv.tableData;
             this.tableData.data.forEach((value) => {
                 if (typeof (+value.key) === 'number' && !isNaN(+value.key)) {

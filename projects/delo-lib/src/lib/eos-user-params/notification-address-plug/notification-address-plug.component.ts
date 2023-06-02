@@ -23,8 +23,6 @@ export class NotificationAddressPlugComponent implements AfterViewInit, OnDestro
 
     ngOnDestroy(): void {
         const header = this.document.getElementsByTagName('head');
-        console.log(header);
-
         if (header[0]) {
             if (/\.App/.test(header[0].lastChild.textContent)) {
                 header[0].removeChild(header[0].lastChild);

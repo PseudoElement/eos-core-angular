@@ -23,7 +23,6 @@ export class SystemParamsChildGuard implements CanActivateChild {
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         this.paramId = route.params['id'];
         this.techRights = this.appCtx.CurrentUser.TECH_RIGHTS || "";
-        console.log(this.techRights);
         if (this.paramId === E_PARMS_PAGES.authentication) {
             return this.checkAuthentificationAccess();
         } else if (this.paramId === E_PARMS_PAGES.logging) {

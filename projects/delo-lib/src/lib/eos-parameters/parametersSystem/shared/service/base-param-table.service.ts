@@ -11,7 +11,7 @@ export class BaseParamTableService {
     public tableData: BaseTableData = { data: [], tableBtn: [], tableHeader: [] };
     public deletedNodesCollection = new Map();
     constructor(private msgSrv: EosMessageService) { }
-    public getTableRow(data: ResultAppSettings) {
+    public getTableRow(data: ResultAppSettings, oldTableData: any[]) {
         this.tableData.data = [];
         Object.keys(data).forEach((key) => {
             const row: any = {};
@@ -19,6 +19,10 @@ export class BaseParamTableService {
             Object.keys(data[key]).forEach((dataField) => {
                 row[dataField] = data[key][dataField]
             })
+            const findOldNode = oldTableData?.find((node) => node.key === key);
+            if (findOldNode?.check) {
+                row.check = findOldNode.check
+            }
             this.tableData.data.push(row);
         })
         this.hideDeletedNodes();
@@ -65,6 +69,11 @@ export class BaseParamTableService {
     }
     public resetNodes() {
         this.deletedNodesCollection.clear();
+        this.tableData.data.forEach(node => node.check = false);
+        this.tableData.tableBtn.forEach(btn => btn.disable = true);
+    }
+
+    public reaetStasusBtn() {
         this.tableData.tableBtn.forEach(btn => btn.disable = true);
     }
 

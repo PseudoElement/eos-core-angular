@@ -51,10 +51,11 @@ export class SmsGatewayComponent extends BaseParamForTableComponent implements O
             if (field !== "Password") {
                 body[field] = this.form.controls["rec." + field].value || "";
             } else {
-                if (this.editData?.Password?.Key !== this.form.controls["rec." + field].value) {
+                if (this.form.controls["rec." + field].value) {
                     body[field] = { Value: this.form.controls["rec." + field].value }
                 } else {
-                    body[field] = { Key: this.form.controls["rec." + field].value }
+                    body[field] = { Key: this.editData?.Password?.Key || "" }
+
                 }
             }
         })

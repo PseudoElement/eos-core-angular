@@ -3,6 +3,10 @@
         max-height: 400px;
         overflow-x: auto;
     }
+    .sms-wrapper {
+        height: calc(100vh - 225px);
+        overflow: auto;
+    }
     .title-under-table {
         width: 100%;
         padding-right: 16px;

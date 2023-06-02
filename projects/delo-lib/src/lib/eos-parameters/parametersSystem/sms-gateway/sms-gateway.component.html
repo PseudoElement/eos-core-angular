@@ -8,20 +8,22 @@
             [editBtn]="true"
             (editForm)="edit()"
         ></eos-param-header>
-        <div class="title-under-table">
-            <div>
-                <span>Профили СМС-шлюза</span>
+        <div class="sms-wrapper">
+            <div class="title-under-table">
+                <div>
+                    <span>Профили СМС-шлюза</span>
+                </div>
             </div>
+            <eos-tabel-element
+                *ngIf="tableData"
+                [edit]="!disableForm"
+                [tabelData]="tableData"
+                (btnAction)="actionTo($event)"
+                (elementsSelect)="selectElement($event)"
+                (orderHead)="orderHead($event)"
+            >
+            </eos-tabel-element>
         </div>
-        <eos-tabel-element
-            *ngIf="tableData"
-            [edit]="!disableForm"
-            [tabelData]="tableData"
-            (btnAction)="actionTo($event)"
-            (elementsSelect)="selectElement($event)"
-            (orderHead)="orderHead($event)"
-        >
-        </eos-tabel-element>
     </div>
     <sms-gateway-card
         *ngIf="showCard"
