@@ -26,6 +26,7 @@ import { AbsoluteRigthServiceLib } from '../../../eos-rest/addons/absoluteRigth.
 import { ITableData, ITableHeader, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { RughtDeloAbsRightService } from './right-delo-absolute-rights.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 /* import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces'; */
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -34,6 +35,8 @@ import { RughtDeloAbsRightService } from './right-delo-absolute-rights.service';
 
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     @ViewChild('tableAuthorized', {static: false}) tableAuthorized;
+    @ViewChild('autorizSetting', {static: false}) autorizSetting;
+    @ViewChild('autorizTable', {static: false}) autorizTable;
     curentUser: IParamUserCl;
     btnDisabled: boolean = true;
     isLoading: boolean = false;
@@ -77,6 +80,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
     }
     public leftSendwitch;
+    public modalRef: BsModalRef;
+    public rowNotFixed: ITableHeader[] = [];
     get titleHeader() {
         if (this.curentUser) {
             if (this.curentUser.isTechUser) {
@@ -107,7 +112,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _extentionsRigts: ExetentionsRigthsServiceLib,
         private _absRigthServ: AbsoluteRigthServiceLib,
         private _navSrv: NavParamService,
-        private _rightDeloService: RughtDeloAbsRightService
+        private _rightDeloService: RughtDeloAbsRightService,
+        private _modalSrv: BsModalService
     ) { }
     ngOnInit() {
         let expandStr = this.expandStr;
@@ -238,7 +244,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.TABLE_HEADER_ABS_RIGHT.push(newElem);
             }
         });
-        this.tabelData.tableHeader = this.TABLE_HEADER_ABS_RIGHT;
+        this.tabelData.tableHeader = this.updateHeaderTable([...this.TABLE_HEADER_ABS_RIGHT]);
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -821,8 +827,65 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
         this._rightDeloService.listRightNew.clear();
     }
+    updateHeaderTable(headers: ITableHeader[]): ITableHeader[] {
+        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
+        if (curentSettingStr && JSON.parse(curentSettingStr)['absolute-rights']) {
+            const localSetting = JSON.parse(curentSettingStr)['absolute-rights'];
+            const newHeader = [];
+            localSetting.forEach((oldHeader) => {
+                const findHead = headers.find((head) => {return oldHeader === head.id});
+                if (findHead) {
+                    newHeader.push(findHead);
+                }
+            });
+            return newHeader;
+        } else {
+            return headers;
+        }
+    }
     actionTo($event) {
-        this._rightDeloService.action($event);
+        if ($event === 'tableCustomization') {
+            this.rowNotFixed = this.getNotFixed();
+            this.openModal();
+        } else {
+            this._rightDeloService.action($event);
+        }
+    }
+    openModal() {
+        this.modalRef = this._modalSrv.show(this.autorizSetting);
+    }
+    saveSettings(flag): void {
+        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
+        const newHeaderKey = [];
+        const newHeader = [];
+        if (flag) {
+            const fixedRow = this.getFixedRow();
+            fixedRow.forEach((header) => {
+                newHeaderKey.push(header.id);
+                newHeader.push(header);
+            });
+            this.rowNotFixed.forEach((header) => {
+                newHeaderKey.push(header.id);
+                newHeader.push(header);
+            });
+            if (curentSettingStr) {
+                const curentSetting = JSON.parse(curentSettingStr);
+                curentSetting['absolute-rights'] = newHeaderKey;
+                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+            } else {
+                const curentSetting = {'absolute-rights': newHeaderKey}
+                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+            }
+            this.tabelData.tableHeader = newHeader;
+            this.autorizTable.updateHeader(JSON.parse(JSON.stringify(newHeader)));
+        }
+        this.modalRef.hide();
+    }
+    getNotFixed(): ITableHeader[] {
+        return this.tabelData.tableHeader.filter((item) => !item.fixed);
+    }
+    getFixedRow(): ITableHeader[] {
+        return this.tabelData.tableHeader.filter((item) => item.fixed);
     }
     selectElement($event) {
         /*  */

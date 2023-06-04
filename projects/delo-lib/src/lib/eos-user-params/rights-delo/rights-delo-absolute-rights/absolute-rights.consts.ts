@@ -506,7 +506,15 @@ export const ABSOLUTE_RIGHTS_BTN_TABEL_SECOND = [
         active: true,
         notView: true,
         id: 'up'
-    }
+    },
+    {
+        tooltip: 'Настройка отображения',
+        disable: false,
+        iconActiv: ' eos-adm-icon-settings-blue',
+        iconDisable: 'eos-adm-icon-settings-grey',
+        activeIcon: 'eos-adm-icon-settings-white',
+        id: 'tableCustomization'
+    },
 ];
 export const HTML_ABSOLUT_RIGH_TITLE = '$TITLE';
 export const HTML_ABSOLUT_RIGH_HEADER = '$HEADERS';

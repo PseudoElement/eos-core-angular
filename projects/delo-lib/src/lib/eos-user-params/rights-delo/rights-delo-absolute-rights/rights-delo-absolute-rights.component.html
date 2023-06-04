@@ -167,6 +167,7 @@
             </div>
         </div>
             <eos-tabel-element
+                #autorizTable
                 [edit]="true"
                 [tabelData]="tabelData"
                 [settings]="settingsTable"
@@ -174,5 +175,40 @@
                 (elementsSelect)="selectElement($event)"
                 (orderHead)="orderHead($event)">
             </eos-tabel-element>
+    </div>
+</ng-template>
+<ng-template #autorizSetting>
+    <div class="autorizSetting">
+        <div style="display: flex; height: 48px;justify-content: space-between; padding: 0 16px 0 16px; line-height: 48px;border-bottom: 1px solid #e6e6e6">
+            <span style="color: #646464; font-size: 18px;">Настройка отображения таблицы</span>
+            <div style="display: flex;padding-top: 10px;">
+                <button
+                    style="width: 88px; height: 28px; margin-right: 8px;"
+                    class="btn btn-primary"
+                    (click)="saveSettings(false)">
+                    ОТМЕНИТЬ
+                </button>
+                <button
+                    style="width: 88px; height: 28px;"
+                    class="btn btn-primary-full"
+                    (click)="saveSettings(true)">
+                    СОХРАНИТЬ
+                </button>
+            </div>
+        </div>
+        <div class="all-window">
+            <div class="all-row-setting-table">
+                <div *ngFor="let header of getFixedRow()" class="row-setting-fixed fixed-item">
+                    <i style="line-height: 20px; padding-right: 5px;" class="fa fa-lock unimportant-text"
+                        aria-hidden="true"></i>
+                    {{header.title}}
+                </div>
+                <div [dragula]='"bag-one"' [dragulaModel]='rowNotFixed'>
+                    <div *ngFor="let header of rowNotFixed" class="row-setting" [id]="header.id">
+                        {{header.title}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </ng-template>
