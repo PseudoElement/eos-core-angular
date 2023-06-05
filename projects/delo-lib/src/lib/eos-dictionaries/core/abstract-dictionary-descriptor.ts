@@ -506,13 +506,15 @@ export abstract class AbstractDictionaryDescriptor {
             i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
         });
         PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': this.apiInstance, 'ids': paramsSop }, 'POST', false);
-        preSave.push({
-            method: 'MERGE',
-            requestUri: `${this.apiInstance}(${isNaN(markedNodes[0].id) ? '\'' + String(markedNodes[0].id) + '\'' : markedNodes[0].id})`,
-            data: {
-                DELETED: 0
-            }
-        });
+        if (markedNodes[0].data['rec']['DELETED'] === 0) {
+            preSave.push({
+                method: 'MERGE',
+                requestUri: `${this.apiInstance}(${isNaN(markedNodes[0].id) ? '\'' + String(markedNodes[0].id) + '\'' : markedNodes[0].id})`,
+                data: {
+                    DELETED: 0
+                }
+            });
+        }
         change = change.concat(preSave);
         return this.apiSrv.batch(change, '');
     }
