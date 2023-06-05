@@ -77,7 +77,7 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
             }
         });
         const inListMes = ['\"Добавлять файлы\"', '\"Редактировать файлы\"', '\"Удалять файлы\"', '\"Читать файлы\"'];
-        if (func_list === '1') {
+        if (func_list === '0') {
             message = 'Назначить пользователю права на выполнение операций' + ':\n' + inListMes.join('\n') + '\n во всех картотеках?';
         } else {
             message = 'У пользователя права назначены на выполнение операций' + ':\n' + inListMes.join('\n') + '\n во всех картотеках. Снять эти права?';
