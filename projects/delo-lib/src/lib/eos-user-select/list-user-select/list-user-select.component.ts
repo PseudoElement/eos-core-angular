@@ -639,7 +639,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     OpenStreamScanSystem() {
         /* setTimeout(() => { */
-        this._router.navigate(['user-params-set/', 'inline-scaning'],
+        this._router.navigate(['user-params-set/', 'inline-scanning'],
             {
                 queryParams: { isn_cl: this.selectedUser.id }
             }
