@@ -78,7 +78,7 @@ export class NodeActionsComponent implements OnDestroy {
         if ( this._markedNodes[this._markedNodes.length -1] && 
              this._markedNodes[this._markedNodes.length -1].data.CONTACT_List) {
                 this._markedNodes.forEach(el => {
-                    if(el.data.CONTACT_List[0].ID_CERTIFICATE){
+                    if(el.data.CONTACT_List && el.data.CONTACT_List[0].ID_CERTIFICATE){
                         isSertificate = true;
                     }
                 })
