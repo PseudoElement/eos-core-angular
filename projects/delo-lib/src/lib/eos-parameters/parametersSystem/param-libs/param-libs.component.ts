@@ -83,7 +83,9 @@ export class ParamLibsComponent extends BaseParamComponent {
         }
       });
       mapData.forEach((data) => {
-        this.tabelData.data.push(data);
+        if (data['TYPE'] === 'FS') {
+          this.tabelData.data.push(data);
+        }
       });
     });
   }

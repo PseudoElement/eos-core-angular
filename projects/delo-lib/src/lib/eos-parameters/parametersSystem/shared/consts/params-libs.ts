@@ -39,7 +39,17 @@ export const PARAMS_LIBS: IBaseParameters = {
             key: 'CommonName',
             type: 'select',
             title: 'ХРАНИЛИЩЕ',
-        }
+        },
+        {
+            key: 'EdmsParm',
+            type: 'radio',
+            title: 'МЕСТО ХРАНЕНИЯ',
+            options: [
+                {value: 'DB2', title: 'База данных единым блоком'},
+                {value: 'DB', title: 'База данных несколькими блоками'},
+                {value: 'STORAGE', title: 'Файловое хранилище'},
+            ]
+        },
     ]
 };
 
