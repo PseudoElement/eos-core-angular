@@ -16,7 +16,6 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
 import { UsersPermissionGuard } from './guards/users-permission.guard';
-import { SystemParamsGuard } from './guards/system-params.guard';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 import { UserParamsComponent } from '../eos-user-params/eos-user-params.component';
@@ -245,7 +244,7 @@ const routes: Routes = [
     data: { title: 'user page' }
 }, {
     path: 'parameters',
-    canActivate: [AuthorizedGuard, SystemParamsGuard, AdministratorGuard],
+    canActivate: [AuthorizedGuard, AdministratorGuard],
     canActivateChild: [SystemParamsChildGuard],
     data: {
         title: 'Параметры системы',

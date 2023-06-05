@@ -86,43 +86,39 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     disabledAutent(param): boolean {
 
         const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
-        if (!this._appContext.cbBase && techRights && techRights.charAt(E_TECH_RIGHTS.SystemSettings - 1) === '0' && param.url !== E_PARMS_PAGES['now-organiz']
-            && param.url !== E_PARMS_PAGES.logging) {
+        if (!this._appContext.cbBase && techRights && techRights.charAt(E_TECH_RIGHTS.SystemSettings - 1) === ETypeRule.no_right && param.url !== E_PARMS_PAGES['now-organiz']
+            && param.url !== E_PARMS_PAGES.logging && param.url !== E_PARMS_PAGES.authentication) {
             return false;
         }
         // проверяем право доступа "Текущая организация"
-        if (param.url === E_PARMS_PAGES['now-organiz'] && (techRights && techRights.charAt(E_TECH_RIGHTS.CurrentOrganization - 1) === ETypeRule.no_right)) {
-            return false;
+        if (param.url === E_PARMS_PAGES['now-organiz']) {
+            if (techRights && techRights.charAt(E_TECH_RIGHTS.CurrentOrganization - 1) === ETypeRule.no_right) {
+                return false;
+            }
+            return true;
         }
         // проверяем право доступа к Протоколированию и проверяем ограниченность технолога
-        if (param.url === E_PARMS_PAGES.logging
-            && (techRights && techRights[E_TECH_RIGHTS.SettingTheBrowsingProtocol - 1] === ETypeRule.no_right
-                || techRights[E_TECH_RIGHTS.Users - 1] === ETypeRule.no_right)) {
-            return false;
-        }
-        if (this._appContext.cbBase) {
-            const limit = this._appContext.limitCardsUser.length;
-            const urlName = param.url === E_PARMS_PAGES.authentication;
-            const userAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1];
-            const paramAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[E_TECH_RIGHTS.SystemSettings - 1];
-            if (urlName) {
-                if (userAccess && !paramAccess) {
-                    return true;
-                } else if (limit > 0 || !userAccess) {
-                    return false;
-                } else {
-                    return true;
-                }
-            } else {
-                if (!paramAccess) {
-                    return false;
-                } else if (paramAccess) {
-                    return true;
-                }
+        if (param.url === E_PARMS_PAGES.logging) {
+            if (techRights && techRights[E_TECH_RIGHTS.SettingTheBrowsingProtocol - 1] === ETypeRule.no_right) {
+                return false
             }
+            return true;
         }
 
-        return true;
+        const paramAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[E_TECH_RIGHTS.SystemSettings - 1];
+        if (param.url === E_PARMS_PAGES.authentication) {
+            const userAccess = !!+this._appContext.CurrentUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1];
+            if (this._appContext.cbBase) {
+                const limit = this._appContext.limitCardsUser.length;
+                if (!userAccess || userAccess && limit) {
+                    return false;
+                }
+                return true;
+            } else {
+                return paramAccess;
+            }
+        }
+        return paramAccess;
     }
     private _askForSaving(): Promise<boolean> {
         if (this.isChanged) {
