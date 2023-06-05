@@ -37,12 +37,12 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
         label: 'Списки справочников',
         value: false,
     },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '6',
-        label: 'Права поточного сканирования',
-        value: false,
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '6',
+    //     label: 'Права поточного сканирования',
+    //     value: false,
+    // },
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '8',

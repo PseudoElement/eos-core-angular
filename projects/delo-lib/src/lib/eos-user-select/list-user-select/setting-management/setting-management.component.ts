@@ -345,13 +345,15 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
     // }
 
     private _getRightsData(form: FormGroup): string {
-        let str = '';
+        const arr_Str = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'];
         Object.keys(form.controls).forEach(key => {
             if (key !== 'USER_COPY') {
-                str += form.controls[key].value ? '1' : '0';
+                if (!isNaN(Number(+key))) {
+                    arr_Str[+key - 1] = form.controls[key].value ? '1' : '0';
+                }
             }
         });
-        return str;
+        return arr_Str.join("");
     }
 
     private _subscribe() {
@@ -382,7 +384,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 const value = data ? true : false;
                 this.form.controls['3'].patchValue(value, { emitEvent: false });
                 this.form.controls['5'].patchValue(value, { emitEvent: false });
-                this.form.controls['6'].patchValue(value, { emitEvent: false });
+                // this.form.controls['6'].patchValue(value, { emitEvent: false });
                 this.form.controls['7'].patchValue(value, { emitEvent: false });
                 this.form.controls['8'].patchValue(value, { emitEvent: true });
                 this.form.controls['1'].patchValue(value, { emitEvent: false });
