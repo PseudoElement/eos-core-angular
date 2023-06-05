@@ -144,7 +144,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 const addr = cryptoStr ? cryptoStr : 'SERVER="http://localhost:8080"';
                 const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
                 this.loadSert = true;
-                this.carma2Srv.connectWrapper(addr, store)
+                this.carma2Srv.connectWrapper(addr, store, false)
                 .then((res) => {
                     this.isCarma = true;
                     this.isLoading = false;
@@ -154,6 +154,12 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                     this.isCarma = false;
                     this.isLoading = false;
                     this.getSertNotCarma();
+                    console.log('ошибка подключения к карме', err);
+                    this._msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Предупреждение:',
+                        msg: 'Сервис КАРМА недоступен'
+                    });
                 });
                 /* this.certStoresService.init(null, store)
                     .pipe(
