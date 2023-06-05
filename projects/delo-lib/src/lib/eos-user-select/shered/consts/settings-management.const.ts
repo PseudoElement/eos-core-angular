@@ -33,13 +33,13 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: '6',
+        key: '7',
         label: 'Списки справочников',
         value: false,
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: '7',
+        key: '6',
         label: 'Права поточного сканирования',
         value: false,
     },
