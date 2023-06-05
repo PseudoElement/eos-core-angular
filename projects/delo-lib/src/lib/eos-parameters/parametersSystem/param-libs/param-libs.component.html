@@ -11,7 +11,7 @@
       <div>
         <div class="title-under-conversion-table">
           <div>
-            <span>Доступные хралилища</span>
+            <span>Доступные хранилища</span>
           </div>
           <div>
               <span (click)="openAccordion(1)" class="icon eos-adm-icon small float-right pull-right"
@@ -35,20 +35,35 @@
                 [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': closeAcordSecond, 'eos-adm-icon-arrow-v-blue-top': !closeAcordSecond}"></span>
         </div>
       </div>
+      
       <div [hidden]="closeAcordSecond" class="param-input-group">
+        <span>МЕСТО ХРАНЕНИЯ</span>
         <eos-dynamic-input
+          [input]="inputs['rec.EdmsParm']"
+          [form]="form"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+          [hidden]="form.controls['rec.EdmsParm'].value === 'DB2' || form.controls['rec.EdmsParm'].value === 'DB'"
           [input]="inputs['rec.CommonName']"
           [form]="form"
         ></eos-dynamic-input>
         <div style="display: flex;">
           <eos-dynamic-input
+            [hidden]="form.controls['rec.EdmsParm'].value === 'DB2' || form.controls['rec.EdmsParm'].value === 'DB'"
             class="padding-item-left"
             [input]="inputs['rec.CommonDirectory']"
             [form]="form"
           ></eos-dynamic-input>
-          <div style="margin-top: 5px;" class="padding-item-right">
+          <div 
+            style="margin-top: 5px;"
+            class="padding-item-right"
+            [ngStyle]="{'padding-left': form.controls['rec.EdmsParm'].value === 'DB2' || form.controls['rec.EdmsParm'].value === 'DB' ? '0px' : '8px'}">
             <span>Макс. размер файлов (МБ)</span>
-            <eos-dynamic-input  [input]="inputs['rec.MaxFileSize']" [form]="form"  [readonly]="inputs['rec.MaxFileSize'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input  
+              [input]="inputs['rec.MaxFileSize']"
+              [form]="form"
+              [readonly]="inputs['rec.MaxFileSize'].readonly"
+              ></eos-dynamic-input>
           </div>
         </div>
       </div>
