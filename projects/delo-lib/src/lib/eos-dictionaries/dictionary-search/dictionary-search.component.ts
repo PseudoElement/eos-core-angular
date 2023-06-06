@@ -394,25 +394,31 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.protocolForm = this._inputCtrlSrv.toFormGroup(this.protocolSerchInputs);
 
         this.protocolForm.valueChanges.subscribe((data) => {
-            this.protocolSearchNameControl.forEach(el => {
-                if(el === 'FROM' || el === 'TO') {
-                    this.searchData['protocol'][el] = data[el]? `${data[el].toISOString()}` : null;
-                } else if (el === 'OPER_DESCRIBE') {
-                    if(data['OPERATION']) {
-                        let oper: string = '';
-                        data['OPERATION'].forEach(el => {
-                            if (oper) {
-                                oper = oper + '|' + el.OPER_DESCRIBE;
-                            } else {
-                                oper = el.OPER_DESCRIBE;
-                            }
-                        })
-                        this.searchData['protocol']['OPER_DESCRIBE'] = oper;
+            try {
+                this.protocolSearchNameControl.forEach(el => {
+                    if(el === 'FROM' || el === 'TO') {
+                        this.searchData['protocol'][el] = data[el]? `${data[el].toISOString()}` : null;
+                    } else if (el === 'OPER_DESCRIBE') {
+                        if(data['OPERATION']) {
+                            let oper: string = '';
+                            data['OPERATION'].forEach(el => {
+                                if (oper) {
+                                    oper = oper + '|' + el.OPER_DESCRIBE;
+                                } else {
+                                    oper = el.OPER_DESCRIBE;
+                                }
+                            })
+                            this.searchData['protocol']['OPER_DESCRIBE'] = oper;
+                        }
+                    } else if (el === 'USER_ISN') {
+                        this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;
                     }
-                } else if (el === 'USER_ISN') {
-                    this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;
-                }
-            })
+                })
+            } catch(err) {
+                console.log(err)
+                console.error('Error: ', err.message)
+            }
+
         })
     }
 
