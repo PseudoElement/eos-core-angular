@@ -4,6 +4,12 @@
         max-height: calc(100vh - 330px);
         padding: 20px 30px 0 30px;
     }
+    .line-box{
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
     eos-dynamic-input {
         font-size: 14px;
     }
