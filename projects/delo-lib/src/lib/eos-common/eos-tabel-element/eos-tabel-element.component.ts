@@ -41,12 +41,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     ngOnInit(): void {
         this.widthAll = 0;
         this.colomns = [];
-        this.colomns = this.tabelData.tableHeader;
-        this.colomns.forEach((col, index) => {
-            if (col.style['min-width'] && !col['fixed']) {
-                this.widthAll += +col.style['min-width'].replace('px', '');
-            }
-        });
+        this.updateHeader(this.tabelData.tableHeader);
         this.buttons = this.tabelData.tableBtn;
         this.tabelData.data.forEach((item) => {
             if (item.check) {
@@ -54,6 +49,14 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             }
         });
 
+    }
+    updateHeader(newHeader: ITableHeader[]) {
+        this.colomns = newHeader;
+        this.colomns.forEach((col, index) => {
+            if (col.style['min-width'] && !col['fixed']) {
+                this.widthAll += +col.style['min-width'].replace('px', '');
+            }
+        });
     }
     /* 
     * Прокрутить таблицу до строки с ключом = key
