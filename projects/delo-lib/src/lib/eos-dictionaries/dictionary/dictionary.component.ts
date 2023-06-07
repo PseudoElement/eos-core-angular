@@ -83,6 +83,7 @@ import { Templates } from '../consts/dictionaries/templates.consts';
 import { ViewProtocolServices } from '../../eos-dictionaries/services/eos-view-prot.services';
 import { DictionaryDescriptor } from '../../eos-dictionaries/core/dictionary-descriptor';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { CONFIRM_OPERATION_HARDDELETE_COPY_MASSAGE } from '..';
 
 
 @Component({
@@ -981,6 +982,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         return Promise.resolve(null);
     }
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
+        if (confirm.buttons.length === 0) {
+            return Promise.resolve({'result': 2, title: 'Да'});
+        }
         const list = [];
         // const selectedNodes = this._dictSrv.getMarkedNodes();
         selectedNodes.forEach((node) => {
@@ -1104,9 +1108,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             confirmDelete.bodyAfterList = '';
         }
         if (slicedNode) {
-            confirmDelete.body = 'Удалить копируемые элементы справочника?';
-            confirmDelete.buttons[0].isDefault = false;
-            confirmDelete.buttons[1].isDefault = true;
+            confirmDelete.buttons = [];
         }
 
         if (this.dictionaryId === 'sev-rules') {
@@ -1511,22 +1513,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private pasteNode(slicedNode: any[], dueTo, whenCopy?) {
         this._dictSrv.updateViewParameters({ updatingList: true });
         this._dictSrv.paste(slicedNode, dueTo, whenCopy)
-            .then(elem => {
+            .then(async elem => {
                 if (this.dictionaryId === 'departments') {
                     this._dictSrv.getMarkedNodes().forEach(node => {
                         node.isMarked = false;
                     });
+                    const listTodelet = [];
                     slicedNode.forEach(node => {
                         node.isMarked = true;
+                        listTodelet.push(`${node.title}`);
                     });
-                    this._dictSrv.currentDictionary.descriptor.checknodeAfterPaste(slicedNode, this._confirmSrv, dueTo).then((deletedNodes: any[]) => {
-                        if (!deletedNodes || !deletedNodes.length) {
+                    const warnDeletion: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE_COPY_MASSAGE, { bodyList: listTodelet });
+                    const button = await this._confirmSrv.confirm2(warnDeletion);
+                    if (button && button.result !== 1) {
+                        this.updateAfterPaste();
+                        return ;
+                    }
+                    this._dictSrv.currentDictionary.descriptor.checknodeAfterPaste(slicedNode, this._confirmSrv, dueTo).then(async (afterDeleted: {deletingNodes, warnDeletion}) => {
+                        if (!afterDeleted.deletingNodes || !afterDeleted.deletingNodes.length) {
                             this.updateAfterPaste();
                         } else {
-                            this._physicallyDelete(deletedNodes).then((records: IRecordOperationResult[]) => {
-                                // обновляем полностью справочник после операции вставки
-                                this.updateAfterPaste();
-                            });
+                            await this._physicallyDelete(afterDeleted.deletingNodes);
+                            // обновляем полностью справочник после операции вставки
+                            this.updateAfterPaste();
+                        }
+                        if (afterDeleted.warnDeletion) {
+                            this._confirmSrv.confirm2(afterDeleted.warnDeletion);
                         }
                     });
                 } else {

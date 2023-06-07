@@ -35,6 +35,9 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     isCBBase: boolean;
     private _unsebscribe = new Subject();
 
+    get viewRedirect() {
+        return this.dictSrv?.viewParameters?.searchResults || (this.nodeDataFull.rec.PARENT_DUE !== this._router.url.split('/').pop());
+    }
     constructor(
         private _modalSrv: BsModalService,
         private _descrSrv: DictionaryDescriptorService,
@@ -59,10 +62,8 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
 
     async ngOnChanges() {
         super.ngOnChanges();
-
         this.boss = null;
         if (this.node) {
-
             if ((!this.node.data.rec['IS_NODE']) && (this.node.children)) {
                 if (this.node.parent.id === '0.') {
                     this.department = await this.getNameOrganization();
