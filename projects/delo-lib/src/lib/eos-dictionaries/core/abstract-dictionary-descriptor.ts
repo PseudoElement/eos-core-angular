@@ -25,7 +25,7 @@ import type {DictionaryComponent} from '../../eos-dictionaries/dictionary/dictio
 import { RestError } from '../../eos-rest/core/rest-error';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 import {IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
-import {WARN_ELEMENTS_ARE_RELATED } from '../../eos-dictionaries/consts/confirm.consts';
+import {WARN_ELEMENTS_ARE_RELATED, WARN_ELEMENTS_COPY_DELETE_LOGICK } from '../../eos-dictionaries/consts/confirm.consts';
 import { GraphQLService } from 'eos-dictionaries/services/graphQL.service';
 
 
@@ -573,7 +573,7 @@ export abstract class AbstractDictionaryDescriptor {
         return Promise.resolve(selectedNodes);
     }
 
-    checknodeAfterPaste(selectedNodes, confirmSrv, dueTo?): Promise<any> {
+    checknodeAfterPaste(selectedNodes, confirmSrv, dueTo?): Promise<{deletingNodes: any, warnDeletion: IConfirmWindow2}> {
         const sopData = {
             type: null,
             id: null,
@@ -610,25 +610,23 @@ export abstract class AbstractDictionaryDescriptor {
                                 }
                             });
                             if (list.length && (this.id !== 'departments' || dueTo !== selectedNodes[0]['parentId'])) {
-                                const warnDeletion: IConfirmWindow2 = Object.assign({}, WARN_ELEMENTS_ARE_RELATED, { bodyList: list });
-                                return confirmSrv.confirm2(warnDeletion).then(() => {
-                                    if (logicalDeletion.length) {
-                                        this.markBooleanData(logicalDeletion, 'DELETED', true, true).then(() => {
-                                        });
-                                    }
-                                    return deletingNodes;
-                                });
+                                const warnDeletion: IConfirmWindow2 = Object.assign({}, WARN_ELEMENTS_COPY_DELETE_LOGICK, { bodyList: list });
+                                if (logicalDeletion.length) {
+                                    this.markBooleanData(logicalDeletion, 'DELETED', true, true).then(() => {
+                                    });
+                                }
+                                return {deletingNodes: deletingNodes, warnDeletion: warnDeletion};
                             } else {
-                                return selectedNodes;
+                                return {deletingNodes: selectedNodes, warnDeletion: undefined};
                             }
                         } else {
-                            return selectedNodes;
+                            return {deletingNodes: selectedNodes, warnDeletion: undefined};
                         }
                     }
-                    return selectedNodes;
+                    return {deletingNodes: selectedNodes, warnDeletion: undefined};
                 }).catch(e => {
                     console.warn(e);
-                    return selectedNodes;
+                    return {deletingNodes: selectedNodes, warnDeletion: undefined};
                 });
         }
         return Promise.resolve(selectedNodes);

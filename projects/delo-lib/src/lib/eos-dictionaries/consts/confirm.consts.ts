@@ -83,6 +83,25 @@ export const CONFIRM_SURNAME_REDACT: IConfirmWindow2 = {
     ],
 };
 
+export const WARN_ELEMENTS_COPY_DELETE_LOGICK: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Следующие элементы справочника удалены логически:',
+    bodyAfterList: '',
+    buttons: [
+        {title: 'Закрыть',  result: 1, isDefault: true},
+    ],
+};
+export const CONFIRM_OPERATION_HARDDELETE_COPY_MASSAGE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Удалить копируемые элементы справочника?',
+    bodyAfterList: '',
+    buttons: [
+        {title: 'Нет', result: 2},
+        {title: 'Да',  result: 1, isDefault: true},
+    ],
+}
 export const WARN_ELEMENTS_ARE_RELATED: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],

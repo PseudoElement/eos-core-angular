@@ -1903,7 +1903,9 @@ export class EosDictService {
         return pResult
             .then((list) => this._setCurrentList(dictionary, list, true))
             .catch((err) => {
-                this.updateResetSerch(); // если произошла ошибка при использовании фильтра то сбрасываем фильтр
+                if (err.code !== 401) {
+                    this.updateResetSerch(); // если произошла ошибка при использовании фильтра то сбрасываем фильтр
+                }
                 this._errHandler(err);
             });
     }
