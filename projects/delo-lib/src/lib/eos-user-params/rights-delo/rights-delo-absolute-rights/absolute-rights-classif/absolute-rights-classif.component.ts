@@ -15,6 +15,7 @@ import { PipRX } from '../../../../eos-rest';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
 import { ExetentionsRigthsServiceLib } from '../../../../eos-rest/addons/extentionsRigts.service';
 import { E_CLASSIF_ID } from './tech-user-classif.consts';
+import { ConfirmWindowService } from '../../../../eos-common/index';
 /* import { AppContext } from 'eos-rest/services/appContext.service'; */
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -37,7 +38,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     listClassif: RightClassifNode[] = [];
     private _techUserRigts: ITechUserClassifConst[] = [];
     private copyPrav = [
-        E_TECH_RIGHTS.Subdivisions, 
+        E_TECH_RIGHTS.Subdivisions,
         E_TECH_RIGHTS.CaseNomenclature,
         E_TECH_RIGHTS.Cabinets,
         E_TECH_RIGHTS.ProcedureForSubmittingDocuments
@@ -93,14 +94,14 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             case false:
                 return (this.editMode && this.selectedNode.control.enabled) && !this.limitedTehnologist ? 'eos-adm-icon-checkbox-square-minus-blue' : 'eos-adm-icon-checkbox-square-minus-grey';
             default:
-                return (this.editMode && this.selectedNode.control.enabled) && !this.limitedTehnologist ?  'eos-adm-icon-checkbox-square-blue' : 'eos-adm-icon-checkbox-square-grey';
+                return (this.editMode && this.selectedNode.control.enabled) && !this.limitedTehnologist ? 'eos-adm-icon-checkbox-square-blue' : 'eos-adm-icon-checkbox-square-grey';
         }
     }
 
     get limitedTehnologist() {
         return !!this._appContext.limitCardsUser.length;
     }
-    constructor (
+    constructor(
         private _apiSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
         public _userParmSrv: UserParamsService,
@@ -108,6 +109,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         private pipRx: PipRX,
         private _appContext: AppContext,
         public _extentionsRigts: ExetentionsRigthsServiceLib,
+        public confirmSrv: ConfirmWindowService
     ) {
         this.userTechList = this._userParmSrv.userTechList;
     }
@@ -132,15 +134,15 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     }
     getEntyti(str: string, config: IConfigUserTechClassif): Promise<any[]> {
         return this._apiSrv.getEntity(config.apiInstance, str)
-        .catch(e => {
-            return [];
-        });
+            .catch(e => {
+                return [];
+            });
     }
     createEntyti<T>(ent: any, typeName: string): T {
         return this._userParmSrv.createEntyti<T>(ent, typeName);
     }
     copyButtonView(key: ETypeTechRight): boolean {
-        return this.copyPrav.indexOf(key) >= 0; 
+        return this.copyPrav.indexOf(key) >= 0;
     }
     getListCopy(key: ETypeTechRight) {
         const massDisable = [];
@@ -174,7 +176,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 };
                 templistContent.push(cfg)
             });
-            
+
             templistUserTech.forEach((item) => {
                 item['CLASSIF_ID'] = E_CLASSIF_ID[node['key'].toString()];
                 item['FUNC_NUM'] = node['key'];
@@ -257,7 +259,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         .then((data: string) => {
             if (data.length) {
                 if (data.split('|').join('|').length > 1500) {
-                    return this.veryBigEntyti(config , data);
+                    return this.veryBigEntyti(config, data);
                 } else {
                     return this.getEntyti(data.split('|').join('|'), config);
                 }
@@ -315,18 +317,20 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                         ISN_CABINET: `isnull`,
                         CARD_FLAG: `1`,
                     }
-                }}));
+                }
+}));
                 str = '';
-             }
+            }
         });
         if (str !== '') {
-            reqs.push(this.pipRx.read({ DEPARTMENT: {
-                criteries: {
-                    DUE: str,
-                    ISN_CABINET: `isnull`,
-                    CARD_FLAG: `1`,
-                }
-            }, orderby: 'CARD_NAME asc'
+            reqs.push(this.pipRx.read({
+                DEPARTMENT: {
+                    criteries: {
+                        DUE: str,
+                        ISN_CABINET: `isnull`,
+                        CARD_FLAG: `1`,
+                    }
+                }, orderby: 'CARD_NAME asc'
             }));
         }
         return Promise.all([...reqs]).then((depData: any) => {
@@ -339,21 +343,21 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             const NewDepData = depData[0].filter((dep) => parArr.indexOf(dep.DUE) === -1 && arrDue.indexOf(dep.DUE) === -1);
             if (NewDepData.length !== 0) {
                 return this.askForAddCard(NewDepData)
-                .then((addCard) => {
-                    if (addCard === true) {
-                        const result = checkData.concat(NewDepData);
-                        return result;
-                    } else {
-                        return checkData;
-                    }
-                })
-                .catch(() => {
-                    this._msgSrv.addNewMessage({
-                        type: 'danger',
-                        title: 'Ошибка добавления картотек:',
-                        msg: 'Ошибка добавление подчиненных картотек'
+                    .then((addCard) => {
+                        if (addCard === true) {
+                            const result = checkData.concat(NewDepData);
+                            return result;
+                        } else {
+                            return checkData;
+                        }
+                    })
+                    .catch(() => {
+                        this._msgSrv.addNewMessage({
+                            type: 'danger',
+                            title: 'Ошибка добавления картотек:',
+                            msg: 'Ошибка добавление подчиненных картотек'
+                        });
                     });
-                });
             } else {
                 return checkData;
             }
@@ -361,9 +365,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     }
     askForAddCard(data: any): Promise<any> {
         this.strNewCards = [];
-        this.strNewCards = [{value: 'Включить в перечень подчиненные картотеки:'}];
+        this.strNewCards = [{ value: 'Включить в перечень подчиненные картотеки:' }];
         data.forEach((card) => {
-            this.strNewCards.push({value: String(card.CARD_NAME), due: card.DUE});
+            this.strNewCards.push({ value: String(card.CARD_NAME), due: card.DUE });
         });
         return this._userParmSrv.confirmCallCard(this.newCards);
     }
@@ -376,8 +380,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     ISN_CABINET: `isnull`,
                     CARD_FLAG: `1`,
                 }
-        }}).then((data: any) => {
-            this.strNewCards = [{value: 'Исключить из перечня подчиненные картотеки:'}];
+            }
+        }).then((data: any) => {
+            this.strNewCards = [{ value: 'Исключить из перечня подчиненные картотеки:' }];
             const arrDueOld = [];
             const newCards = [];
             this.userTechList.forEach((item) => {
@@ -389,7 +394,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 if (arrDueOld.indexOf(card.DUE) !== -1) {
                     newCards.push(card);
                     if (card.DUE !== str) {
-                        this.strNewCards.push({value: String(card.CARD_NAME), due: card.DUE});
+                        this.strNewCards.push({ value: String(card.CARD_NAME), due: card.DUE });
                     }
                 }
             });
@@ -404,7 +409,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             let exitFromLoop = false;
             const indexInsert = ex.indexInsert;
             rigths.forEach((r, i) => {
-                if (exitFromLoop) {return;}
+                if (exitFromLoop) { return; }
                 if (indexInsert === 0 || indexInsert) {
                     if (i === indexInsert) {
                         rigths.splice(i, 0, ex.data);
@@ -420,9 +425,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         this._techUserRigts = rigths;
     }
 
-    private _init () {
+    private _init() {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string  = this._extentionsRigts.getTechRigth();
+            const techRights: string = this._extentionsRigts.getTechRigth();
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -435,7 +440,6 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         } else {  // строке в индексах с пробеломи присваиваем 0
             const arr = this.curentUser['TECH_RIGHTS'].split('');
             this._extentionsRigts.updateRigth(arr);
-            // обрезаю .substring(0, 41); т.к. в кривой базе 50 символов, а пропускает только 41
             this.curentUser['TECH_RIGHTS'] = arr.join('').substring(0, 64);
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);

@@ -31,6 +31,7 @@ export enum ETypeDeloRight {
     ReadingStrictAccessFiles = '33', // Чтение файлов строгого доступа
     ReadingEvents = '34', // Чтение событий
     WorkingWithEvents = '35', // Работа с событиями
+    Reporting = '36',
 }
 export type TupeDeloRight = ETypeDeloRight;
 
@@ -426,6 +427,16 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         onlyDL: true,
         useInProject: 'delo'
     },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: ETypeDeloRight.Reporting,
+        label: 'Получение отчетов',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.srchGroup
+        },
+        useInProject: 'delo'
+    },
 ];
 
 export const CONTROL_ALL_NOTALL: IInputParamControl = {
@@ -471,7 +482,7 @@ export const ABSOLUTE_RIGHTS_BTN_TABEL_SECOND = [
         iconDisable: 'eos-adm-icon-bin-forever-grey',
         id: 'deleted'
     },
-    
+
     {
         tooltip: 'Экспортировать',
         disable: false,
@@ -560,7 +571,7 @@ export const HTML_ABSOLUT_RIGHT_REPORT = `
         input[type="checkbox"] {
             display: none;
         }
-        
+
         /* стили для метки */
         label {
             color: #000;
@@ -632,8 +643,8 @@ export enum ALL_MAP_TO_ABS_RIGHT {
     newMapOrg= 'newMapOrg',// тут храним все DUE организаций которые меня интересуют
     mapDep = 'mapDep', // сохраняем все FUNC_NUM
     mapOrg = 'mapOrg', // сохраняем все FUNC_NUM
-    mapDepInfo = 'mapDepInfo', // сохраняем всю информацию 
-    mapOrgInfo = 'mapOrgInfo', // сохраняем всю информацию 
+    mapDepInfo = 'mapDepInfo', // сохраняем всю информацию
+    mapOrgInfo = 'mapOrgInfo', // сохраняем всю информацию
     mapOrgWeight = 'mapOrgWeight', // сохраняем все веса организаций чтобы привести таблицу в норму
     mapDepWeight = 'mapDepWeight', // сохраняем все веса департаментов чтобы привести таблицу в норму
 }

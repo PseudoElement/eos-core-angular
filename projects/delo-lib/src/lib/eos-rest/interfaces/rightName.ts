@@ -46,6 +46,8 @@ export enum E_TECH_RIGHT {
     MedoNode = 50, // Справочники МЭДО
     FormatSave = 49, // Форматы сохранения
     DocumentTypes = 51, // Виды документов
+    CustomizeReports = 57, // Настройка отчетов
+    ConfigurConfigToReports = 58, // Настройка доступа к отчетам
 }
 
 export enum E_CARD_RIGHT {

@@ -319,7 +319,7 @@ export interface SEV_PARTICIPANT extends ILinearCL {
      * список используемых для участников СЭВ правил
      */
     SEV_PARTICIPANT_RULE_List: SEV_PARTICIPANT_RULE[];
-    /* 
+    /*
     * Имя организации
     */
     ORGANIZ_CL_NAME: string;
@@ -644,7 +644,7 @@ export interface USER_CL extends ILinearCL {
      * список используемых для этого пользователя группы документов абсолютных прав
      */
     USER_RIGHT_DOCGROUP_List: USER_RIGHT_DOCGROUP[];
-//    USER_EDIT_ORG_TYPE_List;
+    //    USER_EDIT_ORG_TYPE_List;
 
     /** настрокки пользователя вызова справочников */
     CLICK_MODE_SETTINGS: number;
@@ -1009,7 +1009,7 @@ export interface DEPARTMENT extends IHierCL, IStamp {
     EXPEDITION_FLAG: number;
     MEDO_ID: string;
 
-    /** Запись не проверенна */ 
+    /** Запись не проверенна */
     UNREAD_FLAG: number;
 
     ISN_LCLASSIF?: number;
@@ -1051,9 +1051,9 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
      * Вид РК
      */
     REG_DATE_PROTECTED: string;
-     /**
-     * Запрещение на редактирование рег. даты
-     */
+    /**
+    * Запрещение на редактирование рег. даты
+    */
     RC_TYPE: number;
     /**
      * Индекс группы
@@ -3952,4 +3952,33 @@ export interface DELO_OWNER {
     SYS_ID: string;
     SYS_NAME: string;
     SYS_VERSION: string;
+}
+
+export interface SRCH_GROUP {
+    /**
+     * ISN группы отчета
+     */
+    ISN_GROUP: number;
+    /**
+     * name наименование группы отчета
+     */
+    NAME: string;
+    /**
+     * вес
+     */
+    WEIGHT: number;
+    ALLOWED_FOR_ALL: number;
+    PROTECTED: number;
+    NOTE: string;
+}
+
+export interface USER_SRCH_GROUP {
+    ISN_USER: number;
+    ISN_GROUP: number;
+}
+
+export interface SRCH_GROUP_ITEM {
+    ISN_GROUP: number;
+    ISN_REQUEST: number;
+    WEIGHT: number;
 }

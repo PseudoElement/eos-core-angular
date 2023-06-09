@@ -263,6 +263,19 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         expandable: E_TECH_USER_CLASSIF_CONTENT.none,
         useInProject: 'delo'
     },
+    {
+        key: E_TECH_RIGHTS.CustomizeReports,
+        label: 'Настройка отчетов',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none,
+        useInProject: 'delo'
+    },
+    {
+        key: E_TECH_RIGHTS.ConfigurConfigToReports,
+        label: 'Настройка доступа к отчетам',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none,
+        useInProject: 'delo'
+    },
+
 ];
 
 export const E_CLASSIF_ID = {

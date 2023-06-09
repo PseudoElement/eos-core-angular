@@ -1,0 +1,78 @@
+<div class="right-dep-list">
+    <div *ngIf="!isLoading; else spiner" class="right-dep-org-list-content">
+        <div>
+            <button
+                *ngIf="editMode && !selectedNode.control.disabled"
+                class="btn"
+                tooltip="Добавить группу отчетов"
+                placement="right"
+                [disabled]="isAccessToAddGroup"
+                triggers="hover"
+                containerClass="tooltip-info"
+                (click)="addSrchGroup()"
+                eosClickMode
+            >
+                <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
+            </button>
+            <button
+                *ngIf="editMode && !selectedNode.control.disabled"
+                class="btn"
+                tooltip="Удалить"
+                #itemTooltip="bs-tooltip"
+                placement="right"
+                triggers="hover"
+                containerClass="tooltip-info"
+                [disabled]="isAccessToAddGroup"
+                (click)="itemTooltip.hide(); deleteSrchGroup()"
+            >
+                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
+            </button>
+        </div>
+        <div>
+            <div class="over-tree-dep" [ngClass]="{ 'redact-tree-org': editMode }">
+                <eos-list-doc-tree
+                    class="tree-classif-node"
+                    [listNode]="listUserSrch"
+                    [editMode]="editMode"
+                    (select)="selectNode($event)"
+                    (checkedNode)="checkedNode($event)"
+                ></eos-list-doc-tree>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isShell" class="shell"></div>
+
+<ng-template #spiner>
+    <div class="spiner-wrapper">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #chooseSrcgGroup>
+    <div class="srch-group">
+        <div class="modal-header">
+            <div class="modal-wrapper">
+                <div>Группы отчетов</div>
+                <div>
+                    <button (click)="closeSubModal()" class="btn btn-primary" type="button">
+                        <span>ОТМЕНИТЬ</span>
+                    </button>
+                    <button type="button" (click)="modalRef.hide(); chooseSrchGroup()" class="btn btn-primary-full">
+                        ДОБАВИТЬ
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="srch-gr-list" *ngFor="let node of originSrchGroup">
+                <label class="checkbox">
+                    <input type="checkbox" [(ngModel)]="node.checked" />
+                    <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
+                    {{ node?.NAME }}
+                </label>
+            </div>
+        </div>
+    </div>
+</ng-template>

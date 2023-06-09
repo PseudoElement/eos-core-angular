@@ -43,6 +43,8 @@ export enum E_TECH_RIGHTS {
     DirectoriesMEDO = 50, // Справочники МЭДО
     DocumentTypes = 51, // Виды документов
     SettingGeneralLists = 52, // Настройка общих списков
+    CustomizeReports = 57, // Настройка отчетов
+    ConfigurConfigToReports = 58, // Настройка доступа к отчетам
 }
 export type ETypeTechRight = E_TECH_RIGHTS;
 

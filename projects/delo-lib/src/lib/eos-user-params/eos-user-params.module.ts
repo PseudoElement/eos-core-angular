@@ -96,6 +96,7 @@ import { NotificationAddressPlugComponent } from './notification-address-plug/no
 import { RughtDeloAbsRightService } from './rights-delo/rights-delo-absolute-rights/right-delo-absolute-rights.service';
 import { RemasterSstuComponent } from './user-params-set/user-param-ext-exch/remaster-sstu/remaster-sstu.component';
 import { RightDepertOrganizSstu } from './rights-delo/rights-delo-absolute-rights/right-organ-sstu/right-organ-sstu.component';
+import { RightSrchGroupomponent } from './rights-delo/rights-delo-absolute-rights/right-srch-group/right-srch-group.component';
 
 @NgModule({
     declarations: [
@@ -171,7 +172,8 @@ import { RightDepertOrganizSstu } from './rights-delo/rights-delo-absolute-right
         RemasterAspsdComponent,
         NotificationAddressPlugComponent,
         RemasterSstuComponent,
-        RightDepertOrganizSstu
+        RightDepertOrganizSstu,
+        RightSrchGroupomponent
     ],
     entryComponents: [
         AddGrifComponent

@@ -1,4 +1,4 @@
-import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
+import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif, E_TECH_RIGHTS } from './tech-user-classif.interface';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl, INodeDocsTreeCfg } from '../../../shared/intrfaces/user-parm.intterfaces';
 import { E_CLASSIF_ID } from './tech-user-classif.consts';
@@ -6,7 +6,7 @@ import { NodeDocsTree } from '../../../shared/list-docs-tree/node-docs-tree';
 import { AbsoluteRightsClassifComponent } from './absolute-rights-classif.component';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { USER_TECH } from '../../../../eos-rest';
-
+import { CONFIRM_REPORTING_ABS_RIGTH } from '../../../../app/consts/confirms.const';
 export class RightClassifNode {
     // isExpanded: boolean = false;
     listContent: NodeDocsTree[] = [];
@@ -62,6 +62,20 @@ export class RightClassifNode {
         if (this.key === 1) {
             this.item.label = 'Пользователи';
         }
+        if (this.item.key === E_TECH_RIGHTS.CustomizeReports) {
+            if (this._value) {
+                const itemConfigureReports = this._component.listClassif.find(node => node.item.key === E_TECH_RIGHTS.ConfigurConfigToReports);
+                if (!itemConfigureReports.value) {
+                    this._component.confirmSrv.confirm2(CONFIRM_REPORTING_ABS_RIGTH).then((result) => {
+                        if (result.result === 2) {
+                            itemConfigureReports.value = 1;
+                        }
+                    })
+                }
+
+
+            }
+        }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
                 const newNode: USER_TECH = this._component.createEntyti<USER_TECH>({
@@ -115,7 +129,7 @@ export class RightClassifNode {
             this._config = this._component.getConfig(this.type);
         }
         const initialOwerride = component._extentionsRigts.initialValues().filter(e => e.key === item.key);
-        const disableFields  = component._extentionsRigts.disableRigths().filter(e => e.key === item.key);
+        const disableFields = component._extentionsRigts.disableRigths().filter(e => e.key === item.key);
         if (this.parentNode.isCreate) {
             this._value = 0;
             this.value = v;
@@ -184,10 +198,10 @@ export class RightClassifNode {
                         this._listUserTech.push(newTechRight);
                         this._component.userTechList.push(newTechRight);
                     });
-            }
-            this.listContent = this.listContent.concat(newList);
-            this._component.Changed.emit();
-            this.isShell = false;
+                }
+                this.listContent = this.listContent.concat(newList);
+                this._component.Changed.emit();
+                this.isShell = false;
             })
             .catch((error) => {
                 this.isShell = false;
@@ -239,7 +253,7 @@ export class RightClassifNode {
                             DUE: item.DUE,
                             ALLOWED: this.getAllowedParent(item.DUE) ? 0 : 1,
                         }, 'USER_TECH');
-                        return Object.assign(item, {cardTech: cardTech});
+                        return Object.assign(item, { cardTech: cardTech });
                     });
                     this._component._userParmSrv.confirmCallCard(this._component.newCards).then((answer) => {
                         if (answer === true) {

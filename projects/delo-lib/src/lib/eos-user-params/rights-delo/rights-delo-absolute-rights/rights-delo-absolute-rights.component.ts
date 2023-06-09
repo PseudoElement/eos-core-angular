@@ -27,6 +27,7 @@ import { ITableData, ITableHeader, ITableSettings } from '../../../eos-parameter
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { RughtDeloAbsRightService } from './right-delo-absolute-rights.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { ReportingService } from './right-srch-group/right-srch-group.component';
 /* import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces'; */
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -34,9 +35,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 })
 
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
-    @ViewChild('tableAuthorized', {static: false}) tableAuthorized;
-    @ViewChild('autorizSetting', {static: false}) autorizSetting;
-    @ViewChild('autorizTable', {static: false}) autorizTable;
+    @ViewChild('tableAuthorized', { static: false }) tableAuthorized;
+    @ViewChild('autorizSetting', { static: false }) autorizSetting;
+    @ViewChild('autorizTable', { static: false }) autorizTable;
     curentUser: IParamUserCl;
     btnDisabled: boolean = true;
     isLoading: boolean = false;
@@ -113,7 +114,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _absRigthServ: AbsoluteRigthServiceLib,
         private _navSrv: NavParamService,
         private _rightDeloService: RughtDeloAbsRightService,
-        private _modalSrv: BsModalService
+        private _modalSrv: BsModalService,
+        private reportingSrv: ReportingService
     ) { }
     ngOnInit() {
         let expandStr = this.expandStr;
@@ -121,43 +123,43 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._userParamsSetSrv.getUserIsn({
             expand: expandStr
         })
-        .then(() => {
-            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-            this._userParamsSetSrv.checkGrifs(id).then(async (el) => {
-                this.flagGrifs = el;
-                const data = await this.apiSrv.getData({
-                    DEPARTMENT: {
-                        criteries: {
-                            'DUE_LINK_ORGANIZ': 'isnotnull',
-                            'DELETED': 0
-                        },
-                        orderby: 'CLASSIF_NAME',
-                    }
+            .then(() => {
+                const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+                this._userParamsSetSrv.checkGrifs(id).then(async (el) => {
+                    this.flagGrifs = el;
+                    const data = await this.apiSrv.getData({
+                        DEPARTMENT: {
+                            criteries: {
+                                'DUE_LINK_ORGANIZ': 'isnotnull',
+                                'DELETED': 0
+                            },
+                            orderby: 'CLASSIF_NAME',
+                        }
+                    });
+                    const dueOrg = [];
+                    data.forEach((item) => {
+                        dueOrg.push(item['DUE_LINK_ORGANIZ']);
+                    });
+                    this.simpleBase = data.length >= 2;
+                    this.init();
                 });
-                const dueOrg = [];
-                data.forEach((item) => {
-                    dueOrg.push(item['DUE_LINK_ORGANIZ']);
-                });
-                this.simpleBase = data.length >= 2;
-                this.init();
+            })
+            .catch(el => {
             });
-        })
-        .catch(el => {
-        });
         this._userParamsSetSrv.canDeactivateSubmit$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
             )
-        .subscribe((rout: RouterStateSnapshot) => {
-            this._userParamsSetSrv.submitSave = this.submit('true');
-        });
+            .subscribe((rout: RouterStateSnapshot) => {
+                this._userParamsSetSrv.submitSave = this.submit('true');
+            });
         this._navSrv.StateSandwich$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe((state: boolean) => {
-            this.leftSendwitch = state;
-        });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe((state: boolean) => {
+                this.leftSendwitch = state;
+            });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -230,7 +232,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.TABLE_HEADER_ABS_RIGHT.push({
             title: 'Участники документаоборота',
             id: 'CLASSIF_NAME',
-            style: {'min-width': '360px', 'max-width': '360px'},
+            style: { 'min-width': '360px', 'max-width': '360px' },
             fixed: true
         });
         ABS.forEach((item) => {
@@ -238,7 +240,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 const newElem = {
                     title: item.label,
                     id: item.key,
-                    style: {'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions  ? '200px' : '140px'},
+                    style: { 'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px' },
                     data: item
                 }
                 this.TABLE_HEADER_ABS_RIGHT.push(newElem);
@@ -276,21 +278,21 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         if (this._appContext.limitCardsUser.length > 0) {
             let arr;
             /* if (this._appContext.cbBase) { */
-                arr = [
-                    ETypeDeloRight.SystemTechnologist,
-                    ETypeDeloRight.SearchInAllFileCabinets,
-                    ETypeDeloRight.SendingDocumentsToRegisters,
-                    ETypeDeloRight.ViewAllOrders,
-                    ETypeDeloRight.BulkDeletionOfAds,
-                    ETypeDeloRight.ReadingFilesInAllFileCabinets,
-                    ETypeDeloRight.UploadingInformationToSSTU
-                ];
+            arr = [
+                ETypeDeloRight.SystemTechnologist,
+                ETypeDeloRight.SearchInAllFileCabinets,
+                ETypeDeloRight.SendingDocumentsToRegisters,
+                ETypeDeloRight.ViewAllOrders,
+                ETypeDeloRight.BulkDeletionOfAds,
+                ETypeDeloRight.ReadingFilesInAllFileCabinets,
+                ETypeDeloRight.UploadingInformationToSSTU
+            ];
             /* } else {
                 arr = ['0', '1', '2', '3', '18', '23', '29'];
             } */
             this.listRight.forEach(elem => {
                 if (arr.indexOf(elem.key) !== -1) {
-                    elem.control.disable({emitEvent: false});
+                    elem.control.disable({ emitEvent: false });
                 }
             });
         }
@@ -372,142 +374,142 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         return Promise.resolve('error');
                     }
                 }
-                return this._userParamsSetSrv.getSysTechUser({oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser})
-                .then((limited: boolean) => {
-                    this.limitUserTech = limited;
-                    //  false : this.checkChangeToLimitUser();
-                    if (this.limitUserTech === false) {
-                        if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
-                            if (this._checkCreatePRJNotEmptyAllowed()) {
-                                this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+                return this._userParamsSetSrv.getSysTechUser({ oldRights: this.arrDeloRight, newRights: this.arrNEWDeloRight, editUser: this.curentUser })
+                    .then((limited: boolean) => {
+                        this.limitUserTech = limited;
+                        //  false : this.checkChangeToLimitUser();
+                        if (this.limitUserTech === false) {
+                            if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
+                                if (this._checkCreatePRJNotEmptyAllowed()) {
+                                    this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+                                }
+                                this.isLoading = true;
+                                return Promise.resolve('error');
                             }
-                            this.isLoading = true;
-                            return Promise.resolve('error');
-                        }
-                        this.editMode = false;
-                        this.btnDisabled = true;
-                        this._pushState();
-                        let qUserCl;
-                        const strNewDeloRight = this.arrNEWDeloRight.join('');
-                        const strDeloRight = this.arrDeloRight.join('');
-                        if (strNewDeloRight !== strDeloRight) {
-                            const q = {
-                                method: 'MERGE',
-                                requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
-                                data: {
-                                    DELO_RIGHTS: strNewDeloRight
-                                }
-                            };
-                            qUserCl = q;
-                            this.queryForSave.push(q);
-                            this.arrDeloRight = strNewDeloRight.split('');
-                        }
-                        this.listRight.forEach((node: NodeAbsoluteRight) => {
-                            if (node.touched && node.key === '2' && !node.contentProp) {
-                                const sendMethod = node.value === 1 ? 'POST' : 'DELETE';
-                                if (sendMethod === 'POST') {
-                                    const q = {
-                                        method: sendMethod,
-                                        requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List`,
-                                        data: {
-                                            ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                                            FUNC_NUM: 3,
-                                            DUE: '0.',
-                                            WEIGHT: null,
-                                            DEEP: 1,
-                                            ALLOWED: 1
-                                        }
-                                    };
-                                    this.queryForSave.push(q);
-                                }
-                                if (sendMethod === 'DELETE' && this.curentUser.USERDEP_List.length) {
-                                    this.curentUser.USERDEP_List.forEach((dep) => {
-                                        if (dep.FUNC_NUM === 3) {
-                                            const query = {
-                                                method: sendMethod,
-                                                requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List('${this._userParamsSetSrv.userContextId} ${dep.DUE} 3')`,
-                                            };
-                                            this.queryForSave.push(query);
-                                        }
-                                    });
-                                }
-        
-                            }
-                            if (node.touched) {
-                                node.submitWeightChanges();
-                                node.change.forEach(ch => {
-                                    const batch = this._createBatch(ch, node, qUserCl);
-                                    if (batch) {
-                                        this.queryForSave.push(batch);
+                            this.editMode = false;
+                            this.btnDisabled = true;
+                            this._pushState();
+                            let qUserCl;
+                            const strNewDeloRight = this.arrNEWDeloRight.join('');
+                            const strDeloRight = this.arrDeloRight.join('');
+                            if (strNewDeloRight !== strDeloRight) {
+                                const q = {
+                                    method: 'MERGE',
+                                    requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
+                                    data: {
+                                        DELO_RIGHTS: strNewDeloRight
                                     }
-                                });
-                                node.deleteChange();
+                                };
+                                qUserCl = q;
+                                this.queryForSave.push(q);
+                                this.arrDeloRight = strNewDeloRight.split('');
                             }
-                        });
-                        if (this.groupDelRK.length > 0) {
-                            this.groupDelRK.forEach(Rk => {
-                                this.queryForSave.push(Rk);
+                            this.listRight.forEach((node: NodeAbsoluteRight) => {
+                                if (node.touched && node.key === '2' && !node.contentProp) {
+                                    const sendMethod = node.value === 1 ? 'POST' : 'DELETE';
+                                    if (sendMethod === 'POST') {
+                                        const q = {
+                                            method: sendMethod,
+                                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List`,
+                                            data: {
+                                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                                                FUNC_NUM: 3,
+                                                DUE: '0.',
+                                                WEIGHT: null,
+                                                DEEP: 1,
+                                                ALLOWED: 1
+                                            }
+                                        };
+                                        this.queryForSave.push(q);
+                                    }
+                                    if (sendMethod === 'DELETE' && this.curentUser.USERDEP_List.length) {
+                                        this.curentUser.USERDEP_List.forEach((dep) => {
+                                            if (dep.FUNC_NUM === 3) {
+                                                const query = {
+                                                    method: sendMethod,
+                                                    requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List('${this._userParamsSetSrv.userContextId} ${dep.DUE} 3')`,
+                                                };
+                                                this.queryForSave.push(query);
+                                            }
+                                        });
+                                    }
+
+                                }
+                                if (node.touched) {
+                                    node.submitWeightChanges();
+                                    node.change.forEach(ch => {
+                                        const batch = this._createBatch(ch, node, qUserCl);
+                                        if (batch) {
+                                            this.queryForSave.push(batch);
+                                        }
+                                    });
+                                    node.deleteChange();
+                                }
                             });
-                            this.groupDelRK = [];
+                            if (this.groupDelRK.length > 0) {
+                                this.groupDelRK.forEach(Rk => {
+                                    this.queryForSave.push(Rk);
+                                });
+                                this.groupDelRK = [];
+                            }
+                            this._rightDeloService.updateWeight(this.queryForSave);
+                            return this.apiSrv.setData(this.queryForSave)
+                                .then(() => {
+                                    const contentProp = this.selectedNode.contentProp;
+                                    this.queryForSave = [];
+                                    this.listRight = [];
+                                    this.selectedNode = null;
+                                    this.editMode = false;
+                                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                                    this.flagDel = false;
+                                    this._storageSrv.removeItem('abs_prav_mas');
+                                    if (this.curentUser['ISN_LCLASSIF'] === this._appContext.CurrentUser['ISN_LCLASSIF'] && contentProp === 6) {
+                                        this._appContext.init().then(() => {
+                                            if (!this._appContext.CurrentUser.TECH_RIGHTS || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
+                                                this._router.navigate(['/spravochniki']);
+                                            }
+
+                                        });
+                                    }
+                                    if (!flag) {
+                                        let expandStr = this.expandStr;
+                                        expandStr += this._absRigthServ.getExpandStr(); // расширение получения данных для пользователя
+                                        return this._userParamsSetSrv.getUserIsn({
+                                            expand: expandStr
+                                        })
+                                            .then(() => {
+                                                this.init();
+                                                if (this._appContext.CurrentUser.ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
+                                                    this._appContext.updateLimitCardsUser(this.curentUser.USER_TECH_List.filter(card => card.FUNC_NUM === 1).map(card => card.DUE));
+                                                }
+                                                this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
+                                            });
+                                    } else {
+                                        return this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
+                                    }
+                                }).catch((e) => {
+                                    this._errorSrv.errorHandler(e);
+                                    this.cancel();
+                                });
+                        } else {
+                            this._msgSrv.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: 'Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.',
+                                dismissOnTimeout: 5000
+                            });
+                            this.cancel();
                         }
-                        this._rightDeloService.updateWeight(this.queryForSave);
-                        return this.apiSrv.setData(this.queryForSave)
-                            .then(() => {
-                                const contentProp = this.selectedNode.contentProp;
-                                this.queryForSave = [];
-                                this.listRight = [];
-                                this.selectedNode = null;
-                                this.editMode = false;
-                                this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                                this.flagDel = false;
-                                this._storageSrv.removeItem('abs_prav_mas');
-                                if (this.curentUser['ISN_LCLASSIF'] === this._appContext.CurrentUser['ISN_LCLASSIF'] && contentProp === 6) {
-                                    this._appContext.init().then(() => {
-                                        if (!this._appContext.CurrentUser.TECH_RIGHTS || this._appContext.CurrentUser.TECH_RIGHTS[0] === '0') {
-                                            this._router.navigate(['/spravochniki']);
-                                        }
-        
-                                    });
-                                }
-                                if (!flag) {
-                                    let expandStr = this.expandStr;
-                                    expandStr += this._absRigthServ.getExpandStr(); // расширение получения данных для пользователя
-                                    return this._userParamsSetSrv.getUserIsn({
-                                        expand: expandStr
-                                    })
-                                    .then(() => {
-                                        this.init();
-                                        if (this._appContext.CurrentUser.ISN_LCLASSIF === this.curentUser.ISN_LCLASSIF) {
-                                            this._appContext.updateLimitCardsUser(this.curentUser.USER_TECH_List.filter(card => card.FUNC_NUM === 1).map(card => card.DUE));
-                                        }
-                                        this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
-                                    });
-                                } else {
-                                    return this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
-                                }
-                            }).catch((e) => {
-                                this._errorSrv.errorHandler(e);
-                                this.cancel();
-                            });
-                    } else {
-                        this._msgSrv.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение',
-                            msg: 'Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.',
-                            dismissOnTimeout: 5000
-                        });
-                        this.cancel();
                     }
-                }
-                ).catch((e) => {
-                    this._errorSrv.errorHandler(e);
-                    this.cancel();
-                });
+                    ).catch((e) => {
+                        this._errorSrv.errorHandler(e);
+                        this.cancel();
+                    });
             } else {
                 return Promise.resolve('error');
             }
         });
-        
+
         // this.selectedNode = null;
     }
     cancel() {
@@ -531,9 +533,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
         if (!this._userParamsSetSrv.curentUser.USERCARD_List.length) {
             this._router.navigate(['user-params-set/', 'card-files'],
-            {
-                queryParams: { isn_cl: id }
-            });
+                {
+                    queryParams: { isn_cl: id }
+                });
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение',
@@ -610,6 +612,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
             if (item.value === 1 && item.contentProp === 5) {
                 this.selectedNode.ischeckedAll = true;
+            }
+            if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.srchGroup) {
+                item.deleteChange();
+                if (!value) {
+                    this.reportingSrv.deletedUserSrch(item);
+                }
             }
         }
     }
@@ -712,7 +720,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (item.key === ETypeDeloRight.CreationOfRKPD) {
                 this.checkExecOrder(flag);
             }
-            if (item.key === ETypeDeloRight.BulkDeletionOfAds &&  !this._appContext.limitCardsUser.length) {
+            if (item.key === ETypeDeloRight.BulkDeletionOfAds && !this._appContext.limitCardsUser.length) {
                 setTimeout(() => this.checkGroupDelRK(flag), 500);
             }
         }
@@ -802,7 +810,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         if (paramsQuer['newMapOrg'].length > 0) {
             allQuery.push(this._userParamsSetSrv.getOrganizFromUser(paramsQuer['newMapOrg']));
-            
+
         } else {
             allQuery.push(Promise.resolve([]));
         }
@@ -820,7 +828,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.authorizedRight = false;
         if (flag) {
             this._rightDeloService.updateCurentUser();
-            this.checkChange();   
+            this.checkChange();
         } else {
             this._rightDeloService.clearInfo();
         }
@@ -833,7 +841,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             const localSetting = JSON.parse(curentSettingStr)['absolute-rights'];
             const newHeader = [];
             localSetting.forEach((oldHeader) => {
-                const findHead = headers.find((head) => {return oldHeader === head.id});
+                const findHead = headers.find((head) => { return oldHeader === head.id });
                 if (findHead) {
                     newHeader.push(findHead);
                 }
@@ -873,7 +881,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 curentSetting['absolute-rights'] = newHeaderKey;
                 localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
             } else {
-                const curentSetting = {'absolute-rights': newHeaderKey}
+                const curentSetting = { 'absolute-rights': newHeaderKey }
                 localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
             }
             this.tabelData.tableHeader = newHeader;
@@ -892,12 +900,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     changedAll($event) {
         /* if (this._appContext.cbBase) { */ ETypeDeloRight.SystemTechnologist
-            const pos_in = this.curentUser.TECH_RIGHTS.indexOf('1');
-            if (pos_in === -1 || pos_in >= 37) {
-                this.returnElemListRight(ETypeDeloRight.SystemTechnologist).control.patchValue(false);
-                this.returnElemListRight(ETypeDeloRight.SystemTechnologist).value = 0;
-                this._deleteAllClassif(this.returnElemListRight(ETypeDeloRight.SystemTechnologist));
-            }
+        const pos_in = this.curentUser.TECH_RIGHTS.indexOf('1');
+        if (pos_in === -1 || pos_in >= 37) {
+            this.returnElemListRight(ETypeDeloRight.SystemTechnologist).control.patchValue(false);
+            this.returnElemListRight(ETypeDeloRight.SystemTechnologist).value = 0;
+            this._deleteAllClassif(this.returnElemListRight(ETypeDeloRight.SystemTechnologist));
+        }
         /* } else {
             const mas_rigth = this.curentUser.TECH_RIGHTS.split('');
             mas_rigth[21] = '0';
@@ -1004,6 +1012,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             case E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
             case E_RIGHT_DELO_ACCESS_CONTENT.organiz:
+            case E_RIGHT_DELO_ACCESS_CONTENT.srchGroup:
                 if (this.selectedNode.value) {
                     setTimeout(() => {
                         this.rightContent = true;
@@ -1149,11 +1158,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             case E_RIGHT_DELO_ACCESS_CONTENT.organiz:
                 url = `/USER_ORGANIZ_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
                 break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.srchGroup:
+                url = `/USER_SRCH_GROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data?.ISN_GROUP}')`}`;
+                break;
         }
         let batch = {};
         if (node.contentProp === 5) {
             batch = this._absRigthServ.batchEditOrgType(chenge, uId);
-        } else {
+        }
+        else {
             batch = {
                 method: chenge.method,
                 requestUri: `USER_CL(${uId})${url}`,
@@ -1229,10 +1242,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return allowed;
     }
     private _checkKeyOrgan(node): boolean {
-        return  node.key === ETypeDeloRight.EnteringResolutions ||
-                node.key === ETypeDeloRight.ExecutionOfOrders ||
-                node.key === ETypeDeloRight.ApprovalOfProjects ||
-                node.key === ETypeDeloRight.ProjectSigning;
+        return node.key === ETypeDeloRight.EnteringResolutions ||
+            node.key === ETypeDeloRight.ExecutionOfOrders ||
+            node.key === ETypeDeloRight.ApprovalOfProjects ||
+            node.key === ETypeDeloRight.ProjectSigning;
     }
     private _checkCreateNotEmptyOrgan(): boolean {
         let allowed = false;

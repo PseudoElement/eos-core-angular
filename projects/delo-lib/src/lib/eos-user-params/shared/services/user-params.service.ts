@@ -106,7 +106,8 @@ export class UserParamsService {
                                        USERDEP_List,
                                        USERCARD_List/USER_CARD_DOCGROUP_List,
                                        NTFY_USER_EMAIL_List,
-                                       USER_TECH_List`;
+                                       USER_TECH_List,
+                                       USER_SRCH_GROUP_List`;
         let isn: number;
         let expand: string;
         expand = cfg && cfg.expand ? cfg.expand : defaultExpand;

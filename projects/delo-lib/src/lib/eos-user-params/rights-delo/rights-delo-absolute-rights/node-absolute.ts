@@ -64,7 +64,9 @@ export class NodeAbsoluteRight {
             this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
             this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz ||
             this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject ||
-            this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.organiz)) {
+            this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.organiz ||
+            this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.srchGroup
+        )) {
             const index = this._change.findIndex((item: IChengeItemAbsolute) => item.due === node.due);
             if (index >= 0) {
                 if (node.user_cl) {
@@ -183,7 +185,7 @@ export class NodeAbsoluteRight {
     }
 
     restoreChangesWeight(_storageSrv: EosStorageService) {
-        if ( _storageSrv.getItem('ch_weight')) {
+        if (_storageSrv.getItem('ch_weight')) {
             this._weightChanges = _storageSrv.getItem('ch_weight');
         }
     }
@@ -206,8 +208,18 @@ export class NodeAbsoluteRight {
             this._checkTouched();
             return;
         }
+        if (this._change[index].method === 'DELETE' && node.method === 'DELETE' && this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.srchGroup) {
+
+            return;
+
+        }
+        if (this._change[index].method === 'DELETE' && node.method === 'POST' && this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.srchGroup) {
+            this._change.splice(index, 1);
+            this._checkTouched();
+            return;
+        }
         if (this._change[index].method === 'DELETE') {
-            if (this.contentProp === 5) {
+            if (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz) {
                 this._change.splice(index, 1);
                 this._checkTouched();
                 return;
@@ -217,6 +229,7 @@ export class NodeAbsoluteRight {
             }
             return;
         }
+
         if (this._change[index].method === 'MERGE' && (node.method === 'DELETE')) {
             this._change.splice(index, 1, node);
             return;

@@ -1,24 +1,28 @@
 <div class="input-user-absolute-rights-wrapper" *ngIf="!authorizedRight; else authorized">
-    <eos-user-params-header 
+    <eos-user-params-header
         [defaultBtn]="getContentProp()"
-        dafaultTitle="авторизованные права"   
+        dafaultTitle="авторизованные права"
         [title]="titleHeader"
         [disableBtn]="btnDisabled"
         [editMode]="editMode"
         (submitEmit)="submit()"
         (cancelEmit)="cancel()"
         (editEmit)="edit()"
-        (defaultEmit)="absoluteTable()">
+        (defaultEmit)="absoluteTable()"
+    >
     </eos-user-params-header>
     <div class="input-user-absolute-rights">
         <div class="left-block-list-absolute-rights">
-            <div class="list-card-files" *ngFor="let item of listRight" [ngClass]="{'highlighted': item.isSelected}">
+            <div class="list-card-files" *ngFor="let item of listRight" [ngClass]="{ highlighted: item.isSelected }">
                 <div [formGroup]="form">
-                    <label class="checkbox" [ngClass]="{'disabled': !editMode}" (click)="[clickLable($event, item), checkRcpd($event, item)]">
-                        <input type="checkbox" hide [formControlName]="item.key" [id]="item.key">
-                        <span eosClickMode class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small">
-                        </span>
-                        {{item.label}}
+                    <label
+                        class="checkbox"
+                        [ngClass]="{ disabled: !editMode }"
+                        (click)="[clickLable($event, item), checkRcpd($event, item)]"
+                    >
+                        <input type="checkbox" hide [formControlName]="item.key" [id]="item.key" />
+                        <span eosClickMode class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"> </span>
+                        {{ item.label }}
                     </label>
                 </div>
             </div>
@@ -28,7 +32,8 @@
                 <ng-container [ngSwitch]="selectedNode.contentProp">
                     <!-- docGroup -->
                     <ng-container *ngSwitchCase="0">
-                        <ng-container eosClickMode *ngTemplateOutlet="rightDocGroup"></ng-container> <!-- s -->
+                        <ng-container eosClickMode *ngTemplateOutlet="rightDocGroup"></ng-container>
+                        <!-- s -->
                     </ng-container>
 
                     <!-- none -->
@@ -70,6 +75,9 @@
                     <ng-container *ngSwitchCase="10">
                         <ng-container *ngTemplateOutlet="organiz"></ng-container>
                     </ng-container>
+                    <ng-container *ngSwitchCase="11">
+                        <ng-container *ngTemplateOutlet="srchGroup"></ng-container>
+                    </ng-container>
                 </ng-container>
             </div>
         </div>
@@ -79,119 +87,204 @@
 <!-- --------------------------Отображение правой стороны------------------------------- -->
 
 <!-- пустой -->
-<ng-template #none>
-    None!!!
-</ng-template>
+<ng-template #none> None!!! </ng-template>
 
 <!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
-    <eos-right-absolute-department style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight" [projectResol]="projectResol"
-        (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)" (independetRight)="addIndepRights($event)"></eos-right-absolute-department>
+    <eos-right-absolute-department
+        style="width: 100%"
+        [editMode]="editMode"
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        [listRigth]="listRight"
+        [projectResol]="projectResol"
+        (Changed)="checkChange($event)"
+        (createRcpdD)="createRcpdD()"
+        (emitDeletedRc)="checkRcpdDelete(false)"
+        (independetRight)="addIndepRights($event)"
+    ></eos-right-absolute-department>
 </ng-template>
 
 <!-- всех/незаполненых -->
 <ng-template #all>
-    <eos-dynamic-input *ngIf="formGroupAll" class="inline-block" [input]="inputAll['all']" [form]="formGroupAll"
-        [readonly]="formGroupAll.get('all').disabled"></eos-dynamic-input>
+    <eos-dynamic-input
+        *ngIf="formGroupAll"
+        class="inline-block"
+        [input]="inputAll['all']"
+        [form]="formGroupAll"
+        [readonly]="formGroupAll.get('all').disabled"
+    ></eos-dynamic-input>
 </ng-template>
 
 <!-- Группы документов -->
 <ng-template #rightDocGroup>
-    <eos-right-absolute-doc-group style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
-        (Changed)="checkChange()"></eos-right-absolute-doc-group>
+    <eos-right-absolute-doc-group
+        style="width: 100%"
+        [editMode]="editMode"
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        (Changed)="checkChange()"
+    ></eos-right-absolute-doc-group>
 </ng-template>
 
 <ng-template #classif>
-    <eos-absolute-rights-classif style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
-        (Changed)="checkChange()" (allNotCheck)="changedAll($event)"></eos-absolute-rights-classif>
+    <eos-absolute-rights-classif
+        style="width: 100%"
+        [editMode]="editMode"
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        (Changed)="checkChange()"
+        (allNotCheck)="changedAll($event)"
+    ></eos-absolute-rights-classif>
 </ng-template>
 
 <ng-template #departOrganiz>
-    <div style="height: 100%;">
-        <div style="height: 50%;position: relative;">
-            <eos-right-absolute-depart-organiz style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight" [resolutions]="resolutionsRights"
-            (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)" (independetRight)="addIndepRights($event)"></eos-right-absolute-depart-organiz>
+    <div style="height: 100%">
+        <div style="height: 50%; position: relative">
+            <eos-right-absolute-depart-organiz
+                style="width: 100%"
+                [editMode]="editMode"
+                [selectedNode]="selectedNode"
+                [curentUser]="curentUser"
+                [listRigth]="listRight"
+                [resolutions]="resolutionsRights"
+                (Changed)="checkChange($event)"
+                (createRcpdD)="createRcpdD()"
+                (emitDeletedRc)="checkRcpdDelete(false)"
+                (independetRight)="addIndepRights($event)"
+            ></eos-right-absolute-depart-organiz>
         </div>
-        <hr style="margin-bottom: 5px;margin-top: 35px;" />
-        <div style="height: 47%;position: relative;">
-            <eos-right-absolute-organiz-depart style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser" [listRigth]="listRight"
-            (Changed)="checkChange($event)" (createRcpdD)="createRcpdD()" (emitDeletedRc)="checkRcpdDelete(false)"></eos-right-absolute-organiz-depart>
-        </div>
-    </div>
-</ng-template>
-<ng-template #organiz>
-    <div style="height: 100%;">
-        <div style="height: 100%;position: relative;">
-            <eos-right-absolute-organiz-sstu
-                style="width: 100%;"
+        <hr style="margin-bottom: 5px; margin-top: 35px" />
+        <div style="height: 47%; position: relative">
+            <eos-right-absolute-organiz-depart
+                style="width: 100%"
                 [editMode]="editMode"
                 [selectedNode]="selectedNode"
                 [curentUser]="curentUser"
                 [listRigth]="listRight"
                 (Changed)="checkChange($event)"
                 (createRcpdD)="createRcpdD()"
-                (emitDeletedRc)="checkRcpdDelete(false)">
+                (emitDeletedRc)="checkRcpdDelete(false)"
+            ></eos-right-absolute-organiz-depart>
+        </div>
+    </div>
+</ng-template>
+<ng-template #organiz>
+    <div style="height: 100%">
+        <div style="height: 100%; position: relative">
+            <eos-right-absolute-organiz-sstu
+                style="width: 100%"
+                [editMode]="editMode"
+                [selectedNode]="selectedNode"
+                [curentUser]="curentUser"
+                [listRigth]="listRight"
+                (Changed)="checkChange($event)"
+                (createRcpdD)="createRcpdD()"
+                (emitDeletedRc)="checkRcpdDelete(false)"
+            >
             </eos-right-absolute-organiz-sstu>
         </div>
     </div>
 </ng-template>
 <ng-template #editOrganiz>
-    <eos-dynamic-input *ngIf="formGroupAll" class="inline-block" [input]="inputAll['all']" [form]="formGroupAll"
-        [readonly]="formGroupAll.get('all').disabled"></eos-dynamic-input>
-        <extension-organization *ngIf="this.selectedNode?.value" style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
-        (Changed)="checkChange()"></extension-organization>
+    <eos-dynamic-input
+        *ngIf="formGroupAll"
+        class="inline-block"
+        [input]="inputAll['all']"
+        [form]="formGroupAll"
+        [readonly]="formGroupAll.get('all').disabled"
+    ></eos-dynamic-input>
+    <extension-organization
+        *ngIf="this.selectedNode?.value"
+        style="width: 100%"
+        [editMode]="editMode"
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        (Changed)="checkChange()"
+    ></extension-organization>
 </ng-template>
 <ng-template #spiner>
-    <eos-spinner size="lg" class="content-absolute" [ngStyle]="{'right': listRight && listRight.length > 0 ? '23%' : '47%' }"></eos-spinner>
+    <eos-spinner
+        size="lg"
+        class="content-absolute"
+        [ngStyle]="{ right: listRight && listRight.length > 0 ? '23%' : '47%' }"
+    ></eos-spinner>
 </ng-template>
 
 <ng-template #authorized>
-    <div 
-        style="width: calc(100% - 380px); background-color: white; height: 100px; position: absolute; left: 380px; height: calc(100vh - 130px);" 
-        [ngStyle]="{'width': leftSendwitch ? 'calc(100% - 400px)' : 'calc(100vw - 60px)', left: leftSendwitch ? '390px' : '40px'}">
-        <div style="display: flex; height: 48px;justify-content: space-between; padding: 0 16px 0 16px; line-height: 48px;">
-            <span style="color: #646464; font-size: 18px;">{{curentUser.CLASSIF_NAME}} Абсолютные авторизованные права</span>
-            <div style="display: flex;padding-top: 10px;">
+    <div
+        style="
+            width: calc(100% - 380px);
+            background-color: white;
+            height: 100px;
+            position: absolute;
+            left: 380px;
+            height: calc(100vh - 130px);
+        "
+        [ngStyle]="{
+            width: leftSendwitch ? 'calc(100% - 400px)' : 'calc(100vw - 60px)',
+            left: leftSendwitch ? '390px' : '40px'
+        }"
+    >
+        <div
+            style="
+                display: flex;
+                height: 48px;
+                justify-content: space-between;
+                padding: 0 16px 0 16px;
+                line-height: 48px;
+            "
+        >
+            <span style="color: #646464; font-size: 18px"
+                >{{ curentUser.CLASSIF_NAME }} Абсолютные авторизованные права</span
+            >
+            <div style="display: flex; padding-top: 10px">
                 <button
-                    style="width: 88px; height: 28px; margin-right: 8px;"
+                    style="width: 88px; height: 28px; margin-right: 8px"
                     class="btn btn-primary"
-                    (click)="close(false)">
+                    (click)="close(false)"
+                >
                     ОТМЕНИТЬ
                 </button>
-                <button
-                    style="width: 88px; height: 28px;"
-                    class="btn btn-primary-full"
-                    (click)="close(true)">
+                <button style="width: 88px; height: 28px" class="btn btn-primary-full" (click)="close(true)">
                     ВЫБРАТЬ
                 </button>
             </div>
         </div>
-            <eos-tabel-element
-                #autorizTable
-                [edit]="true"
-                [tabelData]="tabelData"
-                [settings]="settingsTable"
-                (btnAction)="actionTo($event)"
-                (elementsSelect)="selectElement($event)"
-                (orderHead)="orderHead($event)">
-            </eos-tabel-element>
+        <eos-tabel-element
+            #autorizTable
+            [edit]="true"
+            [tabelData]="tabelData"
+            [settings]="settingsTable"
+            (btnAction)="actionTo($event)"
+            (elementsSelect)="selectElement($event)"
+            (orderHead)="orderHead($event)"
+        >
+        </eos-tabel-element>
     </div>
 </ng-template>
 <ng-template #autorizSetting>
     <div class="autorizSetting">
-        <div style="display: flex; height: 48px;justify-content: space-between; padding: 0 16px 0 16px; line-height: 48px;border-bottom: 1px solid #e6e6e6">
-            <span style="color: #646464; font-size: 18px;">Настройка отображения таблицы</span>
-            <div style="display: flex;padding-top: 10px;">
+        <div
+            style="
+                display: flex;
+                height: 48px;
+                justify-content: space-between;
+                padding: 0 16px 0 16px;
+                line-height: 48px;
+                border-bottom: 1px solid #e6e6e6;
+            "
+        >
+            <span style="color: #646464; font-size: 18px">Настройка отображения таблицы</span>
+            <div style="display: flex; padding-top: 10px">
                 <button
-                    style="width: 88px; height: 28px; margin-right: 8px;"
+                    style="width: 88px; height: 28px; margin-right: 8px"
                     class="btn btn-primary"
-                    (click)="saveSettings(false)">
+                    (click)="saveSettings(false)"
+                >
                     ОТМЕНИТЬ
                 </button>
-                <button
-                    style="width: 88px; height: 28px;"
-                    class="btn btn-primary-full"
-                    (click)="saveSettings(true)">
+                <button style="width: 88px; height: 28px" class="btn btn-primary-full" (click)="saveSettings(true)">
                     СОХРАНИТЬ
                 </button>
             </div>
@@ -199,16 +292,35 @@
         <div class="all-window">
             <div class="all-row-setting-table">
                 <div *ngFor="let header of getFixedRow()" class="row-setting-fixed fixed-item">
-                    <i style="line-height: 20px; padding-right: 5px;" class="fa fa-lock unimportant-text"
-                        aria-hidden="true"></i>
-                    {{header.title}}
+                    <i
+                        style="line-height: 20px; padding-right: 5px"
+                        class="fa fa-lock unimportant-text"
+                        aria-hidden="true"
+                    ></i>
+                    {{ header.title }}
                 </div>
-                <div [dragula]='"bag-one"' [dragulaModel]='rowNotFixed'>
+                <div [dragula]="'bag-one'" [dragulaModel]="rowNotFixed">
                     <div *ngFor="let header of rowNotFixed" class="row-setting" [id]="header.id">
-                        {{header.title}}
+                        {{ header.title }}
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #srchGroup>
+    <div style="height: 100%">
+        <div style="height: 100%; position: relative">
+            <eos-right-srch-group
+                style="width: 100%"
+                [editMode]="editMode"
+                [selectedNode]="selectedNode"
+                [curentUser]="curentUser"
+                [listRigth]="listRight"
+                (Changed)="checkChange($event)"
+            >
+            </eos-right-srch-group>
         </div>
     </div>
 </ng-template>
