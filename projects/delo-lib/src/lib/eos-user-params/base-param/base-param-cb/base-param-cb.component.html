@@ -113,7 +113,7 @@
                     <span
                         style="position: absolute; top: 30px; right: 20px;"
                         class="icon eos-adm-icon small"
-                        [tooltip]="getSelectNote ? 'Введено вручную. Для выбора из справочника необходимо очистить.' : ''"
+                        [tooltip]="!getSelectNote || !form.controls['NOTE'].value ? '' : 'Введено вручную. Для выбора из справочника необходимо очистить.'"
                         container="body"
                         placement="bottom"
                         containerClass="tooltip-info"

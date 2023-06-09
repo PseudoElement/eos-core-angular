@@ -1,8 +1,8 @@
 <div class="full-search-top usual-border">
     <span class="pull-left title xl-font">Настройка ролей</span>
     <div class="pull-right srch-btns">
-        <button class="btn btn-primary s-font upper" (click)="close()">Отменить</button>
-        <button class="btn btn-primary-full s-font upper" (click)="save()">Сохранить</button>
+        <button style="height: 28px; width: 86px; padding-top: 5px;" class="btn btn-primary s-font upper" (click)="close()">Отменить</button>
+        <button style="height: 28px; width: 86px; padding-top: 5px;" class="btn btn-primary-full s-font upper" (click)="save()">Сохранить</button>
     </div>
 </div>
 <div class="modal-body-cb" *ngIf="deletRole">
@@ -44,7 +44,7 @@
                 </button>
             </span>
         </div>
-        <div class="col-r">
+        <div class="col-r" style="width: 100%;">
             <span class="long-title xl-font">Назначение роли</span>
             <div class="title-dir-role-button">
                 <div class="change-due">
@@ -60,7 +60,7 @@
                         container="body"
                         placement="bottom"
                         containerClass="tooltip-info">
-                        <span [ngClass]="[btnChangeDue ? 'eos-adm-icon-DeepUser-Blue' : 'eos-adm-icon-DeepUser-Grey']" class="eos-adm-icon small get"></span>
+                        <span [ngClass]="[btnChangeDue ? 'eos-adm-icons-take-right-from-blue' : 'eos-adm-icons-take-right-from-grey']" class="eos-adm-icon small get"></span>
                     </button>
                 </div>
             </div>
@@ -93,8 +93,8 @@
         </div>
     </div>
 </div>
-<div class="modal-body-cb">
-    <div class="spinner-wrapper" *ngIf="!deletRole">
+<div class="modal-body-cb" *ngIf="!deletRole">
+    <div class="spinner-wrapper" >
         <eos-spinner [size]="'lg'"></eos-spinner>
     </div>
 </div>

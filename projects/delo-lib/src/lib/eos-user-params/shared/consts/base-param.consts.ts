@@ -25,7 +25,7 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.string,
         key: 'NOTE',
         label: 'ПОДРАЗДЕЛЕНИЕ',
-        length: 255
+        // length: 255
     },
     {
         controlType: E_FIELD_TYPE.string,
@@ -115,7 +115,7 @@ export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.string,
         key: 'NOTE',
         label: 'ПОДРАЗДЕЛЕНИЕ',
-        length: 255
+        // length: 255
     },
 
     {
