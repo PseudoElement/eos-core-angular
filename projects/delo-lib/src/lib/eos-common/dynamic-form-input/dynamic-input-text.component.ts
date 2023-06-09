@@ -23,7 +23,7 @@ export class DynamicInputTextComponent extends DynamicInputBaseDirective {
     }
     @HostListener('keydown', ['$event'])
     openStdText($event) {
-        if (this.isFocused && $event.keyCode === 45) {
+        if (this.isFocused && $event.keyCode === 45 && !this.notStandartText) {
             this.openClassif();
         }
     }
