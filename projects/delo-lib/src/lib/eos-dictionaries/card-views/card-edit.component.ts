@@ -169,7 +169,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                             this.isChanged = true;
                         }
                         if (path.indexOf('owners[') !== -1 && path.indexOf('].ISN_CABINET') !== -1) {
-                            allOwners.push(this.newData.owners[+path[7]]);
+                            const open = path.indexOf('[');
+                            const close = path.indexOf(']');
+                            const index = path.slice(open + 1, close);
+                            allOwners.push(this.newData.owners[+index]);
                         }
                     });
                     if (this.dictionaryId === 'cabinet') {
