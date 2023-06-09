@@ -178,6 +178,9 @@ export class ParamFielsComponent extends BaseParamComponent {
             if (this.prepareData.rec['FILE_DESCRIPTION_VALID_CHARS'] === this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value) {
                 delete this.updateData['FILE_DESCRIPTION_VALID_CHARS'];
             }
+            if (!this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].value) {
+                this.updateData['FILE_DESCRIPTION_REPLACE'] = '';
+            }
         }
         if (this.form.controls['rec.FILE_DESCRIPTION_VALID_CHARS'].valid && this.checkReplace()) {
             alert('В параметре "Символ для замены" описания файлов введен не допустимый символ. Он будет удален');
@@ -286,7 +289,9 @@ export class ParamFielsComponent extends BaseParamComponent {
                 .subscribe(value => {
                     if (!value) {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].setValue('');
-                        this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].disable({emitEvent: false});
+                        setTimeout(() => {
+                            this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].disable({emitEvent: false}); 
+                        }, 0);
                     } else {
                         this.form.controls['rec.FILE_DESCRIPTION_REPLACE'].enable({emitEvent: false});
                     }
@@ -506,7 +511,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         if (key === 'FILE') {
             _value = +value;
         } else if (key === 'SIZE') {
-            _value = (!value || value === '0') ? null : +value;
+            _value = (!value) ? null : +value;
         } else if (key === 'EXTENSIONS') {
             _value = value ? value : null;
         } else {

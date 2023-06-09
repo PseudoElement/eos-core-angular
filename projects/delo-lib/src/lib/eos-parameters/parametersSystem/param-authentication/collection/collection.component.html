@@ -14,7 +14,7 @@
 </div>
 <div class="collection-param">
     <div class="checkbox-inline">
-        <label [tooltip]="checkCheckList ? 'Снять пометки' : 'Пометить все'" placement="bottom" containerClass="tooltip-info">
+        <label [tooltip]="checkCheckList ? 'Снять пометки' : 'Пометить все'" placement="bottom" container="body" containerClass="tooltip-info">
                 <input type="checkbox" #checkAllMarkes [checked]='checkCheckList' (change)="toggleAllMarks($event)">
                 <span></span>
             </label>
