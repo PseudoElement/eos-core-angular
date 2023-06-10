@@ -923,6 +923,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         let c = false;
         this.listRight.forEach(li => { // проверяем список на изменения
+            if (li.change.length > 0) {
+                li.touched = true;
+            }
             if (li.touched) {
                 c = true;
             }
@@ -1042,6 +1045,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
             if (li['FUNC_NUM'] === +item.key + 1) {
                 list.push(li);
+                return false;
             } else {
                 return true;
             }
@@ -1061,6 +1065,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.curentUser['USER_ORGANIZ_List'] = this.curentUser['USER_ORGANIZ_List'].filter(li => {
             if (li['FUNC_NUM'] === +item.key + 1) {
                 list.push(li);
+                return false;
             } else {
                 return true;
             }
