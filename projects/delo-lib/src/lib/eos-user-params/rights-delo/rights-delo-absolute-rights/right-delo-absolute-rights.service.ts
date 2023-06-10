@@ -387,7 +387,7 @@ export class RughtDeloAbsRightService {
                     */
                     if (header.id === ETypeDeloRight.IntroductionOfDraftResolutions) {
                         if (this.deloRights22 && dep['key'] === '0.') {
-                            deep = this.deloRights22 === '2' ? true : false;
+                            deep = this.deloRights22 === '2' ? true : undefined;
                         }
                     }
                     dep[header.id] = {
