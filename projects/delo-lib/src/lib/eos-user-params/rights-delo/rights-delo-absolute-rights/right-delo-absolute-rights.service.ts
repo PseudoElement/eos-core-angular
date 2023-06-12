@@ -275,7 +275,7 @@ export class RughtDeloAbsRightService {
         const alreadyWeight = new Map();
         if (this.paramsToQuery && (this.paramsToQuery.mapOrgWeight || this.paramsToQuery.mapDepWeight)) {
             queryAll.forEach((query) => {
-                if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // лорганизации
+                if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // организации
                     const weighNew = this.paramsToQuery.mapOrgWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew && (query.method === 'POST' || query.method === 'MERGE')) {
                         query.data['WEIGHT'] = weighNew;
@@ -387,7 +387,7 @@ export class RughtDeloAbsRightService {
                     */
                     if (header.id === ETypeDeloRight.IntroductionOfDraftResolutions) {
                         if (this.deloRights22 && dep['key'] === '0.') {
-                            deep = this.deloRights22 === '2' ? true : false;
+                            deep = this.deloRights22 === '2' ? true : undefined;
                         }
                     }
                     dep[header.id] = {
@@ -619,6 +619,7 @@ export class RughtDeloAbsRightService {
         });
     }
     getParamsToQuery(curentUser): IAbsRightMapSet {
+        this.paramsToQuery = undefined;
         const newMapDep = [];
         const newMapOrg = [];
         const mapDep = new Map();
@@ -681,7 +682,7 @@ export class RughtDeloAbsRightService {
                 }
                 right.pushChange(value);
             }
-            if (value.method === 'POST' || value.method === 'MERGE' && value['data'].__metadata.__type === 'USERDEP') {
+            if ((value.method === 'POST' || value.method === 'MERGE') && value['data'].__metadata.__type === 'USERDEP') {
                 if (value.method === 'MERGE') {
                     let flag = true;
                     this._userParmSrv.curentUser.USERDEP_List.forEach((dep) => {
@@ -697,7 +698,7 @@ export class RughtDeloAbsRightService {
                     this._userParmSrv.curentUser.USERDEP_List.push(value.data);
                 }
             }
-            if (value.method === 'POST' || value.method === 'MERGE' && value['data'].__metadata.__type === 'USER_ORGANIZ') {
+            if ((value.method === 'POST' || value.method === 'MERGE') && value['data'].__metadata.__type === 'USER_ORGANIZ') {
                 this._userParmSrv.curentUser['USER_ORGANIZ_List'].push(value.data);
             }
         });
@@ -730,6 +731,7 @@ export class RughtDeloAbsRightService {
                 right.touched = true;
             }
         });
+        this.listRightNew.clear();
     }
     clearInfo() {
         this.paramsToQuery = undefined;
