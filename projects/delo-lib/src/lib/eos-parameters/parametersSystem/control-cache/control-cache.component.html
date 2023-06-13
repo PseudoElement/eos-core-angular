@@ -17,8 +17,19 @@
         <div class="cache-date">
             <span>Состояние Кэша на {{dateCache}}</span>
         </div>
+        <div class="show-tables-cache-info" *ngIf="isLoading">
+            <div *ngFor="let cache of allInfo" class="row-cash-info">
+                <div style="display: flex;">
+                    <div class="cache-item2" style="width: 150px; padding-left: 20px;">{{getDataInfo(cache.Item3)}}</div>
+                    <div class="cache-item1" style="width: 250px;">{{cache.Item1}}</div>
+                    <div class="cache-item3" style="width: 320px;">{{cache.Item2}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="cache-date">
+            <span>History</span>
+        </div>
         <div class="show-tables-cache" *ngIf="isLoading">
-            
             <div *ngFor="let cache of allCashe" class="row-cash-info">
                 <div style="display: flex;">
                     <div class="cache-item1">{{cache.Item1}}</div>

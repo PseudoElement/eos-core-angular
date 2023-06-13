@@ -7,8 +7,11 @@
         .row-cash-info {
             border-bottom: 1px solid black;
         }
+        .show-tables-cache-info {
+            max-height: 125px;
+        }
         .show-tables-cache {
-            max-height: calc(100vh - 340px);
+            max-height: calc(100vh - 500px);
             overflow: auto;
             padding: 20px 0px 0 0px;
             border-top: 1px solid #ddd;

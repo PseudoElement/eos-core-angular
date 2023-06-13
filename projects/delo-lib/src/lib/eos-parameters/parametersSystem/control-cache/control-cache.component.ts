@@ -11,6 +11,7 @@ export class ParamControlCache extends BaseParamComponent {
     @Input() btnError;
     isLoading = false;
     allCashe;
+    allInfo;
     dateCache;
     constructor(injector: Injector, private pip: PipRX) {
         super(injector, CONTROL_CACHE_INFO);
@@ -18,12 +19,14 @@ export class ParamControlCache extends BaseParamComponent {
             .then(() => {
                 this.dateCache = this.getDataNow();
                 this.getAllCache();
+                this.getAllInfo();
                 this.form.disable({ emitEvent: false });
             })
             .catch(err => {
-                if (err.code !== 434) {
+                if (err.code !== 401) {
                     console.log(err);
                 }
+                this._errorSrv.errorHandler(err);
             });
     }
     getAllCache(): Promise<any[]> {
@@ -32,6 +35,19 @@ export class ParamControlCache extends BaseParamComponent {
           })
         .then((data) => {
             this.allCashe = data;
+            this.isLoading = true;
+            return data;
+        })
+        .catch(err => {
+                throw err;
+        });
+    }
+    getAllInfo(): Promise<any[]> {
+        return this.pip.read<any>({
+            'CacheStates': ALL_ROWS
+          })
+        .then((data) => {
+            this.allInfo = data;
             this.isLoading = true;
             return data;
         })
@@ -69,6 +85,14 @@ export class ParamControlCache extends BaseParamComponent {
     }
     submit() {
         this.form.disable({ emitEvent: false });
+    }
+    getDataInfo(infoData: string): string {
+        if (infoData) {
+            return infoData.split('T')[1].split('+')[0];
+        } else {
+            return '';
+        }
+        
     }
     getFormatItem(item) {
         let str = '';
