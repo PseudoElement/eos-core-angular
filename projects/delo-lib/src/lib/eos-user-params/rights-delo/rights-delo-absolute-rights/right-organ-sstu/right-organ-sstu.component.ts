@@ -97,11 +97,11 @@ export class RightDepertOrganizSstu implements OnInit {
                 ['../sstu/get-organizations-to-select']: ALL_ROWS
             });
             const ans = [];
-            if (Object.keys(data).length > 0) {
-                Object.keys(data).forEach((key) => {
+            if (data.length > 0) {
+                data.forEach((org) => {
                     ans.push({
-                        DUE: key,
-                        CLASSIF_NAME: data['key'],
+                        DUE: org['Due'],
+                        CLASSIF_NAME: data['ClassifName'],
                     })
                 });
                 return ans;
