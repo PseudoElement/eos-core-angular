@@ -80,7 +80,7 @@ export class DynamicInputSelect2Component extends DynamicInputBaseDirective impl
         }
     }
     controlIsValid() {
-        return this.control.valid;
+        return this.control.valid || !this.control.invalid;
     }
 
 
