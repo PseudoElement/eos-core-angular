@@ -1,32 +1,44 @@
 .rem-auto-search {
+    padding-right: 20px;
+    
+    .user-group-form{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
     .sort-link {
         display: flex;
-        .sort-sp {
-            margin-top: 7px;
-            margin-right: 10px;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+
+        .box-checkbox-sort {
+            width: 50%;
         }
+
         .flex-column {
             display: flex;
             flex-direction: column;
+            width: 180px;
+            gap: 5px;
         }
     }
-    .search-citizens-in-the-directory-by-fields-radio {
-        padding-left: 0;
-        li {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-        }
-    }
-    .right-input-pos {
-        display: flex;
+
+    .inputs-inline {
         align-items: center;
-        margin-bottom: 20px;
-        justify-content: flex-end;
-        margin-right: 40px;
-        span {
-            margin-right: 10px;
-        }
+        gap: 10px;
+    }
+    .space {
+        flex-grow: 1;
+    }
+    .double-space {
+        flex-grow: 2;
     }
 }
 
+.right-input-pos {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
