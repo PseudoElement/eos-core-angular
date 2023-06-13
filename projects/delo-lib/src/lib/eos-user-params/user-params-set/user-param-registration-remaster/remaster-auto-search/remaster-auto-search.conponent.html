@@ -2,6 +2,7 @@
     <div *ngIf="!isCurrentSettings || appMode.arm || appMode.cbr || appMode.tk" class="set-header bold">
         <span>Отображение связок и переписки в АРМ «ДелоWeb»</span>
     </div>
+
     <div *ngIf="!isCurrentSettings || appMode.arm || appMode.cbr || appMode.tk" class="user-group-form">
         <div [ngStyle]="{'margin-bottom': '10px'}">
             <span>Показывать для документа:</span>
@@ -27,13 +28,14 @@
             [readonly]="false"
         ></eos-dynamic-input>
     </div>
+
     <div *ngIf="!isCurrentSettings  || appMode.arm || appMode.cbr || appMode.tk" class="user-group-form">
         <div class="sort-link">
             <div class="sort-sp">
                 <span>Сортировать связки:</span>
             </div>
             <eos-dynamic-input
-                [ngStyle]="{'width': '50%'}"
+                class="box-checkbox-sort"
                 [input]="inputs['rec.LINKS_SORT']"
                 [form]="form"
                 [readonly]="false"
@@ -65,35 +67,55 @@
                 <span>Сортировать переписку по дате регистрации:</span>
             </div>
             <eos-dynamic-input
-                [ngStyle]="{'width': '50%'}"
+                class="space"
                 [input]="inputs['rec.CORRESPONDENCE_SORT_ORDER']"
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
         </div>
     </div>
+
     <div class="set-header bold">
         <span >Поиск документов/проектов документов и создание связки</span>
     </div>
+
     <div class="user-group-form search-link-wrapper">
         <div class="inputs-inline">
-            <span  [ngStyle]="{ 'padding-top':'5px' }" >Искать по:</span> 
-            <eos-dynamic-input [ngStyle]="{'width': '55%', 'margin-right': '10px', 'margin-left': '20px' }" [input]="inputs['rec.LINKED_SEARCHPARAM']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [ngStyle]="{'width': '180px'}" [input]="inputs['rec.LINKED_SEARCHVALUE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        </div><br>
+            <span>Искать по:</span> 
+            <eos-dynamic-input 
+                class="space"
+                [input]="inputs['rec.LINKED_SEARCHPARAM']" 
+                [form]="form" 
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input 
+                [ngStyle]="{'width': '180px'}"
+                [input]="inputs['rec.LINKED_SEARCHVALUE']" 
+                [form]="form" [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+        
         <extension-user-params-registration
             [appMode]="appMode"
             [isCurrentSettings]="isCurrentSettings" 
             [input]="inputs" 
             [form]="form">
         </extension-user-params-registration>
+
         <div class="right-input-pos">
-            <span [ngStyle]="{ 'padding-top':'5px' }" >Создавать связку с типом:</span> 
+            <span>Создавать связку с типом:</span> 
             <!-- <eos-dynamic-input [ngStyle]="{'width': '452px'}" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
-            <eos-dynamic-input [ngStyle]="{'width': '67%', 'margin-left': '20px' }" [input]="inputs['rec.LINKED_LINKTYPE']" [form]="form" [readonly]="false"></eos-dynamic-input> 
+            <eos-dynamic-input 
+                class="double-space"
+                [input]="inputs['rec.LINKED_LINKTYPE']" 
+                [form]="form" 
+                [readonly]="false"
+            ></eos-dynamic-input> 
+
         </div>
         <eos-dynamic-input [input]="inputs['rec.LINKED_WIN_SHOW']" [form]="form" [readonly]="false"></eos-dynamic-input> <!-- [hidden]="!appMode.tkDoc" -->
     </div>
+
     <!-- @task165408 убрать настройки для толстяка
     <div [hidden]="appMode.arm" class="set-header bold">
         <span >Поиск граждан в справочнике по полям</span>
