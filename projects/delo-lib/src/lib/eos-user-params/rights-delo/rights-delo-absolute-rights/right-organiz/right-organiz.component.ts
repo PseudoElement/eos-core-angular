@@ -116,7 +116,9 @@ export class RightDepertOrganizComponent implements OnInit {
     }
     addOrganiz(): Promise<any> {
         this.isShell = true;
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_ORGANIZ_FULL)
+        const classifInfo = Object.assign({}, OPEN_CLASSIF_ORGANIZ_FULL);
+        classifInfo.skipDeleted = true;
+        return this._waitClassifSrv.openClassif(classifInfo)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
