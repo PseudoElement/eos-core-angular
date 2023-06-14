@@ -5,15 +5,38 @@
         border-bottom: solid 1px $border-color-main-theme;
         background: $light-grey-1;
         margin-top: -16px;
-        padding-top: 16px;
+        padding: 16px 10px 0 0;
         box-shadow: inset 0 10px 5px 0 rgba(0, 0, 0, 0.1);
-        .tabs {
-            padding-left: 50px;
-            transition: .3s;
 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        
+        .tabs {
+            transition: .3s;
+            display: flex;
+            gap: 30px;
             .tab-item {
-                margin-right: 30px;
+                margin-right: 0px;
                 transition: .3s;
+            }
+        }
+        .switch-menu {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            right: 10px;
+            .btn {
+                border: none;
+                background: none;
+                &.active-btn{
+                    background: #2196f3!important;
+                }
+                &:active { 
+                    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                }
             }
         }
     }
@@ -33,17 +56,44 @@
         color: #000000;
     }
 }
+.wrapper-context-menu {
+    border-radius: 0;
 
-@media(min-width: 1600px) {
-    .tree-user-select-wrapper {
-        .select-modes {
-            .tabs {
-                padding-left: 90px;
+    .popover-content {
+        padding: 0 !important;
+    }
 
-                .tab-item {
-                    margin-right: 30px;
-                }
+    .context-menu {
+        display: flex;
+        flex-direction: column;
+        width: 225px;
+
+        .menu-item {
+        display: flex;
+            align-items: center;
+            height: 48px;
+            margin: 0;
+            padding: 0 10px;
+            color: #2196f3;
+            cursor: pointer;
+            
+            &:hover {
+                background-color: #e3f2fd;
             }
         }
     }
 }
+
+// @media(min-width: 1600px) {
+//     .tree-user-select-wrapper {
+//         .select-modes {
+//             .tabs {
+//                 //padding-left: 90px;
+
+//                 .tab-item {
+//                     margin-right: 30px;
+//                 }
+//             }
+//         }
+//     }
+// }

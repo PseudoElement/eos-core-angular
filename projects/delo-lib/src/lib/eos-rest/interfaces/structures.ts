@@ -1006,7 +1006,9 @@ export interface DEPARTMENT extends IHierCL, IStamp {
      */
     WDUE: string;
     ISN_STAMP: number;
+    /** Флаг отправки. */
     EXPEDITION_FLAG: number;
+    /** Department_MedoId_name*/
     MEDO_ID: string;
 
     /** Запись не проверенна */
