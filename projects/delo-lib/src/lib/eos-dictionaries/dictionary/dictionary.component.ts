@@ -1791,20 +1791,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     private _clearIdentityCodes() {
-        const changes = [];
         const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
         const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');
-        const body = {
-            'orgsDue': ORGS_DUES_STR
-        };
+        const urlSop = `../CoreHost/Sev/ClearIdentityCodes/'${ORGS_DUES_STR}'`;
         this._dictSrv.sevClearIdentCodesSubject.next(true);
-        PipRX.invokeSop(changes, 'ClearIdentityCodes', body, 'POST', true);
-        this._api.batch(changes, '').then((response: any) => {
+        this._api.getHttp_client().get(urlSop, { responseType: 'blob' }).toPromise().then((response: any) => {
             setTimeout(() => {
                 this._dictSrv.sevClearIdentCodesSubject.next(false);
                 this._msgSrv.addNewMessage(SEV_CLEAR_IDENT_CODES);
             }, 3000);
-
+        })
+        .then((err) => {
+            console.log(err);
         });
     }
 
