@@ -39,6 +39,7 @@ export class RightDepertOrganizSstu implements OnInit {
         private _userParmSrv: UserParamsService,
         private _msgSrv: EosMessageService,) {}
     async ngOnInit(): Promise<any> {
+        this.isLoading = true;
         this.listOrganizNew = await this.getAppSetting();
         this.listOrganizOld = this.curentUser['USER_ORGANIZ_List'].filter((org) => org['FUNC_NUM'] === +this.selectedNode.key + 1);
         const allOrgtoTree = [];
@@ -52,6 +53,7 @@ export class RightDepertOrganizSstu implements OnInit {
         if (allOrgtoTree.length > 0) {
             this.getOrganizToList(allOrgtoTree);
         }
+        this.isLoading = false;
     }
 
     getLogDelet(item): boolean {
@@ -101,13 +103,11 @@ export class RightDepertOrganizSstu implements OnInit {
                 data.forEach((org) => {
                     ans.push({
                         DUE: org['Due'],
-                        CLASSIF_NAME: data['ClassifName'],
+                        CLASSIF_NAME: org['ClassifName'],
                     })
                 });
-                return ans;
-            } else {
-                return [];
             }
+            return ans;
         } catch (e) {
             return [];
         }
@@ -118,7 +118,7 @@ export class RightDepertOrganizSstu implements OnInit {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение',
-                msg: 'Отсутсвуют организации для выбора'
+                msg: 'Отсутствуют организации для выбора'
             }); 
         } else {
             this.modalRef = this.modalService.show(template);
