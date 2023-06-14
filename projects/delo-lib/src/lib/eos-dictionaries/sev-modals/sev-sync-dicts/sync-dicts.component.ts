@@ -223,15 +223,12 @@ export class SevSyncDictsComponent implements OnInit {
     // тут должен нормальный вызов бэка для отправки сообщений
     private _sendDepartmentsSyncInfo(isAddressOrgs: any[]) {
         this.bsModalRef.hide();
-        const changes = [];
-        const ORGS_DUES_AR = isAddressOrgs.map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
-        const ORGS_DUES_STR = ORGS_DUES_AR.join('|');
         const body = {
-            'ownerDue': this._mainOrgDue,
-            'orgsDue': ORGS_DUES_STR
+            'OrgsDue': []
         };
-        PipRX.invokeSop(changes, 'SendDepartmentsSyncInfo', body, 'POST', true);
-        this._api.batch(changes, '').then((response: any) => {
+
+        const urlSop = `../CoreHost/Sev/SendDepartmentsSyncInfo/${this._mainOrgDue}`;
+        this._api.getHttp_client().post(urlSop, body,  { responseType: 'blob' }).toPromise().then((response: any) => {
             this._msgSrv.addNewMessage(SEV_SUCCESS_SEND);
 
         }).catch(err => this._errSrv.errorHandler(err));
