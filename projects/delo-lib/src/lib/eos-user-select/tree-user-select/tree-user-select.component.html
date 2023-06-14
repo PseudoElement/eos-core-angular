@@ -7,20 +7,40 @@
                 role="presentation"
                 [ngClass]="{'active secondary-text': tab.key === currMode}"
                 (click)="setTab(tab.key)"
-                >
+            >
                 <span
-                containerClass="tooltip-info"
-                tooltip="{{tab.tooltip}}"
-                placement="bottom"
-                class="tab-title">{{tab.title}}</span>
+                    containerClass="tooltip-info"
+                    tooltip="{{tab.tooltip}}"
+                    placement="bottom"
+                    class="tab-title"
+                >{{tab.title}}</span>
             </li>
         </ul>
+        <div 
+            #pop="bs-popover"
+            class="switch-menu" 
+            [popover]="contextMenu" 
+            placement="bottom"
+            containerClass="wrapper-context-menu"
+        >
+            <button
+                class="btn"
+                [ngClass]="{'active-btn': pop.isOpen}"
+            >
+                <span [ngClass]="pop.isOpen ? 'eos-adm-icon eos-adm-icon-fab-white small': 
+                                              'eos-adm-icon eos-adm-icon-fab-blue small'"
+                ></span>
+            </button>
+        </div>
     </div>
+
     <div *ngIf="!isLoading; else spiner" class="tree-wrapper-overflow">
         <ng-container [ngSwitch]="GetTypeUsers()">
+
             <ng-container *ngSwitchCase="'users'">
                 <ng-container *ngTemplateOutlet="treeTmpl; context: {items: nodes, level: 0}"></ng-container>
             </ng-container>
+
             <ng-container *ngSwitchCase="'del'">
                 <div class="eos-adm-tree-node" *ngIf="nodes[0].title === 'Все подразделения'">
                     <div [ngClass]="{'highlighted' : true, 'node': true, 'activeTree': true}"
@@ -33,6 +53,7 @@
                     </div>
                 </div>
             </ng-container>
+
             <ng-container *ngSwitchCase="'tech'">
                 <div *ngIf="nodes[0].title === 'Все подразделения'; else centCard">
                     <div class="eos-adm-tree-node">
@@ -50,6 +71,7 @@
                     <ng-container *ngTemplateOutlet="treeTmpl; context: {items: nodes, level: 0}"></ng-container>
                 </ng-template>
             </ng-container>
+
         </ng-container>
 
     </div>
@@ -67,8 +89,7 @@
 <ng-template #treeNodeTmpl
     let-node="node"
     let-level="level">
-    <!-- <div style="width: 400px; height: 50px;"></div> -->
-    <ng-container *ngIf="node && (!node.isDeleted || showDeleted)">
+    <ng-container *ngIf="node && (!node.isDeleted || showLogicallyDeleted)">
         <div
             #el
             (click)="onSelect($event, node)"
@@ -90,11 +111,28 @@
             </div>
         </div>
         <ng-container *ngIf="node.isExpanded && node.expandable">
-            <ng-container *ngTemplateOutlet="treeTmpl; context: {items: node.children, level: level*1+1}"></ng-container>
+            <ng-container *ngTemplateOutlet="treeTmpl; context: {items: childrenTree(node.children, sortContextMenu), level: level*1+1}"></ng-container>
         </ng-container>
     </ng-container>
 </ng-template>
 
 <ng-template #spiner>
     <eos-spinner size="lg"></eos-spinner>
+</ng-template>
+
+<ng-template #contextMenu>
+    <div class="context-menu">
+        <p class="menu-item" *ngIf="!showLogicallyDeleted" (click)="togleParam('showLogicallyDeleted')">
+            <span>Показать логически удаленные</span>
+        </p>
+        <p class="menu-item" *ngIf="showLogicallyDeleted" (click)="togleParam('showLogicallyDeleted')">
+            <span>Скрыть логически удаленные</span>
+        </p>
+        <p class="menu-item" *ngIf="!sortContextMenu" (click)="togleParam('sortContextMenu')">
+            <span>Сортировать по алфавиту</span>
+        </p>
+        <p class="menu-item" *ngIf="sortContextMenu" (click)="togleParam('sortContextMenu')">
+            <span>Сортировать по умолчанию</span>
+        </p>
+    </div>
 </ng-template>

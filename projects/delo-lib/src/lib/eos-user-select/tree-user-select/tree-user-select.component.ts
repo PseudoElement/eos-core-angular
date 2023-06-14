@@ -23,11 +23,12 @@ export class TreeUserSelectComponent implements OnInit {
     nodes: TreeUserNode[];
     modes: IModesUserSelect[] = MODS_USER_SELECT;
     currMode = 0;
-    showDeleted: boolean;
     isLoading: boolean = true;
     id: any;
     typeUsers: string;
     private w: number;
+    public sortContextMenu: boolean = false;
+    public showLogicallyDeleted: boolean = false;
     constructor(
         private _router: Router,
         private treeSrv: TreeUserSelectService,
@@ -40,7 +41,7 @@ export class TreeUserSelectComponent implements OnInit {
         this.actRoute.params.subscribe(param => {
             this.id = param['nodeId'];
         });
-}
+    }
     ngOnInit() {
         this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
         this.isLoading = true;
@@ -54,6 +55,7 @@ export class TreeUserSelectComponent implements OnInit {
         });
         this.onResize();
     }
+
     GetTypeUsers(): string {
         if (this._apiSrv.flagDelitedPermanantly === true) {
             this.typeUsers = 'del';
@@ -66,6 +68,7 @@ export class TreeUserSelectComponent implements OnInit {
         }
         return this.typeUsers;
     }
+
     setTab(key) {
         sessionStorage.setItem('key', key);
         sessionStorage.setItem('titleDue', '');
@@ -125,7 +128,6 @@ export class TreeUserSelectComponent implements OnInit {
     }
 
     onExpand(evt: Event, node: TreeUserNode/*, isDeleted: boolean*/) {
-        // console.log('onExpand', arguments);
         evt.stopPropagation();
         if (node.isExpanded) {
             node.isExpanded = false;
@@ -163,5 +165,28 @@ export class TreeUserSelectComponent implements OnInit {
 
     getNodeWidth(level: number): number {
         return this.w - (PADDING_W * level);
+    }
+
+    togleParam(nameParam: string): void {
+        this[nameParam] = !this[nameParam];
+    }
+
+    childrenTree(children: TreeUserNode[], sort:boolean): TreeUserNode[] {
+        let result = [];
+        if(sort) {
+            children.forEach(el => {
+                result.push(el);
+            })
+            return result.sort((a, b) => {
+                if (a.title.toLowerCase() < b.title.toLowerCase()) {
+                    return -1;
+                  }
+                  if (a.title.toLowerCase() > b.title.toLowerCase()) {
+                    return 1;
+                  }
+                  return 0;
+            });
+        }
+        return children;
     }
 }
