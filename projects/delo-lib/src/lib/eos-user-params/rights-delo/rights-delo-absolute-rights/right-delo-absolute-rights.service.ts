@@ -328,9 +328,6 @@ export class RughtDeloAbsRightService {
         if (dep['DUE'] === '0.') {
             dep['rowNotCount'] = true;
         }
-        if (dep['ROW_WEIGHT'] === undefined) {
-
-        }
         if (dep['DELETED'] === 1) {
             dep['style'] = {color: '#BABABA'}
         }
@@ -418,6 +415,9 @@ export class RughtDeloAbsRightService {
     
     createOrgRow(org, tableHeader: ITableHeader[], objectMap) {
         org['key'] = org['DUE'];
+        if (org['DELETED'] === 1) {
+            org['style'] = {color: '#BABABA'}
+        }
         tableHeader.forEach((header) => {
             if (header['data'] && header['data']['data']['rightContent'] !== E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
                 org[header.id] = '';
@@ -442,7 +442,8 @@ export class RughtDeloAbsRightService {
                         type: ECellToAll.checkbox,
                         check: false,
                         click: ($event) => {this.selectRow(org, $event)},
-                        title: org['CLASSIF_NAME']
+                        title: org['CLASSIF_NAME'],
+                        Icons: org['DELETED'] === 1 ? ['eos-adm-icon-bin-grey'] : undefined
                     };
                 }
             }
