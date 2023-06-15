@@ -94,7 +94,7 @@ export class RightDepertOrganizSstu implements OnInit {
         }
     }
     getAppSetting(): Promise<any[]> {
-        return this._pipRx.getHttp_client().get('../CoreHost/sstu/get-organizations-to-select', { responseType: 'blob' }).toPromise()
+        return this._pipRx.getHttp_client().get('../CoreHost/sstu/get-organizations-to-select').toPromise()
         .then((data: any) => {
             const ans = [];
             if (data.length > 0) {
