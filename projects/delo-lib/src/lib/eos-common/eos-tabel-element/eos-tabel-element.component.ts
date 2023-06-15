@@ -52,6 +52,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     }
     updateHeader(newHeader: ITableHeader[]) {
         this.colomns = newHeader;
+        this.widthAll = 0;
         this.colomns.forEach((col, index) => {
             if (col.style['min-width'] && !col['fixed']) {
                 this.widthAll += +col.style['min-width'].replace('px', '');
