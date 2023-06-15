@@ -8,7 +8,7 @@ import { BaseParamComponent } from '../shared/base-param.component';
 import { CRYPTO_PARAM_BTN_TABEL } from '../shared/consts/cryptography.const';
 import { EMAIL_PARAM } from '../shared/consts/email-param.const';
 import { ELEMENT_PROTECT_NOT_DELET, PARM_SUCCESS_SAVE } from '../shared/consts/eos-parameters.const';
-import { ITableBtn, ITableData, ITableHeader } from '../shared/interfaces/tables.interfaces';
+import { ITableBtn, ITableData, ITableHeader, ITableSettings } from '../shared/interfaces/tables.interfaces';
 
 @Component({
     selector: 'eos-param-email',
@@ -39,6 +39,9 @@ export class ParamEmailComponent extends BaseParamComponent {
     public maxKey = 0;
     public editData;
     public deletedElem = [];
+    public settings: ITableSettings = {
+        headerTitleColor: '#F5F5F5',
+    }
     public tableHeader: ITableHeader[] = [
         {
             title: 'Наименование',

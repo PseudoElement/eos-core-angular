@@ -526,16 +526,6 @@ export const ABSOLUTE_RIGHTS_BTN_TABEL_SECOND = [
         id: 'sort'
     },
     {
-        tooltip: 'Опустить строку',
-        disable: false,
-        iconActiv: 'eos-adm-icon-arrow-v-blue-bottom',
-        iconDisable: 'eos-adm-icon-arrow-v-grey-bottom',
-        activeIcon: 'eos-adm-icon-arrow-v-white-bottom',
-        active: true,
-        notView: true,
-        id: 'down'
-    },
-    {
         tooltip: 'Поднять строку',
         disable: false,
         iconActiv: 'eos-adm-icon-arrow-v-blue-top',
@@ -544,6 +534,16 @@ export const ABSOLUTE_RIGHTS_BTN_TABEL_SECOND = [
         active: true,
         notView: true,
         id: 'up'
+    },
+    {
+        tooltip: 'Опустить строку',
+        disable: false,
+        iconActiv: 'eos-adm-icon-arrow-v-blue-bottom',
+        iconDisable: 'eos-adm-icon-arrow-v-grey-bottom',
+        activeIcon: 'eos-adm-icon-arrow-v-white-bottom',
+        active: true,
+        notView: true,
+        id: 'down'
     },
     {
         tooltip: 'Настройка отображения',

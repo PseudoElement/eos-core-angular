@@ -1,4 +1,16 @@
 .eos-adm-table {
+    .not-background {
+        background: none !important;
+    }
+    .disable-children-buttom {
+        a {
+            cursor: no-drop;
+            span {
+                color: #646464;
+                opacity: 0.65;
+            }
+        }
+    }
     .eos-adm-table-title {
         padding: 10px 15px;
         color: #646464;
@@ -137,6 +149,9 @@
             border-left: 2px solid #2196F3;
             border-top: 2px solid #2196F3;
             border-bottom: 2px solid #2196F3;
+            &.check-fixed-select-row {
+                border-left: 0px;
+            }
         }
         .colomn-style-td:last-child {
             padding: 8px 0 8px 0px;

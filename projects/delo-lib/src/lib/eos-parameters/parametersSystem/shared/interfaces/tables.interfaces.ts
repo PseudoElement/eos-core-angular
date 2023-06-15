@@ -34,7 +34,7 @@ export interface ITableData {
     data: any[];
 }
 export interface ITableSettings {
-    headerStyle?: {
+    headerStyle?: { // для каждого стобца в header
         background: string,
         border: string
     }; // стили для header
@@ -46,6 +46,7 @@ export interface ITableSettings {
     paddingBottom?: string;
     widthAllTable?: boolean;
     printTable?: boolean; // раскрасить строки таблицы в разные цвета
+    headerTitleColor?: string; // цвет бэкграунда для всей строки header
 }
 export enum ECellToAll  {
     icon,
