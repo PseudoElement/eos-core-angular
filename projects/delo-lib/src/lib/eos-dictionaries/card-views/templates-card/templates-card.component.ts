@@ -122,7 +122,10 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     }
     deleteFile() {
         this.frDatas.promise = new window['$']['Deferred']();
-        this._dictSrv.currentDictionary.descriptor.deleteTempRc();
+        this.frDatas.promise.then((data) => {
+            this._dictSrv.currentDictionary.descriptor['dataNewFile'] = data;
+            this._dictSrv.currentDictionary.descriptor.deleteTempRc();
+        });
         this.upload = false;
         this.newFile = null;
         const prevValue = this.inputs['rec.NAME_TEMPLATE'].value ? this.inputs['rec.NAME_TEMPLATE'].value : null;
@@ -178,7 +181,12 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor['dataNewFile']) {
-            this._dictSrv.currentDictionary.descriptor.deleteTempRc();
+            this.frDatas.promise = new window['$']['Deferred']();
+            Promise.all([this.frDatas.promise])
+            .then((data) => {
+                this._dictSrv.currentDictionary.descriptor['dataNewFile'] = data;
+                this._dictSrv.currentDictionary.descriptor.deleteTempRc();
+            });
         }
         this._ref.detach();
     }
