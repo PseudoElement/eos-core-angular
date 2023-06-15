@@ -134,7 +134,7 @@
                         style="overflow: clip auto;"
                         class="fixed-coloms-body"
                         (scroll)="scrollFixed($event)"
-                        [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}" style="margin-right: -20px;">
+                        [ngStyle]="{'max-height': settings && settings['maxHeightTable'] ? settings['maxHeightTable'] : ''}" style="margin-right: -26px; overflow-y: scroll">
                         <div 
                             class="display-element-item"
                             *ngFor="let row of tabelData.data let i = index"
