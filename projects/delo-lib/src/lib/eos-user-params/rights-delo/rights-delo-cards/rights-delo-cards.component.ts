@@ -86,7 +86,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             if (this._appContext.cbBase) {
                 let flag = true;
                 CARD_FUNC_LIST.forEach(elem => {
-                    if (elem.label === 'Отметка отправки документов') {
+                    if (elem.label === 'Децентрализованная отправка документов') {
                         elem.label = 'Отправка документов в Департаментах';
                     }
                     if (elem.label === 'Отправка по СДС') {

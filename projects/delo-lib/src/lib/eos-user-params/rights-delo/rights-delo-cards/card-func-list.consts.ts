@@ -83,8 +83,8 @@ export const CARD_FUNC_LIST: ICardFuncList[] = [
         type: E_CARD_TYPE.none,
     },
     {
-        funcNum: E_CARD_RIGHT.MARKSEND, /// 11 - отметка отправки документов
-        label: 'Отметка отправки документов',
+        funcNum: E_CARD_RIGHT.MARKSEND, /// 11 - Децентрализованная отправка документов
+        label: 'Децентрализованная отправка документов',
         type: E_CARD_TYPE.none,
     },
     {
