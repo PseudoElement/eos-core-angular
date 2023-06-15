@@ -318,7 +318,7 @@ export class RightOrganizDepertComponent implements OnInit {
         });
         return arr;
     }
-    returnOgrani(): boolean {
+    returnOgrani(): boolean { /*  */
         if (this._appContext.limitCardsUser.length > 0) {
             return true;
         }

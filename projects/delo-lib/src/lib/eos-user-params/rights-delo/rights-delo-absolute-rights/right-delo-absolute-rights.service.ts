@@ -9,6 +9,7 @@ import { USERDEP, USER_ORGANIZ } from '../../../eos-rest/interfaces/structures';
 import { WaitClassifService } from '../../../app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT_FULL, OPEN_CLASSIF_ORGANIZ_FULL } from '../../../app/consts/query-classif.consts';
 import { saveAs } from 'file-saver';
+import { AppContext } from '../../../eos-rest';
 enum EFindRight {
     curentRight = 0
 }
@@ -26,7 +27,8 @@ export class RughtDeloAbsRightService {
     maxWeightOrg: number = -1;
     constructor(
         private _userParmSrv: UserParamsService,
-        private _waitClassifSrv: WaitClassifService,){
+        private _waitClassifSrv: WaitClassifService,
+        private _appContext: AppContext,){
     }
     addOrg() {
         const ORGANIZ = Object.assign({}, OPEN_CLASSIF_ORGANIZ_FULL);
@@ -196,6 +198,12 @@ export class RughtDeloAbsRightService {
                 return 0;
             }
         });
+    }
+    returnOgrani(): boolean { /*  */
+        if (this._appContext.limitCardsUser.length > 0) {
+            return true;
+        }
+        return false;
     }
     /* 
     * Тут обрабатываем строки берём
@@ -443,6 +451,7 @@ export class RughtDeloAbsRightService {
                         check: false,
                         click: ($event) => {this.selectRow(org, $event)},
                         title: org['CLASSIF_NAME'],
+                        disabled: this.returnOgrani(),
                         Icons: org['DELETED'] === 1 ? ['eos-adm-icon-bin-grey'] : undefined
                     };
                 }
@@ -765,8 +774,10 @@ export class RughtDeloAbsRightService {
                 btn.disable = this.selectedRow.length !== 1 || this.tabelData.data[ind + 1] === undefined || typeof(this.tabelData.data[ind + 1]['CLASSIF_NAME']) === 'string';
             }
             if (btn.id === 'export') {
-                
                 btn.disable = !(this.tabelData.data.length > 3);
+            }
+            if (btn.id === 'add') {
+                btn.children[1]['disable'] = this.returnOgrani();
             }
         });
     }
