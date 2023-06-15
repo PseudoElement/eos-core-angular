@@ -7,7 +7,7 @@ import { UserParamApiSrv } from '../../../../eos-user-params/shared/services/use
 import { ORGANIZ_CL, USER_ORGANIZ } from '../../../../eos-rest/interfaces/structures';
 import { UserParamsService } from '../../../../eos-user-params/shared/services/user-params.service';
 import { EosMessageService } from '../../../../eos-common/index';
-import { ALL_ROWS, PipRX } from '../../../../eos-rest';
+import { PipRX } from '../../../../eos-rest';
 
 
 @Component({
@@ -93,11 +93,9 @@ export class RightDepertOrganizSstu implements OnInit {
             node.viewAllowed = false;
         }
     }
-    async getAppSetting(): Promise<any[]> {
-        try {
-            const data: any[] = await this._pipRx.read({
-                ['../sstu/get-organizations-to-select']: ALL_ROWS
-            });
+    getAppSetting(): Promise<any[]> {
+        return this._pipRx.getHttp_client().get('../CoreHost/sstu/get-organizations-to-select', { responseType: 'blob' }).toPromise()
+        .then((data: any) => {
             const ans = [];
             if (data.length > 0) {
                 data.forEach((org) => {
@@ -108,10 +106,11 @@ export class RightDepertOrganizSstu implements OnInit {
                 });
             }
             return ans;
-        } catch (e) {
+        })
+        .catch((error) => {
+            console.log('error', error);
             return [];
-        }
-        
+        });
     }
     openWindow(template) {
         if (this.listOrganizNew.length === 0) {
