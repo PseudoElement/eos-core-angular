@@ -6,7 +6,7 @@
                 class="btn"
                 tooltip="Добавить группу отчетов"
                 placement="right"
-                [disabled]="isAccessToAddGroup"
+                [disabled]="!isAccessToAddGroup"
                 triggers="hover"
                 containerClass="tooltip-info"
                 (click)="addSrchGroup()"
@@ -22,7 +22,7 @@
                 placement="right"
                 triggers="hover"
                 containerClass="tooltip-info"
-                [disabled]="isAccessToAddGroup"
+                [disabled]="!isAccessToAddGroup || !listUserSrch.length || !selectedSrchUser"
                 (click)="itemTooltip.hide(); deleteSrchGroup()"
             >
                 <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>

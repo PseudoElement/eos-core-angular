@@ -123,7 +123,7 @@ export class RightSrchGroupomponent implements OnInit {
         }
     }
     get isAccessToAddGroup() {
-        return this.appCtx.CurrentUser.TECH_RIGHTS[E_TECH_RIGHT.ConfigurConfigToReports - 1] == ETypeRule.have_right;
+        return this.appCtx.CurrentUser.TECH_RIGHTS[E_TECH_RIGHT.ConfigurConfigToReports - 1] === ETypeRule.have_right;
     }
     chooseSrchGroup() {
         const addNodes = this._checkRepeat(this.originSrchGroup);
