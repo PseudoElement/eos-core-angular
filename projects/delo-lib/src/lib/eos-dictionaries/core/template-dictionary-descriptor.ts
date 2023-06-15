@@ -111,7 +111,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             };
             const request = {
                 method: 'POST',
-                requestUri: `DOC_TEMPLATES_SetContent?sf=${this.dataNewFile.ISN_REF_FILE}&tt=${id}`,
+                requestUri: `DOC_TEMPLATES_SetFdulzContent?sf=${this.dataNewFile['$Contents'].split('#')[1]}&tt=${id}`,
             };
             return this.apiSrv.batch([entityReq, request], '').then(() => {
                 delete this.dataNewFile;
@@ -121,12 +121,19 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             return id;
         }
     }
+    /* Будет хорошо, если при удалении сделать
+        /CoreHost/fdulz/api/DeleteFile?fileID=фдулз_id
+    */
     deleteTempRc() {
         if (this.dataNewFile) {
-            this.apiSrv.batch([{
-                method: 'DELETE',
-                requestUri: `TEMP_RC(${this.dataNewFile.ISN_REF_DOC})/REF_FILE_List(${this.dataNewFile.ISN_REF_FILE})`,
-            }], '');
+            
+            const urlSop = `/CoreHost/fdulz/api/DeleteFile?fileID=${this.dataNewFile['$Contents'].split('#')[1]}`;
+            this.apiSrv.getHttp_client().get(urlSop, { responseType: 'blob' }).toPromise()
+            .then((response: any) => {
+            })
+            .catch((er) => {
+                console.log('er', er);
+            });
         }
         delete this.dataNewFile;
     }
@@ -145,7 +152,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             };
             const request = {
                 method: 'POST',
-                requestUri: `DOC_TEMPLATES_SetContent?sf=${this.dataNewFile.ISN_REF_FILE}&tt=${originalData.rec.ISN_TEMPLATE}`,
+                requestUri: `DOC_TEMPLATES_SetFdulzContent?sf=${this.dataNewFile['$Contents'].split('#')[1]}&tt=${originalData.rec.ISN_TEMPLATE}`,
             };
             return this.apiSrv.batch([entityReq, request], '').then(() => {
                 return super.updateRecord(originalData, updates, appendToChanges);
