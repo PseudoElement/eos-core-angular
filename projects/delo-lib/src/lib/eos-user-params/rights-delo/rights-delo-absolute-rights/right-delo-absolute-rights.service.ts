@@ -901,6 +901,7 @@ export class RughtDeloAbsRightService {
             .replace(HTML_ABSOLUT_RIGH_DATE, new Date().toString());
             
         const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
-        saveAs(blobHtml, `Права пользователя ${this.curentUser.SURNAME_PATRON}. Участники документооборота авторизованных прав.html`);
+        const noteStr = this.curentUser.NOTE ? ` (${this.curentUser.NOTE})` : '';
+        saveAs(blobHtml, `Права пользователя ${this.curentUser.SURNAME_PATRON}${noteStr}. Участники документооборота авторизованных прав.html`);
     }
 }
