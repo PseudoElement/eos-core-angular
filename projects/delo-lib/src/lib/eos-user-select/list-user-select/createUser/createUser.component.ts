@@ -385,7 +385,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         url += `classifName='${encodeURI(this.form.controls['classifName'].value.toUpperCase())}'`;
         url += `&SURNAME_PATRON=${this.form.controls['SURNAME_PATRON'].value}`
         url += `&role='...'`;
-        url += `&NOTE=${this.department.NOTE}`
+
+        url += this.department.NOTE ? `&NOTE=${this.department.NOTE}` : '';
         url += `&TECH_DUE_DEP=${this.department.TECH_DUE_DEP}`
         url += `&isn_user_copy_from=0`;
         url += `&userType=${(this.osChecked ? '4' : '3')}`
