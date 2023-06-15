@@ -162,7 +162,13 @@
                                         <div
                                             [ngStyle]="row['style']" 
                                             style="height: 24px; padding-left: 0px; margin-left: -2px; position: relative;" 
-                                            class="checkbox-inline table-hidder">
+                                            class="checkbox-inline table-hidder"
+                                            [ngStyle]="{'max-width': getStyleTd(colomn, i, row)['max-width']}"
+                                            [tooltip]="tootipShow(trF, trFP, getElement(colomn, row).info['title'])"
+                                            placement="bottom"
+                                            containerClass="tooltip-info"
+                                            container="body"
+                                            triggers="hover">
                                             <label>
                                                 <input 
                                                     type="checkbox"
@@ -184,12 +190,7 @@
                                             <span
                                                 #trF
                                                 class="text table-hidder"
-                                                [tooltip]="tootipShow(trF, trFP, getElement(colomn, row).info['title'])"
-                                                placement="bottom"
-                                                containerClass="tooltip-info"
-                                                container="body"
-                                                [ngStyle]="row['style']"
-                                                triggers="hover">
+                                                [ngStyle]="row['style']">
                                                 {{getElement(colomn, row).info['title']}}
                                             </span>
                                         </div>
@@ -208,16 +209,16 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngSwitchDefault>
-                                        <div [ngStyle]="row['style']">
-                                            <span
-                                                #trF
-                                                class="text table-hidder"
+                                        <div [ngStyle]="row['style']"
                                                 [tooltip]="tootipShow(trF, trFP, getElement(colomn, row))"
                                                 placement="bottom"
                                                 containerClass="tooltip-info"
                                                 container="body"
-                                                [ngStyle]="row['style']"
                                                 triggers="hover">
+                                            <span
+                                                #trF
+                                                class="text table-hidder"
+                                                [ngStyle]="row['style']">
                                                 {{getElement(colomn, row)}}
                                             </span>
                                         </div>
