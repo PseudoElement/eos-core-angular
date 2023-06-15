@@ -109,7 +109,12 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     clickToButton(btn: ITableBtn) {
         this.btnAction.emit(btn.id);
     }
-
+    clickToChildrenButton(dropdown, elem) {
+        if (!elem.disable) {
+            dropdown.hide();
+            this.clickToButton(elem);
+        }
+    }
     toggleAllMarks($event) {
         this.tabelData.data.forEach((item) => {
             item.check = $event.target.checked;

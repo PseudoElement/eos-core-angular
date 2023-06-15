@@ -16,6 +16,7 @@
         <eos-tabel-element
             [edit]="!disableForm"
             [tabelData]="tabelData"
+            [settings]="settings"
             (btnAction)="actionTo($event)"
             (elementsSelect)="selectElement($event)"
             (orderHead)="orderHead($event)">

@@ -37,10 +37,11 @@
                             role="menu">
                             <li *ngFor="let elem of button.children"
                                 role="menuitem"
+                                [ngClass]="[elem.disable ? 'disable-children-buttom' : '']"
                                 class="menuitem">
                                 <a class="dropdown-item m-font"
                                     eosClickMode
-                                    (click)="dropdown.hide(); clickToButton(elem)"><span class="title m-font">{{elem.title}}</span></a>
+                                    (click)="clickToChildrenButton(dropdown, elem)"><span class="title m-font">{{elem.title}}</span></a>
                             </li>
                         </ul>
                     </div>
@@ -60,7 +61,10 @@
 
     <!-- название столбцов -->
     <div class="all-table">
-        <div *ngIf="getColomsFixed().length" class="header-table-param fixed-coloms" style="margin-right: -20px; position: relative;">
+        <div *ngIf="getColomsFixed().length"
+            class="header-table-param fixed-coloms"
+            style="margin-right: -20px; position: relative;"
+            [ngStyle]="{'background': settings && settings['headerTitleColor'] ? settings['headerTitleColor'] : '#fafafa'}">
             <div *ngFor="let col of getColomsFixed()"
                 class="header-table-title"
                 [ngStyle]="getStyle(col, 'header')"
@@ -84,8 +88,13 @@
             <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 21px; box-shadow: 6px -3px 4px 3px rgba(34, 60, 80, 0.2);">
             </div>
         </div>
-        <div class="header-table-param get-colomn-border" #headerTable style="overflow: inherit; position: relative;" [ngClass]="getClassHidden()">
-            <div *ngIf="showCheckBox" style="padding: 12px 0 0 16px;background-color: white;" class="checkbox-inline">
+        <div class="header-table-param 
+            get-colomn-border"
+            #headerTable
+            style="overflow: inherit; position: relative;"
+            [ngClass]="getClassHidden()"
+            [ngStyle]="{'background': settings && settings['headerTitleColor'] ? settings['headerTitleColor'] : '#fafafa'}">
+            <div *ngIf="showCheckBox" style="padding: 12px 0 0 16px;background: revert;" class="checkbox-inline">
                 <label class="checkbox" >
                     <input [checked]="getAllCheck()" [disabled]="!edit" type="checkbox" (change)="toggleAllMarks($event)">
                     <div>
@@ -96,7 +105,7 @@
             <div *ngFor="let col of getColomsNotFixed()"
                 class="header-table-title"
                 [ngStyle]="getStyle(col, 'header')"
-                [ngClass]="[edit ? '' : 'disable-header-table-title']"
+                [ngClass]="[edit ? '' : 'disable-header-table-title', settings && settings['headerTitleColor'] ? 'not-background' : '']"
                 (click)="orderByField(col)">
                 <span class="text table-hidder"
                     [tooltip]="col.title"
@@ -245,6 +254,7 @@
                             (click)="clickElem(row)"
                             *ngFor="let colomn of getColomsNotFixed()"
                             class="header-table-title colomn-style-td"
+                            [ngClass]="[getColomsFixed().length > 0 ? '' : 'check-fixed-select-row']"
                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
                             [ngStyle]="getStyleTd(colomn, i, row)">
                             <ng-container [ngSwitch]="getType(colomn, row)">
