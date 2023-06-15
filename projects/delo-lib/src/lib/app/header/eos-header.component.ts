@@ -39,9 +39,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
             return 'Вернуться в Дело-Web';
         } */
     }
-    get showtitle(): boolean {
-        return !!sessionStorage.getItem('fromclassif');
-    }
+
     get isDisabled(): boolean {
         if (+this._appcontext.CurrentUser.DELO_RIGHTS[0]) {
             return false;
@@ -195,7 +193,7 @@ export class EosHeaderComponent implements OnDestroy, OnInit {
     }
     private updateHead() {
         const title =  this.width > 1250 ? 244 : 48;
-        const widthHead = this.showtitle ? title + 170 + 95 : 170 + 95;
+        const widthHead = title + 170 + 95;
         const newHead = [];
         let widthTemp = widthHead;
         this.modulesDropdown = [];
