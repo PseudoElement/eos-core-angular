@@ -4,33 +4,60 @@ import { E_FIELD_TYPE } from '../../../eos-dictionaries/interfaces';
 import { DEPARTMENT, ORGANIZ_CL } from '../../../eos-rest';
 
 export enum ETypeDeloRight {
-    SystemTechnologist = '0', // Системный технолог
-    SearchInAllFileCabinets = '1', // Поиск по всем картотекам
-    SendingDocumentsToRegisters = '2', // Отправка документов по реестрам
-    ViewAllOrders = '3', // Просмотр всех поручений
-    EnteringResolutions = '4', // Ввод резолюций
-    ExecutionOfOrders = '5', // Исполнение поручений
-    OrderExecutionControl = '6', // Контроль исполнения поручений
-    AddingOrganizations = '7', // Добавление организаций
-    EditingOrganizationsAndCitizens = '8', // Редактирование организаций и граждан
-    EditingRKData = '9', // Редактирование рег. данных РК
-    ApprovalOfProjects = '10', // Визирование проектов
-    ProjectSigning = '11', // Подписание проектов
-    PuttingOnControl = '14', // Постановка на контроль
-    CreatingSystemRequests = '15', // Создание системных запросов
-    BulkDeletionOfAds = '18', // Групповое удаление РК
-    AlertSubscriptionManagement = '19', // Управление подпиской на оповещения
-    IntroductionOfDraftResolutions = '22', // Ввод проектов резолюций
-    ReadingFilesInAllFileCabinets = '23', // Чтение файлов во всех картотеках
-    ReadingRKpersonalizedAccess = '24', // Чтение РК персонифицированного доступа
-    ReadingPersonalAccessFiles = '25', // Чтение файлов персонифицированного доступа
-    CreationOfRKPD = '28', // Создание РКПД
-    UploadingInformationToSSTU = '29', // Выгрузка информации на ССТУ
-    ProjectExecution = '31', // Исполнение проектов
-    ReadingProjects = '32', // Чтение проектов
-    ReadingStrictAccessFiles = '33', // Чтение файлов строгого доступа
-    ReadingEvents = '34', // Чтение событий
-    WorkingWithEvents = '35', // Работа с событиями
+    /** Системный технолог */
+    SystemTechnologist = '0',
+    /** Поиск по всем картотекам */
+    SearchInAllFileCabinets = '1',
+    /** Централизованная отправка документов */ 
+    SendingDocumentsToRegisters = '2',
+    /** Просмотр всех поручений */
+    ViewAllOrders = '3',
+    /** Ввод резолюций */
+    EnteringResolutions = '4',
+    /** Исполнение поручений */
+    ExecutionOfOrders = '5',
+    /** Контроль исполнения поручений */
+    OrderExecutionControl = '6',
+    /** Добавление организаций */
+    AddingOrganizations = '7',
+    /** Редактирование организаций и граждан */
+    EditingOrganizationsAndCitizens = '8',
+    /** Редактирование рег. данных РК */
+    EditingRKData = '9',
+    /** Визирование проектов */
+    ApprovalOfProjects = '10',
+    /** Подписание проектов */
+    ProjectSigning = '11',
+    /** Постановка на контроль */
+    PuttingOnControl = '14',
+    /** Создание системных запросов */
+    CreatingSystemRequests = '15',
+    /** Групповое удаление РК */
+    BulkDeletionOfAds = '18',
+    /** Управление подпиской на оповещения */
+    AlertSubscriptionManagement = '19',
+    /** Ввод проектов резолюций */ 
+    IntroductionOfDraftResolutions = '22',
+    /** Чтение файлов во всех картотеках */
+    ReadingFilesInAllFileCabinets = '23',
+    /** Чтение РК персонифицированного доступа */
+    ReadingRKpersonalizedAccess = '24',
+    /** Чтение файлов персонифицированного доступа */
+    ReadingPersonalAccessFiles = '25',
+    /** Создание РКПД */
+    CreationOfRKPD = '28',
+    /** Выгрузка информации на ССТУ */
+    UploadingInformationToSSTU = '29',
+    /** Исполнение проектов */
+    ProjectExecution = '31',
+    /** Чтение проектов */
+    ReadingProjects = '32',
+    /** Чтение файлов строгого доступа */
+    ReadingStrictAccessFiles = '33',
+    /** Чтение событий */
+    ReadingEvents = '34',
+    /** Работа с событиями */
+    WorkingWithEvents = '35',
     Reporting = '36',
 }
 export type TupeDeloRight = ETypeDeloRight;
@@ -59,7 +86,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 24
         key: ETypeDeloRight.SendingDocumentsToRegisters,
-        label: 'Отправка документов по реестрам',
+        label: 'Централизованная отправка документов',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
