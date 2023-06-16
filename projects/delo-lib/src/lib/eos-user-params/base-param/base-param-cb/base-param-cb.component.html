@@ -56,8 +56,7 @@
                     "
                     container="body"
                     placement="bottom"
-                    containerClass="tooltip-error"
-                >
+                    containerClass="tooltip-error">
                     <label [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{
                         inputs["CLASSIF_NAME"].label
                     }}</label>
@@ -130,7 +129,20 @@
             ></eos-dynamic-input>
         </div>
         <!-- должностное лицо и роль -->
-        <div class="base-login-input row-department-role">
+        <div class="wrapper-password">
+            <eos-dynamic-input
+                style="width: 550px"
+                class="base-text-input base-input-role"
+                eosClickMode
+                [input]="controls['DUE_DEP_NAME']"
+                [form]="formControls"
+                [readonly]="!editMode"
+                (onClickChoose)="showDepChoose()"
+                (onEnterSearchEmptyResults)="showDepChooseEmpty()"
+            ></eos-dynamic-input>
+        </div>
+        <!-- должностное лицо и роль -->
+        <!-- <div class="base-login-input row-department-role">
             <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
                 <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{ inputs["DUE_DEP_NAME"].label }}</label>
                 <div
@@ -163,7 +175,7 @@
                     </span>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div>
             <eos-dynamic-input
                 class="base-text-input-cb base-input-role"

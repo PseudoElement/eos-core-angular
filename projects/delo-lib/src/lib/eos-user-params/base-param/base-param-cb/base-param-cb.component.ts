@@ -3,7 +3,7 @@ import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
@@ -28,14 +28,14 @@ import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_RED
 import { AppContext } from '../../../eos-rest/services/appContext.service';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param.consts';
-import { ESelectDepart } from '../base-param.component';
+import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component';
+import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
+
 
 @Component({
     selector: 'eos-params-base-param-cb',
     templateUrl: './base-param-cb.component.html'
 })
-
-
 export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     editMode = false;
     curentUser: IParamUserCl;
@@ -83,6 +83,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private modalRef: BsModalRef;
     private rightsCBDueRole: boolean = false;
 
+     // блок автопоиска при выборе ДЛ
+     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
+     private _defaultDepDue: string;
+     private _searchLexem: string = '';
+     private _depDueLinkOrg: string = undefined;
+     private _sysParamsDueOrganiz: string = undefined;
+
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size || this.queryRoles.length || this.rightsCBDueRole) {
             return false;
@@ -116,6 +123,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
         private _rtUserSel: RtUserSelectService,
+        private _userSettingsService: UserSettingsService,
         private _appCtx: AppContext,
     ) {
     }
@@ -159,6 +167,20 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             )
         .subscribe((rout: RouterStateSnapshot) => {
                 this._userParamSrv.submitSave = this.submit('true');
+        });
+        this._userSettingsService.readDepartments().then(x => { // @task157113 читаем подразделение по дефолту и организацию из параметров (если надо)
+            const { sections } = x;
+            this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
+            if (this._defaultDepDue.length === 0) {
+                this.apiSrvRx.read({
+                    DELO_OWNER: 1
+                }).then(org => {
+                    if (org.length > 0) { // задана организация по умолчанию
+                        this._sysParamsDueOrganiz = org[0]['DUE_ORGANIZ'];
+                        this._readSysParamsOrg();
+                    }
+                });
+            }
         });
     }
     afterInit() {
@@ -237,11 +259,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.inputs['NOTE'].value = '';
         }
         this.inputs['NOTE'].value = this.inputs['NOTE'].value || '';
-        console.log('this.inputs', this.inputs);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-        this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+        // установка значения в связи с новым контролом @task161934
+        // this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
+        this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
+        this.controls['DUE_DEP_NAME'].value = this.dueDepName;
+        this.formControls.get('DUE_DEP_NAME').setValue(this.dueDepName);
         this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
         this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
         this.isLoading = false;
@@ -777,6 +802,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return this.GetUserData().then(() => {
             if (this.currentCbFields.length) {
                 this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+                this.controls['DUE_DEP_NAME'].value = this.dueDepName;
                 this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
                 this.cancelValues(this.controls, this.formControls);
                 this.currentCbFields = [];
@@ -1113,7 +1139,164 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         } */
         // this.controlField[0].value = false;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+        this.controls['DUE_DEP_NAME'].value = this.dueDepName;
         this.cancelValues(this.controls, this.formControls);
+    }
+    showDepChoose() {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        if (this._isFromList(this.formControls.get('DUE_DEP_NAME').value)) { // выбрано что-то из выпадашки
+            if (this._idsForModalDictDep.length > 0) {
+                OPEN_CLASSIF_DEPARTMENT['selected'] = this._idsForModalDictDep[0];
+            }
+        } else {  // просто задана лексема и значение не выбрано
+            OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
+        }
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
+    }
+    showDepChooseEmpty() {
+        this.isShell = true;
+        OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
+        OPEN_CLASSIF_DEPARTMENT['selected'] = '';
+        OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+            .then((data: string) => {
+                this._setDepartment(data);
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
+    }
+    private _searchDLinSysParamsOrg() {
+        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
+        this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
+    }
+    private _setDepartment(due: string) {
+        let dueDep = '';
+        if (!due || due === '') {
+            throw new Error();
+        }
+        dueDep = (due.split('|'))[0];
+        this._userParamSrv.getDepartmentFromUser([dueDep])
+            .then((data: DEPARTMENT[]) => {
+                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
+                    if (data) {
+                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
+                    }
+                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                    });
+                    return val;
+                });
+            })
+            .then((dep: DEPARTMENT) => {
+                this.isShell = false;
+                if (this.dueDepSurname !== dep['SURNAME']) {
+                    const depConfirm = Object.assign({}, CONFIRM_SURNAME_REDACT);
+                    depConfirm.body = 'ФИО выбранного должностного лица отличается от ФИО пользователя.\n Скорректировать ФИО пользователя?';
+                    this._confirmSrv.confirm2(depConfirm).then(confirmation => {
+                        if (confirmation && confirmation['result'] === 1) {
+                            this.dueDepSurname = dep['SURNAME'];
+                            this.form.get('SURNAME_PATRON').patchValue(dep['SURNAME']);
+                            this.surnameDepartment = this.form.get('SURNAME_PATRON').value;
+                        }
+                    });
+                }
+                this.dueDepName = dep['CLASSIF_NAME'];
+                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.formControls.get('DUE_DEP_NAME').setValue(dep['CLASSIF_NAME'], { emitEvent: false }); // @task161934 - изменение значения в поле
+                this.formControls.get('teсhUser').setValue(false);
+                this.curentUser.DUE_DEP = dep['DUE'];
+                this.inputs['DUE_DEP_NAME'].data = dep['DUE']; // @task161934 - данные для записи в БД
+                return this.getPhotoUser(dep['DUE']);
+            })
+            .catch(() => {
+                this.isShell = false;
+                this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem, { emitEvent: false });
+            });
+    }
+    private _isSymbolsCorrect(value): boolean {
+        const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
+        return REGEXP.test(value);
+    }
+
+    private _getSafeQueryLexem(lexem): string {
+        const AR = lexem.split('');
+        for (let i = 0; i < AR.length; i++) {
+            if (!this._isSymbolsCorrect(AR[i])) {
+                AR[i] = '%';
+            }
+        }
+        return AR.join('');
+    }
+
+    private _searchEmpInDep(empLexem, due) {
+        empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
+        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
+        let VALUES;
+        if (due) {
+            const ADD = { ISN_HIGH_NODE: due };
+            VALUES = { ...BASE_VALUES, ...ADD };
+        } else {
+            VALUES = BASE_VALUES;
+        }
+        const CRIT = { DEPARTMENT: { criteries: VALUES } };
+        this.apiSrvRx.read<DEPARTMENT>(CRIT).then(empItems => {
+            if (empItems.length > 0) {
+                const DEP_IDS = empItems.map(x => x.DEPARTMENT_DUE);
+                VALUES = { DUE: DEP_IDS.join('|'), DELETED: 0, IS_NODE: 0 };
+                const DEP_CRIT = { DEPARTMENT: { criteries: VALUES } };
+                this.apiSrvRx.read<DEPARTMENT>(DEP_CRIT).then(depItems => {
+                    this.controls['DUE_DEP_NAME'].options = [];
+                    empItems.forEach(empItem => {// формируем список выпадашки
+                        const { CLASSIF_NAME } = depItems.filter(({ DUE }) => empItem.DEPARTMENT_DUE === DUE)[0];
+                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this._searchLexem.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
+                            const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
+                            this.controls['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
+                        }
+                    });
+                    // ставим активную первую запись @task161934 - в случае найденности чего либо
+                    if (this.controls['DUE_DEP_NAME'].options.length > 0 && this.controls['DUE_DEP_NAME'].options[0].due !== '-1') {
+                        this.controls['DUE_DEP_NAME'].dib.showDropDown();
+                    }
+                    this._idsForModalDictDep = [empItems[0].DUE]; // передаем только один
+                });
+            } else {
+                this.controls['DUE_DEP_NAME'].options = [{
+                    title: EMPTY_SEARCH_DL_RESULTS, value: EMPTY_SEARCH_DL_RESULTS, due: '-1',
+                    disabled: true
+                }];
+                this.controls['DUE_DEP_NAME'].dib.showDropDown();
+                this._idsForModalDictDep = [];
+            }
+        }).catch(err => { throw err; });
+    }
+    private _getDueDepFefault(obj): string {
+        return obj.window.mainFolder;
+    }
+    private _existsMainFolder(obj): boolean {
+        if (obj.window) {
+            if (obj.window.mainFolder) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    private _readSysParamsOrg() {
+        this.apiSrvRx.read<any>({ DEPARTMENT: PipRX.criteries({ DUE_LINK_ORGANIZ: this._sysParamsDueOrganiz }) }).then(items => {
+            const DUE = items[0].DEPARTMENT_DUE;
+            this._depDueLinkOrg = DUE.length <= 2 ? undefined : DUE;
+        });
     }
     public clearDepartNote() {
         this.form.controls['NOTE'].setValue('');
@@ -1272,6 +1455,42 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.form.get('SURNAME_PATRON').patchValue(data, { emitEvent: false });
             }
         });
+        this._setDueDepNameSubscription();
+    }
+    private _setDueDepNameSubscription() {
+        this.formControls.get('DUE_DEP_NAME').valueChanges
+            .pipe(
+                debounceTime(1200), takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(value => this._setDueDepName(value));
+    }
+
+    private _setDueDepName(value) {
+        if (value.length < 3) { // нет поиска
+            this.controls['DUE_DEP_NAME'].options = [];
+            this._idsForModalDictDep = [];
+        } else {
+            if (this.controls['DUE_DEP_NAME'].options.length > 0) {
+                if (!this._isFromList(value)) { // запуск поиска по лексеме
+                    this.searchDL();
+                } else { // выбрали из выпадашки значение
+                    const ITEM = this.controls['DUE_DEP_NAME'].options.filter(item => item.value === value);
+                    const DUE: string = ITEM[0].due;
+                    this._idsForModalDictDep = [DUE];
+                    this._setDepartment(DUE);
+                }
+            } else {
+                this.searchDL();
+            }
+        }
+    }
+    searchDL() {
+        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
+        if (this._defaultDepDue.length > 0) {
+            this._searchEmpInDep(this._searchLexem, this._defaultDepDue);
+        } else {
+            this._searchDLinSysParamsOrg();
+        }
     }
     private messageAlert({ title, msg, type }: IMessage) {
         this._msgSrv.addNewMessage(
@@ -1313,5 +1532,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 return Promise.resolve(null);
             }
         });
+    }
+    private _isFromList(value: string): boolean {
+        return this.controls['DUE_DEP_NAME'].options.some(x => value === x.value);
     }
 }
