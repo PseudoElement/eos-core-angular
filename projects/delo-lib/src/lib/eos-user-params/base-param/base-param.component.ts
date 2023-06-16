@@ -31,7 +31,7 @@ import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_RED
 export enum ESelectDepart {
     selectOneElem = 0
 }
-const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
+export const EMPTY_SEARCH_DL_RESULTS: string = 'Ничего не найдено';
 @Component({
     selector: 'eos-params-base-param',
     templateUrl: './base-param.component.html'
@@ -222,11 +222,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (data) {
                 this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
                 this.curentUser = this._userParamSrv.curentUser;
-                console.log('this.curentUser', this.curentUser);
                 if (this.curentUser.DUE_DEP) {
                     this.getPhotoUser(this.curentUser.DUE_DEP);
                 }
-
                 this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
                 this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
                 this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
