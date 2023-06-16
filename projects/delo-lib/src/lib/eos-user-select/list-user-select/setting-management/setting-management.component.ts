@@ -251,6 +251,15 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
             }
         }
         const url = this._createUrlForSop(this.formCut);
+        if (this.checkedUsers.length === 1 && this.checkedUsers[0].data.ISN_LCLASSIF === this._appCtx.CurrentUser.ISN_LCLASSIF) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: '',
+                msg: 'Снять права самому себе нельзя.',
+            });
+            return;
+        }
+
         this.isLoading = true;
         return this._confirmSrv.confirm(CONFIRM_CUT_USER).then(res => {
             if (res) {
