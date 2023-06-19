@@ -6,8 +6,8 @@ export const REGISTRATION_SSTU: IBaseUsers =  {
     apiInstance: 'USER_PARMS',
     fields: [{
         key: 'SSTU_FOLDER_UPLOAD_PATH',
-        type: 'string',
-        title: ''
+        type: 'boolean',
+        title: 'Индивидуальная папка выгрузки'
     },
     ]
 };
