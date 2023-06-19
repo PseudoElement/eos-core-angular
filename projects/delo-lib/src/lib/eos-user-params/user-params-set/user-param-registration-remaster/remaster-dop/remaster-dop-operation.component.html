@@ -52,7 +52,7 @@
 </div>
 
 <div [hidden]="appMode.cbr"class="user-group-form">
-    <span>Печатать регистрационный штамп:</span> <!--  в приложении Документы -->
+    <span>Печатать регистрационный штамп:</span> <!--  в приложении Документы -->  <!--  -->
     <div class="inputs-inline">
         <eos-dynamic-input
             class="input-right"
@@ -69,7 +69,7 @@
     </div>
 </div>
 
-<div [hidden]="appMode.cbr || appMode.arm" class="user-group-form">
+<div class="user-group-form user-group-form-radio-vertical">
     <span>Присваивать гриф доступа:</span>
     <eos-dynamic-input
         class="input-right"
