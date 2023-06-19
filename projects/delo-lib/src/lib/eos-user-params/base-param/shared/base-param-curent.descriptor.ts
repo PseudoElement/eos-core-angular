@@ -77,9 +77,14 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     }*/
                     break;
                 case 'DUE_DEP_NAME':
-                    f['options'] = [
-                    ];
-
+                    f['options'] = [];
+                    if (this._userParamSrv.getAppContextIsCB) {
+                        if (this._userParamSrv.curentUser.DUE_DEP) {
+                            f['value'] = this._userParamSrv.curentUser.DUE_DEP_NAME;
+                        } else {
+                            f['value'] = '';
+                        }
+                    }
             }
         });
         return arrControls;

@@ -265,8 +265,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         // установка значения в связи с новым контролом @task161934
         // this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
-        this.controls['DUE_DEP_NAME'].value = this.dueDepName;
-        this.formControls.get('DUE_DEP_NAME').setValue(this.dueDepName);
         this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
         this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
         this.isLoading = false;
@@ -863,7 +861,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     cancel() {
         this.isLoading = false;
         this.editMode = !this.editMode;
-        this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
+        this.dueDepName = this.curentUser._orig['DUE_DEP_NAME'];
         this.dueDepSurname = this.inputs['SURNAME_PATRON'].value;
         this.isPhoto = this.startIsPhoto;
         this.startUrlPhoto = this.startUrlPhoto;
@@ -890,6 +888,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         this.singleOwnerCab = this.initSingleOwnerCab;
         this.controls['teсhUser'].value = this._userParamSrv.isTechUser;
+        this.controls['DUE_DEP_NAME'].value = this.dueDepName;
         this.cancelValues(this.controls, this.formControls);
         this.clearMap();
         this._pushState();
@@ -1139,7 +1138,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         } */
         // this.controlField[0].value = false;
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
-        this.controls['DUE_DEP_NAME'].value = this.dueDepName;
         this.cancelValues(this.controls, this.formControls);
     }
     showDepChoose() {
@@ -1215,6 +1213,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.formControls.get('teсhUser').setValue(false);
                 this.curentUser.DUE_DEP = dep['DUE'];
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE']; // @task161934 - данные для записи в БД
+                this.curentUser.DUE_DEP_NAME = this.dueDepName;
                 return this.getPhotoUser(dep['DUE']);
             })
             .catch(() => {
