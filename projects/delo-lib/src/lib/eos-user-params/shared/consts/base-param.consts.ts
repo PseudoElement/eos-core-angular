@@ -122,9 +122,15 @@ export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.autosearch,
         key: 'DUE_DEP_NAME',
         label: 'ДОЛЖНОСТНОЕ ЛИЦО',
-        required: true,
-        data: '',
-        options: []
+        disabled: false,
+        readonly: false,
+        options: [
+            {
+                title: '',
+                value: '',
+            }
+        ],
+        value: ''
     },
     {
         controlType: E_FIELD_TYPE.string,

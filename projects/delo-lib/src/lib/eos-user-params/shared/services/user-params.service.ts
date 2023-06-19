@@ -85,6 +85,9 @@ export class UserParamsService {
     get CanEdit() {
         return !!this.curentUser._more_json['CanTech'];
     }
+    get getAppContextIsCB() {
+        return this._appContext.cbBase;
+    }
     constructor(
         private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
