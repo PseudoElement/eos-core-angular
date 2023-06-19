@@ -436,11 +436,16 @@ export class RughtDeloAbsRightService {
                     org[header.id] = {
                         type: ECellToAll.checkbox,
                         check: deep !== undefined,
+                        disabled: this.returnOgrani(),
                         click: ($event) => {this.chechNewInfoOrg(org, header.id, $event)},
                         title: org['key'] === '0.' ? 'За всех' : ''
                     };
                 } else  {
-                    org[header.id] = {type: ECellToAll.checkbox, check: false, click: ($event) => {this.chechNewInfoOrg(org, header.id, $event)}};
+                    org[header.id] = {
+                        type: ECellToAll.checkbox,
+                        check: false,
+                        click: ($event) => {this.chechNewInfoOrg(org, header.id, $event)},
+                        disabled: this.returnOgrani()};
                 }
             } else {
                 if(org['key'] === '0.') {
