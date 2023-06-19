@@ -380,7 +380,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                 label: 'Операция',
                 value: '',
                 readonly: true,
-                required: true
+                required: false
             },
             {
                 controlType: E_FIELD_TYPE.number,
