@@ -3,17 +3,23 @@ import { Protocol, ResponseProtItem, SearchQueryOrganization } from '../interfac
 export class creatorGraphQlParam {
     public prot(param: Protocol): string {
         let operDescribeper: string = '';
-        const oper: string[] = param.OPER_DESCRIBE.split('|');
-        oper.forEach(el => {
-            if (operDescribeper.length) {
-                operDescribeper = operDescribeper + ',' +`{value: "${el}"}`;
-            } else {
-                operDescribeper = `{value: "${el}"}`;
-            }
-        })
+        let operDescribeperSearchParam: string = '';
+        
+        if(param.OPER_DESCRIBE) {
+            const oper: string[] = param.OPER_DESCRIBE.split('|');
+            oper.forEach(el => {
+                if (operDescribeper.length) {
+                    operDescribeper = operDescribeper + ',' +`{value: "${el}"}`;
+                } else {
+                    operDescribeper = `{value: "${el}"}`;
+                }
+            })
+            operDescribeperSearchParam = `in: [${operDescribeper}]`;
+        }
+
         return `protsPg(filter: {
                     userIsn: {equal: {value: ${param.USER_ISN}}}, 
-                    operDescribe: {in: [${operDescribeper}]}, 
+                    operDescribe: {${operDescribeperSearchParam}}, 
                     timeStamp: {
                         greaterOrEqual: {value: "${param.FROM}"}, 
                         lessOrEqual: {value: "${param.TO}"}

@@ -79,7 +79,7 @@ export interface SearchQueryOrganization {
 
 export interface Protocol {
     FROM: string;
-    OPER_DESCRIBE: string;
+    OPER_DESCRIBE?: string;
     TO: string;
     USER_ISN: number;
 }
