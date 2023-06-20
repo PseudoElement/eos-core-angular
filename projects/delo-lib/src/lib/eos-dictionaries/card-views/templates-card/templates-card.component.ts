@@ -30,6 +30,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     @Input() isNewRecord: boolean;
     @Input() dutysList: string[];
     @Input() fullNamesList: string[];
+    public updateField = false;
     public upload = false;
     public newFile: REF_FILE;
     public showDocGrList: boolean;
@@ -113,6 +114,10 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         if ($event) {
             // после выбора файла и записи в TEMPLATE_NAME не меняется туллтип (например если значение не уникальное)
             try {
+                this.updateField = true;
+                setTimeout(() => {
+                        this.updateField = false;
+                }, 0);
                 // this.inp.inpstring.onInput($event);
                 document.getElementById('rec.NAME_TEMPLATE').focus();
             } catch (e) {
