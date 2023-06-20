@@ -919,14 +919,15 @@ export class RughtDeloAbsRightService {
             }
             allRow.push('<tr>' + oneRow.join('') + '</tr>')
         });
+        const noteStr = this.curentUser.NOTE ? ` (${this.curentUser.NOTE})` : '';
         let html = HTML_ABSOLUT_RIGHT_REPORT
-            .replace(HTML_ABSOLUT_RIGH_TITLE, `Права пользователя ${this.curentUser.SURNAME_PATRON}. Участники документооборота авторизованных прав`)
+            .replace(HTML_ABSOLUT_RIGH_TITLE, `Права пользователя ${this.curentUser.SURNAME_PATRON}${noteStr}. Участники документооборота авторизованных прав`)
             .replace(HTML_ABSOLUT_RIGH_HEADER, headerHTML.join(''))
             .replace(HTML_ABSOLUT_ROW, allRow.join(''))
             .replace(HTML_ABSOLUT_RIGH_DATE, new Date().toString());
             
         const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
-        const noteStr = this.curentUser.NOTE ? ` (${this.curentUser.NOTE})` : '';
+        
         saveAs(blobHtml, `Права пользователя ${this.curentUser.SURNAME_PATRON}${noteStr}. Участники документооборота авторизованных прав.html`);
     }
     private _checkLimitCard(arrDep: DEPARTMENT[]) {
