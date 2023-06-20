@@ -1,13 +1,13 @@
 <!-- DON'T USE class="container" with display: grid -->
 <div class="header-wrapper usual-border" #resize *ngIf="headerShow">
         <div class="menu">
-            <div class="eos-adm-title primary-text" *ngIf="showtitle">
+            <div class="eos-adm-title primary-text">
                 <eos-title
-                [tooltip]="tooltip"
-                style="display: block;"
+                    [tooltip]="tooltip"
+                    style="display: block;"
                 ></eos-title>
             </div>
-            <ul class="header-content left" [class.notTitle]="!showtitle">
+            <ul class="header-content left">
                 <li class="header-item primary-text">
                     <eos-desktop-switcher></eos-desktop-switcher>
                 </li>
