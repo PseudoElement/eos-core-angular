@@ -36,6 +36,7 @@ import { EosInstrumentsSingleComponent } from '../eos-instruments/components/eos
 import { CardFromComponent } from '../eos-dictionaries/card-from/card-from.component';
 import { AdministratorGuard } from './guards/administrator.guard';
 import { SystemParamsChildGuard } from './guards/system-params-child.guard';
+import { CommonAccessSystemSettings } from './guards/common-access-system-settings.guard';
 
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
@@ -52,6 +53,7 @@ const formDictionariesComponent: Routes = [
         pathMatch: 'full'
     }
 ];
+
 const childrenDictionariesComponent2: Routes = [
    {
     path: ':dictionaryId',
@@ -91,77 +93,83 @@ const childrenDictionariesComponent2: Routes = [
         }],
     }],
 }];
-const childrenDictionariesComponent: Routes = [{
+
+const childrenDictionariesComponent: Routes = [
+    {
     path: '',
     pathMatch: 'full',
     component: DictionariesComponent,
     canActivate: [AuthorizedGuard],
-}, {
-    path: ':dictionaryId',
-    data: {
-        title: 'Справочник', showBreadcrumb: true,
-        showInBreadcrumb: true,
-        showSandwichInBreadcrumb: true,
-        showPushpin: true
     },
-    canDeactivate: [CanDeactivateDictGuard],
-    children: [{
-        path: ':nodeId',
-        data: { title: 'Запись', showInBreadcrumb: false },
+    {
+        path: ':dictionaryId',
+        data: {
+            title: 'Справочник', showBreadcrumb: true,
+            showInBreadcrumb: true,
+            showSandwichInBreadcrumb: true,
+            showPushpin: true
+        },
+        canDeactivate: [CanDeactivateDictGuard],
         children: [{
+            path: ':nodeId',
+            data: { title: 'Запись', showInBreadcrumb: false },
+            children: [{
+                path: '',
+                component: DictionaryComponent,
+                pathMatch: 'full',
+                data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true },
+            }, 
+            {
+                path: 'edit',
+                data: {
+                    title: 'Редактирование',
+                    showInBreadcrumb: false,
+                    showSandwichInBreadcrumb: false,
+                    showBreadcrumb: true,
+                    closeStyle: true,
+                    showPushpin: false
+                },
+                children: [
+                    {
+                        path: '',
+                        redirectTo: '0',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: ':tabNum',
+                        component: CardComponent,
+                        canDeactivate: [CanDeactivateGuard],
+                    }],
+            }, 
+            {
+                path: 'view',
+                data: {
+                    title: 'Просмотр',
+                    showInBreadcrumb: false,
+                    showSandwichInBreadcrumb: false,
+                    showBreadcrumb: true,
+                    closeStyle: true,
+                    showPushpin: false
+                },
+                children: [
+                    {
+                        path: '',
+                        redirectTo: '0',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: ':tabNum',
+                        component: CardComponent,
+                    }],
+            }],
+        }, {
             path: '',
-            component: DictionaryComponent,
+            redirectTo: '0.',
+            // component: DictionaryComponent,
             pathMatch: 'full',
-            data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true },
-        }, {
-            path: 'edit',
-            data: {
-                title: 'Редактирование',
-                showInBreadcrumb: false,
-                showSandwichInBreadcrumb: false,
-                showBreadcrumb: true,
-                closeStyle: true,
-                showPushpin: false
-            },
-            children: [
-                {
-                    path: '',
-                    redirectTo: '0',
-                    pathMatch: 'full',
-                },
-                {
-                    path: ':tabNum',
-                    component: CardComponent,
-                    canDeactivate: [CanDeactivateGuard],
-                }],
-        }, {
-            path: 'view',
-            data: {
-                title: 'Просмотр',
-                showInBreadcrumb: false,
-                showSandwichInBreadcrumb: false,
-                showBreadcrumb: true,
-                closeStyle: true,
-                showPushpin: false
-            },
-            children: [
-                {
-                    path: '',
-                    redirectTo: '0',
-                    pathMatch: 'full',
-                },
-                {
-                    path: ':tabNum',
-                    component: CardComponent,
-                }],
         }],
-    }, {
-        path: '',
-        redirectTo: '0.',
-        // component: DictionaryComponent,
-        pathMatch: 'full',
-    }],
-}];
+    }
+];
 
 const routes: Routes = [
     {
@@ -170,300 +178,319 @@ const routes: Routes = [
         children: childrenDictionariesComponent2
     },
     {
-    path: 'spravochniki/SEV',
-    data: { title: 'СЭВ', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    children: childrenDictionariesComponent,
-}, {
-    path: 'spravochniki/nadzor',
-    data: { title: 'Надзор', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    children: childrenDictionariesComponent,
-}, {
-    path: 'spravochniki',
-    data: { title: 'Справочники', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    children: childrenDictionariesComponent,
-}, {
-    path: 'form',
-    data: {
-        title: 'Справочники',
-        showInBreadcrumb: true,
-        showBreadcrumb: true,
-        showPushpin: true,
+        path: 'spravochniki/SEV',
+        data: { title: 'СЭВ', showInBreadcrumb: true },
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        children: childrenDictionariesComponent,
     },
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    canDeactivate: [CanDeactivateGuard],
-    children: formDictionariesComponent,
-}, {
-    path: 'desk',
-    data: { title: 'Главная', showInBreadcrumb: false },
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    children: [{
-        path: '',
-        pathMatch: 'full',
-        component: DesktopComponent,
-    }, {
-        path: ':desktopId',
-        component: DesktopComponent,
-        data: { title: 'Главная', showInBreadcrumb: false, showBreadcrumb: false }
-    }]
-}, {
-    path: 'login',
-    canActivate: [UnauthorizedGuard],
-    component: LoginComponent,
-    data: { title: 'Вход в систему', showInBreadcrumb: false }
-}, {
-    path: 'test',
-    component: TestPageComponent,
-    data: { title: 'Test page for UI components' },
-}, {
-    path: 'delivery',
-    canActivate: [AuthorizedGuard],
-    component: DeliveryComponent,
-    data: { title: 'delivery page' },
-}, {
-    path: 'rubric',
-    canActivate: [AuthorizedGuard],
-    component: RubricComponent,
-    data: { title: 'rubric page' }
-}, {
-    path: 'templates',
-    canActivate: [AuthorizedGuard],
-    component: EosTemplateComponent,
-    data: { title: 'template page' }
-}, {
-    path: 'department',
-    canActivate: [AuthorizedGuard],
-    component: DepartmentComponent,
-    data: { title: 'department page' }
-}, {
-    path: 'user',
-    canActivate: [AuthorizedGuard],
-    component: UserRestComponent,
-    data: { title: 'user page' }
-}, {
-    path: 'parameters',
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    canActivateChild: [SystemParamsChildGuard],
-    data: {
-        title: 'Параметры системы',
-        showInBreadcrumb: false,
+    {
+        path: 'spravochniki/nadzor',
+        data: { title: 'Надзор', showInBreadcrumb: true },
+        canActivate: [AuthorizedGuard],
+        children: childrenDictionariesComponent,
     },
-    children: [
-        {
-            path: ':id',
-            pathMatch: 'full',
-            component: ParametersSystemComponent,
-            canDeactivate: [CanDeactivateGuard],
-            data: {
-                showNav: true
-            }
-        },
-        {
-            path: '',
-            redirectTo: 'rc',
-            pathMatch: 'full'
-        }
-    ]
-}, {
-    path: 'user-params-set',
-    canActivate: [AuthorizedGuard, UsersPermissionGuard, AdministratorGuard],
-    children: [
-        {
-            path: '',
-            pathMatch: 'full',
-            redirectTo: 'base-param',
-        },
-        {
-            path: ':field-id',
-            component: UserParamsComponent,
-            canDeactivate: [CanDeactivateGuard],
-            data: {
-                showNav: true
-            },
-        },
-    ]
-}, {
-    path: 'user_param',
-    canActivate: [AuthorizedGuard, UsersPermissionGuard],
-    data: {
-        title: 'Пользователи',
-        showInBreadcrumb: true
+    {
+        path: 'spravochniki',
+        data: { title: 'Справочники', showInBreadcrumb: true },
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        children: childrenDictionariesComponent,
     },
-    children: [
-        {
-            path: 'sum-protocol',
-            component: EosReportSummaryProtocolComponent,
-            data: {
-                title: 'Сводный протокол',
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
+    {
+        path: 'form',
+        data: {
+            title: 'Справочники',
+            showInBreadcrumb: true,
+            showBreadcrumb: true,
+            showPushpin: true,
+        },
+        canActivate: [AuthorizedGuard, AdministratorGuard],
+        canDeactivate: [CanDeactivateGuard],
+        children: formDictionariesComponent,
+    },
+    {
+        path: 'desk',
+        data: { title: 'Главная', showInBreadcrumb: false },
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        children: [{
+                path: '',
+                pathMatch: 'full',
+                component: DesktopComponent,
+            }, 
+            {
+                path: ':desktopId',
+                component: DesktopComponent,
+                data: { title: 'Главная', showInBreadcrumb: false, showBreadcrumb: false }
             }
+        ]
+    },
+    {
+        path: 'login',
+        canActivate: [UnauthorizedGuard],
+        component: LoginComponent,
+        data: { title: 'Вход в систему', showInBreadcrumb: false }
+    },
+    {
+        path: 'test',
+        component: TestPageComponent,
+        data: { title: 'Test page for UI components' },
+    },
+    {
+        path: 'delivery',
+        canActivate: [AuthorizedGuard],
+        component: DeliveryComponent,
+        data: { title: 'delivery page' },
+    },
+    {
+        path: 'rubric',
+        canActivate: [AuthorizedGuard],
+        component: RubricComponent,
+        data: { title: 'rubric page' }
+    },
+    {
+        path: 'templates',
+        canActivate: [AuthorizedGuard],
+        component: EosTemplateComponent,
+        data: { title: 'template page' }
+    },
+    {
+        path: 'department',
+        canActivate: [AuthorizedGuard],
+        component: DepartmentComponent,
+        data: { title: 'department page' }
+    },
+    {
+        path: 'user',
+        canActivate: [AuthorizedGuard],
+        component: UserRestComponent,
+        data: { title: 'user page' }
+    },
+    {
+        path: 'parameters',
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivateChild: [SystemParamsChildGuard],
+        data: {
+            title: 'Параметры системы',
+            showInBreadcrumb: false,
         },
-        {
-            path: 'users-stats',
-            component: EosReportUsersStatsComponent,
-            data: {
-                title: 'Статистика по пользователям',
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-            }
-        },
-        {
-            path: 'default-settings',
-            canActivate: [AuthorizedGuard],
-            data: {
-                title: 'Настройки по умолчанию',
-                showInBreadcrumb: true,
-            },
-            children: [
-                {
-                    path: ':id',
-                    pathMatch: 'full',
-                    component: DefaultSettingsComponent,
-                    canDeactivate: [CanDeactivateGuard],
-                    data: {
-                        showNav: true
-                    },
-                },
-                {
-                    path: '',
-                    pathMatch: 'full',
-                    redirectTo: 'registration',
-                },
-            ]
-        },
-        {
-            path: 'current-settings',
-            canActivate: [AuthorizedGuard],
-            children: [
-                {
-                    path: '',
-                    pathMatch: 'full',
-                    redirectTo: 'registration',
-                },
-                {
-                    path: ':field-id',
-                    component: CurrentUserSetComponent,
-                    canDeactivate: [CanDeactivateGuard],
-                    // data: {
-                    //     showNav: true
-                    // },
-                },
-            ]
-        },
-        {
-            path: 'user-session',
-            canActivate: [AuthorizedGuard, AdministratorGuard],
-            component: PluginReactComponent,
-            data: {
-                title: 'Текущие сессии пользователей',
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-                showSandwichInBreadcrumb: false,
-                showPushpin: false
-            }
-        },
-        {
-            path: ':nodeId',
-            component: UserSelectComponent,
-            data: {
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-                showSandwichInBreadcrumb: true,
-                showPushpin: false
-            },
-        },
-        {
-            path: '',
-            component: UserSelectComponent,
-            data: {
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-                showSandwichInBreadcrumb: true,
-                showPushpin: true
-            }
-        }
-    ]
-},
-{
-    path: 'tools',
-    data: { title: 'Инструменты', showInBreadcrumb: false },
-    canActivate: [AuthorizedGuard, AdministratorGuard],
-    children: [
-        {
-            path: '',
-            component: EosInstrumentsListsComponent,
-            pathMatch: 'full',
-            canActivate: [AuthorizedGuard],
-        },
-        {
-            path: ':taskId',
-            component: EosInstrumentsSingleComponent,
-            data: {
-                showBreadcrumb: false,
-                showInBreadcrumb: false,
-                showSandwichInBreadcrumb: false,
-                showPushpin: false
-            },
-        },
-    ],
-},
-{
-    path: 'services',
-    data: { title: 'Сервисы', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard, AdministratorGuard/* , BackgroundTaskGuard */], // убраю проверку прав оставляю только проверку авторизации, если опять понадобятся то можно будет вернуть
-    children: [
-        {
-            path: '',
-            component: EosBackgraundTasksComponent,
-            pathMatch: 'full',
-            canActivate: [AuthorizedGuard],
-        },
-        {
-            path: ':taskId',
-            component: EosBackgraundSingleComponent,
-            data: {
-                showBreadcrumb: false,
-                showInBreadcrumb: false,
-                showSandwichInBreadcrumb: false,
-                showPushpin: false
-            },
-            children: [
-                {
-                    path: '**',
-                    component: EosBackgraundSingleComponent,
-                    data: {
-                        showBreadcrumb: false,
-                        showInBreadcrumb: false,
-                        showSandwichInBreadcrumb: false,
-                        showPushpin: false
-                    },
-
+        children: [
+            {
+                path: ':id',
+                pathMatch: 'full',
+                component: ParametersSystemComponent,
+                canDeactivate: [CanDeactivateGuard],
+                data: {
+                    showNav: true
                 }
-            ]
-        }, {
-            path: '**',
-            component: EosBackgraundTasksComponent,
-            data: {
-                showBreadcrumb: false,
-                showInBreadcrumb: false,
-                showSandwichInBreadcrumb: false,
-                showPushpin: false
             },
+            {
+                path: '',
+                redirectTo: 'rc',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
+        path: 'user-params-set',
+        canActivate: [AuthorizedGuard, UsersPermissionGuard, CommonAccessSystemSettings],
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'base-param',
+            },
+            {
+                path: ':field-id',
+                component: UserParamsComponent,
+                canDeactivate: [CanDeactivateGuard],
+                data: {
+                    showNav: true
+                },
+            },
+        ]
+    },
+    {
+        path: 'user_param',
+        canActivate: [AuthorizedGuard, UsersPermissionGuard],
+        data: {
+            title: 'Пользователи',
+            showInBreadcrumb: true
+        },
+        children: [
+            {
+                path: 'sum-protocol',
+                component: EosReportSummaryProtocolComponent,
+                data: {
+                    title: 'Сводный протокол',
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                }
+            },
+            {
+                path: 'users-stats',
+                component: EosReportUsersStatsComponent,
+                data: {
+                    title: 'Статистика по пользователям',
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                }
+            },
+            {
+                path: 'default-settings',
+                canActivate: [AuthorizedGuard],
+                data: {
+                    title: 'Настройки по умолчанию',
+                    showInBreadcrumb: true,
+                },
+                children: [
+                    {
+                        path: ':id',
+                        pathMatch: 'full',
+                        component: DefaultSettingsComponent,
+                        canDeactivate: [CanDeactivateGuard],
+                        data: {
+                            showNav: true
+                        },
+                    },
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'registration',
+                    },
+                ]
+            },
+            {
+                path: 'current-settings',
+                canActivate: [AuthorizedGuard],
+                children: [
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'registration',
+                    },
+                    {
+                        path: ':field-id',
+                        component: CurrentUserSetComponent,
+                        canDeactivate: [CanDeactivateGuard],
+                        // data: {
+                        //     showNav: true
+                        // },
+                    },
+                ]
+            },
+            {
+                path: 'user-session',
+                canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+                component: PluginReactComponent,
+                data: {
+                    title: 'Текущие сессии пользователей',
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                    showSandwichInBreadcrumb: false,
+                    showPushpin: false
+                }
+            },
+            {
+                path: ':nodeId',
+                component: UserSelectComponent,
+                data: {
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                    showSandwichInBreadcrumb: true,
+                    showPushpin: false
+                },
+            },
+            {
+                path: '',
+                component: UserSelectComponent,
+                data: {
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                    showSandwichInBreadcrumb: true,
+                    showPushpin: true
+                }
+            }
+        ]
+    },
+    {
+        path: 'tools',
+        data: { title: 'Инструменты', showInBreadcrumb: false },
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        children: [
+            {
+                path: '',
+                component: EosInstrumentsListsComponent,
+                pathMatch: 'full',
+                canActivate: [AuthorizedGuard],
+            },
+            {
+                path: ':taskId',
+                component: EosInstrumentsSingleComponent,
+                data: {
+                    showBreadcrumb: false,
+                    showInBreadcrumb: false,
+                    showSandwichInBreadcrumb: false,
+                    showPushpin: false
+                },
+            },
+        ],
+    },
+    {
+        path: 'services',
+        data: { title: 'Сервисы', showInBreadcrumb: true },
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        children: [
+            {
+                path: '',
+                component: EosBackgraundTasksComponent,
+                pathMatch: 'full',
+                canActivate: [AuthorizedGuard],
+            },
+            {
+                path: ':taskId',
+                component: EosBackgraundSingleComponent,
+                data: {
+                    showBreadcrumb: false,
+                    showInBreadcrumb: false,
+                    showSandwichInBreadcrumb: false,
+                    showPushpin: false
+                },
+                children: [
+                    {
+                        path: '**',
+                        component: EosBackgraundSingleComponent,
+                        data: {
+                            showBreadcrumb: false,
+                            showInBreadcrumb: false,
+                            showSandwichInBreadcrumb: false,
+                            showPushpin: false
+                        },
 
-        }]
-},
-{
-    path: '',
-    redirectTo: '/desk/system',
-    pathMatch: 'full',
-}, {
-    path: '**',
-    redirectTo: '/desk/system',
-    pathMatch: 'full',
-}
+                    }
+                ]
+            },
+            {
+                path: '**',
+                component: EosBackgraundTasksComponent,
+                data: {
+                    showBreadcrumb: false,
+                    showInBreadcrumb: false,
+                    showSandwichInBreadcrumb: false,
+                    showPushpin: false
+                },
+
+            }
+        ]
+    },
+    {
+        path: '',
+        redirectTo: '/desk/system',
+        pathMatch: 'full',
+    },
+    {
+        path: '**',
+        redirectTo: '/desk/system',
+        pathMatch: 'full',
+    }
 ];
 
 @NgModule({

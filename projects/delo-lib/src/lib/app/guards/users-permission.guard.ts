@@ -9,6 +9,7 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { RETURN_URL, URL_LOGIN } from '../../app/consts/common.consts';
+import { ETypeDeloRight } from '../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights.consts';
 
 @Injectable()
 export class UsersPermissionGuard implements CanActivate {
@@ -31,7 +32,7 @@ export class UsersPermissionGuard implements CanActivate {
                 return true;
             }
             if (!this._apCtx.cbBase) {
-                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[0] === '1';
+                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[ETypeDeloRight.SystemTechnologist] === '1';
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
