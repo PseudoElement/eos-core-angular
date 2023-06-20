@@ -9,7 +9,8 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { RETURN_URL, URL_LOGIN } from '../../app/consts/common.consts';
-
+import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
+const URL_USER_PARAM = 1;
 @Injectable()
 export class UsersPermissionGuard implements CanActivate {
     private _userProfile: USER_CL;
@@ -31,7 +32,8 @@ export class UsersPermissionGuard implements CanActivate {
                 return true;
             }
             if (!this._apCtx.cbBase) {
-                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[0] === '1';
+                const access: boolean = conf.key === URL_USER_PARAM &&
+                this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1';
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -40,9 +42,23 @@ export class UsersPermissionGuard implements CanActivate {
                     });
                 }
                 return access;
+            } else {
+                const access: boolean = conf.key === URL_USER_PARAM;
+                if (access) {
+                    if ((this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1') ||
+                        this._userProfile.IS_SECUR_ADM) {
+                        return true;
+                    } else {
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение:',
+                            msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
+                        });
+                        return false;
+                    }
+                }
+                return true;
             }
-            return true;
-
         }).catch((err) => {
             if (err instanceof RestError && (err.code === 401 || err.code === 0)) {
                 // если нас открыли с настроек пользователя, то редиректим на завершение сессии
