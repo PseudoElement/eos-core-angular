@@ -5,11 +5,12 @@ import { E_RIGHT_DELO_ACCESS_CONTENT } from './right-delo.intefaces';
 import { NodeAbsoluteRight } from './node-absolute';
 import { IParamUserCl } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
-import { USERDEP, USER_ORGANIZ } from '../../../eos-rest/interfaces/structures';
+import { DEPARTMENT, USERDEP, USER_ORGANIZ } from '../../../eos-rest/interfaces/structures';
 import { WaitClassifService } from '../../../app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT_FULL, OPEN_CLASSIF_ORGANIZ_FULL } from '../../../app/consts/query-classif.consts';
 import { saveAs } from 'file-saver';
 import { AppContext } from '../../../eos-rest';
+import { EosMessageService } from '../../../eos-common/index';
 enum EFindRight {
     curentRight = 0
 }
@@ -28,7 +29,14 @@ export class RughtDeloAbsRightService {
     constructor(
         private _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
-        private _appContext: AppContext,){
+        private _appContext: AppContext,
+        private _msgSrv: EosMessageService,){
+    }
+    getCheckDepart(depart) {
+        if (this._appContext && this.returnOgrani()) {
+            return this._appContext.limitCardsUser.indexOf(depart['DEPARTMENT_DUE']) === -1;
+        }
+        return false;
     }
     addOrg() {
         const ORGANIZ = Object.assign({}, OPEN_CLASSIF_ORGANIZ_FULL);
@@ -106,6 +114,9 @@ export class RughtDeloAbsRightService {
             if (dataQuery) {
                 return this._userParmSrv.getDepartmentFromUser(dataQuery.split('|'))
                 .then((dataDep) => {
+                    if (this._appContext.limitCardsUser.length > 0) {
+                        dataDep = this._checkLimitCard(dataDep);
+                    }
                     const nMap = this.paramsToQuery;
                     dataDep.forEach((dep) => {
                         if (this.maxWeightDep > 0) {
@@ -340,7 +351,10 @@ export class RughtDeloAbsRightService {
             dep['style'] = {color: '#BABABA'}
         }
         tableHeader.forEach((header) => {
-            const flagDisabled = dep['key'] !== '0.' && header['data'] && header['data']['checkBoxAll'] ? this.curentUser.USERDEP_List.findIndex((item) => item['DUE'] === '0.' && ('' + (item['FUNC_NUM'] - 1)) === header.id) !== -1 : false;
+            let flagDisabled = dep['key'] !== '0.' && header['data'] && header['data']['checkBoxAll'] ? this.curentUser.USERDEP_List.findIndex((item) => item['DUE'] === '0.' && ('' + (item['FUNC_NUM'] - 1)) === header.id) !== -1 : false;
+            if(!flagDisabled && dep['key'] !== '0.') {
+                flagDisabled = this.getCheckDepart(dep);
+            }
             let deep = objectMap['mapDepInfo'].get(dep['key'] + '_' + header.id);
             deep = deep ? deep['DEEP'] : undefined;
             if (header['data'] && header['data']['optionBtn'] && dep['key'] !== '0.') { // тут добавляются button
@@ -395,11 +409,15 @@ export class RughtDeloAbsRightService {
                             deep = this.deloRights22 === '2' ? true : undefined;
                         }
                     }
+                    let dis = flagDisabled;
+                    if (dep['key'] === '0.' && toAllTitle === 'За всех') {
+                        dis = flagDisabled || this.returnOgrani();
+                    }
                     dep[header.id] = {
                         type: ECellToAll.checkbox,
-                        disabled: flagDisabled,
+                        disabled: dis,
                         check: deep !== undefined,
-                        click: ($event) => {this.chechNewInfoDep(dep['DUE'], header.id, $event)},
+                        click: ($event) => {this.chechNewInfoDep(dep, header.id, $event)},
                         title: dep['key'] === '0.' ? toAllTitle : '',
                     };
                 } else {
@@ -412,6 +430,7 @@ export class RughtDeloAbsRightService {
                     dep['' + header.id] = {
                         type: ECellToAll.checkbox,
                         check: Boolean(deep),
+                        disabled: flagDisabled,
                         click: ($event) => {this.selectRow(dep, $event)},
                         title: dep['CLASSIF_NAME'],
                         Icons: dep['DELETED'] === 1 ? ['eos-adm-icon-bin-grey'] : undefined
@@ -463,16 +482,17 @@ export class RughtDeloAbsRightService {
             }
         });
     }
-    chechNewInfoDep(due, funcNum, $event) {
+    chechNewInfoDep(dep, funcNum, $event) {
         const checked = $event.target ? $event.target.checked : $event;
-        if(due === '0.' && funcNum === ETypeDeloRight.IntroductionOfDraftResolutions) { // Разрешить операцию рассылки проекта резолюции
+        if(dep['DUE'] === '0.' && funcNum === ETypeDeloRight.IntroductionOfDraftResolutions) { // Разрешить операцию рассылки проекта резолюции
             this.deloRights22 = checked ? '2' : '1';
             return;
         }
-        if (due === '0.' && funcNum !== ETypeDeloRight.IntroductionOfDraftResolutions) { // если поставили галочку за всех то особое поведение
+        dep[+funcNum]['check'] = checked;
+        if (dep['DUE'] === '0.' && funcNum !== ETypeDeloRight.IntroductionOfDraftResolutions) { // если поставили галочку за всех то особое поведение
             this.updateAllCheck(funcNum, checked);
         } else {
-            this.updatePutchValue(due, funcNum, checked);
+            this.updatePutchValue(dep, funcNum, checked);
         }
     }
     clickToButton(due, funcNum, deep) {
@@ -528,10 +548,10 @@ export class RughtDeloAbsRightService {
             }
         });
     }
-    updatePutchValue(due, funcNum, checked) {
+    updatePutchValue(dep, funcNum, checked) {
         const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
             ISN_LCLASSIF: this._userParmSrv.userContextId,
-            DUE: due,
+            DUE: dep['DUE'],
             FUNC_NUM: +funcNum + 1,
             WEIGHT: -1,
             DEEP: 1,
@@ -908,5 +928,18 @@ export class RughtDeloAbsRightService {
         const blobHtml = new Blob([html], {type: 'text/html;charset=utf-8'});
         const noteStr = this.curentUser.NOTE ? ` (${this.curentUser.NOTE})` : '';
         saveAs(blobHtml, `Права пользователя ${this.curentUser.SURNAME_PATRON}${noteStr}. Участники документооборота авторизованных прав.html`);
+    }
+    private _checkLimitCard(arrDep: DEPARTMENT[]) {
+        return arrDep.filter(elem => {
+            if (this._appContext.limitCardsUser.indexOf(elem['DEPARTMENT_DUE']) === -1) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: `Элемент \'${elem.CLASSIF_NAME}\' не будет добавлен\nтак как он не принадлежит вашим картотекам`
+                });
+                return false;
+            }
+            return true;
+        });
     }
 }
