@@ -8,7 +8,7 @@ export const TABLE_HEADER_CARD: ITableHeader[] = [
         style: {width: 'calc(100% - 173px)'}
     },
     {
-      title: 'Главный',
+      title: 'Главная картотека',
       id: 'Icons',
       order: 'none',
       style: {width: '173px'}
@@ -24,7 +24,7 @@ export const TABLE_HEADER_CARD_SECOND: ITableHeader[] = [
       style: {'width': '204px'}
     },
     {
-        title: 'Главный',
+        title: 'Главный кабинет',
         id: 'Icons',
         fixed: true,
         order: 'none',

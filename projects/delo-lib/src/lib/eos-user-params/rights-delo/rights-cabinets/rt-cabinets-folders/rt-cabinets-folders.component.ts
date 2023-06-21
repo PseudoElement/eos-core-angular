@@ -33,6 +33,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
     @Output() changes = new EventEmitter();
+    @Output() checkChengeWindow = new EventEmitter();
     @ViewChild('secondTable', { static: false }) secondTable;
     public limitCard: boolean = false;
     public currentCabinet: Cabinets;
@@ -145,21 +146,30 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         }
         this.updateBtn();
     }
+    getSelectCabinet(cabinet?) {
+        if (cabinet) {
+            return this.tabelDataSecond.data.filter((cab) => +cab['key'] === +cabinet.selectIdLast)[0];
+        } else {
+            return undefined;
+        }
+    }
     updateBtn() {
+        let cabinet = undefined;
+        cabinet = this.getSelectCabinet(this.secondTable);
         if (this.flagEdit) {
             this.tabelDataSecond.tableBtn.forEach((item) => {
                 switch (item.id) {
                     case 'checked':
-                        item.disable = !Boolean(this.currentCabinet);
+                        item.disable = !Boolean(cabinet);
                         break;
                     case 'main':
-                        item.disable = !Boolean(this.currentCabinet) || this.currentCabinet['Icons'] !== undefined || !Boolean(this.currentCabinet.data['FOLDERS_AVAILABLE']);
+                        item.disable = !Boolean(cabinet) || cabinet['Icons'] !== undefined || !Boolean(cabinet.data['FOLDERS_AVAILABLE']);
                         break;
                     case 'copy':
-                        item.disable = !Boolean(this.currentCabinet);
+                        item.disable = !Boolean(cabinet);
                         break;
                     case 'insert':
-                        item.disable = !Boolean(this.currentCabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === null;
+                        item.disable = !Boolean(cabinet) || localStorage.getItem('copyParamsFOLDER_AVAILABLE') === null;
                         break;
                     case 'checked-cabinet':
                         item.disable = false;
@@ -200,6 +210,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 this.tabelDataSecond.tableBtn.forEach((btn) =>{
                     if (btn.id === 'expand') {
                         btn.active = !btn.active;
+                        this.checkChengeWindow.next(btn.active);
                     }
                 });
                 break;
@@ -451,7 +462,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             cab['key'] = cab['data']['ISN_CABINET'];
             cab['cabTitle'] = cab['cabinetInfo']['CABINET_NAME'];
             if (cab['data']['HOME_CABINET'] === 1) {
-                cab['Icons'] = {type: ECellToAll.icon, info: ['eos-adm-icon-keyfile-grey']};
+                cab['Icons'] = {type: ECellToAll.icon, info: [{class: 'eos-adm-icon-keyfile-grey', tooltip: 'Главный кабинет'}]};
             } else {
                 cab['Icons'] = undefined;
             }

@@ -1,4 +1,5 @@
-<div class="input-user-wrapper input-user-card-files-wrapper cust-height">
+<div class="input-user-wrapper input-user-card-files-wrapper cust-height"
+    [ngClass]="{'extension-window-active': extWindow, 'extension-window-active-is-wide': !isWide && extWindow}">
     <eos-user-params-header
         [editMode]="flagEdit"
         [title]='titleHeader'
@@ -33,6 +34,11 @@
                     (orderHead)="orderHead($event)">
                 </eos-tabel-element>
             </div>
-        <eos-cabinets-folders *ngIf="currentCard && !loadCabinets"  [card]="currentCard" [flagEdit]="flagEdit" (changes)="checkGlobalChanges()"></eos-cabinets-folders>
+        <eos-cabinets-folders 
+            *ngIf="currentCard && !loadCabinets"
+            [card]="currentCard"
+            [flagEdit]="flagEdit"
+            (changes)="checkGlobalChanges()"
+            (checkChengeWindow)="extensionWindow($event)"></eos-cabinets-folders>
     </div>
 </div>

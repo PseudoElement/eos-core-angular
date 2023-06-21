@@ -16,6 +16,7 @@ import { ECellToAll, ITableBtn, ITableData, ITableHeader, ITableSettings } from 
 import { TABLE_HEADER_BTN_TABEL, TABLE_HEADER_BTN_TABEL_SECOND, TABLE_HEADER_CARD } from './right-card-files.const';
 import { ConfirmWindowService, IOrderTable } from '../../../eos-common/index';
 import { CONFIRM_MAIN_CABINET_IN_CARTOTEK } from '../../../eos-dictionaries/consts/confirm.consts';
+import { NavParamService } from '../../../app/services/nav-param.service';
 
 @Component({
     selector: 'eos-card-files',
@@ -36,6 +37,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public closeAcordSecond = false;
     public arrayBtn: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL];
     public arrayBtnSecond: ITableBtn[] = [...TABLE_HEADER_BTN_TABEL_SECOND];
+    public extWindow = false;
+    public isWide;
     get titleHeader() {
         if (this._userSrv.curentUser) {
             if (this._userSrv.curentUser.isTechUser) {
@@ -71,6 +74,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _appContext: AppContext,
         private _userParamsSetSrv: UserParamsService,
         private _confirmSrv: ConfirmWindowService,
+        private _navSrv: NavParamService,
     ) { }
      // чтобы подписка происходила только 1 перенёс основной код из ngOnInit
      ngOnInit() {
@@ -82,7 +86,20 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         .subscribe((rout: RouterStateSnapshot) => {
             this._userParamsSetSrv.submitSave = this.preSubmit(true);
         });
+        this._navSrv.StateSandwich$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+            )
+        .subscribe((state: boolean) => {
+            this.isWide = state;
+        });
         this.updateBtn();
+    }
+    getDefaultBtn() {
+        return true;
+    }
+    extensionWindow(exten) {
+        this.extWindow = exten;
     }
     updateInit () {
         this._userSrv.getUserIsn({
@@ -206,7 +223,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.mainArrayCards.forEach((card) => {
             card['key'] = card['data']['DUE'];
             if (card['data']['HOME_CARD'] === 1) {
-                card['Icons'] = {type: ECellToAll.icon, info: ['eos-adm-icon-keyfile-grey']};
+                card['Icons'] = {type: ECellToAll.icon, info: [{class: 'eos-adm-icon-keyfile-grey', tooltip: 'Главный кабинет'}]};
             } else {
                 card['Icons'] = undefined;
             }

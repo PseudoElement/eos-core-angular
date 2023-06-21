@@ -14,3 +14,14 @@
         border-bottom: 1px solid #e6e6e6;
     }
 }
+.extension-window-active {
+    position: absolute;
+    width: 100%;
+    left: 340px;
+    width: calc(100vw - 350px);
+    background-color: #ffffff;
+}
+.extension-window-active-is-wide {
+    left: 20px;
+    width: calc(100vw - 30px);
+}

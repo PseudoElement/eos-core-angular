@@ -41,9 +41,23 @@ export class UsersPermissionGuard implements CanActivate {
                     });
                 }
                 return access;
+            } else {
+                const access: boolean = conf.key === 1;
+                if (access) {
+                    if ((this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[ETypeDeloRight.SystemTechnologist] === '1') ||
+                        this._userProfile.IS_SECUR_ADM) {
+                        return true;
+                    } else {
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение:',
+                            msg: `У Вас нет права изменять параметры модуля "${conf.name}"`,
+                        });
+                        return false;
+                    }
+                }
+                return true;
             }
-            return true;
-
         }).catch((err) => {
             if (err instanceof RestError && (err.code === 401 || err.code === 0)) {
                 // если нас открыли с настроек пользователя, то редиректим на завершение сессии
