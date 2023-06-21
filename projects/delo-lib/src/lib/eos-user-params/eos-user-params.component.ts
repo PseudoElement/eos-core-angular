@@ -61,7 +61,7 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
     @ViewChild(UserParamExtendExchComponent) allPanels: UserParamExtendExchComponent;
 
     email = '';
-    accordionList: IParamAccordionList[] = USER_PARAMS_LIST_NAV;
+    accordionList: IParamAccordionList[] = JSON.parse(JSON.stringify(USER_PARAMS_LIST_NAV));
     isShowAccordion: boolean;
     isShowRightAccordion: boolean = true;
     isLoading: boolean;
