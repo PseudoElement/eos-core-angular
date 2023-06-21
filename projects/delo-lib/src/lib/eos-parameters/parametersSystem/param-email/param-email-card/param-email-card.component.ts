@@ -26,6 +26,7 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
     public emailPass = '';
     public type1 = 'password';
     public isLoading = false;
+    public errorPass = false;
     public data = {
         ProfileName: ''
     };
@@ -43,6 +44,15 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
         } else {
             this.title = 'Создание профиля электронной почты';
             this.addProfile();
+            this.errorPass = true;
+            this.form.controls['rec.Password'].setErrors({ isRequired: undefined });
+            this.form.controls['rec.Password'].valueChanges
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((state: string) => {
+                this.errorPass = state.length === 0;
+            });
         }
         this.form.controls['rec.ProfileName'].valueChanges
         .pipe(
@@ -58,7 +68,9 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
                 });
                 if (flag) {
                     this.form.controls['rec.ProfileName'].setErrors(null);
-                    this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
+                    setTimeout(() => {
+                        this.form.controls['rec.ProfileName'].setErrors({ valueError: 'Название профиля должно быть уникальным' });
+                    }, 0);
                 } else {
                     this.form.controls['rec.ProfileName'].setErrors(null);
                 }
@@ -124,6 +136,11 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
             this.form.controls[`rec.${item.key}`].setValue(item.value, { emitEvent: false });
         });
         this.isLoading = false;
+    }
+    updateProfileName() {
+        if (this.form.controls['rec.ProfileName'].value.trim().length !== this.form.controls['rec.ProfileName'].value.length) {
+            this.form.controls['rec.ProfileName'].setValue(this.form.controls['rec.ProfileName'].value.trim());
+        }
     }
     inputAllElem($event, flag) {
         if (!this.form.controls['rec.InUserName'].value && this.form.controls['rec.EmailAccount'].value) {
