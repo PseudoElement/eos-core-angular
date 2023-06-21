@@ -21,8 +21,7 @@ const PARAM_FDULZ: IUploadParam = {
 
 @Component({
   selector: 'eos-param-libs',
-  templateUrl: './param-libs.component.html',
-  styleUrls: ['./param-libs.component.scss']
+  templateUrl: './param-libs.component.html'
 })
 export class ParamLibsComponent extends BaseParamComponent {
   @ViewChild('headerElement', {static: false}) headerElement;
@@ -40,7 +39,8 @@ export class ParamLibsComponent extends BaseParamComponent {
   public settingsTable: ITableSettings = {
     hiddenCheckBox: true,
     maxHeightTable: '200px',
-    selectedRow: true
+    selectedRow: true,
+    count: true
   }
   constructor(injector: Injector) {
     super(injector, PARAMS_LIBS);
