@@ -33,6 +33,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
     @Output() changes = new EventEmitter();
+    @Output() checkChengeWindow = new EventEmitter();
     @ViewChild('secondTable', { static: false }) secondTable;
     public limitCard: boolean = false;
     public currentCabinet: Cabinets;
@@ -209,6 +210,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 this.tabelDataSecond.tableBtn.forEach((btn) =>{
                     if (btn.id === 'expand') {
                         btn.active = !btn.active;
+                        this.checkChengeWindow.next(btn.active);
                     }
                 });
                 break;

@@ -16,7 +16,7 @@ export class UserHeaderComponent implements OnInit {
     @Input() defaultBtn?: boolean = false;
     @Input() errorSave: boolean = false;
     @Input() isCurrentSettings?: boolean;
-    @Input() dafaultTitle: string = 'По умолчанию';
+    @Input() defaultTitle: string = 'По умолчанию';
 
     @Output() defaultEmit = new EventEmitter<any>();
     @Output() submitEmit = new EventEmitter<any>();
@@ -67,7 +67,7 @@ export class UserHeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.btnTitles['default'] = this.dafaultTitle;
+        this.btnTitles['default'] = this.defaultTitle;
         if (this.checkSegment) {
             setTimeout(() => {
                 this.editMode = true;
