@@ -1,6 +1,6 @@
 import { EMAIL } from '../../../../eos-dictionaries/consts/input-validation';
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
-
+export const REG_PORT: RegExp = /^(([0-9]{1,4})|([1-5][0-9]{4})|(6[0-4][0-9]{3})|(65[0-4][0-9]{2})|(655[0-2][0-9])|(6553[0-5]))$/; // проверка порта от 0 до 65535
 export const EmailEncryptionType = [
     {value: 1, title: 'Нет'},
     {value: 2, title: 'TLS'},
@@ -30,6 +30,7 @@ export const EMAIL_PARAM: IBaseParameters = {
             readonly: false,
             title: 'Адрес электронной почты',
             pattern: EMAIL,
+            required: true,
         },
         {
             key: 'Password',
@@ -43,6 +44,7 @@ export const EMAIL_PARAM: IBaseParameters = {
             type: 'select',
             readonly: false,
             title: 'Протокол',
+            required: true,
             options: [
                 {value: 1, title: 'IMAP'},
                 {value: 2, title: 'POP3'}
@@ -53,26 +55,31 @@ export const EMAIL_PARAM: IBaseParameters = {
             type: 'string',
             readonly: false,
             title: 'Сервер',
+            required: true,
         },
         {
             key: 'InServerPort',
             type: 'numberIncrement',
             readonly: false,
             title: 'Порт',
+            pattern: REG_PORT,
+            required: true,
         },
         {
             key: 'InEncryption',
             type: 'select',
             readonly: false,
             title: 'Шифрование',
-            options: EmailEncryptionType
+            options: EmailEncryptionType,
+            required: true,
         },
         {
             key: 'InAuthMethod',
             type: 'select',
             readonly: false,
             title: 'Аутентификация',
-            options: EmailAuthenticationType
+            options: EmailAuthenticationType,
+            required: true,
         },
         {
             key: 'InUserName',
@@ -92,12 +99,15 @@ export const EMAIL_PARAM: IBaseParameters = {
             key: 'OutServerHost',
             type: 'string',
             readonly: false,
+            required: true,
             title: 'Сервер',
         },
         {
             key: 'OutServerPort',
             type: 'numberIncrement',
             readonly: false,
+            required: true,
+            pattern: REG_PORT,
             title: 'Порт',
         },
         {
@@ -105,6 +115,7 @@ export const EMAIL_PARAM: IBaseParameters = {
             type: 'select',
             readonly: false,
             title: 'Шифрование',
+            required: true,
             options: EmailEncryptionType
         },
         {
@@ -112,12 +123,14 @@ export const EMAIL_PARAM: IBaseParameters = {
             type: 'select',
             readonly: false,
             title: 'Аутентификация',
+            required: true,
             options: EmailAuthenticationType
         },
         {
             key: 'OutUserName',
             type: 'string',
             readonly: false,
+            required: true,
             title: 'Имя пользователя',
         },
     ],

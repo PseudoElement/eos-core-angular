@@ -13,7 +13,11 @@
         </div>
     </div>
     <div *ngIf="!isLoading" style="padding: 20px">
-        <eos-dynamic-input [input]="inputs['rec.ProfileName']" [form]="form"  [readonly]="inputs['rec.ProfileName'].readonly"></eos-dynamic-input>
+        <eos-dynamic-input 
+            [input]="inputs['rec.ProfileName']"
+            [form]="form"  
+            [readonly]="inputs['rec.ProfileName'].readonly"
+            (onControlBlur)="updateProfileName($event.keyCode, true)"></eos-dynamic-input>
         <div class="second-string">
             <eos-dynamic-input 
                 class="padding-right"
