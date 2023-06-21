@@ -246,13 +246,17 @@
                 height: 70px;
             }
         }
-        .base-param-radio {
+        .param-radio {
             display: block;
             eos-dynamic-input-radio {
                 display: block;
-                width: 422px;
-                div:nth-child(2) {
-                    margin-left: 74px;
+                width: auto;
+                div {
+                    display: flex;
+
+                    .elem-input-radio {
+                        flex-grow: 1;
+                    }
                 }
         }
     }
@@ -274,21 +278,40 @@
     box-shadow: none !important;
 }
 
- .access-syst-wr{
-     display: flex;
-    .access-syst-part {
-         width: 30%;
-        &:last-child {
-         width: 40%;
-     }
-     }
-
-
- }
- .serts {
-     top: 30%;
- }
- .wrapper {
+.hr-line {
+    margin: 9px 0 22px;
+}
+.access-syst-wrapper {
     display: flex;
-    // justify-content: space-between;
+    justify-content: space-between;
+    padding-left: 4px;
+    
+    .access-syst-part {
+        width: 226px;
+
+        eos-dynamic-input {
+            div {
+                .form-group {
+                    margin-bottom: 14px!important;
+                    eos-dynamic-input-checkbox {
+                        div {
+                            label {
+                                span {
+                                    margin-right: 14px!important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.serts {
+    top: 30%;
+}
+
+.wrapper {
+    display: flex;
 }
