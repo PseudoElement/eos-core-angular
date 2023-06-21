@@ -54,6 +54,7 @@ import { DynamicInputAutoSearchComponent } from './dynamic-form-input/dynamic-in
 import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.component';
 import { AddControlsDirective } from './directives/add-controls.directive';
 import { EosCommonDynamicComponent } from './eos-common-dynamic/eos-common-dynamic.component';
+import { DragulaModule } from 'ng2-dragula';
 
 @NgModule({
     declarations: [
@@ -95,7 +96,8 @@ import { EosCommonDynamicComponent } from './eos-common-dynamic/eos-common-dynam
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         AlertModule.forRoot(),
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        DragulaModule,
     ],
     exports: [
         ConfirmWindowComponent,

@@ -1,6 +1,8 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ECellToAll, ICellInfo, ITableBtn, ITableData, ITableHeader, ITableSettings } from '../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { AppContext } from '../../eos-rest';
 /* import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts'; */
 
 export interface IOrderTable {
@@ -8,7 +10,7 @@ export interface IOrderTable {
     order?: 'asc' | 'desc' | 'none';
 }
 
-@Component({
+@Component({ /*  */
     selector: 'eos-tabel-element',
     templateUrl: 'eos-tabel-element.component.html',
     styleUrls: ['./eos-tabel-element.component.scss']
@@ -25,6 +27,9 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     @ViewChild('headerTable', {static: false}) headerTable: ElementRef;
     @ViewChild('fixetColoms', {static: false}) fixetColoms: ElementRef;
     @ViewChild('notFixetColoms', {static: false}) notFixetColoms: ElementRef;
+    @ViewChild('autorizSetting', { static: false }) autorizSetting;
+    public modalRef: BsModalRef;
+    public rowNotFixed: ITableHeader[] = [];
     public title;
     public colomns: ITableHeader[] = [];
     public isLoading = false;
@@ -37,18 +42,30 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     get showCheckBox() {
         return !this.settings?.hiddenCheckBox;
     }
-    constructor() {}
+    constructor(
+        private _modalSrv: BsModalService,
+        private _appContext: AppContext,
+    ) {}
     ngOnInit(): void {
         this.widthAll = 0;
         this.colomns = [];
         this.updateHeader(this.tabelData.tableHeader);
         this.buttons = this.tabelData.tableBtn;
+        if (this.settings && this.settings.defaultSettingHeader) {
+            this.buttons.push({
+                tooltip: 'Настройка отображения',
+                disable: false,
+                iconActiv: ' eos-adm-icon-settings-blue',
+                iconDisable: 'eos-adm-icon-settings-grey',
+                activeIcon: 'eos-adm-icon-settings-white',
+                id: 'tableCustomization'
+            });
+        }
         this.tabelData.data.forEach((item) => {
             if (item.check) {
                 this.countSelected++;
             }
         });
-
     }
     updateHeader(newHeader: ITableHeader[]) {
         this.colomns = newHeader;
@@ -108,7 +125,61 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
         return false;
     }
     clickToButton(btn: ITableBtn) {
+        if (btn.id === 'tableCustomization') {
+            this.rowNotFixed = this.getNotFixed();
+            this.openModal();
+        }
         this.btnAction.emit(btn.id);
+    }
+    openModal() {
+        
+        this.modalRef = this._modalSrv.show(this.autorizSetting);
+    }
+    saveDefault() {
+        const newHeaderKey = [];
+        const newHeader = [];
+        this.modalRef.hide();
+        this.settings.defaultSettingHeader.forEach((header) => {
+            newHeaderKey.push(header.id);
+            newHeader.push(header);
+        });
+        const curentSetting = { 'absolute-rights': newHeaderKey }
+        localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+        this.tabelData.tableHeader = newHeader;
+        this.updateHeader(JSON.parse(JSON.stringify(newHeader)));
+    }
+    saveSettings(flag): void {
+        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
+        const newHeaderKey = [];
+        const newHeader = [];
+        if (flag) {
+            const fixedRow = this.getFixedRow();
+            fixedRow.forEach((header) => {
+                newHeaderKey.push(header.id);
+                newHeader.push(header);
+            });
+            this.rowNotFixed.forEach((header) => {
+                newHeaderKey.push(header.id);
+                newHeader.push(header);
+            });
+            if (curentSettingStr) {
+                const curentSetting = JSON.parse(curentSettingStr);
+                curentSetting['absolute-rights'] = newHeaderKey;
+                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+            } else {
+                const curentSetting = { 'absolute-rights': newHeaderKey }
+                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+            }
+            this.tabelData.tableHeader = newHeader;
+            this.updateHeader(JSON.parse(JSON.stringify(newHeader)));
+        }
+        this.modalRef.hide();
+    }
+    getNotFixed(): ITableHeader[] {
+        return this.tabelData.tableHeader.filter((item) => !item.fixed);
+    }
+    getFixedRow(): ITableHeader[] {
+        return this.tabelData.tableHeader.filter((item) => item.fixed);
     }
     clickToChildrenButton(dropdown, elem) {
         if (!elem.disable) {

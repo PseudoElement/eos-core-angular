@@ -26,7 +26,6 @@ import { AbsoluteRigthServiceLib } from '../../../eos-rest/addons/absoluteRigth.
 import { ITableData, ITableHeader, ITableSettings } from '../../../eos-parameters/parametersSystem/shared/interfaces/tables.interfaces';
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { RughtDeloAbsRightService } from './right-delo-absolute-rights.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ReportingService } from './right-srch-group/right-srch-group.component';
 /* import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces'; */
 @Component({
@@ -36,7 +35,6 @@ import { ReportingService } from './right-srch-group/right-srch-group.component'
 
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     @ViewChild('tableAuthorized', { static: false }) tableAuthorized;
-    @ViewChild('autorizSetting', { static: false }) autorizSetting;
     @ViewChild('autorizTable', { static: false }) autorizTable;
     curentUser: IParamUserCl;
     btnDisabled: boolean = true;
@@ -81,8 +79,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
     }
     public leftSendwitch;
-    public modalRef: BsModalRef;
-    public rowNotFixed: ITableHeader[] = [];
     get titleHeader() {
         if (this.curentUser) {
             if (this.curentUser.isTechUser) {
@@ -114,7 +110,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _absRigthServ: AbsoluteRigthServiceLib,
         private _navSrv: NavParamService,
         private _rightDeloService: RughtDeloAbsRightService,
-        private _modalSrv: BsModalService,
         private reportingSrv: ReportingService
     ) { }
     ngOnInit() {
@@ -246,6 +241,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.TABLE_HEADER_ABS_RIGHT.push(newElem);
             }
         });
+        this.settingsTable.defaultSettingHeader = JSON.parse(JSON.stringify(this.TABLE_HEADER_ABS_RIGHT));
         this.tabelData.tableHeader = this.updateHeaderTable([...this.TABLE_HEADER_ABS_RIGHT]);
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
@@ -852,48 +848,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
     }
     actionTo($event) {
-        if ($event === 'tableCustomization') {
-            this.rowNotFixed = this.getNotFixed();
-            this.openModal();
-        } else {
-            this._rightDeloService.action($event);
-        }
-    }
-    openModal() {
-        this.modalRef = this._modalSrv.show(this.autorizSetting);
-    }
-    saveSettings(flag): void {
-        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
-        const newHeaderKey = [];
-        const newHeader = [];
-        if (flag) {
-            const fixedRow = this.getFixedRow();
-            fixedRow.forEach((header) => {
-                newHeaderKey.push(header.id);
-                newHeader.push(header);
-            });
-            this.rowNotFixed.forEach((header) => {
-                newHeaderKey.push(header.id);
-                newHeader.push(header);
-            });
-            if (curentSettingStr) {
-                const curentSetting = JSON.parse(curentSettingStr);
-                curentSetting['absolute-rights'] = newHeaderKey;
-                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
-            } else {
-                const curentSetting = { 'absolute-rights': newHeaderKey }
-                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
-            }
-            this.tabelData.tableHeader = newHeader;
-            this.autorizTable.updateHeader(JSON.parse(JSON.stringify(newHeader)));
-        }
-        this.modalRef.hide();
-    }
-    getNotFixed(): ITableHeader[] {
-        return this.tabelData.tableHeader.filter((item) => !item.fixed);
-    }
-    getFixedRow(): ITableHeader[] {
-        return this.tabelData.tableHeader.filter((item) => item.fixed);
+        this._rightDeloService.action($event);
     }
     selectElement($event) {
         /*  */
