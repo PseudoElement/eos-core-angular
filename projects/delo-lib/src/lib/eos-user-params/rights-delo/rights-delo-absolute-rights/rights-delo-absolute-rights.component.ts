@@ -235,7 +235,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 const newElem = {
                     title: item.label,
                     id: item.key,
-                    style: { 'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px' },
+                    style: { 'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px', 'max-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px' },
                     data: item
                 }
                 this.TABLE_HEADER_ABS_RIGHT.push(newElem);
