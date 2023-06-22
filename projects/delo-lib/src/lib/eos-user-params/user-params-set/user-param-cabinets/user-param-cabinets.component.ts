@@ -12,12 +12,13 @@ import {
     // CABINETS_USER_INFORMER,
     CABINETS_USER_NOTIFICATOR,
     SEND_ORDER_TO_FOR_ARM,
-    CABINETS_USER_FOLDERS, CABINETS_USER_ASSIGMENTS
+    CABINETS_USER_FOLDERS, 
+    CABINETS_USER_ASSIGMENTS
 } from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from '../../../eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from '../../../eos-common/services/input-control.service';
 import { WaitClassifService } from '../../../app/services/waitClassif.service';
-import { PipRX, USER_PARMS } from '../../../eos-rest';
+import { AppContext, PipRX, USER_PARMS } from '../../../eos-rest';
 import { EosMessageService } from '../../../eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { RECENT_URL } from '../../../app/consts/common.consts';
@@ -67,10 +68,17 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     placementForTooltip: string = 'bottom';
     public lastTabs: string[] = ['Информер', 'Оповещатель'];
     public fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
-    readonly fieldsKeys: Map<string, number> = new Map([['FOLDERCOLORSTATUS_RECEIVED', 0],
-    ['FOLDERCOLORSTATUS_FOR_EXECUTION', 1], ['FOLDERCOLORSTATUS_UNDER_CONTROL', 2], ['FOLDERCOLORSTATUS_HAVE_LEADERSHIP', 3],
-    ['FOLDERCOLORSTATUS_FOR_CONSIDERATION', 4], ['FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 5], ['FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 6],
-    ['FOLDERCOLORSTATUS_ON_SIGHT', 7], ['FOLDERCOLORSTATUS_ON_THE_SIGNATURE', 8]]);
+    readonly fieldsKeys: Map<string, number> = new Map([
+        ['FOLDERCOLORSTATUS_RECEIVED', 0],
+        ['FOLDERCOLORSTATUS_FOR_EXECUTION', 1], 
+        ['FOLDERCOLORSTATUS_UNDER_CONTROL', 2], 
+        ['FOLDERCOLORSTATUS_HAVE_LEADERSHIP', 3],
+        ['FOLDERCOLORSTATUS_FOR_CONSIDERATION', 4], 
+        ['FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 5], 
+        ['FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 6],
+        ['FOLDERCOLORSTATUS_ON_SIGHT', 7], 
+        ['FOLDERCOLORSTATUS_ON_THE_SIGNATURE', 8]
+    ]);
     _ngUnsubscribe: Subject<any> = new Subject();
     public btnDisable: boolean = true;
 
@@ -101,7 +109,19 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
         private _storageSrv: EosStorageService,
+        public appContext: AppContext
     ) {
+        if (this.appContext.cbBase) {
+            CABINETS_USER_FOLDERS.fields.push({
+                key: 'CBR_LIST_STYLE',
+                type: 'radio',
+                title: 'Представление перечней документов и проектов:',
+                options: [
+                    {value: '1', title: 'Лента'},
+                    {value: '2', title: 'Таблица'},
+                ]
+            })
+        }
         this._snap.queryParams
         .pipe(
             takeUntil(this._ngUnsubscribe)
