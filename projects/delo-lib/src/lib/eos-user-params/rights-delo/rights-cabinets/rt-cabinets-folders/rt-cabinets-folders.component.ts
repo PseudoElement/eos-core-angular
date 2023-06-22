@@ -112,6 +112,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         this.form.valueChanges.subscribe((data) => {
             // this.currentCabinet = this.card.cabinets[this.form.controls['selectedCabinet'].value];
             this.updateDataFolder(this.card.cabinets);
+            if (this.secondTable) {
+                this.secondTable.selectIdLast = '';
+            }
+            this.updateBtn();
         });
 
         this._rtCabintsSrv.changeCabinets
@@ -213,6 +217,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         this.checkChengeWindow.next(btn.active);
                     }
                 });
+                this.updateBtn();
                 break;
         }
         this.updateDataFolder(this.card.cabinets);
@@ -388,8 +393,8 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             this.currentCabinet.data.HOME_CABINET = 1;
             this._updateSelect(true);
         }
-        this.updateBtn();
         this.updateDataFolder(this.card.cabinets);
+        this.updateBtn();
         this.changes.emit();
     }
 
