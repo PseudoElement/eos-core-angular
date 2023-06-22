@@ -230,17 +230,31 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             style: { 'min-width': '360px', 'max-width': '360px' },
             fixed: true
         });
+        let tablePredSort = [];
         ABS.forEach((item) => {
             if (item.viewToAuthorized) {
                 const newElem = {
                     title: item.label,
                     id: item.key,
-                    style: { 'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px' },
+                    style: { 'min-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px', 'max-width': item.optionBtn || item.key === ETypeDeloRight.IntroductionOfDraftResolutions ? '200px' : '140px' },
                     data: item
                 }
-                this.TABLE_HEADER_ABS_RIGHT.push(newElem);
+                tablePredSort.push(newElem);
             }
         });
+        tablePredSort = tablePredSort.sort((a, b) => {
+            if (a.data.positionAuthorized > b.data.positionAuthorized) {
+                return 1;
+            } else if (a.data.positionAuthorized < b.data.positionAuthorized) {
+                return -1;
+            } else {
+                /* 
+                * Если у элемента не будет positionAuthorized то пусть он будет в самом конце
+                */
+                return -1;
+            }
+        });
+        this.TABLE_HEADER_ABS_RIGHT = this.TABLE_HEADER_ABS_RIGHT.concat([...tablePredSort]);
         this.settingsTable.defaultSettingHeader = JSON.parse(JSON.stringify(this.TABLE_HEADER_ABS_RIGHT));
         this.tabelData.tableHeader = this.updateHeaderTable([...this.TABLE_HEADER_ABS_RIGHT]);
         this.curentUser = this._userParamsSetSrv.curentUser;

@@ -111,6 +111,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        positionAuthorized: 3,
         viewToAuthorized: true,
         checkBoxAll: true,
         useInProject: 'delo,nadzor'
@@ -132,6 +133,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject
         },
+        positionAuthorized: 4,
         viewToAuthorized: true,
         checkBoxAll: true,
         useInProject: 'delo,nadzor'
@@ -153,6 +155,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        positionAuthorized: 5,
         viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
@@ -174,6 +177,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         },
+        positionAuthorized: 6,
         viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
@@ -245,6 +249,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        positionAuthorized: 7,
         viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
@@ -256,6 +261,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         },
+        positionAuthorized: 8,
         viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
@@ -267,6 +273,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         },
+        positionAuthorized: 9,
         viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
@@ -278,6 +285,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         },
+        positionAuthorized: 10,
         viewToAuthorized: true,
         useInProject: 'delo,nadzor'
     },
@@ -320,6 +328,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
         },
+        positionAuthorized: 0,
         viewToAuthorized: true,
         optionBtn: true,
         checkBoxAll: true,
@@ -334,6 +343,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
         },
+        positionAuthorized: 1,
         viewToAuthorized: true,
         optionBtn: true,
         checkBoxAll: true,
@@ -348,6 +358,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: true,
         },
+        positionAuthorized: 2,
         viewToAuthorized: true,
         optionBtn: true,
         checkBoxAll: true,
@@ -436,6 +447,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: false,
         },
+        positionAuthorized: 11,
         viewToAuthorized: true,
         checkBoxAll: true,
         useInProject: 'delo'
@@ -449,6 +461,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department,
             flagcheck: false,
         },
+        positionAuthorized: 12,
         viewToAuthorized: true,
         checkBoxAll: true,
         onlyDL: true,
