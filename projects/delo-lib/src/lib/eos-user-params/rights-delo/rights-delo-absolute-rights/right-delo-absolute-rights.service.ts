@@ -140,7 +140,7 @@ export class RughtDeloAbsRightService {
                         */
                         Object.keys(dep).forEach((key) => {
                             if (dep[key] && dep[key].type === ECellToAll.checkbox && key !== 'CLASSIF_NAME' && dep[key].disabled !== true) {
-                                this.chechNewInfoDep(dep['key'], key, true);
+                                this.chechNewInfoDep(dep, key, true);
                                 dep[key].check = true;
                             }
                         });
@@ -159,7 +159,7 @@ export class RughtDeloAbsRightService {
             this.tabelData.tableHeader.forEach((header) => {
                 if (row[header.id] && header.id !== 'CLASSIF_NAME' && row[header.id]['type'] === ECellToAll.checkbox && row[header.id]['check']) {
                     if (row.__metadata.__type === 'DEPARTMENT') {
-                        this.chechNewInfoDep(row['key'], header.id, false);
+                        this.chechNewInfoDep(row, header.id, false);
                     } else {
                         this.chechNewInfoOrg(row, header.id, false);
                     }
@@ -310,36 +310,41 @@ export class RughtDeloAbsRightService {
                 }
             });
             this.curentUser.USERDEP_List.forEach((dep) => {
-                if (this.paramsToQuery.mapDepWeight[dep['DUE']] && this.paramsToQuery.mapDepWeight[dep['DUE']] !== dep['WEIGHT'] && !alreadyWeight.has(dep['DUE'] + '_' + dep['FUNC_NUM'])) {
-                    dep['WEIGHT'] = this.paramsToQuery.mapDepWeight[dep['DUE']];
-                    queryAll.push({
-                        requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USERDEP_List('${this.curentUser.ISN_LCLASSIF} ${dep['DUE']} ${dep['FUNC_NUM']}')`,
-                        method: 'MERGE',
-                        data: {
-                            WEIGHT: this.paramsToQuery.mapDepWeight[dep['DUE']],
-                            DUE: dep['DUE'],
-                            FUNC_NUM: dep['FUNC_NUM']
-                        }
-                    });
+                if ((this._appContext.limitCardsUser.length > 0 && !this.getCheckDepart(dep)) || this._appContext.limitCardsUser.length === 0) {
+                    if (this.paramsToQuery.mapDepWeight[dep['DUE']] && this.paramsToQuery.mapDepWeight[dep['DUE']] !== dep['WEIGHT'] && !alreadyWeight.has(dep['DUE'] + '_' + dep['FUNC_NUM'])) {
+                        dep['WEIGHT'] = this.paramsToQuery.mapDepWeight[dep['DUE']];
+                        queryAll.push({
+                            requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USERDEP_List('${this.curentUser.ISN_LCLASSIF} ${dep['DUE']} ${dep['FUNC_NUM']}')`,
+                            method: 'MERGE',
+                            data: {
+                                WEIGHT: this.paramsToQuery.mapDepWeight[dep['DUE']],
+                                DUE: dep['DUE'],
+                                FUNC_NUM: dep['FUNC_NUM']
+                            }
+                        });
+                    }
                 }
             });
-            this.curentUser['USER_ORGANIZ_List'].forEach((org) => {
-                if (this.paramsToQuery.mapOrgWeight[org['DUE']] &&
-                this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['WEIGHT'] &&
-                !alreadyWeight.has(org['DUE'] + '_' + org['FUNC_NUM']) &&
-                this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === org.FUNC_NUM) !== -1) {
-                    org['WEIGHT'] = this.paramsToQuery['mapOrgWeight'][org['DUE']];
-                    queryAll.push({
-                        requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USER_ORGANIZ_List('${this.curentUser.ISN_LCLASSIF} ${org['DUE']} ${org['FUNC_NUM']}')`,
-                        method: 'MERGE',
-                        data: {
-                            WEIGHT: this.paramsToQuery.mapOrgWeight[org['DUE']],
-                            DUE: org['DUE'],
-                            FUNC_NUM: org['FUNC_NUM']
-                        }
-                    });
-                }
-            });
+            if (!this._appContext.limitCardsUser.length) {
+                this.curentUser['USER_ORGANIZ_List'].forEach((org) => {
+                    if (this.paramsToQuery.mapOrgWeight[org['DUE']] &&
+                    this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['WEIGHT'] &&
+                    !alreadyWeight.has(org['DUE'] + '_' + org['FUNC_NUM']) &&
+                    this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === org.FUNC_NUM) !== -1) {
+                        org['WEIGHT'] = this.paramsToQuery['mapOrgWeight'][org['DUE']];
+                        queryAll.push({
+                            requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USER_ORGANIZ_List('${this.curentUser.ISN_LCLASSIF} ${org['DUE']} ${org['FUNC_NUM']}')`,
+                            method: 'MERGE',
+                            data: {
+                                WEIGHT: this.paramsToQuery.mapOrgWeight[org['DUE']],
+                                DUE: org['DUE'],
+                                FUNC_NUM: org['FUNC_NUM']
+                            }
+                        });
+                    }
+                });
+            }
+            
         }
     }
     createDepRow(dep, tableHeader: ITableHeader[], objectMap ) {
@@ -392,7 +397,7 @@ export class RughtDeloAbsRightService {
                 } else {
                     dep[header.id]['check'] = deep !== undefined;
                     dep[header.id]['disabled'] = flagDisabled;
-                    dep[header.id]['click'] = ($event) => {this.chechNewInfoDep(dep['DUE'], header.id, $event)};
+                    dep[header.id]['click'] = ($event) => {this.chechNewInfoDep(dep, header.id, $event)};
                 }
             } else if (header.id !== 'CLASSIF_NAME') {
                 if (header['data'] && header['data']['onlyDL'] && dep['IS_NODE'] === 0 && dep['key'] !== '0.') { // если в столбце должны быть только ДЛ то для подразделений пустота
@@ -421,7 +426,7 @@ export class RughtDeloAbsRightService {
                         title: dep['key'] === '0.' ? toAllTitle : '',
                     };
                 } else {
-                    dep[header.id] = {type: ECellToAll.checkbox, disabled: flagDisabled, check: false, click: () => {this.chechNewInfoDep(dep['DUE'], header.id, Boolean(deep))}};
+                    dep[header.id] = {type: ECellToAll.checkbox, disabled: flagDisabled, check: false, click: () => {this.chechNewInfoDep(dep, header.id, Boolean(deep))}};
                 }
             } else {
                 if(dep['key'] === '0.') {
