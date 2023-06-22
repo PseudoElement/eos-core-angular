@@ -22,10 +22,16 @@ export interface IInputParamControl {
     data?: any;
     deleted?: boolean;
     useInProject?: string;
+    /** данный флаг показывает будет поле отображаться в окне */
     viewToAuthorized?: boolean;
+    /** флаг который говорит что эта таблица будет с снопками */
     optionBtn?: boolean;
+    /** указывает что в департаменте есть чекбокс "За всех" */
     checkBoxAll?: boolean;
+    /** можно добавлять только ДЛ */
     onlyDL?: boolean;
+    /** Позиция элемента по умолчанию в таблице Авторизованных прав */
+    positionAuthorized?: number;
 }
 
 export interface IInputParamControlForIndexRight {
