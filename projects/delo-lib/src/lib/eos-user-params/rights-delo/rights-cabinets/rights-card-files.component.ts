@@ -223,7 +223,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.mainArrayCards.forEach((card) => {
             card['key'] = card['data']['DUE'];
             if (card['data']['HOME_CARD'] === 1) {
-                card['Icons'] = {type: ECellToAll.icon, info: [{class: 'eos-adm-icon-keyfile-grey', tooltip: 'Главный кабинет'}]};
+                card['Icons'] = {type: ECellToAll.icon, info: [{class: 'eos-adm-icon-keyfile-grey', tooltip: 'Главная картотека'}]};
             } else {
                 card['Icons'] = undefined;
             }
