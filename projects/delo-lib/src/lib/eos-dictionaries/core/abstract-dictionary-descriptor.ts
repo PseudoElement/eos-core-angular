@@ -103,6 +103,10 @@ export abstract class AbstractDictionaryDescriptor {
 
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
 
+    /** Получить все записи которые лежать внутри вершины дерева */
+    getAllNodesInParents(departmentDue: string): Promise<any> { 
+        return Promise.resolve();
+    }
     deleteTempRc() {
         throw new Error('Method not implemented.');
     }
