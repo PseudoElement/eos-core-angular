@@ -54,7 +54,6 @@ export enum E_RECORD_ACTIONS {
     copy,
     printNomenc,
     renameBaseDepartment,
-    epCertificateIsAppointed,
     // createRepresentative,
     // slantForForms,
     /* to be extended */
