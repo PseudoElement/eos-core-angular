@@ -1,11 +1,11 @@
 export const RC_CABINET_FOLDER_LIST = [
-    {
+    /* {
         key: 1,
         charKey: '1',
         title: 'Поступившие'
-    }, {
+    },  */{
         key: 2,
-        charKey: '2',
+        charKey: '12',
         title: 'На исполнении'
     }, {
         key: 3,

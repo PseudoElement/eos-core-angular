@@ -5,6 +5,13 @@ $access-first-col-width: 251px;
 bs-dropdown-container {
     z-index: 1100;
 }
+.checkbox-folder-position {
+    padding-left: 12px;
+    padding-top: 10px;
+    width: 28%;
+    float: left;
+    height: 40px;
+}
 .owners-menu {
     max-height: 300px;
     overflow-y: auto;
