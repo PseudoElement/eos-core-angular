@@ -9,6 +9,7 @@ import { UserParamApiSrv } from '../../eos-user-params/shared/services/user-para
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { SearchServices } from '../../eos-user-select/shered/services/search.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { BsDropdownDirective } from 'ngx-bootstrap';
 const BIG_PANEL = 340,
     SMALL_PANEL = 260,
     PADDING_W = 32,
@@ -188,5 +189,9 @@ export class TreeUserSelectComponent implements OnInit {
             });
         }
         return children;
+    }
+
+    showContextMenu(dropdown: BsDropdownDirective) {
+        dropdown.isOpen = true;
     }
 }
