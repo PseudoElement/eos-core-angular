@@ -73,18 +73,6 @@ export class NodeActionsComponent implements OnDestroy {
         return this._markedNodes.filter(node => !node.isSliced);
     }
 
-    get nodeIdCertificate() {
-        let isSertificate: boolean = false;
-        if ( this._markedNodes[this._markedNodes.length -1] && 
-             this._markedNodes[this._markedNodes.length -1].data.CONTACT_List) {
-                this._markedNodes.forEach(el => {
-                    if(el.data.CONTACT_List && el.data.CONTACT_List[0].ID_CERTIFICATE){
-                        isSertificate = true;
-                    }
-                })
-        }
-        return isSertificate;
-    }
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -563,10 +551,10 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.certifUC:
                     break;
-                case E_RECORD_ACTIONS.epCertificateIsAppointed:
-                    _enabled = this.nodeIdCertificate;
-                    _show = true;
-                    break;
+                // case E_RECORD_ACTIONS.epCertificateIsAppointed:
+                //     _enabled = this.nodeIdCertificate;
+                //     _show = true;
+                //     break;
                 default:
                     const {enabled, show} = this._dictSrv.npOverrideSrv.checkActiveMenuButtons(button.type, this, opts)
                     _enabled = enabled;
