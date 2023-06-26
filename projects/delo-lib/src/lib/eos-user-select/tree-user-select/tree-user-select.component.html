@@ -9,6 +9,7 @@
                 (click)="setTab(tab.key)"
             >
                 <span
+                    container="body"
                     containerClass="tooltip-info"
                     tooltip="{{tab.tooltip}}"
                     placement="bottom"
@@ -16,33 +17,33 @@
                 >{{tab.title}}</span>
             </li>
         </ul>
-        
-        <div 
+
+        <div
             #dropdown="bs-dropdown"
             dropdown
-            class="switch-menu" 
+            class="switch-menu"
             container="body"
         >
-        
+
             <button
                 id="switch-menu"
                 dropdownToggle
                 type="button"
                 (mouseover)=showContextMenu(dropdown)
                 class="btn btn btn-primary dropdown-toggle"
-                aria-controls="switch-menu" 
+                aria-controls="switch-menu"
                 [ngClass]="{'active-btn': dropdown.isOpen}"
             >
-                <span [ngClass]="dropdown.isOpen ? 'eos-adm-icon eos-adm-icon-fab-white small': 
+                <span [ngClass]="dropdown.isOpen ? 'eos-adm-icon eos-adm-icon-fab-white small':
                                                    'eos-adm-icon eos-adm-icon-fab-blue small'"
                 ></span>
             </button>
-            
-            <ul 
+
+            <ul
                 id="switch-menu"
-                *dropdownMenu 
-                class="context-menu dropdown-menu" 
-                role="menu" 
+                *dropdownMenu
+                class="context-menu dropdown-menu"
+                role="menu"
                 aria-labelledby="switch-menu"
             >
                 <li  role="menuitem" class="menu-item" *ngIf="!showLogicallyDeleted" (click)="togleParam('showLogicallyDeleted')">
@@ -59,7 +60,7 @@
                 </li>
             </ul>
         </div>
-        
+
     </div>
 
     <div *ngIf="!isLoading; else spiner" class="tree-wrapper-overflow">
