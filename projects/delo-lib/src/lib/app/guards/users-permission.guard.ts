@@ -34,7 +34,7 @@ export class UsersPermissionGuard implements CanActivate {
             }
 
             if (!this._apCtx.cbBase) {
-                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users-1] === '1';
+                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1';
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -46,7 +46,7 @@ export class UsersPermissionGuard implements CanActivate {
             } else {
                 const access: boolean = conf.key === 1;
                 if (access) {
-                    if ((this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users-1] === '1') ||
+                    if ((this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1') ||
                         this._userProfile.IS_SECUR_ADM) {
                         return true;
                     } else {
