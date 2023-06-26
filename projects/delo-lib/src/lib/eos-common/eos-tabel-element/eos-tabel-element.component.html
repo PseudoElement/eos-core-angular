@@ -1,4 +1,7 @@
-<div class="eos-adm-table">
+<div class="eos-adm-table"
+    (window:mousemove)="windowMouseMove($event)"
+    (window:mouseup)="windowMouseUp($event)"
+    [ngStyle]="{'-webkit-user-select': mouseM ? 'none' : '', '-ms-user-select': mouseM ? 'none' : '', '-moz-user-select': mouseM ? 'none' : ''}">
     <!-- Хидер с кнопками и счётчиком выделенного -->
     <div *ngIf="title" class="eos-adm-table-title">
         <span>{{title}}</span>
@@ -85,7 +88,10 @@
                     </span>
                 </div>
             </div>
-            <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 21px; box-shadow: 6px -3px 4px 3px rgba(34, 60, 80, 0.2);">
+            <div 
+                (mousedown)="mouseDown($event)"
+                [ngStyle]="{'cursor': settings && settings.defaultSettingHeaderName ? 'col-resize' : ''}"
+                style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 21px; box-shadow: 6px -3px 4px 3px rgba(34, 60, 80, 0.2);">
             </div>
         </div>
         <div class="header-table-param 
@@ -127,7 +133,9 @@
             <div style="display: flex;" [ngStyle]="{'min-height': settings && settings['minHeightTable'] ? settings['minHeightTable'] : ''}">
                 <!-- Фиксированные колонки -->
                 <div *ngIf="getColomsFixed().length" style="position: relative;">
-                    <div style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 1px; box-shadow: 6px 3px 4px 3px rgba(34, 60, 80, 0.2);">
+                    <div (mousedown)="mouseDown($event)"
+                    [ngStyle]="{'cursor': settings && settings.defaultSettingHeaderName ? 'col-resize' : ''}"
+                    style="position: absolute; height: 100%; width: 5px; z-index: 1; right: 1px; box-shadow: 6px 3px 4px 3px rgba(34, 60, 80, 0.2);">
                     </div>
                     <div
                         #fixetColoms
@@ -168,7 +176,7 @@
                                             style="height: 24px; padding-left: 0px; margin-left: -2px; position: relative;" 
                                             class="checkbox-inline table-hidder"
                                             [ngStyle]="{'max-width': getStyleTd(colomn, i, row)['max-width']}"
-                                            [tooltip]="tootipShow(trF, trFP, getElement(colomn, row).info['title'])"
+                                            [tooltip]="tootipShow(trF, trFP, getElement(colomn, row).info['title'], 50)"
                                             placement="bottom"
                                             containerClass="tooltip-info"
                                             container="body"
@@ -214,7 +222,7 @@
                                     </ng-container>
                                     <ng-container *ngSwitchDefault>
                                         <div [ngStyle]="row['style']"
-                                                [tooltip]="tootipShow(trF, trFP, getElement(colomn, row))"
+                                                [tooltip]="tootipShow(trF, trFP, getElement(colomn, row), 20)"
                                                 placement="bottom"
                                                 containerClass="tooltip-info"
                                                 container="body"
@@ -312,7 +320,7 @@
                                         <span
                                             #trNF
                                             class="text table-hidder"
-                                            [tooltip]="tootipShow(trNF, trNFP, getElement(colomn, row)) || ''"
+                                            [tooltip]="tootipShow(trNF, trNFP, getElement(colomn, row), 20) || ''"
                                             placement="bottom"
                                             containerClass="tooltip-info"
                                             container="body"

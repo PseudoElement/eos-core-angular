@@ -118,6 +118,11 @@ export class SignaturePopupComponent implements OnInit {
     }
     closeAddCertModal() {
         this.modalRef2.hide();
+        this.listCertStores.forEach((item, index) => {
+            item['key'] = index;
+            item['name'] = this.certStoresService.parseName(item);
+            item['check'] = item.marked;
+        });
     }
 
     checkboxClick(e: Event) {

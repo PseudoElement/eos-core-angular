@@ -74,6 +74,8 @@ function stdTextUrl(url, params) {
     if (params.selected !== undefined && params.selected !== null) {
         url += getSymbol(url) + `select=${params.selected}`;
     }
+    console.log('url', url);
+    
     return url;
 }
 
