@@ -248,7 +248,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             } else if (a.data.positionAuthorized < b.data.positionAuthorized) {
                 return -1;
             } else {
-                /* 
+                /*
                 * Если у элемента не будет positionAuthorized то пусть он будет в самом конце
                 */
                 return -1;
@@ -291,7 +291,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             arr = [
                 ETypeDeloRight.SystemTechnologist,
                 ETypeDeloRight.SearchInAllFileCabinets,
-                ETypeDeloRight.SendingDocumentsToRegisters,
                 ETypeDeloRight.ViewAllOrders,
                 ETypeDeloRight.BulkDeletionOfAds,
                 ETypeDeloRight.ReadingFilesInAllFileCabinets,
