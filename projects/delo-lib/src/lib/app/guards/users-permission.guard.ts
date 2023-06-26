@@ -9,7 +9,7 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { RETURN_URL, URL_LOGIN } from '../../app/consts/common.consts';
-import { ETypeDeloRight } from '../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights.consts';
+import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 
 @Injectable()
 export class UsersPermissionGuard implements CanActivate {
@@ -25,14 +25,16 @@ export class UsersPermissionGuard implements CanActivate {
         const urlSegment: UrlSegment = _route.url[0];
         const url: string = urlSegment.path;
         const conf: IKeyRightTech = this._getConf(url);
+
         return this._getContext().then((user: USER_CL[]) => {
             this._userProfile = user[0];
             // если это пользовательские настройки с шестеренки, то ок
             if (state.url.indexOf('/user_param/current-settings') !== -1) {
                 return true;
             }
+
             if (!this._apCtx.cbBase) {
-                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[ETypeDeloRight.SystemTechnologist] === '1';
+                const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1';
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -44,7 +46,7 @@ export class UsersPermissionGuard implements CanActivate {
             } else {
                 const access: boolean = conf.key === 1;
                 if (access) {
-                    if ((this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[ETypeDeloRight.SystemTechnologist] === '1') ||
+                    if ((this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1') ||
                         this._userProfile.IS_SECUR_ADM) {
                         return true;
                     } else {
