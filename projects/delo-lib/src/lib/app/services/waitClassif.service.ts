@@ -24,6 +24,7 @@ const NEW_VIEW_URL: string = '../classifChoose/cl?';
 // const URL_PATH = '../classifChoose/cl?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
+const StdText: string = '../WebRC/Pages/StdText.html';
 const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
@@ -104,6 +105,8 @@ export class WaitClassifService {
             }
         } else if (params.classif === 'TECH_LISTS') {
             url = TECH_LISTS;
+        } else if (params.classif === 'StdText') {
+            url = this.stdTextUrl(StdText, params);
         } else if (params.classif === 'SharingLists') {
             url = this.sharingListsUrl(SharingLists, params);
         } else if (params.classif === 'gop_rc') {
@@ -201,7 +204,31 @@ export class WaitClassifService {
     private getSymbol(url: string) {
         return url.indexOf('?') === -1 ? '?' : '&';
     }
-
+    private stdTextUrl(url, params: IOpenClassifParams) {
+        if (params.isn_user !== undefined && params.isn_user !== null) {
+            url += this.getSymbol(url) + `isn_user=${params.isn_user}`;
+        }
+        if (params.clUser === true) {
+            url += this.getSymbol(url) + `clUser=${params.clUser}`;
+        }
+        // if (params.name !== undefined && params.name !== null) {
+        //     url += `&name=${params.name}`;
+        // }
+        // if (params.form !== undefined && params.form !== null) {
+        //     url += `&form=${params.form}`;
+        // }
+        if (params.idText !== undefined && params.idText !== null) {
+            url += this.getSymbol(url) + `id=${params.idText}`;
+            url += this.getSymbol(url) + `name=${params.idText}`;
+        }
+        if (params.formText !== undefined && params.formText !== null) {
+            url += this.getSymbol(url) + `form=${params.formText}`;
+        }
+        if (params.selected !== undefined && params.selected !== null) {
+            url += this.getSymbol(url) + `select=${params.selected}`;
+        }
+        return url;
+    }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url: string = '';
