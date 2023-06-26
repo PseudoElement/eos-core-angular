@@ -296,6 +296,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 ETypeDeloRight.ReadingFilesInAllFileCabinets,
                 ETypeDeloRight.UploadingInformationToSSTU
             ];
+            if (!this._appContext.cbBase) {
+                arr.push(ETypeDeloRight.SendingDocumentsToRegisters);
+            }
             /* } else {
                 arr = ['0', '1', '2', '3', '18', '23', '29'];
             } */
