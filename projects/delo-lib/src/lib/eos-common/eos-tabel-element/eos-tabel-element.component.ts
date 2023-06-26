@@ -38,6 +38,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     public selectIdLast = '';
     public currentRow: any;
     public widthAll = 0;
+    public mouseM = false;
     types = ECellToAll;
     get showCheckBox() {
         return !this.settings?.hiddenCheckBox;
@@ -110,8 +111,8 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             return btn.iconActiv;
         }
     }
-    tootipShow(width, widthParent, title: string) {
-        if (this.isLoading && width && widthParent && width.offsetWidth > widthParent.offsetWidth) {
+    tootipShow(width, widthParent, title: string, weightPlus) {
+        if (this.isLoading && width && widthParent && width.offsetWidth + weightPlus > widthParent.offsetWidth) {
             return title;
         } else {
             return '';
@@ -143,7 +144,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             newHeaderKey.push(header.id);
             newHeader.push(header);
         });
-        const curentSetting = { 'absolute-rights': newHeaderKey }
+        const curentSetting = { [this.settings.defaultSettingHeaderName]: newHeaderKey }
         localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
         this.tabelData.tableHeader = newHeader;
         this.updateHeader(JSON.parse(JSON.stringify(newHeader)));
@@ -164,10 +165,10 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             });
             if (curentSettingStr) {
                 const curentSetting = JSON.parse(curentSettingStr);
-                curentSetting['absolute-rights'] = newHeaderKey;
+                curentSetting[this.settings.defaultSettingHeaderName] = newHeaderKey;
                 localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
             } else {
-                const curentSetting = { 'absolute-rights': newHeaderKey }
+                const curentSetting = { [this.settings.defaultSettingHeaderName]: newHeaderKey }
                 localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
             }
             this.tabelData.tableHeader = newHeader;
@@ -232,6 +233,60 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
                 return '';
             }
         }
+    }
+    mouseDown($event) {
+        if (this.settings && this.settings.expandFixedColumn) {
+            this.mouseM = true;
+        }
+    }
+    windowMouseUp($event) {
+        if (this.mouseM) {
+            let idColomd = 0;
+            this.tabelData.tableHeader.forEach((item, index) => {
+                if (item.fixed) {
+                    idColomd = index;
+                }
+            });
+            if (this.tabelData.tableHeader[idColomd].style['max-width']) {
+                const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
+                let maxWidth = this.tabelData.tableHeader[idColomd].style['max-width'];
+                if (curentSettingStr) {
+                    const curentSetting = JSON.parse(curentSettingStr);
+                    curentSetting[this.settings.expandFixedColumnName] = maxWidth;
+                    localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+                } else {
+                    const curentSetting = { [this.settings.expandFixedColumnName]: maxWidth }
+                    localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+                }
+            }
+        }
+        this.mouseM = false;
+    }
+    /** Расширение последнего фиксированного столбца */
+    windowMouseMove($event) {
+        if (this.mouseM) {
+            let idColomd = 0;
+            this.tabelData.tableHeader.forEach((item, index) => {
+                if (item.fixed) {
+                    idColomd = index;
+                }
+            });
+            if (this.tabelData.tableHeader[idColomd].style['max-width']) {
+                let maxWidth = +this.tabelData.tableHeader[idColomd].style['max-width'].replace('px', '');
+                maxWidth += $event.movementX;
+                this.tabelData.tableHeader[idColomd].style['max-width'] = '' + maxWidth + 'px';
+            }
+            if (this.tabelData.tableHeader[idColomd].style['min-width']) {
+                let minWidth = +this.tabelData.tableHeader[idColomd].style['min-width'].replace('px', '');
+                minWidth += $event.movementX;
+                this.tabelData.tableHeader[idColomd].style['min-width'] = '' + minWidth + 'px';
+            }
+        }
+    }
+    getMarginRow(colomn, row) {
+        let width = this.getElement(colomn, row)['info']['Icons'] ? (20 * this.getElement(colomn, row)['info']['Icons'].length) : 0
+        width += this.getElement(colomn, row)['type'] === ECellToAll.checkbox ? 30 : 0;
+        return '' + width + 'px';
     }
     getStyle(header: ITableHeader, row?: string): any {
         const style =  header.style ? header.style : {}

@@ -73,6 +73,12 @@ export interface ITableSettings {
     headerTitleColor?: string;
     /** Сюда передаётся дефолтное значение header для таблицы если передано то будет появляться кнопка настройки таблицы */
     defaultSettingHeader?: ITableHeader[];
+    /** Используется вместе с defaultSettingHeader чтобы можно было устанавливать расположение столбцов для всех таблиц */
+    defaultSettingHeaderName?: string;
+    /** Добавляю возможность расширения фиксированной части таблицы с помощью мыши */
+    expandFixedColumn?: boolean;
+    /** Используется вместе с expandFixedColumn чтобы можно было отследить для какой таблицы брать расширение */
+    expandFixedColumnName?: string;
 }
 export enum ECellToAll  {
     icon,
