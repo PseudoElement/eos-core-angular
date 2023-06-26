@@ -36,7 +36,8 @@ import { EosInstrumentsSingleComponent } from '../eos-instruments/components/eos
 import { CardFromComponent } from '../eos-dictionaries/card-from/card-from.component';
 import { AdministratorGuard } from './guards/administrator.guard';
 import { SystemParamsChildGuard } from './guards/system-params-child.guard';
-import { CommonAccessSystemSettings } from './guards/common-access-system-settings.guard';
+import { CommonAccessSystemSettingsGuard } from './guards/common-access-system-settings.guard';
+import { SystemTechnologistGuard } from './guards/system-technologist.guard';
 
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
@@ -180,7 +181,7 @@ const routes: Routes = [
     {
         path: 'spravochniki/SEV',
         data: { title: 'СЭВ', showInBreadcrumb: true },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
         children: childrenDictionariesComponent,
     },
     {
@@ -192,7 +193,7 @@ const routes: Routes = [
     {
         path: 'spravochniki',
         data: { title: 'Справочники', showInBreadcrumb: true },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
         children: childrenDictionariesComponent,
     },
     {
@@ -210,7 +211,7 @@ const routes: Routes = [
     {
         path: 'desk',
         data: { title: 'Главная', showInBreadcrumb: false },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
         children: [{
                 path: '',
                 pathMatch: 'full',
@@ -266,7 +267,7 @@ const routes: Routes = [
     },
     {
         path: 'parameters',
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
         canActivateChild: [SystemParamsChildGuard],
         data: {
             title: 'Параметры системы',
@@ -291,7 +292,7 @@ const routes: Routes = [
     },
     {
         path: 'user-params-set',
-        canActivate: [AuthorizedGuard, UsersPermissionGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, UsersPermissionGuard, CommonAccessSystemSettingsGuard],
         children: [
             {
                 path: '',
@@ -379,7 +380,7 @@ const routes: Routes = [
             },
             {
                 path: 'user-session',
-                canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+                canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
                 component: PluginReactComponent,
                 data: {
                     title: 'Текущие сессии пользователей',
@@ -414,7 +415,7 @@ const routes: Routes = [
     {
         path: 'tools',
         data: { title: 'Инструменты', showInBreadcrumb: false },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
         children: [
             {
                 path: '',
@@ -435,9 +436,11 @@ const routes: Routes = [
         ],
     },
     {
+        // system-technologist.guard.ts
+        // System Technologist
         path: 'services',
         data: { title: 'Сервисы', showInBreadcrumb: true },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettings],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: [
             {
                 path: '',

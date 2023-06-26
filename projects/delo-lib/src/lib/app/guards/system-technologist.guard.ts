@@ -10,7 +10,7 @@ import { ALL_ROWS } from '../../eos-rest/core/consts';
 
 @Injectable({ providedIn: "root" })
 
-export class CommonAccessSystemSettingsGuard implements CanActivate {
+export class SystemTechnologistGuard implements CanActivate {
     constructor(
         private apCtx: AppContext,
         private PipRX: PipRX,
@@ -25,16 +25,6 @@ export class CommonAccessSystemSettingsGuard implements CanActivate {
         const systemTechnologistValue = +currentUser.DELO_RIGHTS[ETypeDeloRight.SystemTechnologist];
 
         if (!systemTechnologistValue) {
-            if (this.apCtx.cbBase) {
-                const systemAdministratorValue = currentUser.IS_SECUR_ADM;
-                
-                if (systemAdministratorValue) {
-                    return true;
-                } else {
-                    this.showMessage(conf);
-                    return false;
-                }
-            }
             this.showMessage(conf);
             return false;
         }
