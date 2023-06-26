@@ -16,22 +16,50 @@
                 >{{tab.title}}</span>
             </li>
         </ul>
+        
         <div 
-            #pop="bs-popover"
+            #dropdown="bs-dropdown"
+            dropdown
             class="switch-menu" 
-            [popover]="contextMenu" 
-            placement="bottom"
-            containerClass="wrapper-context-menu"
+            container="body"
         >
+        
             <button
-                class="btn"
-                [ngClass]="{'active-btn': pop.isOpen}"
+                id="switch-menu"
+                dropdownToggle
+                type="button"
+                (mouseover)=showContextMenu(dropdown)
+                class="btn btn btn-primary dropdown-toggle"
+                aria-controls="switch-menu" 
+                [ngClass]="{'active-btn': dropdown.isOpen}"
             >
-                <span [ngClass]="pop.isOpen ? 'eos-adm-icon eos-adm-icon-fab-white small': 
-                                              'eos-adm-icon eos-adm-icon-fab-blue small'"
+                <span [ngClass]="dropdown.isOpen ? 'eos-adm-icon eos-adm-icon-fab-white small': 
+                                                   'eos-adm-icon eos-adm-icon-fab-blue small'"
                 ></span>
             </button>
+            
+            <ul 
+                id="switch-menu"
+                *dropdownMenu 
+                class="context-menu dropdown-menu" 
+                role="menu" 
+                aria-labelledby="switch-menu"
+            >
+                <li  role="menuitem" class="menu-item" *ngIf="!showLogicallyDeleted" (click)="togleParam('showLogicallyDeleted')">
+                    <span class="dropdown-item">Показать логически удаленные</span>
+                </li>
+                <li class="menu-item" *ngIf="showLogicallyDeleted" role="menuitem" (click)="togleParam('showLogicallyDeleted')">
+                    <span class="dropdown-item">Скрыть логически удаленные</span>
+                </li>
+                <li class="menu-item" *ngIf="!sortContextMenu" role="menuitem" (click)="togleParam('sortContextMenu')">
+                    <span class="dropdown-item">Сортировать по алфавиту</span>
+                </li>
+                <li class="menu-item" *ngIf="sortContextMenu" role="menuitem" (click)="togleParam('sortContextMenu')">
+                    <span class="dropdown-item">Сортировать по умолчанию</span>
+                </li>
+            </ul>
         </div>
+        
     </div>
 
     <div *ngIf="!isLoading; else spiner" class="tree-wrapper-overflow">
@@ -118,21 +146,4 @@
 
 <ng-template #spiner>
     <eos-spinner size="lg"></eos-spinner>
-</ng-template>
-
-<ng-template #contextMenu>
-    <div class="context-menu">
-        <p class="menu-item" *ngIf="!showLogicallyDeleted" (click)="togleParam('showLogicallyDeleted')">
-            <span>Показать логически удаленные</span>
-        </p>
-        <p class="menu-item" *ngIf="showLogicallyDeleted" (click)="togleParam('showLogicallyDeleted')">
-            <span>Скрыть логически удаленные</span>
-        </p>
-        <p class="menu-item" *ngIf="!sortContextMenu" (click)="togleParam('sortContextMenu')">
-            <span>Сортировать по алфавиту</span>
-        </p>
-        <p class="menu-item" *ngIf="sortContextMenu" (click)="togleParam('sortContextMenu')">
-            <span>Сортировать по умолчанию</span>
-        </p>
-    </div>
 </ng-template>
