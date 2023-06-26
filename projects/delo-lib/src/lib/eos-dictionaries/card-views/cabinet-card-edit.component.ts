@@ -52,7 +52,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
 
     @ViewChild('tableEl', { static: false }) tableEl;
     @ViewChild('intupString', { static: false }) intupString;
-
+    public cabFolder;
     private _apiSrv: PipRX;
     private _msgSrv: EosMessageService;
     // private folderList: any[];
@@ -137,6 +137,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
         CABINET_FOLDERS.forEach((folder) => {
             this.foldersMap.set(folder.key, folder);
         });
+        this.cabFolder = [...CABINET_FOLDERS];
         this._apiSrv = injector.get(PipRX);
         this._msgSrv = injector.get(EosMessageService);
         // this.folderList = [];
@@ -150,7 +151,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
         this.tabsToArray(this.tabs);
         if (this.form) {
             this.unsubscribe();
-            this.formChanges$ = this.form.valueChanges.subscribe(() => {
+            this.formChanges$ = this.form.valueChanges.subscribe((change) => {
                 this.updateValidTabs();
                 if (
                     this.form.controls['rec.CABINET_NAME'].value &&
@@ -159,6 +160,9 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
                     const val = this.form.controls['rec.CABINET_NAME'].value.replace('"', '');
                     this.form.controls['rec.CABINET_NAME'].patchValue(val);
                     this.inputs['rec.CABINET_NAME'].value = val;
+                }
+                if (change['rec.FOLDER_List[0].USER_COUNT'] !== change['rec.FOLDER_List[1].USER_COUNT']) {
+                    this.form.controls['rec.FOLDER_List[0].USER_COUNT'].patchValue(change['rec.FOLDER_List[1].USER_COUNT']);
                 }
             });
             setTimeout(() => {
@@ -632,7 +636,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
             this.getCabinetsOwners().forEach((owner) => {
                 owner.orderNum = owner.data.ORDER_NUM || this.getMaxOrderNum();
             });
-            console.log(this.getCabinetsOwners());
+            // console.log(this.getCabinetsOwners());
             if (this.localUserSort) {
                 this.reorderNum();
             } else {
@@ -640,7 +644,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
             }
         });
 
-        this.cabinetFolders = CABINET_FOLDERS;
+        this.cabinetFolders = CABINET_FOLDERS.filter((item) => item.key !== 1);
 
         this.accessHeaders = [
             {

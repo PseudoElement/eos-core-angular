@@ -103,6 +103,10 @@ export abstract class AbstractDictionaryDescriptor {
 
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
 
+    /** Получить все записи которые лежать внутри вершины дерева */
+    getAllNodesInParents(departmentDue: string): Promise<any> { 
+        return Promise.resolve();
+    }
     deleteTempRc() {
         throw new Error('Method not implemented.');
     }
@@ -609,7 +613,7 @@ export abstract class AbstractDictionaryDescriptor {
                                     deletingNodes.push(node);
                                 }
                             });
-                            if (list.length && (this.id !== 'departments' || dueTo !== selectedNodes[0]['parentId'])) {
+                            if (list.length /* && (this.id !== 'departments' || dueTo !== selectedNodes[0]['parentId']) */) {
                                 const warnDeletion: IConfirmWindow2 = Object.assign({}, WARN_ELEMENTS_COPY_DELETE_LOGICK, { bodyList: list });
                                 if (logicalDeletion.length) {
                                     this.markBooleanData(logicalDeletion, 'DELETED', true, true).then(() => {

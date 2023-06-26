@@ -233,12 +233,12 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     item.style = item.style['width'] ? {'min-width': '204px', 'max-width': '204px'} : {'width': '204px'}
                     // item.fixed = !item.fixed;
                     break;
-                case 'FOLDERS_AVAILABLE_1':
-                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '65px'}
+                case 'FOLDERS_AVAILABLE_12':
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '61px'}
                     // item.fixed = !item.fixed;
                     break;
                 default:
-                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '49px'}
+                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '55px'}
                     break;
             }
         });
@@ -369,13 +369,29 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
             return;
         }
         // tslint:disable-next-line: no-bitwise
-        if (~this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(key) !== 0) {
-            const reg = new RegExp(`${key}`, 'g');
-            this.currentCabinet.data.FOLDERS_AVAILABLE = this.currentCabinet.data.FOLDERS_AVAILABLE.replace(reg, '');
+        if (key.length === 2) {
+            if (this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(key[0]) !== -1 || this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(key[1]) !== -1) {
+                const reg0 = new RegExp(`${key[0]}`, 'g');
+                const reg1 = new RegExp(`${key[1]}`, 'g');
+                this.currentCabinet.data.FOLDERS_AVAILABLE = this.currentCabinet.data.FOLDERS_AVAILABLE.replace(reg0, '');
+                this.currentCabinet.data.FOLDERS_AVAILABLE = this.currentCabinet.data.FOLDERS_AVAILABLE.replace(reg1, '');
+            } else {
+                const folders = this.currentCabinet.data.FOLDERS_AVAILABLE.split('');
+                folders.push(key[0]);
+                folders.push(key[1]);
+                const numbersSet = new Set(folders);
+                const newFolders = Array.from(numbersSet);
+                this.currentCabinet.data.FOLDERS_AVAILABLE = newFolders.join('');
+            }
         } else {
-            const folders = this.currentCabinet.data.FOLDERS_AVAILABLE.split('');
-            folders.push(key);
-            this.currentCabinet.data.FOLDERS_AVAILABLE = folders.join('');
+            if (~this.currentCabinet.data.FOLDERS_AVAILABLE.indexOf(key) !== 0) {
+                const reg = new RegExp(`${key}`, 'g');
+                this.currentCabinet.data.FOLDERS_AVAILABLE = this.currentCabinet.data.FOLDERS_AVAILABLE.replace(reg, '');
+            } else {
+                const folders = this.currentCabinet.data.FOLDERS_AVAILABLE.split('');
+                folders.push(key);
+                this.currentCabinet.data.FOLDERS_AVAILABLE = folders.join('');
+            }
         }
 
         if (!this.disabledInAcces) {
@@ -482,8 +498,13 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     cab[col.id] = {type: ECellToAll.checkbox, check: cab['data']['HIDE_INACCESSIBLE_PRJ'] === 1, disabled: this.getHidePrj(cab), click: () => {this.changeFolders('HIDE_INACCESSIBLE_PRJ')}};
                 }
             });
+            if (cab['data']['FOLDERS_AVAILABLE'].indexOf('1') !== -1 && cab['data']['FOLDERS_AVAILABLE'].indexOf('2') !== -1) {
+                cab['FOLDERS_AVAILABLE_12'] = {type: ECellToAll.checkbox, check: true, click: () => {this.changeFolders('12')}};
+            }
             cab['data']['FOLDERS_AVAILABLE'].split('').forEach((key) => {
-                cab['FOLDERS_AVAILABLE_' + key] = {type: ECellToAll.checkbox, check: true, click: () => {this.changeFolders(key)}};
+                if (key !== '1' && key !== '2') {
+                    cab['FOLDERS_AVAILABLE_' + key] = {type: ECellToAll.checkbox, check: true, click: () => {this.changeFolders(key)}};
+                }
             });
         });
         this.tabelDataSecond.data = cabinets;

@@ -100,9 +100,16 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                 'POST_H': '1',
             })
         })
-            .then(([rec]) => rec);
+        .then(([rec]) => rec);
     }
-
+    getAllNodesInParents(departmentDue: string): Promise<any> {
+        return this.apiSrv.read({
+            'DEPARTMENT': PipRX.criteries({
+                'DUE': departmentDue + '|' +departmentDue + '%',
+            })
+        })
+        .then((rec) => rec);
+    }
 
     getFullSearchCriteries(data: any): any {
         const _criteries = {};

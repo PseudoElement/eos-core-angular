@@ -244,15 +244,20 @@
                 >
             </div>
             <div class="folder-access-body row">
-                <div class="pull-left" *ngFor="let colIdx of [0, 1, 2]">
-                    <div class="folder-access-item" *ngFor="let rIdx of [0, 1, 2]">
-                        <div class="minus-checkbox">
-                            <eos-dynamic-input
-                                *ngIf="inputs['rec.FOLDER_List[' + (colIdx * 3 + rIdx) + '].USER_COUNT']"
-                                [input]="inputs['rec.FOLDER_List[' + (colIdx * 3 + rIdx) + '].USER_COUNT']"
-                                [form]="form"
-                                [readonly]="!editMode"
-                            ></eos-dynamic-input>
+                <div style="width: 100%;" class="pull-left">
+                    <div style="width: 100%;" class="minus-checkbox">
+                        <div>
+                            <!-- Первая строка -->
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[1].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[4].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[7].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <!-- Вторая строка -->
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[2].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[5].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[8].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <!-- Третья строка -->
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[3].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input class="checkbox-folder-position" [input]="inputs['rec.FOLDER_List[6].USER_COUNT']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
                         </div>
                     </div>
                 </div>

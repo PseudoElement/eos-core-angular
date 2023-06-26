@@ -1480,30 +1480,30 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
     }
-    private _checkDeletNode(slicedNode: EosDictionaryNode[]) {
-        let countAll = 0;
-        let countDel = 0;
-        slicedNode.forEach(el => {
-            countAll++;
-            if (el.isDeleted) {
-                countDel++;
-            }
-            el.children.forEach(child => {
-                countAll++;
-                if (child.isDeleted) {
-                    countDel++;
-                }
-            });
-        });
-        if (countDel > 0) {
-            if (countAll === countDel) {
-                return -1;
-            }
-            return 1;
-        } else {
-            return 0;
-        }
-    }
+    // private _checkDeletNode(slicedNode: EosDictionaryNode[]) {
+    //     let countAll = 0;
+    //     let countDel = 0;
+    //     slicedNode.forEach(el => {
+    //         countAll++;
+    //         if (el.isDeleted) {
+    //             countDel++;
+    //         }
+    //         el.children.forEach(child => {
+    //             countAll++;
+    //             if (child.isDeleted) {
+    //                 countDel++;
+    //             }
+    //         });
+    //     });
+    //     if (countDel > 0) {
+    //         if (countAll === countDel) {
+    //             return -1;
+    //         }
+    //         return 1;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
     // MoveClassif?dueTo=0.2VK.&type=RUBRIC_CL&dues=0.2EYD3.2EZEN.%2C0.2EYD3.2EZEP.%2C0.2EYD3.2EZER.&weight=1 HTTP/1.1
     // dueTo=0.2VK. => где мы находимся
     // type=RUBRIC_CL => таблица где происходит копирование
@@ -1590,7 +1590,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
-    private _copy(): void {
+    private async _copy(): Promise<void> {
         // то что вырезано и записано
         const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
         if (this._npEditCountOverride.checkCopyElementTech(this.dictionaryId, slicedNode)) {
@@ -1604,10 +1604,27 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         // хранится то куда будем вставлять данные
         const dueTo = this._router.url.split('/').pop();
         // скорее всего нужно ещё и откуда передать
-        const deletNode = this._checkDeletNode(slicedNode);
-        if (/* dueTo !== slicedNode[0]['parentId'] &&  */deletNode !== 0 && this.dictionaryId === 'departments') {
+        const allParams = [];
+        const elementAll = [];
+        const elementDelet = [];
+        slicedNode.forEach((item) => {
+            if (item.isNode) {
+                allParams.push(this.dictionary.descriptor.getAllNodesInParents(item.id));
+            }
+        })
+        const element = await Promise.all(allParams);
+        if (element[0]) {
+            element[0].forEach((item) => {
+                elementAll.push(item);
+                if (item['DELETED'] === 1) {
+                    elementDelet.push(item);
+                }
+            });
+        }
+        // const deletNode = this._checkDeletNode(slicedNode);
+        if (/* dueTo !== slicedNode[0]['parentId'] &&  */elementDelet.length > 0 && this.dictionaryId === 'departments') {
             this.modalWindow = this._modalSrv.show(DictionaryPasteComponent);
-            if (deletNode === -1) {
+            if (elementAll.length === elementDelet.length) {
                 this.modalWindow.content.disabledFirst = true;
                 this.modalWindow.content.whenCopyNode = 1;
             }
