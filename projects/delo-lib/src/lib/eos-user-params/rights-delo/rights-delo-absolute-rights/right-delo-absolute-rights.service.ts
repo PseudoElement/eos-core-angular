@@ -298,6 +298,7 @@ export class RughtDeloAbsRightService {
         const alreadyWeight = new Map();
         if (this.paramsToQuery && (this.paramsToQuery.mapOrgWeight || this.paramsToQuery.mapDepWeight)) {
             queryAll.forEach((query) => {
+                delete query.data['OLD_WEIGHT'];
                 if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // организации
                     const weighNew = this.paramsToQuery.mapOrgWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew && (query.method === 'POST' || query.method === 'MERGE')) {
@@ -782,6 +783,8 @@ export class RughtDeloAbsRightService {
         });
         if (!this._appContext.limitCardsUser.length) {
             this.curentUser['USER_ORGANIZ_List'].forEach((org) => {
+                const right = this.listRight.filter((r) => r.key === '' + (org.FUNC_NUM - 1))[EFindRight.curentRight];
+                right.touched = true;
                 if (this.paramsToQuery.mapOrgWeight[org['DUE']] &&
                 this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['WEIGHT'] &&
                 this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === org.FUNC_NUM) !== -1) {
