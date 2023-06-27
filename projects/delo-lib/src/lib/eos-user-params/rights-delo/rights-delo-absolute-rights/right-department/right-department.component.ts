@@ -493,6 +493,11 @@ export class RightDepertmentComponent implements OnInit {
         }
         if (this.funcNum === 3 /* && this._appContext.cbBase */) {
             /* $event.flagCheckNode.deepValue = Number($event.isAllowed); */
+            this.curentUser.USERDEP_List.forEach((item) => {
+                if (item['DUE'] === $event['DUE'] && item['FUNC_NUM'] === this.funcNum) {
+                    item.ALLOWED = Number($event.isAllowed);
+                }
+            });
             const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });
             a['ALLOWED'] = Number($event.isAllowed);
             /* delete a['CompositePrimaryKey']; */

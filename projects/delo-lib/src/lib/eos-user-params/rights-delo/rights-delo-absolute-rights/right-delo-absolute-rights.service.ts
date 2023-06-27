@@ -290,10 +290,15 @@ export class RughtDeloAbsRightService {
         }
         return newData;
     }
+    /**
+     * Обновление весов для всей таблицы
+     * @param queryAll все запросы
+     */
     updateWeight(queryAll) {
         const alreadyWeight = new Map();
         if (this.paramsToQuery && (this.paramsToQuery.mapOrgWeight || this.paramsToQuery.mapDepWeight)) {
             queryAll.forEach((query) => {
+                delete query.data['OLD_WEIGHT'];
                 if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // организации
                     const weighNew = this.paramsToQuery.mapOrgWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew && (query.method === 'POST' || query.method === 'MERGE')) {
@@ -311,8 +316,8 @@ export class RughtDeloAbsRightService {
             });
             this.curentUser.USERDEP_List.forEach((dep) => {
                 if ((this._appContext.limitCardsUser.length > 0 && !this.getCheckDepart(dep)) || this._appContext.limitCardsUser.length === 0) {
-                    if (this.paramsToQuery.mapDepWeight[dep['DUE']] && this.paramsToQuery.mapDepWeight[dep['DUE']] !== dep['WEIGHT'] && !alreadyWeight.has(dep['DUE'] + '_' + dep['FUNC_NUM'])) {
-                        dep['WEIGHT'] = this.paramsToQuery.mapDepWeight[dep['DUE']];
+                    if (this.paramsToQuery.mapDepWeight[dep['DUE']] && this.paramsToQuery.mapDepWeight[dep['DUE']] !== dep['OLD_WEIGHT'] && !alreadyWeight.has(dep['DUE'] + '_' + dep['FUNC_NUM'])) {
+                        // dep['WEIGHT'] = this.paramsToQuery.mapDepWeight[dep['DUE']];
                         queryAll.push({
                             requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USERDEP_List('${this.curentUser.ISN_LCLASSIF} ${dep['DUE']} ${dep['FUNC_NUM']}')`,
                             method: 'MERGE',
@@ -328,10 +333,10 @@ export class RughtDeloAbsRightService {
             if (!this._appContext.limitCardsUser.length) {
                 this.curentUser['USER_ORGANIZ_List'].forEach((org) => {
                     if (this.paramsToQuery.mapOrgWeight[org['DUE']] &&
-                    this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['WEIGHT'] &&
+                    this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['OLD_WEIGHT'] &&
                     !alreadyWeight.has(org['DUE'] + '_' + org['FUNC_NUM']) &&
                     this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === org.FUNC_NUM) !== -1) {
-                        org['WEIGHT'] = this.paramsToQuery['mapOrgWeight'][org['DUE']];
+                        // org['WEIGHT'] = this.paramsToQuery['mapOrgWeight'][org['DUE']];
                         queryAll.push({
                             requestUri: `USER_CL(${this.curentUser.ISN_LCLASSIF})/USER_ORGANIZ_List('${this.curentUser.ISN_LCLASSIF} ${org['DUE']} ${org['FUNC_NUM']}')`,
                             method: 'MERGE',
@@ -344,7 +349,6 @@ export class RughtDeloAbsRightService {
                     }
                 });
             }
-            
         }
     }
     createDepRow(dep, tableHeader: ITableHeader[], objectMap ) {
@@ -770,7 +774,25 @@ export class RughtDeloAbsRightService {
                 const right = this.listRight.filter((r) => r.key === '' + (depart.FUNC_NUM - 1))[EFindRight.curentRight];
                 right.touched = true;
             }
+            if ((this._appContext.limitCardsUser.length > 0 && !this.getCheckDepart(depart)) || this._appContext.limitCardsUser.length === 0) {
+                if (this.paramsToQuery.mapDepWeight[depart['DUE']] && this.paramsToQuery.mapDepWeight[depart['DUE']] !== depart['WEIGHT']) {
+                    depart['OLD_WEIGHT'] = depart['WEIGHT'];
+                    depart['WEIGHT'] = this.paramsToQuery.mapDepWeight[depart['DUE']];
+                }
+            }
         });
+        if (!this._appContext.limitCardsUser.length) {
+            this.curentUser['USER_ORGANIZ_List'].forEach((org) => {
+                const right = this.listRight.filter((r) => r.key === '' + (org.FUNC_NUM - 1))[EFindRight.curentRight];
+                right.touched = true;
+                if (this.paramsToQuery.mapOrgWeight[org['DUE']] &&
+                this.paramsToQuery.mapOrgWeight[org['DUE']] !== org['WEIGHT'] &&
+                this.tabelData.tableHeader.findIndex((header) => +header.id + 1 === org.FUNC_NUM) !== -1) {
+                    org['OLD_WEIGHT'] = org['WEIGHT'];
+                    org['WEIGHT'] = this.paramsToQuery['mapOrgWeight'][org['DUE']];
+                }
+            });
+        }
         this.listRightNew.clear();
     }
     clearInfo() {
@@ -887,6 +909,9 @@ export class RughtDeloAbsRightService {
                 break;
         }
     }
+    /**
+     * Экспорт информации в новый файл
+     */
     export() {
         const headerHTML = [];
         /* 
