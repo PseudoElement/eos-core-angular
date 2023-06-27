@@ -199,7 +199,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 break;
             case 'copy':
                 localStorage.setItem('copyParamsFOLDER_AVAILABLE', this.currentCabinet.data.FOLDERS_AVAILABLE);
-                this.updateBtn();
+                // this.updateBtn();
                 break;
             case 'insert':
                 this.insertToCurent();
@@ -217,10 +217,11 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         this.checkChengeWindow.next(btn.active);
                     }
                 });
-                this.updateBtn();
+                // this.updateBtn();
                 break;
         }
         this.updateDataFolder(this.card.cabinets);
+        this.updateBtn();
     }
     updateExpand() {
         this.tabelDataSecond.tableHeader.forEach((item) => {
@@ -234,11 +235,11 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     // item.fixed = !item.fixed;
                     break;
                 case 'FOLDERS_AVAILABLE_12':
-                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '61px'}
+                    item.style = item.style['width'] ? {'min-width': '130px', 'max-width': '130px'} : {'width': '61px', 'max-width': '61px'}
                     // item.fixed = !item.fixed;
                     break;
                 default:
-                    item.style = item.style['width'] ? {'min-width': '130px'} : {'width': '55px'}
+                    item.style = item.style['width'] ? {'min-width': '130px', 'max-width': '130px'} : {'width': '55px', 'max-width': '55px'}
                     break;
             }
         });
