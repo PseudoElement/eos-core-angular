@@ -708,7 +708,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     forcedCloseFastSrch() {
         if (this.quickSearchCtl) {
             if (this.searchCtl) {
-                this.searchCtl.close();
+                this.searchCtl.close?.();
             }
             this.clearFindSettings();
         }

@@ -69,7 +69,7 @@
                     <p class="field-title unimportant-text s-font">ПОДРАЗДЕЛЕНИЕ</p>
                     <p class="field-value m-font" *ngIf="!viewRedirect">{{ department }}</p>
                     <p class="field-value m-font" *ngIf="viewRedirect">
-                        <a (click)="redirectToDepartment($event)">{{ department }}</a>
+                        <a (click)="[redirectToDepartment($event), resetSearch()]">{{ department }}</a>
                     </p>
                 </div>
 

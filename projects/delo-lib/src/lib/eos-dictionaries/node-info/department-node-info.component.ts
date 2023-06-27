@@ -94,7 +94,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             }
         }
     }
-    
+
     async getNameOrganization(): Promise<string> {
         const result: DELO_OWNER[] = await this.pipRX.read({ DELO_OWNER: { criteries: '', top: 1, skip: 0 }});
         return result[0].NAME;
@@ -111,6 +111,9 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         setTimeout(() => {
             this._router.navigate(['spravochniki', 'cabinet', this.nodeDataFull.cabinet.ISN_CABINET, 'view']);
         });
+    }
+    resetSearch() {
+        this.dictSrv.updateResetSerch();
     }
 
     redirectToDepartment($event): void {
