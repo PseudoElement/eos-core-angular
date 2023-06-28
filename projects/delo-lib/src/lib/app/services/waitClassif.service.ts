@@ -30,6 +30,8 @@ const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const SharingLists: string = '../WebRC/Pages/SharingLists.html';
 const CERT_INFO = "../CertInfo/certview";
+const COMMON_LIST = "../WebRC/Pages/CommonLists.html";
+
 @Injectable()
 export class WaitClassifService {
     private isCtrl = null;
@@ -48,7 +50,7 @@ export class WaitClassifService {
     }
 
     ctrlClickHandler(isCtrl: boolean) {
-       this.isCtrl = isCtrl;
+        this.isCtrl = isCtrl;
     }
 
     chooseDocGroup(): Promise<string | void> {
@@ -88,14 +90,15 @@ export class WaitClassifService {
     }
 
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<string> {
+
         let carouselInSilentMode: any;
         try {
             // carouselInSilentMode = Delo.Carousel(true);
             if (params.datas) {
                 carouselInSilentMode = Delo.Carousel.prototype;
-            } 
+            }
         } catch (error) {
-            console.log('не найден модуль для карусели');  
+            console.log('не найден модуль для карусели');
         }
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
@@ -105,6 +108,8 @@ export class WaitClassifService {
             }
         } else if (params.classif === 'TECH_LISTS') {
             url = TECH_LISTS;
+        } else if (params.classif === 'COMMON_LIST') {
+            url = COMMON_LIST;
         } else if (params.classif === 'StdText') {
             url = this.stdTextUrl(StdText, params);
         } else if (params.classif === 'SharingLists') {
