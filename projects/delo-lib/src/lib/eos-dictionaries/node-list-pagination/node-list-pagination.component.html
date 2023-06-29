@@ -15,7 +15,7 @@
             [ngClass]="{'btn-primary-full': config.current === page}"
             (click)="showPage(page)">{{page}}</button>
         <button class="pag-btn btn-default next"
-            [disabled]="config?.current === pageCount||isPageCountAll()"
+            [disabled]="config?.current === pageCount || isPageCountAll()"
             (click)="showPage(config.current + 1)">
             <span class="icon-btn eos-adm-icon eos-adm-icon-arrow-v-blue-left small to-rigth"
                 [ngClass]="{'eos-adm-icon-arrow-v-grey-left': config?.current === pageCount}"></span>

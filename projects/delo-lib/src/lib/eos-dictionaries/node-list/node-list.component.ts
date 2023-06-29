@@ -61,7 +61,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     private _recalcEvent: any;
     private _dictId: string;
     private _repaintFlag: any;
-
+    private _currentList: EosDictionaryNode[] = [];
     private _cacheCutNodes: string[];
 
     constructor(
@@ -133,6 +133,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             } else {
                 this.allMarked = false;
             }
+        });
+        _dictSrv.currentList$
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((currentList) => {
+            this._currentList = currentList;
         });
         _dictSrv.sevClearIdentCodesSubscription.pipe(takeUntil(this.ngUnsubscribe)).subscribe(resp => this.isSevClearCodesProgress = resp);
     }
@@ -385,8 +390,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     _nodesSwap(changeList: {}, i1: number, i2: number): any {
-        const item1 = this.nodes[i1];
-        const item2 = this.nodes[i2];
+        const item1 = this._currentList[i1];
+        const item2 = this._currentList[i2];
         let w1 = this.getWeigthForItem(item1, i1);
         let w2 = this.getWeigthForItem(item2, i2);
 
@@ -412,19 +417,18 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         changeList[item1.id] = item1.data.rec['WEIGHT'];
         changeList[item2.id] = item2.data.rec['WEIGHT'];
 
-        this.nodes[i1] = item2;
-        this.nodes[i2] = item1;
+        this._currentList[i1] = item2;
+        this._currentList[i2] = item1;
     }
 
     moveUp(isFormingWeights: boolean = true, isCut: boolean = false): any { // веса не формируем в случае буферного обмена
         const changeList = {};
-
         if (!this._dictSrv.viewParameters.showAllSubnodes) {
-            for (let i = 0; i < this.nodes.length; i++) {
-                const item1 = this.nodes[i];
+            for (let i = 0; i < this._currentList.length; i++) {
+                const item1 = this._currentList[i];
                 if (isCut ? item1.isCut : item1.isMarked) {
                     if (i > 0) {
-                        const item2 = this.nodes[i - 1];
+                        const item2 = this._currentList[i - 1];
                         if (!item2.isMarked) {
                             this._nodesSwap(changeList, i, i - 1);
                         }
@@ -432,15 +436,15 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 }
             }
         } else {
-            for (let m = 0; m < this.nodes.length; m++) {
-                const element = this.nodes[m];
+            for (let m = 0; m < this._currentList.length; m++) {
+                const element = this._currentList[m];
                 if (isCut ? element.isCut : element.isMarked) {
                     let targ_idx = m - 1;
                     for (let i = targ_idx; i >= 0; i--) {
-                        if (element.originalParentId === this.nodes[i].originalParentId) {
+                        if (element.originalParentId === this._currentList[i].originalParentId) {
                             targ_idx = i;
                             if (targ_idx >= 0) {
-                                const item = this.nodes[targ_idx];
+                                const item = this._currentList[targ_idx];
                                 if (!item.isMarked) {
                                     this._nodesSwap(changeList, targ_idx, m);
                                 }
@@ -453,7 +457,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
         if (isFormingWeights && Object.keys(changeList).length !== 0) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
-                this.userOrdered(this.nodes);
+                this.userOrdered(this._currentList);
             });
         }
         return changeList;
@@ -462,11 +466,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     moveDown(): any { // веса не формируем в случае буферного обмена
         const changeList = {};
         if (!this._dictSrv.viewParameters.showAllSubnodes) { // для операции вставки используем флаг вырезанности
-            for (let i = this.nodes.length - 1; i >= 0; i--) {
-                const element = this.nodes[i];
+            for (let i = this._currentList.length - 1; i >= 0; i--) {
+                const element = this._currentList[i];
                 if (element.isMarked) {
-                    if (i < this.nodes.length - 1) {
-                        const item = this.nodes[i + 1];
+                    if (i < this._currentList.length - 1) {
+                        const item = this._currentList[i + 1];
                         if (!item.isMarked) {
                             this._nodesSwap(changeList, i, i + 1);
                         }
@@ -474,15 +478,15 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 }
             }
         } else {
-            for (let m = this.nodes.length - 1; m >= 0; m--) {
-                const element = this.nodes[m];
+            for (let m = this._currentList.length - 1; m >= 0; m--) {
+                const element = this._currentList[m];
                 if (element.isMarked) {
                     let targ_idx = m + 1;
-                    for (let i = targ_idx; i < this.nodes.length; i++) {
-                        if (element.originalParentId === this.nodes[i].originalParentId) {
+                    for (let i = targ_idx; i < this._currentList.length; i++) {
+                        if (element.originalParentId === this._currentList[i].originalParentId) {
                             targ_idx = i;
-                            if (targ_idx < this.nodes.length) {
-                                const item = this.nodes[targ_idx];
+                            if (targ_idx < this._currentList.length) {
+                                const item = this._currentList[targ_idx];
                                 if (!item.isMarked) {
                                     this._nodesSwap(changeList, targ_idx, m);
                                 }
@@ -515,8 +519,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     getIndexForOperationPaste(id: string): number {
         let needIndex: number = 0;
-        for (let index: number = 0; index < this.nodes.length; index++) {
-            if (this.nodes[index].id === id) {
+        for (let index: number = 0; index < this._currentList.length; index++) {
+            if (this._currentList[index].id === id) {
                 needIndex = index;
                 break;
             }
@@ -529,21 +533,56 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this._cacheCutNodes = [];
     }
 
-    userOrderPaste(): void {
+    userOrderPaste(params: any): void {
         this._dictSrv.changeUserOrderCutMode(false);
-        const START_INDEX = this.getIndexForOperationPaste(this._cacheCutNodes[0]);
-        const FINISH_INDEX = this.getIndexForOperationPaste(this.markedInfo.nodes[0].id);
-        const changes: any[] = [];
-        const DELTA = FINISH_INDEX - START_INDEX > 0 ? FINISH_INDEX - START_INDEX : START_INDEX - FINISH_INDEX - 1;
-        const isCut = FINISH_INDEX < START_INDEX;
-        for (let i = 0; i < DELTA; i++) {
-            changes.push(this.moveUp(false, isCut));
-        }
-        let changeList = {};
-        changes.forEach(item => changeList = { ...changeList, ...item });
+        const changeList = {};
+        this._cacheCutNodes.forEach((item, index) => {
+            let FINISH_INDEX = 0;
+            if (this.markedInfo.nodes[0]) {
+                FINISH_INDEX = this.getIndexForOperationPaste(this.markedInfo.nodes[0].id);
+            }
+            switch (params['insertTo']) {
+                case 'first':
+                    FINISH_INDEX = index;
+                    break;
+                case 'last':
+                    FINISH_INDEX = this._currentList.length - 1;
+                    break;
+            }
+            const START_INDEX = this.getIndexForOperationPaste(item);
+            const isCut = START_INDEX - FINISH_INDEX;
+            /** isCut > 0 то перемещаем вверх иначе перемещаем вниз */
+            if (isCut > 0) {
+                let finish = FINISH_INDEX
+                switch (params['insertTo']) {
+                    case 'pred':
+                        FINISH_INDEX = FINISH_INDEX + index;
+                        break;
+                    case 'post':
+                        finish = FINISH_INDEX + 1 + index;
+                        break;
+                }
+                for (let i = START_INDEX; i > finish; i--) {
+                    this._nodesSwap(changeList, i, i - 1);
+                }
+            } else {
+                let finish = FINISH_INDEX;
+                switch (params['insertTo']) {
+                    case 'pred':
+                        finish = FINISH_INDEX - 1;
+                        break;
+                    case 'post':
+                        finish = FINISH_INDEX + index;
+                        break;
+                }
+                for (let i = START_INDEX; i < finish; i++) {
+                    this._nodesSwap(changeList, i, i + 1);
+                }
+            }
+        });
         if (Object.keys(changeList).length) {
             this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
-                this.userOrdered(this.nodes);
+                this.userOrdered(this._currentList);
             });
         }
         this.unselectNodesAfterPaste();

@@ -1,5 +1,43 @@
-import { IAction, E_RECORD_ACTIONS, E_ACTION_GROUPS } from '../../eos-dictionaries/interfaces';
+import { IAction, E_RECORD_ACTIONS, E_ACTION_GROUPS, IActionChildren } from '../../eos-dictionaries/interfaces';
 import { APS_DICT_GRANT } from '../../eos-dictionaries/services/eos-access-permissions.service';
+
+export const enum EUserOrderPasteChildren {
+    first = 0,
+    last = 1,
+    pred = 2,
+    post = 3,
+}
+
+export const USER_ORDER_PASTE_CHILDREN: IActionChildren[] = [
+    {
+        title: 'Вставить в начало',
+        iconClass: 'eos-adm-icon-arrow-v-start-blue',
+        disabledIconClass: 'eos-adm-icon-arrow-v-start-grey',
+        params: {'insertTo': 'first'},
+        disabled: false
+    },
+    {
+        title: 'Вставить в конец',
+        iconClass: 'eos-adm-icon-arrow-v-end-blue',
+        disabledIconClass: 'eos-adm-icon-arrow-v-end-grey',
+        params: {'insertTo': 'last'},
+        disabled: false
+    },
+    {
+        title: 'Вставить до выбранной',
+        iconClass: 'eos-adm-icon-checkbox-square-v-blue',
+        disabledIconClass: 'eos-adm-icon-checkbox-square-v-grey',
+        params: {'insertTo': 'pred'},
+        disabled: false
+    },
+    {
+        title: 'Вставить после выбранной',
+        iconClass: 'eos-adm-icon-checkbox-square-v-blue',
+        disabledIconClass: 'eos-adm-icon-checkbox-square-v-grey',
+        params: {'insertTo': 'post'},
+        disabled: false
+    }
+];
 
 export const RECORD_ACTIONS_EDIT: IAction = {
     type: E_RECORD_ACTIONS.edit,
@@ -103,6 +141,7 @@ const RECORD_ACTION_USER_SORT_PASTE: IAction = {
     hoverIconClass: 'eos-adm-icon eos-adm-icon-paste-white small',
     buttonClass: 'not-disable-color',
     accessNeed: APS_DICT_GRANT.read,
+    children: USER_ORDER_PASTE_CHILDREN
 };
 
 const RECORD_ACTION_TO_UP: IAction = {

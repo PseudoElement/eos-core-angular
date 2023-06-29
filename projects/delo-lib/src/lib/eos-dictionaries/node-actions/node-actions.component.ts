@@ -7,6 +7,7 @@ import { EosDictionary } from '../core/eos-dictionary';
 import {
     COMMON_ADD_MENU,
     DEPARTMENT_ADD_MENU,
+    EUserOrderPasteChildren,
     MORE_RECORD_ACTIONS,
     ORGANIZ_ADD_MENU,
     RECORD_ACTIONS,
@@ -19,7 +20,8 @@ import {
     IActionButton,
     IActionEvent,
     IDictionaryViewParameters,
-    IActionUpdateOptions
+    IActionUpdateOptions,
+    IActionChildren
 } from '../../eos-dictionaries/interfaces';
 import { APS_DICT_GRANT, EosAccessPermissionsService } from '../../eos-dictionaries/services/eos-access-permissions.service';
 import { takeUntil } from 'rxjs/operators';
@@ -134,6 +136,7 @@ export class NodeActionsComponent implements OnDestroy {
         _dictSrv.userOrderCutMode$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(flag => {
             this._userOrderCutMode = flag;
             this._update();
+            this._markedNodes = [];
         });
     }
 
@@ -145,7 +148,13 @@ export class NodeActionsComponent implements OnDestroy {
     stopCloseMenu(evt: MouseEvent) {
         evt.stopPropagation();
     }
-
+    doActionSubMenu(e: MouseEvent, item: IActionButton, subMeny: IActionChildren, params?: any) {
+        if (!subMeny.disabled) {
+            this.doAction(e, item, params);
+        } else {
+            e.stopPropagation();
+        }
+    }
     doAction(e: MouseEvent, item: IActionButton, params?: any) {
         // запоминаем состояние
         // const tooltip_fix = e.currentTarget['disabled'];
@@ -285,6 +294,10 @@ export class NodeActionsComponent implements OnDestroy {
                     _active = _enabled && this._viewParams.userOrdered;
                     break;
                 case E_RECORD_ACTIONS.userOrderPaste:
+                    if (button.children) {
+                        button.children[EUserOrderPasteChildren.post].disabled = this._markedNodes.length !== 1;
+                        button.children[EUserOrderPasteChildren.pred].disabled = this._markedNodes.length !== 1;
+                    }
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults && this._userOrderCutMode;
                     _enabled = this._userOrderCutMode && (this._visibleCount > 0);
                     if (!this.isTree) {

@@ -1319,4 +1319,24 @@ $icon-font-path: "../../../../../node_modules/bootstrap-sass/assets/fonts/bootst
     &.eos-adm-icons-take-right-from-blue {
         background-image: url("../assets/icons/Take-Right-From-Blue.svg")
     }
+    &.eos-adm-icon-arrow-v-end-blue {
+        background-image: url("../assets/icons/Arrow-V-End-Blue.svg");
+        transition: 0ms;
+        transform: rotate(270deg);
+    }
+    &.eos-adm-icon-arrow-v-end-grey {
+        background-image: url("../assets/icons/Arrow-V-End-Grey.svg");
+        transition: 0ms;
+        transform: rotate(270deg);
+    }
+    &.eos-adm-icon-arrow-v-start-grey {
+        background-image: url("../assets/icons/Arrow-V-End-Grey.svg");
+        transition: 0ms;
+        transform: rotate(90deg);
+    }
+    &.eos-adm-icon-arrow-v-start-blue {
+        background-image: url("../assets/icons/Arrow-V-End-Blue.svg");
+        transition: 0ms;
+        transform: rotate(90deg);
+    }
 }
