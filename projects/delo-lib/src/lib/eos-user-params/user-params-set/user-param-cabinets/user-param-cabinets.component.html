@@ -32,21 +32,24 @@
             <div class="cab-mar-span">
                 <span >Подсвечивать записи:</span>
             </div>
-            <div class="line-box">
-                <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_RESOLUTION_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
-                <div class="user-input-increment-cabinets">
-                    <eos-dynamic-input [input]="inputs['rec.HILITE_RESOLUTION']" [form]="form"></eos-dynamic-input>
-                    <span class="user-input-span-for-increment-cabinets">Дней и ранее</span>
+            <div class="wrapper-line-box">
+                <div class="line-box">
+                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_RESOLUTION_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
+                    <div class="user-input-increment-cabinets">
+                        <eos-dynamic-input [input]="inputs['rec.HILITE_RESOLUTION']" [form]="form"></eos-dynamic-input>
+                        <span class="user-input-span-for-increment-cabinets">Дней и ранее</span>
+                    </div>
+                </div>
+    
+                <div class="line-box">
+                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_PRJ_RC_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
+                    <div class="user-input-increment-cabinets">
+                        <eos-dynamic-input [input]="inputs['rec.HILITE_PRJ_RC']" [form]="form"></eos-dynamic-input>
+                        <span class="user-input-span-for-increment-cabinets">Дней и ранее</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="line-box">
-                <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_PRJ_RC_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
-                <div class="user-input-increment-cabinets">
-                    <eos-dynamic-input [input]="inputs['rec.HILITE_PRJ_RC']" [form]="form"></eos-dynamic-input>
-                    <span class="user-input-span-for-increment-cabinets" style="padding-bottom: 10px;">Дней и ранее</span>
-                </div>
-            </div>
         </div>
         <div class="user-group-form">
             <div class="cab-mar-span">

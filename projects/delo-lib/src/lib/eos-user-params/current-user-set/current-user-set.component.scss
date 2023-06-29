@@ -1238,6 +1238,19 @@ bs-dropdown-container {
             }
             .input-user-cabinets-rk-forwarding-wrapper {
                 div.user-group-form {
+
+                    .wrapper-line-box {
+                        margin-top: 15px;
+
+                        .line-box {
+                            max-width: 575px;
+                        }
+    
+                        eos-dynamic-input{
+                            width: auto!important;
+                        }
+                    }
+
                     span.input-title {
                         line-height: 90%;
                         text-align: left;
@@ -1250,7 +1263,7 @@ bs-dropdown-container {
                         }
 
                         .user-input-increment-cabinets {
-                            width: 60%;
+                            // width: 60%;
 
                             & > eos-dynamic-input {
                                 width: 75px;
