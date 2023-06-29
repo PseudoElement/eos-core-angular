@@ -32,6 +32,7 @@
     .user-input-increment-cabinets {
         padding-left: 10px;
         display: inline-flex;
+        align-items: center;
     }
     .cabinets-highlight-new-enntries-in-the-folder {
         display: inline-block;
@@ -43,7 +44,7 @@
     .user-input-span-for-increment-cabinets {
         display: block;
         margin-left: 10px;
-        padding-top: 7px;
+        // padding-top: 7px;
     }
     .elem-input-radio {
         font-size: 14px;
