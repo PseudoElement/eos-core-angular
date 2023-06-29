@@ -64,7 +64,13 @@ export enum E_ACTION_GROUPS {
     item,
     group
 }
-
+export interface IActionChildren {
+    title: string;
+    iconClass: string;
+    disabledIconClass: string;
+    params: any,
+    disabled: boolean
+}
 export interface IAction {
     type: E_RECORD_ACTIONS;
     group: E_ACTION_GROUPS;
@@ -78,7 +84,8 @@ export interface IAction {
     accessNeed: APS_DICT_GRANT;
     /** Дополнительный текст к иконке (часть кнопки) */
     iconText?: string;
-
+    /** Если из кнопки должна появляться выпадашка */
+    children?: IActionChildren[];
 }
 
 export interface IActionButton extends IAction {

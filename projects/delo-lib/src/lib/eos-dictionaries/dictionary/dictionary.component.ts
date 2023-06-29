@@ -502,7 +502,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 this.dictionary.treeResort();
                 break;
             case E_RECORD_ACTIONS.userOrderPaste:
-                this.nodeList.userOrderPaste();
+                this.nodeList.userOrderPaste(evt.params);
                 this.dictionary.treeResort();
                 break;
             case E_RECORD_ACTIONS.moveDown:

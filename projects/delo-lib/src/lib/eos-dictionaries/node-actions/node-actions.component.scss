@@ -55,11 +55,20 @@ $drop-menu-width: 300px;
 
 .btn-group {
     .create-menu {
-        .menuitem{
+        .menuitem {
             .dropdown-item {
                 padding: 0 20px;
                 .title {
                     color: $button-color-main-theme;
+                }
+            }
+            .dropdown-item-icon {
+                display: flex;
+                align-items: center;
+                span {
+                    &.disabled {
+                        color: #bababa;
+                    }
                 }
             }
         }

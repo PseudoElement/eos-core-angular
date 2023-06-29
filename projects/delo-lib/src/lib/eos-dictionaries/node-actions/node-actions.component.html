@@ -4,7 +4,7 @@
     <ng-container *ngFor="let item of buttons">
         <div class="actions"
             *ngIf="item.show">
-            <ng-container *ngIf="item.type === ADD_ACTION && isTree">
+            <ng-container *ngIf="(item.type === ADD_ACTION && isTree) || item.children">
                 <div dropdown
                 class="btn-group"
                 #dropdown="bs-dropdown"
@@ -32,33 +32,47 @@
                     <ul *ngIf="item.enabled"
                         class="dropdown-menu create-menu"
                         role="menu">
-                        <li *ngFor="let elem of addMenu"
+                        <ng-container *ngIf="item.type === ADD_ACTION && isTree">
+                            <li *ngFor="let elem of addMenu"
                             role="menuitem"
                             class="menuitem">
                             <a class="dropdown-item m-font"
                                 (click)="doAction($event, item, elem.params)"><span class="title m-font">{{elem.title}}</span></a>
                         </li>
+                        </ng-container>
+                        <ng-container *ngIf="item.children">
+                            <li *ngFor="let subBtn of item.children"
+                                role="menuitem"
+                                [ngClass]="subBtn.disabled ? 'disabled' : ''"
+                                class="menuitem menu-children">
+                                <a class="dropdown-item m-font dropdown-item-icon" (click)="doActionSubMenu($event, item, subBtn, subBtn.params)">
+                                    <span class="eos-adm-icon small" [ngClass]="subBtn.disabled ? subBtn.disabledIconClass : subBtn.iconClass"></span>
+                                    <span class="title m-font" [ngClass]="subBtn.disabled ? 'disabled' : ''">{{subBtn.title}}</span>
+                                </a>
+                            </li>
+                        </ng-container>
+                        
                     </ul>
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="item.type !== ADD_ACTION || !isTree">
+            <ng-container *ngIf="(item.type !== ADD_ACTION || !isTree) && !item.children">
                 <!--Icons button for other-->
                 <div class="btn-group"
-                      [tooltip]="item.hint"
-                        #itemTooltip="bs-tooltip"
-                        placement="bottom"
-                        [delay]="tooltipDelay"
-                        triggers="hover"
-                        container="body"
-                        containerClass="tooltip-info">
-                        <button [disabled]="!item.enabled"
-                            class="btn btn-primary-light {{item.buttonClass}}"
-                            [ngClass]="{'active': item.isActive}"
-                            (click)="doAction($event, item)">
-                            <span [ngClass]="item.isActive ? item.activeIconClass : (item.enabled ? item.iconClass : item.disabledIconClass)"></span>
-                            <span class="icon-text m-font" [ngClass]="{'disabled':!item.enabled}" *ngIf="item.iconText">{{item.iconText}}</span>
-                        </button>
+                    [tooltip]="item.hint"
+                    #itemTooltip="bs-tooltip"
+                    placement="bottom"
+                    [delay]="tooltipDelay"
+                    triggers="hover"
+                    container="body"
+                    containerClass="tooltip-info">
+                    <button [disabled]="!item.enabled"
+                        class="btn btn-primary-light {{item.buttonClass}}"
+                        [ngClass]="{'active': item.isActive}"
+                        (click)="doAction($event, item)">
+                        <span [ngClass]="item.isActive ? item.activeIconClass : (item.enabled ? item.iconClass : item.disabledIconClass)"></span>
+                        <span class="icon-text m-font" [ngClass]="{'disabled':!item.enabled}" *ngIf="item.iconText">{{item.iconText}}</span>
+                    </button>
                 </div>
 
             </ng-container>

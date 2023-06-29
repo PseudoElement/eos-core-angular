@@ -205,7 +205,9 @@ export class EosDictService {
     get userOrderCutMode$(): Observable<boolean> {
         return this._userOrderCutMode$.asObservable();
     }
-
+    get getPaginationConfig(): IPaginationConfig {
+        return this.paginationConfig;
+    }
     get customFields(): IFieldView[] {
         let _storageData = this._storageSrv.getItem('customFieldsList');
         if (_storageData && !_storageData[this.currentDictionary.id] && this.currentDictionary.descriptor.fieldDefault) {
