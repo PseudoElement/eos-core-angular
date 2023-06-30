@@ -1,50 +1,94 @@
 import { IOpenClassifParams } from '../../../../eos-common/interfaces';
 
 export enum E_TECH_RIGHTS {
-    Users = 1, // Пользователи
-    CurrentOrganization = 2, // Текущая организация
-    ListOfOrganizations = 3, // Список организаций
-    OrganizationTypes = 4, // Типы организаций
-    Regions = 5, // Регионы
-    DestinationCategories = 6, // Категории адресатов
-    CalendarManagement = 7, // Ведение календаря
-    Rubricator = 8, // Рубрикатор
-    DocumentGroups = 9, // Группы документов
-    Subdivisions = 10, // Подразделения
-    DeliveryTypes = 11, // Виды доставки
-    RegistryTypes = 12, // Типы реестров
-    LinkTypes = 13, // Типы связок
-    CaseNomenclature = 14, // Номенклатура дел
-    AccessBars = 15, // Грифы доступа
-    Citizens = 16, // Граждане
-    ApplicantStatus = 17, // Статус заявителя
-    Cabinets = 18, // Кабинеты
-    SettingDetails = 19, // Настройка реквизитов
-    Templates = 20, // Шаблоны
-    VisaTypes = 23, // Типы виз
-    TypesOfSignatures = 24, // Виды подписей
-    OrderCategories = 25, // Категории поручений
-    SystemSettings = 26, // Параметры системы
-    StatusOfExecutionOrder = 27, // Состояние исполнения (поручение)
-    PerformancestatusPerformer = 28, // Состояние исполнения (исполнитель)
-    ProcedureForSubmittingDocuments = 29, // Процедура передачи документов
-    SettingTheBrowsingProtocol = 30, // Настройка протокола просмотра
-    CleanupOfProtocols = 31, // Зачистка протоколов
-    ConfiguringTheAlertAndNotificationSubsystem = 32, // Настройка подсистемы оповещения и уведомления
-    BatchMailSetup = 33, // Настройка партионной почты
-    DirectoriesSEV = 34, // Справочники СЭВ
-    EmailBuffer = 35, // Буфер электронных сообщений
-    PrioritiesOfDraftResolutions = 36, // Приоритеты проектов резолюций
-    CategoriesEP = 37, // Категории ЭП
-    FileTypes = 41, // Типы файлов
-    FileCategories = 43, // Категории файлов
-    AddressTypes = 47, // Типы адреса
-    BackgroundTaskManagement = 48, // Управление фоновыми задачами
-    DirectoriesMEDO = 50, // Справочники МЭДО
-    DocumentTypes = 51, // Виды документов
-    SettingGeneralLists = 52, // Настройка общих списков
-    CustomizeReports = 57, // Настройка отчетов
-    ConfigurConfigToReports = 58, // Настройка доступа к отчетам
+    /** Пользователи */
+    Users = 1,
+    /** Текущая организация */
+    CurrentOrganization = 2,
+    /** Список организаций */
+    ListOfOrganizations = 3,
+    /** Типы организаций */
+    OrganizationTypes = 4,
+    /** Регионы */
+    Regions = 5,
+    /** Категории адресатов */
+    DestinationCategories = 6,
+    /** Ведение календаря */
+    CalendarManagement = 7,
+    /** Рубрикатор */ 
+    Rubricator = 8,
+    /** Группы документов */
+    DocumentGroups = 9,
+    /** Подразделения */
+    Subdivisions = 10,
+    /** Виды доставки */
+    DeliveryTypes = 11,
+    /** Типы реестров */
+    RegistryTypes = 12,
+    /** Типы связок */
+    LinkTypes = 13,
+    /** Номенклатура дел */
+    CaseNomenclature = 14,
+    /** Грифы доступа */
+    AccessBars = 15,
+    /** Граждане */
+    Citizens = 16,
+    /** Статус заявителя */
+    ApplicantStatus = 17,
+    /** Кабинеты */
+    Cabinets = 18,
+    /** Настройка реквизитов */
+    SettingDetails = 19,
+    /** Шаблоны */
+    Templates = 20,
+    /** Типы виз */
+    VisaTypes = 23,
+    /** Виды подписей */
+    TypesOfSignatures = 24,
+    /** Категории поручений */
+    OrderCategories = 25,
+    /** Параметры системы */
+    SystemSettings = 26,
+    /** Состояние исполнения (поручение) */
+    StatusOfExecutionOrder = 27,
+    /** Состояние исполнения (исполнитель) */
+    PerformancestatusPerformer = 28,
+    /** Процедура передачи документов */
+    ProcedureForSubmittingDocuments = 29,
+    /** Настройка протокола просмотра */
+    SettingTheBrowsingProtocol = 30,
+    /** Зачистка протоколов */
+    CleanupOfProtocols = 31,
+    /** Настройка подсистемы оповещения и уведомления */
+    ConfiguringTheAlertAndNotificationSubsystem = 32,
+    /** Настройка партионной почты */
+    BatchMailSetup = 33,
+    /** Справочники СЭВ */
+    DirectoriesSEV = 34,
+    /** Буфер электронных сообщений */
+    EmailBuffer = 35,
+    /** Приоритеты проектов резолюций */
+    PrioritiesOfDraftResolutions = 36,
+    /** Категории ЭП */
+    CategoriesEP = 37,
+    /** Типы файлов */ 
+    FileTypes = 41,
+    /** Категории файлов */
+    FileCategories = 43,
+    /** Типы адреса */ 
+    AddressTypes = 47,
+    /** Управление фоновыми задачами */
+    BackgroundTaskManagement = 48,
+    /** Справочники МЭДО */
+    DirectoriesMEDO = 50,
+    /** Виды документов */
+    DocumentTypes = 51,
+    /** Настройка общих списков */
+    SettingGeneralLists = 52,
+    /** Настройка отчетов */
+    CustomizeReports = 57,
+    /** Настройка доступа к отчетам */
+    ConfigurConfigToReports = 58,
 }
 export type ETypeTechRight = E_TECH_RIGHTS;
 
