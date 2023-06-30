@@ -46,4 +46,8 @@ export const KEY_RIGHT_TECH = {
         key: "user-session",
         name: 'Сессии пользователей'
     },
+    'about_system': {
+        key: "about_system",
+        name: 'О системе'
+    },
 };

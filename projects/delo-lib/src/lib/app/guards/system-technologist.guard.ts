@@ -7,6 +7,7 @@ import { USER_CL } from '../../eos-rest/interfaces/structures';
 import { IKeyRightTech, KEY_RIGHT_TECH } from '../consts/permission.consts';
 import { ETypeDeloRight } from '../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights.consts';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
+import { E_TECH_RIGHTS } from '../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights-classif/tech-user-classif.interface';
 
 @Injectable({ providedIn: "root" })
 
@@ -27,6 +28,14 @@ export class SystemTechnologistGuard implements CanActivate {
         if (!systemTechnologistValue) {
             this.showMessage(conf);
             return false;
+        }
+
+        if(urlSegment.path === 'parameters') {
+            const parmSistValue = +currentUser.TECH_RIGHTS[E_TECH_RIGHTS.SystemSettings-1];
+            if(!parmSistValue) {
+                this.showMessage(conf);
+                return false;
+            }
         }
         return true;
     }

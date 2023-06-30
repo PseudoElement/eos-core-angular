@@ -182,7 +182,7 @@ const routes: Routes = [
     {
         path: 'spravochniki/SEV',
         data: { title: 'СЭВ', showInBreadcrumb: true },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: childrenDictionariesComponent,
     },
     {
@@ -194,7 +194,7 @@ const routes: Routes = [
     {
         path: 'spravochniki',
         data: { title: 'Справочники', showInBreadcrumb: true },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: childrenDictionariesComponent,
     },
     {
@@ -212,7 +212,7 @@ const routes: Routes = [
     {
         path: 'desk',
         data: { title: 'Главная', showInBreadcrumb: false },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: [{
                 path: '',
                 pathMatch: 'full',
@@ -268,7 +268,7 @@ const routes: Routes = [
     },
     {
         path: 'parameters',
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         canActivateChild: [SystemParamsChildGuard],
         data: {
             title: 'Параметры системы',
@@ -416,7 +416,7 @@ const routes: Routes = [
     {
         path: 'tools',
         data: { title: 'Инструменты', showInBreadcrumb: false },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: [
             {
                 path: '',
@@ -439,7 +439,7 @@ const routes: Routes = [
     {
         path: 'about_system',
         data: { title: 'О системе', showInBreadcrumb: false },
-        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: [
             {
                 path: '',
