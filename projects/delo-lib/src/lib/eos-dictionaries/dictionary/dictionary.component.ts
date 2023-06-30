@@ -931,8 +931,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId, params);
         if (this.dictionaryId === 'organization' || this.dictionaryId === 'citizens') {
             this.nodeList.nodes.forEach((node) => {
-                id.push(node.id);
-                rc.push(node.data['rec']['ISN_NODE']);
+                if (node.data['rec']['IS_NODE']) {
+                    id.push(node.id);
+                    rc.push(node.data['rec']['ISN_NODE']);
+                }
             });
             if (this.dictionaryId === 'organization') {
                 datas.rc_id = rc;
@@ -954,7 +956,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
-    private openClassifFromdepartment(params?) {
+    private openClassifFromdepartment(params?) { /*  */
         const list: ORGANIZ_CL = this._dictSrv.listNode.data.organization;
         const config: IOpenClassifParams = {
             classif: 'gop_rc',
