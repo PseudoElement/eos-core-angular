@@ -104,7 +104,7 @@ export class RightSrchGroupomponent implements OnInit {
         this.funcNum = +this.selectedNode.key + 1;
         try {
             this.originSrchGroup = await this.reportingSrv.srchGroup();
-            const usr_srch_group = await this.reportingSrv.userSrchGroup();
+            const usr_srch_group = [...this.curentUser['USER_SRCH_GROUP_List']];
             this.originUserSrch = await this.reportingSrv.userSrchGroupWithSrcGroup(usr_srch_group);
             this.originUserSrch.forEach(node => {
                 const node_tree: INodeDocsTreeCfg = {
@@ -139,6 +139,10 @@ export class RightSrchGroupomponent implements OnInit {
                 this.listUserSrch.push(new NodeDocsTree(node_tree, undefined, undefined, false));
                 this.sortBYWeigth();
                 this.listUserSrch = [...this.listUserSrch];
+                this.curentUser['USER_SRCH_GROUP_List'].push({
+                    ISN_GROUP: node_tree.data?.ISN_GROUP,
+                    ISN_USER: this.curentUser.ISN_LCLASSIF
+                });
                 this.selectedNode.pushChange({
                     method: 'POST',
                     due: node_tree.due,
@@ -173,6 +177,7 @@ export class RightSrchGroupomponent implements OnInit {
     }
 
     deleteSrchGroup() {
+        this.curentUser['USER_SRCH_GROUP_List'] = this.curentUser['USER_SRCH_GROUP_List'].filter(node => node.ISN_GROUP !== this.selectedSrchUser.data?.ISN_GROUP);
         this.listUserSrch = this.listUserSrch.filter(node => node.data.ISN_GROUP !== this.selectedSrchUser.data?.ISN_GROUP);
         this.sortBYWeigth();
         this.selectedNode.pushChange({

@@ -2648,6 +2648,19 @@ export const commonMeta = {
             'PASSWORD'
         ],
         relations: []
+    },
+    SRCH_GROUP: {
+        pk: 'ISN_GROUP',
+        properties: {
+            ISN_GROUP: _T.i,
+            NAME: _T.s,
+            WEIGHT: _T.i,
+            ALLOWED_FOR_ALL: _T.i,
+            PROTECTED: _T.i,
+            NOTE: _T.s,
+        },
+        readonly: [],
+        relations: []
     }
 };
 
