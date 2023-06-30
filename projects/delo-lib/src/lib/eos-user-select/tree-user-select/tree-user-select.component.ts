@@ -28,8 +28,9 @@ export class TreeUserSelectComponent implements OnInit {
     id: any;
     typeUsers: string;
     private w: number;
-    public sortContextMenu: boolean = false;
-    public showLogicallyDeleted: boolean = false;
+    public sortContextMenu: boolean = this.gettingValue('sortContextMenu');
+    public showLogicallyDeleted: boolean = this.gettingValue('showLogicallyDeleted');
+
     constructor(
         private _router: Router,
         private treeSrv: TreeUserSelectService,
@@ -170,6 +171,7 @@ export class TreeUserSelectComponent implements OnInit {
 
     togleParam(nameParam: string): void {
         this[nameParam] = !this[nameParam];
+        sessionStorage.setItem(nameParam, JSON.stringify(this[nameParam]));
     }
 
     childrenTree(children: TreeUserNode[], sort:boolean): TreeUserNode[] {
@@ -193,5 +195,10 @@ export class TreeUserSelectComponent implements OnInit {
 
     showContextMenu(dropdown: BsDropdownDirective) {
         dropdown.isOpen = true;
+    }
+
+    private gettingValue(name: string) {
+        const value = sessionStorage.getItem(name);
+        return value ? JSON.parse(value) : false;
     }
 }
