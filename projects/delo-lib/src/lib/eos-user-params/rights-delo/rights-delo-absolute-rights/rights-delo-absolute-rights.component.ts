@@ -232,14 +232,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             style: { 'min-width': '360px', 'max-width': '360px' },
             fixed: true
         });
-        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
-        if (curentSettingStr) {
-            const curentSetting = JSON.parse(curentSettingStr);
-            if (curentSetting[this.settingsTable.expandFixedColumnName]) {
-                this.TABLE_HEADER_ABS_RIGHT[0]['style']['min-width'] = curentSetting[this.settingsTable.expandFixedColumnName];
-                this.TABLE_HEADER_ABS_RIGHT[0]['style']['max-width'] = curentSetting[this.settingsTable.expandFixedColumnName];
-            }
-        }
         let tablePredSort = [];
         ABS.forEach((item) => {
             if (item.viewToAuthorized) {
@@ -266,6 +258,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         this.TABLE_HEADER_ABS_RIGHT = this.TABLE_HEADER_ABS_RIGHT.concat([...tablePredSort]);
         this.settingsTable.defaultSettingHeader = JSON.parse(JSON.stringify(this.TABLE_HEADER_ABS_RIGHT));
+        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
+        if (curentSettingStr) {
+            const curentSetting = JSON.parse(curentSettingStr);
+            if (curentSetting[this.settingsTable.expandFixedColumnName]) {
+                this.TABLE_HEADER_ABS_RIGHT[0]['style']['min-width'] = curentSetting[this.settingsTable.expandFixedColumnName];
+                this.TABLE_HEADER_ABS_RIGHT[0]['style']['max-width'] = curentSetting[this.settingsTable.expandFixedColumnName];
+            }
+        }
         this.settingsTable.defaultSettingHeaderName = 'absolute-rights';
         this.tabelData.tableHeader = this.updateHeaderTable([...this.TABLE_HEADER_ABS_RIGHT]);
         this.curentUser = this._userParamsSetSrv.curentUser;

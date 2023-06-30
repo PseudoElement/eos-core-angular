@@ -148,6 +148,9 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
         localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
         this.tabelData.tableHeader = newHeader;
         this.updateHeader(JSON.parse(JSON.stringify(newHeader)));
+        if (this.settings && this.settings.expandFixedColumn) {
+            this.windowMouseUp(true);
+        }
     }
     saveSettings(flag): void {
         const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
@@ -239,17 +242,17 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             this.mouseM = true;
         }
     }
-    windowMouseUp($event) {
-        if (this.mouseM) {
+    windowMouseUp($event?) {
+        if (this.mouseM || $event) {
             let idColomd = 0;
-            this.tabelData.tableHeader.forEach((item, index) => {
+            this.colomns.forEach((item, index) => {
                 if (item.fixed) {
                     idColomd = index;
                 }
             });
-            if (this.tabelData.tableHeader[idColomd].style['max-width']) {
+            if (this.colomns[idColomd].style['max-width']) {
                 const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
-                let maxWidth = this.tabelData.tableHeader[idColomd].style['max-width'];
+                let maxWidth = this.colomns[idColomd].style['max-width'];
                 if (curentSettingStr) {
                     const curentSetting = JSON.parse(curentSettingStr);
                     curentSetting[this.settings.expandFixedColumnName] = maxWidth;
@@ -266,20 +269,20 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
     windowMouseMove($event) {
         if (this.mouseM) {
             let idColomd = 0;
-            this.tabelData.tableHeader.forEach((item, index) => {
+            this.colomns.forEach((item, index) => {
                 if (item.fixed) {
                     idColomd = index;
                 }
             });
-            if (this.tabelData.tableHeader[idColomd].style['max-width']) {
-                let maxWidth = +this.tabelData.tableHeader[idColomd].style['max-width'].replace('px', '');
+            if (this.colomns[idColomd].style['max-width']) {
+                let maxWidth = +this.colomns[idColomd].style['max-width'].replace('px', '');
                 maxWidth += $event.movementX;
-                this.tabelData.tableHeader[idColomd].style['max-width'] = '' + maxWidth + 'px';
+                this.colomns[idColomd].style['max-width'] = '' + maxWidth + 'px';
             }
-            if (this.tabelData.tableHeader[idColomd].style['min-width']) {
-                let minWidth = +this.tabelData.tableHeader[idColomd].style['min-width'].replace('px', '');
+            if (this.colomns[idColomd].style['min-width']) {
+                let minWidth = +this.colomns[idColomd].style['min-width'].replace('px', '');
                 minWidth += $event.movementX;
-                this.tabelData.tableHeader[idColomd].style['min-width'] = '' + minWidth + 'px';
+                this.colomns[idColomd].style['min-width'] = '' + minWidth + 'px';
             }
         }
     }
