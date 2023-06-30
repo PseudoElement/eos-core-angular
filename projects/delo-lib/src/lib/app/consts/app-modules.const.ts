@@ -24,6 +24,11 @@ export const APP_MODULES = [
         url: '/tools',
         width: 155
     },
+    {
+        title: 'О системе',
+        url: '/about_system',
+        width: 155
+    },
 
 ];
 

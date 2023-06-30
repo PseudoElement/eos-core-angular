@@ -38,6 +38,7 @@ import { AdministratorGuard } from './guards/administrator.guard';
 import { SystemParamsChildGuard } from './guards/system-params-child.guard';
 import { CommonAccessSystemSettingsGuard } from './guards/common-access-system-settings.guard';
 import { SystemTechnologistGuard } from './guards/system-technologist.guard';
+import { AboutSystemsComponent } from '../about-systems/about-systems.component';
 
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
@@ -119,7 +120,7 @@ const childrenDictionariesComponent: Routes = [
                 component: DictionaryComponent,
                 pathMatch: 'full',
                 data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true },
-            }, 
+            },
             {
                 path: 'edit',
                 data: {
@@ -141,7 +142,7 @@ const childrenDictionariesComponent: Routes = [
                         component: CardComponent,
                         canDeactivate: [CanDeactivateGuard],
                     }],
-            }, 
+            },
             {
                 path: 'view',
                 data: {
@@ -216,7 +217,7 @@ const routes: Routes = [
                 path: '',
                 pathMatch: 'full',
                 component: DesktopComponent,
-            }, 
+            },
             {
                 path: ':desktopId',
                 component: DesktopComponent,
@@ -433,6 +434,19 @@ const routes: Routes = [
                     showPushpin: false
                 },
             },
+        ],
+    },
+    {
+        path: 'about_system',
+        data: { title: 'О системе', showInBreadcrumb: false },
+        canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+        children: [
+            {
+                path: '',
+                component: AboutSystemsComponent,
+                pathMatch: 'full',
+                canActivate: [AuthorizedGuard],
+            }
         ],
     },
     {
