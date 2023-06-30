@@ -20,7 +20,7 @@ export class ExetentionsUserParamsLib {
         })
         const result: DEPARTMENT[] = await this.pipRX.read({ DEPARTMENT: {criteries: {DUE: resultDue.join('|')}}});
         result.forEach( el => {
-            if (el.CARD_NAME === "Центральная картотека") {
+            if (el.DUE === "0.") {
                 this.NOTE += el.CARD_NAME;
             } else {
                 this.NOTE += ' - ' + el.CLASSIF_NAME;
