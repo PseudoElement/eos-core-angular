@@ -1,6 +1,6 @@
 <div class="eos-adm-table"
     (window:mousemove)="windowMouseMove($event)"
-    (window:mouseup)="windowMouseUp($event)"
+    (window:mouseup)="windowMouseUp()"
     [ngStyle]="{'-webkit-user-select': mouseM ? 'none' : '', '-ms-user-select': mouseM ? 'none' : '', '-moz-user-select': mouseM ? 'none' : ''}">
     <!-- Хидер с кнопками и счётчиком выделенного -->
     <div *ngIf="title" class="eos-adm-table-title">

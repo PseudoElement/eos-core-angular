@@ -956,7 +956,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
-    private openClassifFromdepartment(params?) { /*  */
+    private openClassifFromdepartment(params?) {
         const list: ORGANIZ_CL = this._dictSrv.listNode.data.organization;
         const config: IOpenClassifParams = {
             classif: 'gop_rc',
