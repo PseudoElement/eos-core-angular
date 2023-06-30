@@ -96,7 +96,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private CREATE_RCPD = 'У пользователя нет права \'Исполнение проектов\', добавить его?';
     private GRUP_DEL_RK = 'Назначить права пользователю на выполнение операции «Удаление РК» в доступных ему картотеках?';
     private GRUP_NOT_DEL_RK = 'У пользователя назначены права на выполнение операции «Удаление РК» в доступных ему картотеках. Снять?';
-    private expandStr = 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List';
+    private expandStr = 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List,USERCARD_List/USER_CARD_DOCGROUP_List,USER_SRCH_GROUP_List';
     private simpleBase = false; // тут хранится знание колхозная база или нет
     constructor(
         private _msgSrv: EosMessageService,

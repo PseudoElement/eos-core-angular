@@ -70,6 +70,8 @@ export interface IConfigUserTechClassif {
 
 
 export enum ETypeRule {
+    /** Нет права */
     no_right = "0",
+    /** Имется право */
     have_right = "1"
 }
