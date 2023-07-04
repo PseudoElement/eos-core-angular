@@ -1240,7 +1240,7 @@ bs-dropdown-container {
                 div.user-group-form {
 
                     .wrapper-line-box {
-                        margin-top: 15px;
+                        margin: 15px;
 
                         .line-box {
                             max-width: 575px;
@@ -2927,6 +2927,10 @@ bs-dropdown-container {
                         span.input-title {
                             width: 670px;
                         }
+                    }
+
+                    .inputs-inline {
+                        margin-left: 15px;
                     }
                 }
             }
