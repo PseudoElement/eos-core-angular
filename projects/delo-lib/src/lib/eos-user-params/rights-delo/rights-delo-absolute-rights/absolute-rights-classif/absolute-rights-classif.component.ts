@@ -123,11 +123,12 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     }
     updateFlagDictionaries() {
         const flag = this.isCheckedSide;
-        this.listClassif.forEach(item => {
-            if (item.disableItem) {
-                item.value = flag ? 0 : 1;
+        for (let index = this.listClassif.length - 1; index >= 0; index--) {
+            this.listClassif[index];
+            if (this.listClassif[index].disableItem) {
+                this.listClassif[index].value = flag ? 0 : 1;
             }
-        });
+        }
     }
     expendList(node: RightClassifNode) {
         node.isExpanded = !node.isExpanded;
