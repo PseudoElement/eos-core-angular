@@ -39,6 +39,7 @@ import { SystemParamsChildGuard } from './guards/system-params-child.guard';
 import { CommonAccessSystemSettingsGuard } from './guards/common-access-system-settings.guard';
 import { SystemTechnologistGuard } from './guards/system-technologist.guard';
 import { AboutSystemsComponent } from '../about-systems/about-systems.component';
+import { ToolsControlCache } from '../eos-instruments/components/control-cache/control-cache.component';
 
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
@@ -418,6 +419,12 @@ const routes: Routes = [
         data: { title: 'Инструменты', showInBreadcrumb: false },
         canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: [
+            {
+                path: 'control-cache',
+                component: ToolsControlCache,
+                pathMatch: 'full',
+                canActivate: [AuthorizedGuard],
+            },
             {
                 path: '',
                 component: EosInstrumentsListsComponent,

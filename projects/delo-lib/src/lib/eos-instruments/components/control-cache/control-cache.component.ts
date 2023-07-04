@@ -1,33 +1,31 @@
-import { Component, Injector, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ALL_ROWS, PipRX } from '../../../eos-rest';
-import { BaseParamComponent } from '../shared/base-param.component';
-import { CONTROL_CACHE_INFO } from '../shared/consts/control-cache.const';
+import { Router } from '@angular/router';
 
 @Component({
-    selector: 'eos-control-cache',
+    selector: 'eos-tools-control-cache',
     templateUrl: 'control-cache.component.html'
 })
-export class ParamControlCache extends BaseParamComponent {
+export class ToolsControlCache implements OnDestroy, OnInit {
     @Input() btnError;
     isLoading = false;
     allCashe;
     allInfo;
     dateCache;
-    constructor(injector: Injector, private pip: PipRX) {
-        super(injector, CONTROL_CACHE_INFO);
-        this.init()
-            .then(() => {
-                this.dateCache = this.getDataNow();
-                this.getAllCache();
-                this.getAllInfo();
-                this.form.disable({ emitEvent: false });
-            })
-            .catch(err => {
-                if (err.code !== 401) {
-                    console.log(err);
-                }
-                this._errorSrv.errorHandler(err);
-            });
+    selfLink: any;
+    link: '';
+    titleHeader = 'Управление кэшем';
+    constructor(
+            private pip: PipRX,
+            private _router: Router) {}
+    ngOnInit() {
+        this.dateCache = this.getDataNow();
+        this.getAllCache();
+        this.getAllInfo();
+        this.selfLink = this._router.url.split('?')[0];
+    }
+    ngOnDestroy(): void {
+        
     }
     getAllCache(): Promise<any[]> {
         return this.pip.read<any>({
@@ -41,6 +39,12 @@ export class ParamControlCache extends BaseParamComponent {
         .catch(err => {
                 throw err;
         });
+    }
+    async updateInfo() {
+        await this.getAllInfo();
+    }
+    close() {
+        this._router.navigate(['tools']);
     }
     getAllInfo(): Promise<any[]> {
         return this.pip.read<any>({
@@ -73,18 +77,6 @@ export class ParamControlCache extends BaseParamComponent {
         const date = ('' + dateN).length === 1 ? '0' + dateN : '' + dateN;
         const mouns = ('' + (mounsN + 1)).length === 1 ? '0' + (mounsN + 1) : '' + (mounsN + 1);
         return date + '.' + (mouns) + '.' + year + ' ' + hour + ':' + minutes ;
-    }
-    cancel() {
-        this.cancelEdit();
-    }
-    cancelEdit() {
-        this.form.disable({ emitEvent: false });
-    }
-    edit() {
-        this.form.enable({ emitEvent: false });
-    }
-    submit() {
-        this.form.disable({ emitEvent: false });
     }
     getDataInfo(infoData: string): string {
         if (infoData) {

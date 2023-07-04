@@ -160,13 +160,6 @@
                 [btnError] = "disableSave"
             ></eos-param-inline-scanning>
         </ng-container>
-        <ng-container *ngSwitchCase="'control-cache'">
-            <eos-control-cache
-				(formChanged)="recordChanged($event)"
-                (formInvalid)="turnOffSave($event)"
-                [btnDisabled]="!isChanged"
-                [btnError] = "disableSave"></eos-control-cache>
-        </ng-container>
     </ng-container>
 </div>
 
