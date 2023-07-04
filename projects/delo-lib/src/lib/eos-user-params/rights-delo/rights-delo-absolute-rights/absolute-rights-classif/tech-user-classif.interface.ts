@@ -75,7 +75,7 @@ export enum E_TECH_RIGHTS {
     FileTypes = 41,
     /** Категории файлов */
     FileCategories = 43,
-    /** Типы адреса */ 
+    /** Типы адреса данная опция пока скрыта по таску @171201 */ 
     AddressTypes = 47,
     /** Управление фоновыми задачами */
     BackgroundTaskManagement = 48,

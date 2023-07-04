@@ -27,6 +27,7 @@ import { ITableData, ITableHeader, ITableSettings } from '../../../eos-parameter
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { RughtDeloAbsRightService } from './right-delo-absolute-rights.service';
 import { ReportingService } from './right-srch-group/right-srch-group.component';
+import { E_TECH_RIGHTS } from './absolute-rights-classif/tech-user-classif.interface';
 /* import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces'; */
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -371,6 +372,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
 
     submit(flag?): Promise<any> {
+        /** Добавлено чтобы обработать возможность того что у пользователя стоит невидимая галка Типы адреса.
+        *  Данный параметр невидимый и делаю обработку чтобы он не участвовал в проверке последовательности
+        */
+        if (this.listRight[0]['_curentUser'].TECH_RIGHTS) {
+            const newTechRight = this.listRight[0]['_curentUser'].TECH_RIGHTS.split('');
+            newTechRight[E_TECH_RIGHTS.AddressTypes - 1] = '0';
+            this.listRight[0]['_curentUser'].TECH_RIGHTS = newTechRight.join('');
+        }
         if (this.listRight[0].value && !/[1]+/g.test(this.listRight[0]['_curentUser'].TECH_RIGHTS)) {
             this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Не заданы настройки для права "Системный технолог"`, type: 'warning' });
             return Promise.resolve('error');
