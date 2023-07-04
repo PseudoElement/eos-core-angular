@@ -1,0 +1,64 @@
+<div
+    class="input-param-wrapper input-show-tables-cache">
+    <div class="paaram-header-wrapp">
+        <div class="header__text-wrap">
+            <span class="header__text">{{titleHeader}}</span>
+        </div>
+        <div class="header__button-edit">
+            <div class="pull-right">
+                <a class="btn btn-primary-light"
+                    routerLink="{{selfLink}}"
+                    
+                    aria-hidden="true"
+                    tooltip="Открыть в новом окне"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    target="_blank"><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span>
+                </a>
+                <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" container="body"
+                        tooltip="Закрыть" placement="left" containerClass="tooltip-info"><span
+                            class="eos-adm-icon eos-adm-icon-close-blue small"></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="cache-body">
+        <div class="cache-button">
+            <span style="margin-right: 20px; cursor: pointer;" (click)="updateInfo()" class="eos-adm-icon eos-adm-icon-process-blue small"></span>
+            <span style="cursor: pointer;" (click)='cacheClear()' class="eos-adm-icon eos-adm-icon-bin-blue small"></span>
+        </div>
+        <div class="cache-body-tables">
+            <div>
+                <span>Состояние Кэша на {{dateCache}}</span>
+            </div>
+            <div class="show-tables-cache-info" *ngIf="isLoading">
+                <div *ngFor="let cache of allInfo" class="row-cash-info">
+                    <div style="display: flex;">
+                        <div class="cache-item2" style="width: 150px; padding-left: 20px;">{{getDataInfo(cache.Item3)}}</div>
+                        <div class="cache-item1" style="width: 250px;">{{cache.Item1}}</div>
+                        <div class="cache-item3" style="width: 320px;">{{cache.Item2}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cache-date">
+                <span>History</span>
+            </div>
+            <div class="show-tables-cache" *ngIf="isLoading">
+                <div *ngFor="let cache of allCashe" class="row-cash-info">
+                    <div style="display: flex;">
+                        <div class="cache-item1">{{cache.Item1}}</div>
+                        <div class="cache-item2">{{cache.Item3}}</div>
+                        <div class="cache-item3">{{getFormatItem(cache.Item2)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+    
+</div>
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+.input-show-tables-cache {
+    max-width: 800px;
+    margin: 0 auto;
+    max-height: calc(100vh - 90px);
+    min-height: calc(100vh - 90px);
+    margin-top: 15px;
+    .cache-body {
+        background-color: #ffffff;
+        padding-top: 0px;
+        .cache-body-tables {
+            margin: 20px;
+            border: 1px solid #E6E6E6;
+            padding-bottom: 20px;
+            max-height: calc(100vh - 230px);
+            overflow: auto;
+            border-top: 1px solid #ddd;
+        }
+        .cache-button {
+            background-color: #F9F9F9;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            border-bottom: 1px solid #E6E6E6;
+        }
+        .cache-date {
+            padding-top: 20px;
+        }
+        .row-cash-info {
+            border-bottom: 1px solid black;
+        }
+        .show-tables-cache-info {
+            max-height: 125px;
+        }
+        .show-tables-cache {
+            
+            
+            .cache-item1 {
+                margin-right: 20px;
+                width: 150px;
+            }
+            .cache-item2 {
+                width: 280px;
+            }
+            .cache-item3 {
+                width: 400px;
+            }
+        }
+    }
+    
+}
+

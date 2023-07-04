@@ -98,11 +98,6 @@ export const EOS_PARAMETERS_TAB = [{
     visible: true
 },
 {
-    title: 'Управление кэшем',
-    url: E_PARMS_PAGES['control-cache'],
-    visible: true
-},
-{
     title: 'Лицензирование',
     url: E_PARMS_PAGES.licensing,
     visible: true

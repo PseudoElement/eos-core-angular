@@ -984,7 +984,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.formAccess.disable({ onlySelf: true, emitEvent: false });
         }
     }
-    close() {
+    close() { /*  */
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 

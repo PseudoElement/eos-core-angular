@@ -6,7 +6,6 @@
 @import "./parametersSystem/param-other/param-other.component";
 @import "./parametersSystem/param-search/param-search.component";
 @import "./parametersSystem/param-context-rc/param-context-rc.component";
-@import "./parametersSystem/control-cache/control-cache.component.scss";
 @import "./parametersSystem/param-authentication/param-authentication.component";
 @import "./parametersSystem/param-authentication/collection/collection.component";
 @import "./parametersSystem/param-files/param-files.component";
@@ -16,3 +15,4 @@
 @import "./parametersSystem/param-rc/param-rc.component";
 @import "./parametersSystem/param-lib/param-lib.component.scss";
 @import "./parametersSystem/param-libs/param-libs.component.scss";
+@import "../eos-instruments/components/control-cache/control-cache.component.scss";

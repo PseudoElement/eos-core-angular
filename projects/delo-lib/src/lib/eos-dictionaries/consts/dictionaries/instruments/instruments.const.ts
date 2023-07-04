@@ -282,6 +282,18 @@ export const GENERAL_LISTS: IFonLists = {
     render(mountPoint) {},
 };
 
+export const  CONTROL_CACHE: IFonLists = {
+    id: 'control-cache',
+    title: 'Управление кэшем',
+    icon: 'eos-adm-icon-repair-blue',
+    type: ETypeFon.frame,
+    checkAccess: () => Promise.resolve(true),
+    loadPlugin: () => {
+        /// Управление кэшем
+    },
+    render(mountPoint) {},
+};
+
 export const TOOLS_DICTIONARIES = [
     EXPORT,
     IMPORT,
@@ -293,6 +305,7 @@ export const TOOLS_DICTIONARIES = [
     CHANGE_DL,
     COMMON_TECH_LIST,
     GENERAL_LISTS,
+    CONTROL_CACHE
     // DELO_REPORT_DESINGER
     // SEV_ASSOCIATION_DICT,
 ];
