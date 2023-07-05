@@ -1,3 +1,4 @@
+import { ORGANIZ_CL } from 'eos-rest';
 import { Protocol, ResponseProtItem, SearchQueryOrganization } from '../interfaces/fetch.interface'
 
 export class creatorGraphQlParam {
@@ -40,7 +41,8 @@ export class creatorGraphQlParam {
     }
 
     public organiz(param: ResponseProtItem[], query: SearchQueryOrganization): string {
-        const queryParam: string = this.createParamIn(param);
+        const refIsn = this.getSearchParameters(param, 'refIsn');
+        const queryParam: string = this.createParamIn(refIsn);
         let ISN_HIGH_NODE: string = '';
         let DUE: string = '';
         let LAYER: string = '';
@@ -99,7 +101,8 @@ export class creatorGraphQlParam {
     }
 
     public citizens(param: ResponseProtItem[]): string {
-        const queryParam: string = this.createParamIn(param);
+        const userIsn = this.getSearchParameters(param, 'userIsn');
+        const queryParam: string = this.createParamIn(userIsn);
         return `citizensPg(filter: {isnCitizen: {in: [${queryParam}]}}) {
             items {
               isnCitizen
@@ -139,13 +142,37 @@ export class creatorGraphQlParam {
           }`
     }
 
-    private createParamIn(param: ResponseProtItem[]): string {
+    public contacts(organiz: ORGANIZ_CL[]) {
+        const isnNode = [];
+        organiz.forEach(el => {
+            isnNode.push(el.ISN_NODE);
+        })
+        const searchParam = this.createParamIn(isnNode);
+        return `contactsPg(filter: {isnOrganiz: {in: [${searchParam}]}, ordernum: {equal: {value: 0}}}) {
+                    items {
+                    idCertificate
+                    eMail
+                    isnOrganiz
+                    sevIndex
+                    }
+                }`;
+    }
+
+    private getSearchParameters(param: ResponseProtItem[], nameParam: string): number[] {
+        const result = [];
+         param.forEach(el => {
+            result.push(el[nameParam]);
+        })
+        return result;
+    }
+
+    public createParamIn(param: number[]): string {
         let queryParam: string = '';
         param.forEach(el => {
             if (queryParam.length) {
-                queryParam = queryParam + ',' +`{value: "${el}"}`;
+                queryParam = queryParam + ',' +`{value: ${el}}`;
             } else {
-                queryParam = `{value: "${el}"}`;
+                queryParam = `{value: ${el}}`;
             }
         })
         return queryParam;

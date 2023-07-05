@@ -134,6 +134,12 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
             length: 1,
         },
         {
+            key: 'EP_CERTIFICATE',
+            title: 'Сертификат',
+            type: 'ep_certificate',
+            length: 5,
+        },
+        {
             key: 'CONTACT.MEDO_ID',
             title: 'Идентификатор организации',
             type: 'string',
@@ -360,7 +366,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         ... Features.cfg.SEV.isIndexesEnable ? [ICONS_CONTAINER_SEV] : [],
         'CLASSIF_NAME'
     ],
-    allVisibleFields: ['NOTE', 'NEW_RECORD'],
+    allVisibleFields: ['NOTE', 'NEW_RECORD', 'EP_CERTIFICATE'],
     // allVisibleFields: ['CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'MAIL_FOR_ALL', 'NOTE', 'OKPO',
     //     'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT', 'ISN_ADDR_CATEGORY', 'CODE',
     //     'OGRN'],

@@ -1,3 +1,5 @@
+import { ORGANIZ_CL } from "../../eos-rest/interfaces/structures";
+
 export interface DeleteGroupDoc {
     isnFileCategory: number;
     isnNodeDg: number;
@@ -276,4 +278,10 @@ export interface ResponseCitizens {
           items: ResponseCitizenItems[];
         }
       }
+}
+
+export interface ORGANIZ_EXTENDS extends ORGANIZ_CL {
+    ID_CERTIFICATE?: string;
+    E_MAIL?: string;
+    GLOBAL_ID?: string;
 }
