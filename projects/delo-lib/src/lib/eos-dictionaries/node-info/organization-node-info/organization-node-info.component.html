@@ -1,0 +1,94 @@
+<div class="wrapper-information">
+    <div class="header">
+        <p class="header-title">{{title | uppercase}}</p>
+    </div>
+    
+    <div class="full-informaton">
+        <div *ngIf="vertex; else leaf">
+            <div class="wrapper-item-information">
+                <p class="name-field"> НАИМЕНОВАНИЕ </p>
+                <p class="title">
+                    {{title | uppercase}}
+                </p>
+            </div>
+            
+            <div class="wrapper-item-information">
+                <p class="name-field"> ПРИМЕЧАНИЕ </p>
+                <p class="title">
+                    {{note | uppercase}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<ng-template #leaf>
+    <div class="wrapper-item-information">
+        <p class="name-field"> НАИМЕНОВАНИЕ </p>
+        <p class="title">
+            {{title}}
+        </p>
+    </div>
+    
+    <div class="wrapper-item-information">
+        <p class="name-field"> РЕГИОН </p>
+        <p class="title">
+            {{region}}
+        </p>
+    </div>
+
+    <div class="wrapper-item-information">
+        <p class="name-field"> ИНДЕКС </p>
+        <p class="title">
+            {{zipcode}}
+        </p>
+    </div>
+    
+    <div class="wrapper-item-information">
+        <p class="name-field"> НАСЕЛЕННЫЙ ПУНКТ </p>
+        <p class="title">
+            {{city}}
+        </p>
+    </div>
+
+    <div class="wrapper-item-information">
+        <p class="name-field"> АДРЕС </p>
+        <p class="title">
+            {{address}}
+        </p>
+    </div>
+
+    <div class="wrapper-item-information">
+        <p class="name-field"> E-MAIL </p>
+        <p class="title">
+            {{e_mail}}
+        </p>
+    </div>
+
+    <div class="wrapper-item-information">
+        <p class="name-field"> ПРИМЕЧАНИЕ </p>
+        <p class="title">
+            {{note}}
+        </p>
+    </div>
+
+    <div class="wrapper-item-information">
+        <p class="name-field"> ИНДЕКС СЭВ </p>
+        <p class="title">
+            {{global_id}}
+        </p>
+    </div>
+
+    <div class="wrapper-item-information">
+        <p class="name-field"> ИДЕНТИФИКАТОР СЕРТИФИКАТА </p>
+        <p class="title">
+            {{id_certificate}}
+        </p>
+        <div class="wrapper-btn" *ngIf="id_certificate !== '...'">
+            <button (click)="showCert()" class="btn">
+                ПОКАЗАТЬ СЕРТИФИКАТ
+            </button>
+        </div>
+    </div>
+</ng-template>

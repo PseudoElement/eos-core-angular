@@ -53,6 +53,7 @@ export enum E_FIELD_TYPE {
     select2, // Select by angular component
     autosearch,
     new,
+    ep_certificate
 }
 export interface IDictionaryLink {
     pk: string;

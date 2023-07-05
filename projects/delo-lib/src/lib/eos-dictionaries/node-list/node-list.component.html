@@ -4,8 +4,8 @@
         <div class="table-header-content"
              [ngStyle]="{'width.%': 100, 'left.px': headerOffset}">
             <div *ngIf="params.markItems"
-                 class="checkbox-inline">
-
+                 class="checkbox-inline"
+            >
                  <label
                        [tooltip]="markAllTooltip"
                        placement="bottom"
@@ -17,7 +17,7 @@
                             [disabled]="!(nodes && nodes.length)"
                             (change)="toggleAllMarks()">
                     <div>
-                    <span class="eos-adm-icon small" [ngClass]="getflagChecked"></span>
+                        <span class="eos-adm-icon small" [ngClass]="getflagChecked"></span>
                     </div>
                 </label>
                 <!-- [checked]="allMarked || markedInfo.anyMarked" -->
@@ -25,14 +25,16 @@
             <div *ngIf="!params.markItems"
                  class="node-left">
             </div>
-            <div class="node-title" id="nodeListElement"
+            <div class="node-title" 
+                id="nodeListElement"
                 #nodeListElement
-                >
+            >
                 <div *ngFor="let field of viewFields"
                      class="item l-font"
                      [class.no-padding-left]="field.preferences?.noLeftPadding"
                      [attr.id]="'vf_'+field.key"
-                     [ngStyle]="{'min-width.px': min_length[field.key]}">
+                     [ngStyle]="{'min-width.px': min_length[field.key]}"
+                >
                     <span class="text selected-text ng-bind-html"
                           (click)="orderByField(field.key)"
                           [tooltip]="field.title"
@@ -41,46 +43,73 @@
                           [delay]="tooltipDelay"
                           containerClass="tooltip-info"
                           style="display: inline-block;"
-                          >{{untrimmedValue(field.customTitle || field.title)}}</span>
+                    >
+                        {{untrimmedValue(field.customTitle || field.title)}}
+                    </span>
                     <span class="order-icon">
                         <span *ngIf="orderBy?.fieldKey === field.key"
                               class="icon eos-adm-icon small"
-                              [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy?.ascend, 'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
+                            [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy?.ascend, 'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend}">
+                        </span>
+                    </span>
+                </div>
 
                 <div *ngIf="firstColumnIndex > 0" class="arrow-left selected-text" (click)="onLeftClick()">
                     <div class="arrow-left-fix">
                     <i class="fa fa-angle-left "></i>
                     </div>
                 </div>
+
                 <div *ngFor="let field of getSlicedCustomFields();let first=first;"
                      class="item l-font"
                      [class.left-shadowed]="first && (firstColumnIndex > 0)"
                      [attr.id]="'vf_'+field.key"
-                     [ngStyle]="{'min-width.px': min_length[field.key]}">
+                     [ngStyle]="{'min-width.px': min_length[field.key]}"
+                >
                     <span class="text selected-text"
-                          (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span><span class="order-icon">
-                    <span *ngIf="orderBy?.fieldKey === field.key"
-                          class="eos-adm-icon small"
-                          [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy?.ascend, 'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
+                          (click)="orderByField(field.key)"
+                    >
+                        {{untrimmedValue(field.customTitle || field.title)}}
+                    </span>
+                    <span class="order-icon">
+                        <span *ngIf="orderBy?.fieldKey === field.key"
+                            class="eos-adm-icon small"
+                            [ngClass]="{'eos-adm-icon-arrow-blue-top': orderBy?.ascend, 'eos-adm-icon-arrow-blue-bottom': !orderBy?.ascend}"
+                        ></span>
+                    </span>
+                </div>
             </div>
+
             <div *ngIf="hasOverflowedColumns" class="arrow-right selected-text" (click)="onRightClick()">
                 <i class="fa fa-angle-right "></i>
             </div>
         </div>
     </div>
+
     <div class="eos-adm-node-list"
         #eosNodeList
         (scroll)="onListScroll($event)">
         <div class="block list"
-             [ngStyle]="{'width.%': 100}">
+             [ngStyle]="{'width.%': 100}"
+        >
             <p *ngIf="params.updatingList || !recalcDone || isSevClearCodesProgress"
                class="spinner-container text-center">
                 <eos-spinner size="lg"></eos-spinner>
             </p>
             <p *ngIf="!nodes?.length && !params.updatingList"
-               class="text-center text-info node-list-info">Нет записей.</p>
+               class="text-center text-info node-list-info"
+            >
+                Нет записей.
+            </p>
             <!--Simple list-->
-            <ng-container *ngIf="nodes?.length && !params.updatingList && recalcDone && !isSevClearCodesProgress || params.searchResults && !params.updatingList && recalcDone">
+            <ng-container 
+                *ngIf=" nodes?.length && 
+                        !params.updatingList && 
+                        recalcDone && 
+                        !isSevClearCodesProgress || params.searchResults && 
+                        !params.updatingList && 
+                        recalcDone"
+            >
                 <eos-node-list-item *ngFor="let item of nodes"
                                     [ngStyle]="{'width.%': 100}"
                                     [length]="length"
@@ -90,19 +119,20 @@
                                     [firstColumnIndex]="firstColumnIndex"
                                     (clickSelect)="onClickSelect(item)"
                                     (clickMark)="onClickMark(item,$event)"
-                                    >
-                                    </eos-node-list-item>
+                ></eos-node-list-item>
             </ng-container>
         </div>
     </div>
 </div>
+
 <ng-template #markAllTooltip>
     {{allMarked ? 'Снять' : 'Отметить все'}}<br/>{{allMarked ? 'пометки': 'на странице'}}
 </ng-template>
 
 <ng-template #childTemplate
              let-item="item"
-             let-index="index">
+             let-index="index"
+>
     <eos-node-list-item [node]="item.value"
                         [length]="length"
                         [params]="params"
@@ -110,5 +140,5 @@
                         [firstColumnIndex]="firstColumnIndex"
                         (clickSelect)="onClickSelect(item.value,$event)"
                         (clickMark)="onClickMark(item.value,$event)"
-                        ></eos-node-list-item>
+    ></eos-node-list-item>
 </ng-template>

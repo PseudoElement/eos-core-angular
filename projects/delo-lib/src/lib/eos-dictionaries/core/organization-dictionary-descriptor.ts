@@ -10,7 +10,7 @@ import { EosUtils } from '../../eos-common/core/utils';
 import { DepartmentDictionaryDescriptor } from './department-dictionary-descriptor';
 import { FieldDescriptor } from './field-descriptor';
 import { ModeFieldSet } from './record-mode';
-import { ResponseOrganization, SearchQueryOrganization, ResponseProt } from '../interfaces/fetch.interface';
+import { ResponseOrganization, SearchQueryOrganization, ResponseProt, ORGANIZ_EXTENDS } from '../interfaces/fetch.interface';
 import { creatorGraphQlParam } from '../services/creator-graphQl-param'
 import { converterFetchRequest } from '../services/converter-fetch-request';
 
@@ -48,6 +48,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         const srchMode = data['srchMode'];
         const criteries = super.getFullSearchCriteries(data[srchMode]);
         const queries = { contact: null, medo: null, organiz: null, branch: null, protocol: null };
+
         if (srchMode === 'medo') {
             if (criteries.hasOwnProperty('CONTACT.MEDO_ID')) {
                 queries.contact = {
@@ -86,6 +87,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
         return queries;
     }
+
     public getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
         const newPreset = {};
         EosUtils.deepUpdate(newPreset, preSetData);
@@ -264,6 +266,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
 
     async getData(query?: any, order?: string, limit?: number): Promise<any[]> {
+
         if (!this.dopRec.length) {
             await this.ar_Descript();
         }
@@ -283,12 +286,12 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         // if (this.id === 'organization') {
         // req.expand = 'CONTACT_List';
         // }
-        return this.apiSrv
-            .read(req)
-            .then((data: any[]) => {
-                this.prepareForEdit(data);
-                return data;
-            });
+
+        const responseOrganiz: ORGANIZ_CL[] = await this.apiSrv.read(req);
+        const organiz: ORGANIZ_CL[] = this.prepareForEdit(responseOrganiz);
+
+        const extendsOrganiz: ORGANIZ_EXTENDS[] = await this.extendsData(organiz);
+        return extendsOrganiz;
     }
 
     ar_Descript(): Promise<any> {
@@ -470,5 +473,32 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         } else {
             return Promise.resolve([]);
         }
+    }
+
+    private async extendsData(organiz: ORGANIZ_CL[]): Promise<ORGANIZ_EXTENDS[]>{
+        const contactsReq = this.createFetchParam.contacts(organiz);
+        const extOrganiz: ORGANIZ_EXTENDS[] = organiz;
+        try {
+            const responseContacts = await this.graphQl.query(contactsReq);
+            if (responseContacts.ok) {
+                const contacts = await responseContacts.json();
+                contacts.data.contactsPg.items.forEach(el => {
+                    extOrganiz.forEach(orgEl => {
+                        if(orgEl.ISN_NODE === el.isnOrganiz ) {
+                            orgEl.ID_CERTIFICATE = el.idCertificate;
+                            orgEl.E_MAIL = el.eMail
+                            orgEl.GLOBAL_ID = el.sevIndex
+                        }
+                    })
+                }) 
+            } else {
+                console.error('Error: status request: ', responseContacts.status);
+            }
+        } catch(err){
+            console.error('Error: Error when trying to extend standard data.')
+            console.log(err)
+        }
+
+        return extOrganiz;
     }
 }

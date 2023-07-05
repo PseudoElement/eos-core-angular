@@ -117,6 +117,8 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
 import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node-info/sev-participant-node-info.component';
 import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/templateCardExample.component';
 import { DepartmentCalendarComponent } from './department-calendar/department-calendar.component';
+import { OrganizationNodeInfoComponent } from './node-info/organization-node-info/organization-node-info.component';
+
 @NgModule({
     declarations: [
         CardFromComponent,
@@ -197,7 +199,8 @@ import { DepartmentCalendarComponent } from './department-calendar/department-ca
         BroadcastChannelNodeInfoComponent,
         SevParticiantNodeInfoComponent,
         SpravochnikiTemplateComponent,
-        DepartmentCalendarComponent
+        DepartmentCalendarComponent,
+        OrganizationNodeInfoComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,

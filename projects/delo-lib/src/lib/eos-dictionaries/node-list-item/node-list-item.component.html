@@ -1,34 +1,46 @@
 <div #item class="eos-adm-node-list-item secondary-text"
-     [ngClass]="{'highlighted': node.isMarked, 'highlighted-cut': node.isCut, 'flat-child': node.isActive, 'slised': node.isSliced}">
+     [ngClass]="{'highlighted': node.isMarked, 
+                    'highlighted-cut': node.isCut, 
+                    'flat-child': node.isActive, 
+                    'slised': node.isSliced}"
+>
     <div [ngClass]="{'deleted': node.isDeleted}" class="node-list-item clearfix">
         <div *ngIf="params?.markItems" class="node-marker pull-left">
+
             <label *ngIf="params?.markItems" class="checkbox">
                 <input type="checkbox" [ngModel]="node.isMarked" (ngModelChange)="markNode($event)">
                 <span></span>
             </label>
+
         </div>
+
         <div *ngIf="!params?.markItems"
              class="node-left">
         </div>
 
         <div class="node-row pull-left"
              (click)="selectNode($event)"
-             (dblclick)="viewNode($event)">
+             (dblclick)="viewNode($event)"
+        >
             <eos-node-field *ngFor="let field of viewFields"
                             class="old-pull-left1"
                             [ngStyle]="{'width.px': length[field.key]}"
                             [field]="field"
                             [node]="node"
                             [width]="length[field.key]"
-                            (view)="viewNode($event, true)"></eos-node-field><!--
-            --><eos-node-field *ngFor="let field of customSliced;let first=first;"
+                            (view)="viewNode($event, true)"
+            ></eos-node-field>
+
+            <eos-node-field *ngFor="let field of customSliced;let first=first;"
                             class="old-pull-left1"
                             [class.left-shadowed]="first && (firstColumnIndex !== 0)"
                             [ngStyle]="{'width.px': length[field.key]}"
                             [width]="length[field.key]"
                             [field]="field"
                             [node]="node"
-                            (view)="viewNode($event, true)"></eos-node-field>
+                            (view)="viewNode($event, true)"
+            ></eos-node-field>
+            
         </div>
     </div>
 </div>

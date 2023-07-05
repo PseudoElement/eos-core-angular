@@ -169,4 +169,8 @@ export class NodeFieldComponent implements OnInit {
 
         return 'emptyicon';
     }
+
+    get isCertificate() {
+        return !!this.node.data.rec.ID_CERTIFICATE;
+    }
 }

@@ -38,16 +38,19 @@
                 {{ currentValue() }}
             </label>
         </ng-container>
+        
         <ng-container *ngSwitchCase="types.date">
             <label class="fieldlabel" [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value | eosDate }}
             </label>
         </ng-container>
+
         <ng-container *ngSwitchCase="types.dictionary">
             <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
+
         <ng-container *ngSwitchCase="types.icon_sev"> <!-- ICONS_CONTAINER -->
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
                 <span class="folder small eos-adm-icon"
@@ -56,6 +59,7 @@
                     placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
             </div>
         </ng-container>
+
         <ng-container *ngSwitchCase="types.icon"> <!-- ICONS_CONTAINER -->
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
                 <span class="folder small eos-adm-icon"
@@ -64,17 +68,32 @@
                     placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
             </div>
         </ng-container>
+
         <ng-container *ngSwitchCase="types.new">
             <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 <span *ngIf="field.value === 1" class="small eos-adm-icon-dot-blue eos-adm-icon small-icon-dot" (click)="viewNode($event)"> </span>
             </label>
 
         </ng-container>
+
+        <ng-container *ngSwitchCase="types.ep_certificate">
+            <div class="wrapper-icon" >
+                <span 
+                    *ngIf="isCertificate" 
+                    class="eos-adm-icon eos-adm-icon-electronic-signature-blue small"
+                    [tooltip]="'Назначен сертификат ЭП'" 
+                    placement="auto" 
+                    container="body" 
+                    containerClass="tooltip-info"
+                ></span>
+            </div>
+        </ng-container>
+       
         <ng-container *ngSwitchDefault>
             <div class="table-field-ico" *ngIf="hasFolderIcon">
                 <span class="folder small eos-adm-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>
-            </div><!--
-            --><label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
+            </div>
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value }}
             </label>
         </ng-container>
