@@ -16,10 +16,10 @@ export const CONFIRM_SCANSYST: IConfirmWindow = {
 export const CONFIRM_UPDATE_USER: IConfirmWindow2 = {
     title: 'Изменение типа пользователя',
     bodyList: [],
-    body: 'Вы собираетесь сделать этого пользователя техническим. Ассоциация с должностным лицом будет удалена.',
+    body: 'Ассоциация пользователя с должностным лицом и право работы в приложении "Дело-web" будут удалены. Продолжить?',
     bodyAfterList: '',
     buttons: [
-        {title: 'Ок', result: 1, isDefault: true, },
-        {title: 'Отменить',  result: 2, },
+        {title: 'Нет',  result: 2, },
+        {title: 'Да', result: 1, isDefault: true, },
     ],
 };

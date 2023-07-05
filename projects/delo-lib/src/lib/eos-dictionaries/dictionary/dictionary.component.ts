@@ -931,7 +931,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId, params);
         if (this.dictionaryId === 'organization' || this.dictionaryId === 'citizens') {
             this.nodeList.nodes.forEach((node) => {
-                if (node.data['rec']['IS_NODE']) {
+                if (node.data['rec']['IS_NODE'] || this.dictionaryId === 'citizens') {
                     id.push(node.id);
                     rc.push(node.data['rec']['ISN_NODE']);
                 }

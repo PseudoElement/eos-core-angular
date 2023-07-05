@@ -104,6 +104,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     if (deloWeb) {
                         f['value'] = true;
                     } else if (delo || delo_deloWeb) {
+                        f['value'] = false;
                         f['disabled'] = true;
                     }
                     break;
