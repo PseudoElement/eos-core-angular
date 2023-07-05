@@ -16,6 +16,8 @@
             [node]="node"></eos-sev-broadcast-channel-node-info>
         <eos-sev-participant-node-info *ngSwitchCase="'sev-participant'"
             [node]="node"></eos-sev-participant-node-info>
+        <eos-organization-node-info *ngSwitchCase="'organization'"
+            [node]="node"></eos-organization-node-info>
         <eos-node-info *ngSwitchDefault
             [node]="node"></eos-node-info>
     </ng-container>
