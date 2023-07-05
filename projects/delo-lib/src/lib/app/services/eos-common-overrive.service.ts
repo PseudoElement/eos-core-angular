@@ -10,16 +10,16 @@ import { RC_CABINET_FOLDER_LIST } from '../../eos-user-params/shared/consts/rc-c
 @Injectable()
 export class EosCommonOverriveService {
   public defaultFeatures: IOESDictsFeatures = FeaturesDelo
-  /* переопределенный дискриптор в виде модуля */
+  /** переопределенный дискриптор в виде модуля */
   public features?: IOESDictsFeatures;
-  /* константы метаданных для справочников */
+  /** константы метаданных для справочников */
   public overrideDictionaries?: IDictionaryDescriptor[];
-  /* номер права для управлению видимостью справочников */
+  /** номер права для управлению видимостью справочников */
   public numberTechRigth?: number;
   public fnSetDescriptors?: any;
-  /* какие справочники переопределить */
+  /** какие справочники переопределить */
   public renderCardsInCardEditComponents: string[] = [];
-  /* какие контролы отрисовать в карточках элементов */
+  /** какие контролы отрисовать в карточках элементов */
   public controlsEditCard: any[] = [];
 
   public controlsCardDepartments: string[] = [];

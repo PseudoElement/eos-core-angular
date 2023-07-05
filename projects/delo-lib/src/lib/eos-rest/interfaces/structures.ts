@@ -1250,10 +1250,11 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
      */
     OGRN: string;
     /**
-     * срок исполнения
+     * Срок исполнения РК.
      */
     TERM_EXEC: number;
 
+    /** Срок исполнения РК в каких днях. */
     TERM_EXEC_TYPE: string;
 
     /**
