@@ -272,6 +272,41 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.subscribeForms();
         return Promise.resolve();
     }
+    /**
+     * 
+     * @param flag Передаём галочку технического пользователя
+     */
+    updateParamsTech(flag: boolean) {
+        this.accessField.forEach((item) => {
+            switch (item['key']) {
+                case 'delo_web':
+                case '25':
+                case '17':
+                case '15':
+                case '2':
+                case '5':
+                    if (flag) {
+                        this.formAccess.get(item['key']).disable({emitEvent: false});
+                        this.formAccess.get(item['key']).setValue(false);
+                    } else if (this.formAccess.get(item['key']).disabled) {
+                        this.formAccess.get(item['key']).enable({emitEvent: false});
+                        this.formAccess.get(item['key']).setValue(item.value || false);
+                    }
+                    break;
+                case '1-27':
+                    if (flag) {
+                        this.formAccess.get(item['key']).disable({emitEvent: false});
+                        this.formAccess.get(item['key']).setValue(null);
+                    } else if (this.formAccess.get(item['key']).disabled) {
+                        this.formAccess.get(item['key']).enable({emitEvent: false});
+                        this.formAccess.get(item['key']).setValue(item.value || false);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
     createActualLicenze() {
         const masEl = [];
         this.LicenzeInfo.forEach(elem => {
@@ -831,6 +866,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.getTitle();
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
+            this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
             this.upform(this.accessInputs, this.formAccess);
             this.dueDepSurname = this.form.controls['SURNAME_PATRON'].value;
             if (this.curentUser.isTechUser) {
@@ -926,6 +962,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
         this.tf();
+        this.updateParamsTech(this.formControls.get('teсhUser').value);
         this.editLicenze();
     }
     tf() {
@@ -1444,6 +1481,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     // this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
                 }
+                this.updateParamsTech(this.formControls.get('teсhUser').value);
             });
         this.form.get('CLASSIF_NAME').valueChanges
         .pipe(
