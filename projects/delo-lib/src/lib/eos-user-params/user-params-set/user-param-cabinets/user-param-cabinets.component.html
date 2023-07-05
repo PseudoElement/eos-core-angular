@@ -21,7 +21,7 @@
 
     <div #root *ngIf="currTab === 0" class="clearfix scrollWrapper">
         
-        <div class="user-group-form"  *ngIf="appContext.cbBase">
+        <div class="user-group-form"  *ngIf="appContext.cbBase && (!appMode?.arm)">
             <div class="cab-mar-span">
                 <span>Представление перечней документов и проектов:</span>
             </div>
