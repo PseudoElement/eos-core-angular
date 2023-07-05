@@ -21,7 +21,7 @@
 
     <div #root *ngIf="currTab === 0" class="clearfix scrollWrapper">
         
-        <div class="user-group-form"  *ngIf="appContext.cbBase">
+        <div class="user-group-form"  *ngIf="appContext.cbBase && (!appMode?.arm)">
             <div class="cab-mar-span">
                 <span>Представление перечней документов и проектов:</span>
             </div>
@@ -35,7 +35,7 @@
             <div class="wrapper-line-box">
                 <div class="line-box">
                     <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_RESOLUTION_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
-                    <div class="user-input-increment-cabinets">
+                    <div class="user-input-increment-cabinets user-input-increment-cabinets-day">
                         <eos-dynamic-input [input]="inputs['rec.HILITE_RESOLUTION']" [form]="form"></eos-dynamic-input>
                         <span class="user-input-span-for-increment-cabinets">Дней и ранее</span>
                     </div>
@@ -43,7 +43,7 @@
     
                 <div class="line-box">
                     <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_PRJ_RC_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
-                    <div class="user-input-increment-cabinets">
+                    <div class="user-input-increment-cabinets user-input-increment-cabinets-day">
                         <eos-dynamic-input [input]="inputs['rec.HILITE_PRJ_RC']" [form]="form"></eos-dynamic-input>
                         <span class="user-input-span-for-increment-cabinets">Дней и ранее</span>
                     </div>
