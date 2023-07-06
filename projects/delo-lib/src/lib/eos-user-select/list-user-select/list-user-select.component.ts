@@ -673,7 +673,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     UsersStats() {
         /*  setTimeout(() => { */
-        this._router.navigate(['user_param/users-stats']);
+    //    this._router.navigate(['user_param/users-stats']);
         /* }, 0); */
     }
 

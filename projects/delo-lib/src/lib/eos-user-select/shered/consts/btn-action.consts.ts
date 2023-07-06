@@ -140,17 +140,17 @@ export const SumProtocol: BtnActionFields = {
     isActive: false,
 };
 
-export const UsersStats: BtnActionFields = {
-    name: 'UsersStats',
-    title: 'Статистика по пользователям и опциям',
-    disabledClass: 'eos-adm-icon eos-adm-icon eos-adm-icon-statistic-grey small',
-    enableClass: 'eos-adm-icon eos-adm-icon eos-adm-icon-statistic-blue small',
-    tooltip: 'Статистика по пользователям и опциям',
-    disabled: false,
-    activeClass: 'eos-adm-icon eos-adm-icon eos-adm-icon-statistic-blue small',
-    activeBtnClass: '',
-    isActive: false,
-};
+// export const UsersStats: BtnActionFields = {
+//     name: 'UsersStats',
+//     title: 'Статистика по пользователям и опциям',
+//     disabledClass: 'eos-adm-icon eos-adm-icon eos-adm-icon-statistic-grey small',
+//     enableClass: 'eos-adm-icon eos-adm-icon eos-adm-icon-statistic-blue small',
+//     tooltip: 'Статистика по пользователям и опциям',
+//     disabled: false,
+//     activeClass: 'eos-adm-icon eos-adm-icon eos-adm-icon-statistic-blue small',
+//     activeBtnClass: '',
+//     isActive: false,
+// };
 
 export const UsersInfo: BtnActionFields = {
     name: 'OpenUsersInfo',
@@ -269,7 +269,7 @@ export const Allbuttons: BtnAction = {
         OpenRightsSystemCaseDelo,
         UserLists,
         SettingsManagement,
-        UsersStats,
+       // UsersStats,
         USER_SESSION,
         Protocol,
         SumProtocol,

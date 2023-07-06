@@ -18,7 +18,7 @@ import {
     UserLists,
     Unlock,
     ViewDisableUser,
-    UsersStats
+    /* UsersStats */
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { EosStorageService } from '../../app/services/eos-storage.service';
@@ -186,7 +186,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     /* ЦБ блокируем кнопки если зашли под администратором системы */
     blockButtonForCb() {
         if (this.cbBlockSecurAdm()) {
-            UsersStats.disabled = true;
+         //   UsersStats.disabled = true;
         }
     }
     cbBlockSecurAdm() {
