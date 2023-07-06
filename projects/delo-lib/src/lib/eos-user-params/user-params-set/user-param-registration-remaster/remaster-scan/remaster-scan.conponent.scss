@@ -13,3 +13,44 @@
     margin-bottom: 20px;
 
 }
+.remaster-scan-card {
+    .position-boolean-sh {
+        width: 35%;
+        padding-top: 30px;
+    }
+    .title-under-conversion-table {
+        width: 100%;
+        font-size: 18px;
+        margin-bottom: 16px;
+        margin-top: 32px;
+        display: flex;
+        div {
+            border-bottom: 1px solid #e6e6e6;
+            width: 100%;
+        }
+    }
+    .first-radio {
+        width: 300px;
+        eos-dynamic-input-radio {
+            .elem-input-radio {
+                height: 50px;
+            }
+        }
+    }
+    .second-radio {
+        eos-dynamic-input-radio {
+            & > div {
+                display: flex;
+                flex-direction: column;
+            }
+            .elem-input-radio {
+                height: 50px;
+            }
+        }
+        .select-not-label {
+            label {
+                display: none;
+            }
+        }
+    }
+}
