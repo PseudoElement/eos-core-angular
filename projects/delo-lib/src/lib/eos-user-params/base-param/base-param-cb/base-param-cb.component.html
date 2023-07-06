@@ -1,4 +1,4 @@
-<div class="base-param-wrapper" *ngIf="!isLoading">
+<div class="wrapper-params-set" *ngIf="!isLoading">
     <eos-user-params-header
         [editMode]="editMode"
         [title]="title"
@@ -8,343 +8,303 @@
         (cancelEmit)="cancel($event)"
         (editEmit)="edit($event)"
     ></eos-user-params-header>
-    <div class="base-param-main">
-        <!-- Логин , фото, ФИО -->
-        <div class="top-base-align">
-            <div
-                class="avatar-base"
-                *ngIf="
-                    (isPhoto && !formControls.controls['teсhUser'].value) ||
-                        (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP);
-                    else tech
-                "
-            >
-                <a
-                    class="av-link-b"
-                    [routerLink]="[
-                        '/spravochniki',
-                        'departments',
-                        !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP,
-                        'view'
-                    ]"
+
+    <div class="box">
+        <div class="wrapper-card">
+            <div class="wrapper-main-informatin">
+                <div class="wrapper-avatar"
+                    *ngIf="
+                        (isPhoto && !formControls.controls['teсhUser'].value) ||
+                            (!formControls.controls['teсhUser'].value && curentUser.DUE_DEP);
+                        else tech
+                    "
                 >
-                    <span class="avatar-img-b" *ngIf="isPhoto" [ngStyle]="{ 'background-image': urlPhoto }"></span>
-                    <span
-                        class="avatar-img-b"
-                        *ngIf="!isPhoto"
-                        class="avatar-img-b eos-adm-icon eos-adm-icon-Man-Blue small"
-                    ></span>
-                </a>
-            </div>
-            <ng-template #tech>
-                <div class="avatar-base">
-                    <div class="av-link-b">
+                    <a
+                        class="avatar-link"
+                        [routerLink]="[
+                            '/spravochniki',
+                            'departments',
+                            !curentUser.DUE_DEP ? '' : curentUser.DUE_DEP,
+                            'view'
+                        ]"
+                    >
+                        <span class="avatar-img" *ngIf="isPhoto" [ngStyle]="{ 'background-image': urlPhoto }"></span>
+                        <!-- <span
+                            *ngIf="!isPhoto"
+                            class="avatar-img eos-adm-icon eos-adm-icon-Man-Blue small"
+                        ></span> -->
                         <span
-                            class="avatar-img-b"
-                            class="avatar-img-b eos-adm-icon eos-adm-icon-Techman-Grey small"
+                            *ngIf="!isPhoto"
+                            class="avatar-img eos-adm-icon eos-adm-icon-DeepUser-Grey small"
                         ></span>
+                    </a>
+                </div>
+
+                <div class="wrapper-information">
+                    <div class="information-line">
+                        <div class="information-item "
+                            [formGroup]="form"
+                            [tooltip]="
+                                !curentUser['IS_PASSWORD'] && editMode ? 'Для смены логина задайте пароль' : validClassif
+                            "
+                            container="body"
+                            placement="bottom"
+                            containerClass="tooltip-error"
+                            [ngClass]="{'white-field': !editMode}"
+
+                        >
+                            <label [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">
+                                {{inputs["CLASSIF_NAME"].label}}
+                            </label>
+                            <input
+                                class="form-control m-font"
+                                [maxlength]="maxLoginLength"
+                                [formControlName]="inputs['CLASSIF_NAME'].key"
+                                [readonly]="inputs['CLASSIF_NAME'].readonly"
+                                autocomplete="off"
+                            />
+                        </div>
+                        <div class="information-item"
+                            [formGroup]="form"
+                            [tooltip]="!form.controls['SURNAME_PATRON'].value ? 'Поле ФАМИЛИЯ И.О. не может быть пустым' : null"
+                            container="body"
+                            placement="bottom"
+                            containerClass="tooltip-error"
+                            [ngClass]="{'white-field': !editMode}"
+                        >
+                            <label [hidden]="inputs['SURNAME_PATRON'].hideLabel" [attr.for]="inputs['SURNAME_PATRON'].key">
+                                {{inputs["SURNAME_PATRON"].label}}
+                            </label>
+                            <input
+                                class="form-control m-font"
+                                maxlength="64"
+                                [formControlName]="inputs['SURNAME_PATRON'].key"
+                                [readonly]="inputs['SURNAME_PATRON'].readonly"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="information-line">
+                        <eos-dynamic-input
+                            class="base-text-input base-input-role information-item"
+                            eosClickMode
+                            [input]="controls['DUE_DEP_NAME']"
+                            [form]="formControls"
+                            [readonly]="!editMode"
+                            (onClickChoose)="showDepChoose()"
+                            (onEnterSearchEmptyResults)="showDepChooseEmpty()"
+                            [ngClass]="{'white-field': !editMode}"
+                        ></eos-dynamic-input>
+                    </div>
+
+                    <div class="information-line">
+                        <div class="information-item">
+                            <eos-dynamic-input
+                                (keyup)="onKeyUp($event)"
+                                class="base-input-role base-input-note-dep"
+                                [input]="inputs['NOTE']"
+                                [form]="form"
+                                [readonly]="!editMode || !formControls.get('teсhUser').value">
+                            </eos-dynamic-input>
+
+                            <div class="input-controls" *ngIf="editMode && !!formControls.get('teсhUser').value">
+                                <span 
+                                    *ngIf="getSelectNote && form.controls['NOTE'].value"
+                                    class="icon eos-adm-icon small"
+                                    [ngClass]="{'eos-adm-icon-close-blue': getSelectNote}"
+                                    (click)="clearDepartNote()"
+                                    ></span>
+                                <span
+                                    class="icon eos-adm-icon small"
+                                    [tooltip]="!getSelectNote || !form.controls['NOTE'].value ? '' : 'Введено вручную. Для выбора из справочника необходимо очистить.'"
+                                    container="body"
+                                    placement="bottom"
+                                    containerClass="tooltip-info"
+                                    [ngClass]="{'eos-adm-icon-info-blue': getSelectNote, 'eos-adm-icon-directory-book-blue': !getSelectNote || !form.controls['NOTE'].value}"
+                                    (click)="getDepartForTechDueDep()">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="information-item fake-label">
+                            <eos-dynamic-input
+                                [input]="controls['teсhUser']"
+                                [form]="formControls"
+                            ></eos-dynamic-input>
+                        </div>
+
+                    </div>
+
+                    <div class="information-line">
+                        <eos-dynamic-input
+                            class="base-text-input-cb base-input-role information-item"
+                            [input]="controls['SELECT_ROLE']"
+                            [form]="formControls"
+                            container="body"
+                            [readonly]="!editMode"
+                            [disabled]="formControls.controls['SELECT_ROLE'].disabled"
+                        ></eos-dynamic-input>
+            
+                        <div class="information-item fake-label">
+                            <eos-dynamic-input
+                                [input]="inputs['IS_SECUR_ADM']"
+                                [form]="form"
+                                [readonly]="appctx"
+                                tooltip="Администратор системы"
+                                placement="bottom"
+                                containerClass="tooltip-info"
+                            ></eos-dynamic-input>
+                        </div>
+
                     </div>
                 </div>
-            </ng-template>
-            <div class="wrapper-password">
-                <div
-                    style="width: 200px"
-                    class="base-text-input base-login-input"
-                    [formGroup]="form"
-                    [tooltip]="
-                        !curentUser['IS_PASSWORD'] && editMode ? 'Для смены логина задайте пароль' : validClassif
-                    "
-                    container="body"
-                    placement="bottom"
-                    containerClass="tooltip-error">
-                    <label [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{
-                        inputs["CLASSIF_NAME"].label
-                    }}</label>
-                    <input
-                        class="form-control m-font"
-                        [maxlength]="maxLoginLength"
-                        [formControlName]="inputs['CLASSIF_NAME'].key"
-                        [readonly]="inputs['CLASSIF_NAME'].readonly"
-                        autocomplete="off"
-                    />
-                </div>
-                <div
-                    style="width: 315px"
-                    class="mar-fio-r"
-                    [formGroup]="form"
-                    [tooltip]="!form.controls['SURNAME_PATRON'].value ? 'Поле ФАМИЛИЯ И.О. не может быть пустым' : null"
-                    container="body"
-                    placement="bottom"
-                    containerClass="tooltip-error"
-                >
-                    <label [hidden]="inputs['SURNAME_PATRON'].hideLabel" [attr.for]="inputs['SURNAME_PATRON'].key">{{
-                        inputs["SURNAME_PATRON"].label
-                    }}</label>
-                    <input
-                        class="form-control m-font"
-                        maxlength="64"
-                        [formControlName]="inputs['SURNAME_PATRON'].key"
-                        [readonly]="inputs['SURNAME_PATRON'].readonly"
-                        autocomplete="off"
-                    />
-                </div>
             </div>
-        </div>
-        <!-- технический пользователь -->
-        <div class="base-login-input" style="display: flex; margin-top: -5px;">
-            <div style="position: relative;">
-                <eos-dynamic-input
-                    (keyup)="onKeyUp($event)"
-                    class="base-input-role base-input-note-dep"
-                    [input]="inputs['NOTE']"
-                    style="padding-right: 15px; width: 330px"
-                    [form]="form"
-                    [readonly]="!editMode || !formControls.get('teсhUser').value">
-                </eos-dynamic-input>
-                <div *ngIf="editMode && !!formControls.get('teсhUser').value">
-                    <span 
-                        *ngIf="getSelectNote && form.controls['NOTE'].value"
-                        style="position: absolute; top: 30px; right: 45px;"
-                        class="icon eos-adm-icon small"
-                        [ngClass]="{'eos-adm-icon-close-blue': getSelectNote}"
-                        (click)="clearDepartNote()"
-                        ></span>
-                    <span
-                        style="position: absolute; top: 30px; right: 20px;"
-                        class="icon eos-adm-icon small"
-                        [tooltip]="!getSelectNote || !form.controls['NOTE'].value ? '' : 'Введено вручную. Для выбора из справочника необходимо очистить.'"
-                        container="body"
-                        placement="bottom"
-                        containerClass="tooltip-info"
-                        [ngClass]="{'eos-adm-icon-info-blue': getSelectNote, 'eos-adm-icon-directory-book-blue': !getSelectNote || !form.controls['NOTE'].value}"
-                        (click)="getDepartForTechDueDep()">
-                    </span> <!-- eos-adm-icon-directory-book-blue eos-adm-icon-info-blue -->
+
+            <div class="wrapper-role-vibr">
+                <div class="role-vibr">
+                    <label>РОЛЬ ВИБР</label>
+                    <textarea
+                        type="text"
+                        class="input disabled area"
+                        placeholder="..."
+                        disabled
+                        [(ngModel)]="controls['SELECT_ROLE_VIBR'].value"
+                    >
+                    </textarea>
+                </div>
+
+                <div class="fake-label">
+                    <button
+                        class="btn btn-cb"
+                        [disabled]="!getCbRole"
+                        (click)="getTemplateUser(cbRole, 'roles')"
+                        [ngClass]="{ 'btn-primary': editMode, 'btn-light': !editMode }"
+                    >
+                        Настроить
+                    </button>
                 </div>
             </div>
             
-            <eos-dynamic-input
-            style="padding-top: 30px;"
-                [input]="controls['teсhUser']"
-                [form]="formControls"
-            ></eos-dynamic-input>
-        </div>
-        <!-- должностное лицо и роль -->
-        <div class="wrapper-password">
-            <eos-dynamic-input
-                style="width: 550px"
-                class="base-text-input base-input-role"
-                eosClickMode
-                [input]="controls['DUE_DEP_NAME']"
-                [form]="formControls"
-                [readonly]="!editMode"
-                (onClickChoose)="showDepChoose()"
-                (onEnterSearchEmptyResults)="showDepChooseEmpty()"
-            ></eos-dynamic-input>
-        </div>
-        <!-- должностное лицо и роль -->
-        <!-- <div class="base-login-input row-department-role">
-            <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
-                <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{ inputs["DUE_DEP_NAME"].label }}</label>
-                <div
-                    [ngClass]="{ required: inputs['DUE_DEP_NAME'].required, 'department-role-flex': true }"
-                    style="width: 534px"
-                >
-                    <span
-                        *ngIf="curentUser['DEPARTMENT_DELETE']"
-                        class="icon eos-adm-icon small icon-bin-due-dep-base-cb eos-adm-icon-bin-grey"
-                    ></span>
-                    <input
-                        style="width: 550px;"
-                        class="form-control m-font inline-block"
-                        [ngClass]="{ 'delete-department': curentUser['DEPARTMENT_DELETE'] }"
-                        readonly
-                        [formControlName]="inputs['DUE_DEP_NAME'].key"
-                        [id]="inputs['DUE_DEP_NAME'].key"
-                        type="text"
-                        [placeholder]="inputs['DUE_DEP_NAME'].label"
-                        autocomplete="off"
-                    />
-                    <span
-                        class="icon eos-adm-icon small icon-add-department span-avatar-icon"
-                        [ngClass]="{
-                            'eos-adm-icon-avatar-blue': editMode,
-                            'eos-adm-icon-avatar-grey': !editMode
-                        }"
-                        (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
-                    >
-                    </span>
+        </div> 
+
+        <div class="base-param-main">
+
+            <!-- Доступ к системам 1-й ряд -->
+            <span class="l-font">Доступ к системам</span>
+            <hr />
+            <div class="access-syst-wr">
+                <!-- <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"  (change)="[tf(), checkMeinControlAccess($event, '0')]"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="accessInputs['0-1']" [form]="formAccess" [readonly]="formAccess.get('0-1').disabled" class="base-checkbox-input" (change)="[tf(), checkMeinControlAccess($event, '0-1')]"></eos-dynamic-input> -->
+                <div class="access-syst-part">
+                    <eos-dynamic-input
+                        [input]="accessInputs['delo_web']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('delo_web').disabled"
+                        (change)="[tf(), checkMeinControlAccess($event, 'delo_web')]"
+                    ></eos-dynamic-input>
+                </div>
+                <div class="access-syst-part">
+                    <eos-dynamic-input
+                        class="base-param-radio"
+                        [input]="accessInputs['1-27']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('1-27').disabled"
+                    ></eos-dynamic-input>
                 </div>
             </div>
-        </div> -->
-        <div>
-            <eos-dynamic-input
-                class="base-text-input-cb base-input-role"
-                [input]="controls['SELECT_ROLE']"
-                [form]="formControls"
-                container="body"
-                [ngStyle]=" //{'padding-top': formControls.controls['SELECT_ROLE'].value === null ? '38px' : '0'}"
-                [readonly]="!editMode"
-                [disabled]="formControls.controls['SELECT_ROLE'].disabled"
-            ></eos-dynamic-input>
 
-            <eos-dynamic-input
-                [input]="inputs['IS_SECUR_ADM']"
-                [form]="form"
-                [readonly]="appctx"
-                tooltip="Администратор системы"
-                placement="bottom"
-                containerClass="tooltip-info"
-            ></eos-dynamic-input>
-        </div>
-        <br />
-        <div style="display: flex">
-            <div style="width: 653px">
-                <!--  -->
-                <label style="width: 100%">РОЛЬ ВИБР</label>
-                <textarea
-                    style="
-                        width: 100%;
-                        height: 72px;
-                        max-height: 72px;
-                        padding: 6px 8px 10px 8px;
-                        background-color: #fafafa;
-                        border-color: #e6e6e6;
-                    "
-                    type="text"
-                    class="input disabled area"
-                    placeholder="..."
-                    disabled
-                    [(ngModel)]="controls['SELECT_ROLE_VIBR'].value"
-                >
-                </textarea>
+            <hr style="margin-top: -5px" />
+            <!-- Доступ к системам 2-й ряд -->
+            <div class="access-syst-wr">
+                <div class="access-syst-part">
+                    <!-- <eos-dynamic-input [input]="accessInputs['26']" [form]="formAccess" [readonly]="formAccess.get('26').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
+                    <!-- <eos-dynamic-input [input]="accessInputs['23']" [form]="formAccess" [readonly]="formAccess.get('23').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
+                    <eos-dynamic-input
+                        [input]="accessInputs['25']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('25').disabled"
+                        class="base-checkbox-input"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        [input]="accessInputs['16']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('16').disabled"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        [input]="accessInputs['3']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('3').disabled"
+                        class="base-checkbox-input"
+                    ></eos-dynamic-input>
+                    <!-- <eos-dynamic-input [input]="accessInputs['21']" [form]="formAccess" [readonly]="formAccess.get('21').disabled"></eos-dynamic-input> -->
+                </div>
+                <!-- Доступ к системам 3-й ряд -->
+                <div class="access-syst-part">
+                    <eos-dynamic-input
+                        [input]="accessInputs['17']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('17').disabled"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        [input]="accessInputs['15']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('15').disabled"
+                        class="base-checkbox-input"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        [input]="accessInputs['41']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('41').disabled"
+                    ></eos-dynamic-input>
+                </div>
+                <!-- Доступ к системам 4-й ряд -->
+                <div class="access-syst-part">
+                    <eos-dynamic-input
+                        [input]="accessInputs['2']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('2').disabled"
+                        class="base-checkbox-input"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        [input]="accessInputs['5']"
+                        [form]="formAccess"
+                        [readonly]="formAccess.get('5').disabled"
+                    ></eos-dynamic-input>
+                    <button
+                        *ngIf="criptoView"
+                        [disabled]="!editMode"
+                        type="button"
+                        (click)="getSerts(template)"
+                        class="icon-electronic"
+                        [style.border]="!editMode ? '2px #e6e6e6 solid' : '2px #2196F3 solid'"
+                        [style.color]="!editMode ? '#999999' : '#2196F3'"
+                    >
+                        <span
+                            class="eos-adm-icon small"
+                            [ngClass]="[
+                                editMode
+                                    ? 'eos-adm-icon-electronic-signature-blue pointer'
+                                    : 'eos-adm-icon-electronic-signature-grey'
+                            ]"
+                        ></span>
+
+                        Выбрать сертификаты
+                    </button>
+                </div>
             </div>
-
+            <!-- Примечания onkeypress="return event.keyCode != 13;" -->
             <div>
-                <button
-                    class="btn btn-cb"
-                    [disabled]="!getCbRole"
-                    (click)="getTemplateUser(cbRole, 'roles')"
-                    [ngClass]="{ 'btn-primary': editMode, 'btn-light': !editMode }"
-                >
-                    Настроить
-                </button>
-            </div>
-        </div>
-        <!-- Доступ к системам 1-й ряд -->
-        <span class="l-font">Доступ к системам</span>
-        <hr />
-        <div class="access-syst-wr">
-            <!-- <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"  (change)="[tf(), checkMeinControlAccess($event, '0')]"></eos-dynamic-input>
-                <eos-dynamic-input [input]="accessInputs['0-1']" [form]="formAccess" [readonly]="formAccess.get('0-1').disabled" class="base-checkbox-input" (change)="[tf(), checkMeinControlAccess($event, '0-1')]"></eos-dynamic-input> -->
-            <div class="access-syst-part">
                 <eos-dynamic-input
-                    [input]="accessInputs['delo_web']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('delo_web').disabled"
-                    (change)="[tf(), checkMeinControlAccess($event, 'delo_web')]"
+                    class="note-textarea"
+                    [input]="inputs['NOTE2']"
+                    [form]="form"
+                    [readonly]="inputs['NOTE2'].readonly"
+                    style="width: 100%"
                 ></eos-dynamic-input>
             </div>
-            <div class="access-syst-part">
-                <eos-dynamic-input
-                    class="base-param-radio"
-                    [input]="accessInputs['1-27']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('1-27').disabled"
-                ></eos-dynamic-input>
-            </div>
-        </div>
-
-        <hr style="margin-top: 5px" />
-        <!-- Доступ к системам 2-й ряд -->
-        <div class="access-syst-wr">
-            <div class="access-syst-part">
-                <!-- <eos-dynamic-input [input]="accessInputs['26']" [form]="formAccess" [readonly]="formAccess.get('26').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
-                <!-- <eos-dynamic-input [input]="accessInputs['23']" [form]="formAccess" [readonly]="formAccess.get('23').disabled" class="base-checkbox-input"></eos-dynamic-input> -->
-                <eos-dynamic-input
-                    [input]="accessInputs['25']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('25').disabled"
-                    class="base-checkbox-input"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="accessInputs['16']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('16').disabled"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="accessInputs['3']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('3').disabled"
-                    class="base-checkbox-input"
-                ></eos-dynamic-input>
-                <!-- <eos-dynamic-input [input]="accessInputs['21']" [form]="formAccess" [readonly]="formAccess.get('21').disabled"></eos-dynamic-input> -->
-            </div>
-            <!-- Доступ к системам 3-й ряд -->
-            <div class="access-syst-part">
-                <eos-dynamic-input
-                    [input]="accessInputs['17']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('17').disabled"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="accessInputs['15']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('15').disabled"
-                    class="base-checkbox-input"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="accessInputs['41']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('41').disabled"
-                ></eos-dynamic-input>
-            </div>
-            <!-- Доступ к системам 4-й ряд -->
-            <div class="access-syst-part">
-                <eos-dynamic-input
-                    [input]="accessInputs['2']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('2').disabled"
-                    class="base-checkbox-input"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="accessInputs['5']"
-                    [form]="formAccess"
-                    [readonly]="formAccess.get('5').disabled"
-                ></eos-dynamic-input>
-                <button
-                    *ngIf="criptoView"
-                    [disabled]="!editMode"
-                    type="button"
-                    (click)="getSerts(template)"
-                    class="icon-electronic"
-                    [style.border]="!editMode ? '2px #e6e6e6 solid' : '2px #2196F3 solid'"
-                    [style.color]="!editMode ? '#999999' : '#2196F3'"
-                >
-                    <span
-                        class="eos-adm-icon small"
-                        [ngClass]="[
-                            editMode
-                                ? 'eos-adm-icon-electronic-signature-blue pointer'
-                                : 'eos-adm-icon-electronic-signature-grey'
-                        ]"
-                    ></span>
-
-                    Выбрать сертификаты
-                </button>
-            </div>
-        </div>
-        <hr style="margin-top: 5px" />
-        <!-- Примечания onkeypress="return event.keyCode != 13;" -->
-        <div>
-            <eos-dynamic-input
-                class="note-textarea"
-                [input]="inputs['NOTE2']"
-                [form]="form"
-                [readonly]="inputs['NOTE2'].readonly"
-                style="width: 100%"
-            ></eos-dynamic-input>
         </div>
     </div>
+
 </div>
 
 <div class="base-param-wrapper">
@@ -354,6 +314,16 @@
 </div>
 
 <div *ngIf="isShell" class="shell"></div>
+
+<ng-template #tech>
+    <div class="wrapper-avatar">
+        <div class="avatar-link">
+            <span
+                class="avatar-img eos-adm-icon eos-adm-icon-Techman-Grey small"
+            ></span>
+        </div>
+    </div>
+</ng-template>
 
 <ng-template #template>
     <eos-base-serts (closeModal)="closeSerts()"></eos-base-serts>
