@@ -203,16 +203,16 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     getObjectForSystems(): void {
         const split = this.parseSustemParam(this.CurrentUser['data']['AV_SYSTEMS']);
         const delo = !!(+split[0] && !+split[1]);
-        const delo_deloWeb = !!(+split[0] && +split[1]);
+        //const delo_deloWeb = !!(+split[0] && +split[1]);
         const deloWeb = !!((+split[1] || +split[27]) && !+split[0]);
-        if (!delo && !delo_deloWeb && !deloWeb) {
+        if (!delo /* && !delo_deloWeb && !deloWeb */) {
             this.fillDeloField(false, false, false, false);
         } else {
             if (delo) {
                 this.fillDeloField(true, false, false, false);
-            } else if (delo_deloWeb) {
+            } /* else if (delo_deloWeb) {
                 this.fillDeloField(false, true, false, false);
-            } else if (!delo_deloWeb && deloWeb) {
+            }  */else if (/* !delo_deloWeb &&  */deloWeb) {
                 if (+split[1] && !+split[27] && !+split[0]) {
                     this.fillDeloField(false, false, true, false);
                 } else if (!+split[1] && +split[27] && !+split[0]) {
@@ -235,7 +235,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         this.flagSustem = true;
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean): void {
-        this._selectedUser.ArraySystemHelper.delo_deloweb.checked = delo_deloweb;
+        // this._selectedUser.ArraySystemHelper.delo_deloweb.checked = delo_deloweb;
         this._selectedUser.ArraySystemHelper.delowebLGO.checked = delowebLGO;
         this._selectedUser.ArraySystemHelper.delowebKL.checked = delowebKL;
     }

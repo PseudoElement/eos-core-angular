@@ -123,9 +123,9 @@ export class EosReportUsersStatsComponent implements OnInit {
                 this._errorSrv.errorHandler(error);
             });
     }
-    deletDeloDeloWeb(any) {
-        delete any['delo_deloweb'];
-        return any;
+    deletDeloDeloWeb(ArraySystem: object) {
+        delete ArraySystem['delo_deloweb'];
+        return ArraySystem;
     }
 
     // getProtectedUsers(data: any, usNum: number) {
