@@ -122,15 +122,16 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
 
     public getFullSearchCriteries(data) {
         if(data.srchMode === 'common'){
+            const newData = JSON.parse(JSON.stringify(data));
             const filteredField = {};
-            const searchDate = data.common;
+            const searchDate = newData.common;
             Object.keys(searchDate).forEach(_key => {
                 if (String([searchDate[_key]]).trim().length) {
                     filteredField[_key] = searchDate[_key];
                 }
             });
-            data.common = super.getFullSearchCriteries(filteredField);
-            return data;
+            newData.common = super.getFullSearchCriteries(filteredField)
+            return newData;
         } else {
             return data;
         }
