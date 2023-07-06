@@ -1,0 +1,33 @@
+<div class="input-param-wrapper param-conversion" *ngIf="inputs && isLoading">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="(this.form.status === 'INVALID')"
+        [editBtn]="true"
+        (editForm)="edit()"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <!-- <div class="title-under-conversion-table">
+            <div>
+                <span>{{form.controls['rec.Name'].value}}</span>
+            </div>
+            <div>
+                <span (click)="openAccordion()" class="icon eos-adm-icon small float-right pull-right"
+                    [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': openAcord, 'eos-adm-icon-arrow-v-blue-top': !openAcord}"></span>
+            </div>
+        </div> -->
+        <div *ngIf="!openAcord">
+            <eos-dynamic-input
+                [input]="inputs['rec.LibraryName']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.LibraryDirectory']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+</div>

@@ -79,3 +79,7 @@ export interface IFdulzParams {
     Library: ILibrary;
 }
 
+export interface IExtendedParams {
+    Library: ILibrary;
+}
+

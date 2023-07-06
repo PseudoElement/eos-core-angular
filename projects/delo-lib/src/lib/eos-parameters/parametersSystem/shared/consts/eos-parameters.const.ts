@@ -18,7 +18,7 @@ export enum E_PARMS_PAGES {
     "now-organiz" = "now-organiz",
     conversion = "conversion",
     "unloading-arch" = "unloading-arch",
-    "control-cache" = "control-cache",
+    "extended-protocol" = "extended-protocol",
     licensing = "licensing",
 }
 export const EOS_PARAMETERS_TAB = [{
@@ -95,6 +95,11 @@ export const EOS_PARAMETERS_TAB = [{
 {
     title: 'Архивное хранилище',
     url: E_PARMS_PAGES['unloading-arch'],
+    visible: true
+},
+{
+    title: 'Расширенный протокол',
+    url: E_PARMS_PAGES['extended-protocol'],
     visible: true
 },
 {
