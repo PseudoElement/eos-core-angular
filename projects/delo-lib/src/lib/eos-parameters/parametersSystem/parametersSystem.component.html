@@ -160,6 +160,14 @@
                 [btnError] = "disableSave"
             ></eos-param-inline-scanning>
         </ng-container>
+        <ng-container *ngSwitchCase="'extended-protocol'">
+            <eos-extended-protocol
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-extended-protocol>
+        </ng-container>
     </ng-container>
 </div>
 
