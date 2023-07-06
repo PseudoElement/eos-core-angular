@@ -29,14 +29,14 @@
                 *ngIf="showBtnNested()"
                 #nested
                 tooltip="Показывать вложенные"
-                containerClass="tooltip-info" 
+                containerClass="tooltip-info"
                 placement="bottom"
                 (click)="toggleNested()"
                 [ngClass]="{active:onlyView}"
                 >
-                    <span 
+                    <span
                     class="eos-adm-icon small"
-                    [ngClass]="{                        
+                    [ngClass]="{
                         'eos-adm-icon-tree-blue':!onlyView,
                         'eos-adm-icon-tree-white':onlyView
                         }"
@@ -97,7 +97,7 @@
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
                         </span>
                     </ng-template>
-                    <span class="user-list-third-colomn likeLink ">Тип
+                    <span *ngIf="this._apiSrv.flagDisableUser === true" class="user-list-third-colomn likeLink ">Тип
                         <span *ngIf="_apiSrv.srtConfig.tip.checked"></span>
                     </span>
                     <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && _apiSrv.sortDelUsers !== true); else dueSort" class="user-list-two-colomn likeLink user-list-two-colomn-title">Должностное лицо</span>
@@ -108,7 +108,7 @@
                         <span *ngIf="_apiSrv.srtConfig.fullDueName.checked && _apiSrv.flagDelitedPermanantly"
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
                         <!-- </span> -->
-                       
+
                     </span>
                     </ng-template>
                     <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && _apiSrv.sortDelUsers !== true); else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
@@ -139,7 +139,7 @@
                             <div class="user-select-node-t" (click)="selectedNode(user)">
                                 <span class="user-list-fifth-column">{{user.data.SURNAME_PATRON}}</span>
                                 <span class="user-list-fourth-colomn">{{user.login}}</span>
-                                <span class="user-list-third-colomn">
+                                <span class="user-list-third-colomn" *ngIf="this._apiSrv.flagDisableUser === true">
                                     <span *ngIf="user.deleted" class="eos-adm-icon eos-adm-icons-user-deleted-grey small"
                                         tooltip="Удалён"
                                         placement="bottom"
@@ -150,7 +150,7 @@
                                     <span *ngIf="user.blockedSystem && !user.deleted"
                                         class="eos-adm-icon eos-adm-icon-Blockeduser-Red  small"></span>
                                 </span>
-                                <span 
+                                <span
                                     #twoColomnElement
                                     id="{{user.id}}DueName"
                                     class="user-list-two-colomn"
@@ -174,7 +174,7 @@
                                     class="eos-adm-icon eos-adm-icon-department-grey small icon-user"></span>...
                                 </span>
                                 <ng-template #depUser>
-                                    <span 
+                                    <span
                                         #firstColomnElement
                                         id="{{user.id}}Dep"
                                         [isDisabled]="isDisableObj[firstColomnElement.id]"
