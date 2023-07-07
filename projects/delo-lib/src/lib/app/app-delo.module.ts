@@ -69,6 +69,7 @@ import { ExetentionsRigthsServiceLib } from '../eos-rest/addons/extentionsRigts.
 import { ExetentionsUserParamsLib } from '../eos-rest/addons/ExtentionsUserParamsLib.service';
 import { EosCommonOverriveService } from './services/eos-common-overrive.service';
 import { logoOverrideServices } from './services/logo-overrride.service';
+import { UserSessionGuard } from './guards/user-session.guard';
 /* end guards */
 
 @NgModule({
@@ -120,6 +121,7 @@ import { logoOverrideServices } from './services/logo-overrride.service';
         { provide: LOCALE_ID, useValue: 'ru' },
         { provide: ErrorHandler, useClass: EosErrorHandler },
         AuthorizedGuard,
+        UserSessionGuard,
         UnauthorizedGuard,
         CanDeactivateGuard,
         CanDeactivateDictGuard,

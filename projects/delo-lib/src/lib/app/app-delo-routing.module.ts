@@ -40,6 +40,7 @@ import { CommonAccessSystemSettingsGuard } from './guards/common-access-system-s
 import { SystemTechnologistGuard } from './guards/system-technologist.guard';
 import { AboutSystemsComponent } from '../about-systems/about-systems.component';
 import { ToolsControlCache } from '../eos-instruments/components/control-cache/control-cache.component';
+import { UserSessionGuard } from './guards/user-session.guard';
 
 // import { BackgroundTaskGuard } from './guards/background-tasks.guard';
 /// import { environment } from 'environments/environment';
@@ -58,51 +59,51 @@ const formDictionariesComponent: Routes = [
 ];
 
 const childrenDictionariesComponent2: Routes = [
-   {
-    path: ':dictionaryId',
-    canDeactivate: [CanDeactivateDictGuard],
-    children: [{
-        path: ':nodeId',
-        data: { title: 'Запись', showInBreadcrumb: false },
+    {
+        path: ':dictionaryId',
+        canDeactivate: [CanDeactivateDictGuard],
         children: [{
-            path: '',
-            component: DictionaryComponent,
-            pathMatch: 'full',
-        }, {
-            path: 'edit',
-            children: [
-                {
-                    path: '',
-                    redirectTo: '0',
-                    pathMatch: 'full',
-                },
-                {
-                    path: ':tabNum',
-                    component: CardFromComponent,
-                    canDeactivate: [CanDeactivateGuard],
-                }],
-        }, {
-            path: 'view',
-            children: [
-                {
-                    path: '',
-                    redirectTo: '0',
-                    pathMatch: 'full',
-                },
-                {
-                    path: ':tabNum',
-                    component: CardFromComponent,
-                }],
+            path: ':nodeId',
+            data: { title: 'Запись', showInBreadcrumb: false },
+            children: [{
+                path: '',
+                component: DictionaryComponent,
+                pathMatch: 'full',
+            }, {
+                path: 'edit',
+                children: [
+                    {
+                        path: '',
+                        redirectTo: '0',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: ':tabNum',
+                        component: CardFromComponent,
+                        canDeactivate: [CanDeactivateGuard],
+                    }],
+            }, {
+                path: 'view',
+                children: [
+                    {
+                        path: '',
+                        redirectTo: '0',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: ':tabNum',
+                        component: CardFromComponent,
+                    }],
+            }],
         }],
-    }],
-}];
+    }];
 
 const childrenDictionariesComponent: Routes = [
     {
-    path: '',
-    pathMatch: 'full',
-    component: DictionariesComponent,
-    canActivate: [AuthorizedGuard],
+        path: '',
+        pathMatch: 'full',
+        component: DictionariesComponent,
+        canActivate: [AuthorizedGuard],
     },
     {
         path: ':dictionaryId',
@@ -215,15 +216,15 @@ const routes: Routes = [
         data: { title: 'Главная', showInBreadcrumb: false },
         canActivate: [AuthorizedGuard, SystemTechnologistGuard],
         children: [{
-                path: '',
-                pathMatch: 'full',
-                component: DesktopComponent,
-            },
-            {
-                path: ':desktopId',
-                component: DesktopComponent,
-                data: { title: 'Главная', showInBreadcrumb: false, showBreadcrumb: false }
-            }
+            path: '',
+            pathMatch: 'full',
+            component: DesktopComponent,
+        },
+        {
+            path: ':desktopId',
+            component: DesktopComponent,
+            data: { title: 'Главная', showInBreadcrumb: false, showBreadcrumb: false }
+        }
         ]
     },
     {
@@ -382,7 +383,7 @@ const routes: Routes = [
             },
             {
                 path: 'user-session',
-                canActivate: [AuthorizedGuard, CommonAccessSystemSettingsGuard],
+                canActivate: [AuthorizedGuard, UserSessionGuard],
                 component: PluginReactComponent,
                 data: {
                     title: 'Текущие сессии пользователей',
