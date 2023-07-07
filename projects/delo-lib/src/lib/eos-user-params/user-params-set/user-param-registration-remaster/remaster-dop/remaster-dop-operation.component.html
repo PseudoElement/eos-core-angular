@@ -33,7 +33,7 @@
         
     </div>
 </div>
-<div [hidden]="this.appMode.hasMode && (appMode.tkDoc || appMode.tk)" class="user-group-form">
+<div [hidden]="this.appMode.hasMode && (appMode.tkDoc || appMode.tk || appMode.cbr)" class="user-group-form">
     <span>Заполнять значениями от предыдущей РК реквизиты:</span>
     <div class="inputs-inline">
         <eos-dynamic-input
@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<div [hidden]="appMode.cbr"class="user-group-form">
+<div [hidden]="appMode.cbr" class="user-group-form">
     <span>Печатать регистрационный штамп:</span> <!--  в приложении Документы -->  <!--  -->
     <div class="inputs-inline">
         <eos-dynamic-input
@@ -69,7 +69,7 @@
     </div>
 </div>
 
-<div class="user-group-form user-group-form-radio-vertical">
+<div [hidden]="appMode.cbr" class="user-group-form user-group-form-radio-vertical">
     <span>Присваивать гриф доступа:</span>
     <eos-dynamic-input
         class="input-right"
