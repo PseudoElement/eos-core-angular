@@ -71,6 +71,11 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
             title: ''
         },
         {
+            key: 'CBR_AUTO_NEXT_CARD',
+            type: 'boolean',
+            title: 'Открывать следующий в перечне'
+        },
+        {
             key: 'FOLDERCOLORSTATUS',
             type: 'text',
             title: 'Поступившие'
@@ -174,6 +179,11 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
         },
         {
             key: 'OZN_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CBR_AUTO_NEXT_CARD',
             type: '',
             title: '',
         },
