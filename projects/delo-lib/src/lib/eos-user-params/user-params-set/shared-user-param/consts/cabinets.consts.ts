@@ -11,6 +11,8 @@ export const SEND_ORDER_TO_FOR_ARM = {
     type: 'boolean',
     title: 'Направлять резолюции в папку «На контроле» кабинета автора в АРМ «ДелоWeb»',
 };
+
+
 export const CABINETS_USER_FOLDERS: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
@@ -67,6 +69,7 @@ export const CABINETS_USER_FOLDERS: IBaseUsers = {
         },
         {
             key: 'OZN_FILL_REPLY_TEXT',
+            length: 2000,
             type: 'string',
             title: ''
         },
