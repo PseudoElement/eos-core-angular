@@ -219,6 +219,7 @@
             <div class="required-emptiness">
                 <input
                     #NOTE
+                    [maxLength]="255"
                     [formControlName]="inputs['NOTE'].key"
                     [(ngModel)]="department.NOTE"
                     (input)="changeNote(NOTE)"
