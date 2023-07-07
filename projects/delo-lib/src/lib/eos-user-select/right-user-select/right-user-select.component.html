@@ -38,16 +38,7 @@
                 </div>
                 <div class='info-note'>
                     <span class="rt-grey">Подразделение</span>
-                    <span class="rt-role-name" *ngIf="CurrentUser">
-                        <a  *ngIf="CurrentUser.deep else emptyDepartments"
-                            (click)="writeRecentUrl()"
-                            [routerLink]="['/spravochniki','departments', CurrentUser.deep, 'view', '0']"
-                            class="cabinet-title"
-                        >
-                        {{ departments }}
-                        </a>
-                        <ng-template #emptyDepartments>{{ departments }}</ng-template>
-                    </span>
+                    <span class="rt-role-name" *ngIf="CurrentUser">{{departments}}</span>
                 </div>
             </div>
 
