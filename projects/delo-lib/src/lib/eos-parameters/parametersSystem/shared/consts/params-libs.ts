@@ -45,9 +45,12 @@ export const PARAMS_LIBS: IBaseParameters = {
             type: 'radio',
             title: 'МЕСТО ХРАНЕНИЯ',
             options: [
-                {value: 'DB2', title: 'База данных единым блоком'},
-                {value: 'DB', title: 'База данных несколькими блоками'},
-                {value: 'STORAGE', title: 'Файловое хранилище'},
+                {value: 'GRStorage14', title: 'База данных единым блоком'},
+                {value: 'GRStorage11', title: 'База данных несколькими блоками'},
+                {value: 'GRStorage12', title: 'Файловое хранилище'},
+                {value: 'DB2', title: 'База данных единым блоком (DB2)'},
+                {value: 'DB', title: 'База данных несколькими блоками (DB)'},
+                {value: 'STORAGE', title: 'Файловое хранилище (STORAGE)'},
             ]
         },
     ]

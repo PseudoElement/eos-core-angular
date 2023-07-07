@@ -43,13 +43,13 @@
         ></eos-dynamic-input>
         <eos-dynamic-input
           class="eos-dynamic-input-title-custom"
-          [hidden]="form.controls['rec.EdmsParm'].value === 'DB2' || form.controls['rec.EdmsParm'].value === 'DB'"
+          [hidden]="getHidden()"
           [input]="inputs['rec.CommonName']"
           [form]="form"
         ></eos-dynamic-input>
         <div style="display: flex;">
           <eos-dynamic-input
-            [hidden]="form.controls['rec.EdmsParm'].value === 'DB2' || form.controls['rec.EdmsParm'].value === 'DB'"
+            [hidden]="getHidden()"
             class="padding-item-left eos-dynamic-input-title-custom"
             [input]="inputs['rec.CommonDirectory']"
             [form]="form"
@@ -57,7 +57,7 @@
           <div 
             style="margin-top: 2px;"
             class="padding-item-right"
-            [ngStyle]="{'padding-left': form.controls['rec.EdmsParm'].value === 'DB2' || form.controls['rec.EdmsParm'].value === 'DB' ? '0px' : '8px'}">
+            [ngStyle]="{'padding-left': getHidden() ? '0px' : '8px'}">
             <span class="title-span">Макс. размер файлов (МБ)</span>
             <eos-dynamic-input  
               [input]="inputs['rec.MaxFileSize']"
