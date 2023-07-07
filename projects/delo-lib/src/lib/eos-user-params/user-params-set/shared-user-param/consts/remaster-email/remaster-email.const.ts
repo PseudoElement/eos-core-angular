@@ -1,6 +1,6 @@
 import { IBaseUsers} from '../../../../shared/intrfaces/user-params.interfaces';
 import * as Fields from './remaster-fields.const';
-const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
+// const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
 
 export const REGISTRATION_REMASTER_USER: IBaseUsers = {
     id: 'registration',
@@ -332,59 +332,107 @@ export const REGISTRATION_SCAN: IBaseUsers = {
     apiInstance: 'USER_PARMS',
     fields: [
         {
-            key: 'SHABLONBARCODE',
+            key: 'SAVE_FORMAT',
             type: 'select',
-            title: '',
+            title: 'ФОРМАТ СОХРАНЕНИЯ ЭЛЕКТРОННОГО ОБРАЗА ДОКУМЕНТА:',
             options: [
+                {value: '0', title: 'Простой текстовый файл (.txt)'},
+                {value: '1', title: 'Rich Text Format (.rtf)'},
+                {value: '2', title: 'MS Office (.docx)'},
+                {value: '3', title: 'Open formats (.odt)'},
+                {value: '4', title: 'Portable Document Format (.pdf)'}
             ]
         },
         {
-            key: 'SHABLONBARCODEL',
-            type: 'select',
+            key: 'FIRST_PAGE_TYPE',
+            type: 'radio',
             title: '',
+            readonly: false,
             options: [
+                {value: '0', title: 'Оригинал'},
+                {value: '1', title: 'Отдельный лист'},
+                {value: '2', title: 'Обратная сторона'}
             ]
         },
         {
-            key: 'SAVEFORMAT',
+            key: 'BARCODE_LOCATION',
             type: 'select',
             title: '',
             options: [
-
+                {value: '0', title: 'Правый нижний'},
+                {value: '1', title: 'Правый верхний'},
+                {value: '2', title: 'Левый нижний'},
+                {value: '3', title: 'Левый верхний'},
             ]
+        },
+        {
+            key: 'SAERCH_ONLY',
+            type: 'boolean',
+            title: 'Штрих-код только для поиска'
+        },
+        {
+            key: 'ORIENTATION_TYPE',
+            type: 'radio',
+            title: 'Ориентация листа',
+            readonly: false,
+            options: [
+                {value: '0', title: 'Книжная'},
+                {value: '1', title: 'Альбомная'}
+            ]
+        },
+        {
+            key: 'NEED_VISUALITY',
+            type: 'boolean',
+            title: 'Визуальный контроль'
         },
         {
             key: 'LOCKFILE_SSCAN',
             type: 'boolean',
             title: 'Запретить редактирование прикрепленного файла'
         },
-        {
-            key: 'TYPE_PRINT_BARCODE',
-            type: 'radio',
-            title: '',
-            readonly: false,
-            options: [
-                {value: '0', title: 'Документе'},
-                {value: '2', title: 'Обороте документа'},
-                {value: '1', title: 'Чистом листе'}
-            ]
-        },
-        {
-            key: 'COUNT_PAGES_FOR_PRINT_BARCODE',
-            type: 'numberIncrement',
-            title: 'С пояснительной строкой',
-            pattern: REG_MIN_VAL
-        },
-        {
-            key: 'EXPLANATION_STRING_FOR_PRINT_BARCODE',
-            type: 'boolean',
-            title: 'С пояснительной строкой'
-        },
-        {
-            key: 'FORM_BARCODE_FOR_SEARCH',
-            type: 'boolean',
-            title: 'Формировать штрих-код только для поиска'
-        },
+        // {
+        //     key: 'SHABLONBARCODEL',
+        //     type: 'select',
+        //     title: '',
+        //     options: [
+        //     ]
+        // },
+        // {
+        //     key: 'SAVEFORMAT',
+        //     type: 'select',
+        //     title: '',
+        //     options: [
+
+        //     ]
+        // },
+        
+        // {
+        //     key: 'TYPE_PRINT_BARCODE',
+        //     type: 'radio',
+        //     title: '',
+        //     readonly: false,
+        //     options: [
+        //         {value: '0', title: 'Документе'},
+        //         {value: '2', title: 'Обороте документа'},
+        //         {value: '1', title: 'Чистом листе'}
+        //     ]
+        // },
+        // {
+        //     key: 'COUNT_PAGES_FOR_PRINT_BARCODE',
+        //     type: 'numberIncrement',
+        //     title: 'С пояснительной строкой',
+        //     pattern: REG_MIN_VAL
+        // },
+        // {
+        //     key: 'EXPLANATION_STRING_FOR_PRINT_BARCODE',
+        //     type: 'boolean',
+        //     title: 'С пояснительной строкой'
+        // },
+        // {
+        //     key: 'FORM_BARCODE_FOR_SEARCH',
+        //     type: 'boolean',
+        //     title: 'Формировать штрих-код только для поиска'
+        // },
     ]
 };
 

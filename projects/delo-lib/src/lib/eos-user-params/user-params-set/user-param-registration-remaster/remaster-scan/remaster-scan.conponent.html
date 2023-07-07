@@ -1,92 +1,82 @@
-<div *ngIf="inputs">
-    <ng-container > <!-- *ngIf="!isCbBase && !appMode.cbr ; else notSettings" -->
-        <div class="user-group-form" *ngIf="!appMode.tkDoc && !isCbBase">
-            <div class="inputs-inline">
-                <span class="input-title">Печать штрих-кода на:</span>
-                <eos-dynamic-input
-                    class="input-right"
-                    [ngStyle]="{'width': '33%'}"
-                    [input]="inputs['rec.TYPE_PRINT_BARCODE']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    *ngIf="form.controls['rec.TYPE_PRINT_BARCODE'].value === '1'"
-                    class="incr-scan"
-                    [input]="inputs['rec.COUNT_PAGES_FOR_PRINT_BARCODE']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <div class="incr-scan"
-                     *ngIf="form.controls['rec.TYPE_PRINT_BARCODE'].value === '1'"
-                >
-                    <span>&nbsp;шт.</span>
-                </div>
-            </div>
-            <eos-dynamic-input *ngIf="!appMode.tkDoc && !isCbBase"
-                [input]="inputs['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-        </div>
+<div *ngIf="inputs" class="remaster-scan-card">
         <div class="user-group-form">
+            <div style="display: flex; align-items: center;">
+                <eos-dynamic-input
+                    [ngStyle]="{'width': '60%', 'margin-top': '10px', 'margin-right': '20px'}"
+                    [input]="inputs['rec.SAVE_FORMAT']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="position-boolean-sh"
+                    [input]="inputs['rec.SAERCH_ONLY']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+            
+        </div>
+        <div class="title-under-conversion-table">
             <div>
-                <span>Ориентация листа:</span>
+                <span>Место печати штрих-кода</span>
             </div>
-            <br>
-            <div class="radio-form-list">
-                <div [ngStyle]="{'width': '45%', 'margin-right': '5%'}">
-                    <div class="type-scan-sp">
-                        <span>Книжная</span>
-                    </div>
+            <div>
+                <span (click)="openAccordion()" class="icon eos-adm-icon small float-right pull-right"
+                    [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': openAcord, 'eos-adm-icon-arrow-v-blue-top': !openAcord}"></span>
+            </div>
+        </div>
+        <div *ngIf="!openAcord">
+            <div class="first-radio">
+                <eos-dynamic-input
+                [input]="inputs['rec.FIRST_PAGE_TYPE']"
+                [form]="form"
+                [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+            
+        </div>
+        <div style="margin-top: '10px'" class="title-under-conversion-table">
+            <div style="width: '70%'">
+                <span>Ориентация листа и расположение штрих-кода</span>
+            </div>
+            <div style="width: '30%'">
+                <span (click)="openAccordionSecond()" class="icon eos-adm-icon small float-right pull-right"
+                    [ngClass]="{'eos-adm-icon-arrow-v-blue-bottom': openAcordSecond, 'eos-adm-icon-arrow-v-blue-top': !openAcordSecond}"></span>
+            </div>
+        </div>
+        <div *ngIf="!openAcordSecond">
+            <eos-dynamic-input
+                class="select-not-label"
+                style="width: 60%;"
+                [input]="inputs['rec.BARCODE_LOCATION']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+       <!--   -->
+            <div style="display: flex; margin-top: 20px;">
+                <span style="width: 80px; height: 80px;" class="icon eos-adm-icon small" [ngClass]="getIcon"></span>
+                <div class="second-radio">
                     <eos-dynamic-input
-                        [input]="inputs['rec.SHABLONBARCODE']"
+                        style="margin-left: 20px;"
+                        [input]="inputs['rec.ORIENTATION_TYPE']"
                         [form]="form"
                         [readonly]="false"
                     ></eos-dynamic-input>
                 </div>
-                <div [ngStyle]="{'width': '45%'}">
-                    <div class="type-scan-sp">
-                        <span>Альбомная</span>
-                    </div>
-                    <eos-dynamic-input
-                        [input]="inputs['rec.SHABLONBARCODEL']"
-                        [form]="form"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <eos-dynamic-input
+                [input]="inputs['rec.NEED_VISUALITY']"
+                [form]="form"
+                [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.LOCKFILE_SSCAN']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
             </div>
         </div>
-        <div class="user-group-form" *ngIf="!appMode.tkDoc">
-            <eos-dynamic-input
-                [input]="inputs['rec.FORM_BARCODE_FOR_SEARCH']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-            <br>
-        </div>
-    </ng-container>
-    <ng-template #notSettings>
-        <div class="not-settings-container">
-            <span [ngStyle]="{display: 'flex',  justifyContent: 'center'}">Настройки для печати штрих-кода отсутствуют</span>
-        </div>
-    </ng-template>
-        <div class="user-group-form">
-            <span>Формат сохранения документа:</span>
-            <eos-dynamic-input
-                [ngStyle]="{'width': '45%', 'margin-top': '20px'}"
-                [input]="inputs['rec.SAVEFORMAT']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-        </div>
-        <eos-dynamic-input
-            [input]="inputs['rec.LOCKFILE_SSCAN']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-
     <br>
-
 </div>
 

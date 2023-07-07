@@ -1,22 +1,17 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { REGISTRATION_SCAN } from '../../shared-user-param/consts/remaster-email/remaster-email.const';
 import { InputControlService } from '../../../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
-import { FORMAT_CL, DOC_TEMPLATES } from '../../../../eos-rest/interfaces/structures';
-import { IFieldDescriptor } from '../../../../eos-dictionaries/interfaces';
 import { AppContext } from '../../../../eos-rest/services/appContext.service';
 import { IUserSettingsModes } from '../../../shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-scan',
     templateUrl: 'remaster-scan.conponent.html',
-    styleUrls: ['remaster-scan.conponent.scss'],
     providers: [FormHelperService]
 })
 
@@ -32,13 +27,15 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     public inputs;
     public form: FormGroup;
     public isCbBase: boolean = false;
+    public openAcord = false;
+    public openAcordSecond = false;
     private prepareInputs;
     private prapareData;
     private countError: number = 0;
     private prepareDefaultForm;
     private ngUnsub: Subject<any> = new Subject();
     private newDataMap: Map<string, any> = new Map();
-    private btnDisabled: boolean = false;
+    // private btnDisabled: boolean = false;
     constructor(
         private formHelp: FormHelperService,
         private inpSrv: InputControlService,
@@ -80,22 +77,22 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     if (this.form) {
                         this.form.enable({ emitEvent: false });
-                        this.checkDisableInputs();
                     }
                 });
 
             });
     }
-
+    get getIcon() {
+        const location = this.form.controls['rec.BARCODE_LOCATION'].value;
+        const orientation = this.form.controls['rec.ORIENTATION_TYPE'].value;
+        let iconFirst = orientation === '0' ? 'portrait' : 'landscape';
+        let iconSecond = location === '0' || location === '2' ? 'bottom' : 'top';
+        let iconThree = location === '2' || location === '3' ? 'left' : 'right';
+        return 'eos-adm-icon-{0}-{1}-{2}'.replace('{0}', iconFirst).replace('{1}', iconSecond).replace('{2}', iconThree);
+    }
     ngOnInit() {
         this.isCbBase = this.appCtx.cbBase;
-        Promise.all([
-            this._RemasterService.getScanShablonBarCode(),
-            this._RemasterService.getScanShablonBarCodeL(),
-            this._RemasterService.getScanFormatCl(),
-        ]).then((data) => {
-            this.fillOptionsForConst(data);
-            this.fillFormatCl(data[2]);
+        Promise.all([]).then((data) => {
             this.pretInputs();
             this.form = this.inpSrv.toFormGroup(this.inputs);
             if (this.isCurrentSettings) {
@@ -104,7 +101,6 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                 Object.keys(this.prapareData).forEach((key) => {
                     def['rec.' + key] = this.prapareData[key];
                 });
-                this.checkFlag(def);
             } else {
                 this.form.disable({emitEvent: false});
             }
@@ -113,91 +109,11 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             console.log(error);
         }));
     }
-    checkDisableInputs() {
-        if (+this.accessSustem[3] === 0 && +this.accessSustem[15] === 0) {
-            this.form.disable({ emitEvent: false });
-            return;
-        }
-        if (+this.accessSustem[3] === 0 && +this.accessSustem[15] === 1) {
-            this.form.controls['rec.LOCKFILE_SSCAN'].disable({ onlySelf: true, emitEvent: false });
-            return;
-        }
-        if (+this.accessSustem[3] === 1 && +this.accessSustem[15] === 0) {
-            this.form.controls['rec.SHABLONBARCODE'].disable({ onlySelf: true, emitEvent: false });
-            this.form.controls['rec.SHABLONBARCODEL'].disable({ onlySelf: true, emitEvent: false });
-            this.form.controls['rec.SAVEFORMAT'].disable({ onlySelf: true, emitEvent: false });
-            return;
-        }
-        if (this.form.controls['rec.SHABLONBARCODE'].value === 'barcode5.dot' ||
-            this.form.controls['rec.SHABLONBARCODEL'].value === 'barcodeL5.dot' ||
-            this.form.controls['rec.TYPE_PRINT_BARCODE'].value === '0'
-        ) {
-            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].disable({ onlySelf: true, emitEvent: false });
-        }
-
+    openAccordion() {
+        this.openAcord = !this.openAcord;
     }
-
-
-    checkFlag(data) {
-        if (data['rec.SHABLONBARCODE'] === 'barcode5.dot' ||
-            data['rec.SHABLONBARCODEL'] === 'barcodeL5.dot' ||
-            data['rec.TYPE_PRINT_BARCODE'] === '0') {
-            data['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'] = false;
-            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].patchValue(false, { onlySelf: true });
-            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].disable({ onlySelf: true, emitEvent: false });
-        }
-        if (data['rec.SHABLONBARCODE'] !== 'barcode5.dot' &&
-            data['rec.SHABLONBARCODEL'] !== 'barcodeL5.dot' &&
-            data['rec.TYPE_PRINT_BARCODE'] !== '0') {
-            this.form.controls['rec.EXPLANATION_STRING_FOR_PRINT_BARCODE'].enable({ onlySelf: true, emitEvent: false });
-        }
-    }
-
-    fillOptionsForConst(data): void {
-        REGISTRATION_SCAN.fields.map((field: IFieldDescriptor) => {
-            if (field.key === 'SHABLONBARCODE') {
-                return this.setOptions(data[0], field);
-            }
-            if (field.key === 'SHABLONBARCODEL') {
-                return this.setOptions(data[1], field);
-            }
-            return field;
-        });
-    }
-    setOptions(data: DOC_TEMPLATES[], field: IFieldDescriptor) {
-        if (data.length && (field.options.length < data.length)) {
-            data.forEach((el: DOC_TEMPLATES) => {
-                field.options.push({
-                    value: el['NAME_TEMPLATE'],
-                    title: el['DESCRIPTION']
-                });
-            });
-        }
-        return field;
-    }
-    fillFormatCl(data): void {
-        const options: Array<any> = REGISTRATION_SCAN.fields[2].options;
-        if (data.length && (options.length <= data.length - 1)) {
-            data.forEach((el: FORMAT_CL) => {
-                options.push({
-                    value: el.ISN_LCLASSIF,
-                    title: `${el.NOTE}, ${this.formatText(el)}`
-                });
-            });
-        }
-    }
-    formatText(data: FORMAT_CL): string {
-        let fTName = '';
-        let Gname = '';
-        // text format
-        if (data.FORMAT_TNAME !== 'no') {
-            fTName = data.FORMAT_TNAME === 'doc' || data.FORMAT_TNAME === 'xls' ? `${data.FORMAT_TNAME}(x)` : data.FORMAT_TNAME;
-        }
-        // img format
-        if (data.FORMAT_GNAME !== 'no') {
-            Gname = fTName ? `, ${data.FORMAT_GNAME}` : data.FORMAT_GNAME;
-        }
-        return fTName + Gname;
+    openAccordionSecond() {
+        this.openAcordSecond = !this.openAcordSecond;
     }
     setNewValInputs(): void {
         Object.keys(this.form.controls).forEach(inp => {
@@ -216,20 +132,21 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                 takeUntil(this.ngUnsub)
             )
             .subscribe(data => {
-                this.checkFlag(data);
                 Object.keys(data).forEach(item => {
-                    if (!this.checkChanges(data, item)) {
-                        this.countError++;
-                    }
+                  if (!this.checkChanges(data, item)) {
+                      this.countError++;
+                  }
                 });
-                this.pushChenge.emit([{
-                    btn: this.countError > 0,
-                    data: this.newDataMap
-                }, this.form.value]);
-                this.errorSave.emit(this.form.invalid);
-                this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
+                  if (this.countError) {
+                        this.pushChenge.emit([{
+                          btn: this.countError > 0,
+                          data: this.newDataMap
+                      }, this.form.value]);
+                } else {
+                  this.pushChenge.emit(false);
+                }
                 this.countError = 0;
-            });
+              });
     }
 
     checkChanges(data, item: string): boolean {
@@ -266,12 +183,10 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         }
     }
     cancel(): void {
-        if (this.btnDisabled) {
          //   this.pretInputs();
-            Object.keys(this.inputs).forEach(input => {
-                this.form.controls[input].patchValue(this.inputs[input].value);
-            });
-        }
+        Object.keys(this.inputs).forEach(input => {
+            this.form.controls[input].patchValue(this.inputs[input].value);
+        });
         this.form.disable({ emitEvent: false });
     }
     default(): void {

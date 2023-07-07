@@ -1339,4 +1339,28 @@ $icon-font-path: "../../../../../node_modules/bootstrap-sass/assets/fonts/bootst
         transition: 0ms;
         transform: rotate(90deg);
     }
+    &.eos-adm-icon-landscape-bottom-left {
+        background-image: url("../assets/icons/Landscape-Bottom-Left.svg");
+    }
+    &.eos-adm-icon-landscape-bottom-right {
+        background-image: url("../assets/icons/Landscape-Bottom-Right.svg");
+    }
+    &.eos-adm-icon-landscape-top-left {
+        background-image: url("../assets/icons/Landscape-Top-Left.svg");
+    }
+    &.eos-adm-icon-landscape-top-right {
+        background-image: url("../assets/icons/Landscape-Top-Right.svg");
+    }
+    &.eos-adm-icon-portrait-bottom-left {
+        background-image: url("../assets/icons/Portrait-Bottom-Left.svg");
+    }
+    &.eos-adm-icon-portrait-bottom-right {
+        background-image: url("../assets/icons/Portrait-Bottom-Right.svg");
+    }
+    &.eos-adm-icon-portrait-top-left {
+        background-image: url("../assets/icons/Portrait-Top-Left.svg");
+    }
+    &.eos-adm-icon-portrait-top-right {
+        background-image: url("../assets/icons/Portrait-Top-Right.svg");
+    }
 }
