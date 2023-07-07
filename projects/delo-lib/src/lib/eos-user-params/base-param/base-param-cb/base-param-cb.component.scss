@@ -6,119 +6,118 @@
         border: 1px solid $border-color-main-theme;
     }
     
-    .wrapper-params-set {
-        .box {
-            overflow-y: scroll;
-            max-height: calc(100vh - 260px);
-    
+
+    .box {
+        overflow-y: scroll;
+        max-height: calc(100vh - 260px);
+
+    }
+    header {
+        background-color: #fafafa;
+        border: 1px solid $border-color-main-theme;
+    }
+    .wrapper-card {
+        margin-top: 6px;
+        background: #FFFFFF;
+        padding: 15px 20px 0 20px;
+
+        .fake-label{
+            padding-top: 25px;
         }
-        header {
-            background-color: #fafafa;
-            border: 1px solid $border-color-main-theme;
-        }
-        .wrapper-card {
-            margin-top: 6px;
-            background: #FFFFFF;
-            padding: 15px 20px 0 20px;
-    
-            .fake-label{
-                padding-top: 25px;
-            }
-    
-            .wrapper-main-informatin {
-                display: flex;
-                gap: 20px;
-                .wrapper-avatar {
-                    width: 170px;
-                    height: 170px;
-    
-                    .avatar-link{
-                        display: flex;
+
+        .wrapper-main-informatin {
+            display: flex;
+            gap: 20px;
+            .wrapper-avatar {
+                width: 170px;
+                height: 170px;
+
+                .avatar-link{
+                    display: flex;
+                    width: 100%;
+                    height: 100%;
+
+                    .avatar-img {
                         width: 100%;
                         height: 100%;
-    
-                        .avatar-img {
-                            width: 100%;
-                            height: 100%;
-                            display: inline-block;
-                            border-radius: 50%;
-                            background-size: cover;
-                            background-position: center;
-                            border: 1px solid #e6e6e6;
-                        }
+                        display: inline-block;
+                        border-radius: 50%;
+                        background-size: cover;
+                        background-position: center;
+                        border: 1px solid #e6e6e6;
                     }
                 }
-    
-                .wrapper-information {
+            }
+
+            .wrapper-information {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                width: calc(100% - 20px - 170px);
+
+                .information-line {
+                    width: 100%;
                     display: flex;
-                    flex-direction: column;
-                    gap: 14px;
-                    width: calc(100% - 20px - 170px);
-    
-                    .information-line {
+                    gap: 40px;
+
+                    eos-dynamic-input {
+                        font-size: 14px;
+                        .form-group {
+                            margin: 0;
+                            .readonly{
+                                padding: 0;
+                            }
+                        
+                        }
+                    }
+
+                    .information-item {
                         width: 100%;
                         display: flex;
-                        gap: 40px;
-    
-                        eos-dynamic-input {
-                            font-size: 14px;
-                            .form-group {
-                                margin: 0;
-                                .readonly{
-                                    padding: 0;
-                                }
-                          
-                            }
-                        }
-    
-                        .information-item {
-                            width: 100%;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-                            position: relative;
-    
-                            .base-input-role {
-                                input {
-                                    padding: 5px 50px 5px 5px;
-                                }
-                            }
-    
-                            .input-controls {
-                                position: absolute;
-                                right: 5px;
-                                top: 50%;
-                            }
-                        }
-                        .white-field {
+                        flex-direction: column;
+                        justify-content: center;
+                        position: relative;
+
+                        .base-input-role {
                             input {
-                                background-color: #ffff;
+                                padding: 5px 50px 5px 5px;
                             }
+                        }
+
+                        .input-controls {
+                            position: absolute;
+                            right: 5px;
+                            top: 50%;
+                        }
+                    }
+                    .white-field {
+                        input {
+                            background-color: #ffff;
                         }
                     }
                 }
             }
-    
-            .wrapper-role-vibr {
+        }
+
+        .wrapper-role-vibr {
+            width: 100%;
+            display: flex;
+            gap: 10px;
+
+            .role-vibr {
                 width: 100%;
-                display: flex;
-                gap: 10px;
-    
-                .role-vibr {
+
+                textarea {
                     width: 100%;
-    
-                    textarea {
-                        width: 100%;
-                        height: 72px;
-                        max-height: 72px;
-                        padding: 6px 8px 10px 8px;
-                        background-color: #fafafa;
-                        border-color: #e6e6e6;
-                    }
+                    height: 72px;
+                    max-height: 72px;
+                    padding: 6px 8px 10px 8px;
+                    background-color: #fafafa;
+                    border-color: #e6e6e6;
                 }
-    
-    
             }
+
+
         }
     }
     
