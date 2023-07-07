@@ -92,10 +92,12 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
             this.getInfo();
             this.showDep = false;
         }
-        this.departments = 'Не указано';
-        if (!this.CurrentUser.deleted && this.CurrentUser.deep) {
-            const deep = await this._extensionsUser.loadDepartments(this.CurrentUser.deep);
-            this.departments = (deep !== null) ? deep : (this.CurrentUser.data.NOTE || 'Не указано');
+
+        const deep = await this._extensionsUser.loadDepartments(this.CurrentUser.data.TECH_DUE_DEP || '');
+        if (deep) {
+            this.departments = deep;
+        } else {
+            this.departments = this.CurrentUser.data.NOTE ? this.CurrentUser.data.NOTE : 'Не указано';
         }
     }
 
