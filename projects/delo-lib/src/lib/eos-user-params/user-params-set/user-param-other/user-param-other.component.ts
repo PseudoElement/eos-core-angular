@@ -91,6 +91,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         if (this.appMode && this.appMode.cbr) {
             // Скрываем вкладку "Пересылка документа" если mode=ARMCBR
             this.fieldGroups.delete(0);
+            this.fieldGroups.delete(2);
+            this.fieldGroups.delete(3);
+            this.currTab = 1;
         }
         if (this.openingTab && this.fieldGroups.has(this.openingTab - 1)) {
             this.currTab = Number(this.openingTab) - 1;
