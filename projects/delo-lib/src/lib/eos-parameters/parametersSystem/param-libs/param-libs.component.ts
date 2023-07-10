@@ -69,11 +69,10 @@ export class ParamLibsComponent extends BaseParamComponent {
         .then(([libParam, libLibrary, common, fdulz]) => {
             const mapData = new Map<number, any>();
             libLibrary.forEach((item) => {
-                this.inputs['rec.CommonName'].options.push({value: item['NAME'], title: item['DESCRIPTION']});
-                this.inputs['rec.FdulzName'].options.push({value: item['NAME'], title: item['DESCRIPTION']});
                 mapData.set(item.ISN_LIBRARY, {
                     key:  item.ISN_LIBRARY,
                     ProfileName: item.DESCRIPTION,
+                    nameType: item.NAME
                 });
             });
             this.updateParams(common, fdulz);
@@ -85,6 +84,8 @@ export class ParamLibsComponent extends BaseParamComponent {
             mapData.forEach((data) => {
                 if (data['TYPE'] === 'FS') {
                     this.tabelData.data.push(data);
+                    this.inputs['rec.CommonName'].options.push({value: data['nameType'], title: data['ProfileName']});
+                    this.inputs['rec.FdulzName'].options.push({value: data['nameType'], title: data['ProfileName']}); 
                 }
             });
         });
@@ -135,21 +136,28 @@ export class ParamLibsComponent extends BaseParamComponent {
     }
 
     createObjRequest(): [IFilesParams, IFdulzParams] {
-        const files: IFilesParams = {
-            EdmsParm: this.updateData['EdmsParm'] !== undefined ? this.updateData['EdmsParm'] : this.prepareData.rec['EdmsParm'],
-            Library: {
-                Name: this.updateData['CommonName'] !== undefined ? this.updateData['CommonName'] : this.prepareData.rec['CommonName'],
-                Directory: this.updateData['CommonDirectory'] !== undefined ? this.updateData['CommonDirectory'] : this.prepareData.rec['CommonDirectory'],
-            },
-            MaxFileSize: this.updateData['MaxFileSize'] !== undefined ? +this.updateData['MaxFileSize'] : +this.prepareData.rec['MaxFileSize'],
-        }
-        const fdulz: IFdulzParams = {
-            Expiration: this.updateData['Expiration'] !== undefined ? +this.updateData['Expiration'] : +this.prepareData.rec['Expiration'],
-            Library: {
-                Name: this.updateData['FdulzName'] !== undefined ? this.updateData['FdulzName'] : this.prepareData.rec['FdulzName'],
-                Directory: this.updateData['FdulzDirectory'] !== undefined ? this.updateData['FdulzDirectory'] : this.prepareData.rec['FdulzDirectory'],
+        let files: IFilesParams = undefined;
+        if (this.updateData['EdmsParm'] || this.updateData['CommonName'] || this.updateData['CommonDirectory']) {
+            files = {
+                EdmsParm: this.updateData['EdmsParm'] !== undefined ? this.updateData['EdmsParm'] : this.prepareData.rec['EdmsParm'],
+                Library: {
+                    Name: this.updateData['CommonName'] !== undefined ? this.updateData['CommonName'] : this.prepareData.rec['CommonName'],
+                    Directory: this.updateData['CommonDirectory'] !== undefined ? this.updateData['CommonDirectory'] : this.prepareData.rec['CommonDirectory'],
+                },
+                MaxFileSize: this.updateData['MaxFileSize'] !== undefined ? +this.updateData['MaxFileSize'] : +this.prepareData.rec['MaxFileSize'],
             }
         }
+        let fdulz: IFdulzParams = undefined;
+        if (this.updateData['Expiration'] || this.updateData['FdulzName'] || this.updateData['FdulzDirectory']) {
+            fdulz = {
+                Expiration: this.updateData['Expiration'] !== undefined ? +this.updateData['Expiration'] : +this.prepareData.rec['Expiration'],
+                Library: {
+                    Name: this.updateData['FdulzName'] !== undefined ? this.updateData['FdulzName'] : this.prepareData.rec['FdulzName'],
+                    Directory: this.updateData['FdulzDirectory'] !== undefined ? this.updateData['FdulzDirectory'] : this.prepareData.rec['FdulzDirectory'],
+                }
+            }
+        }
+        
         return [files, fdulz];
     }
     checkSetNewElement() {
@@ -184,8 +192,12 @@ export class ParamLibsComponent extends BaseParamComponent {
         if (Object.keys(this.updateData).length) {
             const req = this.createObjRequest();
             const allQuery = [];
-            allQuery.push(this.setAppSetting(PARAM_COMMON, req[0]));
-            allQuery.push(this.setAppSetting(PARAM_FDULZ, req[1]));
+            if (req[0]) {
+                allQuery.push(this.setAppSetting(PARAM_COMMON, req[0]));
+            }
+            if (req[1]) {
+                allQuery.push(this.setAppSetting(PARAM_FDULZ, req[1]));
+            }
             this.updateData = {};
             this.formChanged.emit(false);
             this.isChangeForm = false;
