@@ -68,6 +68,12 @@
                 <eos-dynamic-input [input]="inputs['rec.OZN_FILL_REPLY']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 <eos-dynamic-input class="reply-input" [input]="inputs['rec.OZN_FILL_REPLY_TEXT']" [form]="form" [readonly]="false" [disabled]="!form.controls['rec.OZN_FILL_REPLY'].value"></eos-dynamic-input>
             </div>
+            <div [hidden]="!appMode.cbr" class="user-group-form">
+                <div class="cab-mar-span">
+                    <span>После завершения работы с документом (проектом):</span>
+                </div>
+                <eos-dynamic-input [input]="inputs['rec.CBR_AUTO_NEXT_CARD']" [form]="form" [readonly]="false"></eos-dynamic-input> 
+            </div>
         </div>
         <!-- @task163710 убрать настройки для толстяка
         <div [hidden]="appMode.arm || appMode.cbr" class="user-group-form">
