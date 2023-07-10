@@ -427,6 +427,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             .then((button) => {
                 if (button && button['result'] === 1) {
                     return this.submit(event);
+                } else {
+                    return Promise.resolve('error');
                 }
             })
             .catch((error) => {
@@ -440,6 +442,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     * если сохраняем через кнопку то в event лежит false если при переходе то true
     */
     submit(event): Promise<any> {
+         /*  */
         this.isLoading = true;
         const changes = [];
         const mergechange = [];
