@@ -17,6 +17,7 @@ import { DOP_REC, SEARCH_RADIO_BUTTON, SEARCH_RADIO_BUTTON_NOMENKL, SEV_PARTIPAN
 import { FormGroup, Validators } from '@angular/forms';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl } from 'eos-user-params/index';
+import * as moment from 'moment';
 
 export interface IQuickSrchObj {
     isOpenQuick: boolean;
@@ -397,7 +398,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
             try {
                 this.protocolSearchNameControl.forEach(el => {
                     if(el === 'FROM' || el === 'TO') {
-                        this.searchData['protocol'][el] = data[el]? `${data[el].toISOString()}` : null;
+                        const DATE_ISO_8601 = "YYYY-MM-DD";
+                        this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format(DATE_ISO_8601)}` : null;
                     } else if (el === 'OPER_DESCRIBE') {
                         if(data['OPERATION']) {
                             let oper: string = '';
