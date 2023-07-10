@@ -41,13 +41,13 @@
                         <p class="field-title unimportant-text s-font">
                             {{ fieldsDescriptionFull.rec["fullPosition"]?.title }}
                         </p>
-                        <p class="field-value m-font">{{ nodeDataFull.rec["FULLNAME"] }}</p>
+                        <p class="field-value m-font">{{ nodeDataFull.rec["FULLNAME"] || '...' }}</p>
                     </div>
                     <div class="field">
                         <p class="field-title unimportant-text s-font">
                             {{ fieldsDescriptionFull.rec["POST_H"]?.title }}
                         </p>
-                        <p class="field-value m-font">{{ getRole(nodeDataFull.rec["POST_H"]) }}</p>
+                        <p class="field-value m-font">{{ getRole(nodeDataFull.rec["POST_H"]) || '...' }}</p>
                     </div>
                 </ng-template>
                 <ng-template #shortPosition>
@@ -55,19 +55,19 @@
                         <p class="field-title unimportant-text s-font">
                             {{ fieldsDescriptionFull.rec["DUTY"]?.title }}
                         </p>
-                        <p class="field-value m-font">{{ nodeDataFull.rec["DUTY"] }}</p>
+                        <p class="field-value m-font">{{ nodeDataFull.rec["DUTY"] || '...' }}</p>
                     </div>
                     <div class="field">
                         <p class="field-title unimportant-text s-font">
                             {{ fieldsDescriptionFull.rec["POST_H"]?.title }}
                         </p>
-                        <p class="field-value m-font">{{ getRole(nodeDataFull.rec["POST_H"]) }}</p>
+                        <p class="field-value m-font">{{ getRole(nodeDataFull.rec["POST_H"]) || '...' }}</p>
                     </div>
                 </ng-template>
 
                 <div class="field">
                     <p class="field-title unimportant-text s-font">ПОДРАЗДЕЛЕНИЕ</p>
-                    <p class="field-value m-font" *ngIf="!viewRedirect">{{ department }}</p>
+                    <p class="field-value m-font" *ngIf="!viewRedirect">{{ department || '...' }}</p>
                     <p class="field-value m-font" *ngIf="viewRedirect">
                         <a (click)="[redirectToDepartment($event), resetSearch()]">{{ department }}</a>
                     </p>
@@ -78,35 +78,44 @@
                 </div>
                 <ng-template #phone>
                     <p class="field-title unimportant-text s-font">{{ fieldsDescriptionFull.rec["PHONE"]?.title }}</p>
-                    <p class="field-value m-font">{{ nodeDataFull.rec["PHONE"] }}</p>
+                    <p class="field-value m-font">{{ nodeDataFull.rec["PHONE"] || '...' }}</p>
                 </ng-template>
                 <ng-template #localPhone>
                     <p class="field-title unimportant-text s-font">
                         {{ fieldsDescriptionFull.rec["PHONE_LOCAL"]?.title }}
                     </p>
-                    <p class="field-value m-font">{{ nodeDataFull.rec["PHONE_LOCAL"] }}</p>
+                    <p class="field-value m-font">{{ nodeDataFull.rec["PHONE_LOCAL"] || '...' }}</p>
                 </ng-template>
 
                 <div class="field">
                     <p class="field-title unimportant-text s-font">{{ fieldsDescriptionFull.rec["E_MAIL"]?.title }}</p>
                     <p class="field-value m-font">
-                        <a href="mailto:{{ nodeDataFull.rec['E_MAIL'] }}">{{ nodeDataFull.rec["E_MAIL"] }}</a>
+                        <a href="mailto:{{ nodeDataFull.rec['E_MAIL'] }}" *ngIf="nodeDataFull.rec['E_MAIL']">{{ nodeDataFull.rec["E_MAIL"] }}</a>
+                        <span class="field-value m-font" *ngIf="!nodeDataFull.rec['E_MAIL']">...</span>
                     </p>
                 </div>
                 <div class="field" *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
                     <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
                     <p class="field-value m-font">{{ nodeDataFull.sev?.GLOBAL_ID || "..." }}</p>
                 </div>
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">Идентификатор</p>
+                    <p class="field-value m-font">{{ node.data.rec.SYNC_ID || '...' }}</p>
+                </div>
                 <hr />
                 <div class="field">
                     <p class="field-title unimportant-text s-font">КАБИНЕТЫ</p>
                     <p class="field-value m-font">
-                        <a *ngIf="nodeDataFull.cabinet?.ISN_CABINET" (click)="redirectToEditCabinet($event)">{{
-                            nodeDataFull.cabinet?.CABINET_NAME
-                        }}</a>
+                        <a *ngIf="nodeDataFull.cabinet?.ISN_CABINET" (click)="redirectToEditCabinet($event)">
+                            {{ nodeDataFull.cabinet?.CABINET_NAME || '...' }}
+                        </a>
                     </p>
                 </div>
                 <hr />
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">Запись не проверена</p>
+                    <p class="field-value m-font">{{ node.data.rec.UNREAD_FLAG || '...' }}</p>
+                </div>
                 <!--<p *ngIf="isUserUpdating"-->
                 <!--class="spinner-container text-center">-->
                 <!--<eos-spinner size="lg"></eos-spinner>-->
@@ -118,7 +127,7 @@
                         [routerLink]="'/user-params-set/' + urlPathUser"
                         [queryParams]="{ isn_cl: this.nodeDataFull.user.ISN_LCLASSIF }"
                     >
-                        <p class="field-value m-font">{{ getUserLogin() }}</p></a
+                        <p class="field-value m-font">{{ getUserLogin() || '...' }}</p></a
                     >
                     <!-- p class="field-value m-font"><a [routerLink]="'/spravochniki/user/'+nodeDataFull.user?.ISN_LCLASSIF + '/view'">{{nodeDataFull.user?.CLASSIF_NAME}}</a></p -->
                 </div>
@@ -141,10 +150,10 @@
             <div class="short-info long-title">
                 <ng-container *ngIf="nodeDataFull.rec['FULLNAME']; then fullName; else shortName"></ng-container>
                 <ng-template #fullName>
-                    <span class="l-font">{{ nodeDataFull.rec["FULLNAME"] }}</span>
+                    <span class="l-font">{{ nodeDataFull.rec["FULLNAME"] || '...'}}</span>
                 </ng-template>
                 <ng-template #shortName>
-                    <span class="l-font">{{ nodeDataFull.rec["CLASSIF_NAME"] }}</span>
+                    <span class="l-font">{{ nodeDataFull.rec["CLASSIF_NAME"] || '...'}}</span>
                 </ng-template>
             </div>
             <div class="full-info usual-border">
@@ -152,32 +161,43 @@
                     <div class="field-title unimportant-text s-font">
                         {{ fieldsDescriptionFull.rec["CARD_NAME"]?.title }}
                     </div>
-                    <div class="field-value m-font">{{ nodeDataFull.rec["CARD_NAME"] }}</div>
+                    <div class="field-value m-font">{{ nodeDataFull.rec["CARD_NAME"] || '...'}}</div>
                 </div>
                 <div class="field">
                     <div class="field-title unimportant-text s-font">Фамилия И.О. начальника подразделения</div>
                     <div class="field-value m-font">
-                        <a *ngIf="boss" [routerLink]="'/spravochniki/departments/' + boss.id + '/view'">{{
-                            boss.data.rec.CLASSIF_NAME
-                        }}</a>
+                        <a *ngIf="boss" [routerLink]="'/spravochniki/departments/' + boss.id + '/view'">
+                            {{ boss.data.rec.CLASSIF_NAME || '...'}}
+                        </a>
                     </div>
                 </div>
                 <div class="field">
                     <p class="field-title unimportant-text s-font text-upper">Организация</p>
                     <p class="field-value m-font">
-                        <a (click)="openCardOrganiz()" *ngIf="nodeDataFull.organization?.DUE">{{
-                            nodeDataFull.organization?.CLASSIF_NAME
-                        }}</a>
+                        <a (click)="openCardOrganiz()" *ngIf="nodeDataFull.organization?.DUE">
+                            {{ nodeDataFull.organization?.CLASSIF_NAME || '...' }}
+                        </a>
+                        <span class="field-value m-font" *ngIf="!nodeDataFull.organization?.DUE">...</span>
                     </p>
+                </div>
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">Вышестоящее подразделение</p>
+                    <p class="field-value m-font">{{ department || '...' }}</p>
                 </div>
                 <div class="field" *ngIf="isSevIndexesEnable && nodeDataFull['sev']">
                     <p class="field-title unimportant-text s-font">Индекс СЭВ</p>
                     <p class="field-value m-font">{{ nodeDataFull.sev?.GLOBAL_ID || "..." }}</p>
                 </div>
                 <div class="field">
-                    <p class="field-title unimportant-text s-font">Вышестоящее подразделение</p>
-                    <p class="field-value m-font">{{ department }}</p>
+                    <p class="field-title unimportant-text s-font">Идентификатор</p>
+                    <p class="field-value m-font">{{ node.data.rec.SYNC_ID || '...' }}</p>
                 </div>
+
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">Запись не проверена</p>
+                    <p class="field-value m-font">{{ node.data.rec.UNREAD_FLAG || '...' }}</p>
+                </div>
+
             </div>
         </div>
     </div>

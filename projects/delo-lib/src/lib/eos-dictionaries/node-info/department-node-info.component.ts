@@ -18,6 +18,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PipRX } from '../../eos-rest/services/pipRX.service';
 import { DELO_OWNER } from '../../eos-rest/interfaces/structures';
+import { DEPARTMENT } from '../../eos-rest/interfaces/structures';
+
 @Component({
     selector: 'eos-department-node-info',
     templateUrl: 'department-node-info.component.html',
@@ -65,11 +67,6 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         this.boss = null;
         if (this.node) {
             if ((!this.node.data.rec['IS_NODE']) && (this.node.children)) {
-                if (this.node.parent.id === '0.') {
-                    this.department = await this.getNameOrganization();
-                } else {
-                    this.department = this.node.parent.getParentData('FULLNAME', 'rec', 'CLASSIF_NAME');
-                }
 
                 const dict = new EosDictionary('departments', this._descrSrv);
                 dict.descriptor.getBoss(this.node.id)
@@ -83,7 +80,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                     if (this.node.parent.id === '0.') {
                         this.department = await this.getNameOrganization();
                     } else {
-                        this.department = this.node.parent.getParentData('FULLNAME', 'rec', 'CLASSIF_NAME');
+                        this.department = await this.getFullPathDepartment(this.node.parent.id);
                     }
                     if (this.node.data.photo && this.node.data.photo.url) {
                         this.photo = this.node.data.photo.url;
@@ -98,6 +95,28 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     async getNameOrganization(): Promise<string> {
         const result: DELO_OWNER[] = await this.pipRX.read({ DELO_OWNER: { criteries: '', top: 1, skip: 0 }});
         return result[0].NAME;
+    }
+
+    async getFullPathDepartment(parentId: string) {
+        let path: string = '';
+        let due = parentId.split('.').map(el => el += '.');
+        due.pop();
+        const resultDue = [];
+        let curentDue: string = '';
+        due.forEach(el => {
+            curentDue += el;
+            resultDue.push(curentDue);
+        })
+
+        const result: DEPARTMENT[] = await this.pipRX.read({ DEPARTMENT: {criteries: {DUE: resultDue.join('|')}}});
+        result.forEach( el => {
+            if (el.DUE === "0.") {
+                path = el.CARD_NAME + path;
+            } else {
+                path = el.CLASSIF_NAME + ' - ' + path;
+            }
+        })
+        return path;
     }
 
     ngOnDestroy() {
