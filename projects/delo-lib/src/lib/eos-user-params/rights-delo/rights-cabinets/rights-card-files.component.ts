@@ -442,7 +442,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     * если сохраняем через кнопку то в event лежит false если при переходе то true
     */
     submit(event): Promise<any> {
-         /*  */
         this.isLoading = true;
         const changes = [];
         const mergechange = [];

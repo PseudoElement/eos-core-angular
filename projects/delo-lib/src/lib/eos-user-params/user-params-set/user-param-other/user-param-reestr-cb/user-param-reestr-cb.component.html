@@ -39,12 +39,17 @@
             <span class="input-title">Дата передачи документов не позднее ( дней ):</span>
             <eos-dynamic-input [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div><br>
-        <div class="inputs-inline">
+        <div *ngIf="false" class="inputs-inline">
             <span [hidden]="appMode.arm" class="input-title">Количество копий:</span>
             <eos-dynamic-input [hidden]="appMode.arm" [ngStyle]="{'margin-left': '189px'}" [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
-        <eos-dynamic-input [hidden]="appMode.arm" class="inline-block " [input]="inputs[ 'rec.REESTR_TO_PRINTER'] "
-            [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input 
+            *ngIf="false"
+            class="inline-block "
+            [input]="inputs[ 'rec.REESTR_TO_PRINTER'] "
+            [form]="form"
+            [readonly]="false ">
+        </eos-dynamic-input>
     </div>
     <div [hidden]="appMode.arm" class="user-content-wr ">
         <span class="title-user-content ">Подразделения адресаты</span>
