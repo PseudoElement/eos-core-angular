@@ -18,7 +18,7 @@ export class AboutSystemsComponent implements OnInit {
 
     }
     ngAfterViewInit(): void {
-      Manager.loadPlugins({'target': 'AbountSystem', mountPoint: 'about_system_plug', scriptsAppendPoint: "scriptAppend"}).then(() => {
+      Manager.loadPlugins({'target': 'AboutSystem', mountPoint: 'about_system_plug', scriptsAppendPoint: "scriptAppend"}).then(() => {
         console.log('loaded AboutSystemPlugin');
       });
     }
