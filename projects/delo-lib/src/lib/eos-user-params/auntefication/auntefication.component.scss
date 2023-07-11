@@ -58,9 +58,28 @@
     elem-password-date{
         width: 100%;
     }
-    .wrapper-password{
+    .wrapper-password {
         display: -webkit-box;
         display: flex;
         -webkit-box-pack: justify;
+    }
+    .wrapper-password {
+        display: flex;
+        justify-content: space-between;
+        .vision {
+            position: relative;
+            >span {
+                position: absolute;
+                top: 5px;
+                right: 9px;
+                cursor: pointer;
+            }
+            .vision-close {
+                right: 32px;
+            }
+        }
+        .mar-fio-r {
+            margin-left: 33px;
+        }
     }
 }

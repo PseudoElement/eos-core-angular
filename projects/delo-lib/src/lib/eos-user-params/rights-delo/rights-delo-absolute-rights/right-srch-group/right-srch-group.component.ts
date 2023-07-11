@@ -53,6 +53,7 @@ export class ReportingService {
         });
     }
     async deletedUserSrch(item: NodeAbsoluteRight) {
+        this.userSrch = [...this._userParmSrv.curentUser['USER_SRCH_GROUP_List']];
         if (!this.userSrch.length) {
             this.userSrch = await this.userSrchGroup();
         }
