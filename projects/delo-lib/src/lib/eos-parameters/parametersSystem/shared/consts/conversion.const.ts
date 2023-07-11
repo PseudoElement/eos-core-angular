@@ -1,4 +1,5 @@
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
+import { ITableHeader, ITableSettings } from '../interfaces/tables.interfaces';
 export const CONVERSION_PARAM: IBaseParameters = {
     id: 'conversion',
     apiInstance: 'APP_SETTINGS',
@@ -45,3 +46,40 @@ export const CONVERSION_PARAM: IBaseParameters = {
         }
     ]
 };
+export const CONVERSION_PARAM_BTN_TABEL = [
+    {
+        tooltip: 'Редактировать',
+        disable: true,
+        iconActiv: 'eos-adm-icon-edit-blue',
+        iconDisable: 'eos-adm-icon-edit-grey',
+        id: 'edit'
+    }
+];
+export const HEADER_TABLE_CONVERSION: ITableHeader[]  = [
+    {
+        title: 'Сервер фоновых задач',
+        id: 'DISPALY_NAME',
+        style: {width: '250px'}
+    },
+    {
+        title: 'Экземпляр конвертера',
+        id: 'InstanceName',
+        style: {width: '200px'}
+    },
+    {
+        title: 'Имя конвертера',
+        id: 'Name',
+        style: {width: '200px'}
+    },
+    {
+        title: 'Общий доступ',
+        id: 'IsShared',
+        style: {width: '150px'}
+    },
+];
+export const SETTIING_TABLE_CONVERSION: ITableSettings = {
+    hiddenCheckBox: true,
+    maxHeightTable: '600px',
+    selectedRow: true,
+    count: true
+}

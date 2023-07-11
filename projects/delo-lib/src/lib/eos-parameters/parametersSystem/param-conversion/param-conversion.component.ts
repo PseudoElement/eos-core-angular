@@ -1,11 +1,12 @@
-import { Component, Injector, Input } from '@angular/core';
+import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, } from '../shared/consts/eos-parameters.const';
-import { CONVERSION_PARAM } from '../shared/consts/conversion.const';
-import { Validators } from '@angular/forms';
+import { CONVERSION_PARAM, CONVERSION_PARAM_BTN_TABEL, HEADER_TABLE_CONVERSION, SETTIING_TABLE_CONVERSION } from '../shared/consts/conversion.const';
 import { IConverterParam, IUploadParam } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
+import { ECellToAll, ITableBtn, ITableData } from '../shared/interfaces/tables.interfaces';
+import { APP_HOST } from '../../../eos-rest';
 
 @Component({
     selector: 'eos-parameters-conversion',
@@ -13,15 +14,28 @@ import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/cons
 })
 export class ParamConversionComponent extends BaseParamComponent {
     @Input() btnError;
+    @ViewChild('tableConversion', {static: false}) tableConversion;
     public isLoading = true;
     public masDisable: any[] = [];
     public oldData: any;
+    public viewTable = true;
     public paramConverter: IUploadParam = {
         namespace: AppsettingsParams.Converter,
         typename: AppsettingsTypename.TConverter,
-        instance: 'Default'
     };
     public openAcord = false;
+    public arrayBtn: ITableBtn[] = [...CONVERSION_PARAM_BTN_TABEL];
+    public settingsTable = SETTIING_TABLE_CONVERSION;
+    public editData;
+    public converter;
+    public libLibrary;
+    public appHost: APP_HOST[] = [];
+    public tableHeader = [...HEADER_TABLE_CONVERSION];
+    public tabelData: ITableData = {
+        tableBtn: this.arrayBtn,
+        tableHeader: this.tableHeader,
+        data: []
+    };
     constructor(injector: Injector,
     ) {
         super(injector, CONVERSION_PARAM);
@@ -36,23 +50,24 @@ export class ParamConversionComponent extends BaseParamComponent {
         const allRequest = [];
         allRequest.push(this.getData({'LIB_LIBRARY': ALL_ROWS }));
         allRequest.push(this.getAppSetting<IConverterParam>(this.paramConverter));
+        allRequest.push(this.getData({'APP_HOST': ALL_ROWS }));
         return Promise.all(allRequest)
-        .then(([libLibrary, Converter]) => {
-            this.prepareData = this.convData([]);
+        .then(([libLibrary, Converter, appHost]) => {
+            this.libLibrary = libLibrary;
             this.prepareDataParam();
+            this.prepareData = this.convData([]);
             this.inputs = this.getInputs();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
             this.inputs['rec.LibraryName'].options = [];
-            libLibrary.forEach((item) => {
+            this.libLibrary.forEach((item) => {
                 this.inputs['rec.LibraryName'].options.push({value: item['NAME'], title: item['DESCRIPTION']});
             });
+            this.converter = Converter;
+            this.appHost = appHost;
             if (Converter) {
-                this.updatePrepareData(Converter);
-                this.updateFormForPrepare();
+                this.updateTableData(Converter);
             }
-            this.form.controls['rec.LibraryName'].setValidators([Validators.required]);
-            this.form.controls['rec.LibraryDirectory'].setValidators([Validators.required]);
-            this.form.controls['rec.MaxCacheSize'].setValidators([Validators.required]);
+            
             this.subscribeChangeForm();
         })
         .catch((er) => {
@@ -62,6 +77,7 @@ export class ParamConversionComponent extends BaseParamComponent {
 
     edit() {
         this.form.enable({ emitEvent: false });
+        this.updateBtn();
     }
 
     openAccordion() {
@@ -69,6 +85,58 @@ export class ParamConversionComponent extends BaseParamComponent {
     }
 
     submit() {
+        this.form.disable({ emitEvent: false });
+        this.updateBtn();
+    }
+    cancel() {
+        if (this.isChangeForm) {
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.isChangeForm = false;
+            this.formChanged.emit(false);
+            this.updateData = {};
+            this.form.disable({ emitEvent: false });
+          } else {
+            this.form.disable({ emitEvent: false });
+            this.formChanged.emit(false);
+          }
+          this.updateBtn();
+    }
+    updateTableData(newConverter: any) {
+        this.tabelData.data = [];
+        Object.keys(newConverter).forEach((key) => {
+            const hostName = this.appHost.filter((host) => '' + host.ISN_APP_HOST === '' + key)[0];
+            const conwert: IConverterParam =  newConverter[key];
+            conwert['key'] = '' + key;
+            conwert['DISPALY_NAME'] = hostName ? hostName['DISPLAY_NAME'] : '';
+            conwert['InstanceName'] = conwert.Library.Name;
+            conwert['Name'] = conwert.Name || '';
+            conwert['IsShared'] = {type: ECellToAll.checkbox, check: conwert.IsActive, click: () => {}, disabled: true};
+            this.tabelData.data.push(conwert);
+        })
+    }
+    actionTo($event) {
+        switch ($event) {
+            case 'edit':
+                this.editData = this.tabelData.data.filter((item) => '' + item.key === '' + this.tableConversion?.selectIdLast)[0];
+                this.viewTable = false;
+                break;
+            default:
+                break;
+        }
+    }
+    updateBtn() {
+        const disabled = this.tabelData.data.filter((item) => '' + item.key === '' + this.tableConversion?.selectIdLast).length === 0;
+        this.tabelData.tableBtn.forEach((btn) => {
+            switch (btn.id) {
+                case 'edit':
+                    btn.disable = disabled || this.form.disabled;
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+    submitEmit($event) {
         const newConverter: IConverterParam = {
             Library: {
                 Name: this.updateData['LibraryName'] !== undefined ? this.updateData['LibraryName'] : this.prepareData.rec['LibraryName'],
@@ -76,19 +144,26 @@ export class ParamConversionComponent extends BaseParamComponent {
             },
             MaxCacheSize: this.updateData['MaxCacheSize'] !== undefined ? +this.updateData['MaxCacheSize'] : +this.prepareData.rec['MaxCacheSize'],
             ConverterFormat: this.prepareData.rec['ConverterFormat'],
-            Name: this.updateData['Name'],
-            IsActive: this.updateData['IsActive'] !== undefined ? Boolean(this.updateData['IsActive']) : Boolean(this.prepareData.rec['IsActive']),
+            Name: this.updateData['Name'] !== undefined ? this.updateData['Name'] : this.prepareData.rec['Name'],
+            IsActive: this.updateData['IsActive'] !== undefined ? Boolean(+this.updateData['IsActive']) : Boolean(+this.prepareData.rec['IsActive']),
             ServerURL: this.updateData['ServerURL'] !== undefined ? this.updateData['ServerURL'] : this.prepareData.rec['ServerURL']
         };
-        this.setAppSetting(this.paramConverter, newConverter)
+        Object.keys(this.converter).forEach((key) => {
+            if ('' + key === '' + this.editData.key) {
+                this.converter[key] = newConverter;
+            }
+        });
+        const newSetConverter = Object.assign({instance: this.editData.key}, this.paramConverter);
+        this.setAppSetting(newSetConverter, newConverter)
         .then(() => {
             this.updateData = {};
             this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.isLoading = true;
-            this.form.disable();
-            this.updatePrepareData(newConverter);
+            this.updateTableData(this.converter);
+            this.updateBtn();
+            this.viewTable = true;
         })
         .catch((error) => {
             this.msgSrv.addNewMessage({
@@ -98,34 +173,14 @@ export class ParamConversionComponent extends BaseParamComponent {
             });
         });
     }
-    cancel() {
-        if (this.isChangeForm) {
-            this.updateFormForPrepare();
-            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            this.isChangeForm = false;
-            this.formChanged.emit(false);
-            this.updateData = {};
-            this.form.disable();
-          } else {
-            this.form.disable();
-            this.formChanged.emit(false);
-          }
+    cancelEmit($event) {
+        this.updateBtn();
+        this.updateData = {};
+        this.viewTable = true;
+        this.formChanged.emit(false);
+        this.isChangeForm = false;
     }
-    updatePrepareData(newConverter: IConverterParam) {
-        Object.keys(newConverter).forEach((key) => {
-            if (key === 'Library') {
-                this.prepareData.rec['LibraryName'] = newConverter[key] ? newConverter[key].Name : '';
-                this.prepareData.rec['LibraryDirectory'] = newConverter[key] ? newConverter[key].Directory : '';
-            } else if (key === 'IsActive') {
-                this.prepareData.rec[key] = newConverter[key] ? '1' : '0';
-            } else {
-                this.prepareData.rec[key] = newConverter[key] === null || newConverter[key] === undefined ? '' : newConverter[key];
-            }
-        });
-    }
-    updateFormForPrepare() {
-        Object.keys(this.prepareData.rec).forEach((key) => {
-            this.form.controls['rec.' + key].setValue(this.prepareData.rec[key], { emitEvent: false });
-        });
+    selectElement($event) {
+        this.updateBtn();
     }
 }
