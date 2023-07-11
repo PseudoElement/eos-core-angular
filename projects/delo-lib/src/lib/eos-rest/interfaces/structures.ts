@@ -3985,3 +3985,10 @@ export interface SRCH_GROUP_ITEM {
     ISN_REQUEST: number;
     WEIGHT: number;
 }
+
+export interface APP_HOST {
+    ISN_APP_HOST: number;
+    DISPLAY_NAME: string;
+    SERVICE_URL: string;
+    ENABLED: number;
+}

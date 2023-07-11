@@ -2661,6 +2661,17 @@ export const commonMeta = {
         },
         readonly: [],
         relations: []
+    },
+    APP_HOST: {
+        pk: 'ISN_APP_HOST',
+        properties: {
+            ISN_APP_HOST: _T.i,
+            DISPLAY_NAME: _T.s,
+            SERVICE_URL: _T.s,
+            ENABLED: _T.i,
+        },
+        readonly: [],
+        relations: []
     }
 };
 
