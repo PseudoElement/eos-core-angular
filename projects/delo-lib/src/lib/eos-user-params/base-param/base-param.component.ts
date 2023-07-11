@@ -1180,11 +1180,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.formControls.get('DUE_DEP_NAME').patchValue(''); // @task161934
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
+                                this.form.get('NOTE').patchValue('');
                                 // this.formControls.controls['SELECT_ROLE'].patchValue('');
                                 // this.formControls.controls['SELECT_ROLE'].disable();
                             } else {
                                 this.curentUser.isTechUser = data;
-                                f.get('teсhUser').setValue(false);
+                                f.get('teсhUser').setValue(false, { emitEvent: false });
                             }
                         }).catch(error => {
                             console.log('Ошибка', error);
