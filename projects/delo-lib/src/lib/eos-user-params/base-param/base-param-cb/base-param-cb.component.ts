@@ -1445,6 +1445,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
+                                this.form.get('NOTE').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
                                 const selRol = ('' + this.formControls.controls['SELECT_ROLE'].value).replace(' ...', '');
@@ -1463,7 +1464,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 }
                             } else {
                                 this.curentUser.isTechUser = data;
-                                f.get('teсhUser').setValue(false);
+                                // f.get('teсhUser').setValue(false);
+                                f.get('teсhUser').setValue(false, { emitEvent: false });
                             }
                         }).catch(error => {
                             console.log('Ошибка', error);
