@@ -16,11 +16,11 @@ export class OrganizationNodeInfoComponent {
     ) {}
 
     get title() {
-        return this.node.data.rec.CLASSIF_NAME ?? '...';
+        return this.node.data.rec.CLASSIF_NAME || '...';
     }
 
     get note() {
-        return this.node.data.rec.NOTE ?? '...';
+        return this.node.data.rec.NOTE || '...';
     }
 
     get vertex() {
@@ -36,27 +36,27 @@ export class OrganizationNodeInfoComponent {
     }
 
     get zipcode() {
-        return this.node.data.rec.ZIPCODE ?? '...';
+        return this.node.data.rec.ZIPCODE || '...';
     }
 
     get city() {
-        return this.node.data.rec.CITY ?? '...';
+        return this.node.data.rec.CITY || '...';
     }
 
     get address() {
-        return this.node.data.rec.ADDRESS ?? '...';
+        return this.node.data.rec.ADDRESS || '...';
     }
 
     get e_mail() {
-        return this.node.data.rec.E_MAIL ?? '...';
+        return this.node.data.rec.E_MAIL || '...';
     }
 
     get global_id() {
-        return this.node.data.rec.GLOBAL_ID ?? '...';
+        return this.node.data.rec.GLOBAL_ID || '...';
     }
 
     get id_certificate() {
-        return this.node.data.rec.ID_CERTIFICATE ?? '...';
+        return this.node.data.CONTACT_List[0]?.ID_CERTIFICATE || '...';
     }
 
     showCert() {
