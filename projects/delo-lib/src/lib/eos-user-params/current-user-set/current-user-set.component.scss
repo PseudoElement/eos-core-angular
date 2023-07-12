@@ -2761,6 +2761,15 @@ bs-dropdown-container {
             border-bottom: 1px solid #c4c4c4;
         }
     }
+    .view-reester {
+        padding-top: 15px;
+        & > span {
+            margin-bottom: 15px;
+        }
+        & > div {
+            margin-left: 15px;
+        }
+    }
     .eos-user-param-reestr-cb-margin {
         margin-left: 15px !important;
         &.inputs-inline {
