@@ -1,4 +1,4 @@
-import { ORGANIZ_CL } from 'eos-rest';
+// import { ORGANIZ_CL } from 'eos-rest';
 import { Protocol, ResponseProtItem, SearchQueryOrganization } from '../interfaces/fetch.interface'
 
 export class creatorGraphQlParam {
@@ -142,21 +142,21 @@ export class creatorGraphQlParam {
           }`
     }
 
-    public contacts(organiz: ORGANIZ_CL[]) {
-        const isnNode = [];
-        organiz.forEach(el => {
-            isnNode.push(el.ISN_NODE);
-        })
-        const searchParam = this.createParamIn(isnNode);
-        return `contactsPg(filter: {isnOrganiz: {in: [${searchParam}]}, ordernum: {equal: {value: 0}}}) {
-                    items {
-                    idCertificate
-                    eMail
-                    isnOrganiz
-                    sevIndex
-                    }
-                }`;
-    }
+    // public contacts(organiz: ORGANIZ_CL[]) {
+    //     const isnNode = [];
+    //     organiz.forEach(el => {
+    //         isnNode.push(el.ISN_NODE);
+    //     })
+    //     const searchParam = this.createParamIn(isnNode);
+    //     return `contactsPg(filter: {isnOrganiz: {in: [${searchParam}]}, ordernum: {equal: {value: 0}}}) {
+    //                 items {
+    //                 idCertificate
+    //                 eMail
+    //                 isnOrganiz
+    //                 sevIndex
+    //                 }
+    //             }`;
+    // }
 
     private getSearchParameters(param: ResponseProtItem[], nameParam: string): number[] {
         const result = [];
