@@ -92,8 +92,11 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
 
     public search(criteries: any[]): Promise<any[]> {
         const crit = criteries[0];
-        if (crit.ISN_REGION) {
-            crit.ISN_REGION = crit.ISN_REGION.replace(/"/g, '');
+        if (crit['common'].ISN_REGION) {
+            crit['common'].ISN_REGION = crit['common'].ISN_REGION.replace(/"/g, '');
+        }
+        if (crit['common']['NEW']) {
+            crit['common']['NEW'] = 1;
         }
         if (criteries[0].hasOwnProperty('DOP_REC')) {
             return this.searchDopRec(criteries);
