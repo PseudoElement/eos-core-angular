@@ -164,7 +164,17 @@ export const USER_SEARCH = {
             key: '41',
             title: 'Редактор файлов МО',
             value: '0'
-        }
+        },
+        {
+            key: 'DELO_WEB_RADIO',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: 'competitive', title: 'Конкурентная'},
+                {value: 'personal', title: 'Личная'},
+            ]
+        },
     ]
 };
 

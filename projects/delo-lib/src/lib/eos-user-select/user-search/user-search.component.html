@@ -76,27 +76,38 @@
             </div>
         </div>
         <div  class="search-input-wr-av" *ngIf="currTab === 2">
-            <div class="search-input-wr block-user">
+            <div class="radio-btn-block" style="margin-left: 0; margin-right: 0;">
                 <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div style="display: flex;">
+                <eos-dynamic-input
+                    style="width: 150px;"
+                    [input]="inputs['rec.1']"
+                    [form]="form"
+                    [readonly]="false">
+                </eos-dynamic-input>
+                <div class="block-user" style="margin-left: 172px;">
+                    <eos-dynamic-input
+                        style="width: 360px;"
+                        [input]="inputs['rec.DELO_WEB_RADIO']"
+                        [form]="form"
+                        [readonly]="!form.controls['rec.1'].value"></eos-dynamic-input>
+                </div>
             </div>
             <div class="av-container">
                 <div class="av-pos">
-                    <eos-dynamic-input [input]="inputs['rec.0']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.26']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.5']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.41']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.25']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.16']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.3']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
                 <div class="av-pos">
-                    <eos-dynamic-input [input]="inputs['rec.1']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.25']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.21']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.2']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.17']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.15']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.41']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
                 <div>
-                    <eos-dynamic-input [input]="inputs['rec.3']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.15']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.17']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['rec.16']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.2']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.5']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
             </div>
         </div>
