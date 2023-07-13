@@ -55,6 +55,7 @@ import { TabelElementComponent } from './eos-tabel-element/eos-tabel-element.com
 import { AddControlsDirective } from './directives/add-controls.directive';
 import { EosCommonDynamicComponent } from './eos-common-dynamic/eos-common-dynamic.component';
 import { DragulaModule } from 'ng2-dragula';
+import { DragDropDirective } from './directives/app-drag-drop.directive';
 
 @NgModule({
     declarations: [
@@ -86,7 +87,8 @@ import { DragulaModule } from 'ng2-dragula';
         EosClickModeDirective,
         TabelElementComponent,
         EosCommonDynamicComponent,
-        AddControlsDirective
+        AddControlsDirective,
+        DragDropDirective
     ],
     imports: [
         BrowserModule,
@@ -116,6 +118,7 @@ import { DragulaModule } from 'ng2-dragula';
         TabelElementComponent,
         AddControlsDirective,
         EosCommonDynamicComponent,
+        DragDropDirective
     ],
     entryComponents: [
         ConfirmWindowComponent,

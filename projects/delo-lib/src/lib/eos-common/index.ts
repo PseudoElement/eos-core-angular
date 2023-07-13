@@ -14,6 +14,7 @@ export * from "./messages/messages.component";
 export * from "./spinner/spinner.component";
 export * from "./directives/unic-validator.directive";
 export * from "./directives/click-mode.directive";
+export * from "./directives/app-drag-drop.directive";
 export * from "./directives/add-controls.directive";
 export * from "./pipes/eos-date.pipe";
 export * from "./eos-common-dynamic/eos-common-dynamic.component";
