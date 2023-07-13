@@ -10,6 +10,9 @@ import { IUserSettingsModes } from '../../../eos-user-params/shared/intrfaces/us
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { RouterStateSnapshot } from '@angular/router';
+
+declare function notifyOpener();
+
 @Component({
     selector: 'eos-registration-remaster',
     styleUrls: ['user-param-registration-remaster.component.scss'],
@@ -287,6 +290,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this._RemasterService.submitEmit.next();
             // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             this.isSave = false;
+            notifyOpener();
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });
         }).catch(error => {
