@@ -130,6 +130,14 @@ export class UserSearchComponent implements OnInit  {
                 this.openFastSrch();
             }
         }
+        this.form.controls['rec.1'].valueChanges
+        .subscribe((value) => {
+            if (!value) {
+                this.form.controls['rec.DELO_WEB_RADIO'].patchValue('');
+            } else {
+                this.form.controls['rec.DELO_WEB_RADIO'].patchValue('competitive');
+            }
+        })
         this.srhSrv.closeSearch.subscribe(() => {
             this._storage.removeItem('searchUsers');
             this._storage.removeItem('quickSearch');
@@ -338,9 +346,11 @@ export class UserSearchComponent implements OnInit  {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 0, '_');
         }
         if (this.form.controls['rec.1'].value) {
-            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 1, '1');
+            const index = this.form.controls['rec.DELO_WEB_RADIO'].value === 'competitive' ? 1 : 27;
+            avSystemsStr = this.SetAvSytemValue(avSystemsStr, index, '1');
         } else {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 1, '_');
+            avSystemsStr = this.SetAvSytemValue(avSystemsStr, 27, '_');
         }
         if (this.form.controls['rec.2'].value) {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 2, '1');

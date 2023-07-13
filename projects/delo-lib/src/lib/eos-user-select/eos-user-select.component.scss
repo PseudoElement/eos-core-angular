@@ -4,6 +4,26 @@
 .tooltip-pos-l{
     top: 40px !important;
 }
+.radio-btn-block {
+    span {
+        margin-right: 5px !important;
+    }
+    eos-dynamic-input-radio {
+        & > div {
+            display: flex;
+            .elem-input-radio:nth-child(1) {
+                width: 325px;
+            }
+            .elem-input-radio:nth-child(2) {
+                width: 280px;
+            }
+            .elem-input-radio:nth-child(3) {
+                width: 160px;
+                padding-left: 3px;
+            }
+        }
+    }
+}
 .block-user {
     span {
         margin-right: 5px !important; 
