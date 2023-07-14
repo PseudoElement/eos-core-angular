@@ -9,15 +9,19 @@ import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.servi
 
 import { WaitClassifService } from '../../app/services/waitClassif.service';
 import { IOpenClassifParams } from '../../eos-common/interfaces';
-import { AR_DESCRIPT, USER_CL, PROT_NAME } from '../../eos-rest/interfaces/structures';
+import { AR_DESCRIPT, USER_CL } from '../../eos-rest/interfaces/structures';
 import { PipRX } from '../../eos-rest/services/pipRX.service';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { EosDataConvertService } from '../../eos-dictionaries/services/eos-data-convert.service';
 import { DOP_REC, SEARCH_RADIO_BUTTON, SEARCH_RADIO_BUTTON_NOMENKL, SEV_PARTIPANT } from '../../eos-dictionaries/consts/dictionaries/_common';
 import { FormGroup, Validators } from '@angular/forms';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
-import { IInputParamControl } from 'eos-user-params/index';
+import { IInputParamControl } from '../../eos-user-params/index';
 import * as moment from 'moment';
+import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
+import { ProtNameGraphQlParam } from '../../eos-dictionaries/services/creator-graphQl-param/protName-graphQl-param';
+import { ApolloQueryResult } from '@apollo/client'
+import { ProtNames, ResponseProtNames } from 'eos-dictionaries/interfaces/fetch.interface';
 
 export interface IQuickSrchObj {
     isOpenQuick: boolean;
@@ -71,7 +75,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         selectOption: []
     }
     public flagSelectPopover: boolean = false;
-    public allOperation: PROT_NAME[];
+    public allOperation: ProtNames[];
+    private creatorParam = new ProtNameGraphQlParam();
 
     public clearSelectOperation(){
         this.selectedOperation = {
@@ -91,6 +96,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         private _dataSrv: EosDataConvertService,
         private _pipRX: PipRX,
         private controlService: InputParamControlService,
+        private graphQL: GraphQLService,
     ) {}
 
     ngOnInit(): void {
@@ -349,7 +355,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     private async initProtoSerchForm() {
         const defaulDate = new Date();
-        this.allOperation = await this.operation(this.protocolIdOperation[this.dictId]);
+        this.getProtOperation(this.protocolIdOperation[this.dictId]);
         const configProtocolSerchInput: IInputParamControl[] = [
             {
                 controlType: E_FIELD_TYPE.date,
@@ -405,9 +411,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                             let oper: string = '';
                             data['OPERATION'].forEach(el => {
                                 if (oper) {
-                                    oper = oper + '|' + el.OPER_DESCRIBE;
+                                    oper = oper + '|' + el.operDescribe;
                                 } else {
-                                    oper = el.OPER_DESCRIBE;
+                                    oper = el.operDescribe;
                                 }
                             })
                             this.searchData['protocol']['OPER_DESCRIBE'] = oper;
@@ -445,44 +451,22 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
     }
 
-    async operation(idOperations: string[]): Promise<PROT_NAME[]> {
-        const operation: PROT_NAME[] = await this.getProtOperation(idOperations);
-
-        const sortOperation = operation.sort((a, b) => {
-            if (a.DESCRIBTION.toLowerCase() < b.DESCRIBTION.toLowerCase()) {
-                return -1;
-              }
-              if (a.DESCRIBTION.toLowerCase() > b.DESCRIBTION.toLowerCase()) {
-                return 1;
-              }
-              return 0;
-        });
-
-        const unicOperation: PROT_NAME[] = [];
-        sortOperation.forEach((el) => {
-            if (el.DESCRIBTION) {
-                if(!unicOperation.length){
-                    unicOperation.push(el)
-                } else {
-                    const i = unicOperation.length - 1;
-                    if(!(unicOperation[i].DESCRIBTION === el.DESCRIBTION)) {
-                        unicOperation.push(el)
-                    }
-                }
-            }
-        })
-        return unicOperation;
-    }
-
-    async getProtOperation(param: string[]): Promise<PROT_NAME[]> {
+    getProtOperation(param: string[]) {
         try{
-            let criteies: string = param.join('|');
-            const allOperation: PROT_NAME[] = await this._pipRX.read({PROT_NAME: {criteries: {TABLE_ID: criteies}}})
-            return allOperation;
+            const protNameParam = this.creatorParam.protName(param);
+            this.subscriptions.push(
+                this.graphQL.watchQuery(protNameParam).valueChanges.subscribe((result: ApolloQueryResult<ResponseProtNames> ) => {
+                    if(result.errors){
+                        this.allOperation = [];
+                        throw new Error(result.error.message)
+                    } else {
+                        this.allOperation = result.data?.protNamesPg.items;
+                    }
+                })
+            )
         } catch (err) {
             console.warn(err);
-            console.error('Error: Failed to get operation name.');
-            return [];
+            console.error('Error: Failed to get operation name');
         }
     }
 
@@ -490,10 +474,10 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.flagSelectPopover = !this.flagSelectPopover;
     }
 
-    public togleOperation(operation: PROT_NAME) {
-        if(this.checkOperationIsSelected(operation.DESCRIBTION)) {
+    public togleOperation(operation: ProtNames) {
+        if(this.checkOperationIsSelected(operation.describtion)) {
             this.selectedOperation.selectOption = this.selectedOperation.selectOption.filter(el => {
-                return el.DESCRIBTION !== operation.DESCRIBTION;
+                return el.describtion !== operation.describtion;
             })
             this.createValueToInputOperation();
         } else {
@@ -502,17 +486,17 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.protocolForm.controls['OPERATION'].patchValue(this.selectedOperation.selectOption, { emitEvent: true }) 
     }
 
-    public checkOperationIsSelected(DESCRIBTION: string): boolean {
+    public checkOperationIsSelected(describtion: string): boolean {
         let checkup: boolean = false;
         this.selectedOperation.selectOption.forEach(el => {
-            if(el.DESCRIBTION === DESCRIBTION) {
+            if(el.describtion === describtion) {
                 checkup = true;
             }
         })
         return checkup;
     }
 
-    private selectOperation(operation: PROT_NAME) {
+    private selectOperation(operation: ProtNames) {
         this.selectedOperation.selectOption.push(operation);
         this.createValueToInputOperation();
     }
@@ -521,9 +505,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.selectedOperation.valueToInput = '';
         this.selectedOperation.selectOption.forEach(el => {
             if(this.selectedOperation.valueToInput.length) {
-                this.selectedOperation.valueToInput +=  ' или ' + el.DESCRIBTION
+                this.selectedOperation.valueToInput +=  ' или ' + el.describtion
             } else {
-                this.selectedOperation.valueToInput = el.DESCRIBTION
+                this.selectedOperation.valueToInput = el.describtion
             }
         })
     }
@@ -716,8 +700,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     private async initSearchForm() {
         this.dictionary = this._dictSrv.currentDictionary;
-        if (this.dictId === 'organization' || this.dictId === 'citizens' && !this.protocolForm ) {
-            await this.initProtoSerchForm();
+
+        if ((this.dictId === 'organization' || this.dictId === 'citizens') && !this.protocolForm) {
+            this.initProtoSerchForm();
         }
         if (this.dictionary) {
             if (this.settings) {

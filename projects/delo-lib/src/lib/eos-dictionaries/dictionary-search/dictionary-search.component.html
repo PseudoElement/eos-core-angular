@@ -1007,7 +1007,10 @@
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                            (click)="searchModel['CLASSIF_NAME'] = ''"
+                        >
+                            <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                        </a>
                     </div>
                 </div>
 
@@ -1025,7 +1028,10 @@
                                 maxlength="{{fieldsDescription.rec['EMAIL']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['EMAIL']}"
-                                (click)="searchModel['EMAIL'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                                (click)="searchModel['EMAIL'] = ''"
+                            >
+                                <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                            </a>
                         </div>
                     </div>
 
@@ -1056,13 +1062,18 @@
 
         <div *ngIf="currTab === 'medo'" class="row">
             <form id="organization">
-                <button [disabled]="noSearchData"
+                <button 
+                    [disabled]="noSearchData"
                     type="submit"
                     (click)="fullSearch()"
-                    class="hidden-submit">Найти</button>
+                    class="hidden-submit"
+                >Найти</button>
                 <div class="form-group unimportant-text">
                     <label class="s-font"
-                        for="organization-name">{{fieldsDescription.rec['GATE']?.title}}</label>
+                        for="organization-name"
+                    >
+                        {{fieldsDescription.rec['GATE']?.title}}
+                    </label>
                     <div class="search-fld">
                         <input id="organization-name"
                             name="organization-name"
@@ -1073,12 +1084,16 @@
                             maxlength="{{fieldsDescription.rec['GATE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['GATE']}"
-                            (click)="searchModel['GATE'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                            (click)="searchModel['GATE'] = ''"
+                        >
+                            <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                        </a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
-                    <label class="s-font"
-                        for="organization-email">{{fieldsDescription.rec['GATE_ID']?.title}}</label>
+                    <label class="s-font" for="organization-email">
+                        {{fieldsDescription.rec['GATE_ID']?.title}}
+                    </label>
                     <div class="search-fld">
                         <input id="organization-email"
                             name="organization-email"
@@ -1089,12 +1104,16 @@
                             maxlength="{{fieldsDescription.rec['GATE_ID']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['GATE_ID']}"
-                            (click)="searchModel['GATE_ID'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                            (click)="searchModel['GATE_ID'] = ''"
+                        >
+                            <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                        </a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
-                    <label class="s-font"
-                        for="organization-inn">{{fieldsDescription.rec['CONTACT.MEDO_ID']?.title}}</label>
+                    <label class="s-font" for="organization-inn">
+                        {{fieldsDescription.rec['CONTACT.MEDO_ID']?.title}}
+                    </label>
                     <div class="search-fld">
                         <input id="organization-inn"
                             name="organization-inn"
@@ -1105,12 +1124,16 @@
                             maxlength="{{fieldsDescription.rec['CONTACT.MEDO_ID']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CONTACT.MEDO_ID']}"
-                            (click)="searchModel['CONTACT.MEDO_ID'] = ''"><span class="eos-adm-icon eos-adm-icon-close-blue"></span></a>
+                            (click)="searchModel['CONTACT.MEDO_ID'] = ''"
+                            >
+                                <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
+                            </a>
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
-                    <label class="s-font"
-                        for="organization-inn">{{fieldsDescription.rec['CONTACT.MEDO_GLOBAL_ID']?.title}}</label>
+                    <label class="s-font" for="organization-inn">
+                        {{fieldsDescription.rec['CONTACT.MEDO_GLOBAL_ID']?.title}}
+                    </label>
                     <div class="search-fld">
                         <input id="organization-inn"
                             name="organization-inn"
@@ -1121,7 +1144,10 @@
                             maxlength="{{fieldsDescription.rec['CONTACT.MEDO_GLOBAL_ID']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CONTACT.MEDO_GLOBAL_ID']}"
-                            (click)="searchModel['CONTACT.MEDO_GLOBAL_ID'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                            (click)="searchModel['CONTACT.MEDO_GLOBAL_ID'] = ''"
+                        >
+                            <span class="eos-icon eos-icon-close-blue"></span>
+                        </a>
                     </div>
                 </div>
             </form>
@@ -1461,17 +1487,17 @@
     <div 
         class="operation-item" 
         *ngFor="let operation of allOperation"
-        id="operation.OPER_DESCRIBE"
+        id="operation.operDescribe"
         (click)="togleOperation(operation)"
     >
         <div class="wrapper-checkbox">
             <span 
                 class="eos-adm-icon small"
                 [ngClass]="{
-                    'eos-adm-icon-checkbox-blue': checkOperationIsSelected(operation.DESCRIBTION)
+                    'eos-adm-icon-checkbox-blue': checkOperationIsSelected(operation.describtion)
                 }"
             ></span>
         </div>
-        <p class="title-operation">{{operation.DESCRIBTION}}</p>
+        <p class="title-operation">{{operation.describtion}}</p>
     </div>
 </ng-template>

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Apollo, gql} from 'apollo-angular';
 import { ORIGINDATA, DgFileCategoryElement } from '../interfaces/fetch.interface';
 
 @Injectable({providedIn: 'root'})
 export class GraphQLService {
+    constructor(private apollo: Apollo){}
 
     Const_Response_Headers: string = `
         clientMutationId
@@ -50,5 +52,18 @@ export class GraphQLService {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({query: `mutation{${mutationParam}}`})
         });
+    }
+
+    read(queryParam: string) {
+        return this.apollo.client.readQuery({
+            query:  gql`query{${queryParam}}`,
+            });
+    }
+
+    watchQuery(queryParam: string) {
+        return this.apollo.watchQuery({
+            query:  gql`query{${queryParam}}`,
+            errorPolicy: 'all',
+        })
     }
 }
