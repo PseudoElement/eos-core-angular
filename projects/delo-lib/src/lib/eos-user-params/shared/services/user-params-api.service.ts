@@ -135,7 +135,6 @@ export class UserParamApiSrv {
             propOrderBy = 'CLASSIF_NAME asc';
             ob1['DUE_DEP'] = 'isnull';
         }
-
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
                 ob1['ISN_LCLASSIF'] = '1:null';
@@ -168,6 +167,9 @@ export class UserParamApiSrv {
             } else {
                 let ob = {};
                 ob['DUE_DEP'] = `${dueDep}%`;
+                if (!this.flagDelitedPermanantly && !this.flagDisableUser) { // вот тут должно быть обновление
+                    ob['DELETED'] = 0;
+                }
                 q = {
                     USER_CL: PipRX.criteries(ob),
                     top: `${top}`,
