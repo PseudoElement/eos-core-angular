@@ -52,6 +52,7 @@ import { WaitClassifService } from './services/waitClassif.service';
 import {CertificateService} from './services/certificate.service';
 import { ExportImportClService } from './services/export-import-cl.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { GraphQLModule } from './graphql.module';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -108,7 +109,8 @@ import { UserSessionGuard } from './guards/user-session.guard';
         EosUserParamsModule,
         EosUserSelectModule,
         EosBackgraundTasksModule,
-        EosInstrumentsModule
+        EosInstrumentsModule,
+        GraphQLModule
     ],
     entryComponents: [
         LoginFormComponent,
