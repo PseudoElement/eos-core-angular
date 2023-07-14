@@ -198,7 +198,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 this.checkHomeCabinet();
                 break;
             case 'copy':
-                localStorage.setItem('copyParamsFOLDER_AVAILABLE', this.currentCabinet.data.FOLDERS_AVAILABLE);
+                localStorage.setItem('copyParamsFOLDER_AVAILABLE', this.currentCabinet.data.FOLDERS_AVAILABLE + '_' + this.currentCabinet.data['HIDE_INACCESSIBLE'] + this.currentCabinet.data['HIDE_INACCESSIBLE_PRJ']);
                 // this.updateBtn();
                 break;
             case 'insert':
@@ -269,7 +269,12 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     }
     insertToCurent() {
         if (localStorage.getItem('copyParamsFOLDER_AVAILABLE') !== undefined) {
-            this.currentCabinet.data.FOLDERS_AVAILABLE = localStorage.getItem('copyParamsFOLDER_AVAILABLE');
+            const folder = localStorage.getItem('copyParamsFOLDER_AVAILABLE');
+            this.currentCabinet.data.FOLDERS_AVAILABLE = folder.split('_')[0];
+            const flag = folder.split('_')[1];
+            this.currentCabinet.data.HIDE_INACCESSIBLE = +flag[0];
+            this.currentCabinet.data.HIDE_INACCESSIBLE_PRJ = +flag[1];
+            this.changes.emit();
         }
     }
     updateToAll() {
@@ -299,6 +304,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                 cab.data.HOME_CABINET = 0;
             });
         }
+        this.changes.emit();
     }
     checkedFolder(value): boolean {
         // tslint:disable-next-line: no-bitwise
