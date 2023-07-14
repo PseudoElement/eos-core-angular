@@ -168,10 +168,19 @@
                 [btnError] = "disableSave"
             ></eos-extended-protocol>
         </ng-container>
+        <ng-container *ngSwitchCase="'preview'">
+            <eos-param-preview
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-param-preview>
+        </ng-container>
     </ng-container>
 </div>
 
-<div [ngClass]="{'list-show' : isWide}" class="params-nav-list">
+<div [ngClass]="{'list-show' : isWide}" class="params-nav-list ">
+    <div class="param-system-header"></div>
     <ul class="list-group" style="overflow-x: auto; height: calc(100vh - 96px)">
         <li
             class="list-group-item"

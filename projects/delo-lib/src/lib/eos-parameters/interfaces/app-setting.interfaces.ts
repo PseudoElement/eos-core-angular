@@ -83,3 +83,15 @@ export interface IExtendedParams {
     Library: ILibrary;
 }
 
+export interface IConverterUse {
+    InstanceName: string;
+    Type: number;
+}
+export interface IPreviewParams {
+    ConverterMaxFileSize: number;
+    IsActive: boolean;
+    TimeOutWaitConverting: number;
+    ConverterFormat: string;
+    ConverterUse: IConverterUse;
+}
+

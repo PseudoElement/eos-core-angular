@@ -1,0 +1,52 @@
+<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs">
+    <eos-param-header
+        #headerElement
+        [title]="titleHeader"
+        (submitForm)="btnDisabled ? cancel() : preSubmit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnError"
+        [editBtn]="!stayEdit"
+        (editForm)="edit()"
+    ></eos-param-header>
+    <div style="padding: 20px; padding-bottom: 60px;" class="param-input-group">
+        <div style="display: flex; width: 100%;">
+            <eos-dynamic-input
+                style="width: 50%; padding-right: 10px; "
+                [input]="inputs['rec.ConverterUseType']"
+                [form]="form"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                style="width: 50%; padding-left: 10px; margin-top: 30px;"
+                [input]="inputs['rec.IsActive']"
+                [form]="form"
+            ></eos-dynamic-input>
+        </div>
+        <eos-dynamic-input
+            *ngIf="form.controls['rec.ConverterUseType'].value === '2'"
+            [input]="inputs['rec.ConverterUseInstanceName']"
+            [form]="form"
+        ></eos-dynamic-input>
+        <div style="display: flex; width: 100%;">
+            <div style="width: 50%; padding-right: 10px;">
+                <span class="title-span">Время ожидания завершения конвертации, мин.</span>
+                <eos-dynamic-input
+                    style="width: 100%;"
+                    [input]="inputs['rec.TimeOutWaitConverting']"
+                    [form]="form"
+                ></eos-dynamic-input>
+            </div>
+            <div style="width: 50%; padding-left: 10px;">
+                <span class="title-span">Максимальный размер файла для конвертации, МБ</span>
+                <eos-dynamic-input
+                    style="width: 100%; "
+                    [input]="inputs['rec.ConverterMaxFileSize']"
+                    [form]="form"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+        
+
+        
+    </div>
+    
+  </div>

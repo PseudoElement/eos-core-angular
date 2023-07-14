@@ -9,6 +9,7 @@ export enum AppsettingsParams {
     Sms = "Eos.Platform.Settings.Sms",
     Notification = "Eos.Platform.Settings.Notification",
     ExtendedProtocol = "Eos.Delo.Settings.ExtendedProtocol",
+    FileOper = "Eos.Delo.Settings.FileOper"
 }
 export enum AppsettingsTypename {
     TCryptography = "CryptographyCfg",
@@ -22,5 +23,6 @@ export enum AppsettingsTypename {
     TKafka = "KafkaCfg",
     TElastic = "ElasticCfg",
     TNotification = "NotificationCfg",
-    TExportStorage = "ExportStorageCfg"
+    TExportStorage = "ExportStorageCfg",
+    Preview = "PreviewCfg"
 }
