@@ -20,6 +20,7 @@ export enum E_PARMS_PAGES {
     "unloading-arch" = "unloading-arch",
     "extended-protocol" = "extended-protocol",
     licensing = "licensing",
+    preview = "preview"
 }
 export const EOS_PARAMETERS_TAB = [{
     title: 'Работа с РК',
@@ -91,18 +92,19 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Служба конвертации',
     url: E_PARMS_PAGES.conversion,
     visible: true
-},
-{
+}, {
+    title: 'Предварительный просмотр',
+    url: E_PARMS_PAGES.preview,
+    visible: true
+}, {
     title: 'Архивное хранилище',
     url: E_PARMS_PAGES['unloading-arch'],
     visible: true
-},
-{
+}, {
     title: 'Расширенный протокол',
     url: E_PARMS_PAGES['extended-protocol'],
     visible: true
-},
-{
+}, {
     title: 'Лицензирование',
     url: E_PARMS_PAGES.licensing,
     visible: true
