@@ -5,9 +5,10 @@ import { IRecordModeDescription, ITreeDictionaryDescriptor } from '../../eos-dic
 import { EosDictionaryNode } from './eos-dictionary-node';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { AR_DESCRIPT, CITIZEN, REGION_CL } from '../../eos-rest';
-import { creatorGraphQlParam } from '../services/creator-graphQl-param'
 import { ResponseCitizens, ResponseProt } from '../interfaces/fetch.interface';
-import { converterFetchRequest } from '../services/converter-fetch-request';
+import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
+import { CitizensAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/citizens-advanced-search';
+import { CitizensConverterFetchRequest } from '../services/converter-fetch-request/citizens-converter';
 
 // interface search {
 //     CITIZEN_SURNAME?: string;
@@ -32,8 +33,9 @@ export class CitizenDescriptor extends RecordDescriptor {
 export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: CitizenDescriptor;
     dopRec: AR_DESCRIPT[] = [];
-    private createFetchParam = new creatorGraphQlParam();
-    private converter = new converterFetchRequest();
+    private protParam = new ProtAdvancedSearch();
+    private citizensParam = new CitizensAdvancedSearch();
+    private converter = new CitizensConverterFetchRequest();
 
     public addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
         return Promise.resolve();
@@ -184,7 +186,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
     
     async searchProtocol(data: any) {
-        const protReq: string = this.createFetchParam.prot(data);
+        const protReq: string = this.protParam.prot(data);
         const requestProt = await this.graphQl.query(protReq);
         if (requestProt.ok) {
             const prot: ResponseProt = await requestProt.json();
@@ -193,7 +195,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 return [];
             } else {
                 if (prot.data.protsPg.items.length) {
-                    const citizensReq = this.createFetchParam.citizens(prot.data.protsPg.items);
+                    const citizensReq = this.citizensParam.citizens(prot.data.protsPg.items);
                     const requestCitizens = await this.graphQl.query(citizensReq);
                     const citizens: ResponseCitizens = await requestCitizens.json();
                     const convertSitizenResponse: CITIZEN[] =  this.converter.citizensReq(citizens.data.citizensPg.items);

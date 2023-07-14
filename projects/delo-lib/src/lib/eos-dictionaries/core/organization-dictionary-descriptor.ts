@@ -13,8 +13,9 @@ import { ModeFieldSet } from './record-mode';
 import { ResponseOrganization, SearchQueryOrganization, ResponseProt, 
     // ORGANIZ_EXTENDS 
 } from '../interfaces/fetch.interface';
-import { creatorGraphQlParam } from '../services/creator-graphQl-param'
-import { converterFetchRequest } from '../services/converter-fetch-request';
+import { OrganizAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/organiz-advanced-search';
+import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
+import { OrganizConverterFetchRequest } from '../services/converter-fetch-request/organiz-converter';
 
 const inheritFiields = [
     'ISN_ADDR_CATEGORY',
@@ -43,8 +44,9 @@ class OrganizRecord extends TreeRecordDescriptor {
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     dopRec = [];
     modeList: IRecordModeDescription[];
-    private createFetchParam = new creatorGraphQlParam();
-    private converter = new converterFetchRequest();
+    private organizParam = new OrganizAdvancedSearch();
+    private protParam = new ProtAdvancedSearch();
+    private converter = new OrganizConverterFetchRequest();
     
     public getFullSearchCriteries(data: any) {
         const srchMode = data['srchMode'];
@@ -243,7 +245,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
 
     public async searchProto(queries: SearchQueryOrganization) {
-        const protReq: string = this.createFetchParam.prot(queries.protocol);
+        const protReq: string = this.protParam.prot(queries.protocol);
         const requestProt = await this.graphQl.query(protReq);
         if (requestProt.ok) {
             const prot: ResponseProt = await requestProt.json();
@@ -252,7 +254,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 return [];
             } else {
                 if (prot.data.protsPg.items.length) {
-                    const organizReq = this.createFetchParam.organiz(prot.data.protsPg.items, queries);
+                    const organizReq = this.organizParam.organiz(prot.data.protsPg.items, queries);
                     const requestOrganiz = await this.graphQl.query(organizReq);
                     const organiz: ResponseOrganization = await requestOrganiz.json();
                 
