@@ -295,10 +295,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         });
         if (usersNotDeleted.length > 0) {
             const index = usersNotDeleted.indexOf(this.selectedUser);
-            if (type.action === 13) {
+            if (type.action === 17) {
                 this.setNewCurrUserByBreadMinus(index, usersNotDeleted);
             }
-            if (type.action === 14) {
+            if (type.action === 18) {
                 this.setNewCurrUserByBreadPlus(index, usersNotDeleted);
             }
         }
