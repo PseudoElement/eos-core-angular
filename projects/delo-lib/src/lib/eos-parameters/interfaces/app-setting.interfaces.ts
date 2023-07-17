@@ -43,7 +43,7 @@ export interface IConverterParam {
     Name: string;
     Library: ILibrary;
     MaxCacheSize: number;
-    IsActive: boolean;
+    IsShared: boolean;
     ConverterFormat: string;
     ServerURL: string;
 }

@@ -11,24 +11,27 @@
     <div style="padding: 20px; padding-bottom: 60px;" class="param-input-group">
         <div style="display: flex; width: 100%;">
             <eos-dynamic-input
+                class="eos-dynamic-input-title-custom"
                 style="width: 50%; padding-right: 10px; "
                 [input]="inputs['rec.ConverterUseType']"
                 [form]="form"
             ></eos-dynamic-input>
             <eos-dynamic-input
-                style="width: 50%; padding-left: 10px; margin-top: 30px;"
+            class="eos-dynamic-input-title-custom-checkbox"
+                style="width: 50%; padding-left: 10px; margin-top: 27px;"
                 [input]="inputs['rec.IsActive']"
                 [form]="form"
             ></eos-dynamic-input>
         </div>
         <eos-dynamic-input
+            class="eos-dynamic-input-title-custom"
             *ngIf="form.controls['rec.ConverterUseType'].value === '2'"
             [input]="inputs['rec.ConverterUseInstanceName']"
             [form]="form"
         ></eos-dynamic-input>
         <div style="display: flex; width: 100%;">
             <div style="width: 50%; padding-right: 10px;">
-                <span class="title-span">Время ожидания завершения конвертации, мин.</span>
+                <span style="font-size: 12px !important; color: #969696; text-transform: uppercase;">Время ожидания завершения конвертации, мин.</span>
                 <eos-dynamic-input
                     style="width: 100%;"
                     [input]="inputs['rec.TimeOutWaitConverting']"
@@ -36,7 +39,7 @@
                 ></eos-dynamic-input>
             </div>
             <div style="width: 50%; padding-left: 10px;">
-                <span class="title-span">Максимальный размер файла для конвертации, МБ</span>
+                <span style="font-size: 12px !important; color: #969696; text-transform: uppercase;">Максимальный размер файла для конвертации, МБ</span>
                 <eos-dynamic-input
                     style="width: 100%; "
                     [input]="inputs['rec.ConverterMaxFileSize']"
