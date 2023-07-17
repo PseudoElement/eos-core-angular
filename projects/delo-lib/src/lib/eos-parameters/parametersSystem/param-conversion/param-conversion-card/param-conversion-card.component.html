@@ -13,34 +13,38 @@
         </div>
     </div>
     <div *ngIf="!isLoading" style="padding: 20px">
-        <eos-dynamic-input
-            [input]="inputs['rec.IsActive']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
         <div >
             <eos-dynamic-input
+                class="eos-dynamic-input-title-custom"
                 [input]="inputs['rec.Name']"
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
             <eos-dynamic-input
+                class="eos-dynamic-input-title-custom"
                 [input]="inputs['rec.LibraryName']"
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
+            <eos-dynamic-input  class="eos-dynamic-input-title-custom" [input]="inputs['rec.LibraryDirectory']" [form]="form"  [readonly]="false"></eos-dynamic-input>
             <div class="second-string">
-                <eos-dynamic-input class="padding-right" [input]="inputs['rec.LibraryDirectory']" [form]="form"  [readonly]="false"></eos-dynamic-input>
-                <div style="margin-top: -5px;" class="padding-left">
-                    <span>МАКС. РАЗМЕР ПАПКИ РЕЗУЛЬТАТОВ (ГБ)</span>
+                <div style="margin-right: 10px; width: 55%;">
+                    <span style="font-size: 12px !important; color: #969696;">МАКСИМАЛЬНЫЙ РАЗМЕР ПАПКИ РЕЗУЛЬТАТОВ КОНВЕРТАЦИИ, ГБ</span>
                     <eos-dynamic-input [input]="inputs['rec.MaxCacheSize']" [form]="form"  [readonly]="false"></eos-dynamic-input>
                 </div>
+                <eos-dynamic-input
+                    class="eos-dynamic-input-title-custom-checkbox"
+                    style="width: 45%; margin-left: 10px; padding-top: 25px;"
+                    [input]="inputs['rec.IsShared']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
             </div>
-            <eos-dynamic-input
+           <!--  <eos-dynamic-input
                 [input]="inputs['rec.ServerURL']"
                 [form]="form"
                 [readonly]="false"
-            ></eos-dynamic-input>
+            ></eos-dynamic-input> -->
         </div>
     </div>
     <div class="spinner-wrapper email-wr" *ngIf="isLoading">

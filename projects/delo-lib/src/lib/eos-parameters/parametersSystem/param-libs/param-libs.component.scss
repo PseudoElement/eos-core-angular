@@ -1,10 +1,4 @@
 .param-libs-class {
-    .eos-dynamic-input-title-custom {
-        label {
-            font-size: 12px !important;
-            color: #969696;
-        }
-    }
     .title-span {
         font-size: 12px;
         color: #969696;
@@ -64,6 +58,19 @@
     }
     .style-to-table {
         border-bottom: 1px solid #e6e6e6;
+    }
+}
+.eos-dynamic-input-title-custom {
+    label {
+        font-size: 12px !important;
+        color: #969696;
+    }
+}
+.eos-dynamic-input-title-custom-checkbox {
+    label {
+        font-size: 16px !important;
+        color: #969696;
+        text-transform: none;
     }
 }
 
