@@ -1,0 +1,24 @@
+<div class="card-content-wrapper" #root>
+    <eos-dynamic-input
+        [input]="inputs['rec.RUBRIC_CODE']"
+        [form]="form"
+        [readonly]="!editMode"
+    ></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+        [form]="form"
+        [readonly]="!editMode"
+    ></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.FULLNAME']"
+        [form]="form"
+        [readonly]="!editMode"
+    ></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+        [form]="form"
+        [readonly]="!editMode"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['sev.GLOBAL_ID']"
+        [form]="form"
+        [readonly]="!editMode"
+    ></eos-dynamic-input>
+</div>
