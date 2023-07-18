@@ -118,6 +118,7 @@ import { SevParticiantNodeInfoComponent } from './node-info/sev-participant-node
 import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/templateCardExample.component';
 import { DepartmentCalendarComponent } from './department-calendar/department-calendar.component';
 import { OrganizationNodeInfoComponent } from './node-info/organization-node-info/organization-node-info.component';
+import { RubricatorCardEditComponent } from './card-views/rubricator-card-edit.component';
 
 @NgModule({
     declarations: [
@@ -200,7 +201,8 @@ import { OrganizationNodeInfoComponent } from './node-info/organization-node-inf
         SevParticiantNodeInfoComponent,
         SpravochnikiTemplateComponent,
         DepartmentCalendarComponent,
-        OrganizationNodeInfoComponent
+        OrganizationNodeInfoComponent,
+        RubricatorCardEditComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,
