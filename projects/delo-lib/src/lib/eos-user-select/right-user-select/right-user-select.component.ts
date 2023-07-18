@@ -27,9 +27,10 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     ctf: UserSelectNode;
     UserCabinetInfo: any;
     DueInfo: string;
-    role: string | boolean;
+    role: string | boolean | string[];
     flagSustem: boolean;
-    opened: boolean;
+    openedAccessSystems: boolean;
+    openedRole: boolean;
     chooseTemplate: string;
     isPhoto: boolean | number;
     urlPhoto: string = '';
@@ -45,13 +46,14 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         private _storageSrv: EosStorageService,
         private _router: Router,
         private _errSrv: ErrorHelperServices,
-        private _appContext: AppContext,
+        public _appContext: AppContext,
         private _extensionsUser: ExetentionsUserParamsLib
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
         this.flagSustem = false;
-        this.opened = false;
+        this.openedAccessSystems = false;
+        this.openedRole = true
         this.showDep = false;
 
         this._selectedUser.changerUser
@@ -190,11 +192,21 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         return url;
     }
 
-    getRoleForUser(array: USER_PARMS[], cb_role: Array<any>): string {
-        if (cb_role && cb_role.length) {
-            const idRole = cb_role[0]['KIND_ROLE'];
-            return KIND_ROLES_CB[idRole - 1];
+    getRoleForUser(array: USER_PARMS[], cb_role: Array<any>): string | string[] {
+        if(this._appContext.cbBase) {
+            const roleName: string[] = [];
+            if (cb_role && cb_role.length) {
+                cb_role.forEach(el => {
+                    const id = el['KIND_ROLE'];
+                    roleName.push(KIND_ROLES_CB[id-1])
+                })
+            } 
+            if (array[0] && array[0].PARM_VALUE) {
+                roleName.push(array[0].PARM_VALUE);
+            }
+            return roleName;
         }
+         
         if (array[0]) {
             return array[0].PARM_VALUE ? array[0].PARM_VALUE : 'Не указана';
         } else {
@@ -241,8 +253,9 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         this._selectedUser.ArraySystemHelper.delowebLGO.checked = delowebLGO;
         this._selectedUser.ArraySystemHelper.delowebKL.checked = delowebKL;
     }
-    openedSustem(): void {
-        this.opened = !this.opened;
+
+    togleParam(nameParam: string): void {
+        this[nameParam] = !this[nameParam];
     }
 
     ngOnDestroy() {
