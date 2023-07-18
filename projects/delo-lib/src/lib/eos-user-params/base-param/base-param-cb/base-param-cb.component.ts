@@ -1439,15 +1439,21 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
-                    this.form.get('NOTE').patchValue(this.curentUser['NOTE']);
+                    // this.form.get('NOTE').patchValue(this.curentUser['NOTE']);
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
+
                                 this.form.get('DUE_DEP_NAME').patchValue('');
-                                this.form.get('NOTE').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
+
+                                this.formControls.controls['DUE_DEP_NAME'].patchValue('');
+                                this.formControls.controls['DUE_DEP_NAME'].disable();
+                                this.formControls.controls['DUE_DEP_NAME'].setValidators(null);
+
+                                this.form.get('NOTE').patchValue('');
                                 const selRol = ('' + this.formControls.controls['SELECT_ROLE'].value).replace(' ...', '');
                                 if (KIND_ROLES_CB.indexOf(selRol) > -1) {
                                     this.formControls.controls['SELECT_ROLE'].patchValue('');
