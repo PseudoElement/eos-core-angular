@@ -4,11 +4,12 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     id: 'ext-app',
     title: 'Внешний обмен',
     apiInstance: 'USER_PARMS',
-    fields: [{
+    fields: [
+    /* {
         key: 'SEV_HIDE_SENDING',
         type: 'boolean',
-        title: 'Скрыть операцию "Отправить сообщение СЭВ"' /* в приложении Документы */
-    },
+        title: 'Скрыть операцию "Отправить сообщение СЭВ"'
+    }, */
     {
         key: 'SEV_ALLOW_DELIVERY',
         type: 'boolean',
