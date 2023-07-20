@@ -523,6 +523,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.disableUrlCreate2(arrayQuery);
         this.createUrl(arrayQuery);
         this.mapChanges.clear();
+        arrayQuery.forEach((query) => {
+            if(query.data && query.data['PARM_VALUE']) {
+                query.data['PARM_VALUE'] = query.data['PARM_VALUE'] === 'null' ? null : query.data['PARM_VALUE'];
+            }
+        })
         return arrayQuery;
     }
     createUrl(arrayQuery) {
