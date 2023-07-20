@@ -482,10 +482,17 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     async getProtOperation(param: string[]): Promise<PROT_NAME[]> {
-        try{
+        try {
             let criteies: string = param.join('|');
             const allOperation: PROT_NAME[] = await this._pipRX.read({PROT_NAME: {criteries: {TABLE_ID: criteies}}})
-            return allOperation;
+            const filterOperation = allOperation.filter(operation => {
+                let validOperation = false;
+                param.forEach(el => {
+                    if (el === operation.TABLE_ID) validOperation = true;
+                })
+                return validOperation;
+            })
+            return filterOperation;
         } catch (err) {
             console.warn(err);
             console.error('Error: Failed to get operation name.');
