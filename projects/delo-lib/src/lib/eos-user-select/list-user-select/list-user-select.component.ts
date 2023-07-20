@@ -648,9 +648,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     UserLists() {
-        const selectedUsers = this.listUsers.filter((user) => user.isChecked);
-        if (selectedUsers.length === 1) {
-            const selectedUser = selectedUsers[0];
+        // const selectedUsers = this.listUsers.filter((user) => user.isChecked);
+        if (this._userParamSrv.checkedUsers.length === 1) {
+            const selectedUser = this._userParamSrv.checkedUsers[0];
             const param: IOpenClassifParams = {
                 classif: 'SharingLists',
                 clUser: true,
