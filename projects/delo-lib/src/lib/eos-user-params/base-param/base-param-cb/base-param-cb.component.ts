@@ -1472,6 +1472,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 this.curentUser.isTechUser = data;
                                 // f.get('teсhUser').setValue(false);
                                 f.get('teсhUser').setValue(false, { emitEvent: false });
+                                this.updateParamsTech(false);
                             }
                         }).catch(error => {
                             console.log('Ошибка', error);
