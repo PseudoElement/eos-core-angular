@@ -298,7 +298,9 @@ export class RughtDeloAbsRightService {
         const alreadyWeight = new Map();
         if (this.paramsToQuery && (this.paramsToQuery.mapOrgWeight || this.paramsToQuery.mapDepWeight)) {
             queryAll.forEach((query) => {
-                delete query.data['OLD_WEIGHT'];
+                if (query.data && query.data['OLD_WEIGHT']) {
+                    delete query.data['OLD_WEIGHT'];
+                }
                 if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // организации
                     const weighNew = this.paramsToQuery.mapOrgWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew && (query.method === 'POST' || query.method === 'MERGE')) {
@@ -628,15 +630,15 @@ export class RughtDeloAbsRightService {
         this.tabelData.data.forEach((item) => {
             if (item['key'] === '0.' && item.__metadata.__type === 'DEPARTMENT') {
                 if (item[funcNum].type === ECellToAll.checkbox) {
-                    this.updatePutchValue(item['key'], funcNum, flag);
+                    this.updatePutchValue(item, funcNum, flag);
                     item[funcNum]['check'] = flag;
                 }
             } else if(item[funcNum] && item.__metadata.__type === 'DEPARTMENT') {
                 if (item[funcNum].type === ECellToAll.checkbox) {
                     if (item[funcNum]['check'] && flag) {
-                        this.updatePutchValue(item['key'], funcNum, !flag);
+                        this.updatePutchValue(item, funcNum, !flag);
                     } else if (!item[funcNum]['check'] && !flag) {
-                        this.updatePutchValue(item['key'], funcNum, !flag);
+                        this.updatePutchValue(item, funcNum, !flag);
                     }
                     item[funcNum]['check'] = !flag;
                     item[funcNum]['disabled'] = flag;
@@ -672,7 +674,11 @@ export class RughtDeloAbsRightService {
         const mapOrgInfo = new Map();
         const mapDepWeight = {};
         const mapOrgWeight = {};
+        let getFlag = false;
         curentUser.USERDEP_List.forEach((dep) => {
+            if (dep['DUE'] === '0.') {
+                getFlag = true
+            }
             if (mapDepWeight[dep['DUE']] === undefined) {
                 mapDepWeight[dep['DUE']] = new Set([dep['WEIGHT']]);
             } else {
@@ -686,6 +692,12 @@ export class RughtDeloAbsRightService {
                 mapDep.set(dep['DUE'], dep['FUNC_NUM']);
             }
         });
+        if (!getFlag) {
+            mapDepWeight['0.']= new Set([0]);
+            newMapDep.push('0.');
+            mapDepInfo.set('0._70', {});
+            mapDep.set('0.', 70);
+        }
         curentUser['USER_ORGANIZ_List'].forEach((org) => {
             if (mapOrgWeight[org['DUE']] === undefined) {
                 mapOrgWeight[org['DUE']] = new Set([org['WEIGHT']]);
