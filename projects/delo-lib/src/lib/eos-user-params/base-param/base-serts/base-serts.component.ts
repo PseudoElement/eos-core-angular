@@ -2,7 +2,7 @@ import { Component, Output, OnInit, EventEmitter, OnDestroy } from '@angular/cor
 import { SertsBase } from '../../../eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { CarmaHttp2Service } from './../../../app/services/camaHttp2.service';
 import { CertificateService } from '../../../app/services/certificate.service';
-import { USER_CERTIFICATE } from '../../../eos-rest';
+import { AppContext, USER_CERTIFICATE } from '../../../eos-rest';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { ICertificateInit } from '../../../eos-common/interfaces';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
@@ -41,6 +41,7 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
         private _certService: CertificateService,
         private pip: PipRX,
         private _msg: EosMessageService,
+        private _appContext: AppContext,
     ) {
 
     }
@@ -60,7 +61,14 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
                 this.flagSave = 'POST';
             }
             const store = [{ Location: 'sscu', Address: '', Name: 'My' }];
-            this.carma2Srv.connectWrapper('MODULE=', store).then((res) => {
+            let cryptoStr;
+            this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
+                if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
+                    cryptoStr = params['PARM_VALUE'];
+                }
+            });
+            const addr = cryptoStr ? cryptoStr : 'SERVER="http://localhost:8080"';
+            this.carma2Srv.connectWrapper(addr, store, false).then((res) => {
                 this.isCarma = true;
                 if (user_Sert.length) {
                     this.getInfoSerts();
