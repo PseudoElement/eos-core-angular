@@ -397,23 +397,30 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.protocolForm.valueChanges.subscribe((data) => {
             try {
                 this.protocolSearchNameControl.forEach(el => {
-                    if(el === 'FROM' || el === 'TO') {
-                        const DATE_ISO_8601 = "YYYY-MM-DD";
-                        this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format(DATE_ISO_8601)}` : null;
-                    } else if (el === 'OPER_DESCRIBE') {
-                        if(data['OPERATION']) {
-                            let oper: string = '';
-                            data['OPERATION'].forEach(el => {
-                                if (oper) {
-                                    oper = oper + '|' + el.OPER_DESCRIBE;
-                                } else {
-                                    oper = el.OPER_DESCRIBE;
-                                }
-                            })
-                            this.searchData['protocol']['OPER_DESCRIBE'] = oper;
-                        }
-                    } else if (el === 'USER_ISN') {
-                        this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;
+                    switch (el) {
+                        case 'FROM':
+                            this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format()}` : null;
+                          break;
+                        case 'TO':
+                            const DATE_ISO_8601 = "YYYY-MM-DD";
+                            this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format(DATE_ISO_8601)}T23:59:59.00Z` : null;
+                          break;
+                        case 'OPER_DESCRIBE':
+                            if(data['OPERATION']) {
+                                let oper: string = '';
+                                data['OPERATION'].forEach(el => {
+                                    if (oper) {
+                                        oper = oper + '|' + el.OPER_DESCRIBE;
+                                    } else {
+                                        oper = el.OPER_DESCRIBE;
+                                    }
+                                })
+                                this.searchData['protocol']['OPER_DESCRIBE'] = oper;
+                            }
+                          break;
+                        case 'USER_ISN':
+                            this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;
+                            break;
                     }
                 })
             } catch(err) {
