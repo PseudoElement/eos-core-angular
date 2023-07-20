@@ -2672,6 +2672,24 @@ export const commonMeta = {
         },
         readonly: [],
         relations: []
+    },
+    ADDRESS: {
+        pk: 'ISN_ADDRESS',
+        properties: {
+            ISN_ADDRESS: _T.i,
+            ISN_ADDRESS_VID: _T.i,
+            ISN_REGION: _T.i,
+            ISN_OWNER: _T.i,
+            KIND_OWNER: _T.i,
+            ZIPCODE: _T.s,
+            SETTLEMENT: _T.s,
+            ADDRES: _T.s,
+            NOTE: _T.s,
+            DELETED: _T.i,
+            ORDERNUM: _T.i,
+        },
+        readonly: [],
+        relations: []
     }
 };
 

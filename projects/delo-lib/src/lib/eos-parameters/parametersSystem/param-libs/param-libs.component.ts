@@ -137,7 +137,7 @@ export class ParamLibsComponent extends BaseParamComponent {
 
     createObjRequest(): [IFilesParams, IFdulzParams] {
         let files: IFilesParams = undefined;
-        if (this.updateData['EdmsParm'] || this.updateData['CommonName'] || this.updateData['CommonDirectory']) {
+        if (this.updateData['EdmsParm'] || this.updateData['CommonName'] || this.updateData['CommonDirectory'] || this.updateData['MaxFileSize']) {
             files = {
                 EdmsParm: this.updateData['EdmsParm'] !== undefined ? this.updateData['EdmsParm'] : this.prepareData.rec['EdmsParm'],
                 Library: {
@@ -235,6 +235,7 @@ export class ParamLibsComponent extends BaseParamComponent {
             this.init()
             .then(() => {
                 /* this.afterCreate(); */
+                this.form.disable({ emitEvent: false });
             })
             .catch(err => {
                 if (err.code !== 401) {

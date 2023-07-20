@@ -3992,3 +3992,18 @@ export interface APP_HOST {
     SERVICE_URL: string;
     ENABLED: number;
 }
+export interface ADDRESS {
+    ISN_ADDRESS: number;
+    ISN_ADDRESS_VID: number;
+    /** Регион с которым связанн адрес */
+    ISN_REGION: number;
+    /** ISN гражданина с которым связан адрес */
+    ISN_OWNER: number;
+    KIND_OWNER: number;
+    ZIPCODE: string;
+    SETTLEMENT: string;
+    ADDRES: string;
+    NOTE: string;
+    DELETED: number;
+    ORDERNUM: number;
+}
