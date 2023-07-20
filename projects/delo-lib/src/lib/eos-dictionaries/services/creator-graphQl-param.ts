@@ -101,8 +101,8 @@ export class creatorGraphQlParam {
     }
 
     public citizens(param: ResponseProtItem[]): string {
-        const userIsn = this.getSearchParameters(param, 'userIsn');
-        const queryParam: string = this.createParamIn(userIsn);
+        const refIsn = this.getSearchParameters(param, 'refIsn');
+        const queryParam: string = this.createParamIn(refIsn);
         return `citizensPg(filter: {isnCitizen: {in: [${queryParam}]}}) {
             items {
               isnCitizen

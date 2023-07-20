@@ -262,10 +262,7 @@ export interface ResponseCitizenItems {
     /** Признак логического удаления. */
     deleted: number;
     /** Регион. Ссылка через поле IsnRegion. */
-    regionCl: {
-        /** Код. */
-        due: string;
-    };
+    regionCl: RegionCl;
     /** Признак новой записи. */
     new: number;
 }
@@ -284,4 +281,9 @@ export interface ORGANIZ_EXTENDS extends ORGANIZ_CL {
     ID_CERTIFICATE?: string;
     E_MAIL?: string;
     GLOBAL_ID?: string;
+}
+
+export interface RegionCl {
+    /** Код. */
+    due: string;
 }
