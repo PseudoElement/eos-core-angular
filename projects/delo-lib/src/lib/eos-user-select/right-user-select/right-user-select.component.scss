@@ -281,23 +281,24 @@
     }
 
     .wrapper-value {
-        height: 0;
-        display: flex;
-        flex-direction: column;
-        transition: 0.4s;
-        justify-content: flex-end;
+        display: grid;
+        grid-template-rows: 0fr;
         overflow: hidden;
+        transition: grid-template-rows .4s ease;
+        border-bottom: 1px solid #e6e6e6;
+        padding-bottom: 5px;
 
         .multi-value {
+            min-height: 0px;
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
     }
     .opened {
-        height: auto;
-        min-height: 25px;
+        grid-template-rows: 1fr;
     }
+
     .value {
         color: #000000;
     }
