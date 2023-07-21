@@ -25,7 +25,7 @@ export class creatorGraphQlParam {
                         greaterOrEqual: {value: "${param.FROM}"}, 
                         lessOrEqual: {value: "${param.TO}"}
                     }
-                }) {
+                },first: 1000000) {
                     items {
                         suboperId
                         operDescribe
@@ -58,7 +58,7 @@ export class creatorGraphQlParam {
             LAYER = `, layer: {greaterOrEqual: {value: ${layerParam}}}`;
         }
 
-        return `organizClsPg(filter: {isnNode: {in: [${queryParam}]}${ISN_HIGH_NODE}${DUE}${LAYER}}) {
+        return `organizClsPg(filter: {isnNode: {in: [${queryParam}]}${ISN_HIGH_NODE}${DUE}${LAYER}},first: 1000000) {
                     items {
                         due
                         isnNode
@@ -103,7 +103,7 @@ export class creatorGraphQlParam {
     public citizens(param: ResponseProtItem[]): string {
         const refIsn = this.getSearchParameters(param, 'refIsn');
         const queryParam: string = this.createParamIn(refIsn);
-        return `citizensPg(filter: {isnCitizen: {in: [${queryParam}]}}) {
+        return `citizensPg(filter: {isnCitizen: {in: [${queryParam}]}},first: 1000000) {
             items {
               isnCitizen
               citizenSurname
