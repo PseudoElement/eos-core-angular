@@ -18,16 +18,27 @@
             <div class="table-header header-pos-prot">
                 <div class="btn-group-prot">
                     <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                        <button *ngFor="let button of buttons"
-                            class="btn btn-primary-light bth-size-prot"
-                            [disabled]="button.disabled()"
+                        <button
+                            class="btn btn-primary-light bth-size-prot "
+                            [disabled]="isnNow === undefined"
                             triggers="hover" 
-                            [tooltip]="closeTooltip === true ? button.tooltip : null"
-                            (click)="button.click()"
+                            [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
+                            (click)="GetRefFile()"
                             placement="bottom"
                             container="body"
                             containerClass="tooltip-info">
-                         <span class="eos-adm-icon small" [ngClass]="button.icon"></span>
+                         <span class="eos-adm-icon small eos-adm-icon-open-read-only-blue"></span>
+                        </button>
+                        <button
+                            class="btn btn-primary-light bth-size-prot"
+                            [disabled]="isnNow === undefined || isnNext === undefined"
+                            triggers="hover" 
+                            [tooltip]="closeTooltip === true ? 'Сравнить с предыдущей' : null"
+                            (click)="getUnitFile()"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info">
+                         <span class="eos-adm-icon small eos-icon-compare-doc-blue"></span>
                         </button>
                     </div>
                 </div>
