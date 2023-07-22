@@ -120,7 +120,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     {value: '1', title: 'Лента'},
                     {value: '2', title: 'Таблица'},
                 ]
-            })
+            });
+            CABINETS_USER_FOLDERS.fieldsDefaultValue.push({
+                key: 'CBR_LIST_STYLE',
+                type: '',
+                title: '',
+            });
         }
         this._snap.queryParams
         .pipe(
