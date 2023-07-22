@@ -337,7 +337,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         const params: IOpenClassifParams = {
             classif: 'DOCGROUP_CL',
             selectMulty: true,
-            selectLeafs: false,
+            selectLeafs: true,
             selectNodes: true,
             return_due: true,
         };
