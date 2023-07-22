@@ -5,6 +5,7 @@ import { ERROR_LOGIN } from '../../../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../../../eos-common/confirm-window/confirm-window.service';
 import { RETURN_URL, URL_LOGIN } from '../../../../app/consts/common.consts';
 import { IUploadParam } from '../../../../eos-parameters/interfaces/app-setting.interfaces';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ParamApiSrv {
@@ -52,6 +53,9 @@ export class ParamApiSrv {
     }
     setAppSetting<T>(query: IUploadParam, body: T) {
         return this.apiSrv.setAppSetting(query, body);
+    }
+    setApiPost(): HttpClient {
+        return this.apiSrv.getHttp_client();
     }
     // protected prepareForEdit(records: any[]): any[] {
     //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));

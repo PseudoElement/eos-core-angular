@@ -40,23 +40,23 @@ export const SEARCH_PARAM: IBaseParameters = {
             title: 'Форматы файлов, индексируемых внешней службой',
             length: 2000
         },
-        {
+        /* {
             key: 'KafkaCfgServerURL',
             type: 'string',
             readonly: false,
-            title: 'Адрес Kafka',
-        },
+            title: 'АДРЕС KAFKA',
+        }, */
         {
             key: 'ElasticCfgServerURL',
             type: 'string',
             readonly: false,
-            title: 'Адрес Elasticsearch',
+            title: 'АДРЕС СЕРВЕРА ELASTICSEARCH',
         },
         {
             key: 'ElasticCfgLogin',
             type: 'string',
             readonly: false,
-            title: 'Логин',
+            title: 'ЛОГИН',
         },
         {
             key: 'ElasticCfgPassword',
