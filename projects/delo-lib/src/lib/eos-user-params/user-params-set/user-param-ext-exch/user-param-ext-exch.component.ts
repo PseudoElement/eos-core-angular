@@ -313,7 +313,14 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
                 req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesSstu, userId));
             }
         }
-        return req;
+        /** Не учитываю параметры регистрации по ЕПВВ @168637 */
+        const reqFilter = req.filter((q) => {
+            if (q['data']['PARM_VALUE'] === 'undefined') {
+                return false;
+            } 
+            return true
+        })
+        return reqFilter;
     }
     cancel(event) {
         if (this.btnDisabled) {

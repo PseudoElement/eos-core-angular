@@ -41,49 +41,63 @@ class="input-param-wrapper input-param-search-wrapper">
                 <eos-dynamic-input
                     [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
                     [form]="form"
-                    
                 ></eos-dynamic-input>
             </div>
         </div>
         <div *ngIf="this.form.controls['rec.INDEXKIND'].value === 'ES'">
-            <span class="l-font">Сервер Kafka</span>
+            <!-- <span class="l-font">Параметры сервера Kafka</span>
             <hr>
             <eos-dynamic-input
-                    [input]="inputs['rec.KafkaCfgServerURL']"
+                class="eos-dynamic-input-title-custom"
+                [input]="inputs['rec.KafkaCfgServerURL']"
+                [form]="form"
+            ></eos-dynamic-input> -->
+            <span class="l-font">Параметры сервера Elasticsearch</span>
+            <hr>
+            <div style="display: flex;">
+                <eos-dynamic-input
+                    class="eos-dynamic-input-title-custom"
+                    style="width: 570px;"
+                    [input]="inputs['rec.ElasticCfgServerURL']"
                     [form]="form"
-            ></eos-dynamic-input>
-            <span class="l-font">Сервер Elasticsearch</span>
-            <hr>
-            <eos-dynamic-input
-                [input]="inputs['rec.ElasticCfgServerURL']"
-                [form]="form"
                 
-            ></eos-dynamic-input>
-            <eos-dynamic-input
-                [input]="inputs['rec.ElasticCfgLogin']"
-                [form]="form"
-                
-            ></eos-dynamic-input>
-            <div class="dynamic-input-wrapper base-text-input text-pass-input pass-width padding-right">
-                <label>Пароль</label>
-                <div class="vision" [ngClass]="{'disabled': form.controls['rec.ElasticCfgPassword'].disabled}">
-                    <input class="form-control m-font" maxlength="64"
-                    [(ngModel)]="paramPassword"
-                    [type]="typeInput"
-                    [disabled]="form.controls['rec.ElasticCfgPassword'].disabled"
-                    [placeholder]="form && form.controls['rec.ElasticCfgPassword'].value ? '*******' : ''"
-                    placement="bottom"
-                    containerClass="tooltip-error"
-                    (keyup)="onKeyUp($event)"
-                    [autocomplete]="'off'">
-                    <eos-dynamic-input
-                        hidden="true"
-                        [input]="inputs['rec.ElasticCfgPassword']"
-                        [form]="form"
-                        [readonly]="form.controls['rec.ElasticCfgPassword'].disabled"
-                        autocomplete="off">
-                    </eos-dynamic-input>
-                    <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-adm-icon small"  [ngClass]="form.controls['rec.ElasticCfgPassword'].disabled ? 'eos-adm-icon-show-grey' : 'eos-adm-icon-show-blue'"></span>
+                ></eos-dynamic-input>
+                <button
+                    style="height: 35px; margin-top: 22px; margin-left: 20px; font-size: 12px;"
+                    class="btn btn-primary"
+                    [ngClass]="{'disabled-class-descr': form.disabled}"
+                    (click)="openConnected()"
+                    [disabled]="form.disabled || getDisabledBtnCheck()"
+                >ПРОВЕРИТЬ ПОДКЛЮЧЕНИЕ</button>
+            </div>
+            <div style="display: flex;">
+                <eos-dynamic-input
+                    class="eos-dynamic-input-title-custom"
+                    style="width: 50%;  padding-right: 10px;"
+                    [input]="inputs['rec.ElasticCfgLogin']"
+                    [form]="form"
+                ></eos-dynamic-input>
+                <div class="dynamic-input-wrapper base-text-input text-pass-input pass-width padding-right" style="width: 50%; padding-left: 10px;">
+                    <label style="font-size: 12px !important; color: #969696;">ПАРОЛЬ</label>
+                    <div class="vision" [ngClass]="{'disabled': form.controls['rec.ElasticCfgPassword'].disabled}">
+                        <input class="form-control m-font" maxlength="64"
+                        [(ngModel)]="paramPassword"
+                        [type]="typeInput"
+                        [disabled]="form.controls['rec.ElasticCfgPassword'].disabled"
+                        [placeholder]="form && form.controls['rec.ElasticCfgPassword'].value ? '*******' : ''"
+                        placement="bottom"
+                        containerClass="tooltip-error"
+                        (keyup)="onKeyUp($event)"
+                        [autocomplete]="'off'">
+                        <eos-dynamic-input
+                            hidden="true"
+                            [input]="inputs['rec.ElasticCfgPassword']"
+                            [form]="form"
+                            [readonly]="form.controls['rec.ElasticCfgPassword'].disabled"
+                            autocomplete="off">
+                        </eos-dynamic-input>
+                        <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-adm-icon small"  [ngClass]="form.controls['rec.ElasticCfgPassword'].disabled ? 'eos-adm-icon-show-grey' : 'eos-adm-icon-show-blue'"></span>
+                    </div>
                 </div>
             </div>
             <!-- <eos-dynamic-input
@@ -93,3 +107,41 @@ class="input-param-wrapper input-param-search-wrapper">
         </div>
     </div>
 </div>
+<ng-template #modalCheck>
+    <header>
+        <div class="header paaram-header-wrapp">
+            <div class="header__text-wrap">
+                <span class="header__text">Подключение к северу Elasticsearch</span>
+            </div>
+            <div class="header__button-wrap">
+                <button style="width: 80px;" class="btn btn-primary header__button" (click)="cancelModalCheck()">ОТМЕНИТЬ
+                </button>
+                <button style="width: 80px;" class="btn btn-primary-full header__button" (click)="submitModalCheck()" [disabled]="disableCollection">ВОЙТИ
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="modalWord-content">
+        <main class="modalWord-content">
+            <div style="display: flex;">
+                <div style="width: 50%; padding-right: 10px;">
+                    <span>ЛОГИН АДМИНИСТРАТОРА </span>
+                    <input [autocomplete]="'off'" class="form-control m-font inline-block"  type="text" [(ngModel)]="inputLogin">
+                </div>
+                <div class="vision" style="position: relative;width: 50%; padding-left: 10px;">
+                    <span>ПАРОЛЬ</span>
+                    <input
+                        class="form-control m-font inline-block"
+                        [(ngModel)]="inputPass"
+                        [type]="inputPass.length > 0 ? typeInputModal : 'text'"
+                        [autocomplete]="'off'">
+                        <span
+                            style="position: absolute; right: 10px; bottom: 5px;"
+                            class="eos-adm-icon-show-blue eos-adm-icon small"
+                            (mousedown)='setVisionModal()'
+                            (mouseup)='resetVisionModal()'></span>
+                </div>
+            </div>
+        </main>
+    </main>
+</ng-template>
