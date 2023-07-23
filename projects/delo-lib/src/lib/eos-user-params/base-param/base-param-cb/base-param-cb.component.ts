@@ -82,7 +82,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
     private rightsCBDueRole: boolean = false;
-
+    private clearRoles;
      // блок автопоиска при выборе ДЛ
      private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
      private _defaultDepDue: string;
@@ -533,8 +533,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 data: newD
             });
             if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || (newD.hasOwnProperty('DUE_DEP') && newD.DUE_DEP !== undefined)) {
-                const clearRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
-                this.queryRoles = this.queryRoles.concat(clearRoles);
+                this.clearRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
             }
         }
         this.setRulesForDl(id, query);
@@ -735,12 +734,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 // "Разрешаем назначать роль пользователю без АДЛ"
                 // не имеет смысла проверка кабинета
                 if (res) {
+                    if (this.clearRoles) {
+                        query = query.concat(JSON.parse(JSON.stringify(this.clearRoles)));
+                    }
                     return this.saveData(accessStr, id, query, route);
                 } else {
+                    this.clearRoles = undefined;
                     return;
                 }
             });
         }
+        this.clearRoles = undefined;
         return this.saveData(accessStr, id, query, route);
     }
 
