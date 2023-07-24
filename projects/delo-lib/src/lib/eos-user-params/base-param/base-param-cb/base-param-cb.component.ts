@@ -484,7 +484,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     cheackCtech(): boolean {
-        if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
+        if (!this.dueDepNameNullUndef(this.formControls.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение:',
