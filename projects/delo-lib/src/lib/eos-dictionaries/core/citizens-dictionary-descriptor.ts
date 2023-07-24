@@ -291,7 +291,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         Object.assign(newCriteries, criteries[0]['common']);
         const addresIsn: ADDRESS[] = await this.apiSrv.read<ADDRESS>({
             ADDRESS: {
-                criteries: { ADDRES: `%${newCriteries['CITIZEN_ADDR'].replace(/"/g, '')}%`}
+                criteries: { ADDRES: `%${newCriteries['CITIZEN_ADDR'].replace(/"/g, '').replace(/ /g, '_')}%`}
             }
         });
         const adrIsn = [];
