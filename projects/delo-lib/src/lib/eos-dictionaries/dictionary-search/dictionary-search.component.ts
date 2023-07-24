@@ -195,6 +195,16 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
 
         this._dictSrv.setNomenklFilterClose$ = this.settings.opts.closed;
+
+        if  (this.dictId === 'organization' || this.dictId === 'citizens') {
+            if(
+                this.settings.entity === 'protocol' && 
+                this.settings.full.data.protocol.OPER_DESCRIBE?.includes('DEL') &&
+                !this._dictSrv.viewParameters.showDeleted
+            ) {
+                this.settings.opts.deleted = true;
+            }
+        }
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
     }
