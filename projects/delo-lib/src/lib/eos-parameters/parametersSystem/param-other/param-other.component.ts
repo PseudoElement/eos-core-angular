@@ -35,8 +35,6 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         return this.getData(this.queryObj)
             .then((data: Array<USER_PARMS>) => {
                 data.map(d => {
-                    console.log('d', d);
-                    
                     if (d.PARM_NAME === 'СЕРВЕР ПРИЛОЖЕНИЙ') {
                         d.PARM_NAME = 'СЕРВЕР_ПРИЛОЖЕНИЙ';
                     }
