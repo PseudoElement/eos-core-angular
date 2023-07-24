@@ -17,7 +17,7 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     masDisable: any[] = [];
     formServer: FormGroup;
     licMedo: boolean = false;
-
+    checkDiadoc: boolean = true;
 
 
     constructor(
@@ -35,8 +35,13 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         return this.getData(this.queryObj)
             .then((data: Array<USER_PARMS>) => {
                 data.map(d => {
+                    console.log('d', d);
+                    
                     if (d.PARM_NAME === 'СЕРВЕР ПРИЛОЖЕНИЙ') {
                         d.PARM_NAME = 'СЕРВЕР_ПРИЛОЖЕНИЙ';
+                    }
+                    if (d.PARM_NAME === 'DIADOC_ISN_DELIVERY') {
+                        this.checkDiadoc = true;
                     }
                     return d;
                 });
