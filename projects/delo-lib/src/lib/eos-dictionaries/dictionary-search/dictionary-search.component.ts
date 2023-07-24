@@ -53,7 +53,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     public protocolForm: FormGroup;
     private protocolSearchNameControl: string[] = ['FROM', 'TO', 'USER_ISN', 'OPER_DESCRIBE'];
     private protocolIdOperation: ProtoIdOperation = {
-        organization: ['Z', 'A'],
+        organization: ['Z'],
         citizens: ['C']
     }
     public protocolSerchInputs: any;
