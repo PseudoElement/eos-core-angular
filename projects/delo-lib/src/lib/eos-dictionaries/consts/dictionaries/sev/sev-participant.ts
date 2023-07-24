@@ -38,6 +38,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         key: 'ADDRESS',
         type: 'string',
         title: 'Адрес',
+        required: true,
         pattern: NOT_EMPTY_STRING
     }, {
         key: 'CRYPT',
