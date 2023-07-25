@@ -34,7 +34,8 @@ export class UserParamApiSrv {
     hashSorting = new Map()
         .set('fullDueName', 'SURNAME_PATRON')
         .set('login', 'CLASSIF_NAME')
-        .set('department', 'NOTE');
+        .set('department', 'NOTE')
+        .set('surnamePatron', 'SURNAME_PATRON');
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[1];
     searchRequest = {};
@@ -130,6 +131,9 @@ export class UserParamApiSrv {
         } else if (this.currentSort === 'department') {
             propOrderBy = 'NOTE';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        } else if (this.currentSort === 'fullDueName') {
+            propOrderBy = 'SURNAME_PATRON';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
         if (this.stateTehUsers) {
             propOrderBy = 'CLASSIF_NAME asc';
@@ -158,7 +162,7 @@ export class UserParamApiSrv {
                 if (!this.flagDelitedPermanantly && !this.flagDisableUser) { // вот тут должно быть обновление
                     ob1['DELETED'] = 0;
                 }
-                if (this.currentSort === 'fullDueName') {
+                if (this.currentSort === 'surnamePatron') {
                     propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
                 }
@@ -462,11 +466,15 @@ export class UserParamApiSrv {
         };
         this.srtConfig.fullDueName = {
             upDoun: false,
-            checked: true,
+            checked: false,
         };
         this.srtConfig.tip = {
             upDoun: false,
             checked: false,
+        };
+        this.srtConfig.surnamePatron = {
+            upDoun: false,
+            checked: true,
         };
     }
 
