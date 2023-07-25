@@ -1473,7 +1473,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                     // this.formControls.controls['SELECT_ROLE'].disable();
                                 }
                             } else {
-                                this.curentUser.isTechUser = data;
+                                this.curentUser.isTechUser = false;
                                 // f.get('teсhUser').setValue(false);
                                 f.get('teсhUser').setValue(false, { emitEvent: false });
                                 this.updateParamsTech(false);
