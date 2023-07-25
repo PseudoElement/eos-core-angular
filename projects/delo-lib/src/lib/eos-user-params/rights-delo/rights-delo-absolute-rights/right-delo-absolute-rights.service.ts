@@ -818,24 +818,46 @@ export class RughtDeloAbsRightService {
         }
         this.updateBtn();
     }
-    updateBtn() {
-        let ind;
-        if (this.selectedRow[0]) {
-            this.tabelData.data.forEach((item, index) => {
-                if (this.selectedRow[0]['DUE'] === item['DUE']) {
-                    ind = index;
-                }
+    getDisableSort(key: 'up' | 'down'): boolean {
+        let first;
+        let last;
+        let flagBought = new Map<string, boolean>();
+        if (this.selectedRow.length > 0) {
+            const due = [];
+            this.selectedRow.forEach((item) => {
+                due.push(item['DUE']);
+                flagBought.set(item.__metadata.__type, true);
             });
+            if (flagBought.size < 2) {
+                this.tabelData.data.forEach((item, index) => {
+                    if (due.indexOf(item['DUE']) !== -1 ) {
+                        if (first === undefined) {
+                            first = index;
+                        }
+                        last = index;
+                    }
+                });
+            } else {
+                return true;
+            }
         }
+        switch (key) {
+            case 'up':
+                return first !== undefined && typeof(this.tabelData.data[first - 1]['CLASSIF_NAME']) === 'string';
+            case 'down':
+                return last !== undefined && (this.tabelData.data[last + 1] === undefined || typeof(this.tabelData.data[last + 1]['CLASSIF_NAME']) === 'string');
+        }
+    }
+    updateBtn() {
         this.tabelData.tableBtn.forEach((btn) => {
             if (btn.id === 'deleted') {
                 btn.disable = !this.selectedRow.length;
             }
             if (btn.id === 'up') {
-                btn.disable = this.selectedRow.length !== 1 || typeof(this.tabelData.data[ind - 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('up');
             }
             if (btn.id === 'down') {
-                btn.disable = this.selectedRow.length !== 1 || this.tabelData.data[ind + 1] === undefined || typeof(this.tabelData.data[ind + 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('down');
             }
             if (btn.id === 'export') {
                 btn.disable = !(this.tabelData.data.length > 3);
@@ -846,25 +868,17 @@ export class RughtDeloAbsRightService {
         });
     }
     sortStringVew() {
-        let ind;
-        if (this.selectedRow[0]) {
-            this.tabelData.data.forEach((item, index) => {
-                if (this.selectedRow[0]['DUE'] === item['DUE']) {
-                    ind = index;
-                }
-            });
-        }
         this.tabelData.tableBtn.forEach((btn) => {
             if (btn.id === 'sort') {
                 btn.active = !btn.active;
             }
             if (btn.id === 'up') {
                 btn.notView = !btn.notView;
-                btn.disable = this.selectedRow.length !== 1 || typeof(this.tabelData.data[ind - 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('up');
             }
             if (btn.id === 'down') {
                 btn.notView = !btn.notView;
-                btn.disable = this.selectedRow.length !== 1 || this.tabelData.data[ind + 1] === undefined || typeof(this.tabelData.data[ind + 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('down');
             }
         });
     }
@@ -872,25 +886,36 @@ export class RughtDeloAbsRightService {
         let ind;
         let tempSecond;
         let itemMove;
-        this.tabelData.data.forEach((item, index) => {
-            if (item['DUE'] === this.selectedRow[0]['DUE']) {
-                ind = index;
-                const tempWeight = this.tabelData.data[index - whereMove]['ROW_WEIGHT'];
-                this.tabelData.data[index - whereMove]['ROW_WEIGHT'] = item.ROW_WEIGHT;
-                tempSecond = this.tabelData.data[index - whereMove];
-                item.ROW_WEIGHT = tempWeight;
-                itemMove = item;
+        this.selectedRow.sort((a, b) => {
+            if (a.ROW_WEIGHT > b.ROW_WEIGHT) {
+                return whereMove === 1 ? 1 : -1;
+            } else if (a.ROW_WEIGHT < b.ROW_WEIGHT) {
+                return whereMove === 1 ? -1 : 1;
+            } else {
+                return 0;
+            }
+        })
+        this.selectedRow.forEach((select) => {
+            this.tabelData.data.forEach((item, index) => {
+                if (item['DUE'] === select['DUE']) {
+                    ind = index;
+                    const tempWeight = this.tabelData.data[index - whereMove]['ROW_WEIGHT'];
+                    this.tabelData.data[index - whereMove]['ROW_WEIGHT'] = item.ROW_WEIGHT;
+                    tempSecond = this.tabelData.data[index - whereMove];
+                    item.ROW_WEIGHT = tempWeight;
+                    itemMove = item;
+                }
+            });
+            this.tabelData.data[ind - whereMove] = this.tabelData.data[ind];
+            this.tabelData.data[ind] = tempSecond;
+            if (itemMove.__metadata.__type === 'DEPARTMENT' && this.paramsToQuery.mapDepWeight[itemMove['DUE']] !== undefined) {
+                this.paramsToQuery.mapDepWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
+                this.paramsToQuery.mapDepWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
+            } else if(this.paramsToQuery.mapOrgWeight[select['DUE']] !== undefined) {
+                this.paramsToQuery.mapOrgWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
+                this.paramsToQuery.mapOrgWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
             }
         });
-        this.tabelData.data[ind - whereMove] = this.tabelData.data[ind];
-        this.tabelData.data[ind] = tempSecond;
-        if (itemMove.__metadata.__type === 'DEPARTMENT' && this.paramsToQuery.mapDepWeight[itemMove['DUE']] !== undefined) {
-            this.paramsToQuery.mapDepWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
-            this.paramsToQuery.mapDepWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
-        } else if(this.paramsToQuery.mapOrgWeight[this.selectedRow[0]['DUE']] !== undefined) {
-            this.paramsToQuery.mapOrgWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
-            this.paramsToQuery.mapOrgWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
-        }
         this.updateBtn();
     }
     

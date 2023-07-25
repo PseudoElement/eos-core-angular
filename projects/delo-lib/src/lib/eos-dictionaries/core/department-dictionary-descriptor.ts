@@ -21,6 +21,7 @@ import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2
 import { WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_NOT_DATE, CONFIRM_OPERATION_NOT_DATE_ALL } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { EosUtils } from '../../eos-common/core/utils';
+import { CLEAR_EXPORT } from '../../eos-dictionaries/consts/common';
 
 const inheritFiields = [
     'START_DATE',
@@ -320,5 +321,24 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
 
     protected _initRecord(data: IDictionaryDescriptor) {
         this.record = new DepartmentRecordDescriptor(this, <IDepartmentDictionaryDescriptor>data);
+    }
+    public async updateRecord(originalData, updates, appendToChanges): Promise<any> {
+        if (updates && updates.replace && updates.replace['CLEAR_ROWS_SET_HISTORY'] === CLEAR_EXPORT) {
+            await this.apiSrv.batch([{
+                method: 'MERGE',
+                    requestUri: `DEP_REPLACE('${updates.replace.DUE}')`,
+                    data: {
+                        DUE_REPLACE: null,
+                        END_DATE: null,
+                        REASON: null,
+                        START_DATE: null
+                    }
+            }], '');
+            updates.replace['_orig']['DUE_REPLACE'] = null;
+            updates.replace['_orig']['END_DATE'] = null;
+            updates.replace['_orig']['REASON'] = null;
+            updates.replace['_orig']['START_DATE'] = null;
+        }
+        return super.updateRecord(originalData, updates, appendToChanges);
     }
 }
