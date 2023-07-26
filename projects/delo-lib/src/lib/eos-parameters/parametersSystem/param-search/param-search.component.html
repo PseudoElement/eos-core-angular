@@ -18,7 +18,7 @@ class="input-param-wrapper input-param-search-wrapper">
             [form]="form"
             [disabled]="inputs['rec.INDEXKIND'].readonly"
         ></eos-dynamic-input>
-        <div *ngIf="this.form.controls['rec.INDEXKIND'].value === 'MSINDEXSERVER'">
+        <div>
             <eos-dynamic-input
                 [input]="inputs['rec.INDEX_URL']"
                 [form]="form"
@@ -37,14 +37,14 @@ class="input-param-wrapper input-param-search-wrapper">
                 [form]="form"
                 [readonly]="inputs['rec.ELNPATH'].readonly"
             ></eos-dynamic-input>
-            <div style='padding-bottom: 100px;'>
+            <div style='padding-bottom: 20px;'>
                 <eos-dynamic-input
                     [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
                     [form]="form"
                 ></eos-dynamic-input>
             </div>
         </div>
-        <div *ngIf="this.form.controls['rec.INDEXKIND'].value === 'ES'">
+        <div>
             <!-- <span class="l-font">Параметры сервера Kafka</span>
             <hr>
             <eos-dynamic-input
