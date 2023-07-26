@@ -192,7 +192,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.selfLink = this._router.url.split('?')[0];
         this.init();
         this.getTitle();
-        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
+        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {
             this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
         }
         this.editModeF();
@@ -652,7 +652,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             return 'error';
                         } else {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && !meta) {
+                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && !meta && this.curentUser.USERTYPE !== 4) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
@@ -669,7 +669,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                    if (!this.curentUser['IS_PASSWORD'] && !meta) {
+                    if (!this.curentUser['IS_PASSWORD'] && !meta && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                             if (res) {
                                 return this.ConfirmAvSystems(accessStr, id, query).then(() => {
