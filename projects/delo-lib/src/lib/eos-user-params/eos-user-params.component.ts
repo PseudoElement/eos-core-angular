@@ -21,12 +21,24 @@ import { DIRECTORIES_USER} from '../eos-user-params/user-params-set/shared-user-
 import { REGISTRATION_SCAN } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email.const';
 import { REGISTRATION_SEB } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email-seb.const';
 import { REMASTER_MADO } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email-mado.const';
+import { REGISTRATION_SSTU } from './user-params-set/shared-user-param/consts/remaster-email/remaster-email-ssty.const';
 import { ELECTRONIC_SIGNATURE } from '../eos-user-params/user-params-set/shared-user-param/consts/electronic-signature';
 import { VISUALIZATION_USER } from '../eos-user-params/user-params-set/shared-user-param/consts/visualization.consts';
 import { OTHER_USER_REESTR } from '../eos-user-params/user-params-set/shared-user-param/consts/other.consts';
 import {
-    CERTS, APP_DOCUMENTS_EXT, APP_DOCUMENTS_SEARCH, TRANSFER_ADDRESSES, TRANSFER_DOC,
-    EXT_EXCHANGE_GENERAL, EXT_EXCHANGE_PASSPORT, EXT_EXCHANGE_SENDING, EXT_EXCHANGE_PARAMS,
+    CERTS,
+    APP_DOCUMENTS_EXT,
+    APP_DOCUMENTS_SEARCH,
+    TRANSFER_ADDRESSES,
+    TRANSFER_DOC,
+    EXT_EXCHANGE_GENERAL,
+    EXT_EXCHANGE_PASSPORT,
+    EXT_EXCHANGE_SENDING,
+    EXT_EXCHANGE_PARAMS,
+    LK_EXCHANGE_PARAMS,
+    EPVV_EXCHANGE_PARAMS,
+    SDS_EXCHANGE_PARAMS,
+    ASPSD_EXCHANGE_PARAMS
 } from '../eos-user-params/user-params-set/shared-user-param/consts/search.consts';
 import { UserParamExtendExchComponent } from '../eos-user-params/user-params-set/user-param-ext-exch/user-param-ext-exch.component';
 import { SearchService } from './user-params-set/shared-user-param/services/search-service';
@@ -45,6 +57,7 @@ const REGISTRATION_SEB_FIELDS = REGISTRATION_SEB.fields;
 const ELECTRONIC_SIGNATURE_FIELDS = ELECTRONIC_SIGNATURE;
 const CERTS_FIELDS = CERTS;
 const REMASTER_MADO_FIELDS = REMASTER_MADO.fields;
+const REMASTER_SSTU_FIELDS = REGISTRATION_SSTU.fields;
 const VISUALIZATION_USER_FIELDS = VISUALIZATION_USER.fields;
 const OTHER_USER_REESTR_FIELDS = OTHER_USER_REESTR.fields;
 const OTHER_USER_DISPATCH_FIELDS = OTHER_USER_REESTR.fields;
@@ -396,6 +409,29 @@ export class UserParamsComponent implements OnDestroy, OnInit, DoCheck {
             ret = 3;
             return ret;
         }
+        if (this._foundLexemInFields(REMASTER_SSTU_FIELDS)) {
+            ret = 4;
+            return ret;
+        }
+        if (this._appContext.cbBase) {
+            if (this._foundLexemInFields(LK_EXCHANGE_PARAMS)) {
+                ret = 5;
+                return ret;
+            }
+            if (this._foundLexemInFields(SDS_EXCHANGE_PARAMS)) {
+                ret = 6;
+                return ret;
+            }
+            if (this._foundLexemInFields(EPVV_EXCHANGE_PARAMS)) {
+                ret = 7;
+                return ret;
+            }
+            if (this._foundLexemInFields(ASPSD_EXCHANGE_PARAMS)) {
+                ret = 8;
+                return ret;
+            }
+        }
+        
     }
 
     getFoundInElectronicSignature(): number {

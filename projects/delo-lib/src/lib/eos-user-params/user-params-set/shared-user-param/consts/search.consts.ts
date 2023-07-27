@@ -225,3 +225,25 @@ export const EXT_EXCHANGE_PARAMS = [
     title: 'Сообщать отправителю, если ЭП действительна'
   }
 ];
+export const LK_EXCHANGE_PARAMS = [
+    {
+      title: 'Скрыть операцию отправки по ЛК без подготовки'
+    },
+];
+
+export const EPVV_EXCHANGE_PARAMS = [
+    {
+      title: 'Скрыть операцию отправки по ЕПВВ без подготовки'
+    },
+];
+
+export const SDS_EXCHANGE_PARAMS = [
+    {
+      title: 'Скрыть операцию отправки по СДС без подготовки'
+    },
+];
+export const ASPSD_EXCHANGE_PARAMS = [
+    {
+      title: 'Скрыть операцию отправки по АС ПСД без подготовки'
+    },
+];
