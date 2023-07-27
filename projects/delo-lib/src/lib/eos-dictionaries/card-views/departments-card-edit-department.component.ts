@@ -14,7 +14,7 @@ import { EosAccessPermissionsService, APS_DICT_GRANT } from '../../eos-dictionar
 import { DEPARTMENTS_DICT } from '../../eos-dictionaries/consts/dictionaries/department.consts';
 import { CONFIRM_DEPARTMENTS_DATES_FIX, BUTTON_RESULT_YES, CONFIRM_DEPARTMENTS_DATES_FIX1, CONFIRM_DEPCALENDAR_CREATE, CONFIRM_DEPCALENDAR_DELETE } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
-import { PipRX } from '../../eos-rest';
+import { AppContext, PipRX } from '../../eos-rest';
 import { AddControlsDirective } from '../../eos-common/directives/add-controls.directive';
 import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
 import { CalendarHelper, CALENDAR_CL_BY_DEP } from '../../eos-dictionaries/helpers/calendars.helper';
@@ -49,7 +49,8 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
         private _confirmSrv: ConfirmWindowService,
         private _apiSrv: PipRX,
         private _waitClassifSrv: WaitClassifService,
-        private _eosCommonOverride: EosCommonOverriveService
+        private _eosCommonOverride: EosCommonOverriveService,
+        public apCtx: AppContext
     ) {
         super(injector);
         this.previousValues = {};
