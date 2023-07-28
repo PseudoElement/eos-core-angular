@@ -474,7 +474,7 @@ export class UserParamApiSrv {
         };
         this.srtConfig.surnamePatron = {
             upDoun: false,
-            checked: true,
+            checked: false,
         };
     }
 
