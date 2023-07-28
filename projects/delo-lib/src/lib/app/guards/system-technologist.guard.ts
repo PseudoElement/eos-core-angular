@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlSegment } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlSegment } from '@angular/router';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { PipRX } from '../../eos-rest/services/pipRX.service';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
@@ -15,7 +15,8 @@ export class SystemTechnologistGuard implements CanActivate {
     constructor(
         private apCtx: AppContext,
         private PipRX: PipRX,
-        private msgSrv: EosMessageService
+        private msgSrv: EosMessageService,
+        private _router: Router,
     ) {}
 
     async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
@@ -24,7 +25,11 @@ export class SystemTechnologistGuard implements CanActivate {
         const conf: IKeyRightTech = this.getConf(url);
         const currentUser = await this.getCurrentUser();
         const systemTechnologistValue = +currentUser.DELO_RIGHTS[ETypeDeloRight.SystemTechnologist];
-
+        const systemAdministratorValue = currentUser.IS_SECUR_ADM;
+        if (urlSegment.path === 'desk' && systemAdministratorValue === 1) {
+            this._router.navigate(['user_param']);
+            return false;
+        }
         if (!systemTechnologistValue) {
             this.showMessage(conf);
             return false;
@@ -55,7 +60,7 @@ export class SystemTechnologistGuard implements CanActivate {
         return KEY_RIGHT_TECH[url];
     }
 
-    private showMessage (conf: IKeyRightTech){
+    private showMessage(conf: IKeyRightTech) {
         const msg = conf.name ? `У Вас нет права изменять параметры модуля "${conf.name}"` :
                         `У Вас нет права изменять параметры модуля`
         this.msgSrv.addNewMessage({
