@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angu
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { RC_USER } from '../shared-user-param/consts/rc.consts';
 import { FormGroup } from '@angular/forms';
-import { IOpenClassifParams } from '../../../eos-common/interfaces/interfaces';
+// import { IOpenClassifParams } from '../../../eos-common/interfaces/interfaces';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from '../../../eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from '../../../eos-common/services/input-control.service';
-import { WaitClassifService } from '../../../app/services/waitClassif.service';
+// import { WaitClassifService } from '../../../app/services/waitClassif.service';
 import { PipRX } from '../../../eos-rest';
 import { EosMessageService } from '../../../eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
@@ -60,7 +60,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private formHelp: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
-        private _waitClassifSrv: WaitClassifService,
+        // private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
@@ -80,17 +80,17 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             this.allData = this.defaultUser;
             this.cutentTab = 0;
             this.init();
-            this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
-                this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
-                this.checRcShowRes();
-                this.editMode();
-            }).catch(error => {
-                this._msg.addNewMessage({
-                    type: 'warning',
-                    title: 'Предупреждение',
-                    msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
-                });
-            });
+            // this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+            //     this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
+            //     this.checRcShowRes();
+            //     this.editMode();
+            // }).catch(error => {
+            //     this._msg.addNewMessage({
+            //         type: 'warning',
+            //         title: 'Предупреждение',
+            //         msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+            //     });
+            // });
         } else {
             const config = {expand: 'USER_PARMS_List'};
             if (this.mainUser) {
@@ -102,17 +102,17 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
                     this.currentUser = this._userParamsSetSrv.curentUser;
                     this.cutentTab = 0;
                     this.init();
-                    this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
-                        this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
-                        this.checRcShowRes();
-                        this.editMode();
-                    }).catch(error => {
-                        this._msg.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение',
-                            msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
-                        });
-                    });
+                    // this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+                    //     this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
+                    //     this.checRcShowRes();
+                    //     this.editMode();
+                    // }).catch(error => {
+                    //     this._msg.addNewMessage({
+                    //         type: 'warning',
+                    //         title: 'Предупреждение',
+                    //         msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+                    //     });
+                    // });
                 })
                 .catch(err => {
 
@@ -122,18 +122,18 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     setTab(i: number) {
         this.cutentTab = i;
     }
-    checRcShowRes(): void {
-        const value = this.form.controls['rec.SHOW_RES_HIERARCHY'].value;
-        value === 'YES' ? this.disabDefault(true) : this.disabDefault(false);
-    }
-    disabDefault(flag: boolean): void {
-        if (flag) {
-            this.form.controls['rec.SHOW_ALL_RES'].patchValue('YES');
-            this.form.controls['rec.SHOW_ALL_RES'].disable({ onlySelf: true, emitEvent: false });
-        } else {
-            this.form.controls['rec.SHOW_ALL_RES'].enable({ emitEvent: false });
-        }
-    }
+    // checRcShowRes(): void {
+    //     const value = this.form.controls['rec.SHOW_RES_HIERARCHY'].value;
+    //     value === 'YES' ? this.disabDefault(true) : this.disabDefault(false);
+    // }
+    // disabDefault(flag: boolean): void {
+    //     if (flag) {
+    //         this.form.controls['rec.SHOW_ALL_RES'].patchValue('YES');
+    //         this.form.controls['rec.SHOW_ALL_RES'].disable({ onlySelf: true, emitEvent: false });
+    //     } else {
+    //         this.form.controls['rec.SHOW_ALL_RES'].enable({ emitEvent: false });
+    //     }
+    // }
     init() {
         this.pretInputs();
         this.form = this.inpSrv.toFormGroup(this.inputs);
@@ -145,109 +145,109 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this.prepareInputs = this.formHelp.getObjectInputFields(RC_USER.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
     }
-    getInfoFroCode(code: string): Promise<any> {
-        if (code && String(code) !== 'null') {
-            const parsedCode = code.split(',').filter(el => (String(el) !== 'null')).join('||');
-            const query = {
-                DOCGROUP_CL: {
-                    criteries: {
-                        ISN_NODE: parsedCode
-                    }
-                }
-            };
-            return this._pipRx.read(query).then(result => {
-                this.dopRec = result;
-                this.dopRec.length > 0 ? this.disabledFlagDelite = false : this.disabledFlagDelite = true;
-            });
-        } else {
-            this.dopRec = null;
-            this.disabledFlagDelite = true;
-            return Promise.resolve();
-        }
-    }
+    // getInfoFroCode(code: string): Promise<any> {
+    //     if (code && String(code) !== 'null') {
+    //         const parsedCode = code.split(',').filter(el => (String(el) !== 'null')).join('||');
+    //         const query = {
+    //             DOCGROUP_CL: {
+    //                 criteries: {
+    //                     ISN_NODE: parsedCode
+    //                 }
+    //             }
+    //         };
+    //         return this._pipRx.read(query).then(result => {
+    //             this.dopRec = result;
+    //             this.dopRec.length > 0 ? this.disabledFlagDelite = false : this.disabledFlagDelite = true;
+    //         });
+    //     } else {
+    //         this.dopRec = null;
+    //         this.disabledFlagDelite = true;
+    //         return Promise.resolve();
+    //     }
+    // }
 
-    addRcDoc(): void {
-        this.flagBacground = true;
-        const query: IOpenClassifParams = {
-            classif: 'DOCGROUP_CL',
-            selectMulty: true,
-            selectLeafs: true,
-            selectNodes: false,
-            return_due: false,
-        };
-        this._waitClassifSrv.openClassif(query).then(data => {
-            /* Если получили данные из списка то получаем DUE если же мы получили DUE то тогда доп запрос на получение ISN */
-            if (data.indexOf('.') !== -1) {
-                const queryCriteries = data.replace('|', '||');
-                const q = {
-                    DOCGROUP_CL: {
-                        criteries: {
-                            DUE: queryCriteries
-                        }
-                    }
-                };
-                this._pipRx.read(q).then(result => {
-                    const newDate = [];
-                    result.forEach((doc) => {
-                        newDate.push(doc['ISN_NODE']);
-                    });
-                    this.addRcDocToInput(newDate.join('|'));
-                });
-            } else {
-                this.addRcDocToInput(data);
-            }
-            this.flagBacground = false;
-        }).catch(error => {
-            this.flagBacground = false;
-        });
-    }
-    addRcDocToInput(data): void {
-        let dateVal: string, newValue = [], oldValue = [];
-        dateVal = this.form.controls['rec.OPEN_AR'].value;
-        if (dateVal) {
-            oldValue = dateVal.split(',');
-        }
-        if (data) {
-            newValue = data.split('|');
-            newValue = newValue.filter(isn => {
-                const patt = new RegExp('^' + isn + ',?|,' + isn + '$|.*,' + isn + ',.*');
-                return !patt.test(dateVal);
-            });
-        }
-        if (newValue.length) {
-            oldValue.push(...newValue);
-            const addedValue = oldValue.join(',');
-            this.form.controls['rec.OPEN_AR'].patchValue(addedValue);
-            this.getInfoFroCode(addedValue).then(() => {
-                this.checRcShowRes();
-            }).catch(error => {
-                this._msg.addNewMessage({
-                    type: 'warning',
-                    title: 'Предупреждение',
-                    msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
-                });
-            });
-        }
-    }
+    // addRcDoc(): void {
+    //     this.flagBacground = true;
+    //     const query: IOpenClassifParams = {
+    //         classif: 'DOCGROUP_CL',
+    //         selectMulty: true,
+    //         selectLeafs: true,
+    //         selectNodes: false,
+    //         return_due: false,
+    //     };
+    //     this._waitClassifSrv.openClassif(query).then(data => {
+    //         /* Если получили данные из списка то получаем DUE если же мы получили DUE то тогда доп запрос на получение ISN */
+    //         if (data.indexOf('.') !== -1) {
+    //             const queryCriteries = data.replace('|', '||');
+    //             const q = {
+    //                 DOCGROUP_CL: {
+    //                     criteries: {
+    //                         DUE: queryCriteries
+    //                     }
+    //                 }
+    //             };
+    //             this._pipRx.read(q).then(result => {
+    //                 const newDate = [];
+    //                 result.forEach((doc) => {
+    //                     newDate.push(doc['ISN_NODE']);
+    //                 });
+    //                 this.addRcDocToInput(newDate.join('|'));
+    //             });
+    //         } else {
+    //             this.addRcDocToInput(data);
+    //         }
+    //         this.flagBacground = false;
+    //     }).catch(error => {
+    //         this.flagBacground = false;
+    //     });
+    // }
+    // addRcDocToInput(data): void {
+    //     let dateVal: string, newValue = [], oldValue = [];
+    //     dateVal = this.form.controls['rec.OPEN_AR'].value;
+    //     if (dateVal) {
+    //         oldValue = dateVal.split(',');
+    //     }
+    //     if (data) {
+    //         newValue = data.split('|');
+    //         newValue = newValue.filter(isn => {
+    //             const patt = new RegExp('^' + isn + ',?|,' + isn + '$|.*,' + isn + ',.*');
+    //             return !patt.test(dateVal);
+    //         });
+    //     }
+    //     if (newValue.length) {
+    //         oldValue.push(...newValue);
+    //         const addedValue = oldValue.join(',');
+    //         this.form.controls['rec.OPEN_AR'].patchValue(addedValue);
+    //         this.getInfoFroCode(addedValue).then(() => {
+    //             this.checRcShowRes();
+    //         }).catch(error => {
+    //             this._msg.addNewMessage({
+    //                 type: 'warning',
+    //                 title: 'Предупреждение',
+    //                 msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+    //             });
+    //         });
+    //     }
+    // }
 
-    deleteRcDoc(): void {
-        let updateVield: Array<number>, arrayT: Array<number>;
-        let valToSave;
-        this.dopRec.splice(this.cutentTab, 1);
-        arrayT = [];
-        this.dopRec.forEach(value => {
-            arrayT.push(value.ISN_NODE);
-        });
-        updateVield = arrayT;
-        if (this.dopRec.length > 0) {
-            this.disabledFlagDelite = false;
-        } else {
-            this.disabledFlagDelite = true;
-            this.dopRec = null;
-        }
-        updateVield.join(',') === '' ? valToSave = '' : valToSave = updateVield.join(',');
-        this.form.controls['rec.OPEN_AR'].patchValue(valToSave);
-    }
+    // deleteRcDoc(): void {
+    //     let updateVield: Array<number>, arrayT: Array<number>;
+    //     let valToSave;
+    //     this.dopRec.splice(this.cutentTab, 1);
+    //     arrayT = [];
+    //     this.dopRec.forEach(value => {
+    //         arrayT.push(value.ISN_NODE);
+    //     });
+    //     updateVield = arrayT;
+    //     if (this.dopRec.length > 0) {
+    //         this.disabledFlagDelite = false;
+    //     } else {
+    //         this.disabledFlagDelite = true;
+    //         this.dopRec = null;
+    //     }
+    //     updateVield.join(',') === '' ? valToSave = '' : valToSave = updateVield.join(',');
+    //     this.form.controls['rec.OPEN_AR'].patchValue(valToSave);
+    // }
     disableDelet() {
         if (this.cutentTab && this.dopRec) {
             return ((this.cutentTab + 1) > this.dopRec.length);
@@ -386,7 +386,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     edit($event) {
         this.flagEdit = $event;
         this.editMode();
-        this.checRcShowRes();
+        // this.checRcShowRes();
     }
 
     default() {
@@ -396,14 +396,14 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this._pipRx.read(prep).then((data: any) => {
             this.mapChanges.clear();
             // choose OPEN_AR from data
-            this.getInfoFroCode(data[2].PARM_VALUE).then(() => {
+            // this.getInfoFroCode(data[2].PARM_VALUE).then(() => {
                 this.creatchesheDefault = this.formHelp.createhash(data);
                 this.prepareData = this.formHelp.parse_Create(RC_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(RC_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
                 this.upInputs(this.defoltInputs);
-                this.checRcShowRes();
-            });
+                // this.checRcShowRes();
+            // });
         });
     }
     private _pushState() {
