@@ -20,6 +20,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { EosUserProfileService } from '../../../app/services/eos-user-profile.service';
 import { UserSelectNode } from '../../../eos-user-select/list-user-select/user-node-select';
 import { AbsoluteRigthServiceLib } from '../../../eos-rest/addons/absoluteRigth.service';
+import { ETypeDeloRight } from '../../rights-delo/rights-delo-absolute-rights/absolute-rights.consts';
+import { E_TECH_RIGHTS } from '../../rights-delo/rights-delo-absolute-rights/absolute-rights-classif/tech-user-classif.interface';
 
 
 @Injectable()
@@ -603,23 +605,46 @@ export class UserParamsService {
     }
 
     getSysTechUser(curUser: { oldRights: string[], newRights: string[], editUser: IParamUserCl } = null, checkedUser = this.checkedUsers): Promise<any> {
+        /** проверка галочки системный технолог */
         let limitTechUser = false;
         let checkedUsersIsn = '';
+        /** проверка ограничений на пользователи */
+        let checkLimitTech = true;
+        let checkUser = true;
+        if (curUser) {
+            checkUser = curUser.editUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1] === '1';
+        } else {
+            checkedUser.forEach((user) => {
+                if (user.TECH_RIGHTS && user.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1] !== '1' && checkUser) {
+                    checkUser = false;
+                }
+            });
+        }
+        /** проверка галочки пользователи */
         if (!curUser) {
             checkedUsersIsn = checkedUser.map((user) => `^${user.data.ISN_LCLASSIF}|`).join('');
         } else {
-            limitTechUser = curUser.oldRights[0] === '1' && curUser.newRights[0] === '0';
+            limitTechUser = curUser.oldRights[+ETypeDeloRight.SystemTechnologist] === '1' && curUser.newRights[+ETypeDeloRight.SystemTechnologist] === '0';
             checkedUsersIsn = `^${this.curentUser.ISN_LCLASSIF}`;
         }
-        if (!limitTechUser && curUser) {
+        if (curUser) {
+            this.userTechList.forEach((tech) => {
+                if (tech['FUNC_NUM'] === E_TECH_RIGHTS.Users) {
+                    checkLimitTech = false;
+                }
+            });
+        }
+        if (!limitTechUser && curUser && checkLimitTech && checkUser) {
             return Promise.resolve(false);
         }
         return this._pipRx.read<USER_CL>({
             USER_CL: {
                 criteries: {
                     DELO_RIGHTS: '1%',
+                    TECH_RIGHTS: '1%',
                     DELETED: '0',
-                    ISN_LCLASSIF: checkedUsersIsn,
+                    /** ^0 это владелец БД его не учитываем */
+                    ISN_LCLASSIF: `^0|${checkedUsersIsn}`,
                     AV_SYSTEMS: '_1%',
                     ORACLE_ID: 'isnotnull',
                     'USER_TECH.FUNC_NUM': '^1'
@@ -630,7 +655,7 @@ export class UserParamsService {
             orderby: 'ISN_LCLASSIF',
             loadmode: 'Table'
         }).then((data: USER_CL[]) => {
-            return !(data.length > 1);
+            return !(data.length !== 0);
         });
     }
 

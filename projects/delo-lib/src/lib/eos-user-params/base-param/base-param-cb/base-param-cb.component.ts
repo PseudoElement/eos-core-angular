@@ -616,7 +616,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-
+    /** Если снимаем галочку личного доступа у администратора системы */
+    // getCheckAdmSave() {
+    //     return this.formAccess.controls['1-27'].value !== '1';
+    // }
     submit(meta?: string): Promise<any> {
         if (this.getErrorSave) {
             this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
@@ -637,9 +640,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                if (this._newData.get('IS_SECUR_ADM') === false) {
+                if (this._newData.get('IS_SECUR_ADM') === false/*  || this.getCheckAdmSave() */) {
                     return this.apiSrvRx.read<USER_CL>({
-                        USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1', 'ORACLE_ID': 'isnotnull' }),
+                        USER_CL: PipRX.criteries({
+                            'IS_SECUR_ADM': '1',
+                            'ORACLE_ID': 'isnotnull',
+                            'AV_SYSTEMS':'_1________________________________________%'
+                        }),
                         orderby: 'ISN_LCLASSIF',
                         top: 2,
                         loadmode: 'Table'
