@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
-import { DEPARTMENT, DOCGROUP_CL, ORGANIZ_CL, /* USER_CL */ } from '../../../eos-rest';
+import { DEPARTMENT, DOCGROUP_CL, ORGANIZ_CL, USER_CL, /* USER_CL */ } from '../../../eos-rest';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { Subject, Observable } from 'rxjs';
 import { IConfig } from '../../../eos-user-select/shered/interfaces/user-select.interface';
@@ -478,7 +478,7 @@ export class UserParamApiSrv {
         };
     }
 
-    public _getListUsers(data): UserSelectNode[] {
+    public _getListUsers(data: USER_CL[]): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user, this.sysParam, this._appContext.limitCardsUser)));
         return list;

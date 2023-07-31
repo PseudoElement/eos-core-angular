@@ -818,6 +818,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 ORACLE_ID: 'isnotnull',
                 IS_SECUR_ADM: '1',
                 DELETED: '0',
+                AV_SYSTEMS: '_1________________________________________%'
             };
         } else {
             query = {
@@ -838,7 +839,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             });
             return;
         }
-
         this._userParamSrv.getSysTechUser(null, selectedUser).then((allSysTech: boolean) => {
             if (allSysTech) {
                 this._msgSrv.addNewMessage({
