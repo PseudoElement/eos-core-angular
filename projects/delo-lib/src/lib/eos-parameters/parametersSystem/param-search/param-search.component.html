@@ -18,14 +18,16 @@ class="input-param-wrapper input-param-search-wrapper">
             [form]="form"
             [disabled]="inputs['rec.INDEXKIND'].readonly"
         ></eos-dynamic-input>
-        <div>
+        <div *ngIf="this.form.controls['rec.INDEXKIND'].value === 'MSINDEXSERVER'">
             <eos-dynamic-input
+                class="eos-dynamic-input-title-custom"
                 [input]="inputs['rec.INDEX_URL']"
                 [form]="form"
             ></eos-dynamic-input>
-            <div>
-                <span>{{inputs['rec.INDEXTIMEOUT'].label}}</span>
+            <div class="max-sec-style">
+                <span style="width: 100%; float: left; text-transform: uppercase;font-size: 12px !important; color: #969696;">{{inputs['rec.INDEXTIMEOUT'].label}}</span>
                 <eos-dynamic-input
+                    style="width: 100%;"
                     class="inline-block"
                     [input]="inputs['rec.INDEXTIMEOUT']"
                     [form]="form"
@@ -33,12 +35,14 @@ class="input-param-wrapper input-param-search-wrapper">
                 ></eos-dynamic-input>
             </div>
             <eos-dynamic-input
+                class="eos-dynamic-input-title-custom set-style-disable"
                 [input]="inputs['rec.ELNPATH']"
                 [form]="form"
                 [readonly]="inputs['rec.ELNPATH'].readonly"
             ></eos-dynamic-input>
             <div style='padding-bottom: 20px;'>
                 <eos-dynamic-input
+                    class="eos-dynamic-input-title-custom"
                     [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
                     [form]="form"
                 ></eos-dynamic-input>

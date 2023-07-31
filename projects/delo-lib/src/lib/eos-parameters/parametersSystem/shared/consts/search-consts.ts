@@ -19,7 +19,7 @@ export const SEARCH_PARAM: IBaseParameters = {
             key: 'INDEX_URL',
             type: 'string',
             readonly: false,
-            title: 'Полный путь к прокси-серверу службы поиска',
+            title: 'ПОЛНЫЙ ПУТЬ К ПРОКСИ-СЕРВЕРУ ВНЕШНЕЙ СЛУЖБЫ ПОИСКА',
         },
         {
             key: 'INDEXTIMEOUT',
@@ -31,13 +31,13 @@ export const SEARCH_PARAM: IBaseParameters = {
             key: 'ELNPATH',
             type: 'string',
             readonly: true,
-            title: 'Папка для eln-ярлыков',
+            title: 'ПАПКА ДЛЯ ELN-ЯРЛЫКОВ',
         },
         {
             key: 'FULLTEXT_EXTENSIONS',
             type: 'string',
             // readonly: true,
-            title: 'Форматы файлов, индексируемых внешней службой',
+            title: 'ФОРМАТЫ ФАЙЛОВ, ИНДЕКСИРУЕМЫХ ВНЕШНЕЙ СЛУЖБОЙ',
             length: 2000
         },
         /* {
