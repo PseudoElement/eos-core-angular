@@ -377,7 +377,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     checkSortSessionStore() {
         const sort = this._storage.getItem('SortPageList');
         if (sort) {
-            this._apiSrv.srtConfig['fullDueName'].checked = false;
+            this._apiSrv.srtConfig['surnamePatron'].checked = false;
             // this._apiSrv.srtConfig['login'].checked = false; @166034
             this._apiSrv.currentSort = sort['sort'];
             this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = true;
