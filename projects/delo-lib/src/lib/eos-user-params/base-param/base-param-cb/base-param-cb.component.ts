@@ -1232,15 +1232,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         dueDep = (due.split('|'))[0];
         this._userParamSrv.getDepartmentFromUser([dueDep])
             .then((data: DEPARTMENT[]) => {
-                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
-                    if (data) {
-                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
-                    }
-                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
-                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
-                    });
-                    return val;
-                });
+                if (this.formControls.controls['DUE_DEP_NAME'].value) {
+                    return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
+                            this.fillingDep(data);
+                            return val;
+                        })
+                } else {
+                    this.fillingDep(data);
+                    return Promise.resolve(data[0]);
+                }
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
@@ -1269,6 +1269,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem, { emitEvent: false });
             });
     }
+
+    private fillingDep(data) {
+        if (data) {
+            this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
+        }
+        this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+            this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+        });
+    }
+    
     private _isSymbolsCorrect(value): boolean {
         const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
         return REGEXP.test(value);
@@ -1450,7 +1460,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
-                    // this.form.get('NOTE').patchValue(this.curentUser['NOTE']);
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
@@ -1463,6 +1472,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 this.formControls.controls['DUE_DEP_NAME'].patchValue('');
                                 this.formControls.controls['DUE_DEP_NAME'].disable();
                                 this.formControls.controls['DUE_DEP_NAME'].setValidators(null);
+
+                                this.updateParamsTech(this.formControls.get('teсhUser').value);
 
                                 this.form.get('NOTE').patchValue('');
                                 const selRol = ('' + this.formControls.controls['SELECT_ROLE'].value).replace(' ...', '');
@@ -1481,7 +1492,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 }
                             } else {
                                 this.curentUser.isTechUser = false;
-                                // f.get('teсhUser').setValue(false);
                                 f.get('teсhUser').setValue(false, { emitEvent: false });
                                 this.updateParamsTech(false);
                             }
@@ -1500,8 +1510,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     // this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     // this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
+                    this.updateParamsTech(false);
                 }
-                this.updateParamsTech(this.formControls.get('teсhUser').value);
             });
         this.form.get('CLASSIF_NAME').valueChanges
         .pipe(
