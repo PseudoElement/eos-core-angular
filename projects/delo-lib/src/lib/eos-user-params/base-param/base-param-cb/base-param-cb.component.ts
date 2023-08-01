@@ -640,6 +640,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
+                console.log("this._newData.get('IS_SECUR_ADM')", this._newData.get('IS_SECUR_ADM'))
+                console.log("this._newData", this._newData)
                 if (this._newData.get('IS_SECUR_ADM') === false/*  || this.getCheckAdmSave() */) {
                     return this.apiSrvRx.read<USER_CL>({
                         USER_CL: PipRX.criteries({
@@ -659,7 +661,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             return 'error';
                         } else {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && !meta && this.curentUser.USERTYPE !== 4) {
+                            if (
+                                !this.curentUser['IS_PASSWORD'] && 
+                                this.curentUser.USERTYPE !== 1 && 
+                                // this.curentUser.USERTYPE !== -1 && 
+                                this.curentUser.USERTYPE !== 4 && 
+                                !meta
+                            ) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
@@ -676,7 +684,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                    if (!this.curentUser['IS_PASSWORD'] && !meta && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {
+                    console.log("this.curentUser['IS_PASSWORD']",this.curentUser['IS_PASSWORD'])
+                    console.log("this.curentUser",this.curentUser)
+                    if (
+                        !this.curentUser['IS_PASSWORD'] && 
+                        this.curentUser.USERTYPE !== 1 && 
+                        // this.curentUser.USERTYPE !== -1 && 
+                        this.curentUser.USERTYPE !== 4 &&
+                        !meta
+                    ) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                             if (res) {
                                 return this.ConfirmAvSystems(accessStr, id, query).then(() => {
