@@ -30,6 +30,7 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param.consts';
 import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component';
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
+import { UserType } from 'eos-rest/enum/user-type';
 
 
 @Component({
@@ -659,7 +660,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             return 'error';
                         } else {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && !meta && this.curentUser.USERTYPE !== 4) {
+                            if (
+                                !this.curentUser['IS_PASSWORD'] && 
+                                this.curentUser.USERTYPE !== UserType.OSAuthentication && 
+                                // this.curentUser.USERTYPE !== UserType.noLoginRights && 
+                                this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
+                                !meta
+                            ) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
@@ -676,7 +683,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                    if (!this.curentUser['IS_PASSWORD'] && !meta && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {
+                    if (
+                        !this.curentUser['IS_PASSWORD'] && 
+                        this.curentUser.USERTYPE !== UserType.OSAuthentication && 
+                        // this.curentUser.USERTYPE !== UserType.noLoginRights && 
+                        this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
+                        !meta
+                    ) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                             if (res) {
                                 return this.ConfirmAvSystems(accessStr, id, query).then(() => {
