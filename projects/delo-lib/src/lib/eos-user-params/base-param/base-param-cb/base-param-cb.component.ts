@@ -30,8 +30,7 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param.consts';
 import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component';
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
-import { UserType } from 'eos-rest/enum/user-type';
-
+import { UserType } from '../../../eos-rest/enum/user-type';
 
 @Component({
     selector: 'eos-params-base-param-cb',
