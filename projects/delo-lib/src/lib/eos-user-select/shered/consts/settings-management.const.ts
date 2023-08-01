@@ -33,7 +33,7 @@ export const SETTINGS_MANAGEMENT_INPUTS = [
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: '7',
+        key: '6',
         label: 'Списки справочников',
         value: false,
     },
