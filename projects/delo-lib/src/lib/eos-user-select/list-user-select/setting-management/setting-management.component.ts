@@ -300,6 +300,19 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
         });
         return flag;
     }
+    /**
+     * 
+     * [0] -> Абсолютные права
+     * [1] -> Абсолютные права(включая личные права)
+     * [2] -> Картотечные права
+     * [3] -> Картотечные права(включая все картотеки)
+     * [4] -> Параметры
+     * [5] -> Списки справочников
+     * [6] -> Права поточного сканирования
+     * [7] -> Списки стандарных текстов
+     * [8] -> 
+     * [9] -> 
+     */
     private _createUrlForSop(form: FormGroup, isn?: string, copy?: boolean): string {
         let url;
         let rigths = '';
