@@ -30,6 +30,7 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param.consts';
 import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component';
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
+import { UserType } from 'eos-rest/enum/user-type';
 
 
 @Component({
@@ -640,8 +641,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                console.log("this._newData.get('IS_SECUR_ADM')", this._newData.get('IS_SECUR_ADM'))
-                console.log("this._newData", this._newData)
                 if (this._newData.get('IS_SECUR_ADM') === false/*  || this.getCheckAdmSave() */) {
                     return this.apiSrvRx.read<USER_CL>({
                         USER_CL: PipRX.criteries({
@@ -663,9 +662,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
                             if (
                                 !this.curentUser['IS_PASSWORD'] && 
-                                this.curentUser.USERTYPE !== 1 && 
-                                // this.curentUser.USERTYPE !== -1 && 
-                                this.curentUser.USERTYPE !== 4 && 
+                                this.curentUser.USERTYPE !== UserType.OSAuthentication && 
+                                // this.curentUser.USERTYPE !== UserType.noLoginRights && 
+                                this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
                                 !meta
                             ) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
@@ -684,13 +683,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                    console.log("this.curentUser['IS_PASSWORD']",this.curentUser['IS_PASSWORD'])
-                    console.log("this.curentUser",this.curentUser)
                     if (
                         !this.curentUser['IS_PASSWORD'] && 
-                        this.curentUser.USERTYPE !== 1 && 
-                        // this.curentUser.USERTYPE !== -1 && 
-                        this.curentUser.USERTYPE !== 4 &&
+                        this.curentUser.USERTYPE !== UserType.OSAuthentication && 
+                        // this.curentUser.USERTYPE !== UserType.noLoginRights && 
+                        this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
                         !meta
                     ) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
