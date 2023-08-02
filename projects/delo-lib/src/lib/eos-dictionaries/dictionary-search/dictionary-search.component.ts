@@ -670,7 +670,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     visibleClosedDealsOption() {
-        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category'];
+        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category', 'docgroup'];
         return !ITEMS.includes(this.dictId);
     }
 
