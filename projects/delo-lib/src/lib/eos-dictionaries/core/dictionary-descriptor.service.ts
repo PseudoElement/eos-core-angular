@@ -88,7 +88,16 @@ export class DictionaryDescriptorService {
             //         return 0;
             //     }
             // })
-            .forEach((dict) => this._mDicts.set(dict.id, dict));
+            .forEach((dict) => {
+                if (this._appContext.cbBase && dict.id === 'sev-participant') {
+                    dict['allVisibleFields'] = dict['allVisibleFields'].filter((field) => field !== 'CRYPT');
+                    dict['fieldDefault'] = dict['fieldDefault'].filter((field) => field !== 'CRYPT');
+                    dict['quickViewFields'] = dict['quickViewFields'].filter((field) => field !== 'CRYPT');
+                    dict['editFields'] = dict['editFields'].filter((field) => field !== 'CRYPT');
+                    dict['fields'] = dict['fields'].filter((field) => field.key !== 'CRYPT');
+                }
+                this._mDicts.set(dict.id, dict)
+            });
     }
 
     visibleDictionaries(): IDictionaryDescriptor[] {
