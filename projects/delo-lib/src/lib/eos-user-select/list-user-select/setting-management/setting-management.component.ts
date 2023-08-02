@@ -407,7 +407,7 @@ export class SettingManagementComponent implements OnInit, OnDestroy {
                 this.form.controls['3'].patchValue(value, { emitEvent: false });
                 this.form.controls['5'].patchValue(value, { emitEvent: false });
                 // this.form.controls['6'].patchValue(value, { emitEvent: false });
-                this.form.controls['7'].patchValue(value, { emitEvent: false });
+                this.form.controls['6'].patchValue(value, { emitEvent: false });
                 this.form.controls['8'].patchValue(value, { emitEvent: true });
                 this.form.controls['1'].patchValue(value, { emitEvent: false });
             }
