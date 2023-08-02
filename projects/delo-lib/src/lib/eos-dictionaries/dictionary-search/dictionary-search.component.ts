@@ -268,14 +268,18 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         return this._classif.openClassif(params, true)
         .then((isnNode) => {
             if (isnNode) {
-                return this.dictionary['dictDescrSrv']['apiSrv']
-                .read({
+                const query = {
                     DOCGROUP_CL: {
-                        criteries: {
-                            ISN_NODE: isnNode
-                        }
+                        criteries: {}
                     }
-                }).then(data => {
+                }
+                if (String(isnNode).indexOf('.') !== -1) {
+                    query['DOCGROUP_CL']['criteries']['DUE'] = isnNode;
+                } else {
+                    query['DOCGROUP_CL']['criteries']['ISN_NODE'] = isnNode;
+                }
+                return this.dictionary['dictDescrSrv']['apiSrv']
+                .read(query).then(data => {
                     this.searchModel['DOCGROUP_NAME'] = data[0]['CLASSIF_NAME'];
                     this.searchModel['DUE_DOCGROUP'] = data[0]['DUE'];
                 });
@@ -670,7 +674,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     visibleClosedDealsOption() {
-        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category'];
+        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category', 'docgroup'];
         return !ITEMS.includes(this.dictId);
     }
 
