@@ -574,7 +574,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-
+    /** Если снимаем галочку личного доступа у администратора системы */
+    getCheckAdmSave() {
+        return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
+    }
     submit(meta?: string): Promise<any> {
         if (!this.getValidDate) {
             this.messageAlert({ title: 'Предупреждение', msg: 'Невозможно сохранить некорректные данные', type: 'warning' });
@@ -591,7 +594,31 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     const query = [];
                     const accessStr = '';
                     return this.checkDLSurname(query)
-                        .then(() => {
+                        .then(async () => {
+                            if (this.getCheckAdmSave()) {
+                                const answ: USER_CL[] = await this.apiSrvRx.read<USER_CL>({
+                                    USER_CL: {
+                                        criteries: {
+                                            DELO_RIGHTS: '1%',
+                                            TECH_RIGHTS: '1%',
+                                            DELETED: '0',
+                                            /** ^0 это владелец БД его не учитываем */
+                                            ISN_LCLASSIF: `^0|${this.curentUser.ISN_LCLASSIF}`,
+                                            AV_SYSTEMS: '_1%',
+                                            ORACLE_ID: 'isnotnull',
+                                            'USER_TECH.FUNC_NUM': '^1'
+                                        },
+                                    },
+                                    skip: 0,
+                                    top: 2,
+                                    orderby: 'ISN_LCLASSIF',
+                                    loadmode: 'Table'
+                                });
+                                if (!(answ.length !== 0)) {
+                                    this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`, type: 'warning' });
+                                    return 'error';
+                                }
+                            }
                             this.setQueryNewData(accessStr, newD, query);
                             this.setNewDataFormControl(query, id);
                             if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {
