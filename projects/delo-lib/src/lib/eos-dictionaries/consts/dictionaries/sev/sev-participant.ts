@@ -75,20 +75,9 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV
         },
     },
     {
-        key: 'SEV_PARTICIPANT_RULE.ISN_RULE',
-        title: 'Правила',
-        type: 'dictionary',
-        dictionaryId: 'SEV_PARTICIPANT_RULE',
-        dictionaryLink: {
-            pk: 'ISN_PARTICIPANT',
-            fk: 'ISN_RULE',
-            label: 'CLASSIF_NAME',
-        },
-    },
-    {
         key: 'FILE_SYNC_DATE',
         title: 'Дата формирования файла синхронизации',
-        type: 'number'
+        type: 'string'
     }, {
         key: 'WEIGHT',
         title: 'Вес элемента',

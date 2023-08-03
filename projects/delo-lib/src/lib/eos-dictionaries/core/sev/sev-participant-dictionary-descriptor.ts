@@ -2,9 +2,9 @@ import { SevDictionaryDescriptor } from './sev-dictionary-descriptor';
 import { EosDictionaryNode } from '../eos-dictionary-node';
 import { BUTTON_RESULT_OK } from '../../../app/consts/confirms.const';
 import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
-import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE, PipRX } from '../../../eos-rest';
+import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE, PipRX, SEV_SYNC_REPORT } from '../../../eos-rest';
 import { IDictionaryDescriptor, IRecordOperationResult } from '../../../eos-dictionaries/interfaces';
-
+const MAX_QUERY_DUES = 117; // макс. due = 17 символов вся вложенность (2000 символов), URL сам примерно 50 символов
 
 export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor {
     constructor(
@@ -52,27 +52,89 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
             return data;
         });
     }
+    updateStrToQuery(stringDue: any[]): string[] {
+        const queries: any[] = [];
+        if (stringDue.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
+            const step: number = 0;
+            let finish: number = 0;
+            while (step * MAX_QUERY_DUES < stringDue.length) {
+                const start = MAX_QUERY_DUES * step;
+                finish = step * MAX_QUERY_DUES + MAX_QUERY_DUES;
+                if (finish > stringDue.length) {
+                    finish = step * MAX_QUERY_DUES + (stringDue.length - MAX_QUERY_DUES);
+                }
+                const SELECTED_DUES = stringDue.slice(start, finish);
+                const DUES_STR = SELECTED_DUES.join('|');
+                queries.push(DUES_STR);
+            }
+        } else {
+            queries.push(stringDue.join('|'));
+        }
+        return queries;
+    }
     public getData(query?: any, order?: string, limit?: number): Promise<any> {
         return super.getData(query, order, limit).then((sev_part: SEV_PARTICIPANT[]) => {
             const mapLinksOrganiz = new Map<string, SEV_PARTICIPANT>();
             const organizIds = [];
+            const sevParticipan = [];
+            const mapSevParticipan = new Map<string, string>();
             sev_part.forEach((sev: SEV_PARTICIPANT) => {
+                sevParticipan.push(sev.ISN_LCLASSIF);
+                mapSevParticipan.set('' + sev.ISN_LCLASSIF, '');
                 if (sev.DUE_ORGANIZ) {
                     organizIds.push(sev.DUE_ORGANIZ);
                     mapLinksOrganiz.set(sev.DUE_ORGANIZ, sev);
+
                 }
             });
+            const query = [];
             if (organizIds.length) {
-                return this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: organizIds }).then((org: ORGANIZ_CL[]) => {
-                    org.forEach((o: ORGANIZ_CL) => {
+                query.push(this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: organizIds }));
+            } else {
+                query.push(Promise.resolve([]));
+            }
+            if (sevParticipan.length) {
+                const allQuery = this.updateStrToQuery(sevParticipan);
+                allQuery.forEach((quer) => {
+                    query.push(this.apiSrv.read<SEV_SYNC_REPORT>({ 
+                        SEV_SYNC_REPORT: {
+                            criteries: { 
+                                ISN_PARTICIPANT: quer
+                            }
+                        }
+                    }));
+                });
+            } else {
+                query.push(Promise.resolve([]));
+            }
+            return Promise.all(query)
+            .then((queryAns) => {
+                if (queryAns[0].length > 0) {
+                    queryAns[0].forEach((o: ORGANIZ_CL) => {
                         const s: SEV_PARTICIPANT = mapLinksOrganiz.get(o.DUE);
                         s.DELETED = o.DELETED;
                         s.ORGANIZ_CL_NAME = o.CLASSIF_NAME;
                     });
-                    return sev_part;
+                }
+                for (let index = 1; index < queryAns.length; index++) {
+                    queryAns[index].forEach((sync: SEV_SYNC_REPORT) => {
+                        const oldDate = mapSevParticipan.get('' + sync.ISN_PARTICIPANT);
+                        if (oldDate.length === 0) {
+                            mapSevParticipan.set('' + sync.ISN_PARTICIPANT, '' + sync.FILE_SYNC_DATE);
+                        } else {
+                            const newData = new Date(sync.FILE_SYNC_DATE) > new Date(oldDate);
+                            if (newData) {
+                                mapSevParticipan.set('' + sync.ISN_PARTICIPANT, '' + sync.FILE_SYNC_DATE);
+                            }
+                        }
+                    })
+                }
+                sev_part.forEach((part) => {
+                    const date = mapSevParticipan.get('' + part.ISN_LCLASSIF) ? mapSevParticipan.get('' + part.ISN_LCLASSIF).split('T')[0] : '';
+                    part['FILE_SYNC_DATE'] = date;
                 });
-            }
-            return sev_part;
+                return sev_part;
+            });
         });
     }
     confirmSave(nodeData: EosDictionaryNode, confirmSrv, isNewRecord: boolean): Promise<boolean> {
