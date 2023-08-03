@@ -596,24 +596,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     return this.checkDLSurname(query)
                         .then(async () => {
                             if (this.getCheckAdmSave()) {
-                                const answ: USER_CL[] = await this.apiSrvRx.read<USER_CL>({
-                                    USER_CL: {
-                                        criteries: {
-                                            DELO_RIGHTS: '1%',
-                                            TECH_RIGHTS: '1%',
-                                            DELETED: '0',
-                                            /** ^0 это владелец БД его не учитываем */
-                                            ISN_LCLASSIF: `^0|${this.curentUser.ISN_LCLASSIF}`,
-                                            AV_SYSTEMS: '_1%',
-                                            ORACLE_ID: 'isnotnull',
-                                            'USER_TECH.FUNC_NUM': '^1'
-                                        },
-                                    },
-                                    skip: 0,
-                                    top: 2,
-                                    orderby: 'ISN_LCLASSIF',
-                                    loadmode: 'Table'
-                                });
+                                const answ: USER_CL[] = await this._userParamSrv.getQueryTech();
                                 if (!(answ.length !== 0)) {
                                     this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`, type: 'warning' });
                                     return 'error';
