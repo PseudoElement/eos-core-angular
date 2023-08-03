@@ -273,6 +273,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         };
         return this._classif.openClassif(params, true)
         .then((isnNode) => {
+            console.log('isnNode', isnNode);
+            
             if (isnNode) {
                 const query = {
                     DOCGROUP_CL: {
@@ -291,6 +293,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                 });
             }
         }).catch((e) => {
+            console.log('e', e);
+            
             return { data: [], isnNode: null };
         });
     }
