@@ -95,7 +95,7 @@
         <!-- должностное лицо и роль -->
         <div class="wrapper-password">
             <eos-dynamic-input
-                style="width: 550px"
+                style="width: 550px; margin-top: 14px;"
                 class="base-text-input base-input-role"
                 eosClickMode
                 [input]="controls['DUE_DEP_NAME']"
@@ -107,7 +107,7 @@
         </div>
 
         <!-- технический пользователь -->
-        <div class="base-login-input" style="display: flex; margin-top: -20px;">
+        <div class="base-login-input" style="display: flex; margin-top: -6px;">
             <div style="position: relative;">
                 <eos-dynamic-input
                     (keyup)="onKeyUp($event)"
@@ -150,7 +150,7 @@
             <eos-dynamic-input
                 class="base-text-input base-input-role"
                 [input]="controls['SELECT_ROLE']"
-                style="padding-right: 15px; width: 330px"
+                style="padding-right: 15px; width: 330px; margin-top: -6px;"
                 [form]="formControls"
                 [readonly]="!editMode || formControls.controls['SELECT_ROLE'].disabled"
             >

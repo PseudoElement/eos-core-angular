@@ -5,17 +5,18 @@
         background-color: #fafafa;
         border: 1px solid $border-color-main-theme;
     }
-    
 
     .box {
         overflow-y: scroll;
         max-height: calc(100vh - 260px);
 
     }
+
     header {
         background-color: #fafafa;
         border: 1px solid $border-color-main-theme;
     }
+
     .wrapper-card {
         margin-top: 6px;
         background: #FFFFFF;
@@ -90,6 +91,11 @@
                             top: 50%;
                         }
                     }
+
+                    .textareacounter {
+                        display: none;
+                    }
+
                     .white-field {
                         input {
                             background-color: #ffff;
@@ -359,11 +365,10 @@
     .serts {
         top: 30%;
     }
-    
-    .roles {
-        top: 10%;
-        width: 1200px !important;
-        max-height: 600px !important;
-        max-width: 100% !important;
-    }
+}
+.roles {
+    top: 10%;
+    width: 1200px !important;
+    max-height: 600px !important;
+    max-width: 100% !important;
 }

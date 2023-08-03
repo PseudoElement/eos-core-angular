@@ -65,7 +65,7 @@ export class RightClassifNode {
         if (this.item.key === E_TECH_RIGHTS.CustomizeReports) {
             if (this._value) {
                 const itemConfigureReports = this._component.listClassif.find(node => node.item.key === E_TECH_RIGHTS.ConfigurConfigToReports);
-                if (!itemConfigureReports.value) {
+                if (itemConfigureReports && !itemConfigureReports.value) {
                     this._component.confirmSrv.confirm2(CONFIRM_REPORTING_ABS_RIGTH).then((result) => {
                         if (result.result === 2) {
                             itemConfigureReports.value = 1;

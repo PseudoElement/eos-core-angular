@@ -6,16 +6,16 @@ export const CONVERSION_PARAM: IBaseParameters = {
     title: 'Служба конвертации',
     fields: [
         {
-            key: 'IsActive',
+            key: 'IsShared',
             type: 'boolean',
-            title: 'Использовать службу конвертации',
+            title: 'Общедоступный конвертер',
             formatDbBinary: true
         },
         {
             key: 'Name',
             type: 'string',
             readonly: true,
-            title: ''
+            title: 'Имя конвертера'
         },
         {
             key: 'MaxCacheSize',
@@ -26,13 +26,13 @@ export const CONVERSION_PARAM: IBaseParameters = {
         {
             key: 'LibraryDirectory',
             type: 'string',
-            title: 'ПАПКА'
+            title: 'Рабочая папка конвертера'
         },
         {
             key: 'LibraryName',
             type: 'select',
             readonly: false,
-            title: 'ХРАНИЛИЩЕ',
+            title: 'Файловое хранилище',
         },
         {
             key: 'ConverterFormat',
@@ -73,7 +73,7 @@ export const HEADER_TABLE_CONVERSION: ITableHeader[]  = [
     },
     {
         title: 'Общий доступ',
-        id: 'IsShared',
+        id: 'IsSharedList',
         style: {width: '150px'}
     },
 ];

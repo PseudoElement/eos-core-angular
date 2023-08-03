@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
-import { DEPARTMENT, DOCGROUP_CL, ORGANIZ_CL, /* USER_CL */ } from '../../../eos-rest';
+import { DEPARTMENT, DOCGROUP_CL, ORGANIZ_CL, USER_CL, /* USER_CL */ } from '../../../eos-rest';
 import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { Subject, Observable } from 'rxjs';
 import { IConfig } from '../../../eos-user-select/shered/interfaces/user-select.interface';
@@ -34,7 +34,8 @@ export class UserParamApiSrv {
     hashSorting = new Map()
         .set('fullDueName', 'SURNAME_PATRON')
         .set('login', 'CLASSIF_NAME')
-        .set('department', 'NOTE');
+        .set('department', 'NOTE')
+        .set('surnamePatron', 'SURNAME_PATRON');
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[1];
     searchRequest = {};
@@ -130,6 +131,9 @@ export class UserParamApiSrv {
         } else if (this.currentSort === 'department') {
             propOrderBy = 'NOTE';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        } else if (this.currentSort === 'fullDueName') {
+            propOrderBy = 'SURNAME_PATRON';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
         if (this.stateTehUsers) {
             propOrderBy = 'CLASSIF_NAME asc';
@@ -158,7 +162,7 @@ export class UserParamApiSrv {
                 if (!this.flagDelitedPermanantly && !this.flagDisableUser) { // вот тут должно быть обновление
                     ob1['DELETED'] = 0;
                 }
-                if (this.currentSort === 'fullDueName') {
+                if (this.currentSort === 'surnamePatron') {
                     propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
                 }
@@ -462,15 +466,19 @@ export class UserParamApiSrv {
         };
         this.srtConfig.fullDueName = {
             upDoun: false,
-            checked: true,
+            checked: false,
         };
         this.srtConfig.tip = {
             upDoun: false,
             checked: false,
         };
+        this.srtConfig.surnamePatron = {
+            upDoun: false,
+            checked: true,
+        };
     }
 
-    public _getListUsers(data): UserSelectNode[] {
+    public _getListUsers(data: USER_CL[]): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user, this.sysParam, this._appContext.limitCardsUser)));
         return list;

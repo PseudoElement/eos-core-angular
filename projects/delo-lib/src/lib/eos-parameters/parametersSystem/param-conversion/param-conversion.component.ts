@@ -110,7 +110,7 @@ export class ParamConversionComponent extends BaseParamComponent {
             conwert['DISPALY_NAME'] = hostName ? hostName['DISPLAY_NAME'] : '';
             conwert['InstanceName'] = conwert.Library.Name;
             conwert['Name'] = conwert.Name || '';
-            conwert['IsShared'] = {type: ECellToAll.checkbox, check: conwert.IsActive, click: () => {}, disabled: true};
+            conwert['IsSharedList'] = {type: ECellToAll.checkbox, check: conwert.IsShared, click: () => {}, disabled: true};
             this.tabelData.data.push(conwert);
         })
     }
@@ -145,7 +145,7 @@ export class ParamConversionComponent extends BaseParamComponent {
             MaxCacheSize: this.updateData['MaxCacheSize'] !== undefined ? +this.updateData['MaxCacheSize'] : +this.prepareData.rec['MaxCacheSize'],
             ConverterFormat: this.prepareData.rec['ConverterFormat'],
             Name: this.updateData['Name'] !== undefined ? this.updateData['Name'] : this.prepareData.rec['Name'],
-            IsActive: this.updateData['IsActive'] !== undefined ? Boolean(+this.updateData['IsActive']) : Boolean(+this.prepareData.rec['IsActive']),
+            IsShared: this.updateData['IsShared'] !== undefined ? Boolean(+this.updateData['IsShared']) : Boolean(+this.prepareData.rec['IsShared']),
             ServerURL: this.updateData['ServerURL'] !== undefined ? this.updateData['ServerURL'] : this.prepareData.rec['ServerURL']
         };
         Object.keys(this.converter).forEach((key) => {

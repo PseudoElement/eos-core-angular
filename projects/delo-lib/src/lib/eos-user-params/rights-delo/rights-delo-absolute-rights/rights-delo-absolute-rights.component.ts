@@ -228,7 +228,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.TABLE_HEADER_ABS_RIGHT = [];
         this.TABLE_HEADER_ABS_RIGHT.push({
-            title: 'Участники документаоборота',
+            title: 'Участники документооборота',
             id: 'CLASSIF_NAME',
             style: { 'min-width': '360px', 'max-width': '360px' },
             fixed: true

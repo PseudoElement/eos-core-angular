@@ -94,17 +94,21 @@
             <div class="card-flag">
                 <eos-dynamic-input [input]="inputs['rec.CARD_FLAG']"
                                    [form]="form"
-                                   [readonly]="!(this.editMode)"></eos-dynamic-input>
-                <eos-dynamic-input *ngIf="featuresDep.reestr_send"
+                                   [readonly]="!(this.editMode)"
+                ></eos-dynamic-input>
+                <eos-dynamic-input *ngIf="featuresDep.reestr_send && !apCtx.cbBase"
                                    [input]="inputs['rec.EXPEDITION_FLAG']"
                                    [form]="form"
                                    (click)="this.clickNumcreation()"
-                                   [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input class ="pull-left" *ngIf="featuresDep.numcreation"
+                                   [readonly]="!editMode"
+                ></eos-dynamic-input>
+                <eos-dynamic-input class ="pull-left" 
+                                   *ngIf="featuresDep.numcreation"
                                    [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
                                    (click)="this.clickNumcreation()"
-                                   [readonly]="!editMode"></eos-dynamic-input>
+                                   [readonly]="!editMode"
+                ></eos-dynamic-input>
             </div>
         </div>
         <div class="col-2 pull-right">
@@ -128,8 +132,6 @@
                        [input]="inputs['rec.NOTE']"
                        [form]="form"
                        [readonly]="!editMode"
-
-
     ></eos-dynamic-input>
 
 </div>

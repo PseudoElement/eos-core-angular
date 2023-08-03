@@ -295,10 +295,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         });
         if (usersNotDeleted.length > 0) {
             const index = usersNotDeleted.indexOf(this.selectedUser);
-            if (type.action === 13) {
+            if (type.action === 17) {
                 this.setNewCurrUserByBreadMinus(index, usersNotDeleted);
             }
-            if (type.action === 14) {
+            if (type.action === 18) {
                 this.setNewCurrUserByBreadPlus(index, usersNotDeleted);
             }
         }
@@ -377,7 +377,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     checkSortSessionStore() {
         const sort = this._storage.getItem('SortPageList');
         if (sort) {
-            this._apiSrv.srtConfig['fullDueName'].checked = false;
+            this._apiSrv.srtConfig['surnamePatron'].checked = false;
             // this._apiSrv.srtConfig['login'].checked = false; @166034
             this._apiSrv.currentSort = sort['sort'];
             this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = true;
@@ -648,9 +648,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     UserLists() {
-        const selectedUsers = this.listUsers.filter((user) => user.isChecked);
-        if (selectedUsers.length === 1) {
-            const selectedUser = selectedUsers[0];
+        // const selectedUsers = this.listUsers.filter((user) => user.isChecked);
+        if (this._userParamSrv.checkedUsers.length === 1) {
+            const selectedUser = this._userParamSrv.checkedUsers[0];
             const param: IOpenClassifParams = {
                 classif: 'SharingLists',
                 clUser: true,
@@ -818,6 +818,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 ORACLE_ID: 'isnotnull',
                 IS_SECUR_ADM: '1',
                 DELETED: '0',
+                AV_SYSTEMS: '_1________________________________________%'
             };
         } else {
             query = {
@@ -838,7 +839,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             });
             return;
         }
-
         this._userParamSrv.getSysTechUser(null, selectedUser).then((allSysTech: boolean) => {
             if (allSysTech) {
                 this._msgSrv.addNewMessage({

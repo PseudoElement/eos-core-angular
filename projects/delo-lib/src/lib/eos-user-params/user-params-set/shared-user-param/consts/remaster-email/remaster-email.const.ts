@@ -381,7 +381,7 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             ]
         },
         {
-            key: 'NEED_VISUALITY',
+            key: 'DEFAULT_VISUALITY',
             type: 'boolean',
             title: 'Визуальный контроль'
         },

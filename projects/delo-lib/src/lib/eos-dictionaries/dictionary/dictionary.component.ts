@@ -937,10 +937,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
             });
             if (this.dictionaryId === 'organization') {
-                datas.rc_id = rc;
+                datas.rc_id = rc.map((item) => String(item));
                 datas.due = id;
             } else {
-                datas.rc_id = id;
+                datas.rc_id = id.map((item) => String(item));
             }
             config.datas = datas;
         }

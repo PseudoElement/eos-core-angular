@@ -19,7 +19,7 @@ export const SEARCH_PARAM: IBaseParameters = {
             key: 'INDEX_URL',
             type: 'string',
             readonly: false,
-            title: 'Полный путь к прокси-серверу службы поиска',
+            title: 'ПОЛНЫЙ ПУТЬ К ПРОКСИ-СЕРВЕРУ ВНЕШНЕЙ СЛУЖБЫ ПОИСКА',
         },
         {
             key: 'INDEXTIMEOUT',
@@ -31,32 +31,32 @@ export const SEARCH_PARAM: IBaseParameters = {
             key: 'ELNPATH',
             type: 'string',
             readonly: true,
-            title: 'Папка для eln-ярлыков',
+            title: 'ПАПКА ДЛЯ ELN-ЯРЛЫКОВ',
         },
         {
             key: 'FULLTEXT_EXTENSIONS',
             type: 'string',
             // readonly: true,
-            title: 'Форматы файлов, индексируемых внешней службой',
+            title: 'ФОРМАТЫ ФАЙЛОВ, ИНДЕКСИРУЕМЫХ ВНЕШНЕЙ СЛУЖБОЙ',
             length: 2000
         },
-        {
+        /* {
             key: 'KafkaCfgServerURL',
             type: 'string',
             readonly: false,
-            title: 'Адрес Kafka',
-        },
+            title: 'АДРЕС KAFKA',
+        }, */
         {
             key: 'ElasticCfgServerURL',
             type: 'string',
             readonly: false,
-            title: 'Адрес Elasticsearch',
+            title: 'АДРЕС СЕРВЕРА ELASTICSEARCH',
         },
         {
             key: 'ElasticCfgLogin',
             type: 'string',
             readonly: false,
-            title: 'Логин',
+            title: 'ЛОГИН',
         },
         {
             key: 'ElasticCfgPassword',

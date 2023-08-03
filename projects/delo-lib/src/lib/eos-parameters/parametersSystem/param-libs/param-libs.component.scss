@@ -1,10 +1,4 @@
 .param-libs-class {
-    .eos-dynamic-input-title-custom {
-        label {
-            font-size: 12px !important;
-            color: #969696;
-        }
-    }
     .title-span {
         font-size: 12px;
         color: #969696;
@@ -64,6 +58,39 @@
     }
     .style-to-table {
         border-bottom: 1px solid #e6e6e6;
+    }
+}
+.max-sec-style {
+    eos-dynamic-input-increment-number {
+        .disabled {
+            opacity: 1.0 !important;
+        }
+        input {
+            border: 1px solid #e6e6e6 !important;
+            padding-left: 8px !important;
+            height: 34px;
+            background-color: #eeeeee !important;
+        }
+    }
+}
+.set-style-disable {
+    eos-dynamic-input-string {
+        input {
+            background-color: #eeeeee !important;
+        }
+    }
+}
+.eos-dynamic-input-title-custom {
+    label {
+        font-size: 12px !important;
+        color: #969696;
+    }
+}
+.eos-dynamic-input-title-custom-checkbox {
+    label {
+        font-size: 16px !important;
+        color: #969696;
+        text-transform: none;
     }
 }
 

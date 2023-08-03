@@ -69,5 +69,12 @@
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.EPVV_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
+        <div *ngIf="checkDiadoc" class="param-other">
+            <div class="param-elem">
+                <span>Диадок</span>
+            </div>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.DIADOC_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
+            <span></span>
+        </div>
     </div>
 </div>

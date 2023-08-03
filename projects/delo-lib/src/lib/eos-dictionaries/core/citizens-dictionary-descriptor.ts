@@ -4,7 +4,7 @@ import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { IRecordModeDescription, ITreeDictionaryDescriptor } from '../../eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
-import { AR_DESCRIPT, CITIZEN, REGION_CL } from '../../eos-rest';
+import {  ADDRESS, AR_DESCRIPT, CITIZEN, REGION_CL } from '../../eos-rest';
 import { ResponseCitizens, ResponseProt } from '../interfaces/fetch.interface';
 import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
 import { CitizensAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/citizens-advanced-search';
@@ -100,8 +100,10 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         if (crit['common']['NEW']) {
             crit['common']['NEW'] = 1;
         }
-        if (criteries[0].hasOwnProperty('DOP_REC')) {
+        if (criteries[0]['common'].hasOwnProperty('DOP_REC')) {
             return this.searchDopRec(criteries);
+        } else if(criteries[0]['common'].hasOwnProperty('CITIZEN_ADDR')) {
+            return this.searchAddres(criteries);
         } else {
             return super.search(criteries);
         }
@@ -286,9 +288,31 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
             return this.dopRec;
         });
     }
-
+    async searchAddres(criteries: any[]): Promise<any> {
+        const newCriteries = {};
+        Object.assign(newCriteries, criteries[0]['common']);
+        const addresIsn: ADDRESS[] = await this.apiSrv.read<ADDRESS>({
+            ADDRESS: {
+                criteries: { ADDRES: `%${newCriteries['CITIZEN_ADDR'].replace(/"/g, '').replace(/ /g, '_')}%`}
+            }
+        });
+        const adrIsn = [];
+        if (addresIsn) {
+            addresIsn.forEach((adr) => {
+                adrIsn.push(adr['ISN_OWNER']);
+            });
+        }
+        delete newCriteries['CITIZEN_ADDR'];
+        newCriteries['ISN_CITIZEN'] = adrIsn.join('|');
+        const _d =  this.apiSrv.read({
+            CITIZEN: {
+                criteries: newCriteries
+            }
+        });
+        return _d;
+    }
     searchDopRec(criteries: any[]): Promise<any> {
-        const vaslues = JSON.parse(criteries[0].DOP_REC);
+        const vaslues = JSON.parse(criteries[0]['common'].DOP_REC);
         const newCriteries = {};
         const critName = 'AR_CITIZEN_VALUE.' + vaslues.API_NAME;
         let values;
@@ -303,7 +327,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 values = `${vaslues.SEARCH_VALUE}`;
                 break;
         }
-        Object.assign(newCriteries, criteries[0], { [critName]: values });
+        Object.assign(newCriteries, criteries[0]['common'], { [critName]: values });
         delete newCriteries['DOP_REC'];
         return this.apiSrv.read({
             CITIZEN: {

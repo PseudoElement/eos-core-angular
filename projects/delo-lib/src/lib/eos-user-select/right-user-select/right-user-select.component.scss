@@ -272,3 +272,35 @@
     margin: 0 auto;
     background-color: #bababa;
 }
+
+.multi-role {
+    .wrapper-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .wrapper-value {
+        display: grid;
+        grid-template-rows: 0fr;
+        overflow: hidden;
+        transition: grid-template-rows .4s ease;
+        border-bottom: 1px solid #e6e6e6;
+        padding-bottom: 5px;
+
+        .multi-value {
+            min-height: 0px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+    .opened {
+        grid-template-rows: 1fr;
+    }
+
+    .value {
+        color: #000000;
+    }
+}
+

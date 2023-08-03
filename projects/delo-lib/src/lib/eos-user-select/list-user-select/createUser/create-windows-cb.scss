@@ -1,23 +1,32 @@
 .line{
     display: flex;
     margin-bottom: 20px;
-}
-.line-title{
-    display: block;
-    width: 200px;
-    line-height: 29px;
-}
-.required-emptiness{
-    width: 400px;
-    position: relative;
-}
-.choose-department{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
 
-    position: absolute;
-    top: 5px;
-    right: 6px;
+    .line-title{
+        display: block;
+        width: 200px;
+        line-height: 29px;
+    }
+
+    .required-emptiness{
+        width: 400px;
+        position: relative;
+
+        .form-control-dep {
+            padding-right: 30px;
+        }
+
+        .choose-department{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        
+            position: absolute;
+            top: 5px;
+            right: 6px;
+        }
+    }
 }
+
+

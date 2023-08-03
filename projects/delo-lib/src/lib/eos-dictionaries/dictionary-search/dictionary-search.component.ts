@@ -57,7 +57,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     public protocolForm: FormGroup;
     private protocolSearchNameControl: string[] = ['FROM', 'TO', 'USER_ISN', 'OPER_DESCRIBE'];
     private protocolIdOperation: ProtoIdOperation = {
-        organization: ['Z', 'A'],
+        organization: ['Z'],
         citizens: ['C']
     }
     public protocolSerchInputs: any;
@@ -201,6 +201,16 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
 
         this._dictSrv.setNomenklFilterClose$ = this.settings.opts.closed;
+
+        if  (this.dictId === 'organization' || this.dictId === 'citizens') {
+            if(
+                this.settings.entity === 'protocol' && 
+                this.settings.full.data.protocol.OPER_DESCRIBE?.includes('DEL') &&
+                !this._dictSrv.viewParameters.showDeleted
+            ) {
+                this.settings.opts.deleted = true;
+            }
+        }
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
     }
@@ -264,14 +274,18 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         return this._classif.openClassif(params, true)
         .then((isnNode) => {
             if (isnNode) {
-                return this.dictionary['dictDescrSrv']['apiSrv']
-                .read({
+                const query = {
                     DOCGROUP_CL: {
-                        criteries: {
-                            ISN_NODE: isnNode
-                        }
+                        criteries: {}
                     }
-                }).then(data => {
+                }
+                if (String(isnNode).indexOf('.') !== -1) {
+                    query['DOCGROUP_CL']['criteries']['DUE'] = isnNode;
+                } else {
+                    query['DOCGROUP_CL']['criteries']['ISN_NODE'] = isnNode;
+                }
+                return this.dictionary['dictDescrSrv']['apiSrv']
+                .read(query).then(data => {
                     this.searchModel['DOCGROUP_NAME'] = data[0]['CLASSIF_NAME'];
                     this.searchModel['DUE_DOCGROUP'] = data[0]['DUE'];
                 });
@@ -403,23 +417,30 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.protocolForm.valueChanges.subscribe((data) => {
             try {
                 this.protocolSearchNameControl.forEach(el => {
-                    if(el === 'FROM' || el === 'TO') {
-                        const DATE_ISO_8601 = "YYYY-MM-DD";
-                        this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format(DATE_ISO_8601)}` : null;
-                    } else if (el === 'OPER_DESCRIBE') {
-                        if(data['OPERATION']) {
-                            let oper: string = '';
-                            data['OPERATION'].forEach(el => {
-                                if (oper) {
-                                    oper = oper + '|' + el.operDescribe;
-                                } else {
-                                    oper = el.operDescribe;
-                                }
-                            })
-                            this.searchData['protocol']['OPER_DESCRIBE'] = oper;
-                        }
-                    } else if (el === 'USER_ISN') {
-                        this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;
+                    switch (el) {
+                        case 'FROM':
+                            this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format()}` : null;
+                          break;
+                        case 'TO':
+                            const DATE_ISO_8601 = "YYYY-MM-DD";
+                            this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format(DATE_ISO_8601)}T23:59:59.00Z` : null;
+                          break;
+                        case 'OPER_DESCRIBE':
+                            if(data['OPERATION']) {
+                                let oper: string = '';
+                                data['OPERATION'].forEach(el => {
+                                    if (oper) {
+                                        oper = oper + '|' + el.OPER_DESCRIBE;
+                                    } else {
+                                        oper = el.OPER_DESCRIBE;
+                                    }
+                                })
+                                this.searchData['protocol']['OPER_DESCRIBE'] = oper;
+                            }
+                          break;
+                        case 'USER_ISN':
+                            this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;
+                            break;
                     }
                 })
             } catch(err) {
@@ -464,6 +485,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                     }
                 })
             )
+
         } catch (err) {
             console.warn(err);
             console.error('Error: Failed to get operation name');
@@ -630,7 +652,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     visibleClosedDealsOption() {
-        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category'];
+        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category', 'docgroup'];
         return !ITEMS.includes(this.dictId);
     }
 

@@ -17,7 +17,7 @@ export class ExtendProtocolLib {
     } 
     private GetRefFile() {
         setTimeout(() => {
-            window.open(`../CoreHost/FOP/GetFile/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
+            window.open(`../CoreHost/FOP/GetFile/${this.isnRefFile}/3x.html?nodownload=true`, '_blank', 'width=900, height=700, scrollbars=1');
         }, 0);
     }
 }

@@ -8,20 +8,20 @@ export const UNLOAD_PARAMS: IBaseParameters = {
             key: 'ArhStoreUrl',
             type: 'string',
             readonly: false,
-            title: 'Адрес архивного хранилища',
+            title: 'АДРЕС АРХИВНОГО ХРАНИЛИЩА',
         },
         {
             key: 'Directory',
             type: 'string',
             readonly: false,
             required: true,
-            title: 'Папка выгрузки',
+            title: 'ПАПКА ВЫГРУЗКИ',
         },
         {
             key: 'Name',
             type: 'select',
             readonly: false,
-            title: 'Хранилище',
+            title: 'ХРАНИЛИЩЕ',
         },
     ]
 };

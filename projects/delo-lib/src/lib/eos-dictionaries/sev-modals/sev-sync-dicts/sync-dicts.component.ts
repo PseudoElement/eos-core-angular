@@ -49,7 +49,6 @@ export class SevSyncDictsComponent implements OnInit {
     private _sevLinksCache: SEV_ASSOCIATION[];
     private _orgCryptsAndCerts: ORGANIZ_CL[] = [];
     private _queryOrgs: any[] = [];
-
     constructor(
         public bsModalRef: BsModalRef,
         private _api: PipRX,
@@ -79,51 +78,25 @@ export class SevSyncDictsComponent implements OnInit {
     subscribe() {
         this.form.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => { });
     }
-
-    tryAddOptionOrgs() {
+    updateStrToQuery(stringDue: any[]): string[] {
         const queries: any[] = [];
-        if (this._queryOrgs.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
+        if (stringDue.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
             const step: number = 0;
             let finish: number = 0;
-            while (step * MAX_QUERY_DUES < this._queryOrgs.length) {
+            while (step * MAX_QUERY_DUES < stringDue.length) {
                 const start = MAX_QUERY_DUES * step;
                 finish = step * MAX_QUERY_DUES + MAX_QUERY_DUES;
-                if (finish > this._queryOrgs.length) {
-                    finish = step * MAX_QUERY_DUES + (this._queryOrgs.length - MAX_QUERY_DUES);
+                if (finish > stringDue.length) {
+                    finish = step * MAX_QUERY_DUES + (stringDue.length - MAX_QUERY_DUES);
                 }
-                const SELECTED_DUES = this._queryOrgs.slice(start, finish);
-                const DUES_STR = SELECTED_DUES.map(item => item.due).join('|');
+                const SELECTED_DUES = stringDue.slice(start, finish);
+                const DUES_STR = SELECTED_DUES.join('|');
                 queries.push(DUES_STR);
             }
         } else {
-            queries.push(this._queryOrgs.map(x => x.due).join('|'));
+            queries.push(stringDue.join('|'));
         }
-        const promises = [];
-        queries.forEach(queryStr => {
-            const reqObj = {
-                SEV_ASSOCIATION: {
-                    criteries: {
-                        OBJECT_ID: queryStr,
-                        OBJECT_NAME: 'ORGANIZ_CL'
-                    },
-                }
-            };
-            promises.push(this._api.read<SEV_ASSOCIATION>(reqObj));
-        });
-        Promise.all(promises).then(rSevIndexes => {
-            const flatSevIndexes = [];
-            rSevIndexes.forEach(outer => outer.forEach(inner => flatSevIndexes.push(inner)));
-            if (flatSevIndexes && flatSevIndexes.length) { // можно заносить в список выбора организацию
-                flatSevIndexes.forEach(index => {
-                    const OBJ: any = index;
-                    const POS = OBJ.CompositePrimaryKey.indexOf(' ');
-                    const DUE = OBJ.CompositePrimaryKey.substring(0, POS);
-                    const SELECTED_QUERY_ORG = (this._queryOrgs.filter(x => x.due === DUE))[0];
-                    this.selectOrgs.push({ label: SELECTED_QUERY_ORG.name, value: SELECTED_QUERY_ORG.due });
-                });
-            }
-            this._setOrgSender();
-        });
+        return queries;
     }
 
     getSelected(value) {
@@ -223,8 +196,11 @@ export class SevSyncDictsComponent implements OnInit {
     // тут должен нормальный вызов бэка для отправки сообщений
     private _sendDepartmentsSyncInfo(isAddressOrgs: any[]) {
         this.bsModalRef.hide();
+        const ORGS_DUES_AR = isAddressOrgs.map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
+        // const ORGS_DUES_STR = ORGS_DUES_AR.join('|');
         const body = {
-            'OrgsDue': []
+            // 'ownerDue': this._mainOrgDue,
+            'orgsDue': ORGS_DUES_AR
         };
 
         const urlSop = `../CoreHost/Sev/SendDepartmentsSyncInfo/${this._mainOrgDue}`;
@@ -334,16 +310,39 @@ export class SevSyncDictsComponent implements OnInit {
         }
     }
 
-    private _readSevOrgs(): void {
-        this._api.read<ORGANIZ_CL>({ ORGANIZ_CL: PipRX.criteries({ IS_NODE: '1' }) }).then(items => {
-            items.forEach(org => {
-                const due = org['DUE'];
-                const name = org['CLASSIF_NAME'];
-                this._queryOrgs.push({ due, name });
+    private async _readSevOrgs(): Promise<void> {
+        const reqObj = {
+            SEV_ASSOCIATION: {
+                criteries: {
+                    OBJECT_NAME: 'ORGANIZ_CL'
+                },
+            }
+        };
+        const ansSev = await this._api.read<SEV_ASSOCIATION>(reqObj);
+        const arraSevDUE = [];
+        ansSev.forEach((sev) => {
+            arraSevDUE.push(sev['OBJECT_ID'])
+        });
+        const arrayQuery = this.updateStrToQuery(arraSevDUE);
+        const queryes = [];
+        arrayQuery.forEach((q) => {
+            queryes.push(
+                this._api.read<ORGANIZ_CL>({ ORGANIZ_CL: PipRX.criteries({
+                    DUE: q,
+                    IS_NODE: '1',
+                })})
+            );
+            
+        });
+        Promise.all(queryes)
+        .then((ans) => {
+            ans.forEach((arrayOrg: ORGANIZ_CL[]) =>{
+                arrayOrg.forEach((org: ORGANIZ_CL) => {
+                    this.selectOrgs.push({ label: org.CLASSIF_NAME, value: org.DUE });
+                })
             });
-            this.tryAddOptionOrgs();
-        }
-        );
+            this._setOrgSender();
+        })
     }
 
     private _setOrgSender() {

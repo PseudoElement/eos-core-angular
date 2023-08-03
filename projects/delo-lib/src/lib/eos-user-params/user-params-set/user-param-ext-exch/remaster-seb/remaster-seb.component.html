@@ -1,5 +1,5 @@
 <div class="user-group-form">
-    <ng-container > <!-- *ngIf="appMode.arm || !isCurrentSettings || appMode.tk" -->
+    <ng-container >
         <div style="margin-left: 5px;" class="section-title">
             <span>Отправлять сообщения в АРМ "ДелоWeb":</span>
         </div>
@@ -10,11 +10,11 @@
         ></eos-dynamic-input><br>
     </ng-container>
 
-    <eos-dynamic-input
+    <!-- <eos-dynamic-input
         [input]="inputs['rec.SEV_HIDE_SENDING']"
         [form]="form"
         [readonly]="false"
-    ></eos-dynamic-input><br>
+    ></eos-dynamic-input><br> -->
 
     <eos-dynamic-input
         [input]="inputs['rec.SEV_ALLOW_DELIVERY']"

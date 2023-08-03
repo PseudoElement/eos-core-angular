@@ -47,6 +47,7 @@ import { SmsGatewayComponent } from './parametersSystem/sms-gateway/sms-gateway.
 import { SmsGatewayCardComponent } from './parametersSystem/sms-gateway/sms-gateway-card/sms-gateway-card.component';
 import { ParamExtendedProtocolComponent } from './parametersSystem/extended-protocol/extended-protocol.component';
 import { ParamConversionCardComponent } from './parametersSystem/param-conversion/param-conversion-card/param-conversion-card.component';
+import { ParamPreviewComponent } from './parametersSystem/param-preview/param-preview.component';
 
 @NgModule({
     declarations: [
@@ -79,7 +80,8 @@ import { ParamConversionCardComponent } from './parametersSystem/param-conversio
         SmsGatewayComponent,
         SmsGatewayCardComponent,
         ParamExtendedProtocolComponent,
-        ParamConversionCardComponent
+        ParamConversionCardComponent,
+        ParamPreviewComponent
     ],
     entryComponents: [
         AuthenticationCollectionComponent,

@@ -120,7 +120,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     {value: '1', title: 'Лента'},
                     {value: '2', title: 'Таблица'},
                 ]
-            })
+            });
+            CABINETS_USER_FOLDERS.fieldsDefaultValue.push({
+                key: 'CBR_LIST_STYLE',
+                type: '',
+                title: '',
+            });
         }
         this._snap.queryParams
         .pipe(
@@ -233,7 +238,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.prepareData = this.formHelp.parse_Create([...CABINETS_USER_FOLDERS.fields, ...CABINETS_USER_ASSIGMENTS.fields], this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields([...CABINETS_USER_FOLDERS.fields, ...CABINETS_USER_ASSIGMENTS.fields]);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-        this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value;
+        this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value = !Boolean(+this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value);
     }
 
     parseInputsFromString(inputs, folderString) {
@@ -523,6 +528,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.disableUrlCreate2(arrayQuery);
         this.createUrl(arrayQuery);
         this.mapChanges.clear();
+        arrayQuery.forEach((query) => {
+            if(query.data && query.data['PARM_VALUE']) {
+                query.data['PARM_VALUE'] = query.data['PARM_VALUE'] === 'null' ? null : query.data['PARM_VALUE'];
+            }
+        })
         return arrayQuery;
     }
     createUrl(arrayQuery) {
@@ -539,7 +549,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 const val = value ? 1 : 0;
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else if (key === 'ADD_ADRESS_REPORGANIZ') {
-                const val = value ? 0 : 1;
+                const val = value ? '0' : '1';
                 this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else if (key === 'SEND_ORDER_TO' && this.appMode.arm) {
                 const val = value ? '2' : '1';
@@ -713,8 +723,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     }
                     case 1: {
                         this.parseDefaultFields(CABINETS_USER_ASSIGMENTS.fields, data);
+                        this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !Boolean(+this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value);
                         this.prepFormCancel(this.defoltInputs, true);
-                        this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                         this.getControlAuthor().then((author) => {
                             if (author === false) {
                                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('', { emitEvent: false });

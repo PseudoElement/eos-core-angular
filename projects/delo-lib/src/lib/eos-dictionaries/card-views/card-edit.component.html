@@ -183,6 +183,14 @@
                                       [data]="data"
                                       [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-medo-node-card>
+                <eos-rubricator-card-edit *ngSwitchCase="'rubricator'"
+                                      #cardEditEl
+                                      class="docgroup-card simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [isNewRecord]="isNewRecord"
+                                      [editMode]="editMode"></eos-rubricator-card-edit>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
                                       class="simple-card-edit"

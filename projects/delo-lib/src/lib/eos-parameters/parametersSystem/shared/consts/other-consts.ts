@@ -46,6 +46,12 @@ export const OTHER_PARAM: IBaseParameters = {
             title: '',
             options: []
         },
+        {
+            key: 'DIADOC_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
     ]
 };
 export const OTHER_PARAM_CB: IBaseParameters = {
@@ -115,6 +121,12 @@ export const OTHER_PARAM_CB: IBaseParameters = {
         },
         {
             key: 'EPVV_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
+        {
+            key: 'DIADOC_ISN_DELIVERY',
             type: 'select',
             title: '',
             options: []

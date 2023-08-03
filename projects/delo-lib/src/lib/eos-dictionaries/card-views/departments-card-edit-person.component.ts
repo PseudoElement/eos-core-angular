@@ -20,6 +20,7 @@ import { PipRX } from '../../eos-rest';
 import { OPEN_CLASSIF_DEPARTMENT } from '../../eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from '../../app/services/waitClassif.service';
 import { REPLACE_REASONS } from '../../eos-dictionaries/consts/dictionaries/department.consts';
+import { CLEAR_EXPORT } from '../../eos-dictionaries/consts/common';
 
 interface IToDeclineFields {
     fio?: boolean;
@@ -140,6 +141,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditDirective im
         this.prevValues = this.makePrevValues(this.data);
         this.tabsToArray(this.fieldGroups);
         if (this.form) {
+            this.data.replace['CLEAR_ROWS_SET_HISTORY'] = '';
             this.updateValidators();
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
@@ -459,6 +461,7 @@ formatSurname(fam: string, name: string, patron: string): string {
             this.form.controls['replace.START_DATE'].patchValue(null);
             this.form.controls['replace.END_DATE'].patchValue(null);
             this.form.controls['replace.REASON'].patchValue(defaultReason);
+            this.data.replace['CLEAR_ROWS_SET_HISTORY'] = CLEAR_EXPORT;
             this.deleteDL();
         }
     }

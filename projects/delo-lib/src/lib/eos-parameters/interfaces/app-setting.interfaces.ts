@@ -43,7 +43,7 @@ export interface IConverterParam {
     Name: string;
     Library: ILibrary;
     MaxCacheSize: number;
-    IsActive: boolean;
+    IsShared: boolean;
     ConverterFormat: string;
     ServerURL: string;
 }
@@ -81,5 +81,17 @@ export interface IFdulzParams {
 
 export interface IExtendedParams {
     Library: ILibrary;
+}
+
+export interface IConverterUse {
+    InstanceName: string;
+    Type: number;
+}
+export interface IPreviewParams {
+    ConverterMaxFileSize: number;
+    IsActive: boolean;
+    TimeOutWaitConverting: number;
+    ConverterFormat: string;
+    ConverterUse: IConverterUse;
 }
 

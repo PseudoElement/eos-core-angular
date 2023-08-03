@@ -30,7 +30,7 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param.consts';
 import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component';
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
-
+import { UserType } from '../../../eos-rest/enum/user-type';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -82,7 +82,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
     private rightsCBDueRole: boolean = false;
-
+    private clearRoles;
      // блок автопоиска при выборе ДЛ
      private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
      private _defaultDepDue: string;
@@ -192,7 +192,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.selfLink = this._router.url.split('?')[0];
         this.init();
         this.getTitle();
-        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1) {
+        if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {
             this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
         }
         this.editModeF();
@@ -484,7 +484,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     cheackCtech(): boolean {
-        if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
+        if (!this.dueDepNameNullUndef(this.formControls.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение:',
@@ -533,8 +533,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 data: newD
             });
             if ((newD.hasOwnProperty('AV_SYSTEMS') && newD['AV_SYSTEMS'].charAt(1) === '0') || (newD.hasOwnProperty('DUE_DEP') && newD.DUE_DEP !== undefined)) {
-                const clearRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
-                this.queryRoles = this.queryRoles.concat(clearRoles);
+                this.clearRoles = this._userParamSrv.clearRolesCb(this.startRolesCb);
             }
         }
         this.setRulesForDl(id, query);
@@ -617,7 +616,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-
+    /** Если снимаем галочку личного доступа у администратора системы */
+    // getCheckAdmSave() {
+    //     return this.formAccess.controls['1-27'].value !== '1';
+    // }
     submit(meta?: string): Promise<any> {
         if (this.getErrorSave) {
             this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
@@ -638,9 +640,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                if (this._newData.get('IS_SECUR_ADM') === false) {
+                if (this._newData.get('IS_SECUR_ADM') === false/*  || this.getCheckAdmSave() */) {
                     return this.apiSrvRx.read<USER_CL>({
-                        USER_CL: PipRX.criteries({ 'IS_SECUR_ADM': '1', 'ORACLE_ID': 'isnotnull' }),
+                        USER_CL: PipRX.criteries({
+                            'IS_SECUR_ADM': '1',
+                            'ORACLE_ID': 'isnotnull',
+                            'AV_SYSTEMS':'_1________________________________________%'
+                        }),
                         orderby: 'ISN_LCLASSIF',
                         top: 2,
                         loadmode: 'Table'
@@ -653,7 +659,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             return 'error';
                         } else {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                            if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && !meta) {
+                            if (
+                                !this.curentUser['IS_PASSWORD'] && 
+                                this.curentUser.USERTYPE !== UserType.OSAuthentication && 
+                                // this.curentUser.USERTYPE !== UserType.noLoginRights && 
+                                this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
+                                !meta
+                            ) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                                     if (res) {
                                         return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
@@ -670,7 +682,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                    if (!this.curentUser['IS_PASSWORD'] && !meta) {
+                    if (
+                        !this.curentUser['IS_PASSWORD'] && 
+                        this.curentUser.USERTYPE !== UserType.OSAuthentication && 
+                        // this.curentUser.USERTYPE !== UserType.noLoginRights && 
+                        this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
+                        !meta
+                    ) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
                             if (res) {
                                 return this.ConfirmAvSystems(accessStr, id, query).then(() => {
@@ -735,12 +753,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 // "Разрешаем назначать роль пользователю без АДЛ"
                 // не имеет смысла проверка кабинета
                 if (res) {
+                    if (this.clearRoles) {
+                        query = query.concat(JSON.parse(JSON.stringify(this.clearRoles)));
+                    }
                     return this.saveData(accessStr, id, query, route);
                 } else {
+                    this.clearRoles = undefined;
                     return;
                 }
             });
         }
+        this.clearRoles = undefined;
         return this.saveData(accessStr, id, query, route);
     }
 
@@ -1221,15 +1244,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         dueDep = (due.split('|'))[0];
         this._userParamSrv.getDepartmentFromUser([dueDep])
             .then((data: DEPARTMENT[]) => {
-                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
-                    if (data) {
-                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
-                    }
-                    this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
-                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
-                    });
-                    return val;
-                });
+                if (this.formControls.controls['DUE_DEP_NAME'].value) {
+                    return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
+                            this.fillingDep(data);
+                            return val;
+                        })
+                } else {
+                    this.fillingDep(data);
+                    return Promise.resolve(data[0]);
+                }
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
@@ -1258,6 +1281,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem, { emitEvent: false });
             });
     }
+
+    private fillingDep(data) {
+        if (data) {
+            this.form.get('TECH_DUE_DEP').patchValue(data[0]['PARENT_DUE']);
+        }
+        this._userParamSrv.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+            this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+        });
+    }
+    
     private _isSymbolsCorrect(value): boolean {
         const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
         return REGEXP.test(value);
@@ -1439,15 +1472,22 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
-                    this.form.get('NOTE').patchValue(this.curentUser['NOTE']);
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
                                 this.form.get('TECH_DUE_DEP').patchValue('');
+
                                 this.form.get('DUE_DEP_NAME').patchValue('');
-                                this.form.get('NOTE').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.form.get('DUE_DEP_NAME').setValidators(null);
+
+                                this.formControls.controls['DUE_DEP_NAME'].patchValue('');
+                                this.formControls.controls['DUE_DEP_NAME'].disable();
+                                this.formControls.controls['DUE_DEP_NAME'].setValidators(null);
+
+                                this.updateParamsTech(this.formControls.get('teсhUser').value);
+
+                                this.form.get('NOTE').patchValue('');
                                 const selRol = ('' + this.formControls.controls['SELECT_ROLE'].value).replace(' ...', '');
                                 if (KIND_ROLES_CB.indexOf(selRol) > -1) {
                                     this.formControls.controls['SELECT_ROLE'].patchValue('');
@@ -1463,9 +1503,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                     // this.formControls.controls['SELECT_ROLE'].disable();
                                 }
                             } else {
-                                this.curentUser.isTechUser = data;
-                                // f.get('teсhUser').setValue(false);
+                                this.curentUser.isTechUser = false;
                                 f.get('teсhUser').setValue(false, { emitEvent: false });
+                                this.updateParamsTech(false);
                             }
                         }).catch(error => {
                             console.log('Ошибка', error);
@@ -1482,8 +1522,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     // this.formControls.controls['SELECT_ROLE'].patchValue(this._userParamSrv.hashUserContext['CATEGORY'] ? this._userParamSrv.hashUserContext['CATEGORY'] : '...');
                     // this.formControls.controls['SELECT_ROLE'].enable();
                     this.tf();
+                    this.updateParamsTech(false);
                 }
-                this.updateParamsTech(this.formControls.get('teсhUser').value);
             });
         this.form.get('CLASSIF_NAME').valueChanges
         .pipe(

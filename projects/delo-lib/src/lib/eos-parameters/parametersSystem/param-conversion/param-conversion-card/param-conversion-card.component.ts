@@ -58,7 +58,7 @@ export class ParamConversionCardComponent implements OnInit, OnDestroy {
             if (key === 'Library') {
                 this.prepareData.rec['LibraryName'] = newConverter[key] ? newConverter[key].Name : '';
                 this.prepareData.rec['LibraryDirectory'] = newConverter[key] ? newConverter[key].Directory : '';
-            } else if (key === 'IsActive') {
+            } else if (key === 'IsShared') {
                 this.prepareData.rec[key] = newConverter[key] ? true : false;
             } else {
                 this.prepareData.rec[key] = newConverter[key] === null || newConverter[key] === undefined ? '' : newConverter[key];

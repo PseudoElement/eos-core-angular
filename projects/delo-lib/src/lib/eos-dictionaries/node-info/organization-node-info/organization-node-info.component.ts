@@ -28,7 +28,7 @@ export class OrganizationNodeInfoComponent {
     }
 
     get region() {
-        if(this.node.data.rec.ISN_REGION) {
+        if(this.node.data.rec.ISN_REGION && this.node.data.REGION_Ref[0]) {
             return this.node.data.REGION_Ref[0].CLASSIF_NAME;
         } else {
             return '...';

@@ -17,10 +17,11 @@ export interface IUserSort {
     fullDueName?: IUserCheckSort;
     tip?: IUserCheckSort;
     login?: IUserCheckSort;
+    surnamePatron?:IUserCheckSort;
 }
 
 export interface IUserCheckSort {
     upDoun: boolean;
     checked: boolean;
 }
-export enum SortsList {department, fullDueName, tip, login}
+export enum SortsList {department, fullDueName, tip, login, surnamePatron}

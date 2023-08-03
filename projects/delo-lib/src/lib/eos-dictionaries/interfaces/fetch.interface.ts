@@ -262,10 +262,7 @@ export interface ResponseCitizenItems {
     /** Признак логического удаления. */
     deleted: number;
     /** Регион. Ссылка через поле IsnRegion. */
-    regionCl: {
-        /** Код. */
-        due: string;
-    };
+    regionCl: RegionCl;
     /** Признак новой записи. */
     new: number;
 }
@@ -310,4 +307,8 @@ export interface ResponseProtNames {
         items: ProtNames[];
         __typename: string;
     }
+}
+export interface RegionCl {
+    /** Код. */
+    due: string;
 }

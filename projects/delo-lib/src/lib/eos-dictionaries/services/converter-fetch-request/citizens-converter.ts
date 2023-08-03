@@ -25,7 +25,11 @@ export class CitizensConverterFetchRequest {
                         convertItem['CITIZEN_SURNAME_SEARCH'] = el['citizenSurnameSearch']
                         break;
                     case 'regionCl':
-                        convertItem['DUE_REGION'] = el['regionCl']['due']
+                        if (el['regionCl']) {
+                            convertItem['DUE_REGION'] = el['regionCl']['due']
+                        } else {
+                            convertItem['DUE_REGION'] = null
+                        }
                         break;
                     case 'edsFlag':
                         convertItem['EDS_FLAG'] = el['edsFlag']

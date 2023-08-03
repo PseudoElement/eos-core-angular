@@ -298,7 +298,9 @@ export class RughtDeloAbsRightService {
         const alreadyWeight = new Map();
         if (this.paramsToQuery && (this.paramsToQuery.mapOrgWeight || this.paramsToQuery.mapDepWeight)) {
             queryAll.forEach((query) => {
-                delete query.data['OLD_WEIGHT'];
+                if (query.data && query.data['OLD_WEIGHT']) {
+                    delete query.data['OLD_WEIGHT'];
+                }
                 if (query.requestUri && query.requestUri.indexOf('USER_ORGANIZ_List') !== -1) { // организации
                     const weighNew = this.paramsToQuery.mapOrgWeight['DUE'];
                     if (weighNew && query.data['WEIGHT'] !== weighNew && (query.method === 'POST' || query.method === 'MERGE')) {
@@ -628,15 +630,15 @@ export class RughtDeloAbsRightService {
         this.tabelData.data.forEach((item) => {
             if (item['key'] === '0.' && item.__metadata.__type === 'DEPARTMENT') {
                 if (item[funcNum].type === ECellToAll.checkbox) {
-                    this.updatePutchValue(item['key'], funcNum, flag);
+                    this.updatePutchValue(item, funcNum, flag);
                     item[funcNum]['check'] = flag;
                 }
             } else if(item[funcNum] && item.__metadata.__type === 'DEPARTMENT') {
                 if (item[funcNum].type === ECellToAll.checkbox) {
                     if (item[funcNum]['check'] && flag) {
-                        this.updatePutchValue(item['key'], funcNum, !flag);
+                        this.updatePutchValue(item, funcNum, !flag);
                     } else if (!item[funcNum]['check'] && !flag) {
-                        this.updatePutchValue(item['key'], funcNum, !flag);
+                        this.updatePutchValue(item, funcNum, !flag);
                     }
                     item[funcNum]['check'] = !flag;
                     item[funcNum]['disabled'] = flag;
@@ -672,7 +674,11 @@ export class RughtDeloAbsRightService {
         const mapOrgInfo = new Map();
         const mapDepWeight = {};
         const mapOrgWeight = {};
+        let getFlag = false;
         curentUser.USERDEP_List.forEach((dep) => {
+            if (dep['DUE'] === '0.') {
+                getFlag = true
+            }
             if (mapDepWeight[dep['DUE']] === undefined) {
                 mapDepWeight[dep['DUE']] = new Set([dep['WEIGHT']]);
             } else {
@@ -686,6 +692,12 @@ export class RughtDeloAbsRightService {
                 mapDep.set(dep['DUE'], dep['FUNC_NUM']);
             }
         });
+        if (!getFlag) {
+            mapDepWeight['0.']= new Set([0]);
+            newMapDep.push('0.');
+            mapDepInfo.set('0._70', {});
+            mapDep.set('0.', 70);
+        }
         curentUser['USER_ORGANIZ_List'].forEach((org) => {
             if (mapOrgWeight[org['DUE']] === undefined) {
                 mapOrgWeight[org['DUE']] = new Set([org['WEIGHT']]);
@@ -806,24 +818,46 @@ export class RughtDeloAbsRightService {
         }
         this.updateBtn();
     }
-    updateBtn() {
-        let ind;
-        if (this.selectedRow[0]) {
-            this.tabelData.data.forEach((item, index) => {
-                if (this.selectedRow[0]['DUE'] === item['DUE']) {
-                    ind = index;
-                }
+    getDisableSort(key: 'up' | 'down'): boolean {
+        let first;
+        let last;
+        let flagBought = new Map<string, boolean>();
+        if (this.selectedRow.length > 0) {
+            const due = [];
+            this.selectedRow.forEach((item) => {
+                due.push(item['DUE']);
+                flagBought.set(item.__metadata.__type, true);
             });
+            if (flagBought.size < 2) {
+                this.tabelData.data.forEach((item, index) => {
+                    if (due.indexOf(item['DUE']) !== -1 ) {
+                        if (first === undefined) {
+                            first = index;
+                        }
+                        last = index;
+                    }
+                });
+            } else {
+                return true;
+            }
         }
+        switch (key) {
+            case 'up':
+                return first !== undefined && typeof(this.tabelData.data[first - 1]['CLASSIF_NAME']) === 'string';
+            case 'down':
+                return last !== undefined && (this.tabelData.data[last + 1] === undefined || typeof(this.tabelData.data[last + 1]['CLASSIF_NAME']) === 'string');
+        }
+    }
+    updateBtn() {
         this.tabelData.tableBtn.forEach((btn) => {
             if (btn.id === 'deleted') {
                 btn.disable = !this.selectedRow.length;
             }
             if (btn.id === 'up') {
-                btn.disable = this.selectedRow.length !== 1 || typeof(this.tabelData.data[ind - 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('up');
             }
             if (btn.id === 'down') {
-                btn.disable = this.selectedRow.length !== 1 || this.tabelData.data[ind + 1] === undefined || typeof(this.tabelData.data[ind + 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('down');
             }
             if (btn.id === 'export') {
                 btn.disable = !(this.tabelData.data.length > 3);
@@ -834,25 +868,17 @@ export class RughtDeloAbsRightService {
         });
     }
     sortStringVew() {
-        let ind;
-        if (this.selectedRow[0]) {
-            this.tabelData.data.forEach((item, index) => {
-                if (this.selectedRow[0]['DUE'] === item['DUE']) {
-                    ind = index;
-                }
-            });
-        }
         this.tabelData.tableBtn.forEach((btn) => {
             if (btn.id === 'sort') {
                 btn.active = !btn.active;
             }
             if (btn.id === 'up') {
                 btn.notView = !btn.notView;
-                btn.disable = this.selectedRow.length !== 1 || typeof(this.tabelData.data[ind - 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('up');
             }
             if (btn.id === 'down') {
                 btn.notView = !btn.notView;
-                btn.disable = this.selectedRow.length !== 1 || this.tabelData.data[ind + 1] === undefined || typeof(this.tabelData.data[ind + 1]['CLASSIF_NAME']) === 'string';
+                btn.disable = this.getDisableSort('down');
             }
         });
     }
@@ -860,25 +886,36 @@ export class RughtDeloAbsRightService {
         let ind;
         let tempSecond;
         let itemMove;
-        this.tabelData.data.forEach((item, index) => {
-            if (item['DUE'] === this.selectedRow[0]['DUE']) {
-                ind = index;
-                const tempWeight = this.tabelData.data[index - whereMove]['ROW_WEIGHT'];
-                this.tabelData.data[index - whereMove]['ROW_WEIGHT'] = item.ROW_WEIGHT;
-                tempSecond = this.tabelData.data[index - whereMove];
-                item.ROW_WEIGHT = tempWeight;
-                itemMove = item;
+        this.selectedRow.sort((a, b) => {
+            if (a.ROW_WEIGHT > b.ROW_WEIGHT) {
+                return whereMove === 1 ? 1 : -1;
+            } else if (a.ROW_WEIGHT < b.ROW_WEIGHT) {
+                return whereMove === 1 ? -1 : 1;
+            } else {
+                return 0;
+            }
+        })
+        this.selectedRow.forEach((select) => {
+            this.tabelData.data.forEach((item, index) => {
+                if (item['DUE'] === select['DUE']) {
+                    ind = index;
+                    const tempWeight = this.tabelData.data[index - whereMove]['ROW_WEIGHT'];
+                    this.tabelData.data[index - whereMove]['ROW_WEIGHT'] = item.ROW_WEIGHT;
+                    tempSecond = this.tabelData.data[index - whereMove];
+                    item.ROW_WEIGHT = tempWeight;
+                    itemMove = item;
+                }
+            });
+            this.tabelData.data[ind - whereMove] = this.tabelData.data[ind];
+            this.tabelData.data[ind] = tempSecond;
+            if (itemMove.__metadata.__type === 'DEPARTMENT' && this.paramsToQuery.mapDepWeight[itemMove['DUE']] !== undefined) {
+                this.paramsToQuery.mapDepWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
+                this.paramsToQuery.mapDepWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
+            } else if(this.paramsToQuery.mapOrgWeight[select['DUE']] !== undefined) {
+                this.paramsToQuery.mapOrgWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
+                this.paramsToQuery.mapOrgWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
             }
         });
-        this.tabelData.data[ind - whereMove] = this.tabelData.data[ind];
-        this.tabelData.data[ind] = tempSecond;
-        if (itemMove.__metadata.__type === 'DEPARTMENT' && this.paramsToQuery.mapDepWeight[itemMove['DUE']] !== undefined) {
-            this.paramsToQuery.mapDepWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
-            this.paramsToQuery.mapDepWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
-        } else if(this.paramsToQuery.mapOrgWeight[this.selectedRow[0]['DUE']] !== undefined) {
-            this.paramsToQuery.mapOrgWeight[tempSecond['DUE']] = tempSecond['ROW_WEIGHT'];
-            this.paramsToQuery.mapOrgWeight[itemMove['DUE']] = itemMove['ROW_WEIGHT'];
-        }
         this.updateBtn();
     }
     
