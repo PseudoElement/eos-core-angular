@@ -574,7 +574,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-
+    /** Если снимаем галочку личного доступа у администратора системы */
+    getCheckAdmSave() {
+        return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
+    }
     submit(meta?: string): Promise<any> {
         if (!this.getValidDate) {
             this.messageAlert({ title: 'Предупреждение', msg: 'Невозможно сохранить некорректные данные', type: 'warning' });
@@ -591,7 +594,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     const query = [];
                     const accessStr = '';
                     return this.checkDLSurname(query)
-                        .then(() => {
+                        .then(async () => {
+                            if (this.getCheckAdmSave()) {
+                                const answ: USER_CL[] = await this._userParamSrv.getQueryTech();
+                                if (!(answ.length !== 0)) {
+                                    this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`, type: 'warning' });
+                                    return 'error';
+                                }
+                            }
                             this.setQueryNewData(accessStr, newD, query);
                             this.setNewDataFormControl(query, id);
                             if (!this.curentUser['IS_PASSWORD'] && this.curentUser.USERTYPE !== 1 && this.curentUser.USERTYPE !== -1 && this.curentUser.USERTYPE !== 4) {

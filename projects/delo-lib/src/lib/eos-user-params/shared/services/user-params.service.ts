@@ -603,7 +603,26 @@ export class UserParamsService {
             return this._pipRx.read({ [url]: ALL_ROWS });
         }
     }
-
+    getQueryTech() {
+        return this._pipRx.read<USER_CL>({
+            USER_CL: {
+                criteries: {
+                    DELO_RIGHTS: '1%',
+                    TECH_RIGHTS: '1%',
+                    DELETED: '0',
+                    /** ^0 это владелец БД его не учитываем */
+                    ISN_LCLASSIF: `^0|${this.curentUser.ISN_LCLASSIF}`,
+                    AV_SYSTEMS: '_1%',
+                    ORACLE_ID: 'isnotnull',
+                    'USER_TECH.FUNC_NUM': '^1'
+                },
+            },
+            skip: 0,
+            top: 2,
+            orderby: 'ISN_LCLASSIF',
+            loadmode: 'Table'
+        });
+    }
     getSysTechUser(curUser: { oldRights: string[], newRights: string[], editUser: IParamUserCl } = null, checkedUser = this.checkedUsers): Promise<any> {
         /** проверка галочки системный технолог */
         let limitTechUser = false;
