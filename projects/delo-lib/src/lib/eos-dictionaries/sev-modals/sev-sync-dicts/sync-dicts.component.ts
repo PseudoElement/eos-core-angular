@@ -21,7 +21,7 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.select,
         key: 'ORG',
-        label: 'Организация',
+        label: 'Отправитель',
         disabled: false,
         readonly: false,
         options: [],
