@@ -5,7 +5,6 @@ import { IRecordModeDescription, ITreeDictionaryDescriptor } from '../../eos-dic
 import { EosDictionaryNode } from './eos-dictionary-node';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import {  ADDRESS, AR_DESCRIPT, CITIZEN, REGION_CL } from '../../eos-rest';
-import { ResponseCitizens, ResponseProt } from '../interfaces/fetch.interface';
 import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
 import { CitizensAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/citizens-advanced-search';
 import { CitizensConverterFetchRequest } from '../services/converter-fetch-request/citizens-converter';
@@ -190,25 +189,20 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     async searchProtocol(data: any) {
         const protReq: string = this.protParam.prot(data);
         const requestProt = await this.graphQl.query(protReq);
-        if (requestProt.ok) {
-            const prot: ResponseProt = await requestProt.json();
-            if (prot.errors) {
-                console.error('Error: ', prot.errors[0].message);
-                return [];
+        const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
+        if (protItem.length) {
+            const citizensReq = this.citizensParam.citizens(protItem);
+            const requestCitizens = await this.graphQl.query(citizensReq);
+            const citizens = requestCitizens.data.citizensPg ? requestCitizens.data.citizensPg.items : [];
+
+            if (citizens.length) {
+                const convertSitizenResponse: CITIZEN[] =  this.converter.citizensReq(citizens);
+                const updateResponse: CITIZEN[] = await this.updateResponse(convertSitizenResponse);
+                return updateResponse;
             } else {
-                if (prot.data.protsPg.items.length) {
-                    const citizensReq = this.citizensParam.citizens(prot.data.protsPg.items);
-                    const requestCitizens = await this.graphQl.query(citizensReq);
-                    const citizens: ResponseCitizens = await requestCitizens.json();
-                    const convertSitizenResponse: CITIZEN[] =  this.converter.citizensReq(citizens.data.citizensPg.items);
-                    const updateResponse: CITIZEN[] = await this.updateResponse(convertSitizenResponse);
-                    return updateResponse;
-                } else {
-                    return [];
-                }
+                return [];
             }
         } else {
-            console.error('Error: status request: ', requestProt.status);
             return [];
         }
     }

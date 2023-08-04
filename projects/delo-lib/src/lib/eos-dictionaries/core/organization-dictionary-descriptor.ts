@@ -10,9 +10,7 @@ import { EosUtils } from '../../eos-common/core/utils';
 import { DepartmentDictionaryDescriptor } from './department-dictionary-descriptor';
 import { FieldDescriptor } from './field-descriptor';
 import { ModeFieldSet } from './record-mode';
-import { ResponseOrganization, SearchQueryOrganization, ResponseProt, 
-    // ORGANIZ_EXTENDS 
-} from '../interfaces/fetch.interface';
+import { SearchQueryOrganization } from '../interfaces/fetch.interface';
 import { OrganizAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/organiz-advanced-search';
 import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
 import { OrganizConverterFetchRequest } from '../services/converter-fetch-request/organiz-converter';
@@ -247,24 +245,18 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     public async searchProto(queries: SearchQueryOrganization) {
         const protReq: string = this.protParam.prot(queries.protocol);
         const requestProt = await this.graphQl.query(protReq);
-        if (requestProt.ok) {
-            const prot: ResponseProt = await requestProt.json();
-            if (prot.errors) {
-                console.error('Error: ', prot.errors[0].message);
-                return [];
+        const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
+        if (protItem.length) {
+            const organizReq = this.organizParam.organiz(protItem, queries);
+            const requestOrganiz = await this.graphQl.query(organizReq);
+            const organiz = requestOrganiz.data.organizClsPg ? requestOrganiz.data.organizClsPg.items : [];
+
+            if (organiz.length) {
+                return this.converter.organizReq(organiz.data.organizClsPg.items);
             } else {
-                if (prot.data.protsPg.items.length) {
-                    const organizReq = this.organizParam.organiz(prot.data.protsPg.items, queries);
-                    const requestOrganiz = await this.graphQl.query(organizReq);
-                    const organiz: ResponseOrganization = await requestOrganiz.json();
-                
-                    return this.converter.organizReq(organiz.data.organizClsPg.items);
-                } else {
-                    return [];
-                }
+                return [];
             }
         } else {
-            console.error('Error: status request: ', requestProt.status);
             return [];
         }
     }

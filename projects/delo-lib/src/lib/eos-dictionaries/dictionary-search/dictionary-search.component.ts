@@ -476,24 +476,10 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
     }
 
-    getProtOperation(param: string[]) {
-        try{
-            const protNameParam = this.creatorParam.protName(param);
-            this.subscriptions.push(
-                this.graphQL.watchQuery(protNameParam).valueChanges.subscribe((result: ApolloQueryResult<ResponseProtNames> ) => {
-                    if(result.errors){
-                        this.allOperation = [];
-                        throw new Error(result.error.message)
-                    } else {
-                        this.allOperation = result.data?.protNamesPg.items;
-                    }
-                })
-            )
-
-        } catch (err) {
-            console.warn(err);
-            console.error('Error: Failed to get operation name');
-        }
+    async getProtOperation(param: string[]) {
+        const protNameParam = this.creatorParam.protName(param);
+        const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam);
+        this.allOperation = resProtName.data.protNamesPg ? resProtName.data.protNamesPg.items : [];
     }
 
     public changeFlagSelectPopover() {
