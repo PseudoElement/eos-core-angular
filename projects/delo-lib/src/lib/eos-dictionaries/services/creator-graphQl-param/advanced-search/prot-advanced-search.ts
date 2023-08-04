@@ -9,17 +9,11 @@ export class ProtAdvancedSearch extends AbstractAdvancedSearch{
         
         if(param.OPER_DESCRIBE) {
             const oper: string[] = param.OPER_DESCRIBE.split('|');
-            oper.forEach(el => {
-                if (operDescribeper.length) {
-                    operDescribeper = operDescribeper + ',' +`{value: "${el}"}`;
-                } else {
-                    operDescribeper = `{value: "${el}"}`;
-                }
-            })
+            operDescribeper = this.createParamInString(oper);
             operDescribeperSearchParam = `in: [${operDescribeper}]`;
         }
 
-        return `protsPg(first: 1000,filter: {
+        return `protsPg(first: 1000000,filter: {
                     userIsn: {equal: {value: ${param.USER_ISN}}}, 
                     operDescribe: {${operDescribeperSearchParam}}, 
                     timeStamp: {

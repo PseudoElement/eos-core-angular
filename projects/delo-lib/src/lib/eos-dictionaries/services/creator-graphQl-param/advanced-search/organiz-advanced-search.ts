@@ -21,7 +21,7 @@ export class OrganizAdvancedSearch extends AbstractAdvancedSearch {
             LAYER = `, layer: {greaterOrEqual: {value: ${layerParam}}}`;
         }
 
-        return `organizClsPg(first: 1000, filter: {isnNode: {in: [${queryParam}]}${ISN_HIGH_NODE}${DUE}${LAYER}}) {
+        return `organizClsPg(first: 1000000, filter: {isnNode: {in: [${queryParam}]}${ISN_HIGH_NODE}${DUE}${LAYER}}) {
                     items {
                         due
                         isnNode

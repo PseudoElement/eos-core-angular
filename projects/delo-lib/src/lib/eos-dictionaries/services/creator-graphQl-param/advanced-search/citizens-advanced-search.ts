@@ -4,8 +4,8 @@ import { AbstractAdvancedSearch } from './abstract-advanced-search';
 export class CitizensAdvancedSearch extends AbstractAdvancedSearch {
 
     public citizens(param: ResponseProtItem[]): string {
-        const userIsn = this.getSearchParameters(param, 'userIsn');
-        const queryParam: string = this.createParamInNumber(userIsn);
+        const refIsn = this.getSearchParameters(param, 'refIsn');
+        const queryParam: string = this.createParamInNumber(refIsn);
 
         return `citizensPg(first: 1000, filter: {isnCitizen: {in: [${queryParam}]}}) {
             items {
