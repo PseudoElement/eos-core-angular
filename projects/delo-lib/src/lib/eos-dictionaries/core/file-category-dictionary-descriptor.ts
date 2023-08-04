@@ -26,15 +26,13 @@ export class FileCategoryDescriptor extends RecordDescriptor {
 }
 export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: FileCategoryDescriptor;
-    graphQLService: GraphQLService;
 
     constructor(
         descriptor: IDictionaryDescriptor,
         private _api: PipRX,
-        _GraphQLService: GraphQLService
+        private graphQLService: GraphQLService
     ) {
         super(descriptor, _api);
-        this.graphQLService = _GraphQLService;
     }
 
     public getSubtree(): Promise<any[]> {
@@ -97,6 +95,7 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
                 RESTRICTED_DUES.push(DUE);
             }
         }
+
         if (DUES_NODE_DG.length >= 0) {
             const CHANGE_LIST: any[] = [];
             for (const DUE of DUES_NODE_DG) {
@@ -113,8 +112,6 @@ export class FileCategoryDictionaryDescriptor extends AbstractDictionaryDescript
                 } else {
                     continue;
                 }
-
-
             }
             const DELETED_GROUP_DOC: string[] = [];
             for (const DUE of OLD_DUES_NODE_DG) {
