@@ -629,7 +629,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             return Promise.resolve('error');
         }
         if (this._newData.get('IS_SECUR_ADM') && this.curentUser.TECH_RIGHTS && this.curentUser.TECH_RIGHTS[0] === '1') {
-            this.messageAlert({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
+            this.messageAlert({ title: 'Предупреждение', msg: `Право "Администратор системы" не может быть назначено одновременно с правом "Cистемный технолог"`, type: 'warning' });
             return Promise.resolve('error');
         }
         const id = this._userParamSrv.userContextId;
