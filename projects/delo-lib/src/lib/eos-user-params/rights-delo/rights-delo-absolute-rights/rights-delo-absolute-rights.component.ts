@@ -399,7 +399,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         }
                     });
                     if (!flag_tech) {
-                        this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
+                        this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Право 'Cистемный технолог' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
                         this.editMode = true;
                         this.isLoading = true;
                         this.btnDisabled = false;
