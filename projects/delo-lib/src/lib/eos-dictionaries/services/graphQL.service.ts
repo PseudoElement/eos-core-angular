@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Apollo, gql} from 'apollo-angular';
 import { ORIGINDATA, DgFileCategoryElement } from '../interfaces/fetch.interface';
+import { ApolloQueryResult, NetworkStatus } from '@apollo/client/core';
+import { EosMessageService } from '../../eos-common/services/eos-message.service';
 
 @Injectable({providedIn: 'root'})
 export class GraphQLService {
+    constructor(
+        private apollo: Apollo,
+        private msgSrv: EosMessageService
+    ){}
 
     Const_Response_Headers: string = `
         clientMutationId
@@ -35,20 +42,65 @@ export class GraphQLService {
           body: JSON.stringify({query: string})
       });
     }
-    
-    query(queryParam: string) {
-        return fetch('../CoreHost/Gql/Query', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({query: `query{${queryParam}}`})
-        });
+
+    async query(queryParam: string): Promise<ApolloQueryResult<any>> {
+        try{
+            const result = await this.apollo.query({
+                query:  gql`query{${queryParam}}`,
+                errorPolicy: 'all',
+            }).toPromise();
+            if (result.error) {
+                const message: string = result.error.message;
+                this.errMessage(message);
+            }
+            return result;
+        }
+        catch(err) {
+            const message = err.message ? err.message : err;
+            this.errMessage(message);
+        
+            const result: ApolloQueryResult<any> = {
+                data: {},
+                error: err,
+                loading: false,
+                networkStatus: NetworkStatus.error,
+            };
+            return result;
+        }
     }
 
-    mutation(mutationParam: string) {
-        return fetch('../CoreHost/Gql/Query', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({query: `mutation{${mutationParam}}`})
-        });
+    async mutation(mutationParam: string, name: string) {
+        try{
+            const result: any = await this.apollo.mutate({
+                mutation: gql`mutation{${mutationParam}}`,
+            }).toPromise();
+
+            const grapgQlRes = result.data[name];
+
+            if(!grapgQlRes.success){
+                const message: string = grapgQlRes.message;
+                this.errMessage(message);
+            }
+            return result;
+        }
+        catch(err) {
+            const message = err.message ? err.message : err;
+            this.errMessage(message);
+            const result = {
+                data: {},
+                error: err,
+                loading: false,
+            };
+            return result;
+        }
+    }
+
+    private errMessage(message: string) {
+        this.msgSrv.addNewMessage({
+            type: 'danger',
+            title: message,
+            msg: ``,
+        })
+        console.error(message);
     }
 }

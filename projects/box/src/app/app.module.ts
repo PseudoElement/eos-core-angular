@@ -6,7 +6,6 @@ import { AppDeloModule, EosCommonModule } from '@eos/delo-adm';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,7 +15,6 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     EosCommonModule,
     AppDeloModule,
-
   ],
   providers: [],
   bootstrap: [AppComponent]

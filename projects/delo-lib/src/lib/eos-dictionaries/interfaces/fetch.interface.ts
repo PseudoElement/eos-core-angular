@@ -283,6 +283,31 @@ export interface ORGANIZ_EXTENDS extends ORGANIZ_CL {
     GLOBAL_ID?: string;
 }
 
+export interface ProtNames {
+    /** Описание. */
+    describtion?: string;
+    /** Тип операции. */
+    operDescribe?: string;
+    /** Примечание. */
+    note?: string
+    /** Операция. */
+    operId?: string;
+    /** Подоперация. */
+    suboperId?: string;
+    /** Таблица. */
+    tableId?: string;
+    /** Позиция в параметре пользователя. */
+    viewParmPosition?: number;
+    /** Наименование таблицы */
+    __typename: string
+}
+
+export interface ResponseProtNames {
+    protNamesPg: {
+        items: ProtNames[];
+        __typename: string;
+    }
+}
 export interface RegionCl {
     /** Код. */
     due: string;
