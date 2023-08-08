@@ -31,6 +31,7 @@ import { KIND_ROLES_CB } from '../../../eos-user-params/shared/consts/user-param
 import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component';
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
 import { UserType } from '../../../eos-rest/enum/user-type';
+import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -644,7 +645,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     if (this.getCheckAdmSave()) {
                         const answ: USER_CL[] = await this._userParamSrv.getQueryTech();
                         if (!(answ.length !== 0)) {
-                            this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`, type: 'warning' });
+                            this.confirmAlert({
+                                title: 'Предупреждение',
+                                typeIcon: 'warning',
+                                bodyList: [],
+                                body: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`,
+                                buttons: [
+                                    {title: 'Скрыть ', result: 1, isDefault: true},
+                                ],
+                            })
                             return 'error';
                         }
                     }
@@ -662,7 +671,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             return user.id !== this.curentUser.ISN_LCLASSIF && !user.blockedUser && !user.blockedSystem && !user.deleted;
                         });
                         if (!adminUsers.length) {
-                            this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного незаблокированного пользователя с правом «Администратор»`, type: 'warning' });
+                            this.confirmAlert({
+                                title: 'Предупреждение',
+                                typeIcon: 'warning',
+                                bodyList: [],
+                                body: 'В системе не будет ни одного незаблокированного пользователя с правом «Администратор»',
+                                buttons: [
+                                    {title: 'Скрыть ', result: 1, isDefault: true},
+                                ],
+                            })
                             return 'error';
                         } else {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
@@ -1586,6 +1603,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 title,
             }
         );
+    }
+
+    private confirmAlert(config: IConfirmWindow2) {
+        this._confirmSrv.confirm2(config);
     }
 
     private AddUnderscore(string: string): string {
