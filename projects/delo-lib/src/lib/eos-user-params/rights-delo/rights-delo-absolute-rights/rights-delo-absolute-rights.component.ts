@@ -121,43 +121,43 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._userParamsSetSrv.getUserIsn({
             expand: expandStr
         })
-            .then(() => {
-                const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-                this._userParamsSetSrv.checkGrifs(id).then(async (el) => {
-                    this.flagGrifs = el;
-                    const data = await this.apiSrv.getData({
-                        DEPARTMENT: {
-                            criteries: {
-                                'DUE_LINK_ORGANIZ': 'isnotnull',
-                                'DELETED': 0
-                            },
-                            orderby: 'CLASSIF_NAME',
-                        }
-                    });
-                    const dueOrg = [];
-                    data.forEach((item) => {
-                        dueOrg.push(item['DUE_LINK_ORGANIZ']);
-                    });
-                    this.simpleBase = data.length >= 2;
-                    this.init();
+        .then(() => {
+            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+            this._userParamsSetSrv.checkGrifs(id).then(async (el) => {
+                this.flagGrifs = el;
+                const data = await this.apiSrv.getData({
+                    DEPARTMENT: {
+                        criteries: {
+                            'DUE_LINK_ORGANIZ': 'isnotnull',
+                            'DELETED': 0
+                        },
+                        orderby: 'CLASSIF_NAME',
+                    }
                 });
-            })
-            .catch(el => {
+                const dueOrg = [];
+                data.forEach((item) => {
+                    dueOrg.push(item['DUE_LINK_ORGANIZ']);
+                });
+                this.simpleBase = data.length >= 2;
+                this.init();
             });
+        })
+        .catch(el => {
+        });
         this._userParamsSetSrv.canDeactivateSubmit$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe((rout: RouterStateSnapshot) => {
-                this._userParamsSetSrv.submitSave = this.submit('true');
-            });
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((rout: RouterStateSnapshot) => {
+            this._userParamsSetSrv.submitSave = this.submit('true');
+        });
         this._navSrv.StateSandwich$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe((state: boolean) => {
-                this.leftSendwitch = state;
-            });
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((state: boolean) => {
+            this.leftSendwitch = state;
+        });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -392,10 +392,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 if (this.curentUser.IS_SECUR_ADM === 1 && elemRight && elemRight.control.value) {
                     let flag_tech = true;
                     this.listRight.forEach(elem => {
-                        if (elem.key === '0') {
-                            if (elem['_curentUser']['TECH_RIGHTS'][0] === '1') {
-                                flag_tech = false;
-                            }
+                        if (elem.key === '0' && elem.value === 1) {
+                            flag_tech = false;
                         }
                     });
                     if (!flag_tech) {
