@@ -631,7 +631,7 @@ export class UserParamsService {
         let checkLimitTech = true;
         let checkUser = true;
         if (curUser) {
-            checkUser = curUser.editUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1] === '1';
+            checkUser = curUser.editUser.TECH_RIGHTS && curUser.editUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1] === '1';
         } else {
             checkedUser.forEach((user) => {
                 if (user.TECH_RIGHTS && user.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1] !== '1' && checkUser) {
