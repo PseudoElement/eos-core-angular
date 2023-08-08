@@ -4,6 +4,7 @@ import { BUTTON_RESULT_OK } from '../../../app/consts/confirms.const';
 import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
 import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE, PipRX, SEV_SYNC_REPORT } from '../../../eos-rest';
 import { IDictionaryDescriptor, IRecordOperationResult } from '../../../eos-dictionaries/interfaces';
+import * as moment from 'moment';
 const MAX_QUERY_DUES = 117; // макс. due = 17 символов вся вложенность (2000 символов), URL сам примерно 50 символов
 
 export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor {
@@ -130,7 +131,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                     })
                 }
                 sev_part.forEach((part) => {
-                    const date = mapSevParticipan.get('' + part.ISN_LCLASSIF) ? mapSevParticipan.get('' + part.ISN_LCLASSIF).split('T')[0] : '';
+                    const date = mapSevParticipan.get('' + part.ISN_LCLASSIF) ? moment(mapSevParticipan.get('' + part.ISN_LCLASSIF)).format("DD.MM.YYYY") : '';
                     part['FILE_SYNC_DATE'] = date;
                 });
                 return sev_part;
