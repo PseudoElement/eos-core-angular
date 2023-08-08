@@ -32,6 +32,7 @@ import { EMPTY_SEARCH_DL_RESULTS, ESelectDepart } from '../base-param.component'
 import { UserSettingsService } from '../../../eos-rest/services/user-settings.service';
 import { UserType } from '../../../eos-rest/enum/user-type';
 import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
+import { ETypeDeloRight } from '../../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights.consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -446,7 +447,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._pushState();
     }
 
-    dueDepNameNullUndef(date: any): boolean {
+    dueDepNameNullUndef(date: string): boolean {
         if (!date) {
             return false;
         }
@@ -629,7 +630,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.cheackCtech() || this.checkRole()) {
             return Promise.resolve('error');
         }
-        if (this._newData.get('IS_SECUR_ADM') && this.curentUser.TECH_RIGHTS && this.curentUser.TECH_RIGHTS[0] === '1') {
+        if (this._newData.get('IS_SECUR_ADM') && this.curentUser.DELO_RIGHTS && this.curentUser.DELO_RIGHTS[+ETypeDeloRight.SystemTechnologist] === '1') {
             this.messageAlert({ title: 'Предупреждение', msg: `Право "Администратор системы" не может быть назначено одновременно с правом "Cистемный технолог"`, type: 'warning' });
             return Promise.resolve('error');
         }
