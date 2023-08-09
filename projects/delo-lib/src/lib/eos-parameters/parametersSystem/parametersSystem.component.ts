@@ -57,6 +57,7 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             });
     }
     ngOnInit() {
+        this.listParams = this.listParams.filter((params) => !(this._appContext.cbBase && params.url === 'unloading-arch'));
     }
 
     ngOnDestroy() {
