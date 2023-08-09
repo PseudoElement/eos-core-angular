@@ -108,7 +108,7 @@ export class ParamConversionComponent extends BaseParamComponent {
             const conwert: IConverterParam =  newConverter[key];
             conwert['key'] = '' + key;
             conwert['DISPALY_NAME'] = hostName ? hostName['DISPLAY_NAME'] : '';
-            conwert['InstanceName'] = conwert.Library.Name;
+            conwert['InstanceName'] = conwert['InstanceName'];
             conwert['Name'] = conwert.Name || '';
             conwert['IsSharedList'] = {type: ECellToAll.checkbox, check: conwert.IsShared, click: () => {}, disabled: true};
             this.tabelData.data.push(conwert);
@@ -137,16 +137,17 @@ export class ParamConversionComponent extends BaseParamComponent {
         });
     }
     submitEmit($event) {
+        const query = [];
         const newConverter: IConverterParam = {
             Library: {
                 Name: this.updateData['LibraryName'] !== undefined ? this.updateData['LibraryName'] : this.prepareData.rec['LibraryName'],
                 Directory: this.updateData['LibraryDirectory'] !== undefined ? this.updateData['LibraryDirectory'] : this.prepareData.rec['LibraryDirectory'],
             },
             MaxCacheSize: this.updateData['MaxCacheSize'] !== undefined ? +this.updateData['MaxCacheSize'] : +this.prepareData.rec['MaxCacheSize'],
-            ConverterFormat: this.prepareData.rec['ConverterFormat'],
             Name: this.updateData['Name'] !== undefined ? this.updateData['Name'] : this.prepareData.rec['Name'],
             IsShared: this.updateData['IsShared'] !== undefined ? Boolean(+this.updateData['IsShared']) : Boolean(+this.prepareData.rec['IsShared']),
-            ServerURL: this.updateData['ServerURL'] !== undefined ? this.updateData['ServerURL'] : this.prepareData.rec['ServerURL']
+            CountProcesses: this.prepareData.rec['CountProcesses'],
+            InstanceName: this.prepareData.rec['InstanceName'],
         };
         Object.keys(this.converter).forEach((key) => {
             if ('' + key === '' + this.editData.key) {
@@ -154,7 +155,16 @@ export class ParamConversionComponent extends BaseParamComponent {
             }
         });
         const newSetConverter = Object.assign({instance: this.editData.key}, this.paramConverter);
-        this.setAppSetting(newSetConverter, newConverter)
+        if (this.updateData['LibraryName'] !== undefined ||
+            this.updateData['LibraryDirectory'] !== undefined ||
+            this.updateData['MaxCacheSize'] !== undefined ||
+            this.updateData['Name'] !== undefined ||
+            this.updateData['IsShared'] !== undefined
+            ) {
+            query.push(this.setAppSetting(newSetConverter, newConverter));
+            
+        }
+        Promise.all(query)
         .then(() => {
             this.updateData = {};
             this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);

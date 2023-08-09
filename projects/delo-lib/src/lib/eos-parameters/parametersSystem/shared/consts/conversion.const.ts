@@ -35,15 +35,27 @@ export const CONVERSION_PARAM: IBaseParameters = {
             title: 'Файловое хранилище',
         },
         {
-            key: 'ConverterFormat',
-            type: 'string',
-            title: ''
+            key: 'CountProcesses',
+            type: 'numberIncrement',
+            readonly: true,
+            title: '',
         },
         {
-            key: 'ServerURL',
+            key: 'InstanceName',
             type: 'string',
-            title: 'АДРЕС'
-        }
+            readonly: true,
+            title: '',
+        },
+        // {
+        //     key: 'ConverterFormat',
+        //     type: 'string',
+        //     title: ''
+        // },
+        // {
+        //     key: 'ServerURL',
+        //     type: 'string',
+        //     title: 'АДРЕС'
+        // }
     ]
 };
 export const CONVERSION_PARAM_BTN_TABEL = [

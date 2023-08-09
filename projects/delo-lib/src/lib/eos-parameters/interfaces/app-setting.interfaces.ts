@@ -44,8 +44,11 @@ export interface IConverterParam {
     Library: ILibrary;
     MaxCacheSize: number;
     IsShared: boolean;
-    ConverterFormat: string;
-    ServerURL: string;
+    /** Данные параметры выпилены */
+    /* ConverterFormat: string;
+    ServerURL: string; */
+    CountProcesses: number;
+    InstanceName: number;
 }
 export interface IKafkaParams {
     ServerURL: string;
