@@ -73,7 +73,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         private inputCtrlSrv: InputControlService,
         private _RemasterService: RemasterService,
         private _searchService: SearchService,
-        @Inject(Object) private configChannel : ConfigChannelCB,
+        @Inject(Object) private configChannel : ConfigChannelCB
     ) {
         this.fieldsConst = JSON.parse(JSON.stringify(this.configChannel.fieldsConst));
 
@@ -122,10 +122,12 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(() => {
+                if(!this.isCurrentSettings){
+                    this.flagEdit = false;
+                    this.form.disable({ emitEvent: false });
+                    this.formMailResuve?.disable({ emitEvent: false });
+                }
                 this.setNewValInputs();
-                this.flagEdit = false; 
-                this.form.disable({ emitEvent: false });
-                this.formMailResuve?.disable({ emitEvent: false });
             });
 
         this._RemasterService.editEmit
@@ -185,7 +187,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
             [`${this.MAILRECEIVE}`]: this.defaultValues[`${this.MAILRECEIVE}`],
         };
     }
-
     itCurrentSettingsCheck() {
         if (this.isCurrentSettings) {
             if (this.fieldsConstMailResive) {
@@ -217,7 +218,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
 
         this.sliceArrayForTemplate();
         this.subscriberFormRcSend();
-    } 
+    }
 
     initMailResive() {
         if(this.fieldsConstMailResive){
@@ -226,7 +227,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
             this.prepareDataMailResive = this.formHelp.convData(this.preparedItemForInputsMailREsive);
             this.inputsMailResive = this.dataSrv.getInputs(this.prepareInputsMailREsive, { rec: this.preparedItemForInputsMailREsive });
             this.formMailResuve = this.inputCtrlSrv.toFormGroup(this.inputsMailResive);
-            
+
             this.isCurrentSettings ? this.formMailResuve.enable({ emitEvent: false }):
                                      this.formMailResuve.disable({ emitEvent: false });
             this.templRenderMailResive = this.createTree(this.fieldsConstMailResive.fields);
@@ -236,7 +237,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
 
     parse_Create(fields: IFieldDescriptor[], nameProperty: string, nameFieldDB: string) {
         const obj = {};
-        
+
         fields.forEach((field: IFieldDescriptor) => {
 
             this.hashKeyDBString.set(field.key, field.keyPosition);
@@ -364,10 +365,10 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
 
     sliceArrayForTemplate(): void {
         let count = 4;
-        let separator = 9;  
+        let separator = 9;
         if (this.configChannel.nameEN === 'LK' || this.configChannel.nameEN === 'EPVV') {
             count = 3;
-            separator = 8;  
+            separator = 8;
         }
 
         this.listForAccordion = [];
@@ -442,14 +443,14 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         }
     }
 
-    setParent(node: TreeItem, val?) {
-        if (!val) {
-            val = this.form.controls['rec.' + node.key].value;
+    setParent(node: TreeItem, value?: boolean) {
+        if (!value) {
+            value = this.form.controls['rec.' + node.key].value;
         }
-        if (node.parent && val) {
+        if (node.parent && value) {
             const key = node.parent.key;
-            this.form.controls['rec.' + key].patchValue(val);
-            this.setParent(node.parent, val);
+            this.form.controls['rec.' + key].patchValue(value);
+            this.setParent(node.parent, value);
         }
         if (node.key === `${this.RCSEND}_ADDRESSEES` || node.key === `${this.RCSEND}_RESOLUTIONS`) {
             this.enabelDisabelRcSend(node);
@@ -467,11 +468,10 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         if (this.fieldsConstMailResive) {
             const addresInput = this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT`].value;
             const resolutionInput = this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK`].value;
-    
             (!addresInput) ? this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].disable({ emitEvent: false }) :
                             this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO`].enable({ emitEvent: false });
-            
-            (!resolutionInput) ? this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].disable({ emitEvent: false }) : 
+
+            (!resolutionInput) ? this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].disable({ emitEvent: false }) :
                                  this.formMailResuve.controls[`rec.${this.MAILRECEIVE}_TAKE_RUBRICS_RK_RADIO`].enable({ emitEvent: false });
         }
     }
@@ -682,12 +682,12 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     default() {
-        this.prepareDefaultForm = this.prepareDefaultForm ? 
-                                    this.prepareDefaultForm : 
+        this.prepareDefaultForm = this.prepareDefaultForm ?
+                                    this.prepareDefaultForm :
                                     this.parse_Create(this.fieldsConst.fields, 'mapDefault', `${this.RCSEND}`);
 
-        this.prepareDefaultFormMailREceive = this.prepareDefaultFormMailREceive ? 
-                                                this.prepareDefaultFormMailREceive : 
+        this.prepareDefaultFormMailREceive = this.prepareDefaultFormMailREceive ?
+                                                this.prepareDefaultFormMailREceive :
                                                 this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', `${this.MAILRECEIVE}`);
         this.fillFormDefaultValues();
         this.fillFormMailReceive();
