@@ -13,7 +13,8 @@
             </div>
             <eos-dynamic-input [input]="inputs['rec.indexDep']"
                                [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
+                               [readonly]="!editMode">
+                            </eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
@@ -102,7 +103,7 @@
                                    (click)="this.clickNumcreation()"
                                    [readonly]="!editMode"
                 ></eos-dynamic-input>
-                <eos-dynamic-input class ="pull-left" 
+                <eos-dynamic-input class ="pull-left"
                                    *ngIf="featuresDep.numcreation"
                                    [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
@@ -112,15 +113,10 @@
             </div>
         </div>
         <div class="col-2 pull-right">
-            <ng-container *ngIf="hasCard">
                 <eos-dynamic-input [input]="inputs['rec.CARD_NAME']"
                                    [form]="form"
                                    [readonly]="!(this.editMode)"
-
-
                 ></eos-dynamic-input>
-            </ng-container>
-
         </div>
         <div class="clearfix">
             <div class="overrride_contr_1">

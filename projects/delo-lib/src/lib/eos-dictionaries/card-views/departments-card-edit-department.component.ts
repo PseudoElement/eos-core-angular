@@ -407,16 +407,16 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
     private updateForm(formChanges: any) {
         if (this.previousValues['rec.CARD_FLAG'] !== formChanges['rec.CARD_FLAG']) {
             this.previousValues['rec.CARD_FLAG'] = formChanges['rec.CARD_FLAG'];
+            const cardNameControl = this.form.controls['rec.CARD_NAME']
             if (!formChanges['rec.CARD_FLAG']) {
                 if (!!this.hasOrganization) {
                     this._zone.run(() => this.unbindOrganization());
                 }
-                this.setValue('rec.CARD_NAME', null);
-                this.form.controls['rec.CARD_NAME'].disable();
+                cardNameControl.clearValidators()
             } else {
-                this.form.controls['rec.CARD_NAME'].enable();
+                cardNameControl.addValidators(Validators.required)
             }
-
+            cardNameControl.updateValueAndValidity()
         }
         this._eosCommonOverride.updateForm(this, formChanges);
 
@@ -425,4 +425,5 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditDirectiv
             this.form.controls['rec.DEPARTMENT_INDEX'].updateValueAndValidity();
         }
     }
+
 }
