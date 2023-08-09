@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Features } from '../../../eos-dictionaries/';
+declare function notifyOpener()
 
 @Component({
     selector: 'eos-ext-exch',
@@ -60,7 +61,6 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         }
         return '';
     }
-
     constructor(
         private _userSrv: UserParamsService,
         private _apiSrv: PipRX,
@@ -71,7 +71,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         public _appContext: AppContext,
     ) {
         if(this._appContext.cbBase){
-            const cbChannel = ['ЛК', 'ЕПВВ', 'СДС', 'АС ПСД'];        
+            const cbChannel = ['ЛК', 'ЕПВВ', 'СДС', 'АС ПСД'];
             this.fieldGroupsForExhcExt = [].concat(this.fieldGroupsForExhcExt, cbChannel)
         }
         this._userSrv.canDeactivateSubmit$
@@ -95,7 +95,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
                 return item !== 'МЭДО';
             });
         }
-        if (this._appContext.cbBase && (this.appMode.cbr)) { // this.appMode.arm || 
+        if (this._appContext.cbBase && (this.appMode.cbr)) { // this.appMode.arm ||
             this.fieldGroupsForExhcExt = this.fieldGroupsForExhcExt.filter((item) => {
                 return item !== 'Эл. почта';
             });
@@ -265,8 +265,9 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             // this._userSrv.closeWindowForCurrentSettings(this.isCurrentSettings);
             if (!this.isCurrentSettings) {
                 this.editFlag = false;
-                this._RemasterService.submitEmit.next();
             }
+            this._RemasterService.submitEmit.next();
+            notifyOpener()
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });
         }).catch(error => {
@@ -317,7 +318,7 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
         const reqFilter = req.filter((q) => {
             if (q['data']['PARM_VALUE'] === 'undefined') {
                 return false;
-            } 
+            }
             return true
         })
         return reqFilter;
