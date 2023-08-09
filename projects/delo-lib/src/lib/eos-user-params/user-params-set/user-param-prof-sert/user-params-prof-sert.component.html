@@ -112,7 +112,11 @@
                 [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                 container="body"
             >
-                <button class="btn btn-primary-light" [disabled]="!editFlag || (!selectedFromAllList && !selectList ) || selectList.notFound" (click)='showSert()'>
+                <button 
+                    class="btn btn-primary-light" 
+                    [disabled]="isDisabledSertInfo" 
+                    (click)='showSert()'
+                >
                     <span class="eos-adm-icon eos-adm-icon-info-blue small"></span>
                 </button>
             </div>
@@ -128,7 +132,15 @@
                     <eos-spinner size="lg"></eos-spinner>
                 </div>
                 <div class="item-container" *ngFor='let listSert of listsSertInfo'>
-                    <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
+                    <div 
+                        (click)="selectCurent(listSert)" 
+                        [ngClass]="{
+                            selected: listSert.selected, 
+                            grayItem: !editFlag, 
+                            colorValid:  !listSert.valid
+                        }" class="sert-info-wr"
+                        *ngIf='!listSert.delete'
+                    >
                         <span
                             tooltip="{{listSert.whom}}"
                             placement="bottom"

@@ -97,6 +97,14 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         const techRights = this._appContext.CurrentUser.TECH_RIGHTS;
         return (techRights && techRights[0] === '1');
     }
+    
+    get isDisabledSertInfo() {
+        return !this.editFlag || 
+        (!this.selectedFromAllList && !this.selectList ) || 
+        this.selectList.notFound || 
+        this.checkingListEmpty();
+    }
+
     public flagHideBtn: boolean = false;
     public isCarma: boolean = true;
     public loadSert: boolean = false;
@@ -436,12 +444,10 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
     showSert(): void {
-        if (this.selectedFromAllList) {
+        if(this.selectList) {
+            this.openCarmWindow(this.selectList.id);
+        } else if (this.selectedFromAllList) {
             this.openCarmWindow(this.selectedFromAllList.id);
-        } else {
-            if (this.selectList) {
-                this.openCarmWindow(this.selectList.id);
-            }
         }
     }
 
@@ -622,4 +628,16 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         this._userSrv.setChangeState({ isChange: this.btnDisabled });
     }
 
+    private checkingListEmpty  () {
+        let visibleElement = true;
+        const length = this.listsSertInfo.length
+
+        for (let i = 0; i < length; i++) {
+            if(!this.listsSertInfo[i].delete) {
+                visibleElement = false;
+                break;
+            }
+        }
+        return visibleElement;
+    }
 }
