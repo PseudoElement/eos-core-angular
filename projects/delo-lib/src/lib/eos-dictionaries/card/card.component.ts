@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 
 import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
@@ -609,6 +609,9 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private _afterUpdating(node: EosDictionaryNode): EosDictionaryNode {
         if (node) {
             node.data['updateTrules'] = [];
+            this._apiSrv.getHttp_client().get("../CoreHost/FOP/LogoInfoRefresh")
+                .pipe(catchError(err=> throwError(err)))
+                .subscribe()
             this.recordChanged(node.data);
             this.isChanged = false;
             this._msgSrv.addNewMessage(SUCCESS_SAVE);
