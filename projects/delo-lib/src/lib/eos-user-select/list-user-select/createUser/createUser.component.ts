@@ -630,7 +630,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     private _urlSegment(): string {
         const segment: UrlSegment[] = this._router.parseUrl(this._router.url).root.children.primary.segments;
-        if (!segment[1]) {
+        if (!segment[1] || segment[1].path === "0.") {
             return undefined;//Убрать curdue из queryParams
         }
         return segment[1].path;
