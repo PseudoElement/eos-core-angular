@@ -630,7 +630,7 @@ export class UserParamsService {
         /** проверка ограничений на пользователи */
         let checkLimitTech = true;
         let checkUser = true;
-        if (curUser) {
+        if (curUser && curUser.editUser) {
             checkUser = curUser.editUser.TECH_RIGHTS && curUser.editUser.TECH_RIGHTS[E_TECH_RIGHTS.Users - 1] === '1';
         } else {
             checkedUser.forEach((user) => {
