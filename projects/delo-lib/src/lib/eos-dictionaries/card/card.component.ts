@@ -609,8 +609,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private _afterUpdating(node: EosDictionaryNode): EosDictionaryNode {
         if (node) {
             node.data['updateTrules'] = [];
-            const isTemplateSettings = node.parent.data.rec.NAME_TEMPLATE === "Настройка шаблонов"
-            if(isTemplateSettings){
+            if(this.dictionaryId === "templates"){
                 this._apiSrv.getHttp_client().get("../CoreHost/FOP/LogoInfoRefresh")
                 .pipe(catchError(err=> throwError(err)))
                 .subscribe()
