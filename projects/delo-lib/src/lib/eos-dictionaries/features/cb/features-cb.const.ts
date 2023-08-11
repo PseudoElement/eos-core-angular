@@ -12,15 +12,19 @@ export const FeaturesDelo: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
     },
     departments: {
         numcreation: false,
-        reestr_send: true, /* обображать поле пока сделаю для всех и для ЦБ и для Дела*/
+        /** обображать поле пока сделаю для всех и для ЦБ и для Дела*/
+        reestr_send: true, 
         gas_ps: false,
         stamp: false,
-        userCreateButton: true, /* в цб не должно быть, пока привязано к cb_func */
-        datesReq: false, /* только в цб должно быть, пока привязано к cb_func */
+        /** в цб не должно быть, пока привязано к cb_func */
+        userCreateButton: true, 
+        /** только в цб должно быть, пока привязано к cb_func */
+        datesReq: false, 
     },
     SEV: <IEOSSevConfig> {
         isIndexesEnable: true,
-        isDictsEnabled: true, /* Доступны ли справочники СЭВ */
+        /** Доступны ли справочники СЭВ */
+        isDictsEnabled: true, 
 
     },
     docgroups: <IEOSFDocGroups>{
