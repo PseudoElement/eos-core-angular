@@ -4,8 +4,6 @@ import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from '../../eos-dictionaries/interfaces';
 import { CustomTreeNode } from '../tree2/custom-tree.component';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 
 // interface TreeTempl {
 //     id: string;
@@ -157,14 +155,11 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 requestUri: `DOC_TEMPLATES_SetFdulzContent?sf=${this.dataNewFile['$Contents'].split('#')[1]}&tt=${originalData.rec.ISN_TEMPLATE}`,
             };
             return this.apiSrv.batch([entityReq, request], '').then(() => {
+
                 return super.updateRecord(originalData, updates, appendToChanges);
             });
         } else {
-            if(this.id === "templates"){
-                this.apiSrv.getHttp_client().get("../CoreHost/FOP/LogoInfoRefresh")
-                    .pipe(catchError(err=> throwError(err)))
-                    .subscribe();
-            }
+
             return super.updateRecord(originalData, updates, appendToChanges);
         }
     }

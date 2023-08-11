@@ -27,6 +27,8 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import {IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import {WARN_ELEMENTS_ARE_RELATED, WARN_ELEMENTS_COPY_DELETE_LOGICK } from '../../eos-dictionaries/consts/confirm.consts';
 import { GraphQLService } from 'eos-dictionaries/services/graphQL.service';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 
 export interface IDictionaryDescriptorRelatedInfo {
@@ -104,7 +106,7 @@ export abstract class AbstractDictionaryDescriptor {
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
 
     /** Получить все записи которые лежать внутри вершины дерева */
-    getAllNodesInParents(departmentDue: string): Promise<any> { 
+    getAllNodesInParents(departmentDue: string): Promise<any> {
         return Promise.resolve();
     }
     deleteTempRc() {
@@ -207,12 +209,12 @@ export abstract class AbstractDictionaryDescriptor {
         const _criteries = {};
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
-                if(fld.foreignKey === "FROM" 
-                    || fld.foreignKey === "TO" 
-                    || fld.foreignKey === "OPER_DESCRIBE" 
+                if(fld.foreignKey === "FROM"
+                    || fld.foreignKey === "TO"
+                    || fld.foreignKey === "OPER_DESCRIBE"
                     || fld.foreignKey === "USER_ISN") {
                     _criteries[fld.foreignKey] = data[fld.foreignKey];
-                } else 
+                } else
                 if (fld.foreignKey !== 'CODE' &&
                     fld.foreignKey !== 'DOP_REC' &&
                     fld.foreignKey !== 'DUE_DOCGROUP' &&
@@ -396,6 +398,11 @@ export abstract class AbstractDictionaryDescriptor {
             if (changes.length) {
                 return this.apiSrv.batch(changes, '')
                     .then(() => {
+                        if(this.id === "templates"){
+                            this.apiSrv.getHttp_client().get("../CoreHost/FOP/LogoInfoRefresh")
+                                .pipe(catchError(err=> throwError(err)))
+                                .subscribe();
+                        }
                         results.push({success: true, record: record});
                         return results;
                     });
