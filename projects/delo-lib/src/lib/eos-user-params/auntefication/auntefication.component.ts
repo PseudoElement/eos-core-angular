@@ -191,6 +191,11 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
                 this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME'], { emitEvent: false });
                 const autent = this.form.get('SELECT_AUTENT').value;
                 this.maxLoginLength = autent === 0 ? '12' : '64';
+                
+                if (this._appCtx.cbBase) {
+                    this.maxLoginLength = '256';
+                }
+
                 this.getTitle();
                 this.editMode = false;
                 this.formUpdate(!this.editMode);

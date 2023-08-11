@@ -269,6 +269,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
         this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
+
+        if (this._appCtx.cbBase) {
+            this.maxLoginLength = '256';
+        }
+
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
