@@ -382,6 +382,7 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     break;
                 case E_RECORD_ACTIONS.edit:
+
                     _enabled = (!_isLDSubTree || Features.cfg.canEditLogicDeleted) && !this._viewParams.updatingList && opts.listHasOnlyOne;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
@@ -389,7 +390,6 @@ export class NodeActionsComponent implements OnDestroy {
                             _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
                         }
                     }
-
                     if (this._dictSrv.listNode && !Features.cfg.canEditLogicDeleted) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
                     }
@@ -397,9 +397,11 @@ export class NodeActionsComponent implements OnDestroy {
                     if (this._markedNodes.length) {
                         _enabled =  this._dictSrv.dictionatyOverrideSrv.accessActionEdit(this._markedNodes[0], _enabled, this.dictionary.id);
                     }
+
                     if (this.dictionary.id === 'organization') {
                         _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
                     }
+
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
                     _active = this._viewParams.showDeleted;
@@ -561,6 +563,17 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.renameBaseDepartment:
                     _enabled = this._eaps.checkBaseDepartmentRight();
+                    break;
+                case E_RECORD_ACTIONS.transferDocuments:
+                    if(this.dictionary.id === 'departments') {
+                        _show = true;
+                        if(this._markedNodes.length === 1 && this._markedNodes[0].data.rec.IS_NODE === 1) {
+                            console.log('this._markedNodes', this._markedNodes)
+                            _enabled = this._eaps.checkAccessTransferDocuments(this._markedNodes[0]);
+                        } else {
+                            _enabled = false;
+                        }
+                    }
                     break;
                 case E_RECORD_ACTIONS.certifUC:
                     break;

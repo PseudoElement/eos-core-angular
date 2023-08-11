@@ -36,6 +36,7 @@ import { FILE_CATEGORIES_DICT } from '../../eos-dictionaries/consts/dictionaries
 import { FORMAT_DICT } from '../../eos-dictionaries/consts/dictionaries/format.const';
 import { MEDO_NODE_DICT } from '../../eos-dictionaries/consts/dictionaries/medo-node.const';
 import { ADDRESS_VID_CL } from '../../eos-dictionaries/consts/dictionaries/type-address.const';
+import { EosDictionaryNode } from '../../eos-dictionaries/core/eos-dictionary-node';
 
 export const dictsTechs: { id: string, tech: E_TECH_RIGHT, listedUT: boolean /* проверить дерево USER_TECH */, }[] = [
     // Рубрикатор
@@ -306,10 +307,18 @@ export class EosAccessPermissionsService {
         }
         return this._eosOverridesServ.getCheckButton(E_RECORD_ACTIONS.showDeleted, dictId);
     }
-    /* системному технологу с доступом к справочнику "Подразделения" и разрешеной вершиной "Все подразделения" */
+    /** системному технологу с доступом к справочнику "Подразделения" и разрешеной вершиной "Все подразделения" */
     public checkBaseDepartmentRight(): boolean {
-        const direct_rule = this.appCtx.CurrentUser.USER_TECH_List.findIndex(e => (e['FUNC_NUM'] === 10 && e['DUE'] === '0.' && e['ALLOWED'] === 1));
+        const direct_rule = this.appCtx.CurrentUser.USER_TECH_List.findIndex(e => (e['FUNC_NUM'] === E_TECH_RIGHT.Departments && e['DUE'] === '0.' && e['ALLOWED'] === 1));
         return direct_rule === -1 ? false : true;
+    }
+    
+    public checkAccessTransferDocuments(node: EosDictionaryNode ) {
+        const accessDepartments = this.appCtx.CurrentUser.TECH_RIGHTS[E_TECH_RIGHT.Departments];
+        const accessTransferDocuments = this.appCtx.CurrentUser.TECH_RIGHTS[E_TECH_RIGHT.ProcPeredachiDocs];
+        const dueDep = node.data.rec.PARENT_DUE;
+        const accessTransferDocumentsDep = this.appCtx.CurrentUser.USER_TECH_List.findIndex(el => (el['FUNC_NUM'] === E_TECH_RIGHT.ProcPeredachiDocs && el['ALLOWED'] === 1 && el['DUE'] === dueDep) );
+        return !!accessDepartments && !!accessTransferDocuments && accessTransferDocumentsDep  === -1 ? false : true;
     }
 
     // --------------------------------------------------------------
@@ -346,6 +355,5 @@ export class EosAccessPermissionsService {
         }
         return APS_DICT_GRANT.denied;
     }
-
 
 }

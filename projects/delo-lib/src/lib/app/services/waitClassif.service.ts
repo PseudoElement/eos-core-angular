@@ -31,6 +31,7 @@ const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.html';
 const SharingLists: string = '../WebRC/Pages/SharingLists.html';
 const CERT_INFO = "../CertInfo/certview";
 const COMMON_LIST = "../WebRC/Pages/CommonLists.html";
+const CHANGE_DL = "../WebRC/Pages/ChangeDl.html";
 
 @Injectable()
 export class WaitClassifService {
@@ -123,6 +124,8 @@ export class WaitClassifService {
             }
         } else if (params.classif === "CERT_INFO") {
             url = CERT_INFO;
+        } else if (params.classif === "CHANGE_DL") {
+            url = this.createUrlTransferDocuments(CHANGE_DL, params);
         } else {
             setTimeout(() => {
                 url = this._prepareUrl(params, flag);
@@ -209,6 +212,7 @@ export class WaitClassifService {
     private getSymbol(url: string) {
         return url.indexOf('?') === -1 ? '?' : '&';
     }
+
     private stdTextUrl(url, params: IOpenClassifParams) {
         if (params.isn_user !== undefined && params.isn_user !== null) {
             url += this.getSymbol(url) + `isn_user=${params.isn_user}`;
@@ -234,6 +238,7 @@ export class WaitClassifService {
         }
         return url;
     }
+
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url: string = '';
@@ -280,6 +285,11 @@ export class WaitClassifService {
         }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
 
+        return url;
+    }
+
+    private createUrlTransferDocuments(url: string, params: IOpenClassifParams) {
+        url += `?dl_from=${params.dl_from}${params.dl_to ? '&dl_to='+params.dl_to : ''}`;
         return url;
     }
 }

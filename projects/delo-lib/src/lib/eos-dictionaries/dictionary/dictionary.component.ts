@@ -84,7 +84,7 @@ import { ViewProtocolServices } from '../../eos-dictionaries/services/eos-view-p
 import { DictionaryDescriptor } from '../../eos-dictionaries/core/dictionary-descriptor';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { CONFIRM_OPERATION_HARDDELETE_COPY_MASSAGE } from '..';
-
+import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -119,9 +119,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     protocolWindow: Window;
     filterDate;
     filterDateNomenkl;
+
     get disableCollection() {
         return this.newNameBaseDepartment === '' || this.newNameBaseDepartment.length > 64;
     }
+
     get sliced_title(): string {
         if (this.isTitleSliced) {
             let sliced = this.title.slice(0, this.SLICE_LEN).trim();
@@ -387,6 +389,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     this.doAction(action);
                 }
             });
+
         _dictSrv.resetSerchError$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -394,7 +397,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             .subscribe(() => {
                 this.resetSearch();
             });
-
     }
 
     ngOnInit(): void {
@@ -422,11 +424,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
+
     getFilterDate($event) {
         setTimeout(() => {
             this.filterDate = $event;
         }, 0);
     }
+
     getFilterNomenkl($event) {
         this.filterDateNomenkl = $event;
     }
@@ -497,18 +501,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 }
                 this._dictSrv.toggleWeightOrder();
                 break;
+
             case E_RECORD_ACTIONS.userOrderCut:
                 this.nodeList.userOrderCut();
                 this.dictionary.treeResort();
                 break;
+
             case E_RECORD_ACTIONS.userOrderPaste:
                 this.nodeList.userOrderPaste(evt.params);
                 this.dictionary.treeResort();
                 break;
+
             case E_RECORD_ACTIONS.moveDown:
                 this.nodeList.moveDown();
                 this.dictionary.treeResort();
                 break;
+
             case E_RECORD_ACTIONS.moveUp:
                 this.nodeList.moveUp();
                 this.dictionary.treeResort();
@@ -550,113 +558,153 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.restore:
                 this._restoreItems();
                 break;
+
             case E_RECORD_ACTIONS.createRepresentative:
                 this._createRepresentative();
                 break;
+
             case E_RECORD_ACTIONS.tableCustomization:
                 this.nodeList.configColumns();
                 break;
+
             case E_RECORD_ACTIONS.additionalFields:
                 this._openAdditionalFields();
                 break;
+
             case E_RECORD_ACTIONS.AdvancedCardRK:
                 this._openAdvancedCardRK();
                 break;
+
             case E_RECORD_ACTIONS.counterDepartmentMain:
                 if (this.featuresDep.numcreation) {
                     this._editCounter(E_COUNTER_TYPE.counterDepartmentMain);
                 }
                 break;
+
             case E_RECORD_ACTIONS.counterDepartment:
                 this._editCounter(E_COUNTER_TYPE.counterDepartment);
                 break;
+
             case E_RECORD_ACTIONS.counterDepartmentRK:
                 this._editCounter(E_COUNTER_TYPE.counterDepartmentRK);
                 break;
+
             case E_RECORD_ACTIONS.counterDepartmentRKPD:
                 this._editCounter(E_COUNTER_TYPE.counterDepartmentRKPD);
                 break;
+
             case E_RECORD_ACTIONS.counterDocgroup:
                 this._editCounter(E_COUNTER_TYPE.counterDocgroup);
                 break;
+
             case E_RECORD_ACTIONS.counterDocgroupRKPD:
                 this._editCounter(E_COUNTER_TYPE.counterDocgroupRKPD);
                 break;
+
             case E_RECORD_ACTIONS.CloseSelected:
                 this._closeItems();
                 break;
+
             case E_RECORD_ACTIONS.OpenSelected:
                 this._openItems();
                 break;
+
             case E_RECORD_ACTIONS.prjDefaultValues:
                 this._openPrjDefaultValues();
                 break;
+
             case E_RECORD_ACTIONS.copyProperties:
                 this._openCopyProperties(false);
                 break;
+
             case E_RECORD_ACTIONS.copyPropertiesFromParent:
                 this._openCopyProperties(true);
                 break;
+
             case E_RECORD_ACTIONS.copyNodes:
                 this._copyNodesToBuffer();
                 break;
+
             case E_RECORD_ACTIONS.pasteNodes:
                 this._openCopyNode();
                 break;
+
             case E_RECORD_ACTIONS.certifUC:
                 this._navigateToUC();
                 break;
+
             case E_RECORD_ACTIONS.downloadFile:
                 this._downloadDocTemplates();
                 break;
+
             case E_RECORD_ACTIONS.importEDS:
                 this._openModalWindow();
                 break;
+
             case E_RECORD_ACTIONS.cut:
                 this._cutNode();
                 break;
+
             case E_RECORD_ACTIONS.combine:
                 this._combine();
                 break;
+
             case E_RECORD_ACTIONS.paste:
                 this._copy();
                 break;
+
             case E_RECORD_ACTIONS.copy:
                 this._cutNode();
                 break;
+
             case E_RECORD_ACTIONS.uncheckNewEntry:
                 this._uncheckNewEntry();
                 break;
+
             case E_RECORD_ACTIONS.dopRequisites:
                 this._openDopRequisetes();
                 break;
+
             case E_RECORD_ACTIONS.defaultCollision:
                 this._defaultSettingsCollision();
                 break;
+
             case E_RECORD_ACTIONS.protViewSecurity:
                 this._openProtocolSecyrity();
                 break;
+
             case E_RECORD_ACTIONS.uniqueIndexDel:
                 this.uniqueIndex();
                 break;
+
             case E_RECORD_ACTIONS.printNomenc:
                 this._printNomenc();
                 break;
+
             case E_RECORD_ACTIONS.renameBaseDepartment:
                 this._renameBaseDepartment();
                 break;
+
             case E_RECORD_ACTIONS.sevSyncDicts:
                 this._showSyncDictsModal();
                 break;
+
             case E_RECORD_ACTIONS.sevClearIdentityCodes:
                 this._clearIdentityCodes();
                 break;
+
             case this._npEditCountOverride.handleAction(evt.action, this):
                 break;
+
+            case E_RECORD_ACTIONS.transferDocuments:
+                this.transferDocuments();
+                break;
+
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
     }
+
     _downloadDocTemplates() {
         this._dictSrv.getMarkedNodes().forEach(
             (node) => {
@@ -673,6 +721,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     });
             });
     }
+
     _navigateToUC(): any {
         const url = this._router.url;
         this._storageSrv.setItem(RECENT_URL, url);
@@ -684,7 +733,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         this._router.navigate(_path);
     }
-
 
     resetSearch() {
         this.clearFindSettings();
@@ -785,6 +833,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const dict = this._dictSrv.dictionaryByMode(mode).id;
         return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
+
     setDictMode(mode: number) {
         this._dictSrv.setDictMode(mode);
         this.params.searchResults = false;
@@ -800,6 +849,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this.modalWindow.hide();
         });
     }
+
     nlHeightType() {
         let res = 1;
         if (this.hasFilter()) {
@@ -822,6 +872,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     markedCounter(): number {
         return this._dictSrv.getMarkedNodes().length;
     }
+
     submitModalWord() {
         if (this.newNameBaseDepartment !== this._dictSrv.getCardName()) {
             this._dictSrv.updateNameDepartment(this.newNameBaseDepartment)
@@ -842,6 +893,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.newNameBaseDepartment = this._dictSrv.getCardName();
         this.modalWordRef.hide();
     }
+
     /**
      * @description convert selected persons to list of organization representatives,
      * add it to department organization if it exists upwards to tree
@@ -901,6 +953,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._openCreate(recParams);
         });
     }
+
     private _openPageCitizens(openEdit: boolean, params) {
         if (this.dictionaryId === 'organization') {
             if (params && params.IS_NODE && openEdit) {
@@ -923,6 +976,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.openClassifGopRc(openEdit, params);
 
     }
+
     private openClassifGopRc(openEdit, params) {
         const datas: any = {};
         const rc = [];
@@ -956,6 +1010,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
+
     private openClassifFromdepartment(params?) {
         const list: ORGANIZ_CL = this._dictSrv.listNode.data.organization;
         const config: IOpenClassifParams = {
@@ -974,6 +1029,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._dictSrv.reload();
         });
     }
+
     private updateRigthFields(node: EosDictionaryNode, refresh: boolean = false): Promise<any> {
         if (node) {
             node.relatedLoaded = false;
@@ -983,6 +1039,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
         return Promise.resolve(null);
     }
+
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
         if (confirm.buttons.length === 0) {
             return Promise.resolve({'result': 2, title: 'Да'});
@@ -1071,7 +1128,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         });
 
     }
-
 
     /**
      * Physical delete marked elements on page
@@ -1380,8 +1436,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
     }
 
-
-
     private _openAdditionalFields() {
         const node = this._dictSrv.listNode;
         if (node) {
@@ -1469,7 +1523,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         });
     }
 
-
     private _openModalWindow() {
         this.modalWindow = null;
         const node = this._dictSrv.listNode;
@@ -1482,6 +1535,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
     }
+
     // private _checkDeletNode(slicedNode: EosDictionaryNode[]) {
     //     let countAll = 0;
     //     let countDel = 0;
@@ -1512,6 +1566,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     // dues= записи которые переносим через запятую
     // weight = пока не знаю чему он должен быть равен
     //
+
     private pasteNode(slicedNode: any[], dueTo, whenCopy?) {
         this._dictSrv.updateViewParameters({ updatingList: true });
         this._dictSrv.paste(slicedNode, dueTo, whenCopy)
@@ -1554,6 +1609,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 console.log('er', er);
             });
     }
+
     private updateAfterPaste() {
         const id = this.dictionaryId;
         if (this._dictSrv['_srchCriteries']) {
@@ -1592,6 +1648,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
+
     private async _copy(): Promise<void> {
         // то что вырезано и записано
         const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes');
@@ -1670,6 +1727,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
         this._dictSrv.cutNode();
     }
+
     private _combine() {
         const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes'); // this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
         const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => {
@@ -1700,9 +1758,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._msgSrv.addNewMessage({ type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбрана одна запись' });
         }
     }
+
     private _uncheckNewEntry() {
         this._dictSrv.uncheckNewEntry();
     }
+
     private _openDopRequisetes() {
         const config: IOpenClassifParams = {
             classif: 'AR_EDITOR',
@@ -1725,11 +1785,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _openCopyNode() {
         this.nodeList.openCopyNode(this._dictSrv.bufferNodes);
     }
+
     private _checkDictionaryId(): boolean {
         return ['citizens', 'organization'].some(id => {
             return id === this.dictionaryId;
         });
     }
+
     private _defaultSettingsCollision() {
         const body1 = 'Применить значения по умолчанию для всех групп';
         let body = 'Применить значения по умолчанию для коллизий группы:';
@@ -1756,10 +1818,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         });
     }
+
     private _openProtocolSecyrity(): void {
         this._viewPortSrv.getUrlProtocol(this.dictionary.descriptor as DictionaryDescriptor, this.nodeList.markedInfo.nodes);
     }
-    /* проверка есть ли вложенные подразделения */
+
+    /** проверка есть ли вложенные подразделения */
     private _checkIncludeDepartment(dues: string): boolean {
         let flag = false;
         this.customTreeData[0]['children'].forEach(element => {
@@ -1769,7 +1833,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         });
         return flag;
     }
-    /* открытие окна выбора шаблона для подразделения */
+
+    /** открытие окна выбора шаблона для подразделения */
     private _openPrintTemplate(dues, checkYear, d) {
         const config = { ignoreBackdropClick: true };
         this.modalWindow = this._modalSrv.show(PrintTemplateComponent, config);
@@ -1781,7 +1846,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this.modalWindow.hide();
         });
     }
-    /* выполнение открытия окна в разных условиях */
+
+    /** выполнение открытия окна в разных условиях */
     private _printNomenc() {
         const url = this._router.url;
         const dues: string = url.split('/').pop();
@@ -1789,7 +1855,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._openPrintTemplate(dues, checkYear, this._checkIncludeDepartment(dues));
     }
 
-    /* Меняем имя базового Подразделения */
+    /** Меняем имя базового Подразделения */
     private _renameBaseDepartment() {
         this._openModal();
     }
@@ -1822,6 +1888,39 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         })
         .then((err) => {
             console.log(err);
+        });
+    }
+
+    private transferDocuments() {
+        const person = this._dictSrv.getMarkedNodes()[0];
+        const replacer = person['data']['replace'];
+        const currentUser = this._appContext.CurrentUser;
+        const dateNow = new Date();
+        const dl_from = person['data']['rec']['DUE'];
+        let dl_to = '';
+        
+        if(
+            replacer['DUE_REPLACE'] &&
+            !replacer['DELETED_DUE_REPLACE_NAME'] &&
+            new Date(replacer['START_DATE']) < dateNow &&
+            new Date(replacer['END_DATE']) > dateNow
+        ) {
+            const dueReplacer = replacer['DUE_REPLACE'].split('.');
+            const depReplacer = dueReplacer.slice(0, dueReplacer.length - 2).join('.') + '.';
+            const accessTransferReplacerDep = currentUser.USER_TECH_List.findIndex(el => (el['FUNC_NUM'] === E_TECH_RIGHT.ProcPeredachiDocs && el['ALLOWED'] === 1 && el['DUE'] === depReplacer) );
+            if (accessTransferReplacerDep > -1) {
+                dl_to = replacer['DUE_REPLACE']; 
+            }
+        }
+
+        const config: IOpenClassifParams = {
+            classif: 'CHANGE_DL',
+            dl_from,
+            dl_to,
+        };
+        this._waitClassif.openClassif(config)
+        .finally(() => {
+            console.log('работа завершилась');
         });
     }
 

@@ -54,6 +54,7 @@ export enum E_RECORD_ACTIONS {
     copy,
     printNomenc,
     renameBaseDepartment,
+    transferDocuments,
     // createRepresentative,
     // slantForForms,
     /* to be extended */
