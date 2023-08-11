@@ -60,7 +60,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                 takeUntil(this.destroySubsriber)
             )
             .subscribe(currentUser => {
-                console.log("Current_User_Subscribe", currentUser)
                 this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUser = currentUser;
                 if ((currentUser && this.flagFirstGetInfo) || (currentUser && this._selectedUser.updateSettings)) {
