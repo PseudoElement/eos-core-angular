@@ -126,7 +126,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     */
     deleteTempRc() {
         if (this.dataNewFile) {
-            
+
             const urlSop = `/CoreHost/fdulz/api/DeleteFile?fileID=${this.dataNewFile['$Contents'].split('#')[1]}`;
             this.apiSrv.getHttp_client().get(urlSop, { responseType: 'blob' }).toPromise()
             .then((response: any) => {
@@ -155,10 +155,14 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 requestUri: `DOC_TEMPLATES_SetFdulzContent?sf=${this.dataNewFile['$Contents'].split('#')[1]}&tt=${originalData.rec.ISN_TEMPLATE}`,
             };
             return this.apiSrv.batch([entityReq, request], '').then(() => {
-                return super.updateRecord(originalData, updates, appendToChanges);
-                delete this.dataNewFile;
+                return super.updateRecord(originalData, updates, appendToChanges)
+                        .then(res => {
+                            this.apiSrv.getHttp_client().get("../CoreHost/FOP/LogoInfoRefresh").toPromise()
+                            return res
+                        });
             });
         } else {
+
             return super.updateRecord(originalData, updates, appendToChanges);
         }
     }

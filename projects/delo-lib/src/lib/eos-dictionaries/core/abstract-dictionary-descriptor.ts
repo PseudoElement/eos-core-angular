@@ -104,7 +104,7 @@ export abstract class AbstractDictionaryDescriptor {
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
 
     /** Получить все записи которые лежать внутри вершины дерева */
-    getAllNodesInParents(departmentDue: string): Promise<any> { 
+    getAllNodesInParents(departmentDue: string): Promise<any> {
         return Promise.resolve();
     }
     deleteTempRc() {
@@ -207,12 +207,12 @@ export abstract class AbstractDictionaryDescriptor {
         const _criteries = {};
         _searchFields.forEach((fld) => {
             if (data[fld.foreignKey]) {
-                if(fld.foreignKey === "FROM" 
-                    || fld.foreignKey === "TO" 
-                    || fld.foreignKey === "OPER_DESCRIBE" 
+                if(fld.foreignKey === "FROM"
+                    || fld.foreignKey === "TO"
+                    || fld.foreignKey === "OPER_DESCRIBE"
                     || fld.foreignKey === "USER_ISN") {
                     _criteries[fld.foreignKey] = data[fld.foreignKey];
-                } else 
+                } else
                 if (fld.foreignKey !== 'CODE' &&
                     fld.foreignKey !== 'DOP_REC' &&
                     fld.foreignKey !== 'DUE_DOCGROUP' &&
