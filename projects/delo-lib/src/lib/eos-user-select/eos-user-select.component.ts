@@ -26,7 +26,7 @@ export class UserSelectComponent implements OnDestroy, AfterViewInit, DoCheck {
         private _sandwichSrv: EosSandwichService,
         private _navSrv: NavParamService,
     ) {
-        _sandwichSrv.currentDictState$
+        this._sandwichSrv.currentDictState$
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
