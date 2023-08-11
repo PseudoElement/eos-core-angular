@@ -27,8 +27,6 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import {IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import {WARN_ELEMENTS_ARE_RELATED, WARN_ELEMENTS_COPY_DELETE_LOGICK } from '../../eos-dictionaries/consts/confirm.consts';
 import { GraphQLService } from 'eos-dictionaries/services/graphQL.service';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 
 
 export interface IDictionaryDescriptorRelatedInfo {
@@ -398,11 +396,6 @@ export abstract class AbstractDictionaryDescriptor {
             if (changes.length) {
                 return this.apiSrv.batch(changes, '')
                     .then(() => {
-                        if(this.id === "templates"){
-                            this.apiSrv.getHttp_client().get("../CoreHost/FOP/LogoInfoRefresh")
-                                .pipe(catchError(err=> throwError(err)))
-                                .subscribe();
-                        }
                         results.push({success: true, record: record});
                         return results;
                     });
