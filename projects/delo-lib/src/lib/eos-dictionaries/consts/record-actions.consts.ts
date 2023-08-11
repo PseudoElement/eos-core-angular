@@ -671,6 +671,18 @@ export const RENAME_BASE_DIRECTORY: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+export const TRANSFER_DOCUMENTS: IAction = {
+    type: E_RECORD_ACTIONS.transferDocuments,
+    group: E_ACTION_GROUPS.group,
+    title: 'Передать документы',
+    hint: 'Передать документы',
+    iconClass: 'eos-adm-icon eos-adm-icon-accept-doc-blue small',
+    disabledIconClass: 'eos-adm-icon eos-adm-icon-accept-doc-grey small',
+    hoverIconClass: 'eos-adm-icon eos-adm-icon-accept-doc-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
 
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
@@ -741,6 +753,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_COPY,
     RECORD_ACTION_COMBINE,
     RECORD_ACTION_PASTE,
+    TRANSFER_DOCUMENTS,
     RENAME_BASE_DIRECTORY,
     RECORD_ACTION_EXPORT_DIRECTORY,
     RECORD_ACTION_IMPORT_DIRECTORY,

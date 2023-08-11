@@ -52,7 +52,9 @@ export interface IOpenClassifParams {
     can_tech?: boolean;
     /**  добавлено для корусели в Организациях */
     datas?: {rc_id?: string[], due?: string[]};
+    /** DUE ДЛ от котороко передаем документы */
     dl_from?: string;
+    /** DUE ДЛ котрому передаем документы */
     dl_to?: string;
     /** для StdTextByCode */
     texts?: string;
