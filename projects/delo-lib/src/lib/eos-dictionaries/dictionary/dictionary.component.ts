@@ -1918,10 +1918,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             dl_from,
             dl_to,
         };
-        this._waitClassif.openClassif(config)
-        .finally(() => {
-            console.log('работа завершилась');
-        });
+        this._waitClassif.openClassif(config);
     }
 
 }
