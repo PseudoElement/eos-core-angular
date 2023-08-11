@@ -568,7 +568,6 @@ export class NodeActionsComponent implements OnDestroy {
                     if(this.dictionary.id === 'departments') {
                         _show = true;
                         if(this._markedNodes.length === 1 && this._markedNodes[0].data.rec.IS_NODE === 1) {
-                            console.log('this._markedNodes', this._markedNodes)
                             _enabled = this._eaps.checkAccessTransferDocuments(this._markedNodes[0]);
                         } else {
                             _enabled = false;
