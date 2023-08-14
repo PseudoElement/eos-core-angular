@@ -24,7 +24,7 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
     initProt(): Promise<any> {
         this.prepareDataParam();
         return this.pip.read<USER_PARMS>({
-            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'VIEWPROT' })
+            USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'VIEWPROT', 'ISN_USER_OWNER': -99 })
         })
             .then(data => {
                 this.prepareData = this.convData(data);
