@@ -2,7 +2,6 @@
     class="eos-adm-alert"
     [type]="message.type"
     [dismissible]="true"
-    (click)="onClose(message)"
     [dismissOnTimeout]="message.dismissOnTimeout">
     <div class="alert-icon">
         <!-- <span [ngClass]="'eos-adm-icon eos-adm-icon-close-white'"></span> -->
@@ -13,11 +12,14 @@
             'eos-adm-icon-info-white': message.type==='info' || message.type==='warning'}"></span>
     </div>
     <div class="alert-body">
-        <span>
-                <ng-container *ngIf="message.title && message.title.length">
-                    {{message.title}}<br>
-                </ng-container>
-                    {{message.msg}}
-        </span>
+            <div class="alert-body-content">
+                    <ng-container *ngIf="message.title && message.title.length">
+                        {{message.title}}<br>
+                    </ng-container>
+                        {{message.msg}}
+            </div>
+            <div *ngIf="message.type === 'warning'" class="alert-body-close-btn">
+                <button type="button" class="btn btn-primary-full" (click)="onClose(message)">ЗАКРЫТЬ</button>
+            </div>
     </div>
 </alert>

@@ -61,8 +61,8 @@ export class SystemTechnologistGuard implements CanActivate {
     }
 
     private showMessage(conf: IKeyRightTech) {
-        const msg = conf.name ? `У Вас нет права изменять параметры модуля "${conf.name}"` :
-                        `У Вас нет права изменять параметры модуля`
+        const commonText = 'У Вас нет права изменять параметры модуля'
+        const msg = conf.name ? `${commonText} "${conf.name}"` :`${commonText}`
         this.msgSrv.addNewMessage({
             type: 'warning',
             title: '',

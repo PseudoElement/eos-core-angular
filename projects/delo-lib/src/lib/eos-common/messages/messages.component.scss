@@ -38,15 +38,19 @@
         background-color: $brand-danger;
     }
     .alert-body {
-        height: 46px;
-        display: table-cell;
-        vertical-align: middle;
+        min-height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         padding-left: 20px;
-        padding-right: 20px;
+        padding-right: 16px;
         color: #000000;
         .cabinet-warning {
             display: flex;
             flex-direction: column;
+        }
+        .alert-body-close-btn{
+            margin-left: 32px;
         }
     }
 }

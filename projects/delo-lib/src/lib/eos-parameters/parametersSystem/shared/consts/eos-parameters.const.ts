@@ -123,7 +123,6 @@ export const PARM_CANCEL_CHANGE: IMessage = {
     type: 'warning',
     title: 'Изменения не сохранены',
     msg: '',
-    dismissOnTimeout: 2000
 };
 export const PARM_CHANGE_RC_RES_LAYER: IMessage = {
     type: 'warning',
@@ -153,7 +152,6 @@ export const ELEMENT_PROTECT_NOT_DELET: IMessage = {
     type: 'warning',
     title: 'Изменения сохранены',
     msg: 'Нельзя удалить общий профиль "{{prot}}"',
-    dismissOnTimeout: 2000
 };
 
 export const REG_RANGE_0_30 = /^[1-2]?\d$|^30$/;
