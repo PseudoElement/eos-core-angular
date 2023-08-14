@@ -1,8 +1,9 @@
+import { E_DICTIONARY_ID } from '../enum/dictionaryId.enum';
 import { IDictionaryDescriptor } from '../../../../eos-dictionaries/interfaces';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 
 export const SEV_ASSOCIATION_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
-    id: 'sev-association',
+    id: E_DICTIONARY_ID.SEV_ASSOCIATION,
     apiInstance: 'SEV_ASSOCIATION',
     title: 'Индексы СЭВ',
     defaultOrder: 'OBJECT_NAME',

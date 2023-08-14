@@ -26,6 +26,7 @@ import { COLLISIONS_SEV_DICT } from '../../eos-dictionaries/consts/dictionaries/
 import { SEV_COLLISION_OPTIONS } from '../../eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     selector: 'eos-card-edit',
@@ -75,17 +76,17 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     getNewData(): any {
         this._setInitialData();
         const newData = EosUtils.deepUpdate(Object.assign({}, this.data), this.newData);
-        if (this.dictionaryId === 'broadcast-channel') {
+        if (this.dictionaryId === E_DICTIONARY_ID.BROADCAST_CHANNEL) {
             this._channelSrv.data = newData.rec;
             newData.rec['PARAMS'] = this._channelSrv.toXml();
-        } else if (this.dictionaryId === 'organization') {
+        } else if (this.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
             if (newData.rec['ISN_ADDR_CATEGORY'] !== null) {
                 newData.rec['ISN_ADDR_CATEGORY'] = +newData.rec['ISN_ADDR_CATEGORY'];
             }
             if (newData.rec['ISN_REGION'] !== null) {
                 newData.rec['ISN_REGION'] = +newData.rec['ISN_REGION'];
             }
-        } else if (this.dictionaryId === 'sev-rules') {
+        } else if (this.dictionaryId === E_DICTIONARY_ID.RULES_SEV) {
             this._rulesSrv.data = newData.rec;
             newData.rec['SCRIPT_CONFIG'] = this._rulesSrv.scriptConfigToXml();
             newData.rec['FILTER_CONFIG'] = this._rulesSrv.filterConfigToXml();
@@ -103,7 +104,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                     newData.rec['PRJ_AUTO_REG'] = 1;
                 }
             }
-        } else if (this.dictionaryId === 'departments') {
+        } else if (this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS) {
             if (newData.printInfo['SURNAME'] === null && newData.rec['SURNAME']) {
                 newData.printInfo['SURNAME'] = newData.rec['SURNAME'].split(' ')[0];
             }
@@ -111,7 +112,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         return newData;
     }
     resetData() {
-        if (this.dictionaryId === 'departments') {
+        if (this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS) {
             Object.keys(this.data).forEach((key) => {
                 if (this.data[key] && this.data[key]._orig) {
                     Object.assign(this.data[key], this.data[key]._orig);
@@ -175,7 +176,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                             allOwners.push(this.newData.owners[+index]);
                         }
                     });
-                    if (this.dictionaryId === 'cabinet') {
+                    if (this.dictionaryId === E_DICTIONARY_ID.CABINET) {
                         this.newData.owners = allOwners;
                     }
                     this.formChanged.emit(changed);
@@ -311,7 +312,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         this.subscriptions = [];
     }
     private _setInitialData() {
-        if (this.dictionaryId === 'departments' && this.data.rec && !this.data.rec._orig) {
+        if (this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS && this.data.rec && !this.data.rec._orig) {
             Object.keys(this.data).forEach((key) => {
                 if (this.data[key] && !this.data[key]._orig) {
                     this._initialData[key] = {...this.data[key]};

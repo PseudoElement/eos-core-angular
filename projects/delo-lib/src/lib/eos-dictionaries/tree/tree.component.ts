@@ -2,6 +2,7 @@ import { Component, Input, OnInit, HostListener, OnChanges, SimpleChanges } from
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { Router } from '@angular/router';
 import { EosDictService } from '../services/eos-dict.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 const BIG_PANEL = 340,
     SMALL_PANEL = 260,
@@ -28,7 +29,7 @@ export class TreeComponent implements OnInit, OnChanges {
         this.onResize();
     }
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty('filters') && this._dictSrv.currentDictionary.id === 'departments') {
+        if (changes.hasOwnProperty('filters') && this._dictSrv.currentDictionary.id === E_DICTIONARY_ID.DEPARTMENTS) {
             this.updateTreeForFilters(this.nodes);
         }
     }

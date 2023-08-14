@@ -1,39 +1,13 @@
 import { Injectable } from '@angular/core';
 import { DictionaryDescriptor } from '../../eos-dictionaries/core/dictionary-descriptor';
 import { EosDictionaryNode } from '../../eos-dictionaries/core/eos-dictionary-node';
+import { PROTOCOL_ID } from '../consts/protocolId.const';
 
 @Injectable({ providedIn: 'root' })
 export class ViewProtocolServices {
     public defaultPath: string = '../WebRC/Pages/ProtView.html';
-    private protocolIds: { [key: string]: string } = {
-        'security': 'T',
-        'delivery': 'DLV',
-        'sign-kind': 'SGN', // -
-        'eds-category': 'EDS',
-        'addr-category': 'ADR',
-        'resolution-category': 'RCT',
-        'templates': 'DTM',
-        'reprj-priority': 'RPR',
-        'region': 'REG',
-        'rubricator': 'RUB',
-        'status-reply': 'SRP',
-        'status-exec': 'SEC',
-        'sev-rules': 'SRL',
-        'sev-collisions': '',
-        'broadcast-channel': 'SCH',
-        'sev-participant': 'SPT',
-        'cistatus': 'CST',
-        'visa-type': 'VTS',
-        'org-type': 'OTY',
-        'reestrtype': 'REE',
-        'link': 'LNK',
-        'filetype': 'FTP',
-        'type-docum': 'DVD', // -
-        'departments': 'I',
-        'docgroup': 'G',
-        'organization': 'Z',
-        'citizens': 'C'
-    };
+    private protocolIds: { [key: string]: string } = PROTOCOL_ID;
+
     private windowProtocol: Window;
     public getUrlProtocol(descriptor: DictionaryDescriptor, nodes: EosDictionaryNode[]): void {
         if (nodes[0] && nodes[0].id) {

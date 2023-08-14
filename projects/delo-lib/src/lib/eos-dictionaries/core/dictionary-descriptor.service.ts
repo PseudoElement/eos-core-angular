@@ -39,6 +39,7 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
 import { DictionaryOverrideService } from '../../eos-rest';
 import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -60,7 +61,7 @@ export class DictionaryDescriptorService {
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
         if (!this._appContext.sreamScane) {
             DICTIONARIES.forEach((item) => {
-                if (item.id === 'format') {
+                if (item.id === E_DICTIONARY_ID.FORMAT) {
                     item.visible = false;
                 }
             });
@@ -89,7 +90,7 @@ export class DictionaryDescriptorService {
             //     }
             // })
             .forEach((dict) => {
-                if (this._appContext.cbBase && dict.id === 'sev-participant') {
+                if (this._appContext.cbBase && dict.id === E_DICTIONARY_ID.PARTICIPANT_SEV) {
                     dict['allVisibleFields'] = dict['allVisibleFields'].filter((field) => field !== 'CRYPT');
                     dict['fieldDefault'] = dict['fieldDefault'].filter((field) => field !== 'CRYPT');
                     dict['quickViewFields'] = dict['quickViewFields'].filter((field) => field !== 'CRYPT');
@@ -118,19 +119,19 @@ export class DictionaryDescriptorService {
             const descr = this.getDescriptorData(name);
             if (descr) {
                 switch (descr.id) {
-                    case 'departments':
+                    case E_DICTIONARY_ID.DEPARTMENTS:
                         res = new DepartmentDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'organization':
+                    case E_DICTIONARY_ID.ORGANIZ:
                         res = new OrganizationDictionaryDescriptor(descr, this.apiSrv, this._GraphQLService);
                         break;
-                    case 'broadcast-channel':
+                    case E_DICTIONARY_ID.BROADCAST_CHANNEL:
                         res = new BroadcastChanelDictionaryDescriptor(descr, this.apiSrv, this._channelSrv);
                         break;
-                    case 'sev-rules':
+                    case E_DICTIONARY_ID.RULES_SEV:
                         res = new SevRulesDictionaryDescriptor(descr, this.apiSrv, this._rulesSrv);
                         break;
-                    case 'cabinet':
+                    case E_DICTIONARY_ID.CABINET:
                         res = new CabinetDictionaryDescriptor(descr, this.apiSrv, this._confirmSrv);
                         break;
                     case CA_CATEGORY_CL.id:
@@ -139,37 +140,37 @@ export class DictionaryDescriptorService {
                     case ADDR_CATEGORY_DICT.id:
                         res = new AddrCategoryDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'docgroup':
+                    case E_DICTIONARY_ID.DOCGROUP:
                         res = new DocgroupDictionaryDescriptor(descr, this.apiSrv, this._injector);
                         break;
-                    case 'sev-collisions':
+                    case E_DICTIONARY_ID.COLLISIONS_SEV:
                         res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case PARTICIPANT_SEV_DICT.id:
                         res = new SevParticipantDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'link':
+                    case E_DICTIONARY_ID.LINK:
                         res = new LinkDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case NOMENKL_DICT.id:
                         res = new NomenklDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'reestrtype':
+                    case E_DICTIONARY_ID.REESTRTYPE:
                         res = new ReestrtypeDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'templates':
+                    case E_DICTIONARY_ID.TEMPLATES:
                         res = new TemplateDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case CALENDAR_DICT.id:
                         res = new CalendarDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'citizens':
+                    case E_DICTIONARY_ID.CITIZENS:
                         res = new CitizensDictionaryDescriptor(descr, this.apiSrv, this._GraphQLService);
                         break;
-                    case 'format':
+                    case E_DICTIONARY_ID.FORMAT:
                         res = new FormatDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'medo-node-cl':
+                    case E_DICTIONARY_ID.MEDO_NODE:
                         res = new MedoNodeDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case FILE_CATEGORIES_DICT.id:

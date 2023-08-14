@@ -2,9 +2,10 @@ import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const STATUS_REPLY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'status-reply',
+    id: E_DICTIONARY_ID.STATUS_REPLY,
     apiInstance: 'STATUS_REPLY_CL',
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'restore',

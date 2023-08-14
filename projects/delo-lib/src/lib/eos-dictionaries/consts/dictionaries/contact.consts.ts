@@ -2,6 +2,7 @@ import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { environment } from '../../../environments/environment';
 import { ISelectOption } from '../../../eos-common/interfaces';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const MAIL_FORMATS: ISelectOption[] = [
     { value: 1, title: 'Старый паспорт' },
@@ -10,7 +11,7 @@ export const MAIL_FORMATS: ISelectOption[] = [
 ];
 
 export const CONTACT_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'contact',
+    id: E_DICTIONARY_ID.CONTACT,
     apiInstance: 'CONTACT',
     title: 'Контакты',
     iconName: '',

@@ -1,9 +1,10 @@
 import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME } from './_common';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const RESPRJ_PRIORITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'reprj-priority',
+    id: E_DICTIONARY_ID.RESPRJ_PRIORITY,
     apiInstance: 'RESPRJ_PRIORITY_CL',
     title: 'Приоритеты проектов резолюций',
     actions: [

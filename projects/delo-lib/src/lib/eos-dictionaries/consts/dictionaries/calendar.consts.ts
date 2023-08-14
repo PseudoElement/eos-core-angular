@@ -1,7 +1,8 @@
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { E_DICT_TYPE, IFormDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 
 export const CALENDAR_DICT: IFormDictionaryDescriptor = {
-    id: 'calendar',
+    id: E_DICTIONARY_ID.CALENDAR,
     apiInstance: 'CALENDAR_CL',
     title: 'Ведение календаря',
     visible: true,

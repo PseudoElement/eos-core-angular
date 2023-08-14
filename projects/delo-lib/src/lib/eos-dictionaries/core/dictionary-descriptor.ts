@@ -7,6 +7,7 @@ import { IRecordOperationResult } from '../../eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_CHANGE_CONFIDENTIONAL_FLAG } from '../../app/consts/confirms.const';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
     record: RecordDescriptor;
@@ -62,7 +63,7 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
         // return this.getData();
     }
     confirmSave(nodeData: EosDictionaryNode, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
-        if (this.id === 'security' && !isNewRecord) {
+        if (this.id === E_DICTIONARY_ID.SECURITY && !isNewRecord) {
             if (nodeData['rec'].CONFIDENTIONAL !== nodeData['rec']._orig.CONFIDENTIONAL) {
                 const query1 = this.apiSrv.read({ PRJ_RC: { criteries: { SECURLEVEL: nodeData['rec'].SECURLEVEL } } });
                 const query2 = this.apiSrv.read({ REF_FILE: { criteries: { SECURLEVEL: nodeData['rec'].SECURLEVEL } } });

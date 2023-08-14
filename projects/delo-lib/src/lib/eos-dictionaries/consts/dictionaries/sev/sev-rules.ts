@@ -1,6 +1,6 @@
-import {IDictionaryDescriptor} from '../../../../eos-dictionaries/interfaces';
-import {LINEAR_TEMPLATE } from '../_linear-template';
-import { COMMON_FIELD_NOTE} from '../_common';
+import { IDictionaryDescriptor } from '../../../../eos-dictionaries/interfaces';
+import { LINEAR_TEMPLATE } from '../_linear-template';
+import { COMMON_FIELD_NOTE } from '../_common';
 // import {DOCGROUP_DICT} from '../docgroup.consts';
 import {
     ADDRESS_REPLACE,
@@ -12,15 +12,16 @@ import {
     RESOLUTION_KIND, SIGNATURES_KIND,
     TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE, RESEVER_SELECT, NAME_OF_RULE
 } from './types.consts';
-import {SECURITY_DICT} from '../security.consts';
-import {ORG_TYPE_DICT} from '../org-type.consts';
-import {CONTACT_DICT} from '../contact.consts';
-import {ORGANIZ_DICT} from '../organiz.consts';
+import { SECURITY_DICT } from '../security.consts';
+import { ORG_TYPE_DICT } from '../org-type.consts';
+import { CONTACT_DICT } from '../contact.consts';
+import { ORGANIZ_DICT } from '../organiz.consts';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { SEARCH_TYPES } from '../../../../eos-dictionaries/consts/search-types';
+import { E_DICTIONARY_ID } from '../enum/dictionaryId.enum';
 
 export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
-    id: 'sev-rules',
+    id: E_DICTIONARY_ID.RULES_SEV,
     apiInstance: 'SEV_RULE',
     visible: true,
     iconName: 'eos-adm-icon-rules-blue',

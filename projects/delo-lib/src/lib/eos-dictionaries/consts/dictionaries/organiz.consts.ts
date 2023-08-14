@@ -6,10 +6,11 @@ import { Features } from '../../../eos-dictionaries/features/features-current.co
 import { EOSDICTS_VARIANT } from '../../../eos-dictionaries/features/features.interface';
 import { DIGIT3_PATTERN } from '../../../eos-common/consts/common.consts';
 import { ADDR_CATEGORY_DICT } from './addr-category.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 
 export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
-    id: 'organization',
+    id: E_DICTIONARY_ID.ORGANIZ,
     apiInstance: 'ORGANIZ_CL',
     // dictType: E_DICT_TYPE.tree,
     title: 'Организации',

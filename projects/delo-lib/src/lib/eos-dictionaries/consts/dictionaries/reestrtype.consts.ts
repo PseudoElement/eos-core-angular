@@ -3,9 +3,10 @@ import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME } from './_common';
 import { ADDR_CATEGORY_DICT } from './addr-category.consts';
 import { DELIVERY_DICT } from './delivery.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'reestrtype',
+    id: E_DICTIONARY_ID.REESTRTYPE,
     apiInstance: 'REESTRTYPE_CL',
     title: 'Типы реестров',
     visible: true,

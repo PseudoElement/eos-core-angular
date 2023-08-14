@@ -5,9 +5,10 @@ import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from '../_common';
 import {AUTH_METHOD, CHANNEL_TYPE, ENCRYPTION_TYPE} from './types.consts';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { VALID_REQ_STRING } from '../../../../eos-common/consts/common.consts';
+import { E_DICTIONARY_ID } from '../enum/dictionaryId.enum';
 
 export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
-    id: 'broadcast-channel', // 'userOrderCut', 'userOrderPaste',
+    id: E_DICTIONARY_ID.BROADCAST_CHANNEL, // 'userOrderCut', 'userOrderPaste',
     apiInstance: 'SEV_CHANNEL',
     visible: true,
     iconName: 'eos-adm-icon-move-2d-blue',

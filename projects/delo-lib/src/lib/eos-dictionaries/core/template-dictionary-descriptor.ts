@@ -4,6 +4,7 @@ import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from '../../eos-dictionaries/interfaces';
 import { CustomTreeNode } from '../tree2/custom-tree.component';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 // interface TreeTempl {
 //     id: string;
@@ -221,7 +222,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 const TEMPLATE_ID: string = Number.isInteger(index) ? String(index) : index.toFixed(1);
                 const NODE_TEMPLATE = {
                     title: TEMPLATE_NAME, parent: '0.', id: TEMPLATE_ID, isNode: true, isDeleted: false, isActive: false,
-                    expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', 'templates', TEMPLATE_ID],
+                    expandable: false, isExpanded: false, isClickable: true, updating: false, path: ['spravochniki', E_DICTIONARY_ID.TEMPLATES, TEMPLATE_ID],
                     visibleFilter: true, children: []
                 };
                 this.tree.push(NODE_TEMPLATE);
@@ -229,7 +230,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
             }
             const newHead = [{
                 title: 'Шаблоны', parent: null, id: '0.', isNode: true, isDeleted: false, isActive: true,
-                expandable: true, isExpanded: true, isClickable: true, updating: false, path: ['spravochniki', 'templates', '0.'],
+                expandable: true, isExpanded: true, isClickable: true, updating: false, path: ['spravochniki', E_DICTIONARY_ID.TEMPLATES, '0.'],
                 visibleFilter: true, children: []
             }];
             this.tree.sort((el1: CustomTreeNode, el2: CustomTreeNode) => {

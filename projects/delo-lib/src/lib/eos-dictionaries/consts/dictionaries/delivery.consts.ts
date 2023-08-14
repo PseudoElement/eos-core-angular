@@ -1,9 +1,10 @@
 import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME } from './_common';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const DELIVERY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'delivery',
+    id: E_DICTIONARY_ID.DELIVERY,
     apiInstance: 'DELIVERY_CL',
     title: 'Виды доставки',
     visible: true,

@@ -6,6 +6,7 @@ import { EosDictService } from '../../eos-dictionaries/services/eos-dict.service
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     selector: 'eos-node-info',
@@ -25,12 +26,12 @@ export class NodeInfoComponent extends BaseNodeInfoComponent implements OnDestro
         this.updateFields(); //  костыль к багу 116332, переделать
     }
     updateFields() {
-        if (this.dictSrv.currentDictionary.id  === 'sev-participant') {
+        if (this.dictSrv.currentDictionary.id  === E_DICTIONARY_ID.PARTICIPANT_SEV) {
             if (this._appCtx.cbBase && this.fieldsDescriptionFull.rec) {
                 delete this.fieldsDescriptionFull.rec['CRYPT'];
             }
         }
-        if (this.dictSrv.currentDictionary.id  === 'sev-rules' && Object.keys(this.nodeDataFull).length > 0 && this.node) {
+        if (this.dictSrv.currentDictionary.id  === E_DICTIONARY_ID.RULES_SEV && Object.keys(this.nodeDataFull).length > 0 && this.node) {
             this.nodeDataFull.rec['DUE_DOCGROUP_NAME'] = this.node.data.DOCGROUP_Ref[0]['CLASSIF_NAME'];
             this.fieldsDescriptionFull.rec['DUE_DOCGROUP_NAME'].logDelet = this.node.data.DOCGROUP_Ref[0]['DELETED'];
         }

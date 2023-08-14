@@ -6,6 +6,7 @@ import { REGION_DICT } from './region.consts';
 import { ADDR_CATEGORY_DICT } from './addr-category.consts';
 import { MAIL_FORMATS } from './contact.consts';
 import {GENDERS_CITIZEN } from './department.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 
 
@@ -44,7 +45,7 @@ import {GENDERS_CITIZEN } from './department.consts';
 
 /* tslint:disable:max-line-length */
 export const CITIZENS_DICT: IDictionaryDescriptor = {
-    id: 'citizens',
+    id: E_DICTIONARY_ID.CITIZENS,
     apiInstance: 'CITIZEN',
     dictType: E_DICT_TYPE.linear,
     defaultOrder: 'CITIZEN_SURNAME',

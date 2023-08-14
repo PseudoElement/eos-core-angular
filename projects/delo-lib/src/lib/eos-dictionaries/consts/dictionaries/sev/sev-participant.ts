@@ -5,9 +5,10 @@ import { COMMON_FIELD_NAME } from '../_common';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
 import { SEARCH_TYPES } from '../../../../eos-dictionaries/consts/search-types';
+import { E_DICTIONARY_ID } from '../enum/dictionaryId.enum';
 
 export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
-    id: 'sev-participant',
+    id: E_DICTIONARY_ID.PARTICIPANT_SEV,
     apiInstance: 'SEV_PARTICIPANT',
     title: 'Участники СЭВ',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste',

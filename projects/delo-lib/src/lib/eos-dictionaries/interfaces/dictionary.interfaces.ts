@@ -222,6 +222,3 @@ export interface SearchProtocol {
     USER_ISN:number | null;
 }
 
-export interface ProtoIdOperation {
-    [key:string] : string[]
-}

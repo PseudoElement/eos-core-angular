@@ -5,6 +5,7 @@ import { IDictionaryDescriptor } from '../../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from '../_linear-template';
 import { Features } from '../../../../eos-dictionaries/features/features-current.const';
 import { BROADCAST_CHANNEL_DICT } from './sev-broadcast-channel';
+import { E_DICTIONARY_ID } from '../enum/dictionaryId.enum';
 
 export const SEV_DICTIONARIES = [
     PARTICIPANT_SEV_DICT,
@@ -15,7 +16,7 @@ export const SEV_DICTIONARIES = [
 ];
 
 export const SEV_FOLDER: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'SEV',
+    id: E_DICTIONARY_ID.SEV_FOLDER,
     isFolder: true,
     title: 'Справочники СЭВ',
     visible: Features.cfg.SEV.isDictsEnabled,

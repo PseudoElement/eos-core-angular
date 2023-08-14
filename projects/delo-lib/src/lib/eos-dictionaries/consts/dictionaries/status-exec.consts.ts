@@ -1,9 +1,10 @@
 import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME } from './_common';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const STATUS_EXEC_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'status-exec',
+    id: E_DICTIONARY_ID.STATUS_EXEC,
     apiInstance: 'STATUS_EXEC_CL',
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'userOrderCut', 'userOrderPaste', 'restore',

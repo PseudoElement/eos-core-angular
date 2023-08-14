@@ -1,8 +1,7 @@
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { E_DICT_TYPE, IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 
-/*
-*/
 const FORMAT_TNAME_OPTIONS = [
     { value: 'txt', title: 'TXT' },
     { value: 'rtf', title: 'RTF' },
@@ -33,7 +32,7 @@ const COMPR_OPTIONS = [
     {value: 5, title: 'JPEG'},
 ];
 export const FORMAT_DICT: IDictionaryDescriptor = {
-    id: 'format',
+    id: E_DICTIONARY_ID.FORMAT,
     apiInstance: 'FORMAT_CL',
     dictType: E_DICT_TYPE.linear,
     title: 'Форматы сохранения',

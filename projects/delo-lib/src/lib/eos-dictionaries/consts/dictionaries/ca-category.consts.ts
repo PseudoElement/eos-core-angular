@@ -1,10 +1,11 @@
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { EDS_CATEGORY_CL_CONTS } from './category-eds.consts';
 
 export const CA_CATEGORY_CL: IDictionaryDescriptor =
     Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'ca-category',
+    id: E_DICTIONARY_ID.CA_CATEGORY_CL,
     folder: EDS_CATEGORY_CL_CONTS.id,
     apiInstance: 'CA_CATEGORY',
     title: 'Корневые сертификаты УЦ',

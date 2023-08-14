@@ -31,6 +31,7 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
 import { NpCounterOverrideService } from '../../eos-rest';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 
 @Component({
@@ -282,7 +283,7 @@ export class NodeActionsComponent implements OnDestroy {
             switch (button.type) {
                 case E_RECORD_ACTIONS.add:
                     _enabled = !_isLDSubTree && !this._viewParams.updatingList;
-                    if (this.dictionary.id === 'nomenkl' && _enabled) {
+                    if (this.dictionary.id === E_DICTIONARY_ID.DID_NOMENKL_CL && _enabled) {
                         const activeNode = this.dictionary.descriptor.getActive();
                         const isHighestNode = activeNode && activeNode.id === '0.';
                         _enabled = !isHighestNode;
@@ -322,14 +323,14 @@ export class NodeActionsComponent implements OnDestroy {
                     _active = _enabled && this._viewParams.userOrdered;
                     break;
                 case E_RECORD_ACTIONS.export:
-                    if (this.dictionary.id === 'sign-kind' || this.dictionary.id === 'eds-category') {
+                    if (this.dictionary.id === E_DICTIONARY_ID.SIGN_KIND || this.dictionary.id === E_DICTIONARY_ID.EDS_CATEGORY_CL) {
                         _show = false;
                     }
                     _enabled = true;
                     _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.import:
-                    if (this.dictionary.id === 'sign-kind' || this.dictionary.id === 'eds-category') {
+                    if (this.dictionary.id === E_DICTIONARY_ID.SIGN_KIND || this.dictionary.id === E_DICTIONARY_ID.EDS_CATEGORY_CL) {
                         _show = false;
                     } else {
                         _enabled = true;
@@ -338,7 +339,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.remove: {
                     _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
-                    if (this.dictionary.id === 'organization') {
+                    if (this.dictionary.id === E_DICTIONARY_ID.ORGANIZ) {
                         _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
                     }
                     break;
@@ -346,7 +347,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.restore: {
                     _enabled = !_isLDSubTree && !this._viewParams.updatingList;
                     _enabled = _enabled && opts.listHasDeleted;
-                    if (this.dictionary.id === 'organization') {
+                    if (this.dictionary.id === E_DICTIONARY_ID.ORGANIZ) {
                         _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
                     }
                     break;
@@ -377,7 +378,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.removeHard:
                     _enabled = _enabled && opts.listHasItems;
-                    if (this.dictionary.id === 'organization') {
+                    if (this.dictionary.id === E_DICTIONARY_ID.ORGANIZ) {
                         _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
                     }
                     break;
@@ -398,7 +399,7 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled =  this._dictSrv.dictionatyOverrideSrv.accessActionEdit(this._markedNodes[0], _enabled, this.dictionary.id);
                     }
 
-                    if (this.dictionary.id === 'organization') {
+                    if (this.dictionary.id === E_DICTIONARY_ID.ORGANIZ) {
                         _enabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.combine, _enabled, this._markedNodes);
                     }
 
@@ -408,7 +409,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.userOrder:
                     _enabled = _enabled && !this._viewParams.searchResults;
-                    if (this.dictionary.id === 'nomenkl' && _enabled) {
+                    if (this.dictionary.id === E_DICTIONARY_ID.DID_NOMENKL_CL && _enabled) {
                         const activeNode = this.dictionary.descriptor.getActive();
                         const isHighestNode = activeNode && activeNode.id === '0.';
                         _enabled = !isHighestNode;
@@ -417,11 +418,11 @@ export class NodeActionsComponent implements OnDestroy {
                     _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.sevSyncDicts:
-                    _show = this.dictionary.id === 'sev-participant';
+                    _show = this.dictionary.id === E_DICTIONARY_ID.PARTICIPANT_SEV;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     break;
                 case E_RECORD_ACTIONS.sevClearIdentityCodes:
-                    _show = this.dictionary.id === 'sev-participant';
+                    _show = this.dictionary.id === E_DICTIONARY_ID.PARTICIPANT_SEV;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     break;
                 case E_RECORD_ACTIONS.showAllSubnodes:
@@ -545,7 +546,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && (marketN && marketN.length > 0);
                     if (_enabled && dueTo) {
                         _enabled = !marketN.some((node) => dueTo.indexOf(node.id) !== -1);
-                        if (this.dictionary.descriptor.id !== 'departments' && marketN[0].parentId === dueTo) {
+                        if (this.dictionary.descriptor.id !== E_DICTIONARY_ID.DEPARTMENTS && marketN[0].parentId === dueTo) {
                             _enabled = false;
                         }
                     }
@@ -557,7 +558,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.dopRequisites:
-                    if ((this.dictionary.id === 'organization' || this.dictionary.id === 'citizens') && _enabled) {
+                    if ((this.dictionary.id === E_DICTIONARY_ID.ORGANIZ || this.dictionary.id === E_DICTIONARY_ID.CITIZENS) && _enabled) {
                         _enabled = this._eaps.checkAccessTech(E_TECH_RIGHT.ArrDescripts);
                     }
                     break;
@@ -565,7 +566,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = this._eaps.checkBaseDepartmentRight();
                     break;
                 case E_RECORD_ACTIONS.transferDocuments:
-                    if(this.dictionary.id === 'departments') {
+                    if(this.dictionary.id === E_DICTIONARY_ID.DEPARTMENTS) {
                         _show = true;
                         if(this._markedNodes.length === 1 && this._markedNodes[0].data.rec.IS_NODE === 1) {
                             _enabled = this._eaps.checkAccessTransferDocuments(this._markedNodes[0]);
@@ -587,7 +588,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
             }
 
-            if (this.dictionary.id === 'nomenkl' && _enabled) {
+            if (this.dictionary.id === E_DICTIONARY_ID.DID_NOMENKL_CL && _enabled) {
                 _enabled = this._checkNomenklHighestNode(_enabled, button.type);
             }
         }
@@ -623,17 +624,17 @@ export class NodeActionsComponent implements OnDestroy {
             * Сам справочник FORMAT_CL доступен при this.appCtx.CurrentUser['STREAM_SCAN_RIGHTS'][1]
             * Так что если мы в него вошли то уже можем делать отображение логически удалённых
             */
-            if (this.dictionary.id === 'format') {
+            if (this.dictionary.id === E_DICTIONARY_ID.FORMAT) {
                 return true;
             }
             return this._eaps.checkShowDeleted(this.dictionary.id);
         } else if (this.dictionary && this.dictionary.id) {
             const forDicts = [
                 'rubricator',
-                'docgroup',
-                'departments',
-                'nomenkl',
-                'cabinet',
+                E_DICTIONARY_ID.DOCGROUP,
+                E_DICTIONARY_ID.DEPARTMENTS,
+                E_DICTIONARY_ID.DID_NOMENKL_CL,
+                E_DICTIONARY_ID.CABINET
             ];
             const forButtons = [
                 E_RECORD_ACTIONS.add,
@@ -654,8 +655,9 @@ export class NodeActionsComponent implements OnDestroy {
             }
         } else if (
             button.type === E_RECORD_ACTIONS.copyPropertiesFromParent &&
-            this.dictionary.id === 'docgroup' &&
-            this._markedNodes && this._markedNodes.length
+            this.dictionary.id === E_DICTIONARY_ID.DOCGROUP &&
+            this._markedNodes && 
+            this._markedNodes.length
         ) {
             let commonGrant = APS_DICT_GRANT.readwrite;
             this._markedNodes.every((node) => {

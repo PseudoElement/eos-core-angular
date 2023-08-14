@@ -1,9 +1,10 @@
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { E_DICT_TYPE, IFieldPreferences, IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const FILE_CATEGORIES_DICT: IDictionaryDescriptor = {
-    id: 'file-category',
+    id: E_DICTIONARY_ID.FILE_CATEGORIES,
     apiInstance: 'FILE_CATEGORY_CL',
     dictType: E_DICT_TYPE.linear,
     title: 'Категории файлов',

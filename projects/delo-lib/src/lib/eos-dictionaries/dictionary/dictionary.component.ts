@@ -35,7 +35,7 @@ import { IPaginationConfig } from '../../eos-common/interfaces/interfaces';
 import { CounterNpEditComponent, E_COUNTER_TYPE } from '../counter-np-edit/counter-np-edit.component';
 import { CustomTreeNode } from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from '../../eos-dictionaries/services/eos-access-permissions.service';
-import { DID_NOMENKL_CL, NOMENKL_DICT } from '../../eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { NOMENKL_DICT } from '../../eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { takeUntil } from 'rxjs/operators';
 import { SevSyncDictsComponent } from '../sev-modals/sev-sync-dicts/sync-dicts.component';
 import { PipRX } from '../../eos-rest/services/pipRX.service';
@@ -85,6 +85,7 @@ import { DictionaryDescriptor } from '../../eos-dictionaries/core/dictionary-des
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { CONFIRM_OPERATION_HARDDELETE_COPY_MASSAGE } from '..';
 import { E_TECH_RIGHT } from '../../eos-rest/interfaces/rightName';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -232,7 +233,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
                             this._dictSrv.setMarkAllNone();
                             if (this._dictSrv.currentDictionary && this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
-                                if (this.dictionary.id === 'templates') {
+                                if (this.dictionary.id === E_DICTIONARY_ID.TEMPLATES) {
                                     this.dictionary.descriptor['top'] = this._nodeId;
                                 }
                                 this.dictionary.root.children = null;
@@ -402,7 +403,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     ngOnInit(): void {
         setTimeout(() => {
             this.setStyles();
-            if (this.dictionaryId === 'organization') {
+            if (this.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
                 this._npEditCountOverride.setOrgEditDeny()
                 .finally(() => {
                     this.isLoading = true;
@@ -540,7 +541,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
 
             case E_RECORD_ACTIONS.removeHard:
-                if (this.dictionaryId === 'nomenkl') {
+                if (this.dictionaryId === E_DICTIONARY_ID.DID_NOMENKL_CL) {
                     this._physicallyDeleteNomenkl();
                     return;
                 }
@@ -862,7 +863,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     hasFilter() {
-        if (this.dictionaryId === DID_NOMENKL_CL ||
+        if (this.dictionaryId === E_DICTIONARY_ID.DID_NOMENKL_CL ||
             (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0)) {
             return true;
         }
@@ -899,7 +900,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
      * add it to department organization if it exists upwards to tree
      */
     private _createRepresentative() {
-        if (this.dictionaryId === 'departments') {
+        if (this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS) {
             this._dictSrv.createRepresentative()
                 .then((results) => {
                     results.forEach((result) => {
@@ -933,7 +934,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
         const config = { class: 'creating-modal', ignoreBackdropClick: true };
 
-        if (dictionary.descriptor.id === 'broadcast-channel') {
+        if (dictionary.descriptor.id === E_DICTIONARY_ID.BROADCAST_CHANNEL) {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, config);
         } else {
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, config);
@@ -955,7 +956,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     private _openPageCitizens(openEdit: boolean, params) {
-        if (this.dictionaryId === 'organization') {
+        if (this.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
             if (params && params.IS_NODE && openEdit) {
                 this.openClassifGopRc(openEdit, params);
                 return;
@@ -983,14 +984,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const id = [];
         const node = this.dictionary.getNode(this._dictSrv.redactNodeId);
         const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId, params);
-        if (this.dictionaryId === 'organization' || this.dictionaryId === 'citizens') {
+        if (this.dictionaryId === E_DICTIONARY_ID.ORGANIZ || this.dictionaryId === E_DICTIONARY_ID.CITIZENS) {
             this.nodeList.nodes.forEach((node) => {
-                if (node.data['rec']['IS_NODE'] || this.dictionaryId === 'citizens') {
+                if (node.data['rec']['IS_NODE'] || this.dictionaryId === E_DICTIONARY_ID.CITIZENS) {
                     id.push(node.id);
                     rc.push(node.data['rec']['ISN_NODE']);
                 }
             });
-            if (this.dictionaryId === 'organization') {
+            if (this.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
                 datas.rc_id = rc.map((item) => String(item));
                 datas.due = id;
             } else {
@@ -1103,7 +1104,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                     if (confirmed) {
                         const needInclude = confirmed.result === 2;
                         let deletedLogickItem: string = 'DELETED';
-                        if (this.dictionaryId === 'format') {
+                        if (this.dictionaryId === E_DICTIONARY_ID.FORMAT) {
                             deletedLogickItem = 'DEL_COL';
                         }
                         this._dictSrv.setFlagForMarked(deletedLogickItem, needInclude, false)
@@ -1162,14 +1163,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
 
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
-        if (this.dictionaryId === 'cabinet') {
+        if (this.dictionaryId === E_DICTIONARY_ID.CABINET) {
             confirmDelete.bodyAfterList = '';
         }
         if (slicedNode) {
             confirmDelete.buttons = [];
         }
 
-        if (this.dictionaryId === 'sev-rules') {
+        if (this.dictionaryId === E_DICTIONARY_ID.RULES_SEV) {
             return this._dictSrv.readSevRule(selectedNodes).then(data => {
                 if (data.length) {
                     const part = data.filter((p) => p.PARTICIPANT.length > 0);
@@ -1314,7 +1315,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
                             .replace('{{OPERATION}}', 'удалены логически.');
                         let deletedLogickItem: string = 'DELETED';
-                        if (this.dictionaryId === 'format') {
+                        if (this.dictionaryId === E_DICTIONARY_ID.FORMAT) {
                             deletedLogickItem = 'DEL_COL';
                         }
                         return this._dictSrv.setFlagForMarked(deletedLogickItem, true, true).then((flag) => {
@@ -1384,7 +1385,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (!this._npEditCountOverride.validateOperation(this, type)) {
             return;
         }
-        if (this.dictionaryId !== 'departments' && this.dictionaryId !== 'docgroup') {
+        if (this.dictionaryId !== E_DICTIONARY_ID.DEPARTMENTS && this.dictionaryId !== E_DICTIONARY_ID.DOCGROUP) {
             this._msgSrv.addNewMessage(DANGER_EDIT_DICT_NOTALLOWED);
             return;
         }
@@ -1571,7 +1572,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._dictSrv.updateViewParameters({ updatingList: true });
         this._dictSrv.paste(slicedNode, dueTo, whenCopy)
             .then(async elem => {
-                if (this.dictionaryId === 'departments') {
+                if (this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS) {
                     this._dictSrv.getMarkedNodes().forEach(node => {
                         node.isMarked = false;
                     });
@@ -1618,7 +1619,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._dictSrv.closeDictionary();
         this._dictSrv.openDictionary(id).then(() => {
             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
-                if (this.dictionary.id === 'templates') {
+                if (this.dictionary.id === E_DICTIONARY_ID.TEMPLATES) {
                     this.dictionary.descriptor['top'] = this._nodeId;
                 }
                 this.dictionary.root.children = null;
@@ -1681,7 +1682,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             });
         }
         // const deletNode = this._checkDeletNode(slicedNode);
-        if (/* dueTo !== slicedNode[0]['parentId'] &&  */elementDelet.length > 0 && this.dictionaryId === 'departments') {
+        if (/* dueTo !== slicedNode[0]['parentId'] &&  */elementDelet.length > 0 && this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS) {
             this.modalWindow = this._modalSrv.show(DictionaryPasteComponent);
             if (elementAll.length === elementDelet.length) {
                 this.modalWindow.content.disabledFirst = true;
@@ -1708,7 +1709,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             /* case 'region':
                 message = 'Для объединения можно выбирать только регионы.';
                 break; */
-            case 'organization':
+            case E_DICTIONARY_ID.ORGANIZ:
                 const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
                     return !node.isNode;
                 });
@@ -1731,7 +1732,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _combine() {
         const slicedNode: EosDictionaryNode[] = this._storageSrv.getItem('markedNodes'); // this.nodeList.nodes.filter((node: EosDictionaryNode) => node.isSliced);
         const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) => {
-            if (this.dictionaryId === 'organization') {
+            if (this.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
                 if (node.isNode) {
                     node.isMarked = false;
                 }
@@ -1767,7 +1768,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const config: IOpenClassifParams = {
             classif: 'AR_EDITOR',
         };
-        config.id = this.dictionary.id !== 'citizens' ? 'organiz_cl' : 'citizen';
+        config.id = this.dictionary.id !== E_DICTIONARY_ID.CITIZENS ? 'organiz_cl' : E_DICTIONARY_ID.CITIZENS;
         this._waitClassif.openClassif(config).then(() => {
             this._dictSrv.updateDopRec();
             // this.resetSearch();
@@ -1787,7 +1788,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     private _checkDictionaryId(): boolean {
-        return ['citizens', 'organization'].some(id => {
+        return [
+            E_DICTIONARY_ID.CITIZENS,
+            E_DICTIONARY_ID.ORGANIZ,
+        ].some(id => {
             return id === this.dictionaryId;
         });
     }

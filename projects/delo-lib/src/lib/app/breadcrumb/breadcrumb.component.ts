@@ -22,6 +22,7 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 
 import { E_RECORD_ACTIONS } from '../../eos-dictionaries/';
 import { NpCounterOverrideService } from '../../eos-rest';
+import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     selector: 'eos-breadcrumb',
@@ -104,7 +105,7 @@ export class BreadcrumbsComponent implements OnDestroy {
                     }
                     this.isEditEnabled = (!n.isDeleted || Features.cfg.canEditLogicDeleted) && this.isEditGranted && this._calcisEditable(n);
                     this.isEditEnabled = this._dictSrv.dictionatyOverrideSrv.accessActionEdit(n,  this.isEditEnabled, this._dictSrv.currentDictionary.id);
-                    if (n.dictionaryId === 'organization') {
+                    if (n.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
                         const allCheck: any = [n];
                         this.isEditEnabled = this._npOverrideSrv.getDisableActionExpandOrganiz(E_RECORD_ACTIONS.edit, this.isEditEnabled, allCheck);
                     }

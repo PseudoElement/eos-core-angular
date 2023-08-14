@@ -8,10 +8,11 @@ import { InputBase } from '../../eos-common/core/inputs/input-base';
 import { InputControlService } from '../../eos-common/services/input-control.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from '../../eos-dictionaries/consts/search-types';
-import { DID_NOMENKL_CL, NOMENKL_DICT } from '../../eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { NOMENKL_DICT } from '../../eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { IBaseInput } from '../../eos-common/interfaces';
 import { YEAR_PATTERN } from '../../eos-common/consts/common.consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 
 @Component({
@@ -168,7 +169,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
             /* tslint:disable:no-bitwise */
             this.hasDate = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.dateFilter);
 
-            if (this.dictId === DID_NOMENKL_CL) {
+            if (this.dictId === E_DICTIONARY_ID.DID_NOMENKL_CL) {
                 const yearFilter = this.searchForm.controls['filter.stateYear'];
                 const cb1 = this.searchForm.controls['filter.CB1'];
                 const cb2 = this.searchForm.controls['filter.closed'];
@@ -189,7 +190,7 @@ export class DictionaryFilterComponent implements OnDestroy, OnInit {
 
             }
 
-            if (this.dictId === 'departments') {
+            if (this.dictId === E_DICTIONARY_ID.DEPARTMENTS) {
                 if (this._dictSrv.getFilterValue('date') !== undefined) {
                     const newDate = this._dictSrv.getFilterValue('date') ? new Date(this._dictSrv.getFilterValue('date')) : null;
                     dateFilter.setValue(newDate);

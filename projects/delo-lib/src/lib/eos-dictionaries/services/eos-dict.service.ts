@@ -49,6 +49,7 @@ import { ErrorHelperServices } from '../../eos-user-params/shared/services/helpe
 import { ERROR_LOGIN } from '../../app/consts/confirms.const';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 export const SORT_USE_WEIGHT = true;
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\'!]', 'g');
@@ -530,7 +531,7 @@ export class EosDictService {
             });
     }
     getCabinetOwners(departmentDue: string, cabinet: number): Promise<{owners: any[], allOwners: any[]}> {
-        return this.getDictionaryById('cabinet')
+        return this.getDictionaryById(E_DICTIONARY_ID.CABINET)
             .then((dictionary) => {
                 const descriptor: CabinetDictionaryDescriptor = <CabinetDictionaryDescriptor>dictionary.descriptor;
                 return descriptor.getOwners(departmentDue, cabinet)
@@ -1095,7 +1096,8 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         let fixedString;
         // для полнотекстового поиска кавычки не убираем, экранируем
-        if (['departments', 'rubricator', 'docgroup', 'cabinet'].indexOf(this.currentDictionary.id) !== -1) {
+        const dictionaryID: string[] = [E_DICTIONARY_ID.DEPARTMENTS, E_DICTIONARY_ID.RUBRICATOR, E_DICTIONARY_ID.DOCGROUP, E_DICTIONARY_ID.CABINET];
+        if (dictionaryID.indexOf(this.currentDictionary.id) !== -1) {
             fixedString = settings.quick.data.replace(/^%*$/, '');
         }   else {
             fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '').replace(/^%*$/, '');
@@ -1229,7 +1231,7 @@ export class EosDictService {
         return access;
     }
     deleteDict(mode: number): void { // удаляю справочник с подразделениеями из массива для корректроного перехода по ссылке на владельза кабинета , из правого стакана.
-        if (this._dictionaries.length > 1 && this._dictionaries[1].id === 'cabinet') {
+        if (this._dictionaries.length > 1 && this._dictionaries[1].id === E_DICTIONARY_ID.CABINET) {
             this._dictionaries.shift();
         }
     }
@@ -1282,7 +1284,7 @@ export class EosDictService {
                 records = Array.from(this.currentDictionary.nodes.values());
             } else {
                 if (this._treeNode) {
-                    if ((this.currentDictionary.id === this._treeNode.dictionaryId) && this.currentDictionary.id !== 'cabinet') {
+                    if ((this.currentDictionary.id === this._treeNode.dictionaryId) && this.currentDictionary.id !== E_DICTIONARY_ID.CABINET) {
                         records = this._treeNode.children;
                     } else {
                         // cabinet costyl
@@ -1730,7 +1732,7 @@ export class EosDictService {
             //             }
             //         });
             // }
-            if (dictionary.id === 'reestrtype') {
+            if (dictionary.id === E_DICTIONARY_ID.REESTRTYPE) {
                 if (!data.rec._orig || (data.rec['ISN_DELIVERY'] === String(data.rec._orig['ISN_DELIVERY']))) {
                     return Promise.resolve(null);
                 }
@@ -1760,7 +1762,7 @@ export class EosDictService {
     }
 
     private _updateUserDepartment(data, dictionaryId): Promise<any> {
-        if (dictionaryId === 'departments' &&
+        if (dictionaryId === E_DICTIONARY_ID.DEPARTMENTS &&
             data._orig['IS_NODE'] === 1 &&
             data._orig['SURNAME'] !== data['SURNAME']) {
             return this._apiSrv.read({

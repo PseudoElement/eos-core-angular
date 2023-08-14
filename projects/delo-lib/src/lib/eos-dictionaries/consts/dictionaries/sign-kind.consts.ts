@@ -3,10 +3,10 @@ import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
-/*
-*/
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
+
 export const SIGN_KIND_DICT: IDictionaryDescriptor = {
-    id: 'sign-kind',
+    id: E_DICTIONARY_ID.SIGN_KIND,
     apiInstance: 'SIGN_KIND_CL',
     dictType: E_DICT_TYPE.linear,
     title: 'Виды подписей',

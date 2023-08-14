@@ -4,9 +4,10 @@ import { LINEAR_TEMPLATE } from './_linear-template';
 // import { YEAR_PATTERN, VALID_REQ_MULTIPLE_STRING } from 'eos-common/consts/common.consts';
 // import { SECURITY_DICT } from './security.consts';
 import { SEARCH_TYPES } from '../search-types';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const MEDO_NODE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'medo-node-cl',
+    id: E_DICTIONARY_ID.MEDO_NODE,
     apiInstance: 'MEDO_NODE_CL',
     title: 'Узлы МЭДО',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],

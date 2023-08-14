@@ -13,6 +13,7 @@ import { EosUtils } from '../../eos-common/core/utils';
 import { E_VISIBLE_TIPE } from '../interfaces/dictionary.interfaces';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     selector: 'eos-node-list-item',
@@ -92,7 +93,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         evt.stopPropagation();
         const id = this._dictSrv.currentDictionary.id;
 
-        if ((id === 'citizens' || id === 'organization') && !this.node.isNode && !view) {
+        if ((id === E_DICTIONARY_ID.CITIZENS || id === E_DICTIONARY_ID.ORGANIZ) && !this.node.isNode && !view) {
             this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit, params: {mode: 'view'}});
             return;
         }

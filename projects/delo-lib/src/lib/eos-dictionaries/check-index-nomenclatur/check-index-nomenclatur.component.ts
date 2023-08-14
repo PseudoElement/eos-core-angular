@@ -14,6 +14,7 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 import { CONFIRM_OPERATION_NOMENKL_CLOSED, CONFIRM_OPERATION_HARDDELETE } from '../../app/consts/confirms.const';
 import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import { APS_DICT_GRANT, EosAccessPermissionsService } from '../../eos-dictionaries/services/eos-access-permissions.service';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 interface SORTCONFIG {
     CLASSIF_NAME: SORTITEM;
     NOM_NUMBER: SORTITEM;
@@ -345,7 +346,7 @@ export class CheckIndexNomenclaturComponent implements OnDestroy, OnInit {
     }
     checkButtonsAccess(): boolean {
         if (this.selectedItem) {
-            const grant = this.selectedItem.DUE ? this._eaps.isAccessGrantedForDictionary('nomenkl', this.selectedItem.DUE) : APS_DICT_GRANT.denied;
+            const grant = this.selectedItem.DUE ? this._eaps.isAccessGrantedForDictionary(E_DICTIONARY_ID.DID_NOMENKL_CL, this.selectedItem.DUE) : APS_DICT_GRANT.denied;
             return APS_DICT_GRANT.readwrite > grant;
         }
         return true;

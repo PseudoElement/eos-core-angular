@@ -5,6 +5,7 @@ import {COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNA
 import { ISelectOption } from '../../../eos-common/interfaces';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from '../../../eos-dictionaries/features/features.interface';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const RK_TYPE_OPTIONS_NODE: ISelectOption[] = [
     { value: 0, title: 'Не определена' },
@@ -27,7 +28,7 @@ export const PROTECT_DEL_PRJ_STATUS_OPTS: ISelectOption[] = [
 
 
 export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
-    id: 'docgroup',
+    id: E_DICTIONARY_ID.DOCGROUP,
     apiInstance: 'DOCGROUP_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Группы документов',
