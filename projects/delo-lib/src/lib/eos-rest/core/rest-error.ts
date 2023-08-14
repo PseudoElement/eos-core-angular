@@ -15,10 +15,11 @@ export class RestError {
                     this.message = 'Ошибка соединения';
                     break;
                 case 401:
+                case 403:
                 case 434:
                     this.message = 'Ошибка авторизации';
                     break;
-                case 404: case 403: // Просто так ошибкой не считаем
+                case 404: // Просто так ошибкой не считаем
                     this.message = 'Не найдено';
                     break;
                 default:

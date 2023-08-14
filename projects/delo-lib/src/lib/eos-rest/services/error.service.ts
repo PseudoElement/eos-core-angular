@@ -12,6 +12,7 @@ export class ErrorService /*implements IErrorService*/ {
         if (err.http) {
             switch (err.http.status) {
                 case 401:
+                case 403:
                 case 434:
                     if (!this.LostConnectionAlerted) {
                         /* alert('Потеря соединения.');*/
@@ -20,7 +21,7 @@ export class ErrorService /*implements IErrorService*/ {
                         // window.location.href = "../login.aspx";
                     }
                     break;
-                case 404: case 403: // Просто так ошибкой не считаем
+                case 404: // Просто так ошибкой не считаем
                     return of([]);
                 case 500: // InternalSerrverError
                     // this.$rootScope.$broadcast("srvError", err.http); // для обработки в поиске

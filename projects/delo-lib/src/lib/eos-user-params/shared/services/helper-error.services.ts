@@ -22,6 +22,7 @@ export class ErrorHelperServices {
                     this.sendMessage('warning', 'Предупреждение', error.message);
                     break;
                 case '434':
+                case '403':
                 case '401': // в appsetting конец сессии это 401 код
                     this.razLogin();
                     break;
