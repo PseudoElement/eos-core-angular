@@ -1,5 +1,6 @@
 <alert *ngFor="let message of messages"
     class="eos-adm-alert"
+    (click)="message.type !== 'warning' && onClose(message)"
     [type]="message.type"
     [dismissible]="true"
     [dismissOnTimeout]="message.dismissOnTimeout">
