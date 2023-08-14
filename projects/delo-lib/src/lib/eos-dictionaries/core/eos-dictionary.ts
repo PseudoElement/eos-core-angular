@@ -23,6 +23,7 @@ import { ICONS_CONTAINER_SEV } from '../../eos-dictionaries/consts/dictionaries/
 import { _ES } from '../../eos-rest/core/consts';
 import { EntityHelper } from '../../eos-rest/core/entity-helper';
 import { PipRX } from '../../eos-rest';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
@@ -109,8 +110,8 @@ export class EosDictionary {
 
     bindOrganization(orgDue: string): Promise<any> {
         if (orgDue && (this.descriptor.type === E_DICT_TYPE.department ||
-            this.descriptor.id === 'sev-participant')) {
-            const dOrganization = <OrganizationDictionaryDescriptor>this.dictDescrSrv.getDescriptorClass('organization');
+            this.descriptor.id === E_DICTIONARY_ID.PARTICIPANT_SEV)) {
+            const dOrganization = <OrganizationDictionaryDescriptor>this.dictDescrSrv.getDescriptorClass(E_DICTIONARY_ID.ORGANIZ);
             return dOrganization.getData([orgDue])
                 .then(([organization]) => organization);
         } else {
@@ -135,7 +136,7 @@ export class EosDictionary {
     createRepresentative(newContacts: any[], node: EosDictionaryNode): Promise<IRecordOperationResult[]> {
         const orgDUE = node.data['organization']['DUE'];
         if (orgDUE) {
-            const dOrganization = <OrganizationDictionaryDescriptor>this.dictDescrSrv.getDescriptorClass('organization');
+            const dOrganization = <OrganizationDictionaryDescriptor>this.dictDescrSrv.getDescriptorClass(E_DICTIONARY_ID.ORGANIZ);
             return dOrganization.addContacts(newContacts, orgDUE);
         } else {
             return Promise.resolve([<IRecordOperationResult>{
@@ -323,9 +324,9 @@ export class EosDictionary {
      */
     setFlagForMarked(fieldName: string, recursive = false, value = true): Promise<any> {
         let flagReq = recursive;
-        if (fieldName === 'DELETED' && (this.id === 'departments' ||
-            this.id === 'rubricator' ||
-            this.id === 'docgroup')) {
+        if (fieldName === 'DELETED' && (this.id === E_DICTIONARY_ID.DEPARTMENTS ||
+            this.id === E_DICTIONARY_ID.RUBRICATOR ||
+            this.id === E_DICTIONARY_ID.DOCGROUP)) {
                 flagReq = false;
         }
         const nodeSet = this._getMarkedRecords(flagReq);
@@ -423,7 +424,7 @@ export class EosDictionary {
     }
 
     searchByParentData(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode[]> {
-        if (dictionary.id === 'departments') {
+        if (dictionary.id === E_DICTIONARY_ID.DEPARTMENTS) {
             const critery = {
                 'DUE': node.id ? node.id : ''
             };
@@ -433,7 +434,7 @@ export class EosDictionary {
     }
 
     getSearchCriteries(search: string, params: ISearchSettings, selectedNode?: EosDictionaryNode): any[] {
-        if (this.id === 'departments' || this.id === 'rubricator') {
+        if (this.id === E_DICTIONARY_ID.DEPARTMENTS || this.id === E_DICTIONARY_ID.RUBRICATOR) {
             const _criteries = [];
             const _crit: any = {
                 'CL_SEARCH.Contents': search
@@ -544,7 +545,7 @@ export class EosDictionary {
             }
             EosUtils.setValueByPath(nodeData, 'rec.START_DATE', parent.getParentData('START_DATE', 'rec'));
             EosUtils.setValueByPath(nodeData, 'rec.END_DATE', parent.getParentData('END_DATE', 'rec'));
-        } else if (this.descriptor.id === 'cabinet' && parent) {
+        } else if (this.descriptor.id === E_DICTIONARY_ID.CABINET && parent) {
             // fill cabinet related records with initial data
             EosUtils.setValueByPath(nodeData, 'rec.DUE', parent.data.rec['DUE']);
             EosUtils.setValueByPath(nodeData, 'department', parent.data.rec);
@@ -601,7 +602,7 @@ export class EosDictionary {
     public orderNodesByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
         let key: string = _orderBy.fieldKey;
-        if (key === 'NOM_NUMBER' && this.id === 'nomenkl') {
+        if (key === 'NOM_NUMBER' && this.id === E_DICTIONARY_ID.DID_NOMENKL_CL) {
             key = 'NOM_NUMBER_SORT';
         }
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
@@ -661,7 +662,7 @@ export class EosDictionary {
         if (!this.root) {
             let rootNode: EosDictionaryNode;
             // && this.id !== 'sev-collisions' добавил для справочника коллизии , так как справочник не иерархический и не определить id родителя стандартным способом
-            if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear && this.id !== 'sev-collisions') {
+            if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear && this.id !== E_DICTIONARY_ID.COLLISIONS_SEV) {
                 rootNode = nodes.find((node) => node.parentId === null || node.parentId === undefined || node.id === node.parentId);
             }
 
@@ -728,7 +729,7 @@ export class EosDictionary {
                     // critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId.toString().split('.')[0] + '.%';
                     // Добавить критерий, чтобы не вытягивать "системных" ДЛ
                     // у которых DUE не "0."
-                    if (this.id === 'departments') {
+                    if (this.id === E_DICTIONARY_ID.DEPARTMENTS) {
                         critery.LAYER = '1:null';
                         if (!critery.DUE) {
                             critery.DUE = '0.%';
@@ -744,7 +745,7 @@ export class EosDictionary {
                 break;
             }
             case E_DICT_TYPE.linear:
-                if (this.id === 'citizens') {
+                if (this.id === E_DICTIONARY_ID.CITIZENS) {
                     this.descriptor.extendCritery(critery, params, selectedNode);
                 }
                 break;
@@ -760,15 +761,15 @@ export class EosDictionary {
     private getNodeRelatedData(node: EosDictionaryNode, refresh: boolean = false): Promise<EosDictionaryNode> {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
-                case 'resolution-category':
-                case 'status-reply':
-                case 'region':
+                case E_DICTIONARY_ID.RESOL_CATEGORY:
+                case E_DICTIONARY_ID.STATUS_REPLY:
+                case E_DICTIONARY_ID.REGION:
                 return this.descriptor.getRelatedSev(node.data.rec).then((sev) => {
                     node.data = Object.assign(node.data, { sev: sev });
                     node.relatedLoaded = true;
                     return node;
                 });
-                case 'departments':
+                case E_DICTIONARY_ID.DEPARTMENTS:
                     // const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
                     const orgDUE = node.data.rec.DUE_LINK_ORGANIZ;
                     return Promise.all([
@@ -780,14 +781,14 @@ export class EosDictionary {
                         return node;
                     });
                 case SECURITY_DICT.id:
-                case 'rubricator':
+                case E_DICTIONARY_ID.RUBRICATOR:
                     return this.descriptor.getRelatedSev(node.data.rec)
                         .then((sev) => {
                             node.data = Object.assign(node.data, { sev: sev });
                             node.relatedLoaded = true;
                             return node;
                         });
-                case 'link':
+                case E_DICTIONARY_ID.LINK:
                     return Promise.all([
                         this.descriptor.getRelated(node.data.rec, orgDUE),
                         this.descriptor.getRelatedSev(node.data.rec)
@@ -796,7 +797,7 @@ export class EosDictionary {
                         node.relatedLoaded = true;
                         return node;
                     });
-                case 'sev-participant':
+                case E_DICTIONARY_ID.PARTICIPANT_SEV:
                     return Promise.all([this.descriptor.getRelated(node.data.rec)]).then(([related]) => {
                         node.data = Object.assign(node.data, related);
                         node.relatedLoaded = true;

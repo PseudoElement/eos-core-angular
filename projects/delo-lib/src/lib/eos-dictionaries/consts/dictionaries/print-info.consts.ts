@@ -1,9 +1,10 @@
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { E_DICT_TYPE, IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 
 /* tslint:disable:max-line-length */
 export const PRINT_INFO_DICT: IDictionaryDescriptor = {
-    id: 'printInfo',
+    id: E_DICTIONARY_ID.PRINT_INFO,
     apiInstance: 'CB_PRINT_INFO',
     dictType: E_DICT_TYPE.linear,
     defaultOrder: 'PRINT_DEPARTMENT',

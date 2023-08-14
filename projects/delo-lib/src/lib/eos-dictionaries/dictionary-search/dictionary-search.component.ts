@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, ViewChild, OnDestroy, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EosDictService } from '../services/eos-dict.service';
-import { E_DICT_TYPE, E_FIELD_SET, E_FIELD_TYPE, IRecordModeDescription, SearchFormSettings, SEARCHTYPE, SearchData, ProtoIdOperation } from '../../eos-dictionaries/interfaces';
+import { E_DICT_TYPE, E_FIELD_SET, E_FIELD_TYPE, IRecordModeDescription, SearchFormSettings, SEARCHTYPE, SearchData } from '../../eos-dictionaries/interfaces';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from '../../eos-dictionaries/consts/search-types';
 import { BaseCardEditDirective } from '../card-views/base-card-edit.component';
@@ -22,6 +22,8 @@ import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service'
 import { ProtNameGraphQlParam } from '../../eos-dictionaries/services/creator-graphQl-param/protName-graphQl-param';
 import { ApolloQueryResult } from '@apollo/client'
 import { ProtNames, ResponseProtNames } from 'eos-dictionaries/interfaces/fetch.interface';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
+import { PROTOCOL_ID } from '../../eos-dictionaries/consts/protocolId.const';
 
 export interface IQuickSrchObj {
     isOpenQuick: boolean;
@@ -56,10 +58,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     public formSearch: FormGroup;
     public protocolForm: FormGroup;
     private protocolSearchNameControl: string[] = ['FROM', 'TO', 'USER_ISN', 'OPER_DESCRIBE'];
-    private protocolIdOperation: ProtoIdOperation = {
-        organization: ['Z'],
-        citizens: ['C']
-    }
     public protocolSerchInputs: any;
     public inputs;
     public radioTopButton = [];
@@ -105,7 +103,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.subscriptions.push(this._dictSrv.searchInfo$.subscribe((_d) => this.clearForm()));
         this.subscriptions.push(this._dictSrv.reloadDopRec$.subscribe(() => this.updateDopRec()));
 
-        if (this.dictionary.descriptor.id === 'sev-participant') {
+        if (this.dictionary.descriptor.id === E_DICTIONARY_ID.PARTICIPANT_SEV) {
             this._pipRX.read({
                 SEV_CHANNEL: {
                     criteries: {
@@ -119,7 +117,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
             });
         }
 
-        if (this.dictionary.descriptor.id === 'nomenkl') {
+        if (this.dictionary.descriptor.id === E_DICTIONARY_ID.DID_NOMENKL_CL) {
             this.radioTopButton = SEARCH_RADIO_BUTTON_NOMENKL;
             this.mode = 1;
         } else {
@@ -192,7 +190,11 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         this.settings.lastSearch = SEARCHTYPE.full;
         this.settings.opts.mode = this.mode;
 
-        const model = (this.dictId === 'departments' || this.dictId === 'organization' || this.dictId === 'citizens') ? this.searchData : this.getSearchModel();
+        const model = (
+            this.dictId === E_DICTIONARY_ID.DEPARTMENTS || 
+            this.dictId === E_DICTIONARY_ID.ORGANIZ || 
+            this.dictId === E_DICTIONARY_ID.CITIZENS
+        ) ? this.searchData : this.getSearchModel();
         this.settings.full.data = model;
         if (this.searchValueDopRec) {
             this.searchModel['DOP_REC'] =  this.searchValueDopRec;
@@ -202,7 +204,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
         this._dictSrv.setNomenklFilterClose$ = this.settings.opts.closed;
 
-        if  (this.dictId === 'organization' || this.dictId === 'citizens') {
+        if  (this.dictId === E_DICTIONARY_ID.ORGANIZ || this.dictId === E_DICTIONARY_ID.CITIZENS) {
             if(
                 this.settings.entity === 'protocol' && 
                 this.settings.full.data.protocol.OPER_DESCRIBE?.includes('DEL') &&
@@ -373,7 +375,8 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     private async initProtoSerchForm() {
         const defaulDate = new Date();
-        this.getProtOperation(this.protocolIdOperation[this.dictId]);
+        
+        this.getProtOperation(PROTOCOL_ID[this.dictId]);
         const configProtocolSerchInput: IInputParamControl[] = [
             {
                 controlType: E_FIELD_TYPE.date,
@@ -476,7 +479,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
     }
 
-    async getProtOperation(param: string[]) {
+    async getProtOperation(param: string) {
         const protNameParam = this.creatorParam.protName(param);
         const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam);
         this.allOperation = resProtName.data.protNamesPg ? resProtName.data.protNamesPg.items : [];
@@ -632,17 +635,41 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
     
     visibleBranchOptions(): boolean {
-        const ITEMS = ['cabinet', 'templates', 'citizens', 'sev-rules', 'sev-participant', 'file-category'];
+        const ITEMS: string[] = [
+            E_DICTIONARY_ID.CABINET, 
+            E_DICTIONARY_ID.TEMPLATES,
+            E_DICTIONARY_ID.CITIZENS,
+            E_DICTIONARY_ID.RULES_SEV, 
+            E_DICTIONARY_ID.PARTICIPANT_SEV, 
+            E_DICTIONARY_ID.FILE_CATEGORIES
+        ];
         return !ITEMS.includes(this.dictId);
     }
 
     visibleDeletedOption(): boolean {
-        const ITEMS = ['nomenkl', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category'];
+        const ITEMS: string[] = [
+            E_DICTIONARY_ID.DID_NOMENKL_CL,
+            E_DICTIONARY_ID.TEMPLATES, 
+            E_DICTIONARY_ID.CITIZENS, 
+            E_DICTIONARY_ID.ORGANIZ, 
+            E_DICTIONARY_ID.RULES_SEV,
+            E_DICTIONARY_ID.PARTICIPANT_SEV,
+            E_DICTIONARY_ID.FILE_CATEGORIES
+        ];
         return !ITEMS.includes(this.dictId);
     }
 
     visibleClosedDealsOption() {
-        const ITEMS = ['departments', 'templates', 'citizens', 'organization', 'sev-rules', 'sev-participant', 'file-category', 'docgroup'];
+        const ITEMS: string[] = [
+            E_DICTIONARY_ID.DEPARTMENTS, 
+            E_DICTIONARY_ID.TEMPLATES,
+            E_DICTIONARY_ID.CITIZENS,
+            E_DICTIONARY_ID.ORGANIZ,
+            E_DICTIONARY_ID.RULES_SEV,
+            E_DICTIONARY_ID.PARTICIPANT_SEV, 
+            E_DICTIONARY_ID.FILE_CATEGORIES,
+            E_DICTIONARY_ID.DOCGROUP
+        ];
         return !ITEMS.includes(this.dictId);
     }
 
@@ -655,22 +682,22 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     private clearModel(modelName: string) {
-        if (this.formSearch && (this.dictId === 'organization' || this.dictId === 'citizens') && modelName !== 'medo') {
+        if (this.formSearch && (this.dictId === E_DICTIONARY_ID.ORGANIZ || this.dictId === E_DICTIONARY_ID.CITIZENS) && modelName !== 'medo') {
             this.formSearch.reset();
             this.formSelect.reset();
         }
-        if (this.formSelect && this.dictId === 'sev-rules') {
+        if (this.formSelect && this.dictId === E_DICTIONARY_ID.RULES_SEV) {
             this.formSelect.reset();
         }
-        if (this.formSearch && this.dictId === 'sev-participant') {
+        if (this.formSearch && this.dictId === E_DICTIONARY_ID.PARTICIPANT_SEV) {
             this.formSearch.reset();
         }
-        if (this.dictionary.descriptor.id === 'nomenkl') {
+        if (this.dictionary.descriptor.id === E_DICTIONARY_ID.DID_NOMENKL_CL) {
             this.mode = 1;
         } else {
             this.mode = 0;
         }
-        if ((this.dictId === 'organization' || this.dictId === 'citizens') && this.searchData.srchMode === 'protocol' && this.protocolForm) {
+        if ((this.dictId === E_DICTIONARY_ID.ORGANIZ || this.dictId === E_DICTIONARY_ID.CITIZENS) && this.searchData.srchMode === 'protocol' && this.protocolForm) {
             const date = new Date();
             Object.keys(this.protocolForm.controls).forEach(el => {
                 if(el === 'FROM' || el === 'TO'){
@@ -697,9 +724,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     private getModelName(): string {
-        return (this.dictId === 'departments' || 
-                this.dictId === 'organization' || 
-                this.dictId === 'citizens') ? this.currTab || 'department' : this.dictId;
+        return (this.dictId === E_DICTIONARY_ID.DEPARTMENTS || 
+                this.dictId === E_DICTIONARY_ID.ORGANIZ || 
+                this.dictId === E_DICTIONARY_ID.CITIZENS) ? this.currTab || 'department' : this.dictId;
     }
 
     private getSearchModel() {
@@ -713,13 +740,13 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     private async initSearchForm() {
         this.dictionary = this._dictSrv.currentDictionary;
 
-        if ((this.dictId === 'organization' || this.dictId === 'citizens') && !this.protocolForm) {
+        if ((this.dictId === E_DICTIONARY_ID.ORGANIZ || this.dictId === E_DICTIONARY_ID.CITIZENS) && !this.protocolForm) {
             this.initProtoSerchForm();
         }
         if (this.dictionary) {
             if (this.settings) {
                 if (this.settings.full.data) {
-                    if (this.settings.entity_dict === 'departments') {
+                    if (this.settings.entity_dict === E_DICTIONARY_ID.DEPARTMENTS) {
                         this.searchData = this.settings.full.data;
                         this.setTab(this.searchData.srchMode);
                     } else {
@@ -748,7 +775,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
             if (this.arDescript && this.arDescript.length) {
                 this.initFormDopRec();
             }
-            if (this.dictionary.descriptor.id === 'sev-rules') {
+            if (this.dictionary.descriptor.id === E_DICTIONARY_ID.RULES_SEV) {
                 this.initFormRule(this.dictionary.descriptor.record.getFullSearchFields);
             }
         }

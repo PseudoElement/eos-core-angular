@@ -1,9 +1,10 @@
 import { E_DICT_TYPE, IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 import { VALID_REQ_STRING } from '../../../eos-common/consts/common.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const Templates: IDictionaryDescriptor = {
-    id: 'templates',
+    id: E_DICTIONARY_ID.TEMPLATES,
     apiInstance: 'DOC_TEMPLATES',
     dictType: E_DICT_TYPE.custom,
     defaultOrder: 'NAME_TEMPLATE',

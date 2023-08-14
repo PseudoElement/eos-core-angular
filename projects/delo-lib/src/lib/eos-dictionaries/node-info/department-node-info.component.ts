@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { PipRX } from '../../eos-rest/services/pipRX.service';
 import { DELO_OWNER } from '../../eos-rest/interfaces/structures';
 import { DEPARTMENT } from '../../eos-rest/interfaces/structures';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     selector: 'eos-department-node-info',
@@ -68,7 +69,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         if (this.node) {
             if ((!this.node.data.rec['IS_NODE']) && (this.node.children)) {
 
-                const dict = new EosDictionary('departments', this._descrSrv);
+                const dict = new EosDictionary(E_DICTIONARY_ID.DEPARTMENTS, this._descrSrv);
                 dict.descriptor.getBoss(this.node.id)
                     .then((boss) => {
                         if (boss) {
@@ -128,7 +129,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         $event.preventDefault();
         this.dictSrv.deleteDict(1);
         setTimeout(() => {
-            this._router.navigate(['spravochniki', 'cabinet', this.nodeDataFull.cabinet.ISN_CABINET, 'view']);
+            this._router.navigate(['spravochniki', E_DICTIONARY_ID.CABINET, this.nodeDataFull.cabinet.ISN_CABINET, 'view']);
         });
     }
     resetSearch() {
@@ -139,7 +140,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         $event.preventDefault();
         this.dictSrv.deleteDict(1);
         setTimeout(() => {
-            this._router.navigate(['spravochniki', 'departments', this.nodeDataFull.rec.PARENT_DUE]);
+            this._router.navigate(['spravochniki', E_DICTIONARY_ID.DEPARTMENTS, this.nodeDataFull.rec.PARENT_DUE]);
         });
     }
 

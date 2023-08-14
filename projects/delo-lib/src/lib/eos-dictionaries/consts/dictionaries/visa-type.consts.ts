@@ -4,6 +4,7 @@ import { ISelectOption } from '../../../eos-common/interfaces';
 import { COMMON_FIELD_NAME, COMMON_FIELD_NOTE } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from '../../../eos-dictionaries/features/features.interface';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const STATUS_OPTIONS: ISelectOption[] = [{
     value: 'Положительный',
@@ -19,7 +20,7 @@ export const STATUS_OPTIONS: ISelectOption[] = [{
 const LIST_BY_VARIANT = Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? ['IS_FINAL', 'STATUS'] : [];
 
 export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'visa-type',
+    id: E_DICTIONARY_ID.VISA_TYPE,
     apiInstance: 'VISA_TYPE_CL',
     title: 'Типы виз',
     actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),

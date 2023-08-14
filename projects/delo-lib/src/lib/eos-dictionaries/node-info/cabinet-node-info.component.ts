@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { BaseNodeInfoComponent } from './base-node-info';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 
 @Component({
     selector: 'eos-cabinet-node-info',
@@ -26,7 +27,7 @@ export class CabinetNodeInfoComponent extends BaseNodeInfoComponent {
     }
 
     routerLinkDepartment(due): string {
-        return this._routerLink('departments', due);
+        return this._routerLink(E_DICTIONARY_ID.DEPARTMENTS, due);
     }
 
     isOwner(owner): boolean {

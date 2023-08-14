@@ -1,11 +1,11 @@
 
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { E_DICT_TYPE, IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 import { LINEAR_TEMPLATE } from './_linear-template';
 
-
 export const TYPE_DOCUM_DICT: IDictionaryDescriptor =  {
-    id: 'type-docum',
+    id: E_DICTIONARY_ID.TYPE_DOCUM,
     apiInstance: 'DOCVID_CL',
     title: 'Виды документов',
     dictType: E_DICT_TYPE.linear,

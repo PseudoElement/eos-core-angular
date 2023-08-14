@@ -5,6 +5,7 @@ import {ISelectOption} from '../../../eos-common/interfaces';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS, ICONS_CONTAINER_SEV, COMMON_FIELD_ICONS_SEV } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
 import { VALID_REQ_STRING, NOT_EMPTY_STRING2 } from '../../../eos-common/consts/common.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
     {value: 0, title: 'Не указана'},
@@ -67,7 +68,7 @@ export const REPLACE_FIELDS = [
 ];
 /* tslint:disable:max-line-length */
 export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
-    id: 'departments',
+    id: E_DICTIONARY_ID.DEPARTMENTS,
     apiInstance: 'DEPARTMENT',
     dictType: E_DICT_TYPE.department,
     title: 'Подразделения',

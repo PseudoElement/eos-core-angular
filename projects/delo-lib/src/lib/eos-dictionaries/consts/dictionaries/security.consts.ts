@@ -4,9 +4,10 @@ import { NOT_EMPTY_STRING } from '../../../eos-dictionaries/consts/input-validat
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
 import { ICONS_CONTAINER_SEV, /* COMMON_FIELD_ICONS_SEV */ } from './_common';
 import { VALID_REQ_STRING } from '../../../eos-common/consts/common.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'security',
+    id: E_DICTIONARY_ID.SECURITY,
     apiInstance: 'SECURITY_CL',
     keyField: 'SECURLEVEL',
     defaultOrder: 'GRIF_NAME',

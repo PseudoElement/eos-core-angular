@@ -1,8 +1,9 @@
+import { E_DICTIONARY_ID } from '../enum/dictionaryId.enum';
 import { IDictionaryDescriptor, E_DICT_TYPE } from '../../../../eos-dictionaries/interfaces';
 import { SEV_LINEAR_TEMPLATE } from './templates-sev.consts';
 
 export const COLLISIONS_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEAR_TEMPLATE, {
-    id: 'sev-collisions',
+    id: E_DICTIONARY_ID.COLLISIONS_SEV,
     apiInstance: 'SEV_COLLISION',
     visible: true,
     actions: ['edit', 'defaultCollision', 'protViewSecurity'],

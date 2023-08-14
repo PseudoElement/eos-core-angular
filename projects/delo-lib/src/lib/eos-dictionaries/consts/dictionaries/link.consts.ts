@@ -2,6 +2,7 @@ import { IDictionaryDescriptor, IFieldPreferences} from '../../../eos-dictionari
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const LINK_TYPES = [{
     value: 2,
@@ -18,7 +19,7 @@ export const LINK_TYPES = [{
 }];
 
 export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'link',
+    id: E_DICTIONARY_ID.LINK,
     apiInstance: 'LINK_CL',
     title: 'Типы связок',
     visible: true,

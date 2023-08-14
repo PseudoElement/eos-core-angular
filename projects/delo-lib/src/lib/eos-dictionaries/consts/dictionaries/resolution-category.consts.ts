@@ -2,9 +2,10 @@ import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'resolution-category',
+    id: E_DICTIONARY_ID.RESOL_CATEGORY,
     apiInstance: 'RESOLUTION_CATEGORY_CL',
     title: 'Категории поручений',
     visible: true,

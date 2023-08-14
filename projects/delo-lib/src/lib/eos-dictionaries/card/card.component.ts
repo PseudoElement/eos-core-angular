@@ -41,6 +41,7 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import { E_LIST_ENUM_TYPE } from '../../eos-dictionaries/features/features.interface';
 import { PipRX, ICancelFormChangesEvent } from '../../eos-rest';
 import { BaseCardEditDirective } from '../../eos-dictionaries/card-views/base-card-edit.component';
+import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -144,7 +145,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
                 }
             });
-        if (this.dictionaryId === 'nomenkl') {
+        if (this.dictionaryId === E_DICTIONARY_ID.DID_NOMENKL_CL) {
             this._dictSrv.visibleList$
                 .pipe(
                     takeUntil(this.ngUnsubscribe)
@@ -214,8 +215,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this.goTo(url);
         } else {
             const backUrl = (this.node.parent || this.node).getPath();
-            if (this.node.dictionaryId === 'cabinet') { // hardcode because of cabinets. sorry :(
-                backUrl[1] = 'departments';
+            if (this.node.dictionaryId === E_DICTIONARY_ID.CABINET) { // hardcode because of cabinets. sorry :(
+                backUrl[1] = E_DICTIONARY_ID.DEPARTMENTS;
                 backUrl[2] = this.node.data.rec.DUE;
             }
             this._router.navigate(backUrl);
@@ -366,7 +367,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         return this._dictSrv.updateNode(this.node, data)
             .then((node) => this._afterUpdating(node))
             .catch((err) => {
-                if (err === 'cancel' && this.cardEditRef.dictionaryId === 'reestrtype') {
+                if (err === 'cancel' && this.cardEditRef.dictionaryId === E_DICTIONARY_ID.REESTRTYPE) {
                     const oldDelivery = this.cardEditRef.data.rec._orig['ISN_DELIVERY'];
                     this.cardEditRef.inputs['rec.ISN_DELIVERY'].value = oldDelivery;
                     this.cardEditRef.newData.rec['ISN_DELIVERY'] = oldDelivery;
@@ -504,18 +505,18 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this.nodeData = this.node.data; // getEditData();
             // console.log('recived description', this.nodeData);
 
-            if (this.dictionaryId === 'departments' && this.node.data && this.node.data.rec && this.node.data.rec.IS_NODE) {
+            if (this.dictionaryId === E_DICTIONARY_ID.DEPARTMENTS && this.node.data && this.node.data.rec && this.node.data.rec.IS_NODE) {
                 this.dutysList = this.departmentsSrv.dutys;
                 this.fullNamesList = this.departmentsSrv.fullnames;
             }
-            if (this.dictionaryId === 'sev-rules' && Boolean(this.node.data)) {
+            if (this.dictionaryId === E_DICTIONARY_ID.RULES_SEV && Boolean(this.node.data)) {
                 this.node.data.rec['DUE_DOCGROUP_NAME'] = this.node.data['DOCGROUP_Ref'][0]['CLASSIF_NAME'];
                 this.node.data.rec['DUE_DOCGROUP_DELET'] = this.node.data['DOCGROUP_Ref'][0]['DUE'] !== '0.' && Boolean(this.node.data['DOCGROUP_Ref'][0]['DELETED']);
             }
-            if (this.dictionaryId === 'ca-category' && Boolean(this.node.data)) {
+            if (this.dictionaryId === E_DICTIONARY_ID.CA_CATEGORY_CL && Boolean(this.node.data)) {
                 this.node.data.rec['CA_SUBJECT'] = this.node.data.rec['CA_SUBJECT'].trim();
             }
-            if (this.dictionaryId === 'docgroup' && Boolean(this.node.data)) {
+            if (this.dictionaryId === E_DICTIONARY_ID.DOCGROUP && Boolean(this.node.data)) {
                 if (this.node.data['DOCVID_CL_List'][0]) {
                     this.node.data.rec['DOCVID_NAME'] = this.node.data['DOCVID_CL_List'][0]['CLASSIF_NAME'];
                 }

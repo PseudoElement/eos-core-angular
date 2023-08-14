@@ -3,6 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { PipRX } from './pipRX.service';
+import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 @Injectable()
 export class UserSettingsService {
@@ -21,8 +22,7 @@ export class UserSettingsService {
       }
 
     readDepartments(): Promise<any> {
-      return  this.readUserSetting('departments');
+      return  this.readUserSetting(E_DICTIONARY_ID.DEPARTMENTS);
     }
 
 }
-

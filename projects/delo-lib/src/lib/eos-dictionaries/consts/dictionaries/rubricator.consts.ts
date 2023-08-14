@@ -3,10 +3,10 @@ import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_ICONS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV, } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
 import { VALID_REQ_STRING } from '../../../eos-common/consts/common.consts';
-/*
-*/
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
+
 export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
-    id: 'rubricator',
+    id: E_DICTIONARY_ID.RUBRICATOR,
     apiInstance: 'RUBRIC_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Рубрикатор',

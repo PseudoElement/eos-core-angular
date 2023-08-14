@@ -1,9 +1,10 @@
 import { IDictionaryDescriptor } from '../../../eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME, COMMON_FIELD_NOTE } from './_common';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const EDS_CATEGORY_CL_CONTS: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'eds-category',
+    id: E_DICTIONARY_ID.EDS_CATEGORY_CL,
     apiInstance: 'EDS_CATEGORY_CL',
     actions: [... LINEAR_TEMPLATE.actions, 'certifUC', 'importEDS'],
     title: 'Категории ЭП',

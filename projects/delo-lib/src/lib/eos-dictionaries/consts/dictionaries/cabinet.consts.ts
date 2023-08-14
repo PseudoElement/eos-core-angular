@@ -4,9 +4,10 @@ import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME } from './_common';
 import { SEARCH_TYPES } from '../search-types';
 import {environment} from '../../../environments/environment';
 import { VALID_REQ_STRING } from '../../../eos-common/consts/common.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
 export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'cabinet',
+    id: E_DICTIONARY_ID.CABINET,
     folder: 'departments',
     apiInstance: 'CABINET',
     title: 'Кабинеты',

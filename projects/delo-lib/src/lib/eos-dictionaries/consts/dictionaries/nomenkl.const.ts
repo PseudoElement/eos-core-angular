@@ -4,10 +4,10 @@ import { COMMON_FIELD_ICONS, COMMON_FIELD_NAME } from './_common';
 import { YEAR_PATTERN/* , VALID_REQ_MULTIPLE_STRING */ } from '../../../eos-common/consts/common.consts';
 import { SECURITY_DICT } from './security.consts';
 import { SEARCH_TYPES } from '../search-types';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 
-export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: DID_NOMENKL_CL,
+    id: E_DICTIONARY_ID.DID_NOMENKL_CL,
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],

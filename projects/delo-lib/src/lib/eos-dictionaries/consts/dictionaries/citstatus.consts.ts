@@ -1,9 +1,10 @@
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from '../../../eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELD_NAME, COMMON_FIELDS } from './_common';
 
 export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
-    id: 'cistatus',
+    id: E_DICTIONARY_ID.CITSTATUS,
     apiInstance: 'CITSTATUS_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Статус заявителя',

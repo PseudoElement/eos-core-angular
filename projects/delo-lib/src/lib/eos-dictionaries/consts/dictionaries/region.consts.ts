@@ -4,10 +4,11 @@ import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_ICONS_SEV, ICONS_CONTAINER_SEV } from './_common';
 import { Features } from '../../../eos-dictionaries/features/features-current.const';
 import { NOT_EMPTY_STRING2 } from '../../../eos-common/consts/common.consts';
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 /*
 */
 export const REGION_DICT: ITreeDictionaryDescriptor = {
-    id: 'region',
+    id: E_DICTIONARY_ID.REGION,
     apiInstance: 'REGION_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Регионы',

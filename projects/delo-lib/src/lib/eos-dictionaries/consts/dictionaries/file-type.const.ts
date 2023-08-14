@@ -1,12 +1,12 @@
+import { E_DICTIONARY_ID } from './enum/dictionaryId.enum';
 import { E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences } from '../../../eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
-/*
-*/
+
 export const FILE_TYPE_DICT: IDictionaryDescriptor = {
-    id: 'filetype',
+    id: E_DICTIONARY_ID.FILE_TYPE,
     apiInstance: 'FILE_TYPE_CL',
     dictType: E_DICT_TYPE.linear,
-    title: 'Типы файлов', /*  */
+    title: 'Типы файлов',
     visible: true,
     iconName: 'eos-adm-icon-folder-blue',
     defaultOrder: 'CLASSIF_NAME',
