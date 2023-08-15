@@ -1,4 +1,7 @@
-<alert *ngFor="let message of messages"
+<ng-container *ngFor="let message of messages">
+    <!--task#168421 - Сообщения об успешном удалении, сохранении и т.п. не показывать-->
+    <alert
+    *ngIf="message.type !== 'success'"
     class="eos-adm-alert"
     (click)="message.type !== 'warning' && onClose(message)"
     [type]="message.type"
@@ -8,9 +11,9 @@
         <!-- <span [ngClass]="'eos-adm-icon eos-adm-icon-close-white'"></span> -->
         <span class="eos-adm-icon small"
             [ngClass]="{
-            'eos-adm-icon-checkbox-white': message.type==='success',
-            'eos-adm-icon-close-white': message.type==='danger',
-            'eos-adm-icon-info-white': message.type==='info' || message.type==='warning'}"></span>
+            'eos-adm-icon-checkbox-white': message.type === 'success',
+            'eos-adm-icon-close-white': message.type === 'danger',
+            'eos-adm-icon-info-white': message.type === 'info' || message.type === 'warning'}"></span>
     </div>
     <div class="alert-body">
             <div class="alert-body-content">
@@ -24,3 +27,5 @@
             </div>
     </div>
 </alert>
+</ng-container>
+
