@@ -17,15 +17,24 @@
 
     .btn {
         padding: 0;
-        height: $item-height;
-        width: $item-width;
+        height: 32px;
+        width: 32px;
         background-color: transparent;
-        border-radius: 0;
+        border-radius: 4px !important;
         border-color: transparent;
 
         &:focus {
             outline: 0;
         }
+    }
+
+    .left{
+        margin-top: 8px;
+        margin-left: 8px;
+    }
+
+    .right{
+        margin-right: 8px;
     }
 
     .icon {
