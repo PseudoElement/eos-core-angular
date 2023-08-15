@@ -131,7 +131,16 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                     })
                 }
                 sev_part.forEach((part) => {
-                    const date = mapSevParticipan.get('' + part.ISN_LCLASSIF) ? moment(mapSevParticipan.get('' + part.ISN_LCLASSIF)).format("DD.MM.YYYY") : '';
+                    let date = '';
+                    if (mapSevParticipan.get('' + part.ISN_LCLASSIF)) {
+                        const time = mapSevParticipan.get('' + part.ISN_LCLASSIF);
+                        const day = moment(time).format("DD.MM.YYYY");
+                        const hours = moment(time).hours();
+                        const minutes = moment(time).minutes();
+                        const seconds = moment(time).seconds();
+
+                        date = `${day}, ${hours}:${minutes}:${seconds}`;
+                    }
                     part['FILE_SYNC_DATE'] = date;
                 });
                 return sev_part;
