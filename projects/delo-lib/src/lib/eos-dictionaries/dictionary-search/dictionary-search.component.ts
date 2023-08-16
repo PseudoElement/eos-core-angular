@@ -429,8 +429,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                             this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format()}` : null;
                           break;
                         case 'TO':
-                            const DATE_ISO_8601 = "YYYY-MM-DD";
-                            this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format(DATE_ISO_8601)}T23:59:59.00Z` : null;
+                            this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format().replace('00:00:00', '23:59:59')}` : null;
                           break;
                         case 'OPER_DESCRIBE':
                             if(data['OPERATION']) {
