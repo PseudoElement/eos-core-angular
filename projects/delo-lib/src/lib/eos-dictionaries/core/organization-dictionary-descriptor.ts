@@ -252,7 +252,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             const organiz = requestOrganiz.data.organizClsPg ? requestOrganiz.data.organizClsPg.items : [];
 
             if (organiz.length) {
-                return this.converter.organizReq(organiz.data.organizClsPg.items);
+                return this.converter.organizReq(organiz);
             } else {
                 return [];
             }
