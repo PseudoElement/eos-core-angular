@@ -99,7 +99,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         if (crit['common']['NEW']) {
             crit['common']['NEW'] = 1;
         }
-        if (criteries[0]['common'].hasOwnProperty('DOP_REC')) {
+        if (criteries[0]['common'].hasOwnProperty('DOP_REC') && criteries[0]['common']['DOP_REC']) {
             return this.searchDopRec(criteries);
         } else if(criteries[0]['common'].hasOwnProperty('CITIZEN_ADDR')) {
             return this.searchAddres(criteries);
