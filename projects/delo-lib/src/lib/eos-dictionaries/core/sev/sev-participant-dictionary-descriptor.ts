@@ -135,9 +135,9 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                     if (mapSevParticipan.get('' + part.ISN_LCLASSIF)) {
                         const time = mapSevParticipan.get('' + part.ISN_LCLASSIF);
                         const day = moment(time).format("DD.MM.YYYY");
-                        const hours = moment(time).hours();
-                        const minutes = moment(time).minutes();
-                        const seconds = moment(time).seconds();
+                        const hours = `${moment(time).hours()}`.length === 1 ? '0' + moment(time).hours() : moment(time).hours();
+                        const minutes = `${moment(time).minutes()}`.length === 1 ? '0' + moment(time).minutes() : moment(time).minutes();
+                        const seconds = `${moment(time).seconds()}`.length === 1 ? '0' + moment(time).seconds() : moment(time).seconds();
 
                         date = `${day}, ${hours}:${minutes}:${seconds}`;
                     }
