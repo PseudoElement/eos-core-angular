@@ -13,7 +13,10 @@ export class MessagesComponent implements OnDestroy {
     private _subscription: Subscription;
 
     constructor(private _msgSrv: EosMessageService) {
-        this._subscription = _msgSrv.messages$.subscribe((messages) => this.messages = messages.filter(v => !v.authMsg));
+        this._subscription = _msgSrv.messages$.subscribe((messages) => {
+            this.messages = messages.filter(v => !v.authMsg)
+            this._deleteTimeoutFromWarnings()
+        });
     }
 
     onClose(message: IMessage) {
@@ -23,4 +26,9 @@ export class MessagesComponent implements OnDestroy {
     ngOnDestroy() {
         this._subscription.unsubscribe();
     }
+
+    private _deleteTimeoutFromWarnings(){
+        this.messages.forEach(message=> message.type === "warning" && delete message.dismissOnTimeout)
+    }
+
 }

@@ -1,23 +1,31 @@
-<alert *ngFor="let message of messages"
+<ng-container *ngFor="let message of messages">
+    <!--task#168421 - Сообщения об успешном удалении, сохранении и т.п. не показывать-->
+    <alert
+    *ngIf="message.type !== 'success'"
     class="eos-adm-alert"
+    (click)="message.type !== 'warning' && onClose(message)"
     [type]="message.type"
     [dismissible]="true"
-    (click)="onClose(message)"
     [dismissOnTimeout]="message.dismissOnTimeout">
     <div class="alert-icon">
         <!-- <span [ngClass]="'eos-adm-icon eos-adm-icon-close-white'"></span> -->
         <span class="eos-adm-icon small"
             [ngClass]="{
-            'eos-adm-icon-checkbox-white': message.type==='success',
-            'eos-adm-icon-close-white': message.type==='danger',
-            'eos-adm-icon-info-white': message.type==='info' || message.type==='warning'}"></span>
+            'eos-adm-icon-checkbox-white': message.type === 'success',
+            'eos-adm-icon-close-white': message.type === 'danger',
+            'eos-adm-icon-info-white': message.type === 'info' || message.type === 'warning'}"></span>
     </div>
     <div class="alert-body">
-        <span>
-                <ng-container *ngIf="message.title && message.title.length">
-                    {{message.title}}<br>
-                </ng-container>
-                    {{message.msg}}
-        </span>
+            <div class="alert-body-content">
+                    <ng-container *ngIf="message.title && message.title.length">
+                        {{message.title}}<br>
+                    </ng-container>
+                        {{message.msg}}
+            </div>
+            <div *ngIf="message.type === 'warning'" class="alert-body-close-btn">
+                <button type="button" class="btn btn-primary-full" (click)="onClose(message)">СКРЫТЬ</button>
+            </div>
     </div>
 </alert>
+</ng-container>
+

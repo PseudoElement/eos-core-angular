@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs/';
 
-import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT, WARN_DISMISS_TIMEOUT } from '../core/message.interface';
+import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT } from '../core/message.interface';
 import { EosTooltipService } from './eos-tooltip.service';
 @Injectable()
 export class EosMessageService {
@@ -29,7 +29,6 @@ export class EosMessageService {
                     console.error(message);
                     break;
                 case 'warning':
-                    message.dismissOnTimeout = WARN_DISMISS_TIMEOUT;
                     console.warn(message);
                     break;
                 default:
