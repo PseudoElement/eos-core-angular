@@ -1,10 +1,8 @@
-import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.component';
 import { Component, Injector, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { BaseCardEditDirective } from './base-card-edit.component';
 import { PipRX, SEV_ASSOCIATION, SEV_RULE, SEV_PARTICIPANT_RULE } from '../../eos-rest';
 import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV, MESSAGE_TO_RENAME_ORGANIZATION_SEV } from '../../eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ALL_ROWS, _ES } from '../../eos-rest/core/consts';
 import { SevIndexHelper } from '../../eos-rest/services/sevIndex-helper';
 import { WaitClassifService } from '../../app/services/waitClassif.service';
@@ -22,7 +20,6 @@ export class SevParticipantCardEditComponent extends BaseCardEditDirective imple
     @ViewChild('pop2', { static: true }) pop2;
     _logDeletOrg: boolean;
     _orgName: any;
-    modalWindow: BsModalRef;
     private _flagSetOrigin: boolean = true;
     private _usedRulesString; // правила которые мы будем отображать
     private _usedRules; // правила которые есть у пользователя
@@ -39,7 +36,6 @@ export class SevParticipantCardEditComponent extends BaseCardEditDirective imple
         private _apiSrv: PipRX,
         /* private _zone: NgZone, */
         private _msgSrv: EosMessageService,
-        private _modalSrv: BsModalService,
         private _waitClassif: WaitClassifService,
         private _errorHelper: ErrorHelperServices,
         private _appCtx: AppContext
@@ -173,20 +169,6 @@ export class SevParticipantCardEditComponent extends BaseCardEditDirective imple
             this._msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
         }
     }
-
-    chooseRules() {
-        this.modalWindow = null;
-        this.modalWindow = this._modalSrv.show(RulesSelectComponent, { class: 'sev-rules-select-modal modal-lg' });
-        this.modalWindow.content.initbyLists(this._listRules, this._usedRules);
-        if (this.modalWindow) {
-            const subscription = this.modalWindow.content.onChoose.subscribe((res) => {
-                this._usedRules = res.used;
-                this._usedRulesString = this._updateUsedRules(res.list, res.used);
-                this.changesRrules(res.list, res.used);
-                subscription.unsubscribe();
-            });
-        }
-    }
     changesRrules(list: SEV_RULE[], used: SEV_RULE[]) {
         used.forEach((u: SEV_RULE) => {
             if (this._originSrules.has(u.ISN_LCLASSIF)) {
@@ -213,9 +195,9 @@ export class SevParticipantCardEditComponent extends BaseCardEditDirective imple
     }
 
     getStringUsedRules(): string {
-        if (this._usedRulesString) {
+        if (this.getValue('rec.rules')) {
             this.pop2.hide();
-            return this._usedRulesString;
+            return this.getValue('rec.rules');
         }
         this.pop2.show();
         return '...';
