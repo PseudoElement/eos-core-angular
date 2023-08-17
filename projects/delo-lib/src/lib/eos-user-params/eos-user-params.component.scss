@@ -19,9 +19,15 @@
             }
         }
         .user-group-form {
+            line-height: 32px;
             margin-bottom: 16px;
+            >span{
+                font-size: 16px;
+                color: $black;
+            }
             .inputs-inline {
                 display: flex;
+                color: $grey;
                 .input-title {
                     padding-top: 6px;
                     margin-right: 10px;
