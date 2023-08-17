@@ -52,7 +52,9 @@ export class OrganizationNodeInfoComponent {
     }
 
     get global_id() {
-        return this.node.data.rec.GLOBAL_ID || '...';
+        console.log('this.node.data', this.node.data);
+        
+        return this.node.data?.sev?.GLOBAL_ID || '...';
     }
 
     get id_certificate() {
