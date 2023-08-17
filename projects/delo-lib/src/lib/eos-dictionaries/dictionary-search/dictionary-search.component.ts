@@ -453,7 +453,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                 console.log(err)
                 console.error('Error: ', err.message)
             }
-
         })
     }
 
@@ -481,7 +480,13 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     async getProtOperation(param: string) {
         const protNameParam = this.creatorParam.protName(param);
         const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam);
-        this.allOperation = resProtName.data.protNamesPg ? resProtName.data.protNamesPg.items : [];
+        const uniqOperation: ProtNames[] = [];
+        if(resProtName.data.protNamesPg) {
+            resProtName.data.protNamesPg.items.forEach(el => {
+                uniqOperation.find(uniqEl => uniqEl.describtion === el.describtion) ? null : uniqOperation.push(el);
+            })
+        }   
+        this.allOperation = uniqOperation;
     }
 
     public changeFlagSelectPopover() {
