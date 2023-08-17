@@ -141,9 +141,9 @@ export class SevSyncDictsComponent implements OnInit {
     private _checkSevDeparments(ORG_DUE: string) { // чтение нужного подразделения
         this._api.read<DEPARTMENT>({ DEPARTMENT: PipRX.criteries({ DUE_LINK_ORGANIZ: ORG_DUE }) }).then(items => {
             if (items && items.length > 0) { // есть подразделение слинкованное с организаций
-                const ISN = items[0].ISN_NODE;
-
-                this._api.read<DEPARTMENT>({ DEPARTMENT: PipRX.criteries({ ISN_HIGH_NODE: ISN }) }).then(employees => { // чтение сотрудников подразделения
+                // const ISN = items[0].ISN_NODE;
+                const due = items[0].DUE;
+                this._api.read<DEPARTMENT>({ DEPARTMENT: PipRX.criteries({ DUE: due + '%', IS_NODE: 1 }) }).then(employees => { // чтение сотрудников подразделения
                     if (employees && (employees.length > 0)) {
 
                         // проверка сотрудника в таблице SEV_ASSOC
