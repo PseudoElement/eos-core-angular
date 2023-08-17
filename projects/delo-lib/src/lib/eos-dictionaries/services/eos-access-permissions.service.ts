@@ -317,7 +317,14 @@ export class EosAccessPermissionsService {
         const accessDepartments = this.appCtx.CurrentUser.TECH_RIGHTS[E_TECH_RIGHT.Departments];
         const accessTransferDocuments = this.appCtx.CurrentUser.TECH_RIGHTS[E_TECH_RIGHT.ProcPeredachiDocs];
         const dueDep = node.data.rec.PARENT_DUE;
-        const accessTransferDocumentsDep = this.appCtx.CurrentUser.USER_TECH_List.findIndex(el => (el['FUNC_NUM'] === E_TECH_RIGHT.ProcPeredachiDocs && el['ALLOWED'] === 1 && el['DUE'] === dueDep) );
+
+        const accessTransferDocumentsDep = this.appCtx.CurrentUser.USER_TECH_List.findIndex(el => {
+            return  (
+                el['FUNC_NUM'] === E_TECH_RIGHT.ProcPeredachiDocs && 
+                el['ALLOWED'] === 1 && 
+                (el['DUE'] === dueDep || el['DUE'] === '0.')
+            )
+        } );
         return !!accessDepartments && !!accessTransferDocuments && accessTransferDocumentsDep  === -1 ? false : true;
     }
 
