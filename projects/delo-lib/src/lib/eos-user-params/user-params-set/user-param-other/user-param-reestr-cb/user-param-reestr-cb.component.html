@@ -60,12 +60,12 @@
                 </div>
             </div>
             <div style="display: inline " class="btn-action "> <!--  -->
-                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheDep() " placement="left">
+                <button [disabled]="this.form.disabled " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheDep() " placement="left">
                     <span class="eos-adm-icon eos-adm-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="listDep">
-                <button [disabled]="listDep.length===0 || !flagEdit " #pop1="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteDep();pop1.hide()" placement="left">
+                <button [disabled]="listDep.length===0 || this.form.disabled " #pop1="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteDep();pop1.hide()" placement="left">
                     <span class="eos-adm-icon eos-adm-icon-close-blue small "></span>
                 </button>
             </div>
@@ -81,12 +81,12 @@
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">
-                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheSecure() " placement="left">
+                <button [disabled]="this.form.disabled" class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover" [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheSecure() " placement="left">
                     <span class="eos-adm-icon eos-adm-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " ><!-- *ngIf="listSecur" -->
-                <button [disabled]="listSecur.length===0 || !flagEdit "  #pop3="bs-tooltip" tooltip="Очистить" tooltipAnimation="false" triggers="hover" #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteSecure();pop3.hide()" placement="left">
+                <button [disabled]="listSecur.length===0 || this.form.disabled "  #pop3="bs-tooltip" tooltip="Очистить" tooltipAnimation="false" triggers="hover" #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteSecure();pop3.hide()" placement="left">
                     <span class="eos-adm-icon eos-adm-icon-close-blue small "></span>
                 </button>
             </div>
@@ -105,12 +105,12 @@
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">
-                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheDirectory() " placement="left">
+                <button [disabled]="this.form.disabled " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" (click)="selectfromTheDirectory() " placement="left">
                     <span class="eos-adm-icon eos-adm-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="list">
-                <button [disabled]="list.length===0 || !flagEdit " #pop2="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteDirectory();pop2.hide() " placement="left">
+                <button [disabled]="list.length===0 || this.form.disabled " #pop2="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'" class="btn btn-primary-light add-storage " (click)="deleteDirectory();pop2.hide() " placement="left">
                     <span class="eos-adm-icon eos-adm-icon-close-blue small "></span>
                 </button>
             </div>
