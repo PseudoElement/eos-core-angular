@@ -1922,7 +1922,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             dl_from,
             dl_to,
         };
-        this._waitClassif.openClassif(config);
+        this._waitClassif.openClassif(config)
+        .catch((er) =>{
+            /** при закрытии окна окно возвращает undefined а это воспринимается как ошибка */
+            console.log('error', er);
+        });
     }
 
 }
