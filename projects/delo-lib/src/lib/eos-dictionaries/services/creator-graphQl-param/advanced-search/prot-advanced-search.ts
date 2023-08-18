@@ -9,7 +9,6 @@ export class ProtAdvancedSearch extends AbstractAdvancedSearch{
         let operDescribeperSearchParam: string = '';
         const table_ID: string = PROTOCOL_ID[dictId];
 
-        console.log({param})
         if(param.OPERATION && param.OPERATION.length) {
             const oper: string[] = [];
             param.OPERATION.forEach(el => {
