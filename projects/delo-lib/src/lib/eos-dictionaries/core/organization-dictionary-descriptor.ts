@@ -14,6 +14,7 @@ import { SearchQueryOrganization } from '../interfaces/fetch.interface';
 import { OrganizAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/organiz-advanced-search';
 import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
 import { OrganizConverterFetchRequest } from '../services/converter-fetch-request/organiz-converter';
+import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 const inheritFiields = [
     'ISN_ADDR_CATEGORY',
@@ -243,7 +244,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
 
     public async searchProto(queries: SearchQueryOrganization) {
-        const protReq: string = this.protParam.prot(queries.protocol);
+        const protReq: string = this.protParam.prot(queries.protocol, E_DICTIONARY_ID.ORGANIZ);
         const requestProt = await this.graphQl.query(protReq);
         const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
         if (protItem.length) {

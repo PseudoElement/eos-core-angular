@@ -1,5 +1,6 @@
 import { SEARCH_TYPES } from '../consts/search-types';
 import { ISelectOption } from '../../eos-common/interfaces';
+import { Protocol } from '../../eos-dictionaries/interfaces/fetch.interface'
 
 export enum E_DEPT_MODE {
     person,
@@ -211,14 +212,6 @@ export interface SearchData{
     department?: any;
     medo?: any;
     person?: any;
-    protocol?: SearchProtocol
+    protocol?: Protocol
     srchMode: string
 }
-
-export interface SearchProtocol {
-    FROM: string | null;
-    OPER_DESCRIBE: string | null;
-    TO: string | null;
-    USER_ISN:number | null;
-}
-

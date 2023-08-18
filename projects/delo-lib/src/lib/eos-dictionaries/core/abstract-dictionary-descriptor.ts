@@ -209,7 +209,7 @@ export abstract class AbstractDictionaryDescriptor {
             if (data[fld.foreignKey]) {
                 if(fld.foreignKey === "FROM"
                     || fld.foreignKey === "TO"
-                    || fld.foreignKey === "OPER_DESCRIBE"
+                    || fld.foreignKey === "OPERATION"
                     || fld.foreignKey === "USER_ISN") {
                     _criteries[fld.foreignKey] = data[fld.foreignKey];
                 } else

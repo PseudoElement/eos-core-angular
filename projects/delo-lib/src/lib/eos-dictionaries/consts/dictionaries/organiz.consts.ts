@@ -323,7 +323,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
             type: 'string',
         },
         {
-            key: 'OPER_DESCRIBE',
+            key: 'OPERATION',
             title: '',
             type: 'string',
         },
@@ -353,7 +353,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         'GATE_ID', 
         'CONTACT.MEDO_GLOBAL_ID',
         'FROM',
-        'OPER_DESCRIBE',
+        'OPERATION',
         'TO',
         'USER_ISN',
     ],

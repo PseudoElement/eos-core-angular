@@ -214,7 +214,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         type: 'string',
     },
     {
-        key: 'OPER_DESCRIBE',
+        key: 'OPERATION',
         title: '',
         type: 'string',
     },
@@ -237,7 +237,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         'DOP_REC', 
         'E_MAIL',
         'FROM',
-        'OPER_DESCRIBE',
+        'OPERATION',
         'TO',
         'USER_ISN',
     ],

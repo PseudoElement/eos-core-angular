@@ -81,9 +81,14 @@ export interface SearchQueryOrganization {
 
 export interface Protocol {
     FROM: string;
-    OPER_DESCRIBE?: string;
+    OPERATION: Operation[];
     TO: string;
-    USER_ISN: number;
+    USER_ISN:number;
+}
+
+export interface Operation {
+    describtion: string;
+    operDescribe: string;
 }
 
 export interface ResponseProt {
@@ -99,23 +104,23 @@ export interface ResponseProt {
 
 export interface ResponseProtItem {
     /** Подоперация. */
-    suboperId: string;
+    suboperId?: string;
     /** Описание операции. */
-    operDescribe: string;
+    operDescribe?: string;
     /** Комментарий. */
-    operComment: string;
+    operComment?: string;
     /** Дополнительная информация. */
-    isnProtInfo: number |  null;
+    isnProtInfo?: number |  null;
     /** Кто произвел операцию. */
-    userIsn: number;
+    userIsn?: number;
     /** Дата операции. */
-    timeStamp: string
+    timeStamp?: string
     /** Таблица. */
-    tableId: string;
+    tableId?: string;
     /** Объект. */
-    refIsn: number;
+    refIsn?: number;
     /** Операция. */
-    operId: string;
+    operId?: string;
 }
 
 export interface ResponseOrganizationItems {

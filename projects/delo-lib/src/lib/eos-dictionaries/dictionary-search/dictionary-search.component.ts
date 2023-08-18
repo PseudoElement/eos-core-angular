@@ -21,7 +21,7 @@ import * as moment from 'moment';
 import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
 import { ProtNameGraphQlParam } from '../../eos-dictionaries/services/creator-graphQl-param/protName-graphQl-param';
 import { ApolloQueryResult } from '@apollo/client'
-import { ProtNames, ResponseProtNames } from 'eos-dictionaries/interfaces/fetch.interface';
+import { ProtNames, ResponseProtNames, Operation } from 'eos-dictionaries/interfaces/fetch.interface';
 import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
 import { PROTOCOL_ID } from '../../eos-dictionaries/consts/protocolId.const';
 
@@ -57,7 +57,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     public mode = 0;
     public formSearch: FormGroup;
     public protocolForm: FormGroup;
-    private protocolSearchNameControl: string[] = ['FROM', 'TO', 'USER_ISN', 'OPER_DESCRIBE'];
+    private protocolSearchNameControl: string[] = ['FROM', 'TO', 'USER_ISN', 'OPERATION'];
     public protocolSerchInputs: any;
     public inputs;
     public radioTopButton = [];
@@ -207,7 +207,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         if  (this.dictId === E_DICTIONARY_ID.ORGANIZ || this.dictId === E_DICTIONARY_ID.CITIZENS) {
             if(
                 this.settings.entity === 'protocol' && 
-                this.settings.full.data.protocol.OPER_DESCRIBE?.includes('DEL') &&
+                this.checkDeleted() &&
                 !this._dictSrv.viewParameters.showDeleted
             ) {
                 this.settings.opts.deleted = true;
@@ -215,6 +215,21 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
         }
         this.searchRun.emit(this.settings);
         this.fSearchPop.hide();
+    }
+
+    private checkDeleted() {
+        let flagDeleted: boolean = false;
+        if(
+            this.settings.full.data.protocol.OPERATION && 
+            this.settings.full.data.protocol.OPERATION.length
+        ) {
+            this.settings.full.data.protocol.OPERATION.forEach((el: Operation) => {
+                if(el.operDescribe === 'DEL') {
+                    flagDeleted = true;
+                }
+            })
+        }
+        return flagDeleted;
     }
 
     clearForm() {
@@ -431,18 +446,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
                         case 'TO':
                             this.searchData['protocol'][el] = data[el] ? `${moment(data[el]).format().replace('00:00:00', '23:59:59')}` : null;
                           break;
-                        case 'OPER_DESCRIBE':
-                            if(data['OPERATION']) {
-                                let oper: string = '';
-                                data['OPERATION'].forEach(el => {
-                                    if (oper) {
-                                        oper = oper + '|' + el.OPER_DESCRIBE;
-                                    } else {
-                                        oper = el.OPER_DESCRIBE;
-                                    }
-                                })
-                                this.searchData['protocol']['OPER_DESCRIBE'] = oper;
-                            }
+                        case 'OPERATION':
+                            data['OPERATION'] ? this.searchData['protocol']['OPERATION'] = JSON.parse(JSON.stringify(data['OPERATION'])) : 
+                                                this.searchData['protocol']['OPERATION'] = null;
                           break;
                         case 'USER_ISN':
                             this.searchData['protocol']['USER_ISN'] = data['USER'] ? data['user_isn'] : null;

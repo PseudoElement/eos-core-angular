@@ -8,6 +8,7 @@ import {  ADDRESS, AR_DESCRIPT, CITIZEN, REGION_CL } from '../../eos-rest';
 import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
 import { CitizensAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/citizens-advanced-search';
 import { CitizensConverterFetchRequest } from '../services/converter-fetch-request/citizens-converter';
+import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 // interface search {
 //     CITIZEN_SURNAME?: string;
@@ -187,7 +188,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
     
     async searchProtocol(data: any) {
-        const protReq: string = this.protParam.prot(data);
+        const protReq: string = this.protParam.prot(data, E_DICTIONARY_ID.CITIZENS);
         const requestProt = await this.graphQl.query(protReq);
         const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
         if (protItem.length) {
