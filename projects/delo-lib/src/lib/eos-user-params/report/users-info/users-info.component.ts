@@ -2,6 +2,7 @@ import {
     Component,
     EventEmitter,
     Input, OnChanges,
+    OnInit,
     Output, SimpleChanges,
     TemplateRef,
     ViewChild
@@ -10,13 +11,14 @@ import { UserParamsService } from '../../../eos-user-params/shared/services/user
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RtUserSelectService } from '../../../eos-user-select/shered/services/rt-user-select.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-users-info',
     templateUrl: './users-info.component.html',
-    styleUrls: ['./users-info.component.scss']
+    styleUrls: ['./users-info.component.scss'],
 })
-export class EosReportUsersInfoComponent implements OnChanges {
+export class EosReportUsersInfoComponent implements OnChanges, OnInit {
     @Input() open: boolean = false;
     @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
     @ViewChild('usersInfo', { static: true }) usersInfo;
@@ -26,17 +28,24 @@ export class EosReportUsersInfoComponent implements OnChanges {
     isFirst: boolean;
     isLast: boolean;
     src: any;
-    shortRep: boolean = false;
+    isShortReport: boolean = false;
+    isProtocol: boolean = false
     CheckAllUsers: boolean = false;
     titleDownload: string;
     printUsers: any[] = [{ data: 'Текущем пользователе', value: false }, { data: 'Всех отмеченных пользователях', value: true }];
     private nodeIndex: number = 0;
     constructor(private _userParamSrv: UserParamsService,
                 private modalService: BsModalService,
+                private _router: Router,
                 public sanitizer: DomSanitizer,
-                public _rtSrv: RtUserSelectService) { }
+                public _rtSrv: RtUserSelectService,
+                ) { }
 
 
+    ngOnInit(): void{
+        this.isProtocol = this._router.url.includes('/protocol')
+        console.log("PROTOCOL", this.isProtocol)
+    }
     ngOnChanges(changes: SimpleChanges) {
         if (this.open ) {
             this.init();
@@ -51,7 +60,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
             this.selectUser = this.users[0];
             this.src = this.getHtmlStr(this.selectUser.id);
         }
-        this.shortRep = false;
+        this.changeReportSize(false)
         this.CheckAllUsers = false;
         this.nodeIndex = 0;
         this._updateBorders();
@@ -84,8 +93,12 @@ export class EosReportUsersInfoComponent implements OnChanges {
         this._updateBorders();
     }
 
-    PrintData() {
+    public downloadShortReport() {
         this.InformationSelectedUsers(this.selectUser);
+    }
+
+    public changeReportSize(isShort: boolean): void{
+        this.isShortReport = isShort;
     }
 
     download(filename, data) {
@@ -148,7 +161,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
         this.closeModal.emit(true);
     }
 
-    printFullReport() {
+    public downloadFullReport() {
         let url = '';
         let title = '';
 
@@ -160,12 +173,24 @@ export class EosReportUsersInfoComponent implements OnChanges {
             title = 'Полные сведения по всем пользователям';
             url = `../CoreHost/FOP/UserRights/${strId}`;
         } else {
-            title = `Полные сведения ${this.selectUser.login}`;
+            console.log("SELECTED_USER",this.selectUser)
+            title = this._getFileTitleFullReport()
             url = `../CoreHost/FOP/UserRights/${this.selectUser.id}`;
         }
         this._userParamSrv.createFullReportHtml(url, title);
     }
-
+    private _getFileTitleFullReport(): string{
+        const iframe = window.frames['iframe'].contentWindow
+        const iframeContent = iframe.document.body.innerText as string
+        const date = iframeContent.split('Дата: ')[1].slice(0, 16)
+        if(this.isProtocol) return `Протокол редактирования пользователя ${this.selectUser.login} ${date}.html`
+        else return `Полные сведения ${this.selectUser.login}`
+    }
+    public openPrintWindow(){
+        const iframe = window.frames['iframe'].contentWindow
+        iframe.focus()
+        iframe.print()
+    }
     private _updateBorders() {
         this.isFirst = this.nodeIndex <= 0;
         this.isLast = this.nodeIndex >= this.users.length - 1 || this.nodeIndex < 0;

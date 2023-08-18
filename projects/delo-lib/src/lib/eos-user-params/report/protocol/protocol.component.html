@@ -21,24 +21,24 @@
                         <button
                             class="btn btn-primary-light bth-size-prot "
                             [disabled]="isnNow === undefined"
-                            triggers="hover" 
+                            triggers="hover"
                             [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
                             (click)="GetRefFile()"
                             placement="bottom"
                             container="body"
                             containerClass="tooltip-info">
-                         <span class="eos-adm-icon small eos-adm-icon-open-read-only-blue"></span>
+                                <span class="eos-adm-icon small eos-adm-icon-open-read-only-blue"></span>
                         </button>
                         <button
                             class="btn btn-primary-light bth-size-prot"
                             [disabled]="isnNow === undefined || isnNext === undefined"
-                            triggers="hover" 
+                            triggers="hover"
                             [tooltip]="closeTooltip === true ? 'Сравнить с предыдущей' : null"
                             (click)="getUnitFile()"
                             placement="bottom"
                             container="body"
                             containerClass="tooltip-info">
-                         <span class="eos-adm-icon small eos-icon-compare-doc-blue"></span>
+                                <span class="eos-adm-icon small eos-icon-compare-doc-blue"></span>
                         </button>
                     </div>
                 </div>
@@ -86,10 +86,11 @@
                     </div>
                 </div>
                 <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
-        </div>
-        <div class="spinner-prot" *ngIf="isLoading">
-            <eos-spinner size="lg"></eos-spinner>
+            </div>
+            <div class="spinner-prot" *ngIf="isLoading">
+                <eos-spinner size="lg"></eos-spinner>
+            </div>
         </div>
     </div>
-</div>
+    <eos-users-info [open]="isOpenUserInfo" (closeModal)="setIsOpenUserInfo(false)"></eos-users-info>
 </div>

@@ -1,16 +1,41 @@
 <ng-template #usersInfo>
     <div class="full-search-top usual-border">
-            <span class="pull-left title xl-font">Данные по пользователю {{selectUser?.name}}</span>
-            <div class="pull-right srch-btns">
+            <span *ngIf="users.length < 2; else manyUsers" class="pull-left title xl-font">Данные по пользователю {{selectUser?.name}}</span>
+            <ng-template #manyUsers>
+                <span class="pull-left title xl-font">Данные по отмеченным пользователям</span>
+            </ng-template>
+            <div *ngIf="!isProtocol; else fromProtocol" class="pull-right srch-btns">
                 <button class="btn btn-primary s-font upper" (click)="close()">Закрыть</button>
-                <ng-container *ngIf="shortRep === false; else fullReport">
-                    <button class="btn btn-primary-full s-font upper" (click)="printFullReport()">Печать</button>
-                </ng-container>
-                <ng-template #fullReport>
-                    <button class="btn btn-primary-full s-font upper" (click)="PrintData()">Печать</button>
-                </ng-template>
+                <button class="btn btn-primary-full s-font upper" (click)="isShortReport ? downloadShortReport() : downloadFullReport()">
+                    Печать
+                </button>
             </div>
-        </div>
+            <ng-template #fromProtocol>
+                <div class="pull-right srch-btns action-buttons">
+                    <button class="btn btn-primary-light"
+                            tooltip="Экспортировать"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            (click)="isShortReport ? downloadShortReport() : downloadFullReport()">
+                                <span class="eos-adm-icon eos-adm-icon-download small"></span>
+                    </button>
+                    <button class="btn btn-primary-light"
+                            tooltip="Печать"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            (click)="openPrintWindow()">
+                                <span class="eos-adm-icon eos-adm-icon-print-blue small"></span>
+                    </button>
+                    <button class="btn btn-primary-light"
+                            tooltip="Закрыть"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            (click)="close()">
+                                <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
+                    </button>
+                </div>
+            </ng-template>
+    </div>
     <div class="dir-users usual-border">
         <div class="arrow-info">
             <button class="btn btn-primary-light scroll-btn" [disabled]="isFirst" (click)="prev()">
@@ -22,13 +47,13 @@
         </div>
         <div class="short-info">
             <label class="checkbox">
-                <input type="checkbox" [checked]="shortRep" (change)="shortRep = !shortRep">
+                <input type="checkbox" [checked]="isShortReport" (change)="changeReportSize($event.target.checked)">
                 <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 Печатать краткий отчет
             </label>
         </div>
     </div>
-    <iframe class="frame-info" [src]="src" height="600" width="800" frameborder="0"></iframe>
+    <iframe class="frame-info" [src]="src" height="600" width="800" frameborder="0" id="iframe"></iframe>
     <div class="info-content-wrapper">
         <span class="pull-left info-print">Печатать информацию о:</span>
         <div class="info-radio-btn" *ngFor="let type of printUsers">

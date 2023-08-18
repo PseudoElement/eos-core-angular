@@ -86,8 +86,8 @@
                     <span *ngIf="disableLoginSearch;else surnamePatron"  class="user-list-fifth-column likeLink mar-left">ФИО</span>
                    <ng-template #surnamePatron>
                        <span class="user-list-fifth-column likeLink mar-left" (click)="sortPageList('surnamePatron')">ФИО
-                        <span 
-                            *ngIf="_apiSrv.srtConfig.surnamePatron.checked && !_apiSrv.sortDelUsersd" 
+                        <span
+                            *ngIf="_apiSrv.srtConfig.surnamePatron.checked && !_apiSrv.sortDelUsersd"
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.surnamePatron.upDoun)"
                         ></span>
                        </span>

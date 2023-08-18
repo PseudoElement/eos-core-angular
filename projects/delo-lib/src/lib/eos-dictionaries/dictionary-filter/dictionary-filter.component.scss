@@ -143,13 +143,17 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
     height: 48px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
     .title {
         height: 48px;
         line-height: 48px;
         margin-left: 20px;
     }
     .srch-btns {
-        margin: 8px 15px 8px 0;
+        // margin: 8px 15px 8px 0;
         font-size: 0;
         .btn {
             width: 82px;

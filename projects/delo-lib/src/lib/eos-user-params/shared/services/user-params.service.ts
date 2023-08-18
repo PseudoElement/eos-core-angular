@@ -743,7 +743,6 @@ export class UserParamsService {
         }
         const time = new Date().toLocaleString();
         const htmlTitle = `Краткие сведения ${aboutInfo}`;
-
         const html: string = HTML_TEMPLATE_SHORT_REPORT
             .replace(HTML_TEMPLATE_TITLE, htmlTitle)
             .replace(HTML_TEMPLATE_TITLE, htmlTitle)

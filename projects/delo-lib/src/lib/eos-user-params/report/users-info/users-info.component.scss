@@ -78,7 +78,9 @@
     border-bottom-style: solid;
     height: 48px;
     display: flex;
-    justify-content: space-between;;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
     .arrow-info {
         display: flex;
         .btn{
@@ -88,7 +90,6 @@
     }
     .short-info {
         padding-right: 20px;
-        padding-top: 7px;
     }
     .info-print{
         color: black;

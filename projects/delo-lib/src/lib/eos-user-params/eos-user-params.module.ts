@@ -98,6 +98,7 @@ import { RemasterSstuComponent } from './user-params-set/user-param-ext-exch/rem
 import { RightDepertOrganizSstu } from './rights-delo/rights-delo-absolute-rights/right-organ-sstu/right-organ-sstu.component';
 import { RightSrchGroupomponent } from './rights-delo/rights-delo-absolute-rights/right-srch-group/right-srch-group.component';
 import { LoginLengthService } from './shared/services/login-length.service';
+import { EosUserSelectModule } from '../eos-user-select/eos-user-select.module';
 
 @NgModule({
     declarations: [
@@ -192,7 +193,8 @@ import { LoginLengthService } from './shared/services/login-length.service';
         BsDropdownModule,
         BsDatepickerModule.forRoot(),
         DragulaModule,
-        EosDictionariesModule
+        EosDictionariesModule,
+        EosUserSelectModule
     ],
     providers: [
         UserParamApiSrv,

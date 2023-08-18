@@ -15,7 +15,7 @@ enum EIsnRef {
 @Component({
   selector: 'eos-protocol',
   templateUrl: './protocol.component.html',
-  styleUrls: ['./protocol.component.scss']
+  styleUrls: ['./protocol.component.scss'],
 })
 export class EosReportProtocolComponent implements OnInit, OnDestroy {
     findUsers: any;
@@ -55,6 +55,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         { isn: false }
     ];
     isLoading: boolean = false;
+    isOpenUserInfo: boolean = false;
     public config: IPaginationConfig;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -341,9 +342,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
 
     GetRefFile() {
         this.closeTooltip = true;
-        setTimeout(() => {
-            window.open(`../CoreHost/FOP/GetFile/${this.isnNow}/3x.html?nodownload=true`, '_blank', 'width=900, height=700, scrollbars=1');
-        }, 0);
+        this.setIsOpenUserInfo(true)
     }
     ConvertDate(convDate) {
         const date = new Date(convDate);
@@ -373,9 +372,11 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
     }
-  close() {
-    this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-  }
-
+    close() {
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
+    }
+    setIsOpenUserInfo(isOpen: boolean): void{
+        this.isOpenUserInfo = isOpen
+    }
 }
 

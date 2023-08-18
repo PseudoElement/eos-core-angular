@@ -54,6 +54,7 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
         AccordionModule,
         EosParametersModule,
     ],
+    exports: [EosReportUsersInfoComponent],
     providers: [
         TreeUserSelectService,
         RtUserSelectService,
