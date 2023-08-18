@@ -27,6 +27,7 @@ import { IMessage } from '../../eos-common/interfaces';
 import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT, CONFIRM_UNAVAILABLE_SYSTEMS } from '../../eos-dictionaries/consts/confirm.consts';
+import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 
 export enum ESelectDepart {
     selectOneElem = 0
@@ -598,7 +599,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                             if (this.getCheckAdmSave()) {
                                 const answ: USER_CL[] = await this._userParamSrv.getQueryTech();
                                 if (!(answ.length !== 0)) {
-                                    this.messageAlert({ title: 'Предупреждение', msg: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`, type: 'warning' });
+                                    this.confirmAlert({
+                                        title: 'Предупреждение',
+                                        typeIcon: 'warning',
+                                        bodyList: [],
+                                        body: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`,
+                                        buttons: [
+                                            {title: 'Скрыть ', result: 1, isDefault: true},
+                                        ],
+                                    })
                                     return 'error';
                                 }
                             }
@@ -1252,6 +1261,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 title,
             }
         );
+    }
+
+    private confirmAlert(config: IConfirmWindow2) {
+        this._confirmSrv.confirm2(config);
     }
 
     private AddUnderscore(string: string): string {
