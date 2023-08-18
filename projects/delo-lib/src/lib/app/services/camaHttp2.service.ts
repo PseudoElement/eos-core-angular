@@ -14,15 +14,15 @@ export class CarmaHttp2Service {
     ) {
         this.clientCarma = null;
     }
-    public connect(connectStirng: string, stores: any, showError = true): Promise<any> {
-        return new Promise((res, rej) => {
+    public async connect(connectString: string, stores: any, showError = true): Promise<any> {
+        return new Promise(async (res, rej) => {
             try {
-                this.clientCarma = new CarmaHttp(connectStirng, stores, true);
-                this.clientCarma.Initialize();
-                this.carmaInitialized = true;
-                res(true);
+                this.clientCarma = new CarmaHttp(connectString, stores, true);
+                await this.clientCarma.InitializeAsync(res, rej);
+                this.carmaInitialized = true
             } catch (e) {
                 this.clientCarma = null;
+                this.carmaInitialized = false
                 if (showError) {
                     this.errHalper.errorHandler(e);
                 }
@@ -30,7 +30,7 @@ export class CarmaHttp2Service {
             }
         });
     }
-    public connectWrapper(connectStirng: string, stores: any, showError?: boolean) {
+    public async connectWrapper(connectStirng: string, stores: any, showError?: boolean): Promise<boolean> {
         return new Promise((resolve, reject) => {
             try {
                 this.connect(connectStirng, stores, showError).then(() => {
