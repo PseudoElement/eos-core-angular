@@ -42,6 +42,9 @@ export class CertStoresService {
     get getListCetsStores() {
         return this.listsCetsStores;
     }
+    set setListlCetsStores(list: IListCertStotes[]) {
+        this.listsCetsStores = list;
+    }
     get getCurrentSelectedNode$() {
         return this._currentSelectedNode$.asObservable();
     }
@@ -186,18 +189,7 @@ export class CertStoresService {
     public showCert(certId: string): void {
         this.carmaHttp2Srv.showCertInfo(certId);
     }
-    public parseName(elem): string {
-        if (elem.Location === 'sslm') {
-            const address = String(elem.Address).trim();
-            if (address.length) {
-                return `${elem.Location}:${address}\\${elem.Name}`;
-            }
-            return `${elem.Location}:${elem.Name}`;
-        } else {
-            return `${elem.Location}:${elem.Name}`;
-        }
-    }
-    private createInitCarmaStores(listCertStores: string[]) {
+    public createInitCarmaStores(listCertStores: string[]) {
         const list = [];
         listCertStores.forEach((str: string) => {
             // let address = '';
@@ -213,7 +205,49 @@ export class CertStoresService {
         });
         this.initCarmaStores = list;
     }
-
+    public parseName(elem): string {
+        if (elem.Location === 'sslm') {
+            const address = String(elem.Address).trim();
+            if (address.length) {
+                return `${elem.Location}:${address}\\${elem.Name}`;
+            }
+            return `${elem.Location}:${elem.Name}`;
+        } else {
+            return `${elem.Location}:${elem.Name}`;
+        }
+    }
+    public createListCetsStores(): IListCertStotes[] {
+        this.unicStoreName.clear();
+        const a = [];
+        this.initCarmaStores.forEach(elem => {
+            this.unicStoreName.add(this.parseName(elem));
+            a.push(Object.assign({
+                marked: false,
+                isSelected: false,
+                selectedMark: false,
+            }, elem));
+        });
+        return a;
+    }
+    public async initCarmaServer() {
+        let addr;
+        /* if (this.formControlInitString) {
+            addr = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
+        } else { */
+            let cryptoStr;
+            this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
+                if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
+                    cryptoStr = params['PARM_VALUE'];
+                }
+            });
+            if (!cryptoStr) {
+                const crypto = await this._appContext.get99UserParms('CRYPTO_INITSTR');
+                cryptoStr = crypto['PARM_VALUE'];
+            }
+            addr = cryptoStr ? cryptoStr : 'http://localhost:8080//';
+        /* } */
+        return this.carmaHttp2Srv.connect(addr, this.initCarmaStores);
+    }
     private getTitle(arr: string[]): string {
         const location = arr[0];
         const AddressWithName = arr[1];
@@ -240,20 +274,6 @@ export class CertStoresService {
             return '';
         }
     }
-
-    private createListCetsStores(): IListCertStotes[] {
-        this.unicStoreName.clear();
-        const a = [];
-        this.initCarmaStores.forEach(elem => {
-            this.unicStoreName.add(this.parseName(elem));
-            a.push(Object.assign({
-                marked: false,
-                isSelected: false,
-                selectedMark: false,
-            }, elem));
-        });
-        return a;
-    }
     private _orderByField() {
         this.listsCetsStores.sort((a: IListCertStotes, b: IListCertStotes) => {
             const _a = a.Name.toUpperCase();
@@ -269,25 +289,7 @@ export class CertStoresService {
             }
         });
     }
-    private async initCarmaServer() {
-        let addr;
-        /* if (this.formControlInitString) {
-            addr = this.formControlInitString.value ? this.formControlInitString.value : 'http://localhost:8080//';
-        } else { */
-            let cryptoStr;
-            this._appContext.CurrentUser['USER_PARMS_List'].forEach((params) => {
-                if (params['PARM_NAME'] === 'CRYPTO_INITSTR') {
-                    cryptoStr = params['PARM_VALUE'];
-                }
-            });
-            if (!cryptoStr) {
-                const crypto = await this._appContext.get99UserParms('CRYPTO_INITSTR');
-                cryptoStr = crypto['PARM_VALUE'];
-            }
-            addr = cryptoStr ? cryptoStr : 'http://localhost:8080//';
-        /* } */
-        return this.carmaHttp2Srv.connect(addr, this.initCarmaStores);
-    }
+    
     private checkMarkNode() {
         let check = false;
         this.listsCetsStores.forEach(node => {

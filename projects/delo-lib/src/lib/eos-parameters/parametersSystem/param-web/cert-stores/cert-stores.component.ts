@@ -99,8 +99,6 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     redactStores() {
         this.CertStoresModal = true;
         this.updateItem = this.CurrentSelect;
-        console.log(this.updateItem);
-        
         this.addCertStoresModal.show();
     }
     deleteStores() {
@@ -112,8 +110,9 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
         if (typeof this.formControlStores.value === 'string') {
             certStores = this.formControlStores.value.split('\t');
         }
-        this.certStoresService.initCarma(certStores);
-        this.listCertStores = this.certStoresService.getListCetsStores;
+        this.certStoresService.createInitCarmaStores(certStores);
+        this.listCertStores = this.certStoresService.createListCetsStores();
+        this.certStoresService.setListlCetsStores = this.listCertStores;
     }
     closeAddCertModal() {
         this.init();
