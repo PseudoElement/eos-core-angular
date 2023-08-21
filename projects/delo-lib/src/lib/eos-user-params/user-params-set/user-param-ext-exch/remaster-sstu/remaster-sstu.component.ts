@@ -62,8 +62,10 @@ export class RemasterSstuComponent implements OnInit, OnDestroy {
         )
         .subscribe(() => {
             this.setNewValInputs();
-            this.flagEdit = false;
-            this.form.disable({emitEvent: false});
+            if (!this.isCurrentSettings) {
+                this.flagEdit = false;
+                this.form.disable({emitEvent: false});
+            }
         });
 
         this._RemasterService.editEmit

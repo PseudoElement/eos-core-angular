@@ -99,9 +99,11 @@ export class RemasterEmailComponent implements OnInit, OnDestroy, AfterViewInit 
             )
             .subscribe(() => {
                 this.setNewValInputs();
-                this.flagEdit = false;
-                this.form.disable({ emitEvent: false });
-                this.formMailResuve.disable({ emitEvent: false });
+                if (!this.isCurrentSettings) {
+                    this.flagEdit = false;
+                    this.form.disable({ emitEvent: false });
+                    this.formMailResuve.disable({ emitEvent: false });
+                }
             });
         this._RemasterService.editEmit
             .pipe(
