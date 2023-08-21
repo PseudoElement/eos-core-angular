@@ -1882,7 +1882,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _clearIdentityCodes() {
         const ORGS_DUES_AR = this._dictSrv.getMarkedNodes().map(item => { const rec = item.data.rec; return rec.DUE_ORGANIZ; });
         const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');
-        const urlSop = `../CoreHost/Sev/ClearIdentityCodes/'${ORGS_DUES_STR}'`;
+        const urlSop = `../CoreHost/Sev/ClearIdentityCodes/${ORGS_DUES_STR}`;
         this._dictSrv.sevClearIdentCodesSubject.next(true);
         this._api.getHttp_client().get(urlSop, { responseType: 'blob' }).toPromise().then((response: any) => {
             setTimeout(() => {
