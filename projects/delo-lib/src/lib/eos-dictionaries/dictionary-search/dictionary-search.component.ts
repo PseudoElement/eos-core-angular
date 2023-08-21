@@ -484,7 +484,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     async getProtOperation(param: string) {
-        const protNameParam = this.creatorParam.protName(param);
+        const protNameParam = this.creatorParam.protName(param, this.dictId);
         const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam);
         const uniqOperation: ProtNames[] = [];
         if(resProtName.data.protNamesPg) {
