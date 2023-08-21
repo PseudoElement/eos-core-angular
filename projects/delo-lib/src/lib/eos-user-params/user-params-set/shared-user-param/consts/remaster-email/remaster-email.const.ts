@@ -359,6 +359,7 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             type: 'select',
             title: '',
             options: [
+                {value: '4', title: 'На ленте'},
                 {value: '0', title: 'Правый нижний'},
                 {value: '1', title: 'Правый верхний'},
                 {value: '2', title: 'Левый нижний'},
