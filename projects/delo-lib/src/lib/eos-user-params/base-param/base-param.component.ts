@@ -28,6 +28,7 @@ import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-us
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { CONFIRM_AVSYSTEMS_UNCHECKED, CONFIRM_REDIRECT_AUNT, CONFIRM_SURNAME_REDACT, CONFIRM_UNAVAILABLE_SYSTEMS } from '../../eos-dictionaries/consts/confirm.consts';
 import { IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
+import { LoginLengthService } from '../../eos-user-params/shared/services/login-length.service';
 
 export enum ESelectDepart {
     selectOneElem = 0
@@ -116,7 +117,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
         private _userSettingsService: UserSettingsService,
-        private _rtUserSel: RtUserSelectService
+        private _rtUserSel: RtUserSelectService,
+        private loginLength: LoginLengthService
     ) {
         this.subscription = this._userParamSrv.canDeactivateSubmit$
             .subscribe((rout: RouterStateSnapshot) => {
@@ -245,7 +247,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.formControls.get('DUE_DEP_NAME').setValue(this.dueDepName);
 
                 this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
-                this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
+                this.maxLoginLength = this.loginLength.definitionValue(String(this.curentUser.USERTYPE));
                 this.isLoading = false;
 
                 setTimeout(() => {
