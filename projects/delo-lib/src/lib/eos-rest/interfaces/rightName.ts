@@ -143,5 +143,7 @@ export enum E_CARD_RIGHT {
     /** 21 - Редактирование связок */
     EDIT_REF_LINK = 21,
     /** 22 - Отправка по СДС */
-    SEND_FOR_SDS = 22
+    SEND_FOR_SDS = 22,
+    /** 23 - Отправка по МЭДО */
+    SEND_FOR_MEDO = 23
 }

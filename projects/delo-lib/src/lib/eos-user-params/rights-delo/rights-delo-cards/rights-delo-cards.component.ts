@@ -78,7 +78,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             this._flagGrifs = flagG;
             this._cardSrv.prepareforEdit();
             this.editableUser = this._userParamsSetSrv.curentUser;
-            this.updateCheckbox();
             if (!this.editableUser.USERCARD_List || !this.editableUser.USERCARD_List.length) {
                 this.pageState = 'EMPTY';
                 return;
@@ -101,6 +100,23 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
                     });
                 }
             }
+            let flagMedo = true;
+            CARD_FUNC_LIST.forEach(elem => {
+                if (elem.funcNum === E_CARD_RIGHT.SEND_FOR_MEDO) {
+                    flagMedo = false;
+                }
+            });
+            if (flagMedo) {
+                /** Добавлять после Отправка по СДС, но похоже не продумали что это Отправка по СДС есть только в ЦБ */
+                CARD_FUNC_LIST.push(
+                    {
+                        funcNum: E_CARD_RIGHT.SEND_FOR_MEDO, //// 23 - Отправка по МЭДО
+                        label: 'Отправка по МЭДО',
+                        type: E_CARD_TYPE.none,
+                    }
+                );
+            }
+            this.updateCheckbox();
             this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
             this.pageState = 'VIEW';
             this.selectFuncNum(this.funcList[0]);
@@ -120,9 +136,18 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         });
     }
     updateCheckbox() {
+        let maxIndex = 0;
+        CARD_FUNC_LIST.forEach((item) => {
+            if (maxIndex < item.funcNum) {
+                maxIndex = item.funcNum;
+            }
+        });
         this.funcListDepartment = [];
         this.maxDepartmentInFuncNumber = this.editableUser['USERCARD_List'].length;
         this.editableUser['USERCARD_List'].forEach(dep => {
+            if (dep['FUNCLIST'].length < maxIndex) {
+                dep['FUNCLIST'] = dep['FUNCLIST'] + '0'.repeat(maxIndex - dep['FUNCLIST'].length);
+            }
             this.funcListDepartment.push(dep['FUNCLIST']);
         });
     }
