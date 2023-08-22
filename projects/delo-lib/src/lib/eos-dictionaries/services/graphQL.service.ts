@@ -43,7 +43,7 @@ export class GraphQLService {
       });
     }
 
-    async query(queryParam: string, fetchPolicy: FetchPolicy = 'cache-first'): Promise<ApolloQueryResult<any>> {
+    async query(queryParam: string, fetchPolicy: FetchPolicy = 'no-cache'): Promise<ApolloQueryResult<any>> {
         try{
             const result = await this.apollo.query({
                 query:  gql`query{${queryParam}}`,

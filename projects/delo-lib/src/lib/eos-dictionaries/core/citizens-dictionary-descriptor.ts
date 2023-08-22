@@ -189,7 +189,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     
     async searchProtocol(data: any) {
         const protReq: string = this.protParam.prot(data, E_DICTIONARY_ID.CITIZENS);
-        const requestProt = await this.graphQl.query(protReq, 'no-cache');
+        const requestProt = await this.graphQl.query(protReq);
         const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
         if (protItem.length) {
             const citizensReq = this.citizensParam.citizens(protItem);

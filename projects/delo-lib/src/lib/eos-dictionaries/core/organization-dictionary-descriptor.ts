@@ -245,7 +245,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
 
     public async searchProto(queries: SearchQueryOrganization) {
         const protReq: string = this.protParam.prot(queries.protocol, E_DICTIONARY_ID.ORGANIZ);
-        const requestProt = await this.graphQl.query(protReq, 'no-cache');
+        const requestProt = await this.graphQl.query(protReq);
         const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
         if (protItem.length) {
             const organizReq = this.organizParam.organiz(protItem, queries);
