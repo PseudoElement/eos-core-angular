@@ -1,6 +1,11 @@
 <ng-template #usersInfo>
     <div class="full-search-top usual-border">
-            <span *ngIf="users.length < 2; else manyUsers" class="pull-left title xl-font">Данные по пользователю {{selectUser?.name}}</span>
+            <span *ngIf="users.length < 2; else manyUsers" class="pull-left title xl-font">
+                <!--При обновлении страницы протоколов, данные о пользователе теряются
+                    Также если поставить чекбокс на пользователе в списке Пользователи, то этот пользователь
+                    будет выводиться при выборе любого протокола, поэтому отправляю запрос и сохраняю данные о пользователе в fullUserForProtocols-->
+                Данные по пользователю {{isProtocol ? fullUserForProtocols?.['CLASSIF_NAME'] : selectUser?.name}}
+            </span>
             <ng-template #manyUsers>
                 <span class="pull-left title xl-font">Данные по отмеченным пользователям</span>
             </ng-template>
@@ -53,7 +58,7 @@
             </label>
         </div>
     </div>
-    <iframe class="frame-info" [src]="src" height="600" width="800" frameborder="0" id="iframe"></iframe>
+    <iframe class="frame-info" [src]="src | safeUrl" height="600" width="800" frameborder="0" id="iframe"></iframe>
     <div class="info-content-wrapper">
         <span class="pull-left info-print">Печатать информацию о:</span>
         <div class="info-radio-btn" *ngFor="let type of printUsers">

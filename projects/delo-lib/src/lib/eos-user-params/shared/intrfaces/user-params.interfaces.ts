@@ -35,3 +35,18 @@ export interface IUserSettingsModes {
     cbr?: boolean;
     hasMode?: boolean;
 }
+
+export interface ISelectedUserSumProtocol{
+    checked: boolean
+    date: string
+    eventUser: string
+    id: number
+    isnEvent: number
+    isnUser: string
+    isnWho: string
+}
+
+export interface ISelectedUserProtocol extends ISelectedUserSumProtocol{
+    itemsQty: number
+    count: number
+}

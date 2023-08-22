@@ -56,6 +56,7 @@ import { AddControlsDirective } from './directives/add-controls.directive';
 import { EosCommonDynamicComponent } from './eos-common-dynamic/eos-common-dynamic.component';
 import { DragulaModule } from 'ng2-dragula';
 import { DragDropDirective } from './directives/app-drag-drop.directive';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
     declarations: [
@@ -88,7 +89,8 @@ import { DragDropDirective } from './directives/app-drag-drop.directive';
         TabelElementComponent,
         EosCommonDynamicComponent,
         AddControlsDirective,
-        DragDropDirective
+        DragDropDirective,
+        SafeUrlPipe
     ],
     imports: [
         BrowserModule,
@@ -118,7 +120,8 @@ import { DragDropDirective } from './directives/app-drag-drop.directive';
         TabelElementComponent,
         AddControlsDirective,
         EosCommonDynamicComponent,
-        DragDropDirective
+        DragDropDirective,
+        SafeUrlPipe
     ],
     entryComponents: [
         ConfirmWindowComponent,

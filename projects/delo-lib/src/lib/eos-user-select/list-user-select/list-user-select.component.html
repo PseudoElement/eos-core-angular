@@ -106,14 +106,13 @@
                     <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && _apiSrv.sortDelUsers !== true); else fullDueName" class="user-list-two-colomn likeLink user-list-two-colomn-title">Должностное лицо</span>
                     <ng-template #fullDueName>
                         <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
-                        (click)="sortPageList('fullDueName')">Должностное лицо
-                        <!--  @166034 убираем признак сортировки в столбце ДЛ -->
-                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked && !_apiSrv.flagDelitedPermanantly"
-                            [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"
-                        ></span>
-                        <!-- </span> -->
-
-                    </span>
+                            (click)="sortPageList('fullDueName')">Должностное лицо
+                            <!--  @166034 убираем признак сортировки в столбце ДЛ -->
+                            <span *ngIf="_apiSrv.srtConfig.fullDueName.checked && !_apiSrv.flagDelitedPermanantly"
+                                [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"
+                            ></span>
+                            <!-- </span> -->
+                        </span>
                     </ng-template>
                     <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && _apiSrv.sortDelUsers !== true); else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
                     <ng-template #depSort>

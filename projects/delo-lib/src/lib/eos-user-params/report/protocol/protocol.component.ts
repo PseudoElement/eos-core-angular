@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { EosStorageService } from '../../../app/services/eos-storage.service';
 import { Router } from '@angular/router';
+import { ISelectedUserProtocol } from '../../../eos-user-params/shared/intrfaces/user-params.interfaces';
 enum EIsnRef {
     now = 0,
     next = 1
@@ -19,12 +20,12 @@ enum EIsnRef {
 })
 export class EosReportProtocolComponent implements OnInit, OnDestroy {
     findUsers: any;
-    frontData: any;
+    frontData: ISelectedUserProtocol[];
     usersAudit: any;
     hideTree: boolean = false;
     isnNow: number;
     isnNext: number;
-    lastUser;
+    lastUser: ISelectedUserProtocol;
     initPage: boolean = false;
     checkUser: boolean = false;
     orderByStr: string = 'EVENT_DATE desc';
@@ -83,7 +84,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             }
         });
   }
-
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -319,12 +319,13 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
               isnUser: this.getUserName(user.ISN_USER),
               isnEvent: user.ISN_EVENT,
               count:  this.config.length * (this.config.current - 1) + index,
-              itemsQty: this.config.itemsQty
+              itemsQty: this.config.itemsQty,
+              id: user.ISN_USER
             });
         });
       }
 
-    GetRefIsn(getIsn: string[]) {
+    GetRefIsn(getIsn: number[]) {
         this._pipeSrv.read({
             REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': getIsn.join('|') }),
             orderby: 'UPD_DATE desc',
@@ -340,7 +341,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         });
     }
 
-    GetRefFile() {
+    openUserInfoModal(): void {
         this.closeTooltip = true;
         this.setIsOpenUserInfo(true)
     }
