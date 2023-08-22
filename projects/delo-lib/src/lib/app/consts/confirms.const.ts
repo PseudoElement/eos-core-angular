@@ -437,3 +437,11 @@ export const CONFIRM_REPORTING_ABS_RIGTH: IConfirmWindow2 = {
         { title: 'Да', result: 2, isDefault: true },
     ],
 };
+export const CONFIRM_DELETE_NOTE_SUM_PROTOCOL: IConfirmWindow2 = {
+    title: 'Подтверждение удаления',
+    body: 'Вы действительно хотите удалить навсегда выделенные записи?',
+    buttons: [
+        {title: 'Да', result: 1},
+        {title: 'Нет', result: 2, isDefault: true}
+    ]
+}

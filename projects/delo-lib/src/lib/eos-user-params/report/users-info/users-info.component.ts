@@ -8,50 +8,59 @@ import {
 } from '@angular/core';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { DomSanitizer } from '@angular/platform-browser';
 import { RtUserSelectService } from '../../../eos-user-select/shered/services/rt-user-select.service';
+import { Router } from '@angular/router';
+import { PipRX, USER_CL } from '../../../eos-rest';
 
 @Component({
     selector: 'eos-users-info',
     templateUrl: './users-info.component.html',
-    styleUrls: ['./users-info.component.scss']
+    styleUrls: ['./users-info.component.scss'],
 })
 export class EosReportUsersInfoComponent implements OnChanges {
     @Input() open: boolean = false;
+    @Input() id?: number
     @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
     @ViewChild('usersInfo', { static: true }) usersInfo;
     users: any[];
     modalRef: BsModalRef;
     selectUser: any;
+    fullUserForProtocols: USER_CL;
     isFirst: boolean;
     isLast: boolean;
     src: any;
-    shortRep: boolean = false;
+    isShortReport: boolean = false;
     CheckAllUsers: boolean = false;
     titleDownload: string;
     printUsers: any[] = [{ data: 'Текущем пользователе', value: false }, { data: 'Всех отмеченных пользователях', value: true }];
     private nodeIndex: number = 0;
+    public get isProtocol(): boolean {
+        return this._router.url.includes('/protocol') || this._router.url.includes('/sum-protocol')
+    }
     constructor(private _userParamSrv: UserParamsService,
                 private modalService: BsModalService,
-                public sanitizer: DomSanitizer,
-                public _rtSrv: RtUserSelectService) { }
-
-
+                private _router: Router,
+                public _rtSrv: RtUserSelectService,
+                private _apiSrv: PipRX
+                ) {}
     ngOnChanges(changes: SimpleChanges) {
         if (this.open ) {
             this.init();
-        } else if (!this.open && !changes.open.firstChange) {
+        } else if (!this.open && changes.hasOwnProperty('open') && !changes.open?.firstChange) {
             this.modalRef.hide();
         }
     }
-
-    init() {
+    async init() {
         this.users = this._userParamSrv.checkedUsers;
-        if (this.users.length > 0) {
+        if(this.id){
+            this.fullUserForProtocols = await this._getFullUserData()
+            this.src = this.getHtmlStr(this.id)
+        }
+        if (!this.id && this.users.length > 0) {
             this.selectUser = this.users[0];
             this.src = this.getHtmlStr(this.selectUser.id);
         }
-        this.shortRep = false;
+        this.changeReportSize(false)
         this.CheckAllUsers = false;
         this.nodeIndex = 0;
         this._updateBorders();
@@ -63,8 +72,8 @@ export class EosReportUsersInfoComponent implements OnChanges {
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info', ignoreBackdropClick: true }, ));
     }
-    getHtmlStr(id: number): any {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(`../CoreHost/FOP/UserRights/${id}`);
+    getHtmlStr(id: number): string {
+        return `../CoreHost/FOP/UserRights/${id}`
     }
     prev() {
         if (this.nodeIndex > 0) {
@@ -84,8 +93,29 @@ export class EosReportUsersInfoComponent implements OnChanges {
         this._updateBorders();
     }
 
-    PrintData() {
-        this.InformationSelectedUsers(this.selectUser);
+    public downloadShortReport() {
+        const uData = [];
+        if(this.isProtocol){
+            uData.push({
+                department: this.fullUserForProtocols.NOTE,
+                name: this.fullUserForProtocols.SURNAME_PATRON,
+                login: this.fullUserForProtocols.CLASSIF_NAME
+            })
+        }else{
+            const usersInfo = this.CheckAllUsers === true ? this.users : [this.selectUser];
+            usersInfo.forEach(user => {
+                uData.push({
+                    department: user.department,
+                    name: user.name,
+                    login: user.oracle_id === null ? 'УДАЛЕН' : user.login,
+                });
+            });
+        }
+        this._userParamSrv.createShortReportHtml(uData);
+    }
+
+    public changeReportSize(isShort: boolean): void{
+        this.isShortReport = isShort;
     }
 
     download(filename, data) {
@@ -102,7 +132,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
         }
     }
 
-    InformationSelectedUsers(selectUser: any): void {
+    // InformationSelectedUsers(selectUser: any): void {
         /* let NumberLine: number = 1;
         let informationContent: String = '';
         const encoding = '\uFEFF';
@@ -117,18 +147,7 @@ export class EosReportUsersInfoComponent implements OnChanges {
         const sourceHTML = encoding + header + informationContent;
         const info = this.CheckAllUsers ? `Краткие сведения по всем пользователям.html` : `Краткие сведения ${selectUser.login}.html`;
         this.download(info, sourceHTML); */
-
-        const uData = [];
-        const usersInfo = this.CheckAllUsers === true ? this.users : [selectUser];
-        usersInfo.forEach(user => {
-            uData.push({
-                department: user.department,
-                name: user.name,
-                login: user.oracle_id === null ? 'УДАЛЕН' : user.login,
-            });
-        });
-        this._userParamSrv.createShortReportHtml(uData);
-    }
+    // }
 
     // getHrefPrint(): string {
     //     if (this.CheckAllUsers) {
@@ -148,10 +167,9 @@ export class EosReportUsersInfoComponent implements OnChanges {
         this.closeModal.emit(true);
     }
 
-    printFullReport() {
+    public downloadFullReport() {
         let url = '';
         let title = '';
-
         if (this.CheckAllUsers) {
             let strId = '';
             this.users.forEach(user => {
@@ -160,12 +178,34 @@ export class EosReportUsersInfoComponent implements OnChanges {
             title = 'Полные сведения по всем пользователям';
             url = `../CoreHost/FOP/UserRights/${strId}`;
         } else {
-            title = `Полные сведения ${this.selectUser.login}`;
-            url = `../CoreHost/FOP/UserRights/${this.selectUser.id}`;
+            title = this._getFileTitleFullReport()
+            const id = this.id ?? this.selectUser?.id //this.id - если компонент используется в протоколах, selectUser.id - Данные по отмеченным пользователям (раздел Пользователи)
+            url = `../CoreHost/FOP/UserRights/${id}`;
         }
         this._userParamSrv.createFullReportHtml(url, title);
     }
-
+    private _getFileTitleFullReport(): string {
+        const iframe = window.frames['iframe'].contentWindow
+        const iframeContent = iframe.document.body.innerText as string
+        const date = iframeContent.split('Дата: ')[1].slice(0, 16)
+        const login = this.isProtocol ? this.fullUserForProtocols.CLASSIF_NAME : this.selectUser?.login
+        if(this.isProtocol) return `Протокол редактирования пользователя ${login} ${date}.html`
+        else return `Полные сведения ${login}.html`
+    }
+    /*Метод для получения подразделения и логина пользователя только для протоколов*/
+    private async _getFullUserData(): Promise<USER_CL> {
+       try{
+            const users = await this._apiSrv.read<USER_CL>({ USER_CL :{criteries: {ISN_LCLASSIF: this.id}}})
+            return users[0]
+        }catch(e){
+            console.error(e)
+        }
+    }
+    public openPrintWindow(){
+        const iframe = window.frames['iframe'].contentWindow
+        iframe.focus()
+        iframe.print()
+    }
     private _updateBorders() {
         this.isFirst = this.nodeIndex <= 0;
         this.isLast = this.nodeIndex >= this.users.length - 1 || this.nodeIndex < 0;

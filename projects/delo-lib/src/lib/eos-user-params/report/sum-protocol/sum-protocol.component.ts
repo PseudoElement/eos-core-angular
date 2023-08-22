@@ -10,6 +10,9 @@ import { ALL_ROWS } from '../../../eos-rest/core/consts';
 import { EosStorageService } from '../../../app/services/eos-storage.service';
 import { USER_PARMS } from '../../../eos-rest/interfaces/structures';
 import { AppContext } from '../../../eos-rest/services/appContext.service';
+import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
+import { BUTTON_RESULT_NO, CONFIRM_DELETE_NOTE_SUM_PROTOCOL } from '../../../app/consts/confirms.const';
+import { ISelectedUserSumProtocol } from '../../../eos-user-params/shared/intrfaces/user-params.interfaces';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -18,14 +21,14 @@ import { AppContext } from '../../../eos-rest/services/appContext.service';
 })
 
 export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
-  findUsers: any;
-  frontData: any;
+  findUsers: any[];
+  frontData: ISelectedUserSumProtocol[];
   usersAudit: any;
   checkUser: boolean = false;
   flagChecked: boolean;
   hideTree: boolean = false;
   checkAll: string;
-  lastUser;
+  lastUser: ISelectedUserSumProtocol;
   isnRefFile: number;
   initPage: boolean = false;
   clearResult: boolean = false;
@@ -58,6 +61,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     { isn: false }
   ];
   isLoading: boolean = false;
+  isOpenUserInfo: boolean = false
   public config: IPaginationConfig;
   public markedNodes = [];
   public protocolUser: boolean;
@@ -72,7 +76,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     private _errorSrv: ErrorHelperServices,
     private _storageSrv: EosStorageService,
     private _appContext: AppContext,
-    private _msgSrv: EosMessageService) {
+    private _msgSrv: EosMessageService,
+    private _confirmSrv: ConfirmWindowService
+    ) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -93,7 +99,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         }
       });
   }
-
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -151,15 +156,14 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           type: 'warning'
         });
         this.frontData = [];
-        this.isLoading = false;
       } else {
         this.ParseDate(this.usersAudit);
       }
     })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
-        this.isLoading = false;
-      });
+      })
+      .finally(() => this.isLoading = false)
   }
 
   PaginateData(length, orderStr, skip?) {
@@ -189,13 +193,12 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           this.ParseInitData(this.usersAudit);
         } else {
           this.flagChecked = null;
-          this.isLoading = false;
         }
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
-        this.isLoading = false;
-      });
+      })
+      .finally(() => this.isLoading = false)
   }
 
   ParseInitData(data) {
@@ -283,7 +286,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   SelectUsers(data) {
     let isnUser,
-      isnWho;
+        isnWho;
     this.critUsers.length = 0;
     const b = new Set();
     data.map((x) => {
@@ -325,9 +328,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     }
     if (usersCheck.length > 0) {
       this.GetRefIsn(this.lastUser.isnEvent);
-      this.flagChecked = false;
-    }
-    if (usersCheck.length > 0) {
       this.flagChecked = false;
     }
     if (usersCheck.length === 0) {
@@ -399,7 +399,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         }
       });
     }
-    return deleteAudit === true ? false : true;
+    return deleteAudit ? false : true;
   }
 
   GetRefIsn(isnEvent) {
@@ -451,7 +451,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         eventUser: eventUser,
         isnWho: this.getUserName(user.ISN_WHO),
         isnUser: this.getUserName(user.ISN_USER),
-        isnEvent: user.ISN_EVENT
+        isnEvent: user.ISN_EVENT,
+        id: user.ISN_USER,
       });
       //   }
     });
@@ -549,7 +550,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           });
           this.frontData = [];
           this._user_pagination.totalPages = 0;
-          this.isLoading = false;
         } else {
           const parsePosts = data.TotalRecords;
           if (parsePosts !== undefined) {
@@ -566,9 +566,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         this.initPage = true;
       })
       .catch((error) => {
-        this.isLoading = false;
         this._errorSrv.errorHandler(error);
-      });
+      })
+      .finally(() => this.isLoading = false)
   }
 
   ParseDate(data) {
@@ -579,20 +579,12 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     })
       .then((users: any) => {
         for (const user of users) {
-          if (this.findUsers === undefined) {
-            this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
-          } else {
-            this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
-          }
+          this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
         }
         this.ShowData();
         this.checkNotAllUsers();
         this.isLoading = false;
       });
-  }
-
-  DeleteEvents(): Promise<any> {
-    return this._pipeSrv.batch(this.queryForDelete, '');
   }
 
   createRequestForDelete(isnEvent) {
@@ -603,50 +595,50 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this.queryForDelete.push(query);
   }
 
-  DeleteEventUser() {
+  async DeleteEventUser() {
     this.queryForDelete = [];
     let usersCheck;
+    const confirmRes = await this._confirmSrv.confirm2(CONFIRM_DELETE_NOTE_SUM_PROTOCOL)
+    if(confirmRes.result === BUTTON_RESULT_NO) return;
     this.isLoading = true;
-    if (this.frontData !== undefined) {
-      usersCheck = this.frontData.filter(user => user.checked === true);
-      for (const user of usersCheck) {
-        if (usersCheck[usersCheck.length - 1] === user) {
-          this.createRequestForDelete(user.isnEvent);
-          this.DeleteEvents()
-            .then(() => {
-              this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
-              if (this._user_pagination.totalPages % this.config.length === 0) {
-                if (this.config.current !== 1) {
-                  this.config.current = this.config.current - 1;
-                  this.config.start = this.config.start - 1;
-                }
+          if (this.frontData !== undefined) {
+          usersCheck = this.frontData.filter(user => user.checked === true);
+          for (const user of usersCheck) {
+              if (usersCheck[usersCheck.length - 1] === user) {
+                this.createRequestForDelete(user.isnEvent);
+                this._pipeSrv
+                  .batch(this.queryForDelete, '')
+                  .then(() => {
+                    this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
+                    if (this._user_pagination.totalPages % this.config.length === 0) {
+                      if (this.config.current !== 1) {
+                        this.config.current = this.config.current - 1;
+                        this.config.start = this.config.start - 1;
+                      }
+                    }
+                    if (this.frontData.length === 0) {
+                      this.config.current = 1;
+                      this.config.start = 1;
+                    }
+                    if (this.clearResult === true && this.usersAudit.length === 0) {
+                      this.frontData = [];
+                    }
+                    this._user_pagination.changePagination(this.config);
+                  }).catch(e => {
+                    this._errorSrv.errorHandler(e);
+                  })
+                  .finally(() => this.isLoading = false)
+              } else {
+                this.createRequestForDelete(user.isnEvent);
+                this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
               }
-              if (this.frontData.length === 0) {
-                this.config.current = 1;
-                this.config.start = 1;
-              }
-              if (this.clearResult === true && this.usersAudit.length === 0) {
-                this.frontData = [];
-              }
-              this._user_pagination.changePagination(this.config);
-              this.isLoading = false;
-            }).catch(e => {
-              this.isLoading = false;
-              this._errorSrv.errorHandler(e);
-            });
-        } else {
-          this.createRequestForDelete(user.isnEvent);
-          this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
-        }
-      }
-    }
+          }
+          }
   }
 
-  GetRefFile() {
+  openUserInfoModal() {
     this.closeTooltip = true;
-    setTimeout(() => {
-      window.open(`../CoreHost/FOP/GetFile/${this.isnRefFile}/3x.html?nodownload=true`, '_blank', 'width=900, height=700, scrollbars=1');
-    }, 0);
+    this.setIsOpenUserInfo(true)
   }
 
   ConvertDate(convDate) {
@@ -680,13 +672,15 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       }
     }], '')
       .then(() => {
-        this.isLoading = false;
         this.checkboxLoad = false;
       })
       .catch(() => {
-        this.isLoading = false;
         this.checkboxLoad = false;
-      });
+      })
+      .finally(() => this.isLoading = false);
+  }
+  public setIsOpenUserInfo(isOpen: boolean): void{
+    this.isOpenUserInfo = isOpen
   }
   private _getMarkedNodes() {
     if (this.frontData.length) {
