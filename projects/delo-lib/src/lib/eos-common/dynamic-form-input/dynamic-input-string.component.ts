@@ -3,7 +3,8 @@ import { DynamicInputBaseDirective } from './dynamic-input-base';
 
 @Component({
     selector: 'eos-dynamic-input-string',
-    templateUrl: 'dynamic-input-string.component.html'
+    templateUrl: 'dynamic-input-string.component.html',
+    styleUrls: ['./dynamic-input-string.component.scss']
 })
 export class DynamicInputStringComponent extends DynamicInputBaseDirective implements OnChanges {
 

@@ -485,7 +485,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
 
     async getProtOperation(param: string) {
         const protNameParam = this.creatorParam.protName(param, this.dictId);
-        const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam);
+        const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam, 'cache-first');
         const uniqOperation: ProtNames[] = [];
         if(resProtName.data.protNamesPg) {
             resProtName.data.protNamesPg.items.forEach(el => {

@@ -15,6 +15,7 @@ import { USER_PARMS } from '../../eos-rest';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ESIA_AUTH_PARM_VALUE } from '../../eos-parameters/parametersSystem/shared/consts/auth-consts';
 import { /* Router, */ RouterStateSnapshot } from '@angular/router';
+import { LoginLengthService } from '../../eos-user-params/shared/services/login-length.service';
 
 // Input, Output, EventEmitter
 @Component({
@@ -71,6 +72,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private _msgSrv: EosMessageService,
         private _appCtx: AppContext,
+        private loginLength: LoginLengthService
         // private _router: Router,
     ) {
         this.inputFields = AUNTEFICATION_CONTROL_INPUT;
@@ -190,11 +192,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
                 // this.form.controls['SELECT_AUTENT'].setValue('' + this.curentUser.USERTYPE, { emitEvent: false });
                 this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME'], { emitEvent: false });
                 const autent = this.form.get('SELECT_AUTENT').value;
-                this.maxLoginLength = autent === 0 ? '12' : '64';
-                
-                if (this._appCtx.cbBase) {
-                    this.maxLoginLength = '256';
-                }
+                this.maxLoginLength = this.loginLength.definitionValue(autent);
 
                 this.getTitle();
                 this.editMode = false;
@@ -287,8 +285,7 @@ export class AutenteficationComponent implements OnInit, OnDestroy {
     onChangeAuntef() {
         this.form.get('SELECT_AUTENT').patchValue(this.autentif.nativeElement.value);
         const autent = this.form.get('SELECT_AUTENT').value;
-        this.maxLoginLength = autent === 0 ? '12' : '64';
-
+        this.maxLoginLength = this.loginLength.definitionValue(autent);
         // if (this.originAutent === autent) {
         //     this.form.controls['CLASSIF_NAME'].setValue('' + this.curentUser['CLASSIF_NAME']);
         // } else {

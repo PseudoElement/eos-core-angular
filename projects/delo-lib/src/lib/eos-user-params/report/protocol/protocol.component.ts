@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { EosStorageService } from '../../../app/services/eos-storage.service';
 import { Router } from '@angular/router';
+import { ISelectedUserProtocol } from '../../../eos-user-params/shared/intrfaces/user-params.interfaces';
 enum EIsnRef {
     now = 0,
     next = 1
@@ -15,16 +16,16 @@ enum EIsnRef {
 @Component({
   selector: 'eos-protocol',
   templateUrl: './protocol.component.html',
-  styleUrls: ['./protocol.component.scss']
+  styleUrls: ['./protocol.component.scss'],
 })
 export class EosReportProtocolComponent implements OnInit, OnDestroy {
     findUsers: any;
-    frontData: any;
+    frontData: ISelectedUserProtocol[];
     usersAudit: any;
     hideTree: boolean = false;
     isnNow: number;
     isnNext: number;
-    lastUser;
+    lastUser: ISelectedUserProtocol;
     initPage: boolean = false;
     checkUser: boolean = false;
     orderByStr: string = 'EVENT_DATE desc';
@@ -55,6 +56,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         { isn: false }
     ];
     isLoading: boolean = false;
+    isOpenUserInfo: boolean = false;
     public config: IPaginationConfig;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -82,7 +84,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             }
         });
   }
-
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -318,12 +319,13 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
               isnUser: this.getUserName(user.ISN_USER),
               isnEvent: user.ISN_EVENT,
               count:  this.config.length * (this.config.current - 1) + index,
-              itemsQty: this.config.itemsQty
+              itemsQty: this.config.itemsQty,
+              id: user.ISN_USER
             });
         });
       }
 
-    GetRefIsn(getIsn: string[]) {
+    GetRefIsn(getIsn: number[]) {
         this._pipeSrv.read({
             REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': getIsn.join('|') }),
             orderby: 'UPD_DATE desc',
@@ -339,11 +341,9 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         });
     }
 
-    GetRefFile() {
+    openUserInfoModal(): void {
         this.closeTooltip = true;
-        setTimeout(() => {
-            window.open(`../CoreHost/FOP/GetFile/${this.isnNow}/3x.html?nodownload=true`, '_blank', 'width=900, height=700, scrollbars=1');
-        }, 0);
+        this.setIsOpenUserInfo(true)
     }
     ConvertDate(convDate) {
         const date = new Date(convDate);
@@ -373,9 +373,11 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
     }
-  close() {
-    this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-  }
-
+    close() {
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
+    }
+    setIsOpenUserInfo(isOpen: boolean): void{
+        this.isOpenUserInfo = isOpen
+    }
 }
 

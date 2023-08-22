@@ -43,14 +43,14 @@
     <div class="full-search-top usual-border">
         <span class="pull-left title xl-font">Область поиска</span>
         <div class="pull-right srch-btns">
-            <button 
-                style="background: transparent;" 
-                class="btn btn-primary s-font upper" 
-                type="button"  
-                (click)="clearForm()" 
+            <button
+                style="background: transparent;"
+                class="btn btn-primary s-font upper"
+                type="button"
+                (click)="clearForm()"
                 [disabled]="noSearchData"
             >Сбросить</button>
-            <button 
+            <button
                 [disabled]="regionForm?.invalid || noSearchData || !validFormSearch || isValidProtocolForm"
                 (click)="fullSearch()"
                 class="btn btn-primary-full s-font upper"
@@ -836,7 +836,6 @@
                 </li>
             </ul>
         </div>
-        
         <form id="citizen" *ngIf="currTab === 'common'">
             <button [disabled]="noSearchData"
                 type="submit"
@@ -963,8 +962,12 @@
             </div>
 
             <ng-content *ngTemplateOutlet="doprec"></ng-content>
-            <div class="form-group unimportant-text">
-                <label class="checkbox-inline"><input type="checkbox" name="seeNew" (change)="rest($event)" [(ngModel)]="settings.opts.onlyNew"><span></span><span class="m-font">Только новые</span></label>
+            <div class="form-group unimportant-text additional-requisite" >
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="seeNew" (change)="rest($event)" [(ngModel)]="settings.opts.onlyNew">
+                    <span></span>
+                    <span class="m-font">Только новые</span>
+                </label>
             </div>
         </form>
         <div *ngIf="currTab === 'protocol'">
@@ -1062,7 +1065,7 @@
 
         <div *ngIf="currTab === 'medo'" class="row">
             <form id="organization">
-                <button 
+                <button
                     [disabled]="noSearchData"
                     type="submit"
                     (click)="fullSearch()"
@@ -1420,27 +1423,27 @@
         >Найти</button>
 
         <div class="calendar-wrapper unimportant-text">
-            <eos-dynamic-input 
-                class="s-font" 
-                [input]="protocolSerchInputs['FROM']" 
+            <eos-dynamic-input
+                class="s-font"
+                [input]="protocolSerchInputs['FROM']"
                 [form]="protocolForm"
                 [readonly]="false"
             ></eos-dynamic-input>
 
-            <eos-dynamic-input 
-                class="s-font" 
-                [input]="protocolSerchInputs['TO']" 
+            <eos-dynamic-input
+                class="s-font"
+                [input]="protocolSerchInputs['TO']"
                 [form]="protocolForm"
                 [readonly]="false"
             ></eos-dynamic-input>
         </div>
 
         <eos-dynamic-input
-            class="s-font param-line-wrapper unimportant-text" 
-            [input]="protocolSerchInputs['USER']" 
+            class="s-font param-line-wrapper unimportant-text"
+            [input]="protocolSerchInputs['USER']"
             [form]="protocolForm"
             [readonly]="true"
-            (onClickChoose)="showDepChoose()" 
+            (onClickChoose)="showDepChoose()"
         ></eos-dynamic-input>
 
         <div class="form-group unimportant-text">
@@ -1463,8 +1466,8 @@
                     >
                         <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
                     </div>
-                    <div 
-                        class="show-select-menu-button input-button" 
+                    <div
+                        class="show-select-menu-button input-button"
                         [popover]="selectOperation"
                         containerClass="select-popover"
                         [placement]="bottom"
@@ -1472,7 +1475,7 @@
                     >
                         <span class="eos-adm-icon small"
                             [ngClass]="{
-                                'eos-adm-icon-arrow-v-blue-bottom': !flagSelectPopover, 
+                                'eos-adm-icon-arrow-v-blue-bottom': !flagSelectPopover,
                                 'eos-adm-icon-arrow-v-blue-top': flagSelectPopover
                                 }"
                         ></span>
@@ -1484,14 +1487,14 @@
 </ng-template>
 
 <ng-template #selectOperation>
-    <div 
-        class="operation-item" 
+    <div
+        class="operation-item"
         *ngFor="let operation of allOperation"
         id="operation.operDescribe"
         (click)="togleOperation(operation)"
     >
         <div class="wrapper-checkbox">
-            <span 
+            <span
                 class="eos-adm-icon small"
                 [ngClass]="{
                     'eos-adm-icon-checkbox-blue': checkOperationIsSelected(operation.describtion)

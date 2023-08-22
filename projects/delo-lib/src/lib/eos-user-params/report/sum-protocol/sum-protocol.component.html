@@ -30,7 +30,7 @@
                                 class="btn btn-primary-light bth-size-sum"
                                 triggers="hover"
                                 [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
-                                (click)="GetRefFile()"
+                                (click)="openUserInfoModal()"
                                 placement="auto"
                                 container="body"
                                 containerClass="tooltip-info"
@@ -39,9 +39,11 @@
                             </button>
                         </div>
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button [disabled]="DisabledRemoveAudits()" class="btn btn-primary-light bth-size-sum" [tooltip]="DisabledRemoveAudits() ? null : 'Удалить'" (click)="DeleteEventUser()"
-                                placement="bottom" container="body" containerClass="tooltip-info">
-                                <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
+                            <button [disabled]="DisabledRemoveAudits()"
+                                    class="btn btn-primary-light bth-size-sum" [tooltip]="DisabledRemoveAudits() ? null : 'Удалить'"
+                                    (click)="DeleteEventUser()"
+                                    placement="bottom" container="body" containerClass="tooltip-info">
+                                        <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
                             </button>
                         </div>
                     </div>
@@ -129,4 +131,6 @@
                 </div>
             </div>
         </div>
+        <eos-users-info [open]="isOpenUserInfo" [id]="lastUser?.id" (closeModal)="setIsOpenUserInfo(false)"></eos-users-info>
     </div>
+</div>

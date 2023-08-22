@@ -12,7 +12,6 @@ import { RemasterService } from '../../shared-user-param/services/remaster-servi
 import { IUserSettingsModes } from '../../../../eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-dop-operation',
-    styleUrls: ['remaster-dop-operation.component.scss'],
     templateUrl: 'remaster-dop-operation.component.html',
     providers: [FormHelperService]
 })

@@ -33,6 +33,7 @@ import { UserSettingsService } from '../../../eos-rest/services/user-settings.se
 import { UserType } from '../../../eos-rest/enum/user-type';
 import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-window2.component';
 import { ETypeDeloRight } from '../../../eos-user-params/rights-delo/rights-delo-absolute-rights/absolute-rights.consts';
+import { LoginLengthService } from '../../../eos-user-params/shared/services/login-length.service';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -127,8 +128,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private _rtUserSel: RtUserSelectService,
         private _userSettingsService: UserSettingsService,
         private _appCtx: AppContext,
-    ) {
-    }
+        private loginLength: LoginLengthService
+    ) {}
+
     ngOnInit() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List,USERDEP_List',
@@ -185,6 +187,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         });
     }
+
     afterInit() {
         this._userParamSrv.curentUser.USER_PARMS_List.forEach(elem => {
             if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
@@ -200,10 +203,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.editModeF();
         this._subscribe();
     }
+
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
+
     get validClassif() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
         if (val !== null) {
@@ -268,17 +273,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         // this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.dueDepSurname = this.curentUser['SURNAME_PATRON'];
-        this.maxLoginLength = this.curentUser.USERTYPE === 1 ? '64' : '12';
-
-        if (this._appCtx.cbBase) {
-            this.maxLoginLength = '256';
-        }
-
+        this.maxLoginLength = this.loginLength.definitionValue(String(this.curentUser.USERTYPE));
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
         return Promise.resolve();
     }
+
     /**
      * 
      * @param flag Передаём галочку технического пользователя
