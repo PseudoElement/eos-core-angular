@@ -19,9 +19,15 @@
             }
         }
         .user-group-form {
-            margin-bottom: 20px;
+            line-height: 32px;
+            margin-bottom: 16px;
+            >span{
+                font-size: 16px;
+                color: $black;
+            }
             .inputs-inline {
                 display: flex;
+                color: $grey;
                 .input-title {
                     padding-top: 6px;
                     margin-right: 10px;
@@ -50,7 +56,7 @@
     transition: .3s;
     z-index: 5;
     overflow-y: auto;
-    
+
     &.show-accordion {
         left: 0;
     }
@@ -85,8 +91,8 @@
                 padding: 0;
                 .subItem {
                     cursor: pointer;
-                    padding: 12px 15px;
-                    height: 42px;
+                    padding: 16px;
+                    height: 48px;
                     border-bottom: 1px solid $border-color-main-theme;
                     background: $white;
                     &:hover {
@@ -115,11 +121,11 @@
         }
     }
     .panel-group:first-child {
-        .param-field { 
+        .param-field {
             box-shadow: inset 0 10px 5px 0 rgba(0, 0, 0, 0.1);
         }
     }
-    
+
     .disable {
         pointer-events: none;
         cursor: no-drop;
@@ -240,7 +246,7 @@
         }
     }
     .user-group-form {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         .inputs-inline {
             display: flex;
             .input-title {

@@ -1,6 +1,6 @@
 <div class="eos-adm-nav-param block">
     <span class="eos-adm-sandwich">
-        <button class="btn sandwich" (click)="changeState()" [ngClass]="{'active': isWide }">
+        <button class="btn sandwich left" (click)="changeState()" [ngClass]="{'active': isWide }">
             <span class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-menu-white': isWide, 'eos-adm-icon-menu-blue': !isWide}"></span>
         </button>
     </span>
@@ -18,14 +18,14 @@
     </span>-->
 
     <span *ngIf="showRigth" class="eos-adm-sandwich pull-right">
-        <button *ngIf="!isSearchRightSandwich  else searchRightSandwich" class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
+        <button *ngIf="!isSearchRightSandwich; else searchRightSandwich" class="btn sandwich right" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
             <span class="icon eos-adm-icon small button-sandwich" [ngClass]="{'eos-adm-icon-menu-white': isRighSendwich, 'eos-adm-icon-menu-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
         </button>
     </span>
 </div>
 
 <ng-template #searchRightSandwich>
-    <button class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
+    <button class="btn sandwich right" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
         <span class="icon eos-adm-icon small button-sandwich" [ngClass]="{'eos-adm-icon-search-white': isRighSendwich, 'eos-adm-icon-search-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
     </button>
   </ng-template>

@@ -113,6 +113,12 @@
     }
 }
 
+.full-search-settings-container, .additional-requisite{
+    .checkbox-inline{
+        padding-left: 0;
+    }
+}
+
 .full-search-settings-container {
     padding: 20px;
     border-bottom-width: 1px;
@@ -128,8 +134,8 @@
     .radio-inline,
     .checkbox-inline {
         line-height: 32px;
-        height: 32px;
         padding-left: 0;
+        height: 32px;
         margin-right: 40px;
     }
 }
@@ -226,8 +232,7 @@
         font-size: 16px;
     }
     .margin-r {
-        width: 45%;
-        margin-right: 10px;
+        width: 48.7%;
         margin-top: 5px;
         position: relative;
     }
