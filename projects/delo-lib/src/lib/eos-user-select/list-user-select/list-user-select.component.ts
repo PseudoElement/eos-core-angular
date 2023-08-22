@@ -590,9 +590,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ViewDisableUser() {
         const id = this._route.params['value'].nodeId;
         this._apiSrv.flagDisableUser = !this._apiSrv.flagDisableUser;
-        if (this._apiSrv.flagDisableUser === true && this._apiSrv.configList.shooseTab === 0) {
+        /* if (this._apiSrv.flagDisableUser === true && this._apiSrv.configList.shooseTab === 0) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
-        }
+        } */
         // this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false }); @166034 - старая сортировка
         this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
@@ -603,11 +603,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
-        if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
+        /* if (this._apiSrv.configList.shooseTab === 0 && id !== '0.') {
             this._router.navigate(['user_param/0.']);
         } else {
             this.initView(id ? id : '0.');
-        }
+        } */
+        this.initView(id ? id : '0.');
     }
     upsavePagConfig() {
         const conf = this._storage.getItem('users');
