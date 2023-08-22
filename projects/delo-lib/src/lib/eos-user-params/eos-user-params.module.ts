@@ -97,6 +97,7 @@ import { RughtDeloAbsRightService } from './rights-delo/rights-delo-absolute-rig
 import { RemasterSstuComponent } from './user-params-set/user-param-ext-exch/remaster-sstu/remaster-sstu.component';
 import { RightDepertOrganizSstu } from './rights-delo/rights-delo-absolute-rights/right-organ-sstu/right-organ-sstu.component';
 import { RightSrchGroupomponent } from './rights-delo/rights-delo-absolute-rights/right-srch-group/right-srch-group.component';
+import { LoginLengthService } from './shared/services/login-length.service';
 
 @NgModule({
     declarations: [
@@ -206,7 +207,8 @@ import { RightSrchGroupomponent } from './rights-delo/rights-delo-absolute-right
         ErrorHelperServices,
         FormHelperService,
         SearchService,
-        RughtDeloAbsRightService
+        RughtDeloAbsRightService,
+        LoginLengthService
     ]
 })
 export class EosUserParamsModule { }
