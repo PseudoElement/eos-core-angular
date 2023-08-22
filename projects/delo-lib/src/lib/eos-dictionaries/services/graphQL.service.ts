@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql} from 'apollo-angular';
 import { ORIGINDATA, DgFileCategoryElement } from '../interfaces/fetch.interface';
-import { ApolloQueryResult, NetworkStatus } from '@apollo/client/core';
+import { ApolloQueryResult, FetchPolicy, NetworkStatus } from '@apollo/client/core';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 
 @Injectable({providedIn: 'root'})
@@ -43,11 +43,12 @@ export class GraphQLService {
       });
     }
 
-    async query(queryParam: string): Promise<ApolloQueryResult<any>> {
+    async query(queryParam: string, fetchPolicy: FetchPolicy = 'cache-first'): Promise<ApolloQueryResult<any>> {
         try{
             const result = await this.apollo.query({
                 query:  gql`query{${queryParam}}`,
                 errorPolicy: 'all',
+                fetchPolicy
             }).toPromise();
             if (result.error) {
                 const message: string = result.error.message;
