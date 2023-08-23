@@ -9,6 +9,7 @@ import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-s
 import { CitizensAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/citizens-advanced-search';
 import { CitizensConverterFetchRequest } from '../services/converter-fetch-request/citizens-converter';
 import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
+import { PROTOCOL_ID } from '../../eos-dictionaries/consts/protocolId.const';
 
 // interface search {
 //     CITIZEN_SURNAME?: string;
@@ -30,12 +31,14 @@ export class CitizenDescriptor extends RecordDescriptor {
         ], descriptor);
     }
 }
-export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
+
+export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor{
     record: CitizenDescriptor;
     dopRec: AR_DESCRIPT[] = [];
     private protParam = new ProtAdvancedSearch();
     private citizensParam = new CitizensAdvancedSearch();
     private converter = new CitizensConverterFetchRequest();
+    public protNameParam: string = this.protNamenCreatorParam(PROTOCOL_ID[this.record.dictionary.id]);
 
     public addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
         return Promise.resolve();
@@ -283,6 +286,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
             return this.dopRec;
         });
     }
+
     async searchAddres(criteries: any[]): Promise<any> {
         const newCriteries = {};
         Object.assign(newCriteries, criteries[0]['common']);
@@ -306,6 +310,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         });
         return _d;
     }
+
     searchDopRec(criteries: any[]): Promise<any> {
         const vaslues = JSON.parse(criteries[0]['common'].DOP_REC);
         const newCriteries = {};
@@ -335,5 +340,15 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
 
     protected _initRecord(data: ITreeDictionaryDescriptor) {
         this.record = new CitizenDescriptor(this, data);
+    }
+
+    private protNamenCreatorParam(param: string) {
+        const queryParam = `{value: "${param}"}`;
+        return `protNamesPg(filter: {operDescribe: {notIn: {value: "SIG"}}, tableId: {in: [${queryParam}]}}, first: 100, orderby: {describtion: Asc}) {
+            items {
+                describtion
+                operDescribe
+            }
+        }`
     }
 }
