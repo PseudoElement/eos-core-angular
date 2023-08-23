@@ -725,5 +725,5 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, SEV_LINEA
     allVisibleFields: [],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'type', 'kind', 'RULE_KIND', 'DUE_DOCGROUP'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'kind', 'DUE_DOCGROUP_NAME'],
-    searchFields: ['CLASSIF_NAME', 'NAME_RULE_KIND', 'NOTE'],
+    searchFields: ['CLASSIF_NAME'],
 });
