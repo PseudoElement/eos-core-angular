@@ -15,6 +15,7 @@ import { OrganizAdvancedSearch } from '../services/creator-graphQl-param/advance
 import { ProtAdvancedSearch } from '../services/creator-graphQl-param/advanced-search/prot-advanced-search';
 import { OrganizConverterFetchRequest } from '../services/converter-fetch-request/organiz-converter';
 import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
+import { PROTOCOL_ID } from '../../eos-dictionaries/consts/protocolId.const';
 
 const inheritFiields = [
     'ISN_ADDR_CATEGORY',
@@ -46,6 +47,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     private organizParam = new OrganizAdvancedSearch();
     private protParam = new ProtAdvancedSearch();
     private converter = new OrganizConverterFetchRequest();
+    public protNameParam: string = this.protNamenCreatorParam(PROTOCOL_ID[this.record.dictionary.id]);
     
     public getFullSearchCriteries(data: any) {
         const srchMode = data['srchMode'];
@@ -471,6 +473,16 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         } else {
             return Promise.resolve([]);
         }
+    }
+
+    private protNamenCreatorParam(param: string) {
+        const queryParam = `{value: "${param}"}`;
+        return ` protNamesPg(filter: {tableId: {in: [${queryParam}]}}, first: 100, orderby: {describtion: Asc}) {
+            items {
+                describtion
+                operDescribe
+            }
+        }`
     }
 
     // private async extendsData(organiz: ORGANIZ_CL[]): Promise<ORGANIZ_EXTENDS[]>{

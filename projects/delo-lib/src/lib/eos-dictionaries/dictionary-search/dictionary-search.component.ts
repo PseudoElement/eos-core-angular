@@ -19,7 +19,6 @@ import { InputParamControlService } from '../../eos-user-params/shared/services/
 import { IInputParamControl } from '../../eos-user-params/index';
 import * as moment from 'moment';
 import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
-import { ProtNameGraphQlParam } from '../../eos-dictionaries/services/creator-graphQl-param/protName-graphQl-param';
 import { ApolloQueryResult } from '@apollo/client'
 import { ProtNames, ResponseProtNames, Operation } from 'eos-dictionaries/interfaces/fetch.interface';
 import { E_DICTIONARY_ID } from '../consts/dictionaries/enum/dictionaryId.enum';
@@ -74,7 +73,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
     public flagSelectPopover: boolean = false;
     public allOperation: ProtNames[];
-    private creatorParam = new ProtNameGraphQlParam();
 
     public clearSelectOperation(){
         this.selectedOperation = {
@@ -484,7 +482,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     async getProtOperation(param: string) {
-        const protNameParam = this.creatorParam.protName(param, this.dictId);
+        const getProtName = descriptor => descriptor.protNameParam;
+        const protNameParam = getProtName(this.dictionary.descriptor)
+
         const resProtName: ApolloQueryResult<ResponseProtNames> = await this.graphQL.query(protNameParam, 'cache-first');
         const uniqOperation: ProtNames[] = [];
         if(resProtName.data.protNamesPg) {
