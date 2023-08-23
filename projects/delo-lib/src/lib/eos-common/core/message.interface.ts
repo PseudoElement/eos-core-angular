@@ -9,4 +9,5 @@ export interface IMessage {
     msg: string;
     dismissOnTimeout?: number;
     authMsg?: boolean;
+    showSuccessMessage?: boolean
 }
