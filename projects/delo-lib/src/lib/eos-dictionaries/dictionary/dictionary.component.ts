@@ -1884,10 +1884,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const ORGS_DUES_STR: string = ORGS_DUES_AR.join('|');
         const urlSop = `../CoreHost/Sev/ClearIdentityCodes/${ORGS_DUES_STR}`;
         this._dictSrv.sevClearIdentCodesSubject.next(true);
-        this._api.getHttp_client().get(urlSop, { responseType: 'blob' }).toPromise().then((response: any) => {
+        this._api.getHttp_client().get(urlSop, { responseType: 'json' }).toPromise().then((clearedCount: number) => {
             setTimeout(() => {
                 this._dictSrv.sevClearIdentCodesSubject.next(false);
-                this._msgSrv.addNewMessage(SEV_CLEAR_IDENT_CODES);
+                this._msgSrv.addNewMessage({
+                    ...SEV_CLEAR_IDENT_CODES,
+                    msg: `Количество записей, у которых был удален идентификационный код: ${clearedCount}`,
+                });
             }, 3000);
         })
         .then((err) => {
@@ -1902,7 +1905,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const dateNow = new Date();
         const dl_from = person['data']['rec']['DUE'];
         let dl_to = '';
-        
+
         if(
             replacer['DUE_REPLACE'] &&
             !replacer['DELETED_DUE_REPLACE_NAME'] &&
@@ -1913,7 +1916,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             const depReplacer = dueReplacer.slice(0, dueReplacer.length - 2).join('.') + '.';
             const accessTransferReplacerDep = currentUser.USER_TECH_List.findIndex(el => (el['FUNC_NUM'] === E_TECH_RIGHT.ProcPeredachiDocs && el['ALLOWED'] === 1 && el['DUE'] === depReplacer) );
             if (accessTransferReplacerDep > -1) {
-                dl_to = replacer['DUE_REPLACE']; 
+                dl_to = replacer['DUE_REPLACE'];
             }
         }
 

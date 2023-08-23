@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs/';
-
 import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT } from '../core/message.interface';
-import { EosTooltipService } from './eos-tooltip.service';
 @Injectable()
 export class EosMessageService {
-    messages: IMessage[];
+    messages: IMessage[] = [];
 
-    private _messages$: BehaviorSubject<IMessage[]>;
+    private _messages$: BehaviorSubject<IMessage[]> = new BehaviorSubject<IMessage[]>(this.messages);
 
-    constructor(
-        tooltipPath: EosTooltipService,
-    ) {
-        this.messages = [];
-        this._messages$ = new BehaviorSubject<IMessage[]>(this.messages);
-    }
+    constructor() {}
 
     get messages$(): Observable<IMessage[]> {
         return this._messages$.asObservable();
