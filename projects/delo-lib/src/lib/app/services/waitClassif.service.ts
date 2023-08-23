@@ -289,7 +289,7 @@ export class WaitClassifService {
     }
 
     private createUrlTransferDocuments(url: string, params: IOpenClassifParams) {
-        url += `?dl_from=${params.dl_from}${params.dl_to ? '&dl_to='+params.dl_to : ''}`;
+        url += `?dl_from=${params.dl_from}&dl_to=${params.dl_to}`;
         return url;
     }
 }
