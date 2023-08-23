@@ -195,7 +195,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
         private _waitClassif: WaitClassifService,
-        private _viewPortSrv: ViewProtocolServices,
+        private _viewProtocolSrv: ViewProtocolServices,
         private _appContext: AppContext,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
@@ -1824,7 +1824,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     private _openProtocolSecyrity(): void {
-        this._viewPortSrv.getUrlProtocol(this.dictionary.descriptor as DictionaryDescriptor, this.nodeList.markedInfo.nodes);
+        console.log('_getPROTOCOLSECURITY')
+        this._viewProtocolSrv.getUrlProtocol(this.dictionary.descriptor as DictionaryDescriptor, this.nodeList.markedInfo.nodes);
     }
 
     /** проверка есть ли вложенные подразделения */

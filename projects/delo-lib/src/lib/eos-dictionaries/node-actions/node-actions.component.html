@@ -8,8 +8,8 @@
                 <div dropdown
                 class="btn-group"
                 #dropdown="bs-dropdown"
-                (mouseenter) = "dropdown.show();"
-                (mouseleave) = "dropdown.hide();">
+                (mouseenter)="dropdown.show()"
+                (mouseleave)="dropdown.hide()">
                     <!--Icons button for tree and ADD-->
                     <div
                         placement="bottom"
@@ -51,7 +51,7 @@
                                 </a>
                             </li>
                         </ng-container>
-                        
+
                     </ul>
                 </div>
             </ng-container>
@@ -113,7 +113,7 @@
                     triggers="mouseclick"
                     class="menuitem"
                 >
-                    <a 
+                    <a
                         *ngIf="item.type !== ADD_ACTION"
                         class="dropdown-item"
                         [ngClass]="{'highlighted': item.isActive}"
@@ -127,7 +127,7 @@
                         </div>
                     </a>
 
-                    <a 
+                    <a
                         *ngIf="item.type === ADD_ACTION"
                         class="dropdown-item"
                         [ngClass]="{'highlighted': item.isActive}"
