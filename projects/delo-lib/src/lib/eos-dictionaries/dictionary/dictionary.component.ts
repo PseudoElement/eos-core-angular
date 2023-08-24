@@ -1824,7 +1824,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     private _openProtocolSecyrity(): void {
-        console.log('_getPROTOCOLSECURITY')
         this._viewProtocolSrv.getUrlProtocol(this.dictionary.descriptor as DictionaryDescriptor, this.nodeList.markedInfo.nodes);
     }
 
