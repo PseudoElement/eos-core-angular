@@ -239,12 +239,12 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     //     expandable: E_TECH_USER_CLASSIF_CONTENT.none,
     //     useInProject: 'nadzor'
     // },
-    // {
-    //     key: E_TECH_RIGHTS.FileCategories,
-    //     label: 'Категории файлов',
-    //     expandable: E_TECH_USER_CLASSIF_CONTENT.none,
-    //     useInProject: 'delo'
-    // },
+    {
+        key: E_TECH_RIGHTS.FileCategories,
+        label: 'Категории файлов',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none,
+        useInProject: 'delo'
+    },
     {
         key: E_TECH_RIGHTS.BackgroundTaskManagement,
         label: 'Управление фоновыми задачами',

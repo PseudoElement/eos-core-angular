@@ -404,8 +404,10 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     }
     private registerExtentionsRigths(): void {
         const extendsRigths = this._extentionsRigts.extendsTechRigthsUser();
-        const rigths = this._extentionsRigts.techUserRigth().slice();
-
+        let rigths = this._extentionsRigts.techUserRigth().slice();
+        if (this._appContext.cbBase) {
+            rigths = rigths.filter((item) => item.key !== E_TECH_RIGHTS.FileCategories);
+        }
         extendsRigths.forEach(ex => {
             let exitFromLoop = false;
             const indexInsert = ex.indexInsert;

@@ -64,6 +64,9 @@ export class DictionaryDescriptorService {
                 if (item.id === E_DICTIONARY_ID.FORMAT) {
                     item.visible = false;
                 }
+                if (this._appContext.cbBase && item.id === E_DICTIONARY_ID.FILE_CATEGORIES) {
+                    item.visible = false;
+                }
             });
         }
         DICTIONARIES
