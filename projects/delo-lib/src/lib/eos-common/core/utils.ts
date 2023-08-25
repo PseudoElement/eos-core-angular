@@ -240,4 +240,13 @@ export class EosUtils {
         return { pageCount, pages};
     }
 
+    static removeUselessStyles(attribute: string, value?: string): void{
+        const head = document.querySelector('head')
+        const styles = Array.from(head.querySelectorAll('style'))
+        const uselessStyles = styles.filter(tag => {
+            if(value) return tag.hasAttribute(attribute) && tag.getAttribute(attribute) === value
+            else return tag.hasAttribute(attribute)
+        })
+        uselessStyles.forEach(tag => tag.remove())
+    }
 }

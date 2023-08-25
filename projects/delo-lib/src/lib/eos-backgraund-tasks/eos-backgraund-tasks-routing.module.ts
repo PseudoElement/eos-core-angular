@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthorizedGuard } from '../app/guards/eos-auth.guard';
-import { EosBackgraundSingleComponent } from './components/eos-backgraund-single/eos-backgraund-single.component';
+import { EosBackgroundSingleComponent } from './components/eos-backgraund-single/eos-backgraund-single.component';
 import { EosBackgraundTasksComponent } from './components/eos-backgraund-tasks/eos-backgraund-tasks.component';
 
 const routes: Routes = [
@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: ':taskId',
-    component: EosBackgraundSingleComponent,
+    component: EosBackgroundSingleComponent,
     data: {
       showBreadcrumb: false,
       showInBreadcrumb: false,

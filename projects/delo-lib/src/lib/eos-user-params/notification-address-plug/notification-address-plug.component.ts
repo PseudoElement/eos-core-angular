@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnDestroy } from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 import { EosMessageService } from '../../eos-common/index';
+import { EosUtils } from '../../eos-common/core/utils';
 
 @Component({
     selector: 'notificationl-address-plug',
@@ -22,12 +23,10 @@ export class NotificationAddressPlugComponent implements AfterViewInit, OnDestro
     }
 
     ngOnDestroy(): void {
-        const header = this.document.getElementsByTagName('head');
-        if (header[0]) {
-            if (/\.App/.test(header[0].lastChild.textContent)) {
-                header[0].removeChild(header[0].lastChild);
-            }
-        }
+        EosUtils.removeUselessStyles('data-styled')
+        EosUtils.removeUselessStyles('id', 'plugin.1-style')
+        const head = this.document.querySelector('head');
+        if (head && /\.App/.test(head.lastChild.textContent)) head.removeChild(head.lastChild);
     }
 
 }

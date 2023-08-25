@@ -2,16 +2,27 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { FonTasksService } from '../../../eos-backgraund-tasks/services/fon-tasks.service';
+import { EosUtils } from '../../../eos-common/core/utils';
 
 @Component({
-    selector: 'eos-eos-backgraund-single',
+    selector: 'eos-eos-background-single',
     templateUrl: './eos-backgraund-single.component.html',
     styleUrls: ['./eos-backgraund-single.component.scss']
 })
-export class EosBackgraundSingleComponent implements OnInit, OnDestroy {
+export class EosBackgroundSingleComponent implements OnInit, OnDestroy {
 
     public readonly MOUNT_POINT = 'eos-admin-fon-tasks';
-    private deletedStyleIds = ["daemonsManager-style", "SmevPluginSettings-style", "SevPluginSettings-style", "DiadocPluginSettings-style", "DUEPluginSettings-style"]
+    private readonly _deletedStyleIds = [
+        "daemonsManager-style",
+        "SmevPluginSettings-style",
+        "SevPluginSettings-style",
+        "DiadocPluginSettings-style",
+        "DUEPluginSettings-style",
+        "LckFilesPluginSettings-style",
+        "PrepareDocumentToSendPluginSettings-style",
+        "GUpdatePluginSettings-style",
+        "SfrPluginSettings-style",
+    ]
     constructor(private route: ActivatedRoute, private router: Router, private _fonTasks: FonTasksService, private _navSrv: NavParamService) { }
 
 
@@ -35,12 +46,7 @@ export class EosBackgraundSingleComponent implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy(): void {
-        this.deletedStyleIds.forEach(ids => {
-            const elementsToRemove = document.querySelectorAll("style#" + ids);
-            elementsToRemove.forEach(element => {
-                element.remove();
-            });
-        })
-
+        EosUtils.removeUselessStyles('data-styled')
+        this._deletedStyleIds.forEach(value => EosUtils.removeUselessStyles('id', value))
     }
 }
