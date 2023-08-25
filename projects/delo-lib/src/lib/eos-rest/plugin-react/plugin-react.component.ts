@@ -3,6 +3,7 @@ import { AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/cor
 import { Manager } from '@eos/jsplugins-manager';
 import { NavParamService } from '../../app/services/nav-param.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { EosUtils } from '../../eos-common/core/utils';
 
 @Component({
     selector: 'eos-plugin-react',
@@ -28,11 +29,9 @@ export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-      const header = this.document.getElementsByTagName('head');
-      if (header[0]) {
-        if (/\.App/.test(header[0].lastChild.textContent)) {
-            header[0].removeChild(header[0].lastChild);
-        }
-      }
+      EosUtils.removeUselessStyles('data-styled')
+      EosUtils.removeUselessStyles('id', 'UserSessions-style')
+      const head = this.document.querySelector('head');
+      if (head && /\.App/.test(head.lastChild.textContent)) head.removeChild(head.lastChild);
     }
 }

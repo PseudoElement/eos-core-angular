@@ -18,26 +18,19 @@ export class EosErrorHandler implements ErrorHandler {
     get _confirmSrv() {
         return this.inject.get(ConfirmWindowService);
     }
-    handleError(error: Error) {
+    public async handleError(error: Error) {
         console.error('Unhandled error', error);
         try {
-            if (error['rejection'] && error['rejection'] instanceof RestError) {
-                if (error['rejection']['code'] && +error['rejection']['code'] === 401) {
-                    // console.log('this._router', this._router);
-                    this._confirmSrv
-                    .confirm2(ERROR_LOGIN)
-                    .then((confirmed) => {
-                        if (confirmed) {
-                            document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
-                        }
-                    });
+            if (this._isUnauthorizedError(error)) {
+                const isConfirmed = await this._confirmSrv.confirm2(ERROR_LOGIN)
+                if(!isConfirmed) return
+                document.location.assign(URL_LOGIN + RETURN_URL + document.location.href);
                     // если нас открыли с настроек пользователя, то редиректим на завершение сессии или из дела
                     /* if (this._userParms.openWithCurrentUserSettings || !sessionStorage.getItem('fromclassif')) {
                         document.location.assign('../login.aspx?returnUrl=classif/#/spravochniki/citizens/0.');
                     } else {
                         document.location.assign('../login.aspx?returnUrl=classif/#/spravochniki/citizens/0.');
                     } */
-                }
             } else {
                 if (error && error.message &&  !/^.*instance\s.*NULL$/i.test(error.message)) {
                     this._msgSrv.addNewMessage({
@@ -48,10 +41,13 @@ export class EosErrorHandler implements ErrorHandler {
                     });
                 }
             }
-
         } catch (e) {
             console.error('addNewMessage failed', e);
         }
-        /*tslint:enable:no-console*/
+    }
+    private _isUnauthorizedError(error: any): boolean{
+        const firstCondition = error?.['rejection'] instanceof RestError && error?.['rejection']['code'] === 403
+        const secondCondition = error.message.includes('403')
+        return Boolean(firstCondition || secondCondition)
     }
 }

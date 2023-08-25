@@ -30,7 +30,7 @@ import { CurrentUserSetComponent } from '../eos-user-params/current-user-set/cur
 import { CanDeactivateDictGuard } from './guards/can-deactivate-dict.guard';
 import { PluginReactComponent } from '../eos-rest/plugin-react/plugin-react.component';
 import { EosBackgraundTasksComponent } from '../eos-backgraund-tasks/components/eos-backgraund-tasks/eos-backgraund-tasks.component';
-import { EosBackgraundSingleComponent } from '../eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
+import { EosBackgroundSingleComponent } from '../eos-backgraund-tasks/components/eos-backgraund-single/eos-backgraund-single.component';
 import { EosInstrumentsListsComponent } from '../eos-instruments/components/eos-instruments-lists/eos-instruments-lists.component';
 import { EosInstrumentsSingleComponent } from '../eos-instruments/components/eos-instruments-single/eos-instruments-single.component';
 import { CardFromComponent } from '../eos-dictionaries/card-from/card-from.component';
@@ -472,7 +472,7 @@ const routes: Routes = [
             },
             {
                 path: ':taskId',
-                component: EosBackgraundSingleComponent,
+                component: EosBackgroundSingleComponent,
                 data: {
                     showBreadcrumb: false,
                     showInBreadcrumb: false,
@@ -482,7 +482,7 @@ const routes: Routes = [
                 children: [
                     {
                         path: '**',
-                        component: EosBackgraundSingleComponent,
+                        component: EosBackgroundSingleComponent,
                         data: {
                             showBreadcrumb: false,
                             showInBreadcrumb: false,
