@@ -46,8 +46,9 @@ export class EosErrorHandler implements ErrorHandler {
         }
     }
     private _isUnauthorizedError(error: any): boolean{
-        const firstCondition = error?.['rejection'] instanceof RestError && error?.['rejection']['code'] === 403
-        const secondCondition = error.message.includes('403')
+        const status = error?.['rejection']?.['code']
+        const firstCondition = error?.['rejection'] instanceof RestError && (status === 403 || status === 401)
+        const secondCondition = error.message.includes('403') || error.message.includes('401')
         return Boolean(firstCondition || secondCondition)
     }
 }
