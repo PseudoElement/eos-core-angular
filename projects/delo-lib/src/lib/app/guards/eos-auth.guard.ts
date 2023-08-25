@@ -65,7 +65,6 @@ export class UnauthorizedGuard implements CanActivate {
     constructor(private _profileSrv: EosUserProfileService) { }
 
     canActivate(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): boolean | Promise<boolean> {
-        debugger;
         return this._profileSrv.checkAuth()
             .then((auth) => {
                 if (auth) {
