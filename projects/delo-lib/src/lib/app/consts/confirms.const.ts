@@ -360,7 +360,7 @@ export const CONFIRM_HARD_DELET_CABINET: IConfirmWindow2 = {
 export const ERROR_LOGIN: IConfirmWindow2 = {
     title: 'Внимание',
     bodyList: [],
-    body: 'Невозможно выполнить запрос. Вход в приложение не был осуществлен, либо сессия прекращена сервером, т.к. была неактивна в течение длительного времени.',
+    body: 'Вход в приложение не был осуществлен, либо сессия прекращена сервером, поскольку была неактивна в течение длительного времени.',
     bodyAfterList: '',
     buttons: [
         { title: 'Войти', result: 1, isDefault: true, },
