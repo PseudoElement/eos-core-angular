@@ -5,9 +5,11 @@ import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT } from '../c
 export class EosMessageService {
     messages: IMessage[] = [];
 
-    private _messages$: BehaviorSubject<IMessage[]> = new BehaviorSubject<IMessage[]>(this.messages);
+    private _messages$: BehaviorSubject<IMessage[]>;
 
-    constructor() {}
+    constructor() {
+        this._messages$ = new BehaviorSubject<IMessage[]>(this.messages);
+    }
 
     get messages$(): Observable<IMessage[]> {
         return this._messages$.asObservable();
