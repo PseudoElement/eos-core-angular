@@ -68,7 +68,6 @@ export class UnauthorizedGuard implements CanActivate {
         debugger;
         return this._profileSrv.checkAuth()
             .then((auth) => {
-                console.log('canActivate_then')
                 if (auth) {
                     return this._profileSrv.logout()
                         .then(() => true);
