@@ -1,13 +1,10 @@
 .eos-adm-title {
     position: absolute;
-    .square-img-wrapper{
-        cursor: pointer;
-    }
     .title-wrapper {
         width: 244px;
         display: flex;
         align-items: center;
-
+        cursor: pointer;
         .title-text {
             padding: 0 10px;
             text-decoration: none;

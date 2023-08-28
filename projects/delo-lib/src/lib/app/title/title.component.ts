@@ -8,7 +8,7 @@ import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.servi
 })
 
 export class TitleComponent  implements OnInit {
-    @Input() tooltip: String;
+    @Input() tooltipText: String;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     /* todo: define it or remove. Mocked now*/
     title = 'Настройка системы';
@@ -18,7 +18,7 @@ export class TitleComponent  implements OnInit {
 
     ngOnInit(): void {
         this.pathLogo = this.logoOverrideSrv.pathLogo;
-        this.tooltip = this.logoOverrideSrv.tooltip || this.tooltip;
+        this.tooltipText = this.logoOverrideSrv.tooltip || this.tooltipText;
     }
 
     openDelo() {
