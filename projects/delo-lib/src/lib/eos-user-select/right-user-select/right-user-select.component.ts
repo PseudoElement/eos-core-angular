@@ -130,7 +130,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                 }
             }
             this.getObjectForSystems();
-        } else {
+        } else if(this.CurrentUser) {
             this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue, this._appContext)
                 .then(([user_role, deep = null, cb_print = null, cb_role = null]) => {
                     this.getObjectForSystems();
@@ -160,12 +160,14 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                         this.showDep = false;
                     }
                     this.role = this.getRoleForUser(user_role, cb_role);
-                    this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
+                    if (this.CurrentUser) {
+                        this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
                         .then((res: [USER_CL, DEPARTMENT]) => {
                             this.UserCabinetInfo = res;
                             this.chooseTemplate = 'main';
                             this.hashUsers();
                         });
+                    }
                 })
                 .catch(error => {
                     this._errSrv.errorHandler(error);
@@ -214,23 +216,25 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     }
 
     getObjectForSystems(): void {
-        const split = this.parseSustemParam(this.CurrentUser['data']['AV_SYSTEMS']);
-        const isDeloWebLGOChecked = split[1] === '1'//ДЕЛО-WEB Личная
-        const isDeloWebKLChecked = split[27] === '1' //Дело-WEB Конкурентная
-        this.fillDeloField(isDeloWebLGOChecked, isDeloWebKLChecked)
-
-        this._selectedUser.ArraySystemHelper.MobileApp.checked = split[25] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.SCAN.checked = split[2] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.Pscan.checked = split[3] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.Shif.checked = split[5] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.Scan_code.checked = split[15] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.Notifer.checked = split[16] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.Search_code.checked = split[17] === '1' ? true : false
-        this._selectedUser.ArraySystemHelper.EDITORMO.checked = split[41] === '1' ? true : false
-        // split[21] === '1' ? this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUsВer.ArraySystemHelper.EOS.checked = false;
-        // split[23] === '1' ? this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
-        /* split[26] === '1' ? this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false; */
-        this.flagSustem = true;
+        if (this.CurrentUser) {
+            const split = this.parseSustemParam(this.CurrentUser['data']['AV_SYSTEMS']);
+            const isDeloWebLGOChecked = split[1] === '1'//ДЕЛО-WEB Личная
+            const isDeloWebKLChecked = split[27] === '1' //Дело-WEB Конкурентная
+            this.fillDeloField(isDeloWebLGOChecked, isDeloWebKLChecked)
+    
+            this._selectedUser.ArraySystemHelper.MobileApp.checked = split[25] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.SCAN.checked = split[2] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.Pscan.checked = split[3] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.Shif.checked = split[5] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.Scan_code.checked = split[15] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.Notifer.checked = split[16] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.Search_code.checked = split[17] === '1' ? true : false
+            this._selectedUser.ArraySystemHelper.EDITORMO.checked = split[41] === '1' ? true : false
+            // split[21] === '1' ? this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUsВer.ArraySystemHelper.EOS.checked = false;
+            // split[23] === '1' ? this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
+            /* split[26] === '1' ? this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false; */
+            this.flagSustem = true;
+        }
     }
     fillDeloField(delowebLGO: boolean, delowebKL: boolean): void {
         this._selectedUser.ArraySystemHelper.delowebLGO.checked = delowebLGO;
