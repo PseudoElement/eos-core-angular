@@ -28,9 +28,6 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         required: true,
     },
 ];
-
-const MAX_QUERY_DUES = 117; // макс. due = 17 символов вся вложенность (2000 символов), URL сам примерно 50 символов
-
 @Component({
     selector: 'eos-sev-sync-dicts',
     templateUrl: './sync-dicts.component.html',
@@ -78,26 +75,26 @@ export class SevSyncDictsComponent implements OnInit {
     subscribe() {
         this.form.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => { });
     }
-    updateStrToQuery(stringDue: any[]): string[] {
-        const queries: any[] = [];
-        if (stringDue.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
-            const step: number = 0;
-            let finish: number = 0;
-            while (step * MAX_QUERY_DUES < stringDue.length) {
-                const start = MAX_QUERY_DUES * step;
-                finish = step * MAX_QUERY_DUES + MAX_QUERY_DUES;
-                if (finish > stringDue.length) {
-                    finish = step * MAX_QUERY_DUES + (stringDue.length - MAX_QUERY_DUES);
-                }
-                const SELECTED_DUES = stringDue.slice(start, finish);
-                const DUES_STR = SELECTED_DUES.join('|');
-                queries.push(DUES_STR);
-            }
-        } else {
-            queries.push(stringDue.join('|'));
-        }
-        return queries;
-    }
+    // updateStrToQuery(stringDue: any[]): string[] {
+    //     const queries: any[] = [];
+    //     if (stringDue.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
+    //         const step: number = 0;
+    //         let finish: number = 0;
+    //         while (step * MAX_QUERY_DUES < stringDue.length) {
+    //             const start = MAX_QUERY_DUES * step;
+    //             finish = step * MAX_QUERY_DUES + MAX_QUERY_DUES;
+    //             if (finish > stringDue.length) {
+    //                 finish = step * MAX_QUERY_DUES + (stringDue.length - MAX_QUERY_DUES);
+    //             }
+    //             const SELECTED_DUES = stringDue.slice(start, finish);
+    //             const DUES_STR = SELECTED_DUES.join('|');
+    //             queries.push(DUES_STR);
+    //         }
+    //     } else {
+    //         queries.push(stringDue.join('|'));
+    //     }
+    //     return queries;
+    // }
 
     getSelected(value) {
         return value === this._mainOrgDue;
@@ -323,7 +320,7 @@ export class SevSyncDictsComponent implements OnInit {
         ansSev.forEach((sev) => {
             arraSevDUE.push(sev['OBJECT_ID'])
         });
-        const arrayQuery = this.updateStrToQuery(arraSevDUE);
+        const arrayQuery = this._api.splitStrQueryLength(arraSevDUE);
         const queryes = [];
         arrayQuery.forEach((q) => {
             queryes.push(

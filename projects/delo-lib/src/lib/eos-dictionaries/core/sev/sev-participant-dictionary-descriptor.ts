@@ -5,8 +5,6 @@ import { IConfirmWindow2 } from '../../../eos-common/confirm-window/confirm-wind
 import { SEV_PARTICIPANT_RULE, SEV_PARTICIPANT, ORGANIZ_CL, SEV_RULE, PipRX, SEV_SYNC_REPORT } from '../../../eos-rest';
 import { IDictionaryDescriptor, IRecordOperationResult } from '../../../eos-dictionaries/interfaces';
 import * as moment from 'moment';
-const MAX_QUERY_DUES = 117; // макс. due = 17 символов вся вложенность (2000 символов), URL сам примерно 50 символов
-
 export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor {
     constructor(
         descriptor: IDictionaryDescriptor,
@@ -53,26 +51,26 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
             return data;
         });
     }
-    updateStrToQuery(stringDue: any[]): string[] {
-        const queries: any[] = [];
-        if (stringDue.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
-            const step: number = 0;
-            let finish: number = 0;
-            while (step * MAX_QUERY_DUES < stringDue.length) {
-                const start = MAX_QUERY_DUES * step;
-                finish = step * MAX_QUERY_DUES + MAX_QUERY_DUES;
-                if (finish > stringDue.length) {
-                    finish = step * MAX_QUERY_DUES + (stringDue.length - MAX_QUERY_DUES);
-                }
-                const SELECTED_DUES = stringDue.slice(start, finish);
-                const DUES_STR = SELECTED_DUES.join('|');
-                queries.push(DUES_STR);
-            }
-        } else {
-            queries.push(stringDue.join('|'));
-        }
-        return queries;
-    }
+    // updateStrToQuery(stringDue: any[]): string[] {
+    //     const queries: any[] = [];
+    //     if (stringDue.length > MAX_QUERY_DUES) { // разбиваем на куски по 177 кодов и делаем массив
+    //         const step: number = 0;
+    //         let finish: number = 0;
+    //         while (step * MAX_QUERY_DUES < stringDue.length) {
+    //             const start = MAX_QUERY_DUES * step;
+    //             finish = step * MAX_QUERY_DUES + MAX_QUERY_DUES;
+    //             if (finish > stringDue.length) {
+    //                 finish = step * MAX_QUERY_DUES + (stringDue.length - MAX_QUERY_DUES);
+    //             }
+    //             const SELECTED_DUES = stringDue.slice(start, finish);
+    //             const DUES_STR = SELECTED_DUES.join('|');
+    //             queries.push(DUES_STR);
+    //         }
+    //     } else {
+    //         queries.push(stringDue.join('|'));
+    //     }
+    //     return queries;
+    // }
     public getData(query?: any, order?: string, limit?: number): Promise<any> {
         return super.getData(query, order, limit).then((sev_part: SEV_PARTICIPANT[]) => {
             const mapLinksOrganiz = new Map<string, SEV_PARTICIPANT>();
@@ -95,7 +93,7 @@ export class SevParticipantDictionaryDescriptor extends SevDictionaryDescriptor 
                 query.push(Promise.resolve([]));
             }
             if (sevParticipan.length) {
-                const allQuery = this.updateStrToQuery(sevParticipan);
+                const allQuery = this.apiSrv.splitStrQueryLength(sevParticipan);
                 allQuery.forEach((quer) => {
                     query.push(this.apiSrv.read<SEV_SYNC_REPORT>({ 
                         SEV_SYNC_REPORT: {
