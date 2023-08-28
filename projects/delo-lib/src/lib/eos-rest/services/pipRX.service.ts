@@ -24,7 +24,7 @@ import { commonMergeMeta } from '../../eos-rest/common/initMetaData';
 import { IUploadParam } from '../../eos-parameters/interfaces/app-setting.interfaces';
 import { RESPUNS_URL_QUERY } from '../../app/consts/common.consts';
 
-
+export const MAX_LENGTH_PARAMS_TO_GET = 1500;
 @Injectable()
 export class PipRX extends PipeUtils {
     public sequenceMap: SequenceMap = new SequenceMap();
@@ -47,7 +47,7 @@ export class PipRX extends PipeUtils {
         this.entityHelper = new EntityHelper(this._metadata);
         this.cache = new Cache(this, this._metadata);
     }
-
+    
     static criteries(cr: any) {
         return { criteries: cr };
     }
@@ -77,7 +77,23 @@ export class PipRX extends PipeUtils {
     get cancelFormChanges$() {
         return this._cancelFormChanges$.asObservable();
     }
-
+    /** 
+     * На вход принимает массив элементов разбивает их по максимальной длинне запроса MAX_LENGTH_PARAMS_TO_GET
+     * На выход массив строк объединённых через |
+     * */
+    splitStrQueryLength(str: string[]): string[] {
+        const arrayCabList = [];
+        let str_list = '';
+        str.forEach((elem) => {
+            str_list +=  elem + '|';
+            if (str_list.length > MAX_LENGTH_PARAMS_TO_GET) { // заполняем запрос, небольшим количеством символов, если их больше то разделяем на несколько запросов
+                arrayCabList.push(str_list);
+                str_list = '';
+            }
+        });
+        arrayCabList.push(str_list); // если запрос был маленьким то добавляем его в массив и тем самым делаем всего один запрос
+        return arrayCabList
+    }
     // todo: move config in common service
 
     initConfig(config: any) {
