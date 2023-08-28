@@ -459,7 +459,8 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     openSertService(): void {
         const openSerts: ICertificateInit = {
             OnlyWithPrivateKey: true,
-            add_cert: true
+            /** убираю галочку Запомнить выбранный сертификат в профиле */
+            add_cert: false
         };
         if (this.selectList && this.selectList.selected[0]) {
             openSerts.cert_id = this.selectList.selected[0].id;
