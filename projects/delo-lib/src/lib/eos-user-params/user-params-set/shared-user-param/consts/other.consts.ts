@@ -1,6 +1,7 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
-const REG_MIN_VAL_MORE: RegExp = /^([1-9]{1}[0-9]{0,1}[0-9]{0,1})$/;
+const REG_MIN_VAL_MORE: RegExp = /^([0-9]{1}[0-9]{0,1}[0-9]{0,1})$/;
+const REG_MIN_VAL2: RegExp = /^([0-9]{1}[0-9]{0,1})$/;
 export const OTHER_USER_TRANSFER: IBaseUsers = {
     id: 'other',
     title: 'Передача',
@@ -226,7 +227,7 @@ export const OTHER_USER_REESTR: IBaseUsers = {
         key: 'REESTR_DATE_INTERVAL',
         type: 'numberIncrement',
         title: 'Дата передачи документов не позднее ( дней ):',
-        pattern: REG_MIN_VAL
+        pattern: REG_MIN_VAL2
     },
     {
         key: 'REESTR_COPY_COUNT',
@@ -687,7 +688,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'REESTR_DATE_INTERVAL',
             type: 'numberIncrement',
             title: 'Дата передачи документов не позднее ( дней ):',
-            pattern: REG_MIN_VAL
+            pattern: REG_MIN_VAL2
         },
         {
             key: 'REESTR_COPY_COUNT',
