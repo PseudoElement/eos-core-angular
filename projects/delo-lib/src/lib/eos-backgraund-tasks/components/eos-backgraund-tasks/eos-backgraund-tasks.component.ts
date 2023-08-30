@@ -20,7 +20,15 @@ export class EosBackgraundTasksComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     try {
-      this.lists = this._fonTasksSrv.loadTaskLists();
+      this.lists = this._fonTasksSrv.loadTaskLists().sort((a, b) => {
+        if (a.title < b.title) {
+            return 1;
+        } else if (a.title > b.title) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
     } catch (error) {
       console.log('Ошибка получения всех плагинов', error);
     }
