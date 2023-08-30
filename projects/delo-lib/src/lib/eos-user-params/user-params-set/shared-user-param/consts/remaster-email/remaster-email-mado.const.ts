@@ -41,11 +41,11 @@ export const REMASTER_MADO: IBaseUsers =  {
         type: 'boolean',
         title: 'Автоматически добавлять организации и представителей в справочник "Организации"'
     },
-    {
+    /* {
         key: 'ARM_MEDO_HIDE',
         type: 'boolean',
         title: 'Скрыть команду отправки'
-    },
+    }, */
     {
         key: 'ARM_MEDO_DLG',
         type: 'boolean',
