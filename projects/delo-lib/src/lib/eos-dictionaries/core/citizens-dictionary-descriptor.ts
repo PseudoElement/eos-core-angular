@@ -115,7 +115,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor{
                 return super.search(criteries);
             }
         } else {
-            return Promise.resolve([]);
+            return super.search(criteries);
         }
     }
 
