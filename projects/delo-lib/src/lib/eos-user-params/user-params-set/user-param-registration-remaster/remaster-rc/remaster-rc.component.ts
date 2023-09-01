@@ -10,6 +10,7 @@ import { EosDataConvertService } from '../../../../eos-dictionaries/services/eos
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { IUserSettingsModes } from '../../../../eos-user-params/shared/intrfaces/user-params.interfaces';
+import { AppContext } from '../../../../eos-rest';
 @Component({
     selector: 'eos-remaster-rc',
     styleUrls: ['remaster-rc.component.scss'],
@@ -33,12 +34,15 @@ export class RemasterRcComponent implements OnInit, OnDestroy {
     private ngUnsub: Subject<any> = new Subject();
     private newDataMap: Map<string, any> = new Map();
     private btnDisabled: boolean = false;
-
+    get cbBase() {
+        return this._appContext.cbBase;
+    }
     constructor(
         private formHelp: FormHelperService,
         private inpSrv: InputControlService,
         private dataConv: EosDataConvertService,
-        private _RemasterService: RemasterService
+        private _RemasterService: RemasterService,
+        private _appContext: AppContext,
     ) {
         this._RemasterService.cancelEmit
         .pipe(
