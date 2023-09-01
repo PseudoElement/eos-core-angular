@@ -11,16 +11,19 @@
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        *ngIf="!cbBase"
         [input]="inputs['rec.SHOW_PRJ_FILE_VERSIONS']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        *ngIf="!cbBase"
         [input]="inputs['rec.SHOW_PRJ_VISA_FILES']"
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
+        *ngIf="!cbBase"
         [input]="inputs['rec.SHOW_PRJ_SIGN_FILES']"
         [form]="form"
         [readonly]="false"
