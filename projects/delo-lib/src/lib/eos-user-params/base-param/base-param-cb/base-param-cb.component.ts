@@ -150,14 +150,20 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 if (flagCrypto && flagAncud) {
                     this.criptoView = flagCrypto && flagAncud;
                 } else {
-                    const answer = await this.apiSrvRx.read<any>({
-                        USER_PARMS: {
-                            criteries: {
-                                ISN_USER_OWNER: '-99',
-                                PARM_NAME: 'ANCUD|CRYPTO_ACTIVEX'
+                    let answer = [];
+                    try {
+                        answer = await this.apiSrvRx.read<any>({
+                            USER_PARMS1: {
+                                criteries: {
+                                    ISN_USER_OWNER: '-99',
+                                    PARM_NAME: 'ANCUD|CRYPTO_ACTIVEX'
+                                }
                             }
-                        }
-                    });
+                        });
+                    } catch (e) {
+                        console.log('error', e);
+                        answer = [];
+                    }
                     answer.forEach((elem) => {
                         if (elem.PARM_NAME === 'ANCUD' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('SIGNATURA') !== -1) {
                             flagAncud = true;
@@ -165,7 +171,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         if (elem.PARM_NAME === 'CRYPTO_ACTIVEX' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('EosUtils.EosCryptoSvc') !== -1) {
                             flagCrypto = true;
                         }
-                    })
+                    });
                 }
                 this.apiSrvRx.read<any>({
                     LicenseInfo: ALL_ROWS
