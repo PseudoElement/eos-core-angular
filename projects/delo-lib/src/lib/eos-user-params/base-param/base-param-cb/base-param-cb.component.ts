@@ -135,13 +135,38 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List,USERDEP_List',
             shortSys: true
-        }).then((data) => {
+        }).then(async (data) => {
             if (data) {
+                let flagAncud = false;
+                let flagCrypto = false;
                 this._userParamSrv.curentUser.USER_PARMS_List.forEach(elem => {
-                    if (elem.PARM_NAME === 'CRYPTO_INITSTR' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('spki') !== -1) {
-                        this.criptoView = true;
+                    if (elem.PARM_NAME === 'ANCUD' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('SIGNATURA') !== -1) {
+                        flagAncud = true;
+                    }
+                    if (elem.PARM_NAME === 'CRYPTO_ACTIVEX' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('EosUtils.EosCryptoSvc') !== -1) {
+                        flagCrypto = true;
                     }
                 });
+                if (flagCrypto && flagAncud) {
+                    this.criptoView = flagCrypto && flagAncud;
+                } else {
+                    const answer = await this.apiSrvRx.read<any>({
+                        USER_PARMS: {
+                            criteries: {
+                                ISN_USER_OWNER: '-99',
+                                PARM_NAME: 'ANCUD|CRYPTO_ACTIVEX'
+                            }
+                        }
+                    });
+                    answer.forEach((elem) => {
+                        if (elem.PARM_NAME === 'ANCUD' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('SIGNATURA') !== -1) {
+                            flagAncud = true;
+                        }
+                        if (elem.PARM_NAME === 'CRYPTO_ACTIVEX' && elem.PARM_VALUE && elem.PARM_VALUE.indexOf('EosUtils.EosCryptoSvc') !== -1) {
+                            flagCrypto = true;
+                        }
+                    })
+                }
                 this.apiSrvRx.read<any>({
                     LicenseInfo: ALL_ROWS
                 })
