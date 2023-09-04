@@ -14,9 +14,9 @@ enum EIsnRef {
     next = 1
 }
 @Component({
-  selector: 'eos-protocol',
-  templateUrl: './protocol.component.html',
-  styleUrls: ['./protocol.component.scss'],
+    selector: 'eos-protocol',
+    templateUrl: './protocol.component.html',
+    styleUrls: ['./protocol.component.scss'],
 })
 export class EosReportProtocolComponent implements OnInit, OnDestroy {
     findUsers: any;
@@ -57,6 +57,9 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     ];
     isLoading: boolean = false;
     isOpenUserInfo: boolean = false;
+    isComparisonWithPrev: boolean = false
+    innerHTMLSelectedProtocol: string
+    innerHTMLPrevProtocol: string
     public config: IPaginationConfig;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -65,25 +68,26 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         private _userpar: UserParamsService,
         public _user_pagination: UserPaginationService,
         private _storage: EosStorageService,
-        private _router: Router) {
+        private _router: Router,
+    ) {
         _user_pagination.paginationConfig$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe((config: IPaginationConfig) => {
-            if (config) {
-                this.config = config;
-                if (this._user_pagination.totalPages !== undefined) {
-                    if (this.config.current > this.config.start) {
-                        this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
-                        (this.config.length * this.config.start - this.config.length).toString());
-                    } else if (this.config.current && this.initPage === true) {
-                        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((config: IPaginationConfig) => {
+                if (config) {
+                    this.config = config;
+                    if (this._user_pagination.totalPages !== undefined) {
+                        if (this.config.current > this.config.start) {
+                            this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
+                                (this.config.length * this.config.start - this.config.length).toString());
+                        } else if (this.config.current && this.initPage === true) {
+                            this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+                        }
                     }
                 }
-            }
-        });
-  }
+            });
+    }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -108,10 +112,10 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             this.selfLink = this._router.url.split('?')[0];
             this.link = this._userpar.userContextId;
         })
-        .catch((error) => {
-            this.isLoading = false;
-            this._errorSrv.errorHandler(error);
-        });
+            .catch((error) => {
+                this.isLoading = false;
+                this._errorSrv.errorHandler(error);
+            });
     }
 
     PaginateData(length, orderStr, skip?) {
@@ -123,29 +127,29 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             skip: skip || this.config.length * this.config.current - this.config.length,
             inlinecount: 'allpages'
         })
-        .then((data: any) => {
-            this.usersAudit = data;
-            if (data !== undefined) {
-                if (this._user_pagination.totalPages === undefined) {
-                    const parsePosts = data.TotalRecords;
-                    if (parsePosts !== undefined) {
-                        this._user_pagination.totalPages = parsePosts;
-                    } else {
-                        this._user_pagination.totalPages = this.usersAudit.length;
+            .then((data: any) => {
+                this.usersAudit = data;
+                if (data !== undefined) {
+                    if (this._user_pagination.totalPages === undefined) {
+                        const parsePosts = data.TotalRecords;
+                        if (parsePosts !== undefined) {
+                            this._user_pagination.totalPages = parsePosts;
+                        } else {
+                            this._user_pagination.totalPages = this.usersAudit.length;
+                        }
+                        this._user_pagination.getSumIteq = true;
+                        this._user_pagination.changePagination(this.config);
+                        this.initPage = true;
                     }
-                    this._user_pagination.getSumIteq = true;
-                    this._user_pagination.changePagination(this.config);
-                    this.initPage = true;
+                    this.ParseInitData(this.usersAudit);
+                } else {
+                    this.isLoading = false;
                 }
-                this.ParseInitData(this.usersAudit);
-            } else {
+            })
+            .catch((error) => {
+                this._errorSrv.errorHandler(error);
                 this.isLoading = false;
-            }
-        })
-        .catch((error) => {
-            this._errorSrv.errorHandler(error);
-            this.isLoading = false;
-        });
+            });
     }
 
     ParseInitData(data) {
@@ -153,7 +157,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         const getUsersPromise = this.critUsers && this.critUsers.length ? this._pipeSrv.read({
             USER_CL: this.critUsers,
             loadmode: 'Table'
-        }): Promise.resolve([]);
+        }) : Promise.resolve([]);
         getUsersPromise.then((users: any) => {
             for (const user of users) {
                 if (this.findUsers === undefined) {
@@ -167,26 +171,26 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         });
     }
 
-//   GetCountPosts(posts: string): number {
-//     if (posts !== undefined) {
-//       posts = posts.split('').reverse().join('');
-//       posts = posts.split(',')[0];
-//       posts = posts.split('').reverse().join('');
-//       let data;
-//       data = parseInt(posts, 10);
-//       return data;
-//     }
-//   }
+    //   GetCountPosts(posts: string): number {
+    //     if (posts !== undefined) {
+    //       posts = posts.split('').reverse().join('');
+    //       posts = posts.split(',')[0];
+    //       posts = posts.split('').reverse().join('');
+    //       let data;
+    //       data = parseInt(posts, 10);
+    //       return data;
+    //     }
+    //   }
     SortPageList(crit: number) {
         if (this._user_pagination.totalPages > 1) {
             let critSearch;
             switch (crit) {
                 case 1:
-                critSearch = 'EVENT_DATE';
-                this.arrSort[0].date = !this.arrSort[0].date;
-                this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
-                this.status = critSearch;
-                break;
+                    critSearch = 'EVENT_DATE';
+                    this.arrSort[0].date = !this.arrSort[0].date;
+                    this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
+                    this.status = critSearch;
+                    break;
                 // case 2:
                 //   critSearch = 'eventUser';
                 //   this.arrSort[1].event = !this.arrSort[1].event;
@@ -215,7 +219,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
 
     SelectUsers(data) {
         let isnUser,
-        isnWho;
+            isnWho;
         this.critUsers.length = 0;
         const b = new Set();
         data.map((x) => {
@@ -242,10 +246,10 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         this.isnNow = undefined;
         user.checked = true;
         if (user.checked) {
-          this.frontData.forEach(node => {
-            node.checked = false;
-          });
-          user.checked = true;
+            this.frontData.forEach(node => {
+                node.checked = false;
+            });
+            user.checked = true;
         }
         this.lastUser = user;
         const getIsn = [this.lastUser.isnEvent];
@@ -256,7 +260,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
                 }
             })
             if (getIsn.length === 1 && this.lastUser.count + 1 < this.lastUser.itemsQty) {
-            const ans = await this._pipeSrv.read({
+                const ans = await this._pipeSrv.read({
                     USER_AUDIT: PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
                     orderby: 'EVENT_DATE desc',
                     top: 1,
@@ -272,73 +276,73 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
                     getIsn.unshift(data.isnEvent);
                 }
             });
-          if (getIsn.length === 1 && this.lastUser.count > 0) {
-            const ans = await this._pipeSrv.read({
-               USER_AUDIT: PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
-               orderby: 'EVENT_DATE asc',
-               top: 1,
-               skip: this.lastUser.count - 1,
-               inlinecount: 'allpages'
-             });
-             getIsn.unshift(ans[0]['ISN_EVENT']);
-           }
-          this.GetRefIsn(getIsn);
+            if (getIsn.length === 1 && this.lastUser.count > 0) {
+                const ans = await this._pipeSrv.read({
+                    USER_AUDIT: PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
+                    orderby: 'EVENT_DATE asc',
+                    top: 1,
+                    skip: this.lastUser.count - 1,
+                    inlinecount: 'allpages'
+                });
+                getIsn.unshift(ans[0]['ISN_EVENT']);
+            }
+            this.GetRefIsn(getIsn);
         }
     }
 
     ShowData() {
         let eventUser;
         this.frontData = [];
-        this.isnNow= undefined;
+        this.isnNow = undefined;
         this.usersAudit.map((user, index) => {
-          const date = this.ConvertDate(user.EVENT_DATE);
-          eventUser = this.eventKind[user.EVENT_KIND - 1];
-          // if (this.frontData === undefined) {
-          //   this.frontData = [{
-          //     checked: !this.checkUser,
-          //     date: date,
-          //     eventUser: eventUser,
-          //     isnWho: this.getUserName(user.ISN_WHO),
-          //     isnUser: this.getUserName(user.ISN_USER),
-          //     isnEvent: user.ISN_EVENT
-          //   }];
-          //   this.lastUser = {
-          //     checked: !this.checkUser,
-          //     date: date,
-          //     eventUser: eventUser,
-          //     isnWho: this.getUserName(user.ISN_WHO),
-          //     isnUser: this.getUserName(user.ISN_USER),
-          //     isnEvent: user.ISN_EVENT
-          //   };
-          // } else {
+            const date = this.ConvertDate(user.EVENT_DATE);
+            eventUser = this.eventKind[user.EVENT_KIND - 1];
+            // if (this.frontData === undefined) {
+            //   this.frontData = [{
+            //     checked: !this.checkUser,
+            //     date: date,
+            //     eventUser: eventUser,
+            //     isnWho: this.getUserName(user.ISN_WHO),
+            //     isnUser: this.getUserName(user.ISN_USER),
+            //     isnEvent: user.ISN_EVENT
+            //   }];
+            //   this.lastUser = {
+            //     checked: !this.checkUser,
+            //     date: date,
+            //     eventUser: eventUser,
+            //     isnWho: this.getUserName(user.ISN_WHO),
+            //     isnUser: this.getUserName(user.ISN_USER),
+            //     isnEvent: user.ISN_EVENT
+            //   };
+            // } else {
             this.frontData.push({
-              checked: this.checkUser,
-              date: date,
-              eventUser: eventUser,
-              isnWho: this.getUserName(user.ISN_WHO),
-              isnUser: this.getUserName(user.ISN_USER),
-              isnEvent: user.ISN_EVENT,
-              count:  this.config.length * (this.config.current - 1) + index,
-              itemsQty: this.config.itemsQty,
-              id: user.ISN_USER
+                checked: this.checkUser,
+                date: date,
+                eventUser: eventUser,
+                isnWho: this.getUserName(user.ISN_WHO),
+                isnUser: this.getUserName(user.ISN_USER),
+                isnEvent: user.ISN_EVENT,
+                count: this.config.length * (this.config.current - 1) + index,
+                itemsQty: this.config.itemsQty,
+                id: user.ISN_USER
             });
         });
-      }
+    }
 
     GetRefIsn(getIsn: number[]) {
         this._pipeSrv.read({
             REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': getIsn.join('|') }),
             orderby: 'UPD_DATE desc',
-          })
-        .then((data: any) => {
-            if (data.length !== 0) {
-                this.isnNow = data[EIsnRef.now].ISN_REF_FILE;
-                this.isnNext = data[EIsnRef.next]?.ISN_REF_FILE;
-            }
         })
-        .catch((error) => {
-            this._errorSrv.errorHandler(error);
-        });
+            .then((data: any) => {
+                if (data.length !== 0) {
+                    this.isnNow = data[EIsnRef.now].ISN_REF_FILE;
+                    this.isnNext = data[EIsnRef.next]?.ISN_REF_FILE;
+                }
+            })
+            .catch((error) => {
+                this._errorSrv.errorHandler(error);
+            });
     }
 
     openUserInfoModal(): void {
@@ -363,20 +367,22 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             query.push(this._pipeSrv.getHttp_client().get(`../CoreHost/FOP/GetFile/${this.isnNext}/3x.html`, { responseType: 'text' }).toPromise());
         }
         return Promise.all(query).then(([html1, html2]) => {
-            const newWindow: any = window;
-            if (html1 !== undefined && html2 !== undefined) {
-                newWindow['getCompareDocHtml'] = () => [html2, html1];
-                window.open(`../ArmSite/Pages/RightsCompare.html?getter=getCompareDocHtml`, '_blank', 'width=900, height=700, scrollbars=1');
+            if (html1 && html2) {
+                this.innerHTMLSelectedProtocol = html1;
+                this.innerHTMLPrevProtocol = html2;
+                this.isComparisonWithPrev = true;
+                this.openUserInfoModal();
             }
         })
-        .catch((error) => {
-            this._errorSrv.errorHandler(error);
-        });
+            .catch((error) => {
+                this._errorSrv.errorHandler(error);
+            });
     }
     close() {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
-    setIsOpenUserInfo(isOpen: boolean): void{
+    setIsOpenUserInfo(isOpen: boolean): void {
+        if (!isOpen) setTimeout(() => this.isComparisonWithPrev = false, 700);
         this.isOpenUserInfo = isOpen
     }
 }

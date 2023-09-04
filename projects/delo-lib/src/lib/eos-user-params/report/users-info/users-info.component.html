@@ -1,5 +1,6 @@
 <ng-template #usersInfo>
     <div class="full-search-top usual-border">
+        <ng-container *ngIf="!isComparisonWithPrev; else compareWithPrevTitle">
             <span *ngIf="users.length < 2; else manyUsers" class="pull-left title xl-font">
                 <!--При обновлении страницы протоколов, данные о пользователе теряются
                     Также если поставить чекбокс на пользователе в списке Пользователи, то этот пользователь
@@ -9,39 +10,64 @@
             <ng-template #manyUsers>
                 <span class="pull-left title xl-font">Данные по отмеченным пользователям</span>
             </ng-template>
-            <div *ngIf="!isProtocol; else fromProtocol" class="pull-right srch-btns">
-                <button class="btn btn-primary s-font upper" (click)="close()">Закрыть</button>
-                <button class="btn btn-primary-full s-font upper" (click)="isShortReport ? downloadShortReport() : downloadFullReport()">
-                    Печать
+        </ng-container>
+        <ng-template #compareWithPrevTitle>
+            <span class="pull-left title xl-font">Изменения учетной записи и прав пользователя</span>
+        </ng-template>
+        <div *ngIf="!isProtocol; else fromProtocol" class="pull-right srch-btns">
+            <button class="btn btn-primary s-font upper" (click)="close()">Закрыть</button>
+            <button
+                class="btn btn-primary-full s-font upper"
+                (click)="isShortReport ? downloadShortReport() : downloadFullReport()"
+            >
+                Печать
+            </button>
+        </div>
+        <ng-template #fromProtocol>
+            <div class="pull-right srch-btns action-buttons">
+                <button
+                    *ngIf="!isComparisonWithPrev; else compareWithPrevSave"
+                    class="btn btn-primary-light"
+                    tooltip="Экспортировать"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    (click)="isShortReport ? downloadShortReport() : downloadFullReport()"
+                >
+                    <span class="eos-adm-icon eos-adm-icon-download small"></span>
+                </button>
+                <ng-template #compareWithPrevSave>
+                    <button
+                        class="btn btn-primary-light"
+                        tooltip="Экспортировать"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        (click)="saveComparedProtocols()"
+                    >
+                        <span class="eos-adm-icon eos-adm-icon-download small"></span>
+                    </button>
+                </ng-template>
+                <button
+                    class="btn btn-primary-light"
+                    tooltip="Печать"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    (click)="openPrintWindow()"
+                >
+                    <span class="eos-adm-icon eos-adm-icon-print-blue small"></span>
+                </button>
+                <button
+                    class="btn btn-primary-light"
+                    tooltip="Закрыть"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    (click)="close()"
+                >
+                    <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
                 </button>
             </div>
-            <ng-template #fromProtocol>
-                <div class="pull-right srch-btns action-buttons">
-                    <button class="btn btn-primary-light"
-                            tooltip="Экспортировать"
-                            placement="bottom"
-                            containerClass="tooltip-info"
-                            (click)="isShortReport ? downloadShortReport() : downloadFullReport()">
-                                <span class="eos-adm-icon eos-adm-icon-download small"></span>
-                    </button>
-                    <button class="btn btn-primary-light"
-                            tooltip="Печать"
-                            placement="bottom"
-                            containerClass="tooltip-info"
-                            (click)="openPrintWindow()">
-                                <span class="eos-adm-icon eos-adm-icon-print-blue small"></span>
-                    </button>
-                    <button class="btn btn-primary-light"
-                            tooltip="Закрыть"
-                            placement="bottom"
-                            containerClass="tooltip-info"
-                            (click)="close()">
-                                <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
-                    </button>
-                </div>
-            </ng-template>
+        </ng-template>
     </div>
-    <div class="dir-users usual-border">
+    <div *ngIf="!isComparisonWithPrev" class="dir-users usual-border">
         <div class="arrow-info">
             <button class="btn btn-primary-light scroll-btn" [disabled]="isFirst" (click)="prev()">
                 <span class="eos-adm-icon eos-adm-icon-arrow-v-blue-left small" aria-hidden="true"></span>
@@ -52,23 +78,43 @@
         </div>
         <div class="short-info">
             <label class="checkbox">
-                <input type="checkbox" [checked]="isShortReport" (change)="changeReportSize($event.target.checked)">
+                <input type="checkbox" [checked]="isShortReport" (change)="changeReportSize($event.target.checked)" />
                 <span class="eos-adm-icon eos-adm-icon-checkbox-square-blue x-small"></span>
                 Печатать краткий отчет
             </label>
         </div>
     </div>
-    <iframe class="frame-info" [src]="src | safeUrl" height="600" width="800" frameborder="0" id="iframe"></iframe>
-    <div class="info-content-wrapper">
+    <iframe
+        *ngIf="!isComparisonWithPrev; else compareProtocols"
+        class="frame-info"
+        [src]="src | safeUrl"
+        height="600"
+        width="800"
+        frameborder="0"
+        id="iframe"
+    >
+    </iframe>
+    <ng-template #compareProtocols>
+        <div class="two-protocols-compare-wrapper">
+            <div id="selected-protocol"></div>
+            <div id="prev-protocol"></div>
+        </div>
+    </ng-template>
+    <div *ngIf="!isComparisonWithPrev" class="info-content-wrapper">
         <span class="pull-left info-print">Печатать информацию о:</span>
         <div class="info-radio-btn" *ngFor="let type of printUsers">
             <div class="radio-info-group">
                 <label class="radio">
-                    <input type="radio" class="ng-untouched ng-pristine ng-valid" [value]="type.value" [(ngModel)]="CheckAllUsers"
-                    [disabled]="users.length === 1 && type.data === printUsers[1].data" />
+                    <input
+                        type="radio"
+                        class="ng-untouched ng-pristine ng-valid"
+                        [value]="type.value"
+                        [(ngModel)]="CheckAllUsers"
+                        [disabled]="users.length === 1 && type.data === printUsers[1].data"
+                    />
                     <span></span>
                 </label>
-                <span class="info-users-sp">{{type.data}}</span>
+                <span class="info-users-sp">{{ type.data }}</span>
             </div>
         </div>
     </div>

@@ -4,12 +4,31 @@
             <div class="table-header">
                 <div class="table-prot-wraper">
                     <div class="selected-prot-title">
-                        <span class="long-title xl-font">Протокол редактирования пользователя {{username}}</span>
+                        <span class="long-title xl-font">Протокол редактирования пользователя {{ username }}</span>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" [queryParams]="{isn_cl: link}" aria-hidden="true" tooltip="Открыть в новом окне" placement="bottom"
-                        container="body" containerClass="tooltip-info" target="_blank"><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span></a>
-                        <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" tooltip="Закрыть" placement="bottom" containerClass="tooltip-info">
+                        <a
+                            class="btn btn-primary-light"
+                            rel="noopener"
+                            triggers="hover"
+                            routerLink="{{ selfLink }}"
+                            [queryParams]="{ isn_cl: link }"
+                            aria-hidden="true"
+                            tooltip="Открыть в новом окне"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info"
+                            target="_blank"
+                            ><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span
+                        ></a>
+                        <button
+                            class="btn btn-primary-light"
+                            aria-hidden="true"
+                            (click)="close()"
+                            tooltip="Закрыть"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                        >
                             <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
                         </button>
                     </div>
@@ -19,15 +38,16 @@
                 <div class="btn-group-prot">
                     <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
                         <button
-                            class="btn btn-primary-light bth-size-prot "
+                            class="btn btn-primary-light bth-size-prot"
                             [disabled]="isnNow === undefined"
                             triggers="hover"
                             [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
                             (click)="openUserInfoModal()"
                             placement="bottom"
                             container="body"
-                            containerClass="tooltip-info">
-                                <span class="eos-adm-icon small eos-adm-icon-open-read-only-blue"></span>
+                            containerClass="tooltip-info"
+                        >
+                            <span class="eos-adm-icon small eos-adm-icon-open-read-only-blue"></span>
                         </button>
                         <button
                             class="btn btn-primary-light bth-size-prot"
@@ -37,60 +57,92 @@
                             (click)="getUnitFile()"
                             placement="bottom"
                             container="body"
-                            containerClass="tooltip-info">
-                                <span class="eos-adm-icon small eos-icon-compare-doc-blue"></span>
+                            containerClass="tooltip-info"
+                        >
+                            <span class="eos-adm-icon small eos-icon-compare-doc-blue"></span>
                         </button>
                     </div>
                 </div>
                 <div class="item-count-prot usual-border m-font">
                     <span class="item-count-content-prot">
-                            Записей:
-                        <span class="counter-prot">{{config?.itemsQty}}</span>
+                        Записей:
+                        <span class="counter-prot">{{ config?.itemsQty }}</span>
                     </span>
                 </div>
             </div>
             <div class="table-header header-pad">
                 <div class="table-title contain-span-header">
-                    <span class=" width-title1 likeLink-prot" (click)="SortPageList(1)">
+                    <span class="width-title1 likeLink-prot" (click)="SortPageList(1)">
                         Дата
-                        <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[0].date, 'eos-adm-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
+                        <span
+                            *ngIf="status === 'EVENT_DATE' || status === undefined"
+                            class="icon eos-adm-icon small"
+                            [ngClass]="{
+                                'eos-adm-icon-arrow-blue-top': arrSort[0].date,
+                                'eos-adm-icon-arrow-blue-bottom': !arrSort[0].date
+                            }"
+                        ></span>
                     </span>
-                    <span class=" width-title2 likeLink-prot" (click)="SortPageList(2)">
+                    <span class="width-title2 likeLink-prot" (click)="SortPageList(2)">
                         Событие
-                        <span *ngIf="status === 'eventUser'" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[1].event, 'eos-adm-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
+                        <span
+                            *ngIf="status === 'eventUser'"
+                            class="icon eos-adm-icon small"
+                            [ngClass]="{
+                                'eos-adm-icon-arrow-blue-top': arrSort[1].event,
+                                'eos-adm-icon-arrow-blue-bottom': !arrSort[1].event
+                            }"
+                        ></span>
                     </span>
-                    <span class=" width-title3 likeLink-prot" (click)="SortPageList(3)">
+                    <span class="width-title3 likeLink-prot" (click)="SortPageList(3)">
                         Пользователь
-                        <span *ngIf="status === 'WHO'" class="icon eos-adm-icon small" [ngClass]="{'eos-adm-icon-arrow-blue-top': arrSort[2].who, 'eos-adm-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
+                        <span
+                            *ngIf="status === 'WHO'"
+                            class="icon eos-adm-icon small"
+                            [ngClass]="{
+                                'eos-adm-icon-arrow-blue-top': arrSort[2].who,
+                                'eos-adm-icon-arrow-blue-bottom': !arrSort[2].who
+                            }"
+                        ></span>
                     </span>
                 </div>
             </div>
             <div class="selected-wrapper">
                 <div class="user-item prot-list-prot" *ngIf="!isLoading">
-                    <div *ngFor="let user of frontData; let i = index ">
-                        <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
-                            <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
-                                {{user.date}}
+                    <div *ngFor="let user of frontData; let i = index">
+                        <div class="contain-span-header" [ngClass]="{ highlighted: user.checked === true }">
+                            <span class="item-table width-title1" (click)="SingleUserCheck(user)">
+                                {{ user.date }}
                             </span>
-                            <span class=" item-table width-title2"  (click)="SingleUserCheck(user)">
+                            <span class="item-table width-title2" (click)="SingleUserCheck(user)">
                                 <div>
-                                    {{user.eventUser}}
+                                    {{ user.eventUser }}
                                 </div>
                             </span>
-                            <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
+                            <span class="item-table width-title3" (click)="SingleUserCheck(user)">
                                 <div>
-                                    {{user.isnWho}}
+                                    {{ user.isnWho }}
                                 </div>
                             </span>
                         </div>
                     </div>
                 </div>
-                <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
+                <eos-user-list-pagination
+                    [currentState]="[currentState[0] && !hideTree, currentState[1]]"
+                ></eos-user-list-pagination>
             </div>
             <div class="spinner-prot" *ngIf="isLoading">
                 <eos-spinner size="lg"></eos-spinner>
             </div>
         </div>
     </div>
-    <eos-users-info [open]="isOpenUserInfo" [id]="lastUser?.id" (closeModal)="setIsOpenUserInfo(false)"></eos-users-info>
+    <eos-users-info
+        [open]="isOpenUserInfo"
+        [id]="lastUser?.id"
+        [innerHTMLSelectedProtocol]="innerHTMLSelectedProtocol"
+        [innerHTMLPrevProtocol]="innerHTMLPrevProtocol"
+        [isComparisonWithPrev]="isComparisonWithPrev"
+        (closeModal)="setIsOpenUserInfo(false)"
+    >
+    </eos-users-info>
 </div>
