@@ -101,3 +101,16 @@
 .users-info:hover {
     background-color: #e3f2fd;
 }
+
+.two-protocols-compare-wrapper{
+    display: flex;
+    align-items: center;
+    #selected-protocol, #prev-protocol {
+        font-size: 11pt;
+        font-family: 'Times New Roman';
+        width: 900px;
+        height: 700px;
+        overflow-y: scroll;
+    }
+}
+
