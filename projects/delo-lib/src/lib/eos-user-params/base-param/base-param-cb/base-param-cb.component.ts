@@ -153,7 +153,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     let answer = [];
                     try {
                         answer = await this.apiSrvRx.read<any>({
-                            USER_PARMS1: {
+                            USER_PARMS: {
                                 criteries: {
                                     ISN_USER_OWNER: '-99',
                                     PARM_NAME: 'ANCUD|CRYPTO_ACTIVEX'

@@ -3,7 +3,9 @@ import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { AppContext } from '../../../eos-rest/services/appContext.service';
-import { USER_PARMS } from '../../../eos-rest';
+// import { USER_PARMS } from '../../../eos-rest';
+import { AppsettingsParams, AppsettingsTypename } from '../../../eos-common/consts/params.const';
+import { ISession } from '../../../eos-parameters/interfaces/app-setting.interfaces';
 
 @Component({
     selector: 'eos-param-other',
@@ -18,7 +20,11 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     formServer: FormGroup;
     licMedo: boolean = false;
     checkDiadoc: boolean = true;
-
+    public paramSession: any = {
+        namespace: AppsettingsParams.Identity,
+        typename: AppsettingsTypename.Session,
+        instance: 'Default'
+    };
 
     constructor(
         injector: Injector,
@@ -32,8 +38,11 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
      */
     public init() {
         this.prepareDataParam();
-        return this.getData(this.queryObj)
-            .then((data: Array<USER_PARMS>) => {
+        const allRequest = [];
+        allRequest.push(this.getData(this.queryObj));
+        allRequest.push(this.getAppSetting<ISession>(this.paramSession));
+        return Promise.all(allRequest)
+            .then(([data, session]) => {
                 data.map(d => {
                     if (d.PARM_NAME === 'СЕРВЕР ПРИЛОЖЕНИЙ') {
                         d.PARM_NAME = 'СЕРВЕР_ПРИЛОЖЕНИЙ';
@@ -44,6 +53,7 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                     return d;
                 });
                 this.prepareData = this.convData(data);
+                this.prepareData.rec['TimeoutInMinutes'] = session['TimeoutInMinutes'];
                 this._updateDeliveryOptions();
                 this.prepareDataParam();
                 this.inputs = this.getInputs();
@@ -93,6 +103,16 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                 this.form.controls[key].enable({ emitEvent: false });
             }
         });
+    }
+    async submit(): Promise<void> {
+        if (this.updateData['TimeoutInMinutes']) {
+            const newArhivist: ISession = {
+                TimeoutInMinutes: +this.updateData['TimeoutInMinutes']
+            };
+            await this.setAppSetting(this.paramSession, newArhivist);
+            delete this.updateData['TimeoutInMinutes'];
+        }
+        super.submit();
     }
     cancelEdit() {
         this.masDisable = [];

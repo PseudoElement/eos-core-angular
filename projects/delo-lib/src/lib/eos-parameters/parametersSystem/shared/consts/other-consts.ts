@@ -1,4 +1,5 @@
 import { IBaseParameters } from './../interfaces/parameters.interfaces';
+const REG_MIN_VAL_MORE: RegExp = /^([1-9]{1}[0-9]{0,})$/;
 export const OTHER_PARAM: IBaseParameters = {
     id: 'other',
     apiInstance: 'USER_PARMS',
@@ -27,6 +28,13 @@ export const OTHER_PARAM: IBaseParameters = {
             type: 'string',
             readonly: false,
             title: 'Подсистемы "Оповещения и уведомления" и "управление процессами"',
+        },
+        {
+            key: 'TimeoutInMinutes',
+            type: 'numberIncrement',
+            readonly: false,
+            pattern: REG_MIN_VAL_MORE,
+            title: 'Таймаут сессии (минут)',
         },
         {
             key: 'EMAIL_ISN_DELIVERY',
@@ -82,6 +90,13 @@ export const OTHER_PARAM_CB: IBaseParameters = {
             type: 'string',
             readonly: true,
             title: 'Подсистемы "Оповещения и уведомления" и "управление процессами"',
+        },
+        {
+            key: 'TimeoutInMinutes',
+            type: 'numberIncrement',
+            readonly: false,
+            pattern: REG_MIN_VAL_MORE,
+            title: 'Таймаут сессии (минут)',
         },
         {
             key: 'EMAIL_ISN_DELIVERY',
