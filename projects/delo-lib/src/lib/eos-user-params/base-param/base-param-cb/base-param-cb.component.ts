@@ -315,7 +315,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
      *
      * @param flag Передаём галочку технического пользователя
      */
-    updateParamsTech(flag: boolean) {//------------------------------TYT----
+    updateParamsTech(flag: boolean) {
         this.accessField.forEach((item) => {
             switch (item['key']) {
                 case 'delo_web':
