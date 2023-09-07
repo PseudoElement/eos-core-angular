@@ -33,13 +33,19 @@
                     <eos-dynamic-input [input]="inputs['rec.MaxCacheSize']" [form]="form"  [readonly]="false"></eos-dynamic-input>
                 </div>
                 <eos-dynamic-input
-                    class="eos-dynamic-input-title-custom-checkbox"
-                    style="width: 45%; margin-left: 10px; padding-top: 25px;"
-                    [input]="inputs['rec.IsShared']"
+                    style="width: 45%; margin-left: 10px; padding-top: 20px;"
+                    class="eos-dynamic-input-title-custom"
+                    [input]="inputs['rec.CountProcesses']"
                     [form]="form"
                     [readonly]="false"
                 ></eos-dynamic-input>
             </div>
+            <eos-dynamic-input
+                class="eos-dynamic-input-title-custom-checkbox"
+                [input]="inputs['rec.IsShared']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
         </div>
     </div>
     <div class="spinner-wrapper email-wr" *ngIf="isLoading">
