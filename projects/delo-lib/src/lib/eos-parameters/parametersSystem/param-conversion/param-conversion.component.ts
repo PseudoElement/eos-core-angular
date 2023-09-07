@@ -146,7 +146,7 @@ export class ParamConversionComponent extends BaseParamComponent {
             MaxCacheSize: this.updateData['MaxCacheSize'] !== undefined ? +this.updateData['MaxCacheSize'] : +this.prepareData.rec['MaxCacheSize'],
             Name: this.updateData['Name'] !== undefined ? this.updateData['Name'] : this.prepareData.rec['Name'],
             IsShared: this.updateData['IsShared'] !== undefined ? Boolean(+this.updateData['IsShared']) : Boolean(+this.prepareData.rec['IsShared']),
-            CountProcesses: this.prepareData.rec['CountProcesses'],
+            CountProcesses: this.updateData['CountProcesses'] !== undefined ? +this.updateData['CountProcesses'] : +this.prepareData.rec['CountProcesses'],
             InstanceName: this.prepareData.rec['InstanceName'],
         };
         Object.keys(this.converter).forEach((key) => {
