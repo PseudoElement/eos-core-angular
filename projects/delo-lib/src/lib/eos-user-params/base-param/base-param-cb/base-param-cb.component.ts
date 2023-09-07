@@ -86,12 +86,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private modalRef: BsModalRef;
     private rightsCBDueRole: boolean = false;
     private clearRoles;
-     // блок автопоиска при выборе ДЛ
-     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
-     private _defaultDepDue: string;
-     private _searchLexem: string = '';
-     private _depDueLinkOrg: string = undefined;
-     private _sysParamsDueOrganiz: string = undefined;
+    // блок автопоиска при выборе ДЛ
+    private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
+    private _defaultDepDue: string;
+    private _searchLexem: string = '';
+    private _depDueLinkOrg: string = undefined;
+    private _sysParamsDueOrganiz: string = undefined;
 
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size || this.queryRoles.length || this.rightsCBDueRole) {
@@ -129,7 +129,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private _userSettingsService: UserSettingsService,
         private _appCtx: AppContext,
         private loginLength: LoginLengthService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this._userParamSrv.getUserIsn({
@@ -176,33 +176,33 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.apiSrvRx.read<any>({
                     LicenseInfo: ALL_ROWS
                 })
-                .then(ans => {
-                    if (typeof (ans) === 'string') {
-                        this.LicenzeInfo = JSON.parse(ans);
-                    } else {
-                        this.LicenzeInfo = ans;
-                    }
-                    if (this.LicenzeInfo.length > 0) {
-                        this.createActualLicenze();
-                    }
-                    this.afterInit();
-                })
-                .catch(err => {
-                    this.afterInit();
-                    this.LicenzeInfo = [];
-                });
+                    .then(ans => {
+                        if (typeof (ans) === 'string') {
+                            this.LicenzeInfo = JSON.parse(ans);
+                        } else {
+                            this.LicenzeInfo = ans;
+                        }
+                        if (this.LicenzeInfo.length > 0) {
+                            this.createActualLicenze();
+                        }
+                        this.afterInit();
+                    })
+                    .catch(err => {
+                        this.afterInit();
+                        this.LicenzeInfo = [];
+                    });
                 // if (localStorage.getItem('lastNodeDue') == null) {
                 //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
                 // }
             }
         });
         this._userParamSrv.canDeactivateSubmit$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
             )
-        .subscribe((rout: RouterStateSnapshot) => {
+            .subscribe((rout: RouterStateSnapshot) => {
                 this._userParamSrv.submitSave = this.submit('true');
-        });
+            });
         this._userSettingsService.readDepartments().then(x => { // @task157113 читаем подразделение по дефолту и организацию из параметров (если надо)
             const { sections } = x;
             this._defaultDepDue = this._existsMainFolder(sections) ? this._getDueDepFefault(sections) : '';
@@ -273,9 +273,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.curentUser = this._userParamSrv.curentUser;
         if (this.curentUser.DUE_DEP) {
             this.getPhotoUser(this.curentUser.DUE_DEP, true)
-            .then(() => {
-                this.initSingleOwnerCab = this.singleOwnerCab;
-            });
+                .then(() => {
+                    this.initSingleOwnerCab = this.singleOwnerCab;
+                });
         }
         const baseInput = [...BASE_PARAM_CONTROL_INPUT];
         /*
@@ -312,7 +312,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * 
+     *
      * @param flag Передаём галочку технического пользователя
      */
     updateParamsTech(flag: boolean) {
@@ -325,19 +325,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 case '2':
                 case '5':
                     if (flag) {
-                        this.formAccess.get(item['key']).disable({emitEvent: false});
+                        this.formAccess.get(item['key']).disable({ emitEvent: false });
                         this.formAccess.get(item['key']).setValue(false);
                     } else if (this.formAccess.get(item['key']).disabled) {
-                        this.formAccess.get(item['key']).enable({emitEvent: false});
+                        this.formAccess.get(item['key']).enable({ emitEvent: false });
                         this.formAccess.get(item['key']).setValue(item.value || false);
                     }
                     break;
                 case '1-27':
                     if (flag) {
-                        this.formAccess.get(item['key']).disable({emitEvent: false});
+                        this.formAccess.get(item['key']).disable({ emitEvent: false });
                         this.formAccess.get(item['key']).setValue(null);
                     } else if (this.formAccess.get(item['key']).disabled) {
-                        this.formAccess.get(item['key']).enable({emitEvent: false});
+                        this.formAccess.get(item['key']).enable({ emitEvent: false });
                         this.formAccess.get(item['key']).setValue(item.value || false);
                     }
                     break;
@@ -522,17 +522,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
 
-    cheackCtech(): boolean {
-        if (!this.dueDepNameNullUndef(this.formControls.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
-            this._msgSrv.addNewMessage({
-                type: 'warning',
-                title: 'Предупреждение:',
-                msg: 'Укажите пользователя техническим или добавьте должностное лицо',
-                dismissOnTimeout: 6000,
-            });
-            return true;
-        }
-        return false;
+    notTechUserAndHasNotDueDepName(): boolean {
+        return !(Boolean(this.formControls.get('DUE_DEP_NAME').value)) && !this.curentUser.isTechUser;
     }
     setQueryNewData(accessStr, newD, query): void {
         const id = this._userParamSrv.userContextId;
@@ -660,11 +651,19 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
     }
     submit(meta?: string): Promise<any> {
+        if (this.notTechUserAndHasNotDueDepName()) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение:',
+                msg: 'Выберите должностное лицо или установите флаг технического пользователя',
+            });
+            return Promise.resolve('error');
+        }
         if (this.getErrorSave) {
             this.messageAlert({ title: 'Предупреждение', msg: 'Изменения не сохранены', type: 'warning' });
             return Promise.resolve('error');
         }
-        if (this.cheackCtech() || this.checkRole()) {
+        if (this.checkRole()) {
             return Promise.resolve('error');
         }
         if (this._newData.get('IS_SECUR_ADM') && this.curentUser.DELO_RIGHTS && this.curentUser.DELO_RIGHTS[+ETypeDeloRight.SystemTechnologist] === '1') {
@@ -689,7 +688,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 bodyList: [],
                                 body: `В системе не будет ни одного действующего системного технолога с полным доступом к справочнику "Пользователя"`,
                                 buttons: [
-                                    {title: 'Скрыть ', result: 1, isDefault: true},
+                                    { title: 'Скрыть ', result: 1, isDefault: true },
                                 ],
                             })
                             return 'error';
@@ -699,7 +698,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         USER_CL: PipRX.criteries({
                             'IS_SECUR_ADM': '1',
                             'ORACLE_ID': 'isnotnull',
-                            'AV_SYSTEMS':'_1________________________________________%'
+                            'AV_SYSTEMS': '_1________________________________________%'
                         }),
                         orderby: 'ISN_LCLASSIF',
                         top: 2,
@@ -715,17 +714,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 bodyList: [],
                                 body: 'В системе не будет ни одного незаблокированного пользователя с правом «Администратор»',
                                 buttons: [
-                                    {title: 'Скрыть ', result: 1, isDefault: true},
+                                    { title: 'Скрыть ', result: 1, isDefault: true },
                                 ],
                             })
                             return 'error';
                         } else {
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
                             if (
-                                !this.curentUser['IS_PASSWORD'] && 
-                                this.curentUser.USERTYPE !== UserType.OSAuthentication && 
-                                // this.curentUser.USERTYPE !== UserType.noLoginRights && 
-                                this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
+                                !this.curentUser['IS_PASSWORD'] &&
+                                this.curentUser.USERTYPE !== UserType.OSAuthentication &&
+                                // this.curentUser.USERTYPE !== UserType.noLoginRights &&
+                                this.curentUser.USERTYPE !== UserType.OSAuthenticationServer &&
                                 !meta
                             ) {
                                 return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
@@ -745,10 +744,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 } else {
                     /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
                     if (
-                        !this.curentUser['IS_PASSWORD'] && 
-                        this.curentUser.USERTYPE !== UserType.OSAuthentication && 
-                        // this.curentUser.USERTYPE !== UserType.noLoginRights && 
-                        this.curentUser.USERTYPE !== UserType.OSAuthenticationServer && 
+                        !this.curentUser['IS_PASSWORD'] &&
+                        this.curentUser.USERTYPE !== UserType.OSAuthentication &&
+                        // this.curentUser.USERTYPE !== UserType.noLoginRights &&
+                        this.curentUser.USERTYPE !== UserType.OSAuthenticationServer &&
                         !meta
                     ) {
                         return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
@@ -893,12 +892,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                         method: 'POST',
                         requestUri: `FillUserCl?isn_user=${this._userParamSrv.curentUser.ISN_LCLASSIF}&role=${encodeURI(this.formControls.value.SELECT_ROLE)}&isn_user_copy_from=0`
                     }], '')
-                    .then(() => {
-                        return this.AfterSubmit(accessStr, query, route);
-                    });
-            } else {
-                return this.AfterSubmit(accessStr, query, route);
-            }
+                        .then(() => {
+                            return this.AfterSubmit(accessStr, query, route);
+                        });
+                } else {
+                    return this.AfterSubmit(accessStr, query, route);
+                }
             }).catch(error => {
                 this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
                 this.cancel();
@@ -927,9 +926,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
             if (this.curentUser.DUE_DEP) {
                 return this.getPhotoUser(this.curentUser.DUE_DEP, true)
-                .then(() => {
-                    this.initSingleOwnerCab = this.singleOwnerCab;
-                });
+                    .then(() => {
+                        this.initSingleOwnerCab = this.singleOwnerCab;
+                    });
             }
         });
     }
@@ -1026,11 +1025,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         });
     }
     gt(): any {
-       // const delo = this.formAccess.get('0').value;
-       // const delo_web_delo = this.formAccess.get('0-1').value;
+        // const delo = this.formAccess.get('0').value;
+        // const delo_web_delo = this.formAccess.get('0-1').value;
         const delo_web = this.formAccess.get('delo_web').value;
         return {
-           delo_web
+            delo_web
         };
     }
     edit() {
@@ -1041,8 +1040,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (this.gt()['delo_web']) {
             this.checkMeinControlAccess({ target: { checked: true } }, 'delo_web');
         } else {
-           // this._toggleFormControl(this.formAccess.controls['0'], false);
-           // this._toggleFormControl(this.formAccess.controls['0-1'], false);
+            // this._toggleFormControl(this.formAccess.controls['0'], false);
+            // this._toggleFormControl(this.formAccess.controls['0-1'], false);
             this._toggleFormControl(this.formAccess.controls['delo_web'], false);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
@@ -1073,16 +1072,16 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     checkMeinControlAccess($event, data) {
         if (data === '0') {
-           // this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
+            // this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['delo_web'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         } else if (data === '0-1') {
-           // this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
+            // this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['delo_web'], $event.target.checked);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         } else {
-           // this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
-           // this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
+            // this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
+            // this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
             if (this.LicenzeInfo.length > 0 && $event.target.checked) {
                 if (this.actualLicenz.indexOf('1-27') !== -1) {
                     this._toggleFormControl(this.formAccess.controls['1-27'], false);
@@ -1180,7 +1179,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
             this.formAccess.controls['26'].disable({ emitEvent: false });
             this.formAccess.controls['26'].patchValue(false, { emitEvent: false });
-            ['2', '5', '15', '17',  '23', '25'].forEach(numberControl => {
+            ['2', '5', '15', '17', '23', '25'].forEach(numberControl => {
                 this._toggleFormControl(this.formAccess.controls[numberControl], false);
             });
         }
@@ -1189,9 +1188,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this._toggleFormControl(this.formAccess.controls[numberControl], false);
             });
             this._toggleFormControl(this.formAccess.controls['23'], true);
-           // this._toggleFormControl(this.formAccess.controls['21'], true);
+            // this._toggleFormControl(this.formAccess.controls['21'], true);
             this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
-           // this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
+            // this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
         }
         if (this.gt()['delo_web_delo']) {
             this.disableAccessSyst(false);
@@ -1308,9 +1307,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then((data: DEPARTMENT[]) => {
                 if (this.formControls.controls['DUE_DEP_NAME'].value) {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
-                            this.fillingDep(data);
-                            return val;
-                        })
+                        this.fillingDep(data);
+                        return val;
+                    })
                 } else {
                     this.fillingDep(data);
                     return Promise.resolve(data[0]);
@@ -1352,7 +1351,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
         });
     }
-    
+
     private _isSymbolsCorrect(value): boolean {
         const REGEXP = new RegExp(/^[а-яА-ЯёЁA-Za-z0-9]+$/);
         return REGEXP.test(value);
@@ -1457,17 +1456,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
     private patchVal() {
-        ['2', '5', '15', '17',  '23', '25', '26'].forEach(numberControl => {
+        ['2', '5', '15', '17', '23', '25', '26'].forEach(numberControl => {
             this.formAccess.controls[numberControl].patchValue(false, { emitEvent: false });
         });
     }
     private disableAccessSyst(flag) {
         if (flag) {
-            ['2', '5', '15', '17',  '23', '25', '26'].forEach(numberControl => {
+            ['2', '5', '15', '17', '23', '25', '26'].forEach(numberControl => {
                 this._toggleFormControl(this.formAccess.controls[numberControl], true);
             });
         } else {
-            ['2', '5', '15', '17',  '23', '25', '26'].forEach(numberControl => {
+            ['2', '5', '15', '17', '23', '25', '26'].forEach(numberControl => {
                 this._toggleFormControl(this.formAccess.controls[numberControl], false);
             });
         }
@@ -1534,6 +1533,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 if (data) {
                     this.curentUser.isTechUser = data;
+                    this.updateParamsTech(this.formControls.get('teсhUser').value);
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm2(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation && confirmation['result'] === 1) {
@@ -1588,14 +1588,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
             });
         this.form.get('CLASSIF_NAME').valueChanges
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(data => {
-            if (f.get('teсhUser').value) {
-                this.form.get('SURNAME_PATRON').patchValue(data, { emitEvent: false });
-            }
-        });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(data => {
+                if (f.get('teсhUser').value) {
+                    this.form.get('SURNAME_PATRON').patchValue(data, { emitEvent: false });
+                }
+            });
         this._setDueDepNameSubscription();
     }
     private _setDueDepNameSubscription() {
