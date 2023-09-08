@@ -17,9 +17,9 @@ export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
+    @Input() shouldHideTooltipOnBlur?: boolean = false;
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
-
 
     public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
@@ -42,7 +42,6 @@ export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
         }
         return required;
     }
-
     hasValue(): boolean {
         const ctrl = this.control;
         return (ctrl && ctrl.value !== null && ctrl.value !== undefined);
@@ -58,6 +57,10 @@ export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
         this.isFocused = false;
         this.updateMessage();
         this.toggleTooltip();
+        if(this.shouldHideTooltipOnBlur){
+             this.inputTooltip.visible = false
+             this.inputTooltip.message = '';
+        };
         this.onControlBlur.emit(this);
     }
 
@@ -86,7 +89,6 @@ export class DynamicInputBaseDirective implements OnChanges, OnDestroy {
     forceTooltip() {
         this.inputTooltip.force = true;
     }
-
     ngOnChanges(changes: SimpleChanges) {
         const control = this.control;
         this.input.dib = this;

@@ -1,0 +1,21 @@
+<div class="input-param-wrapper input-param-prj-wrapper">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="form.status === 'INVALID'"
+        [editBtn]="!isEditMode"
+        (editForm)="edit()"
+    ></eos-param-header>
+    <div class="text-area-wrapper">
+        <ng-container *ngFor="let input of inputsData">
+            <eos-dynamic-input
+                [input]="input"
+                [shouldHideTooltipOnBlur]="true"
+                [form]="form"
+                [readonly]="input.readonly"
+            >
+            </eos-dynamic-input>
+        </ng-container>
+    </div>
+</div>

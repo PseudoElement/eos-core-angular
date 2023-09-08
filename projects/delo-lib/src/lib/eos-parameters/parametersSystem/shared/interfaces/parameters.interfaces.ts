@@ -1,3 +1,4 @@
+import { E_PARMS_PAGES } from "../consts/eos-parameters.const";
 import { ITableData } from "./tables.interfaces";
 
 export interface IParamBese {
@@ -77,4 +78,10 @@ export enum DEFAULT_APP_SETTINGS_BTN {
     add = "add",
     edit = "edit",
     deleted = "deleted"
+}
+
+export interface IEosParametersTab {
+    title: string
+    url: E_PARMS_PAGES
+    visible?: boolean
 }

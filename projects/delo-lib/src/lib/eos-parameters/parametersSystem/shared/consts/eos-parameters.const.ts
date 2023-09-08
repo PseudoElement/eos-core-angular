@@ -1,4 +1,5 @@
 import { IMessage } from '../../../../eos-common/interfaces';
+import { IEosParametersTab } from '../interfaces/parameters.interfaces';
 export enum E_PARMS_PAGES {
     rc = "rc",
     "prj-rc" = "prj-rc",
@@ -20,9 +21,11 @@ export enum E_PARMS_PAGES {
     "unloading-arch" = "unloading-arch",
     "extended-protocol" = "extended-protocol",
     licensing = "licensing",
-    preview = "preview"
+    preview = "preview",
+    "protocol-of-requests" = "protocol-of-requests"
 }
-export const EOS_PARAMETERS_TAB = [{
+
+export const EOS_PARAMETERS_TAB: IEosParametersTab[] = [{
     title: 'Работа с РК',
     url: E_PARMS_PAGES.rc,
     visible: true
@@ -84,7 +87,13 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Протоколирование',
     url: E_PARMS_PAGES.logging,
     visible: true
-}, {
+},
+{
+    title: 'Протоколирование запросов',
+    url: E_PARMS_PAGES['protocol-of-requests'],
+    visible: true
+},
+{
     title: 'Текущая организация',
     url: E_PARMS_PAGES['now-organiz'],
     visible: true

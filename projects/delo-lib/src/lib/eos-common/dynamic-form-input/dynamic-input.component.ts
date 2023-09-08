@@ -49,6 +49,7 @@ export class DynamicInputComponent {
     @Input() notStandartText: boolean; // параметр для text принимает boolean по дефолту undefined, если true то прячет иконку
     @Input() placement: string; // используется для даты чтобы можно было указать в какую сторону открывать выпадашку
     @Input() customStyle: DatePickerStyleFixes | undefined; // для передачи кастомных стилей выподающему окну Datepicker
+    @Input() shouldHideTooltipOnBlur?: boolean;
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
 
