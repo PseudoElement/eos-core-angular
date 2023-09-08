@@ -38,7 +38,7 @@ export const CONVERSION_PARAM: IBaseParameters = {
             key: 'CountProcesses',
             type: 'numberIncrement',
             readonly: true,
-            title: '',
+            title: 'КОЛИЧЕСТВО ПРОЦЕССОВ',
         },
         {
             key: 'InstanceName',
