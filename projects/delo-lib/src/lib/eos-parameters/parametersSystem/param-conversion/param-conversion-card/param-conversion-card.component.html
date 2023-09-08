@@ -32,13 +32,15 @@
                     <span style="font-size: 12px !important; color: #969696;">МАКСИМАЛЬНЫЙ РАЗМЕР ПАПКИ РЕЗУЛЬТАТОВ КОНВЕРТАЦИИ, ГБ</span>
                     <eos-dynamic-input [input]="inputs['rec.MaxCacheSize']" [form]="form"  [readonly]="false"></eos-dynamic-input>
                 </div>
-                <eos-dynamic-input
-                    style="width: 45%; margin-left: 10px; padding-top: 20px;"
-                    class="eos-dynamic-input-title-custom"
-                    [input]="inputs['rec.CountProcesses']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
+                <div style="width: 45%; margin-left: 10px;">
+                    <span style="font-size: 12px !important; color: #969696;">КОЛИЧЕСТВО ПРОЦЕССОВ</span>
+                    <eos-dynamic-input
+                        class="eos-dynamic-input-title-custom"
+                        [input]="inputs['rec.CountProcesses']"
+                        [form]="form"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+                </div>
             </div>
             <eos-dynamic-input
                 class="eos-dynamic-input-title-custom-checkbox"
