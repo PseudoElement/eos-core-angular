@@ -475,8 +475,7 @@ export class EosDictionary {
         const tablelist = updatefields.filter(i => i.dictionaryId)
             .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder } : null);
         const tablesUniq = Array.from(new Set(tablelist));
-
-        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER_SEV) !== -1) {
+        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER_SEV) !== -1 && this.id !== 'organization') {
             tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: { OBJECT_NAME: this.descriptor.apiInstance } } });
         }
 
@@ -515,6 +514,10 @@ export class EosDictionary {
                                 }
                             });
 
+                        } else if(this.id === 'organization') {
+                            nodes.forEach(node => {
+                                node.data.sev = node.data.rec.sev;
+                            })
                         }
                     }
                 });
