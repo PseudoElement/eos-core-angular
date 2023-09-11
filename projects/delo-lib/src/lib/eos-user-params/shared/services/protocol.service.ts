@@ -7,15 +7,20 @@ import { IComparedProtocol } from '../intrfaces/protocol.interfaces';
 export class ProtocolService {
   private readonly BODY = '{{BODY}}';
   private readonly STYLES = '{{STYLES}}';
+  private readonly TITLE = '{{TITLE}}';
   private readonly red: string = '#f0978b';
   private readonly green: string = '#7dc868';
+  private readonly HEAD: string = `
+  <head>
+    <title>${this.TITLE}</title>
+    <style>
+      ${this.STYLES}
+    </style>
+  </head>
+  `
   private readonly templateForSave: string = `
   <html>
-    <head>
-      <style>
-        ${this.STYLES}
-      </style>
-    </head>
+    ${this.HEAD}
     <body>
       ${this.BODY}
     </body>
@@ -26,6 +31,9 @@ export class ProtocolService {
       display: flex !important;
       width: 100%;
       justify-content: space-around;
+    }
+    #selected-protocol, #prev-protocol{
+      padding: 5px !important;
     }
     .two-protocols-compare-wrapper{
       display: flex !important;
@@ -74,6 +82,7 @@ export class ProtocolService {
   public printOnlyOneTag(selector: string) {
     this._setStylesForPrint()
     const printContents = document.querySelector(selector).innerHTML;
+    this._setHead('Изменения учетной записи и прав пользователя');
     document.body.innerHTML = printContents;
     window.print();
     document.body.style.visibility = 'visible';
@@ -112,6 +121,9 @@ export class ProtocolService {
     catch (e) {
       console.error(e);
     }
+  }
+  private _setHead(title: string): void{
+    document.head.innerHTML = this.HEAD.replace(this.TITLE, title).replace(this.STYLES, this.printStyles)
   }
   private _setStylesForPrint() {
     document.body.style.display = 'flex';
