@@ -11,6 +11,7 @@ export enum AppsettingsParams {
     ExtendedProtocol = "Eos.Delo.Settings.ExtendedProtocol",
     FileOper = "Eos.Delo.Settings.FileOper",
     Identity = "Eos.Platform.Settings.Identity",
+    LogginManager = "Eos.Platform.Settings.LoggingManager"
 }
 export enum AppsettingsTypename {
     TCryptography = "CryptographyCfg",
@@ -25,6 +26,7 @@ export enum AppsettingsTypename {
     TElastic = "ElasticCfg",
     TNotification = "NotificationCfg",
     TExportStorage = "ExportStorageCfg",
+    TFilterSettings = "FilterSettingsCfg",
     Preview = "PreviewCfg",
     Session = "SessionCfg"
 }

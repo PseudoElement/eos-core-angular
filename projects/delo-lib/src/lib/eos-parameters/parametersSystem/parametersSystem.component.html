@@ -1,7 +1,15 @@
 <div class="param-system">
     <ng-container [ngSwitch]="paramId">
-            <ng-container *ngSwitchCase="'authentication'">
-                <eos-param-authentication
+        <ng-container *ngSwitchCase="'protocol-of-requests'">
+            <eos-param-protocol-of-requests
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave">
+            </eos-param-protocol-of-requests>
+        </ng-container>
+        <ng-container *ngSwitchCase="'authentication'">
+            <eos-param-authentication
                 (formChanged)="recordChanged($event)"
                 (formInvalid)="turnOffSave($event)"
                 [btnDisabled]="!isChanged"
