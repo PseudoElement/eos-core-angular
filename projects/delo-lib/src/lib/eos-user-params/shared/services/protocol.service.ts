@@ -100,8 +100,8 @@ export class ProtocolService {
       const struct1 = this._convertHtmlToStruct(prevProtocol.innerHTML);
       const struct2 = this._convertHtmlToStruct(selectedProtocol.innerHTML);
       const [comparedStruct1, comparedStruct2] = this._compareStructs(struct1, struct2);
-      const comparedHtml1 = this._createHtmlFromStruct(comparedStruct1, 'red-span');
-      const comparedHtml2 = this._createHtmlFromStruct(comparedStruct2, 'green-span');
+      const comparedHtml1 = this._createHtmlFromStruct(comparedStruct1, 'red-span', 'Предыдущее состояние');
+      const comparedHtml2 = this._createHtmlFromStruct(comparedStruct2, 'green-span', 'Текущее состояние');
       if (selectedProtocolNode) selectedProtocolNode.innerHTML = comparedHtml1;
       if (prevProtocolNode) prevProtocolNode.innerHTML = comparedHtml2;
       const spansGreen = prevProtocolNode.querySelectorAll('.green-span') as NodeListOf<HTMLElement>
@@ -228,7 +228,7 @@ export class ProtocolService {
     });
     return { tables: comparedTables };
   }
-  private _createHtmlFromStruct(struct, className) {
+  private _createHtmlFromStruct(struct, className: string, stateTitle: string) : string {
     let html = '<div class="reportSize">';
     const wrap = (value, unique) => `<span class="${unique ? className : ''}">${value}</span>`;
     struct.tables.forEach(table => {
@@ -243,6 +243,7 @@ export class ProtocolService {
       }).join('');
     });
     html += '</div>';
+    html = `<h1 style="font-size: 18px; font-weight: bold; text-align: center;">${stateTitle}</h1>` + html
     return html;
   }
   private _innerRowsComparison(rows1, rows2) {
