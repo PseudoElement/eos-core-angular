@@ -89,11 +89,6 @@ export const EOS_PARAMETERS_TAB: IEosParametersTab[] = [{
     visible: true
 },
 {
-    title: 'Протоколирование запросов',
-    url: E_PARMS_PAGES['protocol-of-requests'],
-    visible: true
-},
-{
     title: 'Текущая организация',
     url: E_PARMS_PAGES['now-organiz'],
     visible: true
@@ -116,6 +111,11 @@ export const EOS_PARAMETERS_TAB: IEosParametersTab[] = [{
 }, {
     title: 'Лицензирование',
     url: E_PARMS_PAGES.licensing,
+    visible: true
+},
+{
+    title: 'Протоколирование запросов',
+    url: E_PARMS_PAGES['protocol-of-requests'],
     visible: true
 }
 ];
