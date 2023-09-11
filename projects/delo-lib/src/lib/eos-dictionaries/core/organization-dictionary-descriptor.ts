@@ -286,12 +286,24 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         // req.expand = 'CONTACT_List';
         // }
 
-        const responseOrganiz: ORGANIZ_CL[] = await this.apiSrv.read(req);
-        const organiz: ORGANIZ_CL[] = this.prepareForEdit(responseOrganiz);
-
+        const responseOrganiz: Promise<ORGANIZ_CL[]> = this.apiSrv.read(req);
+        const sev: Promise<SEV_ASSOCIATION[]> =  this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({ 'OBJECT_NAME': 'ORGANIZ_CL' })});
+        return Promise.all([responseOrganiz, sev])
+        .then(([Organiz, s]) => {
+            const organiz: ORGANIZ_CL[] = this.prepareForEdit(Organiz);
+            if (s && s.length > 0) {
+                organiz.forEach((org: ORGANIZ_CL) => {
+                    const index = s.findIndex((sev_) => sev_.OBJECT_ID === org.DUE);
+                    if (index !== -1) {
+                        org['sev'] = s[index];
+                    }
+                })
+            }
+            return organiz;
+        })
+        
         // const extendsOrganiz: ORGANIZ_EXTENDS[] = await this.extendsData(organiz);
         // return extendsOrganiz;
-        return organiz;
     }
 
     ar_Descript(): Promise<any> {
