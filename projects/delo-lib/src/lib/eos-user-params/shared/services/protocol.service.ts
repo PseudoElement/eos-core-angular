@@ -143,11 +143,11 @@ export class ProtocolService {
         try {
           const [_, verStart] = title.split('(');
           const [verPair] = verStart.split(')');
-          const [verName, verValue] = verPair.split(': ');
+          const [verName, verValue, date] = verPair.split(': ');
           const fakeIn1 = document.createElement('td');
           const fakeIn2 = document.createElement('td');
           fakeIn1.innerHTML = verName[0].toUpperCase() + verName.substr(1);
-          fakeIn2.innerHTML = verValue;
+          fakeIn2.innerHTML = `${verValue}: ${date}`;
           const fakeRow = document.createElement('tr');
           fakeRow.appendChild(fakeIn1);
           fakeRow.appendChild(fakeIn2);
