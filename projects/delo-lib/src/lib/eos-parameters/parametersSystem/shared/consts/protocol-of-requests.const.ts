@@ -1,5 +1,7 @@
 import { InputBase } from "eos-common/core/inputs/input-base";
 import { IBaseParameters } from "../interfaces/parameters.interfaces";
+import { IUploadParam } from "../../../../eos-parameters/interfaces/app-setting.interfaces";
+import { AppsettingsParams, AppsettingsTypename } from "../../../../eos-common/consts/params.const";
 
 export const PARAMS: IBaseParameters = {
     id: 'protocol-of-requests',
@@ -25,3 +27,9 @@ export const PROTOCOL_OF_REQUESTS_PARAMS: InputBase<string>[] = [{
     unique: undefined,
     uniqueInDict: false
 }]
+
+export const UPLOAD_PARAMS: IUploadParam = {
+    namespace: AppsettingsParams.LogginManager,
+    typename: AppsettingsTypename.TFilterSettings,
+    instance: 'Default'
+  }

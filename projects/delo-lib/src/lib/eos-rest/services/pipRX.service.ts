@@ -155,19 +155,22 @@ export class PipRX extends PipeUtils {
             });
     }
     setAppSetting<T>(changeSet: IUploadParam, body: T): Promise<any> {
-        return fetch(this._cfg.appSetting + `/upload?namespace=${changeSet.namespace}&typename=${changeSet.typename}&instance=${changeSet.instance}`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((answer: any) => {
-            if (answer['status'] !== 200) {
-                return Promise.reject({code: answer['status'], message: answer['error']});
-            }
-            return answer;
-        });
+        const options = {
+            withCredentials: true,
+            headers: new HttpHeaders({
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'Content-Type': 'text/plain; charset=utf-8'
+            })
+        };
+        return this.getHttp_client()
+                .post(
+                    this._cfg.appSetting + `/upload?namespace=${changeSet.namespace}&typename=${changeSet.typename}&instance=${changeSet.instance}`,
+                    body, 
+                    options
+                )
+                .toPromise()
+                .then(res => res)
+                .catch(err => console.error(err))
     }
     private makeArgs(args: IKeyValuePair): string {
         let url = '';

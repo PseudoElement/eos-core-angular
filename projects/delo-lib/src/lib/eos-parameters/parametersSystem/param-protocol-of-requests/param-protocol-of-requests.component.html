@@ -2,7 +2,7 @@
     <eos-param-header
         [title]="titleHeader"
         (submitForm)="submit()"
-        (cancelForm)="cancel()"
+        (cancelForm)="disableForm()"
         [statusBtnSub]="form.status === 'INVALID'"
         [editBtn]="!isEditMode"
         (editForm)="edit()"
