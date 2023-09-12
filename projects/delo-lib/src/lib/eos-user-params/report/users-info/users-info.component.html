@@ -95,9 +95,22 @@
     >
     </iframe>
     <ng-template #compareProtocols>
-        <div class="two-protocols-compare-wrapper">
-            <div id="selected-protocol"></div>
-            <div id="prev-protocol"></div>
+        <div class="compare-protocols-wrapper">
+            <section class="legend-wrapper">
+                <h4 class="title">Легенда</h4>
+                <div class="info">
+                    <span class="left">
+                        Текст, отсутствующий в правой части, но присутсвующий в левой
+                    </span>
+                    <span class="right">
+                        Текст, отсутствующий в левой части, но присутсвующий в правой
+                    </span>
+                </div>
+            </section>
+            <div class="two-protocols-compare-wrapper">
+                <div id="selected-protocol"></div>
+                <div id="prev-protocol"></div>
+            </div>
         </div>
     </ng-template>
     <div *ngIf="!isComparisonWithPrev" class="info-content-wrapper">

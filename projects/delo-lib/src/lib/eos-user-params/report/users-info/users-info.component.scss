@@ -101,7 +101,9 @@
 .users-info:hover {
     background-color: #e3f2fd;
 }
-
+.compare-protocols-wrapper{
+    display: block;
+}
 .two-protocols-compare-wrapper{
     display: flex;
     align-items: center;
@@ -113,4 +115,28 @@
         overflow-y: scroll;
     }
 }
-
+.legend-wrapper{
+    display: flex;
+    margin: 0 5px;
+    padding: 5px;
+    border: 1px solid black;
+    flex-direction: column;
+    align-items: center;
+    .title{
+        font-weight: bold;
+    }
+    .info{
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+        .left, .right{
+            text-align: center;
+        }
+        .left{
+            background: #f0978b;
+        }
+        .right{
+            background: #7dc868;
+        }
+    }
+}
