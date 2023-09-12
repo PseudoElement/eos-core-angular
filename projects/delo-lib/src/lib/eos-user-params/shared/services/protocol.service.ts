@@ -229,7 +229,7 @@ export class ProtocolService {
     return [this._compareStruct(struct1, struct2), this._compareStruct(struct2, struct1)];
   }
   private _compareStruct(struct, compareWith) {
-    const comparedTables = struct.tables.map(table => {
+      const comparedTables = struct.tables.map(table => {
       const sameTable = compareWith.tables.find(x => x.title === table.title);
       if (!sameTable) {
         this._setUniquinessDownToChildren(table);
@@ -282,8 +282,9 @@ export class ProtocolService {
   }
   private _setUniquinessDownToChildren(node) {
     node.unique = true;
-    if (node.rows) node.rows.forEach(this._setUniquinessDownToChildren);
-    if (node.values) node.values.forEach(this._setUniquinessDownToChildren);
+    if (node.rows && node.rows.length) node.rows.forEach(this._setUniquinessDownToChildren);
+                                          /*В некоторых местах теряется контекст, хз почему, поэтому такой костыль */
+    if(node.values && node.values.length) node.values.forEach((this || new ProtocolService)._setUniquinessDownToChildren)
   }
   private _setBackgroundColor(nodes: NodeListOf<HTMLElement>, color: string): void {
     nodes.forEach(node => {
