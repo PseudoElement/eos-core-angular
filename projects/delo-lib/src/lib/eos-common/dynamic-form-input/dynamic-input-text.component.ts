@@ -10,6 +10,8 @@ import { DynamicInputBaseDirective } from './dynamic-input-base';
 })
 export class DynamicInputTextComponent extends DynamicInputBaseDirective {
     @ViewChild('textArea', {static: false}) textArea: ElementRef<HTMLElement>;
+    /*Для установления минимальной высоты поля */
+    @Input() height?: number;
     @Input() notStandartText: boolean;
     /* public isShowText = false; */
     constructor(private _waitCl: WaitClassifService/* , private appCtx: AppContext */) {
