@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlSegment } from '@angular/router';
-import { PipRX, USER_CL } from '../../eos-rest';
+import { PipRX, SYS_PARMS, USER_CL } from '../../eos-rest';
 import { KEY_RIGHT_TECH, IKeyRightTech } from '../../app/consts/permission.consts';
 import { ALL_ROWS } from '../../eos-rest/core/consts';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
@@ -25,15 +25,15 @@ export class UsersPermissionGuard implements CanActivate {
         const urlSegment: UrlSegment = _route.url[0];
         const url: string = urlSegment.path;
         const conf: IKeyRightTech = this._getConf(url);
-
-        return this._getContext().then((user: USER_CL[]) => {
-            this._userProfile = user[0];
+        return this._getContext().then((answer) => {
+            this._userProfile = answer[0];
+            const cbBase = answer[1];
             // если это пользовательские настройки с шестеренки, то ок
             if (state.url.indexOf('/user_param/current-settings') !== -1) {
                 return true;
             }
 
-            if (!this._apCtx.cbBase) {
+            if (!cbBase) {
                 const access: boolean = conf.key === 1 && this._userProfile.TECH_RIGHTS && this._userProfile.TECH_RIGHTS[E_TECH_RIGHT.Users - 1] === '1';
                 if (!access) {
                     this._msgSrv.addNewMessage({
@@ -84,12 +84,29 @@ export class UsersPermissionGuard implements CanActivate {
 
     }
 
-    private _getContext(): Promise<USER_CL[]> {
+    private _getContext(): Promise<[USER_CL, boolean]> {
         if (this._apCtx.CurrentUser) {
-            return Promise.resolve([this._apCtx.CurrentUser]);
+            return Promise.resolve([this._apCtx.CurrentUser, this._apCtx.cbBase]);
         } else {
-            return this._pipSrv.read<USER_CL>({
+            const query = [];
+            query.push(this._pipSrv.read<USER_CL[]>({
                 CurrentUser: ALL_ROWS
+            }));
+            query.push(this._pipSrv.read<SYS_PARMS>({
+                SysParms: ALL_ROWS,
+                _moreJSON: {
+                    DbDateTime: new Date(),
+                    licensed: null,
+                    ParamsDic: '-99'
+                }
+            }));
+            return Promise.all(query)
+            .then<[USER_CL, boolean]>(([ansUsers, oSysParams]) => {
+                let cbBase = false;
+                if (oSysParams[0]['_more_json'].ParamsDic['CB_FUNCTIONS'] === 'YES') {
+                    cbBase = true;
+                }
+                return [ansUsers[0], cbBase];
             });
         }
     }
