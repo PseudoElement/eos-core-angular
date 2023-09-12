@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { PARAMS, PROTOCOL_OF_REQUESTS_PARAMS, UPLOAD_PARAMS } from '../shared/consts/protocol-of-requests.const';
 import { InputBase } from '../../../eos-common/core/inputs/input-base';
@@ -9,7 +9,8 @@ import { PipRX } from '../../../eos-rest';
 @Component({
   selector: 'eos-param-protocol-of-requests',
   templateUrl: './param-protocol-of-requests.component.html',
-  styleUrls: ['./param-protocol-of-requests.component.scss']
+  styleUrls: ['./param-protocol-of-requests.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ParamProtocolOfRequestsComponent extends BaseParamComponent implements OnInit {
   inputsData: InputBase<string>[] = PROTOCOL_OF_REQUESTS_PARAMS;
