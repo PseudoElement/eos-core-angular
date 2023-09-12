@@ -203,7 +203,7 @@ export class EosReportUsersInfoComponent implements OnChanges, AfterViewInit, On
         this._userParamSrv.createFullReportHtml(url, title);
     }
     public saveComparedProtocols(): void {
-        const protocols = document.querySelector('.two-protocols-compare-wrapper');
+        const protocols = document.querySelector('.compare-protocols-wrapper');
         this._protocolSrv.saveComparedProtocols(protocols.innerHTML)
     }
     private _getFileTitleFullReport(): string {
@@ -226,7 +226,7 @@ export class EosReportUsersInfoComponent implements OnChanges, AfterViewInit, On
     }
     public openPrintWindow() {
         if (this.isComparisonWithPrev) {
-            this._protocolSrv.printOnlyOneTag('.two-protocols-compare-wrapper')
+            this._protocolSrv.printOnlyOneTag('.compare-protocols-wrapper')
         } else {
             const iframe = window.frames['iframe'].contentWindow
             iframe.focus()

@@ -28,9 +28,31 @@ export class ProtocolService {
   `
   private readonly printStyles = `
     body{
+      display: block !important;
+    }
+    .legend-wrapper{
       display: flex !important;
-      width: 100%;
-      justify-content: space-around;
+      margin: 0 5px !important;
+      padding: 5px !important;
+      border: 1px solid black !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+    .legend-wrapper .title{
+      font-weight: bold !important;
+    }
+    .legend-wrapper .info{
+      display: flex !important;
+      width: 100% !important;
+      justify-content: space-around !important;
+    }
+    .legend-wrapper .info .left{
+      text-align: center !important;
+      background: ${this.red} !important;
+    }
+    .legend-wrapper .info .right{
+      text-align: center !important;
+      background: ${this.green} !important;
     }
     #selected-protocol, #prev-protocol{
       padding: 5px !important;
