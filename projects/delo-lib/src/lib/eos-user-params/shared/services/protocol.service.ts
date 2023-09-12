@@ -261,7 +261,6 @@ export class ProtocolService {
   private _innerRowsComparison(rows1, rows2) {
     const rows = rows1.map(row => {
       const sameRow = rows2.find(x => x.title === row.title);
-      // if(row.title === 'Системный технолог') debugger;
       if (!sameRow) {
         this._setUniquinessDownToChildren(row);
         return row;
