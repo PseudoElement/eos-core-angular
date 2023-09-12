@@ -4,7 +4,7 @@
         (submitForm)="submit()"
         (cancelForm)="disableForm()"
         [statusBtnSub]="form.status === 'INVALID'"
-        [editBtn]="!isEditMode"
+        [editBtn]="true"
         (editForm)="edit()"
     ></eos-param-header>
     <div class="text-area-wrapper">
@@ -14,6 +14,7 @@
                 [shouldHideTooltipOnBlur]="true"
                 [form]="form"
                 [readonly]="input.readonly"
+                [height]="400"
             >
             </eos-dynamic-input>
         </ng-container>

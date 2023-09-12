@@ -1,27 +1,27 @@
 import { InputBase } from "eos-common/core/inputs/input-base";
 import { IBaseParameters } from "../interfaces/parameters.interfaces";
-import { IUploadParam } from "../../../../eos-parameters/interfaces/app-setting.interfaces";
+import { IUploadParam } from "../../../interfaces/app-setting.interfaces";
 import { AppsettingsParams, AppsettingsTypename } from "../../../../eos-common/consts/params.const";
 
 export const PARAMS: IBaseParameters = {
     id: 'protocol-of-requests',
     apiInstance: 'APP_SETTINGS',
-    title: 'Протоколирование запросов',
+    title: 'Трассировка запросов',
     fields: []
 };
 
-export const PROTOCOL_OF_REQUESTS_PARAMS: InputBase<string>[] = [{
+export const TRACE_PARAMS: InputBase<string>[] = [{
     controlType: 3,
     readonly: false,
-    key: 'PROTOCOL_PARAMS',
+    key: 'TRACE_PARAMS',
     value: '',
-    required: true,
+    required: false,
     isUnique: false,
     disabled: false,
     dict: 'rec',
     forNode: undefined,
     hideLabel: false,
-    label: 'ПАРАМЕТРЫ ПРОТОКОЛИРОВАНИЯ',
+    label: 'ПАРАМЕТРЫ',
     order: undefined,
     pattern: null,
     unique: undefined,

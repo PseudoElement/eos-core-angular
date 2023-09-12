@@ -22,7 +22,7 @@ export enum E_PARMS_PAGES {
     "extended-protocol" = "extended-protocol",
     licensing = "licensing",
     preview = "preview",
-    "protocol-of-requests" = "protocol-of-requests"
+    tracecfg = "tracecfg"
 }
 
 export const EOS_PARAMETERS_TAB: IEosParametersTab[] = [{
@@ -114,8 +114,8 @@ export const EOS_PARAMETERS_TAB: IEosParametersTab[] = [{
     visible: true
 },
 {
-    title: 'Протоколирование запросов',
-    url: E_PARMS_PAGES['protocol-of-requests'],
+    title: 'Трассировка запросов',
+    url: E_PARMS_PAGES['tracecfg'],
     visible: true
 }
 ];

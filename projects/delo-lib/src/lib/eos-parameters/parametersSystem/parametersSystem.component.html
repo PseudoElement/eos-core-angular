@@ -1,12 +1,12 @@
 <div class="param-system">
     <ng-container [ngSwitch]="paramId">
-        <ng-container *ngSwitchCase="'protocol-of-requests'">
-            <eos-param-protocol-of-requests
+        <ng-container *ngSwitchCase="'tracecfg'">
+            <eos-param-trace
                 (formChanged)="recordChanged($event)"
                 (formInvalid)="turnOffSave($event)"
                 [btnDisabled]="!isChanged"
                 [btnError] = "disableSave">
-            </eos-param-protocol-of-requests>
+            </eos-param-trace>
         </ng-container>
         <ng-container *ngSwitchCase="'authentication'">
             <eos-param-authentication

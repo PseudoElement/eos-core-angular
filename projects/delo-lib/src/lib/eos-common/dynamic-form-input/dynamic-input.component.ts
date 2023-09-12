@@ -45,7 +45,7 @@ export class DynamicInputComponent {
     @Input() viewOpts: IDynamicInputOptions;
     @Input() container: string; // контейнер для dropdown select. 'body' или не указано для локального положения
     @Input() dropup: boolean; // выкидывать меню селекта вверх, а не вниз
-    @Input() height: number; // ограничить высоту выпадалки
+    @Input() height: number; // ограничить высоту выпадалки или указать минимальную высота textarea в dynamic-input-text
     @Input() notStandartText: boolean; // параметр для text принимает boolean по дефолту undefined, если true то прячет иконку
     @Input() placement: string; // используется для даты чтобы можно было указать в какую сторону открывать выпадашку
     @Input() customStyle: DatePickerStyleFixes | undefined; // для передачи кастомных стилей выподающему окну Datepicker
