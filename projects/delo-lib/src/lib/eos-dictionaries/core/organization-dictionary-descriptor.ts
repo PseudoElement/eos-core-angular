@@ -53,7 +53,6 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         const srchMode = data['srchMode'];
         const criteries = super.getFullSearchCriteries(data[srchMode]);
         const queries = { contact: null, medo: null, organiz: null, branch: null, protocol: null };
-
         if (srchMode === 'medo') {
             if (criteries.hasOwnProperty('CONTACT.MEDO_ID')) {
                 queries.contact = {
@@ -69,15 +68,15 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 if (criteries.hasOwnProperty('GATE_ID')) {
                     queries.medo.GATE_ID = criteries['GATE_ID'];
                 }
-                if (criteries.hasOwnProperty('CONTACT.MEDO_GLOBAL_ID')) {
-                    if (!queries.contact) {
-                        queries.contact = {
-                            'CONTACT.MEDO_GLOBAL_ID': criteries['CONTACT.MEDO_GLOBAL_ID'],
-                            'CONTACT.ORDERNUM': 0
-                        };
-                    } else {
-                        queries.contact['CONTACT.MEDO_GLOBAL_ID'] = criteries['CONTACT.MEDO_GLOBAL_ID'];
-                    }
+            }
+            if (criteries.hasOwnProperty('CONTACT.MEDO_GLOBAL_ID')) {
+                if (!queries.contact) {
+                    queries.contact = {
+                        'CONTACT.MEDO_GLOBAL_ID': criteries['CONTACT.MEDO_GLOBAL_ID'],
+                        'CONTACT.ORDERNUM': 0
+                    };
+                } else {
+                    queries.contact['CONTACT.MEDO_GLOBAL_ID'] = criteries['CONTACT.MEDO_GLOBAL_ID'];
                 }
             }
         } else if (srchMode === 'protocol') {
