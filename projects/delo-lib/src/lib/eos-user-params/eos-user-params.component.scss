@@ -5,6 +5,15 @@
     background: $white;
     border: 1px solid $border-color-main-theme;
     .user-set {
+        // .input-user-wrapper{
+        //     //97px - высота хедера, 16px - нижний отступ
+        //     height: calc(100vh - 97px - 16px);
+        // }
+        .user-param-wrapper{
+            //97px - высота хедера, 16px - нижний отступ
+            display: block;
+            height: calc(100vh - 97px - 16px);
+        }
         .form-group {
             margin: 0;
         }

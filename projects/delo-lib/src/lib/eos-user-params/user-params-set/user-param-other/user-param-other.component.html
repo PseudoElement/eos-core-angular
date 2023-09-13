@@ -1,85 +1,88 @@
-<div class="input-user-wrapper">
-    <eos-user-params-header
-        [editMode]="editFlag"
-        [title]='titleHeader'
-        [disableBtn]="btnDisabled"
-        [errorSave]="!flagIncrementError"
-        [defaultBtn]='true'
-        [isCurrentSettings]="isCurrentSettings"
-        (submitEmit)='submit($event)'
-        (cancelEmit)='cancel($event)'
-        (editEmit)='edit($event)'
-        (defaultEmit)='default($event) '
-    ></eos-user-params-header>
-</div>
-<div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
-    <div class="tabs-wrapper usual-border border-bottom">
-        <ul class="tabs">
-            <li class="tab-item tab-item-other" *ngFor="let tab of fieldGroups | keyvalue" [ngClass]="{'active ': tab.key === currTab}" (click)="setTab(tab.key)">
-                <span class="tab-title">{{tab.value}}</span>
-            </li>
-        </ul>
+<div class="user-param-wrapper">
+    <div class="input-user-wrapper">
+        <eos-user-params-header
+            [editMode]="editFlag"
+            [title]='titleHeader'
+            [disableBtn]="btnDisabled"
+            [errorSave]="!flagIncrementError"
+            [defaultBtn]='true'
+            [isCurrentSettings]="isCurrentSettings"
+            (submitEmit)='submit($event)'
+            (cancelEmit)='cancel($event)'
+            (editEmit)='edit($event)'
+            (defaultEmit)='default($event) '
+        ></eos-user-params-header>
     </div>
-    <div class="user-param-other-content-wrapper scrollWrapper">
-        <div [hidden]="currTab !==0" class="clearfix">
+    <div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
+        <div class="tabs-wrapper usual-border border-bottom">
+            <ul class="tabs">
+                <li class="tab-item tab-item-other" *ngFor="let tab of fieldGroups | keyvalue" [ngClass]="{'active ': tab.key === currTab}" (click)="setTab(tab.key)">
+                    <span class="tab-title">{{tab.value}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="user-param-other-content-wrapper scrollWrapper">
+            <div [hidden]="currTab !==0" class="clearfix">
+                <!--------------------------0--------------------------------------------->
+                <eos-user-param-transfer
+                    (pushChange)="emitChangesTransfer($event)"
+                    [defaultValues]=" defaultValues "
+                    [defaultUser]="defaultUser"
+                    [appMode]="appMode"
+                    [isCurrentSettings]="isCurrentSettings"
+                ></eos-user-param-transfer>
+            </div>
             <!--------------------------0--------------------------------------------->
-            <eos-user-param-transfer
-                (pushChange)="emitChangesTransfer($event)"
-                [defaultValues]=" defaultValues "
-                [defaultUser]="defaultUser"
-                [appMode]="appMode"
-                [isCurrentSettings]="isCurrentSettings"
-            ></eos-user-param-transfer>
-        </div>
-        <!--------------------------0--------------------------------------------->
-        <!--------------------------1--------------------------------------------->
-        <div [hidden]="currTab !==1" class="clearfix ">
-            <eos-user-param-addresses
-                (pushChange)="emitChangesAddresses($event)"
-                [defaultValues]=" defaultValues"
-                [defaultUser]="defaultUser"
-                [appMode]="appMode"
-                [isCurrentSettings]="isCurrentSettings"
-            ></eos-user-param-addresses>
-        </div>
-        <!--------------------------1--------------------------------------------->
-        <!--------------------------2--------------------------------------------->
-        <div [hidden]="currTab !==2" class="clearfix ">
-            <eos-user-param-reestr-cb
-                *ngIf='cbBase'
-                [appMode]="appMode"
-                (pushChange)="emitChangesReestr($event)"
-                (pushIncrementError)="emitIncrementError($event)"
-                [defaultUser]="defaultUser"
-                [errorHidden]='currTab===2'
-                [defaultValues]=" defaultValues "
-                [isCurrentSettings]="isCurrentSettings"
-                #paramReestrErr
-            ></eos-user-param-reestr-cb>
-            <eos-user-param-reestr
-                *ngIf='!cbBase'
-                [appMode]="appMode"
-                (pushChange)="emitChangesReestr($event)"
-                (pushIncrementError)="emitIncrementError($event)"
-                [defaultUser]="defaultUser"
-                [errorHidden]='currTab===2'
-                [defaultValues]=" defaultValues "
-                [isCurrentSettings]="isCurrentSettings"
-                #paramReestrErr
-            ></eos-user-param-reestr>
-        </div>
-        <!--------------------------2--------------------------------------------->
-        <div [hidden]="currTab !==3" class="clearfix ">
-            <eos-user-param-dispatch 
-                (pushChange)="emitChangesDispatch($event)" 
-                [defaultValues]=" defaultValues" 
-                [defaultUser]="defaultUser"
-                [appMode]="appMode"
-                [isCurrentSettings]="isCurrentSettings"
-                ></eos-user-param-dispatch>
+            <!--------------------------1--------------------------------------------->
+            <div [hidden]="currTab !==1" class="clearfix ">
+                <eos-user-param-addresses
+                    (pushChange)="emitChangesAddresses($event)"
+                    [defaultValues]=" defaultValues"
+                    [defaultUser]="defaultUser"
+                    [appMode]="appMode"
+                    [isCurrentSettings]="isCurrentSettings"
+                ></eos-user-param-addresses>
+            </div>
+            <!--------------------------1--------------------------------------------->
+            <!--------------------------2--------------------------------------------->
+            <div [hidden]="currTab !==2" class="clearfix ">
+                <eos-user-param-reestr-cb
+                    *ngIf='cbBase'
+                    [appMode]="appMode"
+                    (pushChange)="emitChangesReestr($event)"
+                    (pushIncrementError)="emitIncrementError($event)"
+                    [defaultUser]="defaultUser"
+                    [errorHidden]='currTab===2'
+                    [defaultValues]=" defaultValues "
+                    [isCurrentSettings]="isCurrentSettings"
+                    #paramReestrErr
+                ></eos-user-param-reestr-cb>
+                <eos-user-param-reestr
+                    *ngIf='!cbBase'
+                    [appMode]="appMode"
+                    (pushChange)="emitChangesReestr($event)"
+                    (pushIncrementError)="emitIncrementError($event)"
+                    [defaultUser]="defaultUser"
+                    [errorHidden]='currTab===2'
+                    [defaultValues]=" defaultValues "
+                    [isCurrentSettings]="isCurrentSettings"
+                    #paramReestrErr
+                ></eos-user-param-reestr>
+            </div>
+            <!--------------------------2--------------------------------------------->
+            <div [hidden]="currTab !==3" class="clearfix ">
+                <eos-user-param-dispatch 
+                    (pushChange)="emitChangesDispatch($event)" 
+                    [defaultValues]=" defaultValues" 
+                    [defaultUser]="defaultUser"
+                    [appMode]="appMode"
+                    [isCurrentSettings]="isCurrentSettings"
+                    ></eos-user-param-dispatch>
+            </div>
         </div>
     </div>
 </div>
+
 <!-- <div class="sp " *ngIf="!isLoading ">
     <eos-spinner size="lg "></eos-spinner>
 </div> -->
