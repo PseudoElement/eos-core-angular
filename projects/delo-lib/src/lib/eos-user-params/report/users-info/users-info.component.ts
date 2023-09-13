@@ -25,6 +25,7 @@ export class EosReportUsersInfoComponent implements OnChanges, AfterViewInit, On
     @Input() open: boolean = false;
     /* id - нужно только в протоколах*/
     @Input() id?: number
+    @Input() isnNow?: number
     @Input() isComparisonWithPrev: boolean = false;
     @Input() innerHTMLSelectedProtocol: string;
     @Input() innerHTMLPrevProtocol: string;
@@ -68,7 +69,7 @@ export class EosReportUsersInfoComponent implements OnChanges, AfterViewInit, On
         this.users = this._userParamSrv.checkedUsers;
         if (this.id && !this.isComparisonWithPrev) {
             this.fullUserForProtocols = await this._getFullUserData()
-            this.src = this.getHtmlStr(this.id)
+            this.src = this.getProtocolSrc(this.isnNow)
         }
         if (!this.id && this.users.length > 0 && !this.isComparisonWithPrev) {
             this.selectUser = this.users[0];
@@ -93,6 +94,9 @@ export class EosReportUsersInfoComponent implements OnChanges, AfterViewInit, On
     }
     getHtmlStr(id: number): string {
         return `../CoreHost/FOP/UserRights/${id}`
+    }
+    getProtocolSrc(isnNow: number): string{
+        return `../CoreHost/FOP/GetFile/${isnNow}/3x.html?nodownload=true`
     }
     prev() {
         if (this.nodeIndex > 0) {
