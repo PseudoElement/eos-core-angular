@@ -701,7 +701,12 @@ export const REGISTRATION_RC: IBaseUsers =  {
     {
         key: 'CLOSE_PRJ_AFTER_SAVE_VISA_SING_AND_ADD_SUBVISA',
         type: 'boolean',
-        title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы в АРМ «ДелоWeb»'
+        title: 'Закрывать проект документа после визирования, подписания или добавления подчиненной визы'
     },
+    {
+        key: 'USE_NEW_PRJ_RC',
+        type: 'boolean',
+        title: 'Использовать новый интерфейс для РКПД'
+    }
     ]
 };

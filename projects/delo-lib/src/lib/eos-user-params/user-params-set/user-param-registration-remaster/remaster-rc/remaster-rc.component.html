@@ -34,6 +34,12 @@
         [form]="form"
         [readonly]="false"
     ></eos-dynamic-input>
+    <eos-dynamic-input
+        *ngIf="appMode.arm"
+        [input]="inputs['rec.USE_NEW_PRJ_RC']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
 </div>
 
 
