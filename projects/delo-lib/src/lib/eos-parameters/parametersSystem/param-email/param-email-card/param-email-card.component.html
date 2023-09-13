@@ -53,8 +53,8 @@
         </div>
         <div class="label-style">Сервер входящей почты</div>
         <div class="label-bottom-string">
-            <eos-dynamic-input class="padding-right" [input]="inputs['rec.InServerType']" [form]="form"  [readonly]="inputs['rec.InServerType'].readonly"></eos-dynamic-input>
-            <eos-dynamic-input style="margin-top: 20px;" class="padding-left boolean-not-label" [input]="inputs['rec.DeleteEmailsOnServer']" [form]="form"  [readonly]="inputs['rec.DeleteEmailsOnServer'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input class="padding-right" style="max-width: 355px;" [input]="inputs['rec.InServerType']" [form]="form"  [readonly]="inputs['rec.InServerType'].readonly"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="+this.form.controls['rec.InServerType'].value === 2" style="margin-top: 20px;" class="padding-left boolean-not-label" [input]="inputs['rec.DeleteEmailsOnServer']" [form]="form"  [readonly]="inputs['rec.DeleteEmailsOnServer'].readonly"></eos-dynamic-input>
         </div>
         <div class="second-string">
             <eos-dynamic-input class="padding-right" [input]="inputs['rec.InServerHost']" [form]="form"  [readonly]="inputs['rec.InServerHost'].readonly"></eos-dynamic-input>
