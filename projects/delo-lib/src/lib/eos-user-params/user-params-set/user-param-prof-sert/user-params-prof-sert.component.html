@@ -1,55 +1,123 @@
-<div class="input-user-wrapper input-user-directories-wrapper">
-    <eos-user-params-header
-        [editMode]="editFlag"
-        [title]='titleHeader'
-        [disableBtn]="!btnDisabled"
-        [defaultBtn]='isCurrentSettings'
-        [isCurrentSettings]="isCurrentSettings"
-        (submitEmit)='submit($event)'
-        (cancelEmit)='cancellation($event)'
-        (editEmit)='edit($event)'
-        (defaultEmit)='default($event)'
-    ></eos-user-params-header>
-</div>
-
-<!-- <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature scrollWrapper">
-    <div class="edit-bacground" *ngIf='!editFlag'></div>
-    <div class=" ">
-        <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
+<div class="user-param-wrapper">
+    <div class="input-user-wrapper input-user-directories-wrapper">
+        <eos-user-params-header
+            [editMode]="editFlag"
+            [title]='titleHeader'
+            [disableBtn]="!btnDisabled"
+            [defaultBtn]='isCurrentSettings'
+            [isCurrentSettings]="isCurrentSettings"
+            (submitEmit)='submit($event)'
+            (cancelEmit)='cancellation($event)'
+            (editEmit)='edit($event)'
+            (defaultEmit)='default($event)'
+        ></eos-user-params-header>
     </div>
-    <div class="scrollWrapper">
-        <div class="sert-table">
+    
+    <!-- <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature scrollWrapper">
+        <div class="edit-bacground" *ngIf='!editFlag'></div>
+        <div class=" ">
+            <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
+        </div>
+        <div class="scrollWrapper">
+            <div class="sert-table">
+                <div class="sert-table-nav">
+                    <div
+                        triggers="hover:click"
+                        [tooltip]="!editFlag && isCursetUnlimTech ? '' : 'Добавить сертификат'"
+                        placement="auto"
+                        containerClass="tooltip-info"
+                        container="body"
+                    >
+                        <button class="btn btn-primary-light" [disabled]='!editFlag || !isCursetUnlimTech' (click)='chooseSertificate()'>
+                            <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
+                        </button>
+                    </div>
+                    <div
+                        triggers="hover:click"
+                        [tooltip]="!editFlag ? '' : 'Удалить сертификат' "
+                        placement="auto"
+                        containerClass="tooltip-info"
+                        container="body"
+                    >
+                        <button class="btn btn-primary-light" [disabled]="isUnselected || (!isCursetUnlimTech && !isUnselected)" (click)='deleteSertificate()'>
+                            <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
+                        </button>
+                    </div>
+                    <div
+                        triggers="hover:click"
+                        [tooltip]="!editFlag ? '' : 'Показать сертификат'"
+                        placement="auto"
+                        containerClass="tooltip-info"
+                        container="body"
+                    >
+                        <button class="btn btn-primary-light" [disabled]="isUnselected || (!isCursetUnlimTech && !isUnselected) || isNotFoundSert" (click)='showSert()'>
+                            <span class="eos-adm-icon eos-adm-icon-info-blue small"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="sert-table-head">
+                    <span class="sert-table-whom">Кому выдан</span>
+                    <span class="sert-table-serial">Серийный номер</span>
+                    <span class="sert-table-who">Кем выдан</span>
+                </div>
+                <div *ngIf="!loadSert; else spinner" class="sert-table-body">
+                    <div class="sert-table-content" *ngFor='let listSert of listsSertInfo'>
+                        <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
+                            <span tooltip="{{listSert.whom}}" placement="bottom" containerClass="tooltip-info" class="whom">{{listSert.whom}}</span>
+                            <span tooltip="{{listSert.sn}}" placement="bottom" containerClass="tooltip-info" class="serial">{{listSert.sn}}</span>
+                            <span tooltip="{{listSert.who}}" placement="bottom" containerClass="tooltip-info" class="who">{{listSert.who}}</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <ng-template #spinner>
+                    <div class="spiner-wrapper flex-wr-centered">
+                        <eos-spinner size="md"></eos-spinner>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div> -->
+    <div class="sert-list-wrapper">
+        <div>
+            <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
+        </div>
+        <div class="sert-table-wrapper">
             <div class="sert-table-nav">
                 <div
                     triggers="hover:click"
-                    [tooltip]="!editFlag && isCursetUnlimTech ? '' : 'Добавить сертификат'"
-                    placement="auto"
-                    containerClass="tooltip-info"
+                    [tooltip]="!editFlag ? '' : 'Добавить сертификат'"
+                    placement="bottom"
+                    [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                     container="body"
                 >
-                    <button class="btn btn-primary-light" [disabled]='!editFlag || !isCursetUnlimTech' (click)='chooseSertificate()'>
+                    <button class="btn btn-primary-light" [disabled]='!editFlag' (click)='chooseSertificate()'>
                         <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
                     </button>
                 </div>
                 <div
                     triggers="hover:click"
                     [tooltip]="!editFlag ? '' : 'Удалить сертификат' "
-                    placement="auto"
-                    containerClass="tooltip-info"
+                    placement="left"
+                    [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                     container="body"
                 >
-                    <button class="btn btn-primary-light" [disabled]="isUnselected || (!isCursetUnlimTech && !isUnselected)" (click)='deleteSertificate()'>
+                    <button class="btn btn-primary-light" [disabled]="!listsSertInfo.length || flagHideBtn || !editFlag" (click)='deleteSertificate()'>
                         <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
                     </button>
                 </div>
                 <div
                     triggers="hover:click"
                     [tooltip]="!editFlag ? '' : 'Показать сертификат'"
-                    placement="auto"
-                    containerClass="tooltip-info"
+                    placement="left"
+                    [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
                     container="body"
                 >
-                    <button class="btn btn-primary-light" [disabled]="isUnselected || (!isCursetUnlimTech && !isUnselected) || isNotFoundSert" (click)='showSert()'>
+                    <button 
+                        class="btn btn-primary-light" 
+                        [disabled]="isDisabledSertInfo" 
+                        (click)='showSert()'
+                    >
                         <span class="eos-adm-icon eos-adm-icon-info-blue small"></span>
                     </button>
                 </div>
@@ -59,118 +127,53 @@
                 <span class="sert-table-serial">Серийный номер</span>
                 <span class="sert-table-who">Кем выдан</span>
             </div>
-            <div *ngIf="!loadSert; else spinner" class="sert-table-body">
-                <div class="sert-table-content" *ngFor='let listSert of listsSertInfo'>
-                    <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
-                        <span tooltip="{{listSert.whom}}" placement="bottom" containerClass="tooltip-info" class="whom">{{listSert.whom}}</span>
-                        <span tooltip="{{listSert.sn}}" placement="bottom" containerClass="tooltip-info" class="serial">{{listSert.sn}}</span>
-                        <span tooltip="{{listSert.who}}" placement="bottom" containerClass="tooltip-info" class="who">{{listSert.who}}</span>
+            <div class="sert-table-content">
+                <div>
+                    <div class="spinner-prot" *ngIf="isLoading" style="position: absolute;top: 45%;left: 45%;">
+                        <eos-spinner size="lg"></eos-spinner>
                     </div>
-                </div>
-            </div>
-
-            <ng-template #spinner>
-                <div class="spiner-wrapper flex-wr-centered">
-                    <eos-spinner size="md"></eos-spinner>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-</div> -->
-<div class="sert-list-wrapper">
-    <div>
-        <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
-    </div>
-    <div class="sert-table-wrapper">
-        <div class="sert-table-nav">
-            <div
-                triggers="hover:click"
-                [tooltip]="!editFlag ? '' : 'Добавить сертификат'"
-                placement="bottom"
-                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
-                container="body"
-            >
-                <button class="btn btn-primary-light" [disabled]='!editFlag' (click)='chooseSertificate()'>
-                    <span class="eos-adm-icon eos-adm-icon-plus-blue small"></span>
-                </button>
-            </div>
-            <div
-                triggers="hover:click"
-                [tooltip]="!editFlag ? '' : 'Удалить сертификат' "
-                placement="left"
-                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
-                container="body"
-            >
-                <button class="btn btn-primary-light" [disabled]="!listsSertInfo.length || flagHideBtn || !editFlag" (click)='deleteSertificate()'>
-                    <span class="eos-adm-icon eos-adm-icon-bin-forever-blue small"></span>
-                </button>
-            </div>
-            <div
-                triggers="hover:click"
-                [tooltip]="!editFlag ? '' : 'Показать сертификат'"
-                placement="left"
-                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
-                container="body"
-            >
-                <button 
-                    class="btn btn-primary-light" 
-                    [disabled]="isDisabledSertInfo" 
-                    (click)='showSert()'
-                >
-                    <span class="eos-adm-icon eos-adm-icon-info-blue small"></span>
-                </button>
-            </div>
-        </div>
-        <div class="sert-table-head">
-            <span class="sert-table-whom">Кому выдан</span>
-            <span class="sert-table-serial">Серийный номер</span>
-            <span class="sert-table-who">Кем выдан</span>
-        </div>
-        <div class="sert-table-content">
-            <div>
-                <div class="spinner-prot" *ngIf="isLoading" style="position: absolute;top: 45%;left: 45%;">
-                    <eos-spinner size="lg"></eos-spinner>
-                </div>
-                <div class="item-container" *ngFor='let listSert of listsSertInfo'>
-                    <div 
-                        (click)="selectCurent(listSert)" 
-                        [ngClass]="{
-                            selected: listSert.selected, 
-                            grayItem: !editFlag, 
-                            colorValid:  !listSert.valid
-                        }" class="sert-info-wr"
-                        *ngIf='!listSert.delete'
-                    >
-                        <span
-                            tooltip="{{listSert.whom}}"
-                            placement="bottom"
-                            container="body"
-                            [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
-                            class="whom"
-                            boundary="scrollParent">
-                            {{listSert.whom}}
-                        </span>
-                        <span
-                            tooltip="{{listSert.sn}}"
-                            placement="bottom"
-                            container="body"
-                            [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
-                            class="serial"
-                            boundary="scrollParent">
-                            {{listSert.sn}}
-                        </span>
-                        <span
-                            tooltip="{{listSert.who}}"
-                            placement="bottom"
-                            container="body"
-                            [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
-                            boundary="scrollParent"
-                            class="who">
-                            {{listSert.who}}
-                        </span>
+                    <div class="item-container" *ngFor='let listSert of listsSertInfo'>
+                        <div 
+                            (click)="selectCurent(listSert)" 
+                            [ngClass]="{
+                                selected: listSert.selected, 
+                                grayItem: !editFlag, 
+                                colorValid:  !listSert.valid
+                            }" class="sert-info-wr"
+                            *ngIf='!listSert.delete'
+                        >
+                            <span
+                                tooltip="{{listSert.whom}}"
+                                placement="bottom"
+                                container="body"
+                                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
+                                class="whom"
+                                boundary="scrollParent">
+                                {{listSert.whom}}
+                            </span>
+                            <span
+                                tooltip="{{listSert.sn}}"
+                                placement="bottom"
+                                container="body"
+                                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
+                                class="serial"
+                                boundary="scrollParent">
+                                {{listSert.sn}}
+                            </span>
+                            <span
+                                tooltip="{{listSert.who}}"
+                                placement="bottom"
+                                container="body"
+                                [containerClass]="isCurrentSettings ? 'tooltip-info-current' : 'tooltip-info'"
+                                boundary="scrollParent"
+                                class="who">
+                                {{listSert.who}}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
