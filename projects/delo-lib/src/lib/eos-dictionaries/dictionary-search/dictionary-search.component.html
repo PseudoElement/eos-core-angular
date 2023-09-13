@@ -1114,12 +1114,12 @@
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
-                    <label class="s-font" for="organization-inn">
+                    <label class="s-font" for="organization-medo-id">
                         {{fieldsDescription.rec['CONTACT.MEDO_ID']?.title}}
                     </label>
                     <div class="search-fld">
-                        <input id="organization-inn"
-                            name="organization-inn"
+                        <input id="organization-medo-id"
+                            name="organization-medo-id"
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CONTACT.MEDO_ID']"
@@ -1134,12 +1134,12 @@
                     </div>
                 </div>
                 <div class="form-group unimportant-text">
-                    <label class="s-font" for="organization-inn">
+                    <label class="s-font" for="organization-global-id">
                         {{fieldsDescription.rec['CONTACT.MEDO_GLOBAL_ID']?.title}}
                     </label>
                     <div class="search-fld">
-                        <input id="organization-inn"
-                            name="organization-inn"
+                        <input id="organization-global-id"
+                            name="organization-global-id"
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CONTACT.MEDO_GLOBAL_ID']"
@@ -1149,7 +1149,7 @@
                             [ngClass]="{'hide': !searchModel['CONTACT.MEDO_GLOBAL_ID']}"
                             (click)="searchModel['CONTACT.MEDO_GLOBAL_ID'] = ''"
                         >
-                            <span class="eos-icon eos-icon-close-blue"></span>
+                            <span class="eos-adm-icon eos-adm-icon-close-blue"></span>
                         </a>
                     </div>
                 </div>
