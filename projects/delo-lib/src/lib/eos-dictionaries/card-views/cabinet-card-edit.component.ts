@@ -316,7 +316,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
                                     mesageAr2.push(`В кабинете ${cabMap.get(c['ISN_CABINET']) || ''} ${c['SURNAME']} является единственным владельцем. Продолжить операцию?`);
                                 }
                                 mesageAr.push(
-                                    `Должносное лицо "${c['SURNAME']}" является владельцем кабинета ${cabMap.get(c['ISN_CABINET']) || ''}.
+                                    `Должностное лицо "${c['SURNAME']}" является владельцем кабинета ${cabMap.get(c['ISN_CABINET']) || ''}.
                                      Хотите сделать его владельцем данного кабинета (с переносом «его» документов)?`
                                     );
                                 cabUserCount.set(c['ISN_CABINET'], cabUserCount.get(c['ISN_CABINET']) - 1);
