@@ -1,4 +1,4 @@
-import { IMessage } from '../../eos-common/interfaces';
+import { IMessage, SUCCESS_DISMISS_TIMEOUT } from '../../eos-common/interfaces';
 
 export const NOT_EMPTY_STRING = /^((?!\:\"\|).)*$/; // /\s*\S+(\s|\S)*/;
 export const NOT_EMPTY_MULTYSTRING = /^((?!\:\"\|).|\n|\r)*$/; // /\s*\S+(\s|\S)*/;
@@ -33,5 +33,5 @@ export const SUCCESS_SAVE_MESSAGE_SUCCESS: IMessage = {
     type: 'success',
     title: 'Информация о сохранении: ',
     msg: 'текущие изменения успешно сохранены',
-    dismissOnTimeout: 6000,
+    dismissOnTimeout: SUCCESS_DISMISS_TIMEOUT,
 };
