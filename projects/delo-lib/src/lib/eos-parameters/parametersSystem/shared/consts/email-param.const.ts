@@ -13,6 +13,10 @@ export const EmailAuthenticationType = [
     {value: 4, title: 'NTLM'},
     {value: 5, title: 'Нет'}
 ];
+export enum InServerType{
+    IMAP = '1',
+    POP3 = '2'
+}
 export const EMAIL_PARAM: IBaseParameters = {
     id: 'email',
     title: 'Электронная почта',
@@ -87,6 +91,13 @@ export const EMAIL_PARAM: IBaseParameters = {
             readonly: false,
             required: true,
             title: 'Имя пользователя',
+        },
+        {
+            key: 'InServerImapFolder',
+            type: 'string',
+            readonly: false,
+            required: true,
+            title: 'Папка'
         },
         {
             key: 'DeleteEmailsOnServer',
@@ -179,6 +190,10 @@ export const DEFAULT_EMAIL_PARAM = [
     {
         key: 'DeleteEmailsOnServer',
         value: false
+    },
+    {
+        key: 'InServerImapFolder',
+        value: 'Inbox'
     },
     /* Сервер исходящей почты */
     {
