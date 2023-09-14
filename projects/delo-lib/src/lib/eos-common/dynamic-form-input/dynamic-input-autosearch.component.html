@@ -44,7 +44,8 @@
                 <span class="eos-adm-icon eos-adm-icon-directory-book-blue small" (click)="onClickChoose.emit($event)"></span>
             </div>
 
-            <ul
+            <ng-container *ngIf="form.enabled">
+                <ul
                 *dropdownMenu
                 #dropdownElement
                 class="dropdown-menu eos-adm-select2"
@@ -89,7 +90,9 @@
                         {{item.title}}
                     </a>
                 </li>
-            </ul>
+                </ul>
+            </ng-container>
+
         </div>
     </div>
 </div>
