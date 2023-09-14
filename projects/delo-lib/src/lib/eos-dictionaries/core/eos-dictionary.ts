@@ -239,14 +239,13 @@ export class EosDictionary {
         // return this.loadRelatedFieldsOptions(updatefields, [existNode], false).then (() => {
         //     return existNode;
         // });
-
         const existNode = this.getNode(nodeId);
         if (!existNode || !existNode.relatedLoaded) {
             return this.getNodeByNodeId(nodeId)
                 .then((node) => this.getNodeRelatedData(node, refresh));
         } else {
             // чтобы не грузить заново данные , перезаписываю _orig
-            if (existNode.data.hasOwnProperty('sev')) {
+            if (existNode.data.hasOwnProperty('sev') && existNode.data.sev) {
                 if (!existNode.data.sev.hasOwnProperty('_orig')) {
                     const sev = existNode.data.sev;
                     if (sev._State !== _ES.Added) {
