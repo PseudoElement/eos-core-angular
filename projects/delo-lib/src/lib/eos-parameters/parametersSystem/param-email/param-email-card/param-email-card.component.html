@@ -70,7 +70,13 @@
         </div>
         <div class="second-string">
             <eos-dynamic-input class="padding-right" [input]="inputs['rec.InUserName']" [form]="form"  [readonly]="inputs['rec.InUserName'].readonly"></eos-dynamic-input>
-            <div class="padding-left"></div>
+            <eos-dynamic-input
+                *ngIf="form.value['rec.InServerType'] === InServerType.IMAP" 
+                class="padding-left" 
+                [input]="inputs['rec.InServerImapFolder']" 
+                [form]="form" 
+                [readonly]="inputs['rec.InServerImapFolder'].readonly">
+            </eos-dynamic-input>
         </div>
         <div class="label-style">Сервер исходящей почты</div>
         <div class="label-bottom-string">

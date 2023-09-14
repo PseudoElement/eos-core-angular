@@ -5,7 +5,7 @@ import { AppsettingsParams, AppsettingsTypename } from '../../../../eos-common/c
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ISettingEmailReceive, ISettingEmailSend, IUploadParam } from '../../../../eos-parameters/interfaces/app-setting.interfaces';
-import { DEFAULT_EMAIL_PARAM } from '../../../../eos-parameters/parametersSystem/shared/consts/email-param.const';
+import { DEFAULT_EMAIL_PARAM, InServerType } from '../../../../eos-parameters/parametersSystem/shared/consts/email-param.const';
 import { ParamApiSrv } from '../../../../eos-parameters/parametersSystem/shared/service/parameters-api.service';
 /* import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts'; */
 
@@ -30,6 +30,9 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
     public data = {
         ProfileName: ''
     };
+    public get InServerType(): typeof InServerType{
+        return InServerType;
+    }
     public title;
     get typeInput(): string {
         return !this.form.controls['rec.Password'].value ? 'text' : this.type1;
