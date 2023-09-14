@@ -482,6 +482,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this._ngUnsubscribe.complete();
     }
     submit(): Promise<any> {
+        console.log('submit_this.mapChanges', this.mapChanges)
+        console.log('submit_this.newInformerData', this.newInformerData)
+        console.log('submit_this.newNotificatorData', this.newNotificatorData)
         if (this.MaxIncrement) {
             this._msg.addNewMessage(this.createMessage('warning', '', 'Нельзя сохранить некорректные данные.'));
             return Promise.resolve('error');

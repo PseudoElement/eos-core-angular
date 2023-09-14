@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs/';
-import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT } from '../core/message.interface';
+import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT, SUCCESS_DISMISS_TIMEOUT } from '../core/message.interface';
 import { EosTooltipService } from './eos-tooltip.service';
 @Injectable()
 export class EosMessageService {
@@ -23,6 +23,9 @@ export class EosMessageService {
         /*tslint:disable:no-console*/
         if (message.dismissOnTimeout === undefined) {
             switch (message.type) {
+                case 'success':
+                    message.dismissOnTimeout = SUCCESS_DISMISS_TIMEOUT;
+                    break;
                 case 'danger':
                     message.dismissOnTimeout = DANGER_DISMISS_TIMEOUT;
                     console.error(message);

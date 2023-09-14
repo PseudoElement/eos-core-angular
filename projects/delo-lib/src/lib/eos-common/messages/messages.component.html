@@ -1,7 +1,5 @@
 <ng-container *ngFor="let message of messages">
-    <!--task#168421 - Скрыть все успешные сообщения, кроме тех, у которых showSuccessMessage === true-->
     <alert
-    *ngIf="message.type !== 'success' || message?.showSuccessMessage"
     class="eos-adm-alert"
     (click)="message.type !== 'warning' && onClose(message)"
     [type]="message.type"

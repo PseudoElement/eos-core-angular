@@ -253,8 +253,7 @@ export const SEV_WARN_CHECK_SEV_DEPARTMENTS: IMessage = {
 export const SEV_CLEAR_IDENT_CODES: IMessage = {
     type: 'success',
     title: 'Очистка идентификационных кодов завершена успешно',
-    msg: '',
-    showSuccessMessage: true
+    msg: ''
 };
 
 export const WARN_NO_BINDED_DOCGROUP: IMessage = {

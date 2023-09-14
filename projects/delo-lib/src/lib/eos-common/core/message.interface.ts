@@ -1,6 +1,5 @@
-
+export const SUCCESS_DISMISS_TIMEOUT = 3000;
 export const DEFAULT_DISMISS_TIMEOUT = 3000;
-
 export const DANGER_DISMISS_TIMEOUT = 5000;
 
 export interface IMessage {
@@ -9,5 +8,4 @@ export interface IMessage {
     msg: string;
     dismissOnTimeout?: number;
     authMsg?: boolean;
-    showSuccessMessage?: boolean
 }
