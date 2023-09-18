@@ -328,27 +328,15 @@
         </eos-dynamic-input>
     </div>
     <p class="xl-font paragraph-title"></p>
-    <div class="items-group">
-        <span [ngStyle]="{ 'white-space': 'nowrap' }">
-            Положить РК в папку:
-            <!-- "На исполнение"  -->
-            <eos-dynamic-input
-                class="no-margin inline-with-label"
-                [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER2_DEST_W']"
-                [form]="form"
-                [readonly]="!editMode"
-            >
-            </eos-dynamic-input>
-            <eos-dynamic-input
-                class="no-margin inline-with-label"
-                [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER6_DEST_W']"
-                [form]="form"
-                [readonly]="!editMode"
-            >
-            </eos-dynamic-input>
-
-            - текущего кабинета регистратора
-        </span>
+    <div class="items-group" [ngStyle]="{display: 'flex', 'flex-direction': 'column', 'align-items': 'baseline'}">
+        Положить РК в папку:
+        <!-- "На исполнение"  -->
+        <eos-dynamic-input
+            class="no-margin inline-with-label"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER2_DEST_W']"
+            [form]="form"
+            [readonly]="!editMode">
+        </eos-dynamic-input>
     </div>
     <p class="xl-font paragraph-title"></p>
 </div>
