@@ -249,4 +249,8 @@ export class EosUtils {
         })
         uselessStyles.forEach(tag => tag.remove())
     }
+
+    static async wait(delay: number): Promise<boolean> {
+       return await new Promise(res => setTimeout(() => res(true), delay))
+    }
 }

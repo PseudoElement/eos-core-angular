@@ -9,6 +9,7 @@ import { UserParamsService } from '../../../eos-user-params/shared/services/user
 import { EosStorageService } from '../../../app/services/eos-storage.service';
 import { Router } from '@angular/router';
 import { ISelectedUserProtocol } from '../../../eos-user-params/shared/intrfaces/user-params.interfaces';
+import { EosUtils } from '../../../eos-common/core/utils';
 enum EIsnRef {
     now = 0,
     next = 1
@@ -74,15 +75,15 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((config: IPaginationConfig) => {
+            .subscribe(async (config: IPaginationConfig) => {
                 if (config) {
                     this.config = config;
                     if (this._user_pagination.totalPages !== undefined) {
                         if (this.config.current > this.config.start) {
-                            this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
+                            await this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
                                 (this.config.length * this.config.start - this.config.length).toString());
                         } else if (this.config.current && this.initPage === true) {
-                            this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+                            await this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
                         }
                     }
                 }
@@ -118,8 +119,9 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
             });
     }
 
-    PaginateData(length, orderStr, skip?) {
+    async PaginateData(length, orderStr, skip?) {
         this.isLoading = true;
+        await EosUtils.wait(500)
         this._pipeSrv.read({
             USER_AUDIT: PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
             orderby: orderStr,
