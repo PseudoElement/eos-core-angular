@@ -13,8 +13,8 @@
         </div>
     </div>
     <div class="user-group-form">
-        <span>Записывать документ в папку текущего кабинета:</span>
-        <div class="inputs-inline">
+        <span>Записывать документ в папку "На исполнении" текущего кабинета:</span>
+        <div class="inputs-inline setting-current-checbox">
             <eos-dynamic-input
                 class="input-right"
                 [input]="inputs['rec.AUTOLOAD_TO_EXEC_CURR_CAB']"
@@ -36,7 +36,7 @@
     </div>
     <div [hidden]="this.appMode.hasMode && (appMode.tkDoc || appMode.tk || appMode.cbr)" class="user-group-form">
         <span>Заполнять значениями от предыдущей РК реквизиты:</span>
-        <div class="inputs-inline">
+        <div class="inputs-inline setting-current-checbox">
             <eos-dynamic-input
                 class="input-right"
                 [input]="inputs['rec.DOC_EXE_FROM_PREVIOUS_RC']"
@@ -54,7 +54,7 @@
 
     <div [hidden]="appMode.cbr" class="user-group-form">
         <span>Печатать регистрационный штамп:</span> <!--  в приложении Документы -->  <!--  -->
-        <div class="inputs-inline">
+        <div class="inputs-inline setting-current-checbox">
             <eos-dynamic-input
                 class="input-right"
                 [input]="inputs['rec.AUTOSTAMP']"

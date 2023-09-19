@@ -732,6 +732,9 @@ bs-dropdown-container {
         eos-registration-remaster {
             .user-param-registration-content-wrapper {
                 eos-dop-operation {
+                    .setting-current-checbox {
+                        margin: 15px 0 15px 15px;
+                    }
                     & > div.user-group-form {
                         &:nth-child(3),
                         &:nth-child(4) {

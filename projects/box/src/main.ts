@@ -13,6 +13,10 @@ if (environment.production) {
 try {
 
     (async () => {
+        if (window.location.href.indexOf('current-settings') !== -1) {
+            const elem = document.getElementById('loading-icon');
+            elem.classList.add('fa-spinner-curent');
+        }
         await Manager.loadPlugins({ targets: ['tech_tasks', 'tech_tools'] })
         onlyOneDinamic();
     })()
