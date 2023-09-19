@@ -62,7 +62,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
     private ngUnsubscribe: Subject<any> = new Subject();
     private prepareDefaultForm: any;
     private prepareDefaultFormMailREceive: any;
-
+    private maxLength = 0;
     private setMailResive = new Set();
 
     private _arPanels: AccordionPanelComponent[];
@@ -79,6 +79,11 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
 
         if (this.configChannel.fieldsConstMailResive) {
             this.fieldsConstMailResive = JSON.parse(JSON.stringify(this.configChannel.fieldsConstMailResive));
+            this.fieldsConstMailResive.fields.forEach((field) => {
+                if (typeof(field.keyPosition) === 'number' && field.keyPosition > this.maxLength) {
+                    this.maxLength = field.keyPosition;
+                }
+            });
         }
 
         this.RCSEND = `RCSEND_${this.configChannel.nameEN}`;
@@ -181,7 +186,7 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
         this.itCurrentSettingsCheck();
 
         this.stringRCSEND = this.userData[`${this.RCSEND}`];
-        this.stringMailResive = this.userData[`${this.MAILRECEIVE}`];
+        this.stringMailResive = !this.userData[`${this.MAILRECEIVE}`] || this.userData[`${this.MAILRECEIVE}`].length === this.maxLength ? this.userData[`${this.MAILRECEIVE}`] : this.userData[`${this.MAILRECEIVE}`] + '0'.repeat(this.maxLength - this.userData[`${this.MAILRECEIVE}`].length);
         this.mapDefault = {
             [`${this.RCSEND}`]: this.defaultValues[`${this.RCSEND}`],
             [`${this.MAILRECEIVE}`]: this.defaultValues[`${this.MAILRECEIVE}`],
