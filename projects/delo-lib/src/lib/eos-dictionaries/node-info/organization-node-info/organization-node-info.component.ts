@@ -52,8 +52,6 @@ export class OrganizationNodeInfoComponent {
     }
 
     get global_id() {
-        console.log('this.node.data', this.node.data);
-        
         return this.node.data?.sev?.GLOBAL_ID || '...';
     }
 
