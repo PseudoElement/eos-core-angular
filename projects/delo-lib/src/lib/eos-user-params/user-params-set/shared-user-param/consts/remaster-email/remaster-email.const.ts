@@ -223,7 +223,7 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         {
             key: 'AUTOLOAD_TO_EXEC_CURR_CAB',
             type: 'boolean',
-            title: 'На исполнении'
+            title: 'Записывать документ в папку "На исполнении" текущего кабинета:'
         },
         {
             key: 'AUTOLOAD_TO_DELO_CURR_CAB',
