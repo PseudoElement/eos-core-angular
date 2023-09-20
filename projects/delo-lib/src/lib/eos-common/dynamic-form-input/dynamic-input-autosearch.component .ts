@@ -189,13 +189,17 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     }
 
     onClick() {
-        if (this.input.options.length > 0) {
+        if (this.shouldShowDropdown()) {
             if (this._dropDown.isOpen) {
                 this._dropDown.hide();
             } else {
                 this._dropDown.show();
             }
         }
+    }
+
+    shouldShowDropdown(): boolean {
+        return this.form.enabled && this.input.options.length > 0 && !!this.currentValue.trim()
     }
 
     private _isEmptyResults(): boolean {
