@@ -44,7 +44,7 @@
                 <span class="eos-adm-icon eos-adm-icon-directory-book-blue small" (click)="onClickChoose.emit($event)"></span>
             </div>
 
-            <ng-container *ngIf="form.enabled">
+            <ng-container *ngIf="shouldShowDropdown()">
                 <ul
                 *dropdownMenu
                 #dropdownElement
@@ -54,42 +54,37 @@
                 aria-labelledby="button-container"
                 [ngStyle]="getMenuWidthStyle()"
                 style="background-clip: unset !important;"
-            >
-                <li
+                >
+                    <li
                     role="menuitem"
                     *ngIf="viewOpts.defaultValue"
                     [value]="viewOpts.defaultValue.value"
                     [ngClass]="{ 'eos-adm-icon-checkbox-blue': !hasValue() }"
-                >
-                    <a class="dropdown-item eos-adm-select2" style="color: black;" (click)="selectAction($event, viewOpts.defaultValue)">
-                        <span class="eos-adm-icon x-small" [ngClass]="{ 'eos-adm-icon-checkbox-blue': !hasValue() }"></span>
-                        {{ viewOpts.defaultValue.title }}</a
                     >
-                </li>
-
-                <li role="menuitem" *ngFor="let item of input.options"
-                    (mouseenter)="elementMouseEnter(item);"
-                    (mouseleave)="elementMouseLeave(item);"
-                >
-                    <a
-                        #compartmentOpen
-                        class="dropdown-item eos-adm-select2"
-                        [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item, 'option-is-deleted': item.isDeleted }"
-                        [ngStyle]="item.style"
-                        (click)="!item.disabled ? selectAction($event, item) : null"
-                        tooltip="{{getItemTooltip(compartmentOpen, item) || undefined}}"
-                        placement="bottom"
-                        container="body"
-                        triggers="hover"
-                        containerClass="tooltip-info word-break tooltip-z-index"
+                        <a class="dropdown-item eos-adm-select2" style="color: black;" (click)="selectAction($event, viewOpts.defaultValue)">
+                            <span class="eos-adm-icon x-small" [ngClass]="{ 'eos-adm-icon-checkbox-blue': !hasValue() }"></span>
+                            {{ viewOpts.defaultValue.title }}</a
+                        >
+                    </li>
+                    <li role="menuitem" *ngFor="let item of input.options"
+                        (mouseenter)="elementMouseEnter(item);"
+                        (mouseleave)="elementMouseLeave(item);"
                     >
-                        <span
-                            class="eos-adm-icon x-small"
-                            [ngClass]="{ 'eos-adm-icon-checkbox-blue': isItemSelected(item), disabled: item.disabled }"
-                        ></span>
-                        {{item.title}}
-                    </a>
-                </li>
+                        <a  #compartmentOpen
+                            class="dropdown-item eos-adm-select2"
+                            [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item, 'option-is-deleted': item.isDeleted }"
+                            [ngStyle]="item.style"
+                            (click)="!item.disabled ? selectAction($event, item) : null"
+                            tooltip="{{getItemTooltip(compartmentOpen, item) || undefined}}"
+                            placement="bottom"
+                            container="body"
+                            triggers="hover"
+                            containerClass="tooltip-info word-break tooltip-z-index"
+                        >
+                        <span class="eos-adm-icon x-small" [ngClass]="{ 'eos-adm-icon-checkbox-blue': isItemSelected(item), disabled: item.disabled }"></span>
+                            {{item.title}}
+                        </a>
+                    </li>
                 </ul>
             </ng-container>
 
