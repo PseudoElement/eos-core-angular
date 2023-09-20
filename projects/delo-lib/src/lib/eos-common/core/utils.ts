@@ -249,7 +249,9 @@ export class EosUtils {
         })
         uselessStyles.forEach(tag => tag.remove())
     }
-
+    /**
+     @param delay Время таймаута
+    **/ 
     static async wait(delay: number): Promise<boolean> {
        return await new Promise(res => setTimeout(() => res(true), delay))
     }
