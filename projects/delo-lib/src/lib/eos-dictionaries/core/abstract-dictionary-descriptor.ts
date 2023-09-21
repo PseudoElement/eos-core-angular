@@ -94,14 +94,18 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     abstract addRecord(...params): Promise<IRecordOperationResult[]>;
-
+    /** query: Запрос, order?: Сортировка, limit?: Сколько записей получить, skip?: Сколько записей пропустить */
     abstract getChildren(...params): Promise<any[]>;
 
-    abstract getRoot(): Promise<any[]>;
+    abstract getRoot(extension?): Promise<any[]>;
 
     abstract getSubtree(...params): Promise<any[]>;
 
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
+
+    public async updatSev(str: string) {
+        return await this.apiSrv.read<any>({SEV_ASSOCIATION: PipRX.criteries({ 'OBJECT_NAME': str })}); 
+    }
 
     /** Получить все записи которые лежать внутри вершины дерева */
     getAllNodesInParents(departmentDue: string): Promise<any> {
@@ -320,10 +324,12 @@ export abstract class AbstractDictionaryDescriptor {
         return this.apiSrv.batch(changes, '');
     }
 
-    search(criteries: any[]): Promise<any[]> {
+    search(criteries: any[], order?: string, limit?: number, skip?: number): Promise<any[]> {
         const _search = criteries.map((critery) => this.getData(PipRX.criteries(critery)));
         return Promise.all(_search)
-            .then((results) => [].concat(...results));
+            .then((results) => {
+                return [].concat(...results)
+            });
     }
 
     checkPreDelete(selectedNodes: EosDictionaryNode[]): Promise<any> {

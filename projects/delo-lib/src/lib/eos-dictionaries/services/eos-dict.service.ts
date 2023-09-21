@@ -10,7 +10,7 @@ import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import {
     E_DICT_TYPE,
     IDictionaryDescriptor,
-    IDictionaryViewParameters,
+    IDictionaryViewParameters, // 
     IFieldView,
     IOrderBy,
     IRecordOperationResult,
@@ -322,7 +322,31 @@ export class EosDictService {
         this._reloadDopRecvizites$ = new Subject();
         this._resetSerch$ = new Subject();
     }
-
+    getShowAllSubnodesQueryes(data?) {
+        const layer = this._treeNode.originalId.toString().split('.').length - 1;
+        const critery = {
+            [this._treeNode._descriptor.keyField.foreignKey]: this._treeNode.originalId + '%',
+            ['LAYER']: layer + ':Null'
+        };
+        if (!this.viewParameters.showDeleted) {
+            critery['DELETED'] = '0';
+        }
+        return critery;
+    }
+    getChildrenQuery(data?) {
+        let q;
+        if (this.viewParameters.showDeleted) {
+            q = {
+                ISN_HIGH_NODE: data.data.rec.ISN_NODE + ''
+            }
+        } else {
+            q = {
+                ISN_HIGH_NODE: data.data.rec.ISN_NODE + '',
+                DELETED: 0
+            }
+        }
+        return q;
+    }
     getDescr(dictionaryId: string): IDictionaryDescriptor {
         for (let i = 0; i < DICTIONARIES.length; i++) {
             const dict = DICTIONARIES[i];
@@ -554,7 +578,7 @@ export class EosDictService {
         if (recursive) {
             return this.currentDictionary.getMarkedNodes(recursive);
         } else {
-            return this._visibleListNodes.filter(n => n.isMarked);
+            return this._visibleListNodes?.filter(n => n.isMarked) || [];
         }
     }
 
@@ -740,6 +764,10 @@ export class EosDictService {
      */
 
     selectTreeNode(nodeId: string): Promise<EosDictionaryNode> {
+        if (this.viewParameters) {
+            this.viewParameters.showAllSubnodes = false;
+            this.viewParameters.searchResults = false;
+        }
         let p = Promise.resolve(this._treeNode);
         if (nodeId) {
             if (!this._treeNode || this._treeNode.id !== nodeId) {
@@ -926,7 +954,6 @@ export class EosDictService {
 
     addNode(data: any): Promise<EosDictionaryNode> {
         const dictionary = this.currentDictionary;
-
         if (this._treeNode) {
             return this._preSave(dictionary, data, true)
                 .then((appendChanges) => {
@@ -938,6 +965,12 @@ export class EosDictService {
                     return this._reloadList(true)
                         .then(async() => {
                             await this._extSrvSave.saveExtensions(dictionary, data, results, this._treeNode.data, true);
+                            /** обновляем дерево после добавления записи */
+                            if (dictionary.id === 'organization') {
+                                await dictionary.getRoot();
+                                /* this._treeNode.children = newTree.children;
+                                this._treeNode$.next(this._treeNode); */
+                            }
                             this.updateViewParameters({ updatingList: false });
                             if (dictionary.descriptor.type !== E_DICT_TYPE.linear &&
                                 dictionary.descriptor.type !== E_DICT_TYPE.custom) {
@@ -1104,7 +1137,11 @@ export class EosDictService {
         }
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
-            this._srchParams = settings.opts;
+            if (this.currentDictionary.id !== 'organization') {
+                this._srchParams = settings.opts;
+            } else {
+                this._srchParams = settings.opts[0];
+            }
             return this._search(settings.opts.deleted);
         } else {
             return Promise.resolve(null);
@@ -1119,13 +1156,12 @@ export class EosDictService {
         }
     }
 
-    fullSearch(data: any, params: ISearchSettings) {
+    async fullSearch(data: any, params: ISearchSettings) {
         try {
             data.srchMode === 'common' ? this.fixSearchSymbols(data.common) : null;
         } catch (e) {
             console.error('Error: ', e)
         }
-
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
@@ -1142,7 +1178,8 @@ export class EosDictService {
             return this._search(params.deleted);
         } else {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
-            return this._search(params.deleted);
+            const answer = await this._search(params.deleted);
+            return answer;
         }
     }
 
@@ -1481,7 +1518,10 @@ export class EosDictService {
     public setStoredSearchSettings(data: SearchFormSettings) {
         this._storageSrv.setItem('lastSearchSetting', data);
     }
-    public reload() {
+    public async reload() {
+        if (this.currentDictionary.id === 'organization') {
+            await this.currentDictionary.descriptor.updatSev('ORGANIZ_CL');
+        }
         this._reloadList();
     }
     public resetPagination() {
@@ -1502,7 +1542,27 @@ export class EosDictService {
         }
 
     }
-
+    public async loadChildrenPagination(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode[]> {
+        const by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
+        const order = this.currentDictionary.orderBy['fieldKey'];
+        const skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
+        let q = this.getChildrenQuery(node);
+        if (this.viewParameters.showAllSubnodes) {
+            q = this.getShowAllSubnodesQueryes();
+        }
+        if (this._srchCriteries) {
+            return await dictionary.search(this._srchCriteries, order + ' ' + by, this.paginationConfig.length, skip)
+            .then((el) => {
+                return el;
+            })
+        } else {
+            return await dictionary.getChildren(node, order + ' ' + by, this.paginationConfig.length, skip, q)
+            .then((el) => {
+                return el;
+            })
+            .catch((err) => this._errHandler(err));
+        }
+    }
     public findNewNodePages(id: number): EosDictionaryNode {
         let indexNewNode: number;
         let list = [];
@@ -1560,7 +1620,11 @@ export class EosDictService {
 
     private _fixCurrentPage() {
         // this.paginationConfig.itemsQty = this._getAllListLength();
-        this.paginationConfig.itemsQty = this._getListLength();
+        if (this.currentDictionary.descriptor['totalRecords'] !== undefined) {
+            this.paginationConfig.itemsQty = this.currentDictionary.descriptor['totalRecords'];
+        } else {
+            this.paginationConfig.itemsQty = this._getListLength();
+        }
         const maxPage = Math.max(1, Math.ceil(this.paginationConfig.itemsQty / this.paginationConfig.length));
         this.paginationConfig.start = Math.min(this.paginationConfig.start, maxPage);
         this.paginationConfig.current = Math.min(this.paginationConfig.current, maxPage);
@@ -1595,7 +1659,7 @@ export class EosDictService {
             itemsQty: this._getListLength()
         });
 
-        if (update) {
+        if (update && this.currentDictionary.id !== 'organization') {
             this._updateVisibleNodes(param);
             // this._fixCurrentPage();
         } else {
@@ -1604,13 +1668,24 @@ export class EosDictService {
             this._paginationConfig$.next(this.paginationConfig);
         }
     }
-
-    private loadChildren(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode> {
+    private async loadChildren(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode> {
         if (dictionary) {
-            return dictionary.getChildren(node)
-                .then((el) => {
+            const query = []
+            /** тут тоже идёт обновление дерева и ничего более */
+            if (dictionary.id === 'organization') {
+                query.push(Promise.resolve([]));
+            } else {
+                query.push(dictionary.getChildren(node));
+            }
+            return await Promise.all(query)
+                .then((ans) => {
+                    const el = ans[0];
                     // теперь будем обновлять данные а не просто делать запрос
-                    node.children = el;
+                    if (dictionary.id === 'organization') {
+                        node.children = node.children.concat(el);
+                    } else {
+                        node.children = el;
+                    }
                     return node;
                 })
                 .then(() => {
@@ -1846,7 +1921,15 @@ export class EosDictService {
         this._updateVisibleNodes();
     }
 
-    private _updateVisibleNodes(reorder?) {
+    private async _updateVisibleNodes(reorder?) {
+        if (this.currentDictionary.id === 'organization') {
+            /* if (!Boolean(this._srchCriteries)) { */
+                const newElem = await this.loadChildrenPagination(this.currentDictionary, this._treeNode);
+                if (newElem.length > 0) {
+                    this._currentList = newElem;
+                }
+           /*  } */
+        }
         this._visibleListNodes = this._currentList;
         if (this._visibleListNodes) {
             if (!this.viewParameters.showDeleted) {
@@ -1856,7 +1939,7 @@ export class EosDictService {
             this._visibleListNodes = this._visibleListNodes.filter((node) => node.filterBy(this.filters));
             this._fixCurrentPage();
             const page = this.paginationConfig;
-            const pageList = (page.length > 0) ? this._visibleListNodes.slice((page.start - 1) * page.length, page.current * page.length) : this._visibleListNodes;
+            const pageList = (page.length > 0) && this.currentDictionary.id !== 'organization' ? this._visibleListNodes.slice((page.start - 1) * page.length, page.current * page.length) : this._visibleListNodes;
             const lastTimeMarked = pageList.find(n => n === this._listNode);
             if (!lastTimeMarked || !lastTimeMarked.isMarked) {
                 const firstMarkedIndex = pageList.findIndex((node) => node.isMarked);
@@ -1890,17 +1973,46 @@ export class EosDictService {
         if (dictionary) {
             if (this._srchCriteries) {
                 if (!afterAdd) {
-                    pResult = dictionary.search(this._srchCriteries);
+                    let by;
+                    let order;
+                    let skip;
+                    let limit;
+                    if (this.currentDictionary.id === 'organization') {
+                        by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
+                        order = this.currentDictionary.orderBy['fieldKey'];
+                        skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
+                        limit = this.paginationConfig.length;
+                    }
+                    pResult = dictionary.search(this._srchCriteries, order + ' ' + by, limit, skip);
                 } else {
                     pResult = Promise.resolve(this._currentList);
                 }
             } else if (this._dictMode !== 0) {
                 pResult = dictionary.searchByParentData(this._dictionaries[0], this._treeNode);
             } else if (this.viewParameters.showAllSubnodes) {
-                pResult = dictionary.getAllChildren(this._treeNode);
+                if (this.currentDictionary.id === 'organization') {
+                    const by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
+                    const order = this.currentDictionary.orderBy['fieldKey'];
+                    const skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
+                    const limit = this.paginationConfig.length;
+                    const critery = this.getShowAllSubnodesQueryes(this._treeNode);
+                    pResult = dictionary.getChildren(this._treeNode, order + ' ' + by, limit, skip, critery);
+                } else {
+                    pResult = dictionary.getAllChildren(this._treeNode);
+                }
             } else {
-                this.viewParameters.searchResults = false;
-                pResult = dictionary.getChildren(this._treeNode);
+                if (this.currentDictionary.id === 'organization') {
+                    const by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
+                    const order = this.currentDictionary.orderBy['fieldKey'];
+                    const skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
+                    const limit = this.paginationConfig.length;
+                    this.viewParameters.searchResults = false;
+                    const q = this.getChildrenQuery(this._treeNode);
+                    pResult = dictionary.getChildren(this._treeNode, order + ' ' + by, limit, skip, q);
+                } else {
+                    this.viewParameters.searchResults = false;
+                    pResult = dictionary.getChildren(this._treeNode);
+                }
             }
         }
 
@@ -1960,13 +2072,24 @@ export class EosDictService {
     }
     */
 
-    private _search(showDeleted = false): Promise<EosDictionaryNode[]> {
+    private async _search(showDeleted = false): Promise<EosDictionaryNode[]> {
         this._openNode(null);
         this.updateViewParameters({
             updatingList: true
         });
+        let by;
+        let order;
+        let skip;
+        let limit;
+        if (this.currentDictionary.id === 'organization') {
+            by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
+            order = this.currentDictionary.orderBy['fieldKey'];
+            skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
+            limit = this.paginationConfig.length + skip;
+            this._srchCriteries['DELETED'] = showDeleted;
+        }
         const dictionary = this.currentDictionary;
-        return dictionary.search(this._srchCriteries)
+        return dictionary.search(this._srchCriteries, order + ' ' + by, limit, skip)
             .then((nodes: any[]) => {
                 if (!nodes || nodes.length < 1) {
                 //    this._msgSrv.addNewMessage(WARN_SEARCH_NOTFOUND);
@@ -1974,6 +2097,7 @@ export class EosDictService {
                     this.viewParameters.showDeleted = showDeleted;
                     this._dictionaries.forEach((dict) => dict.showDeleted = this.viewParameters.showDeleted);
                 }
+                // this._treeNode['TotalRecords'] = nodes['TotalRecords'] || 20;
                 this._setCurrentList(dictionary, nodes);
 
                 // if (dictionary.id === DEPARTMENTS_DICT.id) {

@@ -42,6 +42,8 @@ class OrganizRecord extends TreeRecordDescriptor {
 }
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
+    sevOrg: SEV_ASSOCIATION[];
+    totalRecords: number;
     dopRec = [];
     modeList: IRecordModeDescription[];
     private organizParam = new OrganizAdvancedSearch();
@@ -103,36 +105,68 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
         return super.getNewRecord(newPreset, parentNode);
     }
-
-    public getRoot(): Promise<any[]> {
+    public async updatSev(str: string): Promise<any> {
+        this.sevOrg = await this.apiSrv.read<any>({SEV_ASSOCIATION: PipRX.criteries({ 'OBJECT_NAME': str })});
+        return this.sevOrg;
+    }
+    public async getRoot(): Promise<any[]> {
+        await this.updatSev('ORGANIZ_CL');
         return this.getData({ criteries: { IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
     }
 
-    public search(criteries: any[]): Promise<any> {
-        
+    public search(criteries: any[], order?: string, limit?: number, skip?: number): Promise<any> {
+        const query = [];
         const queries = criteries[0];
         if (queries.medo || queries.contact) {
-            return this.searchMedo(queries);
+            query.push(this.searchMedo(queries, {top: limit, orderby: order, skip: skip}, queries['DELETED']));
         }
         if (queries.protocol) {
-            return this.searchProto(queries);
+            query.push(this.searchProto(queries, {top: limit, orderby: order, skip: skip}, queries['DELETED']));
         }
         if (queries.organiz) {
             const extQuery = this.getCriteriesBranch(queries);
             if (extQuery) {
                 Object.assign(queries.organiz, extQuery);
             }
-
+            if (!queries['DELETED']) {
+                queries.organiz['DELETED'] = 0;
+            }
             if (queries.organiz.hasOwnProperty('DOP_REC')) {
-                return this.searchDopRec([queries.organiz]);
+                query.push(this.searchDopRec([queries.organiz], {top: limit, orderby: order, skip: skip}));
             } else {
-                return super.search([queries.organiz]);
+                query.push(this.searchAbs(queries.organiz, order, limit, skip));
             }
         }
+        if (query.length === 0) {
+            if (!queries['DELETED']) {
+                criteries['DELETED'] = 0;
+            }
+            let q = criteries;
+            if (criteries[0]) {
+                q = queries;
+            }
+            query.push(this.searchAbs(q, order, limit, skip));
+        }
+        return Promise.all(query)
+        .then((ans) => {
+            if (ans[0]) {
+                const answer = ans[0];
+                this.totalRecords = answer['TotalRecords'];
+                answer['TotalRecords'] = answer['TotalRecords'];
+                return answer;
+            } else {
+                return [];
+            }
+        });
         // для быстрого поиска
-        return super.search(criteries);
     }
-
+    public searchAbs(criteries: any, order?: string, limit?: number, skip?: number): Promise<any[]> {
+        const _search = this.getData(PipRX.criteries(criteries), order, limit, skip);
+        return Promise.all([_search])
+        .then((results) => {
+            return results[0];
+        });
+    }
     public getCriteriesBranch(criteries: any): any {
         const obj = {};
         if (criteries.hasOwnProperty('DUE') || criteries.hasOwnProperty('LAYER') || criteries.hasOwnProperty('ISN_HIGH_NODE')) {
@@ -150,7 +184,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         return null;
     }
 
-    public searchMedo(queries: { medo: any, contact: any }): Promise<any> {
+    public searchMedo(queries: { medo: any, contact: any }, {top, skip, orderby}, flagDeleted): Promise<any> {
         let queryMedo = null;
         let queryContact = null;
         let flagmedo = false;
@@ -171,12 +205,19 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             if (extQuery) {
                 Object.assign(queries.contact, extQuery);
             }
-            flagorganiz = true;
-            queryContact = this.apiSrv.read({
+            const q = {
                 ORGANIZ_CL: {
                     criteries: queries.contact
-                }
-            });
+                },
+                top: top,
+                skip: skip,
+                orderby: orderby,
+            }
+            if (!flagDeleted) {
+                q['ORGANIZ_CL']['criteries']['DELETED'] = 0;
+            }
+            flagorganiz = true;
+            queryContact = this.apiSrv.read(q);
         } else {
             queryContact = Promise.resolve(null);
         }
@@ -217,7 +258,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         });
     }
 
-    public searchDopRec(criteries: any[]): Promise<any> {
+    public searchDopRec(criteries: any[], {top, orderby, skip}): Promise<any> {
         const vaslues = JSON.parse(criteries[0].DOP_REC);
         const newCriteries = {};
         const critName = 'AR_ORGANIZ_VALUE.' + vaslues.API_NAME;
@@ -238,13 +279,16 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         return this.apiSrv.read({
             ORGANIZ_CL: {
                 criteries: newCriteries
-            }
+            },
+            op: top,
+            skip: skip,
+            orderby: orderby,
         }).then(_d => {
             return _d;
         });
     }
 
-    public async searchProto(queries: SearchQueryOrganization) {
+    public async searchProto(queries: SearchQueryOrganization, {top, skip, orderby}, flagDeleted) {
         const protReq: string = this.protParam.prot(queries.protocol, E_DICTIONARY_ID.ORGANIZ);
         const requestProt = await this.graphQl.query(protReq);
         const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
@@ -263,8 +307,7 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         }
     }
 
-    async getData(query?: any, order?: string, limit?: number): Promise<any[]> {
-
+    async getData(query?: any, order?: string, limit?: number, skip?: number): Promise<any[]> {
         if (!this.dopRec.length) {
             await this.ar_Descript();
         }
@@ -281,28 +324,43 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         if (order) {
             req.orderby = order;
         }
+        if (skip) {
+            req.skip = skip;
+        }
         // if (this.id === 'organization') {
         // req.expand = 'CONTACT_List';
         // }
 
-        const responseOrganiz: Promise<ORGANIZ_CL[]> = this.apiSrv.read(req);
-        const sev: Promise<SEV_ASSOCIATION[]> =  this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({ 'OBJECT_NAME': 'ORGANIZ_CL' })});
-        return Promise.all([responseOrganiz, sev])
-        .then(([Organiz, s]) => {
+        return this.apiSrv.read(req)
+        .then((Organiz) => {
             const organiz: ORGANIZ_CL[] = this.prepareForEdit(Organiz);
-            if (s && s.length > 0) {
-                organiz.forEach((org: ORGANIZ_CL) => {
-                    const index = s.findIndex((sev_) => sev_.OBJECT_ID === org.DUE);
-                    if (index !== -1) {
-                        org['sev'] = s[index];
-                    }
-                })
-            }
+            this.totalRecords = Organiz['TotalRecords'];
+            organiz['TotalRecords'] = Organiz['TotalRecords'];
             return organiz;
         })
         
         // const extendsOrganiz: ORGANIZ_EXTENDS[] = await this.extendsData(organiz);
         // return extendsOrganiz;
+    }
+    async getChildren(query: ORGANIZ_CL, order?: string, limit?: number, skip?: number, q?: any): Promise<any[]> {
+        let _children = {
+            ISN_HIGH_NODE: query.ISN_NODE + ''
+        };
+        if (q) {
+            _children = q;
+        }
+        return this.getData({ criteries: _children }, order, limit, skip)
+        .then(async (Organiz) => {
+            if (this.sevOrg && this.sevOrg.length > 0) {
+                Organiz.forEach((org: ORGANIZ_CL) => {
+                    const index = this.sevOrg.findIndex((sev_) => sev_.OBJECT_ID === org.DUE);
+                    if (index !== -1) {
+                        org['sev'] = this.sevOrg[index];
+                    }
+                })
+            }
+            return Organiz;
+        });
     }
 
     ar_Descript(): Promise<any> {

@@ -165,7 +165,13 @@ export class EosDictionary {
                 });
         }
     }
-
+    getRoot(extension?) {
+        return this.descriptor.getRoot(extension)
+        .then((data: any[]) => {
+            this.updateNodes(data, true);
+            return this.root;
+        });
+    }
     init(): Promise<EosDictionaryNode> {
         this._nodes.clear();
         return this.descriptor.getRoot()
@@ -353,12 +359,22 @@ export class EosDictionary {
         };
         return this.search([critery]);
     }
-
-    getChildren(node: EosDictionaryNode): Promise<EosDictionaryNode[]> {
+    /** Первоначальные данные из сервиса */
+    getChildren(node: EosDictionaryNode, order?: string, limit?: number, skip?: number, q?: any): Promise<EosDictionaryNode[]> {
         if (node) {
-            return this.descriptor.getChildren(node.data.rec)
+            let query;
+            if (this.descriptor.id === 'organization') {
+                query = this.descriptor.getChildren(node.data.rec, order, limit, skip, q);
+            } else {
+                query = this.descriptor.getChildren(node.data.rec);
+            }
+            return query
                 .then((nodes) => {
                     const res = this.updateNodes(nodes, true);
+                    if (this.descriptor.id === 'organization') {
+                        res['TotalRecords'] = nodes['TotalRecords'];
+                    }
+                    node['TotalRecords'] = nodes['TotalRecords'];
                     node.updating = false;
                     return Promise.all(res);
                 });
@@ -413,11 +429,12 @@ export class EosDictionary {
     }
 
 
-    search(criteries: any[]): Promise<EosDictionaryNode[]> {
+    search(criteries: any[], order?: string, limit?: number, skip?: number): Promise<EosDictionaryNode[]> {
         return this.descriptor
-            .search(criteries)
+            .search(criteries, order, limit, skip)
             .then((data) => {
                 const nodes = this.updateNodes(data, true);
+                nodes['TotalRecords'] = data['TotalRecords'];
                 return Promise.all(nodes);
             });
     }
