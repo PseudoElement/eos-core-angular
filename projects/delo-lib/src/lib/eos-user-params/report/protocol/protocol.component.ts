@@ -121,7 +121,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
 
     async PaginateData(length, orderStr, skip?) {
         this.isLoading = true;
-        await EosUtils.wait(900)
+        await EosUtils.wait(500)
         this._pipeSrv.read({
             USER_AUDIT: PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
             orderby: orderStr,

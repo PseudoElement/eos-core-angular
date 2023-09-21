@@ -678,7 +678,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(async () => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                if (this._newData.get('IS_SECUR_ADM') === false || this.getCheckAdmSave()) {
+                if (this.getCheckAdmSave() || this._newData.get('IS_SECUR_ADM') === false) {
                     if (this.getCheckAdmSave()) {
                         const answ: USER_CL[] = await this._userParamSrv.getQueryTech();
                         if (!(answ.length !== 0)) {
@@ -718,27 +718,26 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                                 ],
                             })
                             return 'error';
-                        } else {
+                        }
                             /*  добавил meta чтобы не появлялось сообщение о смене пароля при переходе на другую вкладку */
-                            if (
-                                !this.curentUser['IS_PASSWORD'] &&
-                                this.curentUser.USERTYPE !== UserType.OSAuthentication &&
-                                // this.curentUser.USERTYPE !== UserType.noLoginRights &&
-                                this.curentUser.USERTYPE !== UserType.OSAuthenticationServer &&
-                                !meta
-                            ) {
-                                return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
-                                    if (res) {
-                                        return this.ConfirmAvSystems(accessStr, id, query, meta).then(() => {
-                                            this._router.navigate(['/user-params-set/auntefication']);
-                                        });
-                                    } else {
-                                        return this.ConfirmAvSystems(accessStr, id, query, meta);
-                                    }
-                                });
-                            } else {
-                                return this.ConfirmAvSystems(accessStr, id, query, meta);
-                            }
+                        if (
+                            !this.curentUser['IS_PASSWORD'] &&
+                            this.curentUser.USERTYPE !== UserType.OSAuthentication &&
+                            // this.curentUser.USERTYPE !== UserType.noLoginRights &&
+                            this.curentUser.USERTYPE !== UserType.OSAuthenticationServer &&
+                            !meta
+                        ) {
+                            return this._confirmSrv.confirm(CONFIRM_REDIRECT_AUNT).then(res => {
+                                if (res) {
+                                    return this.ConfirmAvSystems(accessStr, id, query).then(() => {
+                                        this._router.navigate(['/user-params-set/auntefication']);
+                                    });
+                                } else {
+                                    return this.ConfirmAvSystems(accessStr, id, query);
+                                }
+                            });
+                        } else {
+                            return this.ConfirmAvSystems(accessStr, id, query);
                         }
                     });
                 } else {
