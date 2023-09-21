@@ -1304,7 +1304,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         dueDep = (due.split('|'))[0];
         this._userParamSrv.getDepartmentFromUser([dueDep])
             .then((data: DEPARTMENT[]) => {
-                this.formControls.get('DUE_DEP_NAME').patchValue(data[0].CLASSIF_NAME)
                 if (this.formControls.get('DUE_DEP_NAME').value) {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                         this.fillingDep(data);
