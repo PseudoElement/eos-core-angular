@@ -44,7 +44,7 @@
                 <span class="eos-adm-icon eos-adm-icon-directory-book-blue small" (click)="onClickChoose.emit($event)"></span>
             </div>
 
-            <ng-container *ngIf="shouldShowDropdown()">
+            <ng-container *ngIf="form.enabled">
                 <ul
                 *dropdownMenu
                 #dropdownElement

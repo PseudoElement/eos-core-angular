@@ -58,7 +58,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
             return undefined;
         }
     }
-
     controlIsValid() {
         return this.control.valid;
     }
@@ -189,7 +188,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     }
 
     onClick() {
-        if (this.shouldShowDropdown()) {
+        if (this.input.options.length > 0 && this.form.enabled) {
             if (this._dropDown.isOpen) {
                 this._dropDown.hide();
             } else {
