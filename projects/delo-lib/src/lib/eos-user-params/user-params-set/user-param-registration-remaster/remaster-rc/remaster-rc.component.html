@@ -35,7 +35,7 @@
         [readonly]="false"
     ></eos-dynamic-input>
     <eos-dynamic-input
-        *ngIf="appMode.arm"
+        *ngIf="appMode.arm && !cbBase"
         [input]="inputs['rec.USE_NEW_PRJ_RC']"
         [form]="form"
         [readonly]="false"
