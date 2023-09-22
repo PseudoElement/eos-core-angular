@@ -70,6 +70,8 @@ export class BreadcrumbsComponent implements OnDestroy {
             .subscribe((bc: IBreadcrumb[]) => {
                 if (bc && bc[0] && bc[0]['url'] === '/user_param') {
                     this.breadcrumbs = [bc[0]];
+                } else {
+                    this.breadcrumbs = bc;
                 }
             });
         this._update();
