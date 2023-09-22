@@ -84,6 +84,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             });
     }
     ngOnInit() {
+        this.fieldGroups.delete(2);
         this.editFlag = !!this.isCurrentSettings;
         /* if (this.isCurrentSettings && this.appMode && this.appMode.arm) {
             this.fieldGroups.delete(2);
