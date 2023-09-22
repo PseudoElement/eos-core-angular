@@ -67,7 +67,11 @@ export class BreadcrumbsComponent implements OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
+            .subscribe((bc: IBreadcrumb[]) => {
+                if (bc && bc[0] && bc[0]['url'] === '/user_param') {
+                    this.breadcrumbs = [bc[0]];
+                }
+            });
         this._update();
         this._router.events
             .pipe(
