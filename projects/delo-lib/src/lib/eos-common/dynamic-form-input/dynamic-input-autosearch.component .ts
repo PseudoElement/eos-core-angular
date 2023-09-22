@@ -23,7 +23,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     @ViewChild('textInputSelect', {static: false}) private textInputSelect: ElementRef;
     private _lastWrapperWidth: number;
     private _calcItemWidth: number;
-
+    private _onInputDebounce: NodeJS.Timeout;
     constructor() {
         super();
     }
@@ -64,9 +64,12 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
 
     onInput(event) {
         event.stopPropagation();
-        this.delayedTooltip();
-        this.control.setValue(event.target.value);
-        this.showDropDown();
+        if(this._onInputDebounce) clearTimeout(this._onInputDebounce)
+        this._onInputDebounce = setTimeout(() => {
+            this.delayedTooltip();
+            this.control.setValue(event.target.value);
+            this.showDropDown()
+        }, 1000)
     }
 
     showDropDown() {
@@ -155,7 +158,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     onMenuHidden(event) {
         setTimeout(() => {
             this.updateMessage();
-        }, 100);
+        }, 700);
     }
 
     onEraseClick() {
@@ -179,7 +182,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
                     this._dropDown.hide();
                 }
             }
-        }
+            }
     }
 
     setFirstFocusedItem() {
