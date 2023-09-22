@@ -345,7 +345,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }
-        if ((this._apiSrv.flagDelitedPermanantly !== true || this._apiSrv.flagTehnicalUsers !== true) && this._apiSrv.configList.shooseTab === 0) {
+        if ((this._apiSrv.flagDelitedPermanantly === true || this._apiSrv.flagTehnicalUsers === true) && this._apiSrv.configList.shooseTab === 0) {
             this.titleCurrentDue = 'Все подразделения';
         }
         if (this._apiSrv.flagDelitedPermanantly === true) {
