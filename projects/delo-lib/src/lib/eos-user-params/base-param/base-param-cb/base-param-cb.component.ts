@@ -650,6 +650,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     getCheckAdmSave() {
         return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
     }
+    isExistDueDepName(){
+        console.log('isExist', this.controls['DUE_DEP_NAME'].options.some(option => option.value === this.controls['DUE_DEP_NAME'].value))
+        return this.controls['DUE_DEP_NAME'].options.some(option => option.value === this.controls['DUE_DEP_NAME'].value)
+    }
     submit(meta?: string): Promise<any> {
         if (this.notTechUserAndHasNotDueDepName()) {
             this._msgSrv.addNewMessage({
@@ -678,6 +682,22 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(async () => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
+                const dueDepNames = await this._apiSrv.getData<USER_CL[]>({
+                    DEPARTMENT: {
+                        criteries: {
+                            CLASSIF_NAME: `%${this.formControls.value['DUE_DEP_NAME'].trim().replace(/\s/g, '_')}%`,
+                        }
+                    }
+                })
+                if(!dueDepNames.length){ 
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение!',
+                        msg: 'Выберите должностное лицо или установите флаг технического пользователя',
+                    })
+                    return Promise.resolve('error');
+                }
+                /* Значение должностного лица*/
                 if (this.getCheckAdmSave() || this._newData.get('IS_SECUR_ADM') === false) {
                     if (this.getCheckAdmSave()) {
                         const answ: USER_CL[] = await this._userParamSrv.getQueryTech();
@@ -1304,7 +1324,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         dueDep = (due.split('|'))[0];
         this._userParamSrv.getDepartmentFromUser([dueDep])
             .then((data: DEPARTMENT[]) => {
-                this.formControls.get('DUE_DEP_NAME').patchValue(data[0].CLASSIF_NAME)
                 if (this.formControls.get('DUE_DEP_NAME').value) {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                         this.fillingDep(data);
