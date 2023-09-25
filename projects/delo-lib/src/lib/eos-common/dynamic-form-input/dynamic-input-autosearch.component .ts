@@ -66,19 +66,16 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
         event.stopPropagation();
         if(this._onInputDebounce) clearTimeout(this._onInputDebounce)
         this._onInputDebounce = setTimeout(() => {
-            this.delayedTooltip();
             this.control.setValue(event.target.value);
             this.showDropDown()
-        }, 1000)
+        }, 300)
     }
 
     showDropDown() {
-        if (!this._dropDown.isOpen && this.control.value.length >= 3) {
-            if (this.input.options.length > 0) {
-                this._dropDown.show();
-                if (this.input.options.length > 1) {
-                    this.setFirstFocusedItem();
-                }
+        if (this.control.value.length >= 3) {
+            this._dropDown.show();
+            if (this.input.options.length > 1) {
+                this.setFirstFocusedItem();
             }
         } else {
             this._dropDown.hide();
