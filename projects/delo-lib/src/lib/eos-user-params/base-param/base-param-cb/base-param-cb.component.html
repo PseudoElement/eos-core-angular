@@ -2,7 +2,7 @@
     <eos-user-params-header
         [editMode]="editMode"
         [title]="title"
-        [disableBtn]="!getValidDate || newInfo"
+        [disableBtn]="isDisabledHeaderBtns"
         [errorSave]="getErrorSave"
         (submitEmit)="submit($event)"
         (cancelEmit)="cancel($event)"
@@ -87,6 +87,7 @@
 
                     <div class="information-line">
                         <eos-dynamic-input
+                            #dueDepNameInput
                             class="base-text-input base-input-role information-item"
                             eosClickMode
                             [input]="controls['DUE_DEP_NAME']"
@@ -94,6 +95,7 @@
                             [readonly]="!editMode"
                             (onClickChoose)="showDepChoose()"
                             (onEnterSearchEmptyResults)="showDepChooseEmpty()"
+                            (onInputChange)="checkIsDueDepNameExist($event)"
                             [ngClass]="{'white-field': !editMode}"
                         ></eos-dynamic-input>
                     </div>

@@ -52,6 +52,7 @@ export class DynamicInputComponent {
     @Input() shouldHideTooltipOnBlur?: boolean;
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onInputChange: EventEmitter<Event> = new EventEmitter<Event>();
 
     // для контрола контекстного поиска в карточке пользователя
     @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();
