@@ -171,19 +171,21 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
 
     filterKeyDown(event) {
         const code = event.code /* !IE */ || event.key /* IE */;
+        const isNotEmptyValue = event.target.value.length > 0;
+        const isLessThen3Chars = event.target.value.length < 3
         switch (code) {
             case 'ArrowDown':
             case 'Down': this._hoverNext(); break;
             case 'ArrowUp':
             case 'Up': this._hoverPrev(); break;
-            case 'Enter': if (this._isEmptyResults()) {
-                this.onEnterSearchEmptyResults.emit();
-            } else {
-                if (this._dropDown.isOpen) {
+            case 'Enter': 
+                if (isNotEmptyValue) {
+                    this.onEnterSearchEmptyResults.emit();
+                }
+                if(isLessThen3Chars &&  this._dropDown.isOpen) {
                     this.selectAction(null, this.focusedItem);
                     this._dropDown.hide();
                 }
-            }
             }
     }
 
@@ -206,9 +208,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
         return this.form.enabled && this.input.options.length > 0 && !!this.currentValue.trim()
     }
 
-    private _isEmptyResults(): boolean {
-        return (this.input.options.length === 1 && this.input.options[0].due === '-1');
-    }
 
     private _hoverNext(): any {
         if (!this.input.options || !this.input.options.length) {
