@@ -1,10 +1,8 @@
-import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
-
 import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
-
+import {  debounceTime, takeUntil } from 'rxjs/operators';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB, USERDEP } from '../../../eos-rest';
@@ -92,6 +90,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _searchLexem: string = '';
     private _depDueLinkOrg: string = undefined;
     private _sysParamsDueOrganiz: string = undefined;
+    private _isLoadingDueDepNames: boolean = false;
+    private _debounceDueDepName: NodeJS.Timeout;
+    private _isFoundDueDepNamesInDB: boolean = false;
+    @ViewChild('dueDepNameInput', {read: ElementRef}) dueDepNameInputRef: ElementRef;
 
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size || this.queryRoles.length || this.rightsCBDueRole) {
@@ -258,14 +260,17 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     get getErrorSave() {
         const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
-        const clName = this.form.controls['CLASSIF_NAME'].value ? this.form.controls['CLASSIF_NAME'].value : '';
-        const suPatron = this.form.controls['SURNAME_PATRON'].value ? this.form.controls['SURNAME_PATRON'].value : '';
+        const clName = this.form.controls['CLASSIF_NAME'].value ?? '';
+        const suPatron = this.form.controls['SURNAME_PATRON'].value ?? '';
         const formError = this.form.status === 'INVALID' ? true : false;
         if (this.editMode && (val !== null || (clName).trim() === '' || (suPatron).trim() === '') || formError) {
             return true;
         } else {
             return false;
         }
+    }
+    get isDisabledHeaderBtns(): boolean{
+        return this._isLoadingDueDepNames || !this.getValidDate || this.newInfo;
     }
 
     init() {
@@ -650,9 +655,24 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     getCheckAdmSave() {
         return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
     }
-    isExistDueDepName(){
-        console.log('isExist', this.controls['DUE_DEP_NAME'].options.some(option => option.value === this.controls['DUE_DEP_NAME'].value))
-        return this.controls['DUE_DEP_NAME'].options.some(option => option.value === this.controls['DUE_DEP_NAME'].value)
+    checkIsDueDepNameExist(event: Event){
+        this._isLoadingDueDepNames = true;
+        const input = event.target as HTMLInputElement;
+        const request = this._apiSrv.getData<USER_CL[]>({
+            DEPARTMENT: {
+                criteries: {
+                    CLASSIF_NAME: `%${input.value.trim().replace(/\s/g, '_')}%`,
+                }
+            }
+        })
+        if(this._debounceDueDepName) clearTimeout(this._debounceDueDepName);
+        this._debounceDueDepName = setTimeout(() => {
+            request.then(dueDepNames => {
+                this._isFoundDueDepNamesInDB = dueDepNames.length ? true : false;
+            })
+            .catch(err => new Error('checkIsDueDepNameError: ' + err))
+            .finally(() => this._isLoadingDueDepNames = false)
+        }, 300)
     }
     submit(meta?: string): Promise<any> {
         if (this.notTechUserAndHasNotDueDepName()) {
@@ -683,22 +703,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
                 /* Если установлено Должностное лицо - проверить, существует ли введенное ДЛ в базе*/
-                if(this.formControls.value['DUE_DEP_NAME']){
-                    const dueDepNames = await this._apiSrv.getData<USER_CL[]>({
-                        DEPARTMENT: {
-                            criteries: {
-                                CLASSIF_NAME: `%${this.formControls.value['DUE_DEP_NAME']?.trim()?.replace(/\s/g, '_')}%`,
-                            }
-                        }
+                if(this.formControls.value['DUE_DEP_NAME'] && !this._isFoundDueDepNamesInDB){
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение!',
+                        msg: 'Должностное лицо не проверено по справочнику. Выполните проверку с помощью клавиши Enter или очистите поле.',
                     })
-                    if(!dueDepNames.length){ 
-                        this._msgSrv.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение!',
-                            msg: 'Выберите должностное лицо или установите флаг технического пользователя',
-                        })
-                        return Promise.resolve('error');
-                    }
+                    const dueDepNameInput = this.dueDepNameInputRef.nativeElement.querySelector('input') as HTMLInputElement
+                    dueDepNameInput.focus()
+                    return Promise.resolve('error');
                 }
                 /* Значение должностного лица*/
                 if (this.getCheckAdmSave() || this._newData.get('IS_SECUR_ADM') === false) {

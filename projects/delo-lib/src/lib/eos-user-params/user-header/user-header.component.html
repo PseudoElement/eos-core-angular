@@ -18,7 +18,7 @@
             <div>
                 <button *ngIf='defaultBtn' [ngClass]="{ 'hiden-default-button': isn_user }" class="btn btn-primary default-btn" (click)="default()">{{btnTitles.default}}</button>
                 <button class="btn btn-primary" (click)="cancelClose()">{{isCurrentSettings ? btnTitles.close : btnTitles.cancel}}</button>
-                <button class="btn btn-primary-full" [disabled]="errorSave"  (click)="submit()">{{btnTitles.save}}</button><!---->
+                <button class="btn btn-primary-full" [disabled]="errorSave || disableBtn"  (click)="submit()">{{btnTitles.save}}</button><!---->
             </div>
         </div>
         <div class="action-wrapper" *ngIf="!editMode">
