@@ -682,20 +682,23 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(async () => {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
-                const dueDepNames = await this._apiSrv.getData<USER_CL[]>({
-                    DEPARTMENT: {
-                        criteries: {
-                            CLASSIF_NAME: `%${this.formControls.value['DUE_DEP_NAME'].trim().replace(/\s/g, '_')}%`,
+                /* Если установлено Должностное лицо - проверить, существует ли введенное ДЛ в базе*/
+                if(this.formControls.value['DUE_DEP_NAME']){
+                    const dueDepNames = await this._apiSrv.getData<USER_CL[]>({
+                        DEPARTMENT: {
+                            criteries: {
+                                CLASSIF_NAME: `%${this.formControls.value['DUE_DEP_NAME']?.trim()?.replace(/\s/g, '_')}%`,
+                            }
                         }
-                    }
-                })
-                if(!dueDepNames.length){ 
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение!',
-                        msg: 'Выберите должностное лицо или установите флаг технического пользователя',
                     })
-                    return Promise.resolve('error');
+                    if(!dueDepNames.length){ 
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение!',
+                            msg: 'Выберите должностное лицо или установите флаг технического пользователя',
+                        })
+                        return Promise.resolve('error');
+                    }
                 }
                 /* Значение должностного лица*/
                 if (this.getCheckAdmSave() || this._newData.get('IS_SECUR_ADM') === false) {
