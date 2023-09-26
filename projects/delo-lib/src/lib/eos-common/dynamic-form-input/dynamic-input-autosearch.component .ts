@@ -168,7 +168,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
 
     filterKeyDown(event) {
         const code = event.code /* !IE */ || event.key /* IE */;
-        const isNotEmptyValue = event.target.value.length > 0;
         const isLessThen3Chars = event.target.value.length < 3
         switch (code) {
             case 'ArrowDown':
@@ -176,9 +175,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
             case 'ArrowUp':
             case 'Up': this._hoverPrev(); break;
             case 'Enter': 
-                if (isNotEmptyValue) {
-                    this.onEnterSearchEmptyResults.emit();
-                }
+                this.onEnterSearchEmptyResults.emit();
                 if(isLessThen3Chars &&  this._dropDown.isOpen) {
                     this.selectAction(null, this.focusedItem);
                     this._dropDown.hide();
