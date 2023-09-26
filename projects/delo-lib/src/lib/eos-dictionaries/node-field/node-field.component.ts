@@ -7,6 +7,7 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import { RESOLVE_DESCRIPTIONS } from '../../eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 import { CHANNEL_TYPE } from '../../eos-dictionaries/consts/dictionaries/sev/types.consts';
 import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
+import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 interface ISpecialIcon {
     class: string;
@@ -41,7 +42,7 @@ export class NodeFieldComponent implements OnInit {
         }
     }
     getIcons() {
-        if (this.node.dictionaryId === 'organization') {
+        if (this.node.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
             const icons = [];
             if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
                 icons.push({

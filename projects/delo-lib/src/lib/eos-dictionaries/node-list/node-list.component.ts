@@ -27,6 +27,7 @@ import { CopyNodeComponent } from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-tooltip.service';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 @Component({
@@ -67,7 +68,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         return this._dictId;
     }
     get currentList() {
-        if (this._dictId === 'organization') {
+        if (this._dictId === E_DICTIONARY_ID.ORGANIZ) {
             return this._dictSrv.currentList;
         } else {
             return this._currentList;
