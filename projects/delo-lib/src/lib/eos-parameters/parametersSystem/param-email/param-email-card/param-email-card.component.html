@@ -36,7 +36,9 @@
                     [readonly]="false"
                     [placeholder]="dataProfile && dataProfile['Password'] ? '*******' : ''"
                     [tooltip]="errorPass ? 'Обязательное поле' : ''"
+                    [isOpen]="errorPass"
                     placement="bottom"
+                    triggers=""
                     containerClass="tooltip-error"
                     (keyup)="onKeyUp($event)"
                     [autocomplete]="'off'">
