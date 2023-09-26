@@ -10,7 +10,7 @@ import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import {
     E_DICT_TYPE,
     IDictionaryDescriptor,
-    IDictionaryViewParameters, // 
+    IDictionaryViewParameters,
     IFieldView,
     IOrderBy,
     IRecordOperationResult,
@@ -287,7 +287,9 @@ export class EosDictService {
     get bufferNodes(): EosDictionaryNode[] {
         return this._bufferNodes;
     }
-
+    get currentList() {
+        return this._currentList;
+    }
 
     constructor(
         public dictionatyOverrideSrv: DictionaryOverrideService,
@@ -1521,8 +1523,10 @@ export class EosDictService {
     public async reload() {
         if (this.currentDictionary.id === 'organization') {
             await this.currentDictionary.descriptor.updatSev('ORGANIZ_CL');
+            this._updateVisibleNodes();
+        } else {
+            this._reloadList();
         }
-        this._reloadList();
     }
     public resetPagination() {
         this._initPaginationConfig();
@@ -1546,17 +1550,18 @@ export class EosDictService {
         const by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
         const order = this.currentDictionary.orderBy['fieldKey'];
         const skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
+        const top = this.paginationConfig.current === this.paginationConfig.start ? this.paginationConfig.length : this.paginationConfig.length + ((this.paginationConfig.current - this.paginationConfig.start) * this.paginationConfig.length) ;
         let q = this.getChildrenQuery(node);
         if (this.viewParameters.showAllSubnodes) {
             q = this.getShowAllSubnodesQueryes();
         }
         if (this._srchCriteries) {
-            return await dictionary.search(this._srchCriteries, order + ' ' + by, this.paginationConfig.length, skip)
+            return await dictionary.search(this._srchCriteries, order + ' ' + by, top, skip)
             .then((el) => {
                 return el;
             })
         } else {
-            return await dictionary.getChildren(node, order + ' ' + by, this.paginationConfig.length, skip, q)
+            return await dictionary.getChildren(node, order + ' ' + by, top, skip, q)
             .then((el) => {
                 return el;
             })
@@ -1620,7 +1625,7 @@ export class EosDictService {
 
     private _fixCurrentPage() {
         // this.paginationConfig.itemsQty = this._getAllListLength();
-        if (this.currentDictionary.descriptor['totalRecords'] !== undefined) {
+        if (this.currentDictionary.id === 'organization') { // this.currentDictionary.descriptor['totalRecords'] !== undefined
             this.paginationConfig.itemsQty = this.currentDictionary.descriptor['totalRecords'];
         } else {
             this.paginationConfig.itemsQty = this._getListLength();
@@ -1924,11 +1929,23 @@ export class EosDictService {
     private async _updateVisibleNodes(reorder?) {
         if (this.currentDictionary.id === 'organization') {
             /* if (!Boolean(this._srchCriteries)) { */
+            this.updateViewParameters({ updatingList: true });
+            try {
                 const newElem = await this.loadChildrenPagination(this.currentDictionary, this._treeNode);
                 if (newElem.length > 0) {
                     this._currentList = newElem;
                 }
-           /*  } */
+                this._visibleListNodes = this._currentList;
+                this._fixCurrentPage();
+                this._visibleList$.next(newElem);
+                this.updateMarked(true);
+                this.updateViewParameters({ updatingList: false });
+                return;
+            } catch (error) {
+                this._visibleListNodes = [];
+                this._visibleList$.next([]);
+                this._errHandler(error);
+            }
         }
         this._visibleListNodes = this._currentList;
         if (this._visibleListNodes) {
@@ -1956,6 +1973,7 @@ export class EosDictService {
             }
 
         }
+        this.updateViewParameters({ updatingList: false });
     }
 
 
@@ -1969,6 +1987,7 @@ export class EosDictService {
 
     private _reloadList(afterAdd = false): Promise<any> {
         let pResult = Promise.resolve([]);
+        this.updateViewParameters({ updatingList: true });
         const dictionary = this.currentDictionary;
         if (dictionary) {
             if (this._srchCriteries) {
@@ -1981,7 +2000,7 @@ export class EosDictService {
                         by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
                         order = this.currentDictionary.orderBy['fieldKey'];
                         skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
-                        limit = this.paginationConfig.length;
+                        limit = this.paginationConfig.current === this.paginationConfig.start ? this.paginationConfig.length : this.paginationConfig.length + ((this.paginationConfig.current - this.paginationConfig.start) * this.paginationConfig.length);
                     }
                     pResult = dictionary.search(this._srchCriteries, order + ' ' + by, limit, skip);
                 } else {
@@ -1994,7 +2013,7 @@ export class EosDictService {
                     const by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
                     const order = this.currentDictionary.orderBy['fieldKey'];
                     const skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
-                    const limit = this.paginationConfig.length;
+                    const limit = this.paginationConfig.current === this.paginationConfig.start ? this.paginationConfig.length : this.paginationConfig.length + ((this.paginationConfig.current - this.paginationConfig.start) * this.paginationConfig.length);
                     const critery = this.getShowAllSubnodesQueryes(this._treeNode);
                     pResult = dictionary.getChildren(this._treeNode, order + ' ' + by, limit, skip, critery);
                 } else {
@@ -2005,7 +2024,7 @@ export class EosDictService {
                     const by = this.currentDictionary.orderBy['ascend'] ? 'asc' : 'desc';
                     const order = this.currentDictionary.orderBy['fieldKey'];
                     const skip = (this.paginationConfig.current - 1) * this.paginationConfig.length;
-                    const limit = this.paginationConfig.length;
+                    const limit = this.paginationConfig.current === this.paginationConfig.start ? this.paginationConfig.length : this.paginationConfig.length + ((this.paginationConfig.current - this.paginationConfig.start) * this.paginationConfig.length);
                     this.viewParameters.searchResults = false;
                     const q = this.getChildrenQuery(this._treeNode);
                     pResult = dictionary.getChildren(this._treeNode, order + ' ' + by, limit, skip, q);
@@ -2017,8 +2036,12 @@ export class EosDictService {
         }
 
         return pResult
-            .then((list) => this._setCurrentList(dictionary, list, true))
+            .then((list) => {
+                this.updateViewParameters({ updatingList: false });
+                return this._setCurrentList(dictionary, list, true)
+            })
             .catch((err) => {
+                this.updateViewParameters({ updatingList: false });
                 if (err.code !== 401) {
                     this.updateResetSerch(); // если произошла ошибка при использовании фильтра то сбрасываем фильтр
                 }

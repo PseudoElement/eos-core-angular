@@ -119,6 +119,7 @@ import { SpravochnikiTemplateComponent } from '../eos-rest/addons/components/tem
 import { DepartmentCalendarComponent } from './department-calendar/department-calendar.component';
 import { OrganizationNodeInfoComponent } from './node-info/organization-node-info/organization-node-info.component';
 import { RubricatorCardEditComponent } from './card-views/rubricator-card-edit.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     declarations: [
@@ -228,6 +229,7 @@ import { RubricatorCardEditComponent } from './card-views/rubricator-card-edit.c
         DepartmentCalendarComponent
     ],
     imports: [
+        ScrollingModule,
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,

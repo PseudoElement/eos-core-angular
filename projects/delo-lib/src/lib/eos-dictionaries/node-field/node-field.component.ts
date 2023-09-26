@@ -40,7 +40,25 @@ export class NodeFieldComponent implements OnInit {
             this.view.emit(evt);
         }
     }
-
+    getIcons() {
+        if (this.node.dictionaryId === 'organization') {
+            const icons = [];
+            if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
+                icons.push({
+                    class: this.node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black',
+                    tooltip: 'Индекс СЭВ',
+                });
+            }
+            if (this.node.data.rec['CONFIDENTIONAL']) {
+                icons.push({
+                    class: this.node.isDeleted ? 'eos-adm-icon-restricted-grey' : 'eos-adm-icon-restricted-blue',
+                    tooltip: 'ДСП файлы',
+                });
+            }
+            return icons;
+        }
+        return this.iconsArray;
+    }
     ngOnInit(): void {
         this._hasFolderIcon = this.field.preferences && this.field.preferences.hasIcon;    
         if (this.field.type === E_FIELD_TYPE.icon) {

@@ -27,6 +27,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "12.2.16",
+    "@angular/cdk": "^12.2.13",
     "@angular/common": "12.2.16",
     "@angular/compiler": "12.2.16",
     "@angular/core": "12.2.16",
@@ -34,20 +35,20 @@
     "@angular/platform-browser": "12.2.16",
     "@angular/platform-browser-dynamic": "12.2.16",
     "@angular/router": "12.2.16",
+    "@apollo/client": "^3.0.0",
+    "@eos/jsplugins-manager": "2.1.0-beta.2",
     "apollo-angular": "^3.0.1",
     "core-js": "^2.6.12",
     "file-saver": "^2.0.5",
-    "@eos/jsplugins-manager": "2.1.0-beta.2",
     "fs-extra": "^4.0.3",
+    "graphql": "^16",
     "moment": "^2.29.1",
     "ng2-dragula": "^1.5.0",
     "ngx-bootstrap": "5.5.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "xml2js": "0.4.5",
-    "zone.js": "~0.11.4",
-    "@apollo/client": "^3.0.0",
-    "graphql": "^16"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "12.2.16",

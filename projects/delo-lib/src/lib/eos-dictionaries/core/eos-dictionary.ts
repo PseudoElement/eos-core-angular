@@ -370,13 +370,13 @@ export class EosDictionary {
             }
             return query
                 .then((nodes) => {
-                    const res = this.updateNodes(nodes, true);
-                    if (this.descriptor.id === 'organization') {
-                        res['TotalRecords'] = nodes['TotalRecords'];
+                    try {
+                        const res = this.updateNodes(nodes, true);
+                        node.updating = false;
+                        return Promise.all(res);
+                    } catch (error) {
+                        return [];
                     }
-                    node['TotalRecords'] = nodes['TotalRecords'];
-                    node.updating = false;
-                    return Promise.all(res);
                 });
         } else {
             return Promise.resolve([]);

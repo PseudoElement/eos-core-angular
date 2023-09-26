@@ -110,16 +110,35 @@
                         !params.updatingList && 
                         recalcDone"
             >
-                <eos-node-list-item *ngFor="let item of nodes"
-                                    [ngStyle]="{'width.%': 100}"
-                                    [length]="length"
-                                    [node]="item"
-                                    [params]="params"
-                                    [customFields]="customFields"
-                                    [firstColumnIndex]="firstColumnIndex"
-                                    (clickSelect)="onClickSelect(item)"
-                                    (clickMark)="onClickMark(item,$event)"
-                ></eos-node-list-item>
+                <ng-container *ngIf="dictionId === 'organization'">
+                    <cdk-virtual-scroll-viewport itemSize="40" class="example-viewport"> <!-- appendOnly -->
+                        <ng-container *cdkVirtualFor="let item of nodes">
+                            <eos-node-list-item 
+                                *ngIf="item"
+                                [ngStyle]="{'width.%': 100}"
+                                [length]="length"
+                                [node]="item"
+                                [params]="params"
+                                [customFields]="customFields"
+                                [firstColumnIndex]="firstColumnIndex"
+                                (clickSelect)="onClickSelect(item)"
+                                (clickMark)="onClickMark(item,$event)"
+                            ></eos-node-list-item>
+                        </ng-container>
+                    </cdk-virtual-scroll-viewport>
+                </ng-container>
+                <ng-container *ngIf="dictionId !== 'organization'">
+                    <eos-node-list-item  *ngFor="let item of nodes"
+                        [ngStyle]="{'width.%': 100}"
+                        [length]="length"
+                        [node]="item"
+                        [params]="params"
+                        [customFields]="customFields"
+                        [firstColumnIndex]="firstColumnIndex"
+                        (clickSelect)="onClickSelect(item)"
+                        (clickMark)="onClickMark(item,$event)"
+                    ></eos-node-list-item>
+                </ng-container>
             </ng-container>
         </div>
     </div>
