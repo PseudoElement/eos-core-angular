@@ -71,6 +71,7 @@ import { ExetentionsUserParamsLib } from '../eos-rest/addons/ExtentionsUserParam
 import { EosCommonOverriveService } from './services/eos-common-overrive.service';
 import { logoOverrideServices } from './services/logo-overrride.service';
 import { UserSessionGuard } from './guards/user-session.guard';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 /* end guards */
 
 @NgModule({
@@ -110,7 +111,8 @@ import { UserSessionGuard } from './guards/user-session.guard';
         EosUserSelectModule,
         EosBackgraundTasksModule,
         EosInstrumentsModule,
-        GraphQLModule
+        GraphQLModule,
+        ScrollingModule
     ],
     entryComponents: [
         LoginFormComponent,

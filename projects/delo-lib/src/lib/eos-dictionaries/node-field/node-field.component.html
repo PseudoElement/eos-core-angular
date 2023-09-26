@@ -51,8 +51,8 @@
             </label>
         </ng-container>
 
-        <ng-container *ngSwitchCase="types.icon_sev"> <!-- ICONS_CONTAINER -->
-            <div class="table-field-ico" *ngFor="let icon of iconsArray;">
+        <ng-container *ngSwitchCase="types.icon_sev"> <!-- ICONS_CONTAINER  getIcons()-->
+            <div class="table-field-ico" *ngFor="let icon of getIcons();">
                 <span class="folder small eos-adm-icon"
                     [ngClass]="icon.class"
                     [tooltip]="icon.tooltip"

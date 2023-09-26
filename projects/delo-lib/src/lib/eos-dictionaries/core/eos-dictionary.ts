@@ -363,20 +363,20 @@ export class EosDictionary {
     getChildren(node: EosDictionaryNode, order?: string, limit?: number, skip?: number, q?: any): Promise<EosDictionaryNode[]> {
         if (node) {
             let query;
-            if (this.descriptor.id === 'organization') {
+            if (this.descriptor.id === E_DICTIONARY_ID.ORGANIZ) {
                 query = this.descriptor.getChildren(node.data.rec, order, limit, skip, q);
             } else {
                 query = this.descriptor.getChildren(node.data.rec);
             }
             return query
                 .then((nodes) => {
-                    const res = this.updateNodes(nodes, true);
-                    if (this.descriptor.id === 'organization') {
-                        res['TotalRecords'] = nodes['TotalRecords'];
+                    try {
+                        const res = this.updateNodes(nodes, true);
+                        node.updating = false;
+                        return Promise.all(res);
+                    } catch (error) {
+                        return [];
                     }
-                    node['TotalRecords'] = nodes['TotalRecords'];
-                    node.updating = false;
-                    return Promise.all(res);
                 });
         } else {
             return Promise.resolve([]);
@@ -530,7 +530,7 @@ export class EosDictionary {
                                 }
                             });
 
-                        } else if(this.id === 'organization') {
+                        } else if(this.id === E_DICTIONARY_ID.ORGANIZ) {
                             nodes.forEach(node => {
                                 node.data.sev = node.data.rec.sev;
                             })
