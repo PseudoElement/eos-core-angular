@@ -44,6 +44,16 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
         if (this.dataProfile) {
             this.title = 'Редактирование профиля электронной почты';
             this.editProfile();
+            this.errorPass = !Boolean(this.dataProfile['Password']);
+            if (this.errorPass) {
+                this.form.controls['rec.Password'].valueChanges
+                .pipe(
+                    takeUntil(this.ngUnsubscribe)
+                )
+                .subscribe((state: string) => {
+                    this.errorPass = state.length === 0;
+                });
+            }
         } else {
             this.title = 'Создание профиля электронной почты';
             this.addProfile();
@@ -91,6 +101,7 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
         this.cancelEmit.next();
     }
     submit() {
+        this.isLoading = true;
         this.submitEmit.next();
     }
     editProfile() {
