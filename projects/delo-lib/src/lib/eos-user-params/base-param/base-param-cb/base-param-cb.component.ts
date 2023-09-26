@@ -1305,7 +1305,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 OPEN_CLASSIF_DEPARTMENT['selected'] = this._idsForModalDictDep[0];
             }
         } else {  // просто задана лексема и значение не выбрано
-            OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
+            OPEN_CLASSIF_DEPARTMENT.search_query = this.formControls.get('DUE_DEP_NAME').value;
         }
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
