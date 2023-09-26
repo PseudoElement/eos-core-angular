@@ -84,7 +84,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             });
     }
     ngOnInit() {
-        this.fieldGroups.delete(2);
+        
         this.editFlag = !!this.isCurrentSettings;
         /* if (this.isCurrentSettings && this.appMode && this.appMode.arm) {
             this.fieldGroups.delete(2);
@@ -101,6 +101,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         }
         if (this._appContext.cbBase) {
             this.cbBase = true;
+        } else {
+            this.fieldGroups.delete(2);
         }
         if (this.defaultUser) {
             this.currentUser = this.defaultTitle;
