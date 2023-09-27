@@ -87,7 +87,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     // блок автопоиска при выборе ДЛ
     private _idsForModalDictDep: string[] = []; // @task157113 due ДЛ для окна выбора
     private _defaultDepDue: string;
-    private _searchLexem: string = '';
     private _depDueLinkOrg: string = undefined;
     private _sysParamsDueOrganiz: string = undefined;
     private _isLoadingDueDepNames: boolean = false;
@@ -1319,7 +1318,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         OPEN_CLASSIF_DEPARTMENT['selected'] = '';
-        OPEN_CLASSIF_DEPARTMENT.search_query = this._searchLexem;
+        OPEN_CLASSIF_DEPARTMENT.search_query = this.formControls.get('DUE_DEP_NAME').value;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 this._setDepartment(data);
@@ -1329,8 +1328,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             });
     }
     private _searchDLinSysParamsOrg() {
-        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
-        this._searchEmpInDep(this._searchLexem, this._depDueLinkOrg);
+        this._searchEmpInDep(this.formControls.get('DUE_DEP_NAME').value, this._depDueLinkOrg);
     }
     private _setDepartment(due: string) {
         let dueDep = '';
@@ -1374,7 +1372,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             })
             .catch(() => {
                 this.isShell = false;
-                this.formControls.get('DUE_DEP_NAME').patchValue(this._searchLexem, { emitEvent: false });
             });
     }
 
@@ -1422,7 +1419,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     this.controls['DUE_DEP_NAME'].options = [];
                     empItems.forEach(empItem => {// формируем список выпадашки
                         const { CLASSIF_NAME } = depItems.filter(({ DUE }) => empItem.DEPARTMENT_DUE === DUE)[0];
-                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this._searchLexem.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
+                        if (empItem.CLASSIF_NAME.toLocaleLowerCase().indexOf(this.formControls.get('DUE_DEP_NAME').value.toLocaleLowerCase()) >= 0) { // более строгая проверка на формирование dsgflfirb
                             const LIST_ITEM_NAME = `${empItem.CLASSIF_NAME} - ${CLASSIF_NAME}`;
                             this.controls['DUE_DEP_NAME'].options.push({ title: LIST_ITEM_NAME, value: empItem.CLASSIF_NAME, due: empItem.DUE });
                         }
@@ -1661,9 +1658,8 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
     searchDL() {
-        this._searchLexem = this.formControls.get('DUE_DEP_NAME').value;
         if (this._defaultDepDue.length > 0) {
-            this._searchEmpInDep(this._searchLexem, this._defaultDepDue);
+            this._searchEmpInDep(this.formControls.get('DUE_DEP_NAME').value, this._defaultDepDue);
         } else {
             this._searchDLinSysParamsOrg();
         }
