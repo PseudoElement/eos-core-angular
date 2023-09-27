@@ -90,7 +90,12 @@ export class WaitClassifService {
             });
     }
 
-    openClassif(params: IOpenClassifParams, flag?: boolean): Promise<string> {
+    /**
+     * 
+     * @param params Параметры
+     * @param ignoreClickMode Не учитывать нажатие Ctrl и открывать всегда одно окно
+     */
+    openClassif(params: IOpenClassifParams, ignoreClickMode?: boolean): Promise<string> {
 
         let carouselInSilentMode: any;
         try {
@@ -128,7 +133,7 @@ export class WaitClassifService {
             url = this.createUrlTransferDocuments(CHANGE_DL, params);
         } else {
             setTimeout(() => {
-                url = this._prepareUrl(params, flag);
+                url = this._prepareUrl(params, ignoreClickMode);
             }, 0);
         }
 
@@ -239,10 +244,10 @@ export class WaitClassifService {
         return url;
     }
 
-    private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
+    private _prepareUrl(params: IOpenClassifParams, ignoreClickMode?: boolean): string {
         const clickMode = this._appContext.CurrentUser._more_json.ParamsDic['CLASSIF_WEB_SUGGESTION'];
         let url: string = '';
-        if (LIST_OLD_PAGES.indexOf(params.classif) !== -1) {
+        if (LIST_OLD_PAGES.indexOf(params.classif) !== -1 || ignoreClickMode) {
             url += NEW_VIEW_URL;
         } else {
             if (clickMode === '1') {
