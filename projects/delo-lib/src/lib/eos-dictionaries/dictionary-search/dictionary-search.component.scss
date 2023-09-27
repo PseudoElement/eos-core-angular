@@ -195,6 +195,13 @@
     .margin-r {
         margin-right: 38px;
     }
+    .dop-rec-wpapper {
+        .margin-r {
+            ul {
+                max-height: 200px !important;
+            }
+        }
+    }
     form {
         padding: 20px;
         font-size: 0;
