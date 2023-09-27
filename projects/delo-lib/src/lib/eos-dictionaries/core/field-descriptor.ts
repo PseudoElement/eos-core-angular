@@ -28,7 +28,8 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly dictionaryOrder?: string;
     readonly readonly?: boolean;
     readonly preferences: IFieldPreferences;
-
+    readonly hideTooltip: boolean;
+    readonly customTooltip: string;
     constructor(data: IFieldDescriptor) {
         if (data.key) {
             this.key = data.key;
@@ -78,5 +79,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         }
         this.preferences = data.preferences;
         this.readonly = data.readonly;
+        this.hideTooltip = data.hideTooltip;
+        this.customTooltip = data.customTooltip;
     }
 }

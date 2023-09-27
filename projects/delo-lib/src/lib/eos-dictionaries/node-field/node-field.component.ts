@@ -47,7 +47,7 @@ export class NodeFieldComponent implements OnInit {
             if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
                 icons.push({
                     class: this.node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black',
-                    tooltip: 'Индекс СЭВ',
+                    tooltip: 'Назначен индекс СЭВ',
                 });
             }
             if (this.node.data.rec['CONFIDENTIONAL']) {
