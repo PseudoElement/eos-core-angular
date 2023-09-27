@@ -142,7 +142,7 @@ export class ParamSearchComponent extends BaseParamComponent {
             )
             .subscribe(value => {
                 if (this.changeByPath('rec.FULLTEXT_EXTENSIONS', value)) {
-                    if (value !== value.toUpperCase()) {
+                    if (typeof(value) === 'string' && value !== value.toUpperCase()) {
                         this.form.controls['rec.FULLTEXT_EXTENSIONS'].patchValue(value.toUpperCase());
                     }
                 } else {
@@ -208,11 +208,15 @@ export class ParamSearchComponent extends BaseParamComponent {
                     this.submit();
                 }
             } catch(er) {
+                console.log('error', er);
                 this.headerElement.editMode = true;
-                const message = er['error'].toUpperCase();
+                let message = '';
+                if (typeof(er['error']) === 'string') {
+                    message = er['error'].toUpperCase();
+                }
                 if (message.indexOf('HttpRequestException'.toUpperCase()) >= 0 || message.indexOf('InvalidOperationException'.toUpperCase()) >= 0) {
-                    const message = Object.assign({}, SUBMIT_ERROR_CONNECT);
-                    const button = await this.confirmSrv.confirm2(message);
+                    const message1 = Object.assign({}, SUBMIT_ERROR_CONNECT);
+                    const button = await this.confirmSrv.confirm2(message1);
                     if (button && button.result === 2) {
                         this.submit();
                     } else {
@@ -323,7 +327,7 @@ export class ParamSearchComponent extends BaseParamComponent {
     }
     async checkConnect(): Promise<any> {
         const url = `../CoreHost/elastic/user/check?serverUrl=${this.form.controls['rec.ElasticCfgServerURL'].value}&username=${this.form.controls['rec.ElasticCfgLogin'].value}&password=${this.form.controls['rec.ElasticCfgPassword'].value}`;
-        return await this.paramApiSrv.setApiPost().get(url).toPromise()
+        return await this.paramApiSrv.setApiPost().get(url).toPromise();
     }
     async openConnected() {
         try {
@@ -337,7 +341,11 @@ export class ParamSearchComponent extends BaseParamComponent {
                 throw {code: 500, error: 'Авторизация'};
             }
         } catch (er) {
-            const message = er['error'].toUpperCase();
+            console.log('error', er);
+            let message = '';
+            if (typeof(er['error']) === 'string') {
+                message = er['error'].toUpperCase();
+            }
             if (message.indexOf('Авторизация'.toUpperCase()) >= 0) {
                 const message = Object.assign({}, CONNECT_ERROR);
                 message.body = 'Неверные логин или пароль пользователя. Создать или обновить пользователя на сервере Elasticsearh можно при сохранении параметров.';

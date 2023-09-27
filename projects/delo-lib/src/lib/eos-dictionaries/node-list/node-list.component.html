@@ -117,7 +117,7 @@
                         recalcDone"
             >
                 <ng-container *ngIf="dictionId === 'organization'">
-                    <cdk-virtual-scroll-viewport itemSize="40" class="example-viewport"> <!-- appendOnly -->
+                    <cdk-virtual-scroll-viewport itemSize="32" class="example-viewport" [ngStyle]="{'height': getHeight() + 'px'}"> <!-- appendOnly  [ngStyle]="{'height': getHeight() + 'px'}"-->
                         <ng-container *cdkVirtualFor="let item of nodes">
                             <eos-node-list-item 
                                 *ngIf="item"
