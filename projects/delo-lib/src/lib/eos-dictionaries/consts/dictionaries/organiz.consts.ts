@@ -133,6 +133,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
             title: 'Нов.',
             type: 'new',
             length: 1,
+            customTooltip: 'Признак "Новая запись"'
         },
         // {
         //     key: 'EP_CERTIFICATE',
@@ -169,6 +170,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
             title: 'Наименование организации',
             groupLabel: 'Наименование группы',
             length: 255,
+            hideTooltip: true,
             preferences: <IFieldPreferences>{ hasIcon: true, },
         }),
         /* {

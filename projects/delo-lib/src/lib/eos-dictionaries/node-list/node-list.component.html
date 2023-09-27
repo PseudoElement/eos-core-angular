@@ -37,7 +37,7 @@
                 >
                     <span class="text selected-text ng-bind-html"
                           (click)="orderByField(field.key)"
-                          [tooltip]="field.title"
+                          [tooltip]="field.hideTooltip ? '' : field.title"
                           placement="bottom"
                           container="body"
                           [delay]="tooltipDelay"
@@ -67,7 +67,13 @@
                      [ngStyle]="{'min-width.px': min_length[field.key]}"
                 >
                     <span class="text selected-text"
-                          (click)="orderByField(field.key)"
+                        [tooltip]="field.customTooltip"
+                        placement="bottom"
+                        container="body"
+                        [delay]="tooltipDelay"
+                        containerClass="tooltip-info"
+                        style="display: inline-block;"
+                        (click)="orderByField(field.key)"
                     >
                         {{untrimmedValue(field.customTitle || field.title)}}
                     </span>

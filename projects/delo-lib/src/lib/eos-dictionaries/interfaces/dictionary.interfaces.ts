@@ -100,6 +100,10 @@ export interface IFieldDescriptor {
     keyPosition?: number| string;
     preferences?: IFieldPreferences;
     readonly?: boolean;
+    /** показывать тултип в таблице */
+    hideTooltip?: boolean;
+    /** Если текст тултипа и текст названия разлечаются можно указать tooltip */
+    customTooltip?: string;
 }
 
 export interface IFieldDescriptorBase {

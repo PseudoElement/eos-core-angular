@@ -27,7 +27,8 @@ export class InputBase<T> {
     maxValue?: number;
     dib?: DynamicInputBaseDirective;
     descriptor?: any;
-
+    customTooltip?: string;
+    hideTooltip?: boolean;
     constructor(options: {
         value?: T,
         key?: string,
@@ -52,6 +53,8 @@ export class InputBase<T> {
         formatDbBinary?: boolean,
         minValue?: number;
         maxValue?: number;
+        customTooltip?: string;
+        hideTooltip?: boolean;
     } = {}) {
         this.value = options.value;
         this.key = options.key || '';
@@ -77,5 +80,7 @@ export class InputBase<T> {
         this.minValue = options.minValue;
         this.maxValue = options.maxValue;
         this.unique = options?.unique;
+        this.customTooltip = options?.customTooltip;
+        this.hideTooltip = options?.hideTooltip;
     }
 }
