@@ -95,7 +95,7 @@
                             [readonly]="!editMode"
                             (onClickChoose)="showDepChoose()"
                             (onEnterSearchEmptyResults)="showDepChooseEmpty()"
-                            (onInputChange)="checkIsDueDepNameExist($event)"
+                            (onInputChange)="checkIsDueDepNameExist($event.target.value)"
                             [ngClass]="{'white-field': !editMode}"
                         ></eos-dynamic-input>
                     </div>

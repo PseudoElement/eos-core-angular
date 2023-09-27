@@ -25,6 +25,7 @@
                 (focus)="onFocus()"
                 (blur)="onBlur()"
                 (input)="onInput($event)"
+                (change)="$event.target.value && onInputChange.emit($event)"
                 autocomplete="off"
                 tooltip="{{currentTooltip || undefined}}"
                 placement="bottom"

@@ -655,13 +655,12 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     getCheckAdmSave() {
         return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
     }
-    checkIsDueDepNameExist(event: Event){
+    checkIsDueDepNameExist(dueDepName: string) {
         this._isLoadingDueDepNames = true;
-        const input = event.target as HTMLInputElement;
         const request = this._apiSrv.getData<USER_CL[]>({
             DEPARTMENT: {
                 criteries: {
-                    CLASSIF_NAME: `%${input.value.trim().replace(/\s/g, '_')}%`,
+                    CLASSIF_NAME: `%${dueDepName.trim().replace(/\s/g, '_')}%`,
                 }
             }
         })
@@ -1310,6 +1309,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 this._setDepartment(data);
+                this.checkIsDueDepNameExist(this.dueDepName)
             })
             .catch(() => {
                 this.isShell = false;
@@ -1323,6 +1323,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
             .then((data: string) => {
                 this._setDepartment(data);
+                this.checkIsDueDepNameExist(this.dueDepName)
             })
             .catch(() => {
                 this.isShell = false;
