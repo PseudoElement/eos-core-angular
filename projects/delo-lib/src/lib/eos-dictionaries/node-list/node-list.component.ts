@@ -39,7 +39,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     @ViewChild(LongTitleHintComponent, { static: false }) hint: LongTitleHintComponent;
     @ViewChild('eosNodeList', { static: true }) eosNodeList;
     @ViewChild('nodeListElement', { static: true }) nodeListElement;
-
+    // itemSize;
     customFields: IFieldView[] = [];
     length = {};
     min_length = {};
@@ -101,6 +101,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     this._dictId = _dictSrv.currentDictionary.id;
 
                     this.customFields = this._dictSrv.customFields;
+                    // this.itemSize = nodes.length < 10 ? nodes.length * 10 : 40;
                     this.nodes = nodes;
                     this.updateViewFields(this.customFields, nodes).then(() => {
                         const _customTitles = this._dictSrv.customTitles;
@@ -151,7 +152,15 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
         _dictSrv.sevClearIdentCodesSubscription.pipe(takeUntil(this.ngUnsubscribe)).subscribe(resp => this.isSevClearCodesProgress = resp);
     }
-
+    getHeight() {
+        const height = this.nodes.length * 32;
+        if (height < 530) {
+            return height;
+        } else {
+            return undefined;
+        }
+        
+    }
     highlightNewNode(): void {
         if (this._store.getItem('newNode')) {
             const id = this._store.getItem('newNode');

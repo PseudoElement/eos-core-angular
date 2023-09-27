@@ -1626,7 +1626,7 @@ export class EosDictService {
     private _fixCurrentPage() {
         // this.paginationConfig.itemsQty = this._getAllListLength();
         if (this.currentDictionary.id === E_DICTIONARY_ID.ORGANIZ) { // this.currentDictionary.descriptor['totalRecords'] !== undefined
-            this.paginationConfig.itemsQty = this.currentDictionary.descriptor['totalRecords'];
+            this.paginationConfig.itemsQty = this.currentDictionary.descriptor['totalRecords'] || 0;
         } else {
             this.paginationConfig.itemsQty = this._getListLength();
         }

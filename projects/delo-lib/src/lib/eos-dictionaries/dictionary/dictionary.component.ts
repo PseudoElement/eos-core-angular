@@ -964,7 +964,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 this._openCreate(params);
                 return;
             } else if (!params && !openEdit) {
-                if (this._dictSrv.listNode.isNode) {
+                if (this._dictSrv.getMarkedNodes()[0].isNode) {
                     this._editNode();
                     return;
                 } else {
