@@ -91,7 +91,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _sysParamsDueOrganiz: string = undefined;
     private _isLoadingDueDepNames: boolean = false;
     private _debounceDueDepName: NodeJS.Timeout;
-    private _isFoundDueDepNamesInDB: boolean = false;
+    private _isFoundDueDepNamesInDB: boolean = true;
     @ViewChild('dueDepNameInput', {read: ElementRef}) dueDepNameInputRef: ElementRef;
 
     get newInfo() {
