@@ -7,7 +7,7 @@
 }
 .example-viewport {
     width: 100%;
-    // height: calc(100vh - 420px);
+    min-height: calc(100vh - 420px);
     .cdk-virtual-scroll-content-wrapper {
         width: 100%;
     }

@@ -7,7 +7,6 @@ import { Features } from '../../eos-dictionaries/features/features-current.const
 import { RESOLVE_DESCRIPTIONS } from '../../eos-dictionaries/consts/dictionaries/sev/templates-sev.consts';
 import { CHANNEL_TYPE } from '../../eos-dictionaries/consts/dictionaries/sev/types.consts';
 import { EosCommonOverriveService } from '../../app/services/eos-common-overrive.service';
-import { E_DICTIONARY_ID } from '../../eos-dictionaries/consts/dictionaries/enum/dictionaryId.enum';
 
 interface ISpecialIcon {
     class: string;
@@ -19,7 +18,6 @@ interface ISpecialIcon {
     selector: 'eos-node-field',
     templateUrl: 'node-field.component.html'
 })
-
 export class NodeFieldComponent implements OnInit {
     @Input() field: IFieldView;
     @Input() node: EosDictionaryNode;
@@ -40,25 +38,6 @@ export class NodeFieldComponent implements OnInit {
         if (this.getFolderIcon() !== 'emptyicon') { // делаю так чтобы нажатие на папку работало только если папка видна
             this.view.emit(evt);
         }
-    }
-    getIcons() {
-        if (this.node.dictionaryId === E_DICTIONARY_ID.ORGANIZ) {
-            const icons = [];
-            if (Features.cfg.SEV.isIndexesEnable && this.node.data.sev && this.node.data.sev['GLOBAL_ID']) {
-                icons.push({
-                    class: this.node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black',
-                    tooltip: 'Назначен индекс СЭВ',
-                });
-            }
-            if (this.node.data.rec['CONFIDENTIONAL']) {
-                icons.push({
-                    class: this.node.isDeleted ? 'eos-adm-icon-restricted-grey' : 'eos-adm-icon-restricted-blue',
-                    tooltip: 'ДСП файлы',
-                });
-            }
-            return icons;
-        }
-        return this.iconsArray;
     }
     ngOnInit(): void {
         this._hasFolderIcon = this.field.preferences && this.field.preferences.hasIcon;    

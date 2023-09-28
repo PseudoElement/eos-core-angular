@@ -50,17 +50,26 @@
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
-
-        <ng-container *ngSwitchCase="types.icon_sev"> <!-- ICONS_CONTAINER  getIcons()-->
-            <div class="table-field-ico" *ngFor="let icon of getIcons();">
-                <span class="folder small eos-adm-icon"
-                    [ngClass]="icon.class"
-                    [tooltip]="icon.tooltip"
-                    placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
-            </div>
+        <ng-container *ngSwitchCase="types.icon_sev">
+            <ng-container *ngIf="node.dictionaryId === 'organization' && node.data.sev && node.data.sev['GLOBAL_ID']">
+                <div class="table-field-ico">
+                    <span class="folder small eos-adm-icon"
+                        [ngClass]="node.isDeleted ? 'eos-adm-icon-shared-folder-grey' : 'eos-adm-icon-shared-folder-black'"
+                        tooltip="Назначен индекс СЭВ"
+                        placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="node.dictionaryId !== 'organization'">
+                <div class="table-field-ico" *ngFor="let icon of iconsArray;">
+                    <span class="folder small eos-adm-icon"
+                        [ngClass]="icon.class"
+                        [tooltip]="icon.tooltip"
+                        placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
+                </div>
+            </ng-container>
         </ng-container>
 
-        <ng-container *ngSwitchCase="types.icon"> <!-- ICONS_CONTAINER -->
+        <ng-container *ngSwitchCase="types.icon">
             <div class="table-field-ico" *ngFor="let icon of iconsArray;">
                 <span class="folder small eos-adm-icon"
                     [ngClass]="icon.class"
