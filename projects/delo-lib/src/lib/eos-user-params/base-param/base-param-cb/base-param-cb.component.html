@@ -96,6 +96,7 @@
                             (onClickChoose)="showDepChoose()"
                             (onEnterSearchEmptyResults)="showDepChooseEmpty()"
                             (onInputChange)="checkIsDueDepNameExist($event.target.value)"
+                            (onSelectDropDown)="checkIsDueDepNameExist($event)"
                             [ngClass]="{'white-field': !editMode}"
                         ></eos-dynamic-input>
                     </div>

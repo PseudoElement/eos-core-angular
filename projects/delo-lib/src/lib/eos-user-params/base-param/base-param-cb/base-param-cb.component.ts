@@ -656,20 +656,25 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     checkIsDueDepNameExist(dueDepName: string) {
         this._isLoadingDueDepNames = true;
-        const request = this._apiSrv.getData<USER_CL[]>({
-            DEPARTMENT: {
-                criteries: {
-                    CLASSIF_NAME: `%${dueDepName.trim().replace(/\s/g, '_')}%`,
-                }
-            }
-        })
-        if(this._debounceDueDepName) clearTimeout(this._debounceDueDepName);
+        if(this._debounceDueDepName) {
+            clearTimeout(this._debounceDueDepName)
+        }
+        /* Оборачиваю в двойные кавычки и ставлю =, чтобы делать проверку на полное соответствие значения в БД*/
         this._debounceDueDepName = setTimeout(() => {
-            request.then(dueDepNames => {
-                this._isFoundDueDepNamesInDB = dueDepNames.length ? true : false;
+            this._apiSrv.getData<USER_CL[]>({
+                DEPARTMENT: {
+                    criteries: {
+                        CLASSIF_NAME: `="${dueDepName.trim()}"`,
+                    }
+                }
             })
-            .catch(err => new Error('checkIsDueDepNameError: ' + err))
-            .finally(() => this._isLoadingDueDepNames = false)
+                .then(dueDepNames => {
+                    this._isFoundDueDepNamesInDB = dueDepNames.length ? true : false;
+                })
+                .catch(err => new Error('checkIsDueDepNameError: ' + err))
+                .finally(() => {
+                    this._isLoadingDueDepNames = false
+                })
         }, 300)
     }
     submit(meta?: string): Promise<any> {
@@ -701,6 +706,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
                 /* Если установлено Должностное лицо - проверить, существует ли введенное ДЛ в базе*/
+                console.log('this._isFoundDueDepNames', this._isFoundDueDepNamesInDB)
                 if(this.formControls.value['DUE_DEP_NAME'] && !this._isFoundDueDepNamesInDB){
                     this._msgSrv.addNewMessage({
                         type: 'warning',

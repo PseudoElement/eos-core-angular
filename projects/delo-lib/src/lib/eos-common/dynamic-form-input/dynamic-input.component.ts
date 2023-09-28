@@ -53,7 +53,7 @@ export class DynamicInputComponent {
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
     @Output() onInputChange: EventEmitter<Event> = new EventEmitter<Event>();
-
+    @Output() onSelectDropDown: EventEmitter<string> = new EventEmitter<string>();
     // для контрола контекстного поиска в карточке пользователя
     @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() onEnterSearchEmptyResults: EventEmitter<any> = new EventEmitter<any>();
