@@ -656,20 +656,25 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
     checkIsDueDepNameExist(dueDepName: string) {
         this._isLoadingDueDepNames = true;
-        const request = this._apiSrv.getData<USER_CL[]>({
-            DEPARTMENT: {
-                criteries: {
-                    CLASSIF_NAME: `%${dueDepName.trim().replace(/\s/g, '_')}%`,
-                }
-            }
-        })
-        if(this._debounceDueDepName) clearTimeout(this._debounceDueDepName);
+        if(this._debounceDueDepName) {
+            clearTimeout(this._debounceDueDepName)
+        }
+        /* Оборачиваю в двойные кавычки и ставлю =, чтобы делать проверку на полное соответствие значения в БД*/
         this._debounceDueDepName = setTimeout(() => {
-            request.then(dueDepNames => {
-                this._isFoundDueDepNamesInDB = dueDepNames.length ? true : false;
+            this._apiSrv.getData<USER_CL[]>({
+                DEPARTMENT: {
+                    criteries: {
+                        CLASSIF_NAME: `="${dueDepName.trim()}"`,
+                    }
+                }
             })
-            .catch(err => new Error('checkIsDueDepNameError: ' + err))
-            .finally(() => this._isLoadingDueDepNames = false)
+                .then(dueDepNames => {
+                    this._isFoundDueDepNamesInDB = dueDepNames.length ? true : false;
+                })
+                .catch(err => new Error('checkIsDueDepNameError: ' + err))
+                .finally(() => {
+                    this._isLoadingDueDepNames = false
+                })
         }, 300)
     }
     submit(meta?: string): Promise<any> {

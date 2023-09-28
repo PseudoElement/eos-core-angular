@@ -65,6 +65,7 @@
                 (onClickChoose)="onClickChoose.emit($event)"
                 (onEnterSearchEmptyResults)="onEnterSearchEmptyResults.emit($event)"
                 (onInputChange)="onInputChange.emit($event)"
+                (onSelectDropDown)="onSelectDropDown.emit($event)"
             ></eos-dynamic-input-autosearch>
             <eos-dynamic-input-checkbox
                 *ngSwitchCase="types.boolean"
