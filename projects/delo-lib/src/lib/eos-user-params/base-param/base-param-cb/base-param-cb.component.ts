@@ -706,7 +706,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this.setQueryNewData(accessStr, newD, query);
                 this.setNewDataFormControl(query, id);
                 /* Если установлено Должностное лицо - проверить, существует ли введенное ДЛ в базе*/
-                console.log('this._isFoundDueDepNames', this._isFoundDueDepNamesInDB)
                 if(this.formControls.value['DUE_DEP_NAME'] && !this._isFoundDueDepNamesInDB){
                     this._msgSrv.addNewMessage({
                         type: 'warning',
