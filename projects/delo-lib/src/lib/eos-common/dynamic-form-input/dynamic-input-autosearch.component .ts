@@ -14,7 +14,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     @Output() buttonClickRemove: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() onEnterSearchEmptyResults: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onInputChange: EventEmitter<Event> = new EventEmitter<Event>();
+    @Output() onInputChange: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSelectDropDown: EventEmitter<string> = new EventEmitter<string>();
     @Input() container: string;
     @Input() dropup: boolean;
@@ -67,7 +67,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     onInput(event: Event) {
         event.stopPropagation();
         const input = event.target as HTMLInputElement
-        if(input.value) this.onInputChange.emit(event);
+        if(input.value) this.onInputChange.emit(input.value);
         if(this._onInputDebounce) clearTimeout(this._onInputDebounce)
         this._onInputDebounce = setTimeout(() => {
             this.control.setValue((event.target as HTMLInputElement).value);
