@@ -1346,9 +1346,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then((data: DEPARTMENT[]) => {
                 if (this.formControls.get('DUE_DEP_NAME').value) {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
-                        this.fillingDep(data);
-                        return val;
-                    })
+                            this.fillingDep(data);
+                            return val;
+                        })
+                        .catch(err => {
+                            this.formControls.controls['DUE_DEP_NAME'].patchValue('');
+                            throw new Error(err);
+                        })
                 } else {
                     this.fillingDep(data);
                     return Promise.resolve(data[0]);
@@ -1432,7 +1436,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     });
                     // ставим активную первую запись @task161934 - в случае найденности чего либо
                     if (this.controls['DUE_DEP_NAME'].options.length > 0 && this.controls['DUE_DEP_NAME'].options[0].due !== '-1') {
-                        console.log('_searchEmp_IF')
                         this.controls['DUE_DEP_NAME'].dib.toggleDropdown();
                     }
                     this._idsForModalDictDep = [empItems[0].DUE]; // передаем только один
