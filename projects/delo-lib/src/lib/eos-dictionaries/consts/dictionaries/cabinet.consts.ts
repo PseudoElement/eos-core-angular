@@ -88,7 +88,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     editFields: ['CABINET_NAME', 'FULLNAME', 'department', 'users', 'owners', 'folders', 'cabinetAccess'],
 });
 
-export const CABINET_FOLDERS = [{
+export const CABINET_FOLDERS = [{ /*  */
     key: 1,
     charKey: '1',
     title: 'Поступившие'
