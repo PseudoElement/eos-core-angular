@@ -21,7 +21,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     @Input() height: number;
     public focusedItem: any;
     @ViewChild('dropdown', {static: false}) private _dropDown: BsDropdownDirective;
-    @ViewChild('dropdownElement', {static: false}) private dropdownElement: ElementRef;
+    @ViewChild('dropdownElement', {static: true}) private dropdownElement: ElementRef;
     @ViewChild('textInputSelect', {static: false}) private textInputSelect: ElementRef;
     private _lastWrapperWidth: number;
     private _calcItemWidth: number;
@@ -70,24 +70,31 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
         if(input.value) this.onInputChange.emit(input.value);
         if(this._onInputDebounce) clearTimeout(this._onInputDebounce)
         this._onInputDebounce = setTimeout(() => {
-            this.control.setValue((event.target as HTMLInputElement).value);
-            this.showDropDown()
+            this.delayedTooltip();
+            this.control.setValue(input.value);
+            this.toggleDropdown()
         }, 300)
     }
 
-    showDropDown() {
+    toggleDropdown() {
         if (this.control.value.length >= 3) {
-            this._dropDown.show();
+            // this._dropDown.show();
+            this.showDropdown();
             if (this.input.options.length > 1) {
                 this.setFirstFocusedItem();
             }
         } else {
-            this._dropDown.hide();
+            this.hideDropDown();
         }
+    }
+    showDropdown(){
+        this._dropDown.show();
+        if(this.dropdownElement && this.dropdownElement.nativeElement) this.dropdownElement.nativeElement.style.display = 'block';
     }
 
     hideDropDown() {
         this._dropDown.hide();
+        if(this.dropdownElement && this.dropdownElement.nativeElement) this.dropdownElement.nativeElement.style.display = 'none';
     }
 
     getMenuWidthStyle(): any {
@@ -129,7 +136,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
                 this.onSelectDropDown.emit(item.value);
             }
         }
-        this._dropDown.hide();
+        this.hideDropDown()
         if (AppContext.isIE()) {
             // console.log("TCL: DynamicInputSelect2Component -> selectAction -> AppContext.isIE", AppContext.isIE())
             /* IE fix */
@@ -166,7 +173,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     onEraseClick() {
         this.control.setValue('');
         this.input.options = [];
-        this._dropDown.hide();
+        this.hideDropDown();
     }
 
     filterKeyDown(event) {
@@ -181,7 +188,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
                 this.onEnterSearchEmptyResults.emit();
                 if(isLessThen3Chars &&  this._dropDown.isOpen) {
                     this.selectAction(null, this.focusedItem);
-                    this._dropDown.hide();
+                    this.hideDropDown();
                 }
             }
     }
@@ -194,9 +201,10 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     onClick() {
         if (this.input.options.length > 0 && this.form.enabled) {
             if (this._dropDown.isOpen) {
-                this._dropDown.hide();
+                this.hideDropDown();
             } else {
-                this._dropDown.show();
+                this.showDropdown();
+                // this._dropDown.show();
             }
         }
     }
