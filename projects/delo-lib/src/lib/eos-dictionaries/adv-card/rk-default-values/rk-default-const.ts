@@ -1107,7 +1107,7 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Положить во 2 папку текущего кабинета',
-        title: '"На исполнение"',
+        title: 'Положить РК в папку "На исполнение" текущего кабинета регистратора',
         order: 2260,
         // classif_id: NULL
     }, {
