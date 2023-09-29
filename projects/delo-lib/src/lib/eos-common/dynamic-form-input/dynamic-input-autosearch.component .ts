@@ -29,7 +29,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     constructor() {
         super();
     }
-
     get textType(): string {
         return 'text';
     }
