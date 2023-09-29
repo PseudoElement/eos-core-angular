@@ -268,7 +268,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             return false;
         }
     }
-    get isDisabledHeaderBtns(): boolean{
+    get isDisabledHeaderBtns(): boolean {
         return this._isLoadingDueDepNames || !this.getValidDate || this.newInfo;
     }
 
@@ -657,6 +657,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     checkIsDueDepNameExist(dueDepName: string) {
         this._isLoadingDueDepNames = true;
         if(this._debounceDueDepName) {
+            this._isLoadingDueDepNames = false;
             clearTimeout(this._debounceDueDepName)
         }
         /* Оборачиваю в двойные кавычки и ставлю =, чтобы делать проверку на полное соответствие значения в БД*/
