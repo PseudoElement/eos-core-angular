@@ -644,7 +644,7 @@ export class CabinetCardEditComponent extends BaseCardEditDirective implements O
             }
         });
 
-        this.cabinetFolders = CABINET_FOLDERS.filter((item) => item.key !== 1);
+        this.cabinetFolders = CABINET_FOLDERS.filter((item) => (item.key !== 1 && item.key !== 6));
 
         this.accessHeaders = [
             {

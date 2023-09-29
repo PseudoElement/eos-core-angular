@@ -74,7 +74,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     //     { key: 'HIDE_INACCESSIBLE', title: 'Учитывать ограничения доступа к РК по грифам и группам документов' },
     //     { key: 'HIDE_INACCESSIBLE_PRJ', title: 'Учитывать права для работы с РКПД' },
     // ];
-    private regExpFolders1 = /[1|2|3|4|5|6]/;
+    private regExpFolders1 = /[1|2|3|4|5]/;
     private regExpFolders2 = /[7|8|9]/;
     private regExpFolders3 = /[1|2|3|4|5|6|7|8|9]/;
     get disabledInAcces() {
@@ -235,11 +235,11 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                     // item.fixed = !item.fixed;
                     break;
                 case 'FOLDERS_AVAILABLE_12':
-                    item.style = item.style['width'] ? {'min-width': '130px', 'max-width': '130px'} : {'width': '61px', 'max-width': '61px'}
+                    item.style = item.style['width'] ? {'min-width': '130px', 'max-width': '130px'} : {'width': '68px', 'max-width': '68px'}
                     // item.fixed = !item.fixed;
                     break;
                 default:
-                    item.style = item.style['width'] ? {'min-width': '130px', 'max-width': '130px'} : {'width': '55px', 'max-width': '55px'}
+                    item.style = item.style['width'] ? {'min-width': '130px', 'max-width': '130px'} : {'width': '61px', 'max-width': '61px'} /*  */
                     break;
             }
         });

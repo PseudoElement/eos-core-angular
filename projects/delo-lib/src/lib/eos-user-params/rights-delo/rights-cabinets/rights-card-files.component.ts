@@ -42,7 +42,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     get titleHeader() {
         if (this._userSrv.curentUser) {
             if (this._userSrv.curentUser.isTechUser) {
-                return this._userSrv.curentUser.CLASSIF_NAME + '- Картотеки и Кабинеты';
+                return this._userSrv.curentUser.CLASSIF_NAME + '- Картотеки и Кабинеты'; /*  */
             }
             return `${this._userSrv.curentUser['DUE_DEP_SURNAME']} - Картотеки и Кабинеты`;
         }
