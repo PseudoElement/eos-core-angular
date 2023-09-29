@@ -1099,7 +1099,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     });
                     // ставим активную первую запись @task161934 - в случае найденности чего либо
                     if (this.controls['DUE_DEP_NAME'].options.length > 0 && this.controls['DUE_DEP_NAME'].options[0].due !== '-1') {
-                        this.controls['DUE_DEP_NAME'].dib.showDropDown();
+                        this.controls['DUE_DEP_NAME'].dib.toggleDropdown();
                     }
                     this._idsForModalDictDep = [empItems[0].DUE]; // передаем только один
                 });
@@ -1108,7 +1108,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     title: EMPTY_SEARCH_DL_RESULTS, value: EMPTY_SEARCH_DL_RESULTS, due: '-1',
                     disabled: true
                 }];
-                this.controls['DUE_DEP_NAME'].dib.showDropDown();
+                this.controls['DUE_DEP_NAME'].dib.toggleDropdown();
                 this._idsForModalDictDep = [];
             }
         }).catch(err => { throw err; });

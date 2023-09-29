@@ -296,9 +296,7 @@ export class UserParamsService {
                         return dep;
                     }
                     mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
-                    if (isn && u[0]['ISN_LCLASSIF'] === this.userContextId) {
-                        mess.msg = `Пользователь ${this.curentUser.SURNAME_PATRON} уже ассоциирован с выбранным ДЛ`;
-                    }
+                    if(isn && u[0]['ISN_LCLASSIF'] === this.userContextId) return;
                 }
                 this._msgSrv.addNewMessage(mess);
                 throw new Error();
