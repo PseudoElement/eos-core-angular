@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input, DoCheck } from '@angular/core';
+import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input } from '@angular/core';
 import { DynamicInputBaseDirective } from './dynamic-input-base';
 import { BsDropdownDirective } from 'ngx-bootstrap';
 import { AppContext } from '../../eos-rest/services/appContext.service';
@@ -9,7 +9,7 @@ const LI_HEIGHT = 20;
     templateUrl: 'dynamic-input-autosearch.component.html'
 })
 
-export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective implements OnChanges, OnDestroy, DoCheck {
+export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective implements OnChanges, OnDestroy {
     @Output() buttonClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() buttonClickRemove: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClickChoose: EventEmitter<any> = new EventEmitter<any>();
@@ -28,10 +28,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     private _onInputDebounce: NodeJS.Timeout;
     constructor() {
         super();
-    }
-    ngDoCheck(){
-        /* Убрать некорректных пользователей из выпадающего списка без 0. в начале due*/
-        this.input.options = this.input.options.filter(opt => /^0\..*/.test(opt?.due))
     }
     get textType(): string {
         return 'text';

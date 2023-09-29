@@ -1407,7 +1407,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
 
     private _searchEmpInDep(empLexem, due) {
         empLexem = empLexem.substring(0, 1).toUpperCase() + empLexem.substring(1).toLowerCase();
-        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%` };
+        const BASE_VALUES = { IS_NODE: 1, DELETED: 0, CLASSIF_NAME: `%${this._getSafeQueryLexem(empLexem)}%`, DUE: '0.%' };
         let VALUES;
         if (due) {
             const ADD = { ISN_HIGH_NODE: due };
