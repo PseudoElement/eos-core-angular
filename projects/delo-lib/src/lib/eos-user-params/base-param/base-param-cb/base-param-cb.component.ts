@@ -1314,11 +1314,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 this._setDepartment(data);
-                this.checkIsDueDepNameExist(this.dueDepName)
             })
             .catch(() => {
                 this.isShell = false;
-            });
+            })
+            .finally(() =>{
+                setTimeout(() => this.checkIsDueDepNameExist(this.formControls.get('DUE_DEP_NAME').value), 200)
+            })
     }
     showDepChooseEmpty() {
         this.isShell = true;
@@ -1332,6 +1334,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             })
             .catch(() => {
                 this.isShell = false;
+            })
+            .finally(() => {
+                setTimeout(() => this.checkIsDueDepNameExist(this.formControls.get('DUE_DEP_NAME').value), 200)
             });
     }
     private _searchDLinSysParamsOrg() {
