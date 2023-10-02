@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, ElementRef } from
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { Subject } from 'rxjs';
-import {  debounceTime, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { UserParamsService } from '../../../eos-user-params/shared/services/user-params.service';
 import { PipRX } from '../../../eos-rest/services/pipRX.service';
 import { DEPARTMENT, USER_CERTIFICATE, USER_CL, DELO_BLOB, USERDEP } from '../../../eos-rest';
@@ -1649,7 +1649,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _setDueDepNameSubscription() {
         this.formControls.get('DUE_DEP_NAME').valueChanges
             .pipe(
-                debounceTime(1200), takeUntil(this._ngUnsubscribe)
+                takeUntil(this._ngUnsubscribe)
             )
             .subscribe(value => this._setDueDepName(value));
     }
