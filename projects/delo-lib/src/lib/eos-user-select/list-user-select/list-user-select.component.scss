@@ -52,6 +52,18 @@
         display: flex;
         justify-content: space-between;
         padding-left: 20px;
+        .tabs-wrapper{
+            .tab-item{
+                margin-right: 20px;
+                padding: 0;
+                font-size: 16px;
+            }
+        }
+    }
+    .table-header-right{
+        display: flex;
+        align-items: center;
+
     }
     .selected-node-title {
         padding: 11px 0;

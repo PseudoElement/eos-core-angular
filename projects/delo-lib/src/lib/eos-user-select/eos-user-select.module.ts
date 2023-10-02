@@ -23,6 +23,7 @@ import {SearchServices} from '../eos-user-select/shered/services/search.service'
 import { EosReportUsersInfoComponent } from '../eos-user-params/report/users-info/users-info.component';
 import { SettingManagementComponent } from './list-user-select/setting-management/setting-management.component';
 import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
+import { FilterUsersPipe } from './shered/pipes/filter-users.pipe';
 @NgModule({
     declarations: [
         UserSelectComponent,
@@ -34,7 +35,8 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
         BtnActionComponent,
         UserSearchComponent,
         EosReportUsersInfoComponent,
-        SettingManagementComponent
+        SettingManagementComponent,
+        FilterUsersPipe
     ],
     entryComponents: [
         CreateUserComponent,

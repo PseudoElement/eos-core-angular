@@ -32,7 +32,7 @@ import { SearchServices } from '../../eos-user-select/shered/services/search.ser
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { SettingManagementComponent } from './setting-management/setting-management.component';
 import { FormGroup } from '@angular/forms';
-import { LIST_USER_CABINET } from '../../eos-user-select/shered/consts/list-user.const';
+import { LIST_USER_CABINET, USERS_TYPE_TO_TECH_ADMIN_TABS, UsersTypeTabs } from '../../eos-user-select/shered/consts/list-user.const';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
 interface TypeBread {
     action: number;
@@ -47,6 +47,8 @@ interface ISDISABLED {
 export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
     @ViewChild('listContent', { static: false }) listContent;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
+    usersTypeTabs = USERS_TYPE_TO_TECH_ADMIN_TABS;
+    activeUsersTypeTab: UsersTypeTabs = UsersTypeTabs.MyUsers;
     currentState: boolean[];
     createUserModal: BsModalRef;
     settingsManagementModal: BsModalRef;
@@ -73,6 +75,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     isDisableObj: ISDISABLED = {}
     public inputs: any;
     public form: FormGroup;
+    get isLimitedTechnologist(): boolean {
+        return this._appContext.limitCardsUser.length > 0;
+    }
+    get availableDuesForTechnologist(): string[] {
+        return this._appContext.limitCardsUser
+    }
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries['USER_CL.Removed'] === 'true') {
             this._apiSrv.sortDelUsers = true;
@@ -176,7 +184,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ngAfterContentChecked() {
         if(this.listUsers) this.checkIsDisabled();
     }
-
     ngOnInit() {
         this.rtUserService.clearHash();
         if (this._storage.getItem('onlyView') !== undefined) {
@@ -1145,6 +1152,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
         this._pagSrv.resetConfig();
         this.initView(urlUpdate);
+    }
+    setActiveUsersTypeTab(activeTab: UsersTypeTabs){
+        this.activeUsersTypeTab = activeTab;
     }
 
     private _createUrlForSop(isn_user) {

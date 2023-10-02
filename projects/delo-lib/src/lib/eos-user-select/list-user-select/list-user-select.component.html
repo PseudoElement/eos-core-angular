@@ -5,18 +5,32 @@
                 <div class="selected-node-title">
                     <span class="long-title xl-font">{{titleCurrentDue}}</span>
                 </div>
-                <div class="item-count usual-border m-font">
-                    <span class="item-count-content" [ngClass]="{search:showCloseQuickSearch}">
-                        Записей:
-                        <span class="counter">{{countMaxSize}}</span>
-                        Выбрано:
-                        <span class="counter">{{countcheckedField}}</span>
-                        <button *ngIf="showCloseQuickSearch" class="btn btn-primary-light btn-size"
-                            tooltip="Очистить результаты" placement="bottom" container="body"
-                            containerClass="tooltip-info" (click)=resetSearch()><span
-                                class="eos-adm-icon eos-adm-icon-close-blue small"></span></button>
-                    </span>
+                <div class="table-header-right">
+                    <div *ngIf="isLimitedTechnologist" class="tabs-wrapper usual-border border-bottom">
+                        <ul class="tabs">
+                            <li *ngFor="let tab of usersTypeTabs"
+                                 class="tab-item"
+                                 [class.active]="activeUsersTypeTab === tab.value"
+                                 (click)="setActiveUsersTypeTab(tab.value)">
+                                {{tab.text}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="item-count usual-border m-font">
+                        <span class="item-count-content" [ngClass]="{search:showCloseQuickSearch}">
+                            Записей:
+                            <span class="counter">{{countMaxSize}}</span>
+                            Выбрано:
+                            <span class="counter">{{countcheckedField}}</span>
+                            <button *ngIf="showCloseQuickSearch" class="btn btn-primary-light btn-size"
+                                tooltip="Очистить результаты" placement="bottom" container="body"
+                                containerClass="tooltip-info" (click)=resetSearch()>
+                                <span class="eos-adm-icon eos-adm-icon-close-blue small"></span>
+                            </button>
+                        </span>
+                    </div>
                 </div>
+
             </div>
         </div>
         <div class="table-header search-wr">
@@ -128,7 +142,13 @@
         <div *ngIf="!isLoading" #listContent class="list-user-sel">
             <div>
                 <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': ''}">
-                    <div *ngFor="let user of listUsers;   let last = last" class="user-item"
+                    <div 
+                        *ngFor="let user of listUsers | filterUsers 
+                                                            : activeUsersTypeTab 
+                                                            : availableDuesForTechnologist 
+                                                            : isLimitedTechnologist;
+                        let last = last" 
+                        class="user-item"
                         [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}"
                         (dblclick)="buttons.buttons[1].disabled === false ? RedactUser(user): null" onclick=this.blur()>
                         <div class="table-title user-select-node"
