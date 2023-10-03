@@ -281,6 +281,12 @@ bs-dropdown-container {
 }
 
 .current-settings {
+    .input-user-ext-exch-wrapper {
+        position: inherit !important;
+        .accordion-position {
+            max-height: calc(100vh - 230px);
+        }
+    }
     eos-spinner > i {
         content: url("../assets/icons/Spiner-Curent.svg");
     }
