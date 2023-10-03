@@ -211,7 +211,7 @@
                         class="base-param-radio"
                         [input]="accessInputs['1-27']"
                         [form]="formAccess"
-                        [readonly]="formAccess.get('1-27').disabled"
+                        [readonly]="formAccess.get('1-27').disabled || !formAccess.get('delo_web').value"
                     ></eos-dynamic-input>
                 </div>
             </div>
