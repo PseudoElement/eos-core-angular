@@ -318,7 +318,13 @@ export const RKPDDefaultFields: any[] = [
         DEFAULT_TYPE: E_FIELD_TYPE.boolean,
         DESCRIPTION: 'Организация согл-я и утв-я',
         order: 80,
-    }];
+    }, {
+        DEFAULT_ID: 'ISN_NOMENKL_M',
+        DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+        DESCRIPTION: 'Индекс дела по номенклатуре',
+        READONLY: false,
+        DEFAULT_VALUE: false,
+    },];
 class PrjDefaultItem {
     id: string;
     type: E_FIELD_TYPE;
@@ -391,6 +397,7 @@ class PrjDefaultFactory {
             'PRJ_DEFAULT_VALUE_List.PSND_M',
             'PRJ_DEFAULT_VALUE_List.FILE_M',
             'PRJ_DEFAULT_VALUE_List.PRUB_M',
+            'PRJ_DEFAULT_VALUE_List.ISN_NOMENKL_M',
         ];
     }
 
