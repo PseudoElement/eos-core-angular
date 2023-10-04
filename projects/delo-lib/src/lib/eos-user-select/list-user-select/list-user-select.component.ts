@@ -63,7 +63,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     shooseP: number;
     checkAll: string;
     onlyView: boolean;
-    currentDue: string;
+    // currentDue: string;
     openUserInfo: boolean = false;
     // количество выбранных пользователей
     countcheckedField: number;
@@ -355,24 +355,24 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this.flagChecked = null;
         this.isLoading = true;
         return this._apiSrv.getUsers(param || '0.', cabinet)
-            .then((data: UserSelectNode[]) => {
-                this.listUsers = this._pagSrv.UsersList;
-                this.flagScan = null;
-                this.isLoading = false;
-                this.countMaxSize = this._pagSrv.countMaxSize;
-                this.rtUserService._updateBtn.next(this.optionsBtn);
-                this.rtUserService.changeSelectedUser(null);
-            }).catch(error => {
-                this._errorSrv.errorHandler(error);
-            });
-        let due;
-        const url = this._router.url.split('/');
-        if (url[url.length - 1] === 'user_param') {
-            due = '0.';
-        } else {
-            due = url[url.length - 1];
-        }
-        this.currentDue = due;
+        .then((data: UserSelectNode[]) => {
+            this.listUsers = this._pagSrv.UsersList;
+            this.flagScan = null;
+            this.isLoading = false;
+            this.countMaxSize = this._pagSrv.countMaxSize;
+            this.rtUserService._updateBtn.next(this.optionsBtn);
+            this.rtUserService.changeSelectedUser(null);
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
+        });
+        // let due;
+        // const url = this._router.url.split('/');
+        // if (url[url.length - 1] === 'user_param') {
+        //     due = '0.';
+        // } else {
+        //     due = url[url.length - 1];
+        // }
+        // this.currentDue = due;
     }
     checkSortSessionStore() {
         const sort = this._storage.getItem('SortPageList');
@@ -892,7 +892,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                         this.rtUserService._updateBtn.next(this.optionsBtn); // обновляем кнопки
                         this.rtUserService.subjectFlagBtnHeader.next(false); // обновляем кнопки
                         this.updateFlafListen(); // обновить флаги
-                        this.initView(this.currentDue)
+                        const id = this._route.params['value'].nodeId;
+                        this.initView(id ? id : '0.')
                         .then(() => {
                             this.isLoading = false;
                         })
@@ -1072,7 +1073,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     msg: `Пользователи: ${names} \n\r удалены`,
                     type: 'success'
                 });
-                this.initView(this.currentDue);
+                const id = this._route.params['value'].nodeId;
+                this.initView(id ? id : '0.');
                 arrayRequests = [];
                 deletedUsers.forEach(el => {
                     arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
