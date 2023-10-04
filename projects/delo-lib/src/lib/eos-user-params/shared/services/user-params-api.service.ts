@@ -185,6 +185,9 @@ export class UserParamApiSrv {
                 // отображение ДЛ из подчененных подразделений
                 if (!this.flagOnlyThisDepart && this.dueDep !== '0.' && this.configList.shooseTab === 0) {
                     ob = { 'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}` };
+                    if (!this.flagDelitedPermanantly && !this.flagDisableUser) { // вот тут должно быть обновление
+                        ob['DELETED'] = 0;
+                    }
                     q['USER_CL'] = PipRX.criteries(ob);
                 }
                 if (this.currentSort === 'fullDueName') {
