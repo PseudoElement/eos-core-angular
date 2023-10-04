@@ -2,20 +2,20 @@ import { EMAIL } from '../../../../eos-dictionaries/consts/input-validation';
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 export const REG_PORT: RegExp = /^(([0-9]{1,4})|([1-5][0-9]{4})|(6[0-4][0-9]{3})|(65[0-4][0-9]{2})|(655[0-2][0-9])|(6553[0-5]))$/; // проверка порта от 0 до 65535
 export const EmailEncryptionType = [
-    {value: 1, title: 'Нет'},
-    {value: 2, title: 'TLS'},
-    {value: 3, title: 'STARTTLS'}
+    {value: 'none', title: 'Нет'},
+    {value: 'tls', title: 'TLS'},
+    {value: 'starttls', title: 'STARTTLS'}
 ];
 export const EmailAuthenticationType = [
-    {value: 1, title: 'Обычный пароль'},
-    {value: 2, title: 'Зашифрованный пароль'},
-    {value: 3, title: 'Kerberos'},
-    {value: 4, title: 'NTLM'},
-    {value: 5, title: 'Нет'}
+    {value: 'password', title: 'Обычный пароль'},
+    {value: 'encryptedPassword', title: 'Зашифрованный пароль'},
+    {value: 'kerberos', title: 'Kerberos'},
+    {value: 'ntlm', title: 'NTLM'},
+    {value: 'none', title: 'Нет'}
 ];
-export enum InServerType{
-    IMAP = '1',
-    POP3 = '2'
+export enum InServerType {
+    IMAP = 'imap',
+    POP3 = 'poP3'
 }
 export const EMAIL_PARAM: IBaseParameters = {
     id: 'email',
@@ -50,8 +50,8 @@ export const EMAIL_PARAM: IBaseParameters = {
             title: 'Протокол',
             required: true,
             options: [
-                {value: 1, title: 'IMAP'},
-                {value: 2, title: 'POP3'}
+                {value: InServerType.IMAP, title: 'IMAP'},
+                {value: InServerType.POP3, title: 'POP3'}
             ]
         },
         {
@@ -93,7 +93,7 @@ export const EMAIL_PARAM: IBaseParameters = {
             title: 'Имя пользователя',
         },
         {
-            key: 'InServerImapFolder',
+            key: 'ImapFolder',
             type: 'string',
             readonly: false,
             required: true,
@@ -192,7 +192,7 @@ export const DEFAULT_EMAIL_PARAM = [
         value: false
     },
     {
-        key: 'InServerImapFolder',
+        key: 'ImapFolder',
         value: 'Inbox'
     },
     /* Сервер исходящей почты */

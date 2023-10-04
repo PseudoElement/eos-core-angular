@@ -175,7 +175,7 @@ export class ParamEmailComponent extends BaseParamComponent {
             Password: {},
             ProfileName: this.updateData['ProfileName'] !== undefined ? this.updateData['ProfileName'] : this.prepareData.rec['ProfileName']
         };
-        if (this.updateData['Password'] !== undefined) {
+        if (this.updateData['Password'] !== undefined && this.updateData['Password'] !== '') {
             newEmailAcount.Password['Value'] = this.updateData['Password'];
         } else {
             newEmailAcount.Password['Key'] = this.prepareData.rec['Password'];
@@ -188,16 +188,17 @@ export class ParamEmailComponent extends BaseParamComponent {
         }
         const newEmailReceive = {
             DeleteEmailsOnServer: this.updateData['DeleteEmailsOnServer'] !== undefined ? this.updateData['DeleteEmailsOnServer'] : this.prepareData.rec['DeleteEmailsOnServer'],
-            InAuthMethod: this.updateData['InAuthMethod'] !== undefined ? +this.updateData['InAuthMethod'] : +this.prepareData.rec['InAuthMethod'],
-            InEncryption: this.updateData['InEncryption'] !== undefined ? +this.updateData['InEncryption'] : +this.prepareData.rec['InEncryption'],
+            InAuthMethod: this.updateData['InAuthMethod'] !== undefined ? this.updateData['InAuthMethod'] : this.prepareData.rec['InAuthMethod'],
+            InEncryption: this.updateData['InEncryption'] !== undefined ? this.updateData['InEncryption'] : this.prepareData.rec['InEncryption'],
             InServerHost: this.updateData['InServerHost'] !== undefined ? this.updateData['InServerHost'] : this.prepareData.rec['InServerHost'],
             InServerPort: this.updateData['InServerPort'] !== undefined ? +this.updateData['InServerPort'] : +this.prepareData.rec['InServerPort'],
-            InServerType: this.updateData['InServerType'] !== undefined ? +this.updateData['InServerType'] : +this.prepareData.rec['InServerType'],
+            InServerType: this.updateData['InServerType'] !== undefined ? this.updateData['InServerType'] : this.prepareData.rec['InServerType'],
             InUserName: this.updateData['InUserName'] !== undefined ? this.updateData['InUserName'] : this.prepareData.rec['InUserName'],
+            ImapFolder: this.updateData['ImapFolder'] !== undefined ? this.updateData['ImapFolder'] : this.prepareData.rec['ImapFolder'],
         };
         const newEmailSend = {
-            OutAuthMethod: this.updateData['OutAuthMethod'] !== undefined ? +this.updateData['OutAuthMethod'] : +this.prepareData.rec['OutAuthMethod'],
-            OutEncryption: this.updateData['OutEncryption'] !== undefined ? +this.updateData['OutEncryption'] : +this.prepareData.rec['OutEncryption'],
+            OutAuthMethod: this.updateData['OutAuthMethod'] !== undefined ? this.updateData['OutAuthMethod'] : this.prepareData.rec['OutAuthMethod'],
+            OutEncryption: this.updateData['OutEncryption'] !== undefined ? this.updateData['OutEncryption'] : this.prepareData.rec['OutEncryption'],
             OutServerHost: this.updateData['OutServerHost'] !== undefined ? this.updateData['OutServerHost'] : this.prepareData.rec['OutServerHost'],
             OutServerPort: this.updateData['OutServerPort'] !== undefined ? +this.updateData['OutServerPort'] : +this.prepareData.rec['OutServerPort'],
             OutUserName: this.updateData['OutUserName'] !== undefined ? this.updateData['OutUserName'] : this.prepareData.rec['OutUserName']

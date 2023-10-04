@@ -10,12 +10,13 @@ export interface ISettingEmailCommon {
 }
 export interface ISettingEmailReceive {
     DeleteEmailsOnServer: boolean;
-    InAuthMethod: number;
-    InEncryption: number;
+    InAuthMethod: string;
+    InEncryption: string;
     InServerHost: string;
     InServerPort: number;
-    InServerType: number;
+    InServerType: string;
     InUserName: string;
+    ImapFolder: string;
 }
 export interface ISettingEmailSend {
     OutAuthMethod: number;

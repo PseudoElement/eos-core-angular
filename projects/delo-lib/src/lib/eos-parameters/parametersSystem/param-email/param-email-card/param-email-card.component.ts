@@ -1,6 +1,6 @@
 /* import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service'; */
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { AppsettingsParams, AppsettingsTypename } from '../../../../eos-common/consts/params.const';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -67,6 +67,17 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
                 this.errorPass = state.length === 0;
             });
         }
+        this.form.controls['rec.InServerType'].valueChanges
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((state: string) => {
+            if (state !== InServerType.IMAP) {
+                this.form.controls['rec.ImapFolder'].setValidators(null);
+            } else {
+                this.form.controls['rec.ImapFolder'].setValidators([Validators.required])
+            }
+        });
         this.form.controls['rec.ProfileName'].valueChanges
         .pipe(
             takeUntil(this.ngUnsubscribe)
@@ -132,6 +143,13 @@ export class ParamEmailCardComponent implements OnInit, OnDestroy {
                     this.form.controls[`rec.${key}`].setValue(Receive[key], { emitEvent: false });
                     this.prepareData.rec[key] = Receive[key];
                 }
+                if (Receive['ImapFolder'] === undefined) {
+                    this.prepareData.rec['ImapFolder'] = '';
+                }
+                if (Receive['InServerType'] === InServerType.POP3) {
+                    this.form.controls['rec.ImapFolder'].setValidators(null);
+                }
+                
             });
             Object.keys(Send).forEach((key) => {
                 if (this.form.controls[`rec.${key}`]) {
