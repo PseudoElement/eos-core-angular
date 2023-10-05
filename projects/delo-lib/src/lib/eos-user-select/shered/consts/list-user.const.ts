@@ -1,8 +1,8 @@
 import { E_FIELD_TYPE } from '../../../eos-dictionaries/interfaces';
 
 export enum UsersTypeTabs{
-    AllUsers,
-    MyUsers
+    AllUsers = 'AllUsers',
+    MyUsers = 'MyUsers'
 }
 export const LIST_USER_CABINET = [
     {

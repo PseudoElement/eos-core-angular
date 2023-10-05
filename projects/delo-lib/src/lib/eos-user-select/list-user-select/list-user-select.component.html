@@ -6,14 +6,16 @@
                     <span class="long-title xl-font">{{titleCurrentDue}}</span>
                 </div>
                 <div class="table-header-right">
-                    <div *ngIf="isLimitedTechnologist" class="tabs-wrapper usual-border border-bottom">
+                    <div *ngIf="isVisibleUsersTypeTabs" class="tabs-wrapper usual-border border-bottom">
                         <ul class="tabs">
-                            <li *ngFor="let tab of usersTypeTabs"
-                                 class="tab-item"
-                                 [class.active]="activeUsersTypeTab === tab.value"
-                                 (click)="setActiveUsersTypeTab(tab.value)">
-                                {{tab.text}}
-                            </li>
+                            <ng-container *ngFor="let tab of usersTypeTabs">
+                                <li *ngIf="isVisibleUsersTypeTabs[tab.value]"
+                                    class="tab-item"
+                                    [class.active]="activeUsersTypeTab$.value === tab.value"
+                                    (click)="setActiveUsersTypeTab(tab.value)">
+                                    {{tab.text}}
+                                </li>
+                            </ng-container>
                         </ul>
                     </div>
                     <div class="item-count usual-border m-font">
@@ -143,10 +145,7 @@
             <div>
                 <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': ''}">
                     <div 
-                        *ngFor="let user of listUsers | filterUsers 
-                                                            : activeUsersTypeTab 
-                                                            : availableDuesForTechnologist 
-                                                            : isLimitedTechnologist;
+                        *ngFor="let user of listUsers;
                         let last = last" 
                         class="user-item"
                         [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}"
