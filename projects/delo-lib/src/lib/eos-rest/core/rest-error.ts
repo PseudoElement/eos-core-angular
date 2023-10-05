@@ -12,15 +12,15 @@ export class RestError {
             this.code = error.http.status;
             switch (error.http.status) {
                 case 0:
-                    this.message = 'Ошибка соединения';
+                    this.message = "Ошибка соединения";
                     break;
                 case 401:
                 case 403:
                 case 434:
-                    this.message = 'Ошибка авторизации';
+                    this.message = "Ошибка авторизации";
                     break;
                 case 404: // Просто так ошибкой не считаем
-                    this.message = 'Не найдено';
+                    this.message = "Не найдено";
                     break;
                 default:
                     this._defaultErrorHandler(error.http);
@@ -36,12 +36,12 @@ export class RestError {
 
     private _defaultErrorHandler(e: any) {
         // console.log('http error', e);
-        let message = e.message || '';
+        let message = e.message || "";
         if (e.data) {
-            const error = e.data['odata.error'] || e.data['error'];
+            const error = e.data["odata.error"] || e.data["error"];
             message = error.message ? error.message.value : message;
-            if (error.innererror && error.innererror.type === 'Eos.Delo.Exceptions.LogicException') {
-                let data = error['logicException.data'];
+            if (error.innererror && error.innererror.type === "Eos.Delo.Exceptions.LogicException") {
+                let data = error["logicException.data"];
                 if (data) {
                     data = JSON.parse(data);
                 }
@@ -58,32 +58,32 @@ export class RestError {
         try {
             let odataerr;
             try {
-                odataerr = e.error['odata.error'].innererror.message || e.error['odata.error'].innererror.Message;
+                odataerr = e.error["odata.error"].innererror.message || e.error["odata.error"].innererror.Message;
             } catch {
                 const str = JSON.parse(e.error);
-                odataerr = str['odata.error'].innererror.message || str['odata.error'].innererror.Message;
+                odataerr = str["odata.error"].innererror.message || str["odata.error"].innererror.Message;
             }
 
-            this.message = odataerr;
-
+            if (odataerr) {
+                this.message = odataerr;
+            }
         } catch (err) {
+            this.message = e.message;
             return;
         }
     }
 
     private _defaultLogicExceptionHandler(e, data) {
         // console.log('_defaultLogicExceptionHandler');
-        if (data.ErrorKind === 'InvalidEntityRef') {
+        if (data.ErrorKind === "InvalidEntityRef") {
             // TODO: специальное исключени - ссылка на уже не существующий объект, для интерфейса пытались отдать с подробностями
             // из ошибки берем имя сущности и по ее первичному ключу извлекаем его значение
             // завязка на метаданные здесь выглядит избыточной
             // если будем в это играть, проще передать данные, вызывающая сторона легче поймет что из них нужно
             // чтобы спозиционироваться на форме в нужное место.
-
             // let etn = data.EntityName;
             // let et = _meta<D2.iTypeDef>(etn);
             // let isn = data[et.pk];
-
             // if (this.InvalidRefErrorHandler(e, etn, isn))
             // 	return;
         }
@@ -92,11 +92,11 @@ export class RestError {
 
     private _odataErrorsHandler(err) {
         const erl = err.odataErrors;
-        let logic = '';
+        let logic = "";
         for (let i = 0; i < erl.length; i++) {
             const e = erl[i].innererror || erl[i];
-            if (e.type === 'Eos.Delo.Exceptions.LogicException') {
-                logic += e.message + '\n';
+            if (e.type === "Eos.Delo.Exceptions.LogicException") {
+                logic += e.message + "\n";
             } else {
                 // console.log('non logic odata error', e);
                 if (e.message.value) {
@@ -110,5 +110,4 @@ export class RestError {
         }
         this.message = logic;
     }
-
 }

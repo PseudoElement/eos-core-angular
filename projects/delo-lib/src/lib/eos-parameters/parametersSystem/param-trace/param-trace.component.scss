@@ -1,3 +1,25 @@
-.text-area-wrapper{
-    margin: 20px 20px 40px 20px;
+.param-trace {
+    .text-area-wrapper {
+        margin: 20px 20px 40px 20px;
+    }
+    .user_info {
+        display: flex;
+        justify-content: space-between;
+        .user_info-control {
+            width: 48%;
+            .input-label {
+                font-size: 16px !important;
+                color: #646464;
+            }
+        }
+    }
+    .shell {
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+    }
 }

@@ -1,28 +1,20 @@
+import { throwError as observableThrowError, Observable, of, Subject } from "rxjs";
+import { map, catchError, mergeMap, reduce } from "rxjs/operators";
+import { Injectable, Optional } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-import { throwError as observableThrowError, Observable, of, Subject } from 'rxjs';
-import { map, catchError, mergeMap, reduce } from 'rxjs/operators';
-import { Injectable, Optional } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-
-
-
-
-
-
-
-import { ApiCfg } from '../core/api-cfg';
-import { ALL_ROWS, HTTP_OPTIONS, BATCH_BOUNDARY, CHANGESET_BOUNDARY } from '../core/consts';
-import { IAsk, IKeyValuePair, IR, IRequest, ICancelFormChangesEvent } from '../interfaces/interfaces';
-import { SequenceMap } from '../core/sequence-map';
-import { Metadata } from '../core/metadata';
-import { EntityHelper } from '../core/entity-helper';
-import { PipeUtils } from '../core/pipe-utils';
-import { Cache } from '../core/cache';
-import { RestError } from '../core/rest-error';
-import { commonMergeMeta } from '../../eos-rest/common/initMetaData';
-import { IUploadParam } from '../../eos-parameters/interfaces/app-setting.interfaces';
-import { RESPUNS_URL_QUERY } from '../../app/consts/common.consts';
+import { ApiCfg } from "../core/api-cfg";
+import { ALL_ROWS, HTTP_OPTIONS, BATCH_BOUNDARY, CHANGESET_BOUNDARY } from "../core/consts";
+import { IAsk, IKeyValuePair, IR, IRequest, ICancelFormChangesEvent } from "../interfaces/interfaces";
+import { SequenceMap } from "../core/sequence-map";
+import { Metadata } from "../core/metadata";
+import { EntityHelper } from "../core/entity-helper";
+import { PipeUtils } from "../core/pipe-utils";
+import { Cache } from "../core/cache";
+import { RestError } from "../core/rest-error";
+import { commonMergeMeta } from "../../eos-rest/common/initMetaData";
+import { IUploadParam } from "../../eos-parameters/interfaces/app-setting.interfaces";
+import { RESPUNS_URL_QUERY } from "../../app/consts/common.consts";
 
 export const MAX_LENGTH_PARAMS_TO_GET = 1500;
 @Injectable()
@@ -47,7 +39,7 @@ export class PipRX extends PipeUtils {
         this.entityHelper = new EntityHelper(this._metadata);
         this.cache = new Cache(this, this._metadata);
     }
-    
+
     static criteries(cr: any) {
         return { criteries: cr };
     }
@@ -56,19 +48,16 @@ export class PipRX extends PipeUtils {
         return { args: ar };
     }
 
-
-    static invokeSop(chr, name, args, method = 'POST', encodeurl: boolean = true) {
+    static invokeSop(chr, name, args, method = "POST", encodeurl: boolean = true) {
         const ar = [];
         // tslint:disable-next-line:forin
         for (const k in args) {
-            const quot = typeof (args[k]) === 'string' ? '\'' : '';
-            ar.push(k + '=' + quot +
-                encodeURIComponent(args[k])
-                + quot);
+            const quot = typeof args[k] === "string" ? "'" : "";
+            ar.push(k + "=" + quot + encodeURIComponent(args[k]) + quot);
         }
 
         chr.push({
-            requestUri: name + '?' + ar.join('&'),
+            requestUri: name + "?" + ar.join("&"),
             method: method,
             encodeurl: encodeurl,
         });
@@ -77,37 +66,41 @@ export class PipRX extends PipeUtils {
     get cancelFormChanges$() {
         return this._cancelFormChanges$.asObservable();
     }
-    /** 
+    /**
      * На вход принимает массив элементов разбивает их по максимальной длинне запроса MAX_LENGTH_PARAMS_TO_GET
      * На выход массив строк объединённых через |
      * */
     splitStrQueryLength(str: string[]): string[] {
         const arrayCabList = [];
-        let str_list = '';
+        let str_list = "";
         str.forEach((elem) => {
-            str_list +=  elem + '|';
-            if (str_list.length > MAX_LENGTH_PARAMS_TO_GET) { // заполняем запрос, небольшим количеством символов, если их больше то разделяем на несколько запросов
+            str_list += elem + "|";
+            if (str_list.length > MAX_LENGTH_PARAMS_TO_GET) {
+                // заполняем запрос, небольшим количеством символов, если их больше то разделяем на несколько запросов
                 arrayCabList.push(str_list);
-                str_list = '';
+                str_list = "";
             }
         });
         arrayCabList.push(str_list); // если запрос был маленьким то добавляем его в массив и тем самым делаем всего один запрос
-        return arrayCabList
+        return arrayCabList;
     }
     // todo: move config in common service
 
     initConfig(config: any) {
-        this._cfg = Object.assign({
-            webBaseUrl: '../',
-            apiBaseUrl: '../',
-            authApi: 'Services/ApiSession.asmx/',
-            dataApi: RESPUNS_URL_QUERY,
-            templateApi: 'CoreHost/FOP/GetDocTemplate/',
-        }, config);
+        this._cfg = Object.assign(
+            {
+                webBaseUrl: "../",
+                apiBaseUrl: "../",
+                authApi: "Services/ApiSession.asmx/",
+                dataApi: RESPUNS_URL_QUERY,
+                templateApi: "CoreHost/FOP/GetDocTemplate/",
+            },
+            config
+        );
         this._cfg.dataApiUrl = this._cfg.apiBaseUrl + this._cfg.dataApi;
         this._cfg.authApiUrl = this._cfg.apiBaseUrl + this._cfg.authApi;
         this._cfg.templateApiUrl = this._cfg.apiBaseUrl + this._cfg.templateApi;
-        this._cfg.appSetting = '../CoreHost/appsettings/api';
+        this._cfg.appSetting = "../CoreHost/appsettings/api";
         this._cfg.metaMergeFuncList = [commonMergeMeta];
     }
 
@@ -134,14 +127,20 @@ export class PipRX extends PipeUtils {
         const options = {
             withCredentials: true,
             headers: new HttpHeaders({
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-                'Content-Type': 'text/plain; charset=utf-8'
+                Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Content-Type": "text/plain; charset=utf-8",
             }),
-            responseType: 'text' as 'text',
+            responseType: "text" as "text",
         };
-        const instance = urlParam.instance ? `&instance=${urlParam.instance}` : '';
-        const get_list = !urlParam.instance ? '/get-list' : '';
-        return this.getHttp_client().get(this._cfg.appSetting + get_list + `?namespace=${urlParam.namespace}&typename=${urlParam.typename + instance}&$format=compact`, options)
+        const instance = urlParam.instance ? `&instance=${urlParam.instance}` : "";
+        const get_list = !urlParam.instance ? "/get-list" : "";
+        return this.getHttp_client()
+            .get(
+                this._cfg.appSetting +
+                    get_list +
+                    `?namespace=${urlParam.namespace}&typename=${urlParam.typename + instance}&$format=compact`,
+                options
+            )
             .toPromise<string>()
             .then((ans: string) => {
                 if (ans) {
@@ -151,39 +150,42 @@ export class PipRX extends PipeUtils {
                 }
             })
             .catch((error) => {
-                return Promise.reject({code: error['status'], message: error['error']});
+                return Promise.reject({ code: error["status"], message: error["error"] });
             });
     }
     setAppSetting<T>(changeSet: IUploadParam, body: T): Promise<any> {
         const options = {
             withCredentials: true,
             headers: new HttpHeaders({
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-                'Content-Type': 'text/plain; charset=utf-8'
-            })
+                Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Content-Type": "text/plain; charset=utf-8",
+            }),
         };
         return this.getHttp_client()
-                .post(
-                    this._cfg.appSetting + `/upload?namespace=${changeSet.namespace}&typename=${changeSet.typename}&instance=${changeSet.instance}`,
-                    body, 
-                    options
-                )
-                .toPromise()
-                .then(res => res)
-                .catch(err => console.error(err))
+            .post(
+                this._cfg.appSetting +
+                    `/upload?namespace=${changeSet.namespace}&typename=${changeSet.typename}&instance=${changeSet.instance}`,
+                body,
+                options
+            )
+            .toPromise()
+            .then((res) => res)
+            .catch((err) => {
+                throw new RestError({ http: err });
+            });
     }
     private makeArgs(args: IKeyValuePair): string {
-        let url = '';
+        let url = "";
         // tslint:disable-next-line:forin
         for (const argname in args) {
-            let q = '',
+            let q = "",
                 v = args[argname];
-            const t = typeof (args[argname]);
-            if (t !== 'number') {
-                q = '\'';
-                v = t !== 'string' ? encodeURIComponent(JSON.stringify(v)) : encodeURIComponent(v);
+            const t = typeof args[argname];
+            if (t !== "number") {
+                q = "'";
+                v = t !== "string" ? encodeURIComponent(JSON.stringify(v)) : encodeURIComponent(v);
             }
-            url += ['&', argname, '=', q, v, q].join('');
+            url += ["&", argname, "=", q, v, q].join("");
         }
         return url;
     }
@@ -193,18 +195,18 @@ export class PipRX extends PipeUtils {
             return [r.url];
         }
         const result = [];
-        let url = r.urlParams || '';
+        let url = r.urlParams || "";
         if (r.expand) {
-            const exp = r.expand.split(',');
+            const exp = r.expand.split(",");
             if (exp.length > 10) {
-                r._moreJSON.expand = exp.splice(10, exp.length - 10).join(',');
+                r._moreJSON.expand = exp.splice(10, exp.length - 10).join(",");
             }
-            url += '&$expand=' + exp.join(',');
+            url += "&$expand=" + exp.join(",");
         }
 
         if (ask.criteries) {
             // проблема с кириллицей, поэтому escape
-            url += '&criteries=' + encodeURIComponent(JSON.stringify(ask.criteries));
+            url += "&criteries=" + encodeURIComponent(JSON.stringify(ask.criteries));
         }
 
         if (ask.args) {
@@ -212,42 +214,42 @@ export class PipRX extends PipeUtils {
         }
 
         if (r.foredit) {
-            url += '&ForEdit=true';
+            url += "&ForEdit=true";
         }
 
         if (r.reload) {
-            url += '&reload=true';
+            url += "&reload=true";
         }
 
         if (r.top) {
-            url += '&$top=' + r.top.toString();
+            url += "&$top=" + r.top.toString();
         }
 
         if (r.skip) {
-            url += '&$skip=' + r.skip.toString();
+            url += "&$skip=" + r.skip.toString();
         }
 
         if (r.orderby) {
-            url += '&$orderby=' + r.orderby;
+            url += "&$orderby=" + r.orderby;
         }
 
         if (r._moreJSON) {
-            url += '&_more_json=' + JSON.stringify(r._moreJSON);
+            url += "&_more_json=" + JSON.stringify(r._moreJSON);
         }
         if (r.loadmode) {
-            url += '&loadmode=' + r.loadmode;
+            url += "&loadmode=" + r.loadmode;
         }
 
         if (ids !== undefined && ids.length) {
             const idss = PipeUtils.chunkIds(PipeUtils.distinctIDS(ids instanceof Array ? ids : [ids]));
             for (let i = 0; i < idss.length; i++) {
                 // encode id because of hash issue
-                result.push([this._cfg.dataApiUrl, r._et, '/?ids=', encodeURIComponent(idss[i]), url].join(''));
+                result.push([this._cfg.dataApiUrl, r._et, "/?ids=", encodeURIComponent(idss[i]), url].join(""));
             }
-        } else if (typeof ids === 'string' || typeof ids === 'number') {
-            result.push([this._cfg.dataApiUrl, r._et, '/?ids=', encodeURIComponent(ids.toString()), url].join(''));
+        } else if (typeof ids === "string" || typeof ids === "number") {
+            result.push([this._cfg.dataApiUrl, r._et, "/?ids=", encodeURIComponent(ids.toString()), url].join(""));
         } else {
-            result.push(this._cfg.dataApiUrl + r._et + url.replace('&', '?'));
+            result.push(this._cfg.dataApiUrl + r._et + url.replace("&", "?"));
         }
 
         return result;
@@ -263,16 +265,17 @@ export class PipRX extends PipeUtils {
         let key = null;
         // переопределяю ALL_ROWS для всего проекта
         if (this._metadata[r._et]) {
-            key = Array.isArray(this._metadata[r._et]['pk']) ? this._metadata[r._et]['pk'][0] : this._metadata[r._et]['pk'];
+            key = Array.isArray(this._metadata[r._et]["pk"])
+                ? this._metadata[r._et]["pk"][0]
+                : this._metadata[r._et]["pk"];
         }
-        if ((Array.isArray(a) && !a.length) ||
-            (this.findVal(a, 'ar') && key)) {
+        if ((Array.isArray(a) && !a.length) || (this.findVal(a, "ar") && key)) {
             a = {
-                criteries: { [key]: 'isnotnull' },
+                criteries: { [key]: "isnotnull" },
             };
         }
         // переопределяю ALL_ROWS для всего проекта
-        const ids = ((a.criteries === undefined) && (a.args === undefined) && (a !== ALL_ROWS)) ? a : undefined;
+        const ids = a.criteries === undefined && a.args === undefined && a !== ALL_ROWS ? a : undefined;
         const urls = this._makeUrls(r, a, ids);
 
         return this._odataGet<T>(urls, req);
@@ -282,29 +285,26 @@ export class PipRX extends PipeUtils {
         const _options = Object.assign({}, this._options, {
             headers: new HttpHeaders({
                 // 'MaxDataServiceVersion': '3.0',
-                'Accept': 'application/json;odata=light;q=1,application/json;odata=minimalmetadata;'
-            })
+                Accept: "application/json;odata=light;q=1,application/json;odata=minimalmetadata;",
+            }),
         });
 
-        const rl = of(...urls)
-            .pipe(
-                mergeMap(url => {
-                    url.indexOf('?') === -1 ? url = url + '?$format=compact' : url = url + '&$format=compact'; // дописываем в конце запроса $format=compact
-                    return this.http
-                        .get(url, _options)
-                        .pipe(
-                            map((r: Response) => {
-                                try {
-                                    return this.nativeParser(r);
-                                } catch (e) {
-                                    throw new RestError({ odataErrors: [e], _request: req, _response: r });
-                                    // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
-                                }
-                            }),
-                            catchError(this.httpErrorHandler.bind(this))
-                        );
+        const rl = of(...urls).pipe(
+            mergeMap((url) => {
+                url.indexOf("?") === -1 ? (url = url + "?$format=compact") : (url = url + "&$format=compact"); // дописываем в конце запроса $format=compact
+                return this.http.get(url, _options).pipe(
+                    map((r: Response) => {
+                        try {
+                            return this.nativeParser(r);
+                        } catch (e) {
+                            throw new RestError({ odataErrors: [e], _request: req, _response: r });
+                            // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
+                        }
+                    }),
+                    catchError(this.httpErrorHandler.bind(this))
+                );
 
-                    /*
+                /*
                     (err, caught) => {
                         if (err instanceof RestError) {
                             return Observable.throw(err);
@@ -314,17 +314,15 @@ export class PipRX extends PipeUtils {
                         // return [];
                     });
                     */
-                })
+            })
+        );
 
-            );
-
-        return rl
-            .pipe(
-                reduce((acc: T[], v: T[]) => {
-                    acc.push(...v);
-                    return acc;
-                })
-            );
+        return rl.pipe(
+            reduce((acc: T[], v: T[]) => {
+                acc.push(...v);
+                return acc;
+            })
+        );
     }
 
     private _batch(changeSet: any[], vc: string, dataApiUrl): Observable<any> {
@@ -344,11 +342,13 @@ export class PipRX extends PipeUtils {
         const d = this.buildBatch(changeSet);
         // console.log(this._cfg.dataSrv + '$batch?' + vc, d, _options);
         return this.http
-            .post(dataApiUrl + '$batch?' + vc, d, {
-                observe: 'response', responseType: 'text', headers: {
-                    'Accept': 'multipart/mixed',
-                    'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,
-                }
+            .post(dataApiUrl + "$batch?" + vc, d, {
+                observe: "response",
+                responseType: "text",
+                headers: {
+                    Accept: "multipart/mixed",
+                    "Content-Type": "multipart/mixed;boundary=" + BATCH_BOUNDARY,
+                },
             })
             .pipe(
                 map((r) => {
@@ -365,45 +365,46 @@ export class PipRX extends PipeUtils {
     }
 
     private buildBatch(changeSets: any[]) {
-        let batch = '';
+        let batch = "";
         let i, len;
-        batch = ['--' + BATCH_BOUNDARY, 'Content-Type: multipart/mixed; boundary=' + CHANGESET_BOUNDARY, '']
-            .join('\r\n');
+        batch = ["--" + BATCH_BOUNDARY, "Content-Type: multipart/mixed; boundary=" + CHANGESET_BOUNDARY, ""].join(
+            "\r\n"
+        );
 
         for (i = 0, len = changeSets.length; i < len; i++) {
             const it = changeSets[i];
             batch += [
-                '', '--' + CHANGESET_BOUNDARY,
-                'Content-Type: application/http',
-                'Content-Transfer-Encoding: binary',
-                '',
-                it.method + ' '
-                + (it.encodeurl ? encodeURI(it.requestUri) : it.requestUri) + ' HTTP/1.1',
-                'Accept: application/json;odata=light;q=1,application/json;odata=nometadata;',
-                'MaxDataServiceVersion: 3.0',
-                'Content-Type: application/json',
-                'DataServiceVersion: 3.0',
-                '',
-                it.data ? JSON.stringify(it.data) : ''
-            ].join('\r\n');
+                "",
+                "--" + CHANGESET_BOUNDARY,
+                "Content-Type: application/http",
+                "Content-Transfer-Encoding: binary",
+                "",
+                it.method + " " + (it.encodeurl ? encodeURI(it.requestUri) : it.requestUri) + " HTTP/1.1",
+                "Accept: application/json;odata=light;q=1,application/json;odata=nometadata;",
+                "MaxDataServiceVersion: 3.0",
+                "Content-Type: application/json",
+                "DataServiceVersion: 3.0",
+                "",
+                it.data ? JSON.stringify(it.data) : "",
+            ].join("\r\n");
         }
 
-        batch += ['', '--' + CHANGESET_BOUNDARY + '--', '--' + BATCH_BOUNDARY + '--'].join('\r\n');
+        batch += ["", "--" + CHANGESET_BOUNDARY + "--", "--" + BATCH_BOUNDARY + "--"].join("\r\n");
         return batch;
     }
 
     private parseBatchResponse(response: any, answer: any[]): any[] {
         let dd;
-        if (response.body.indexOf('--changesetresponse') !== -1) {
-            dd = response.body.split('--changesetresponse');
+        if (response.body.indexOf("--changesetresponse") !== -1) {
+            dd = response.body.split("--changesetresponse");
             dd.shift();
             dd.pop();
         } else {
-            dd = response.body.split('--');
+            dd = response.body.split("--");
         }
         for (let i = 0; i < dd.length; i++) {
-            if (dd[i].indexOf('{') !== -1) {
-                dd[i] = dd[i].substr(dd[i].indexOf('{'));
+            if (dd[i].indexOf("{") !== -1) {
+                dd[i] = dd[i].substr(dd[i].indexOf("{"));
             } else {
                 dd[i] = null;
             }
@@ -413,8 +414,10 @@ export class PipRX extends PipeUtils {
             if (dd[i] !== null) {
                 const d = JSON.parse(dd[i]);
                 answer.push(d);
-                const e = d['odata.error'];
-                if (e) { allErr.push(e); }
+                const e = d["odata.error"];
+                if (e) {
+                    allErr.push(e);
+                }
                 // console.log(d);
                 this.sequenceMap.FixMapItem(d);
             }

@@ -1,14 +1,13 @@
-import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input } from '@angular/core';
-import { DynamicInputBaseDirective } from './dynamic-input-base';
-import { BsDropdownDirective } from 'ngx-bootstrap';
-import { AppContext } from '../../eos-rest/services/appContext.service';
+import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input } from "@angular/core";
+import { DynamicInputBaseDirective } from "./dynamic-input-base";
+import { BsDropdownDirective } from "ngx-bootstrap";
+import { AppContext } from "../../eos-rest/services/appContext.service";
 
 const LI_HEIGHT = 20;
 @Component({
-    selector: 'eos-dynamic-input-autosearch',
-    templateUrl: 'dynamic-input-autosearch.component.html'
+    selector: "eos-dynamic-input-autosearch",
+    templateUrl: "dynamic-input-autosearch.component.html",
 })
-
 export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective implements OnChanges, OnDestroy {
     @Output() buttonClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() buttonClickRemove: EventEmitter<any> = new EventEmitter<any>();
@@ -20,9 +19,9 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     @Input() dropup: boolean;
     @Input() height: number;
     public focusedItem: any;
-    @ViewChild('dropdown', {static: false}) private _dropDown: BsDropdownDirective;
-    @ViewChild('dropdownElement', {static: true}) private dropdownElement: ElementRef;
-    @ViewChild('textInputSelect', {static: false}) private textInputSelect: ElementRef;
+    @ViewChild("dropdown", { static: false }) private _dropDown: BsDropdownDirective;
+    @ViewChild("dropdownElement", { static: true }) private dropdownElement: ElementRef;
+    @ViewChild("textInputSelect", { static: false }) private textInputSelect: ElementRef;
     private _lastWrapperWidth: number;
     private _calcItemWidth: number;
     private _onInputDebounce: NodeJS.Timeout;
@@ -30,7 +29,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
         super();
     }
     get textType(): string {
-        return 'text';
+        return "text";
     }
 
     get label(): string {
@@ -53,7 +52,10 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
             optValue = this.input.options.find((option) => option.value === ctrl.value);
         }
         if (this.textInputSelect && optValue && optValue.tooltip) {
-            const tooltip = this.textInputSelect.nativeElement.clientWidth < this.textInputSelect.nativeElement.scrollWidth ? this.currentValue : undefined;
+            const tooltip =
+                this.textInputSelect.nativeElement.clientWidth < this.textInputSelect.nativeElement.scrollWidth
+                    ? this.currentValue
+                    : undefined;
             return tooltip;
         } else {
             return undefined;
@@ -65,14 +67,14 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
 
     onInput(event: Event) {
         event.stopPropagation();
-        const input = event.target as HTMLInputElement
-        if(input.value) this.onInputChange.emit(input.value);
-        if(this._onInputDebounce) clearTimeout(this._onInputDebounce)
+        const input = event.target as HTMLInputElement;
+        if (input.value) this.onInputChange.emit(input.value);
+        if (this._onInputDebounce) clearTimeout(this._onInputDebounce);
         this._onInputDebounce = setTimeout(() => {
             this.delayedTooltip();
             this.control.setValue(input.value);
-            this.toggleDropdown()
-        }, 300)
+            this.toggleDropdown();
+        }, 300);
     }
 
     toggleDropdown() {
@@ -86,19 +88,21 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
             this.hideDropDown();
         }
     }
-    showDropdown(){
+    showDropdown() {
         this._dropDown.show();
-        if(this.dropdownElement && this.dropdownElement.nativeElement) this.dropdownElement.nativeElement.style.display = 'block';
+        if (this.dropdownElement && this.dropdownElement.nativeElement)
+            this.dropdownElement.nativeElement.style.display = "block";
     }
 
     hideDropDown() {
         this._dropDown.hide();
-        if(this.dropdownElement && this.dropdownElement.nativeElement) this.dropdownElement.nativeElement.style.display = 'none';
+        if (this.dropdownElement && this.dropdownElement.nativeElement)
+            this.dropdownElement.nativeElement.style.display = "none";
     }
 
     getMenuWidthStyle(): any {
         const w = this.getMenuWidth();
-        return { 'min-width.px': w, 'max-width.px': w, 'max-height.px': this.height ? this.height : 400 };
+        return { "min-width.px": w, "max-width.px": w, "max-height.px": this.height ? this.height : 400 };
     }
 
     getItemTooltip(event, item): string {
@@ -128,14 +132,14 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
 
     selectAction(e: MouseEvent, item: any, params?: any) {
         if (item) {
-            if (item.value === '') {
+            if (item.value === "") {
                 this.control.setValue(null);
             } else {
                 this.control.setValue(String(item.value));
                 this.onSelectDropDown.emit(item.value);
             }
         }
-        this.hideDropDown()
+        this.hideDropDown();
         if (AppContext.isIE()) {
             // console.log("TCL: DynamicInputSelect2Component -> selectAction -> AppContext.isIE", AppContext.isIE())
             /* IE fix */
@@ -170,26 +174,30 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     }
 
     onEraseClick() {
-        this.control.setValue('');
+        this.control.setValue("");
         this.input.options = [];
         this.hideDropDown();
     }
 
     filterKeyDown(event) {
-        const code = event.code /* !IE */ || event.key /* IE */;
-        const isLessThen3Chars = event.target.value.length < 3
+        const code = event.code /* !IE */ || event.key; /* IE */
+        const isLessThen3Chars = event.target.value.length < 3;
         switch (code) {
-            case 'ArrowDown':
-            case 'Down': this._hoverNext(); break;
-            case 'ArrowUp':
-            case 'Up': this._hoverPrev(); break;
-            case 'Enter': 
+            case "ArrowDown":
+            case "Down":
+                this._hoverNext();
+                break;
+            case "ArrowUp":
+            case "Up":
+                this._hoverPrev();
+                break;
+            case "Enter":
                 this.onEnterSearchEmptyResults.emit();
-                if(isLessThen3Chars &&  this._dropDown.isOpen) {
+                if (isLessThen3Chars && this._dropDown.isOpen) {
                     this.selectAction(null, this.focusedItem);
                     this.hideDropDown();
                 }
-            }
+        }
     }
 
     setFirstFocusedItem() {
@@ -209,9 +217,8 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     }
 
     shouldShowDropdown(): boolean {
-        return this.form.enabled && this.input.options.length > 0 && !!this.currentValue.trim()
+        return this.form.enabled && this.input.options.length > 0 && !!this.currentValue.trim();
     }
-
 
     private _hoverNext(): any {
         if (!this.input.options || !this.input.options.length) {
@@ -251,13 +258,12 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
         const i = this.input.options.findIndex((o) => o === item);
         if (i !== -1 && this.dropdownElement) {
             const pos = i * LI_HEIGHT;
-            const isVisible = this.dropdownElement.nativeElement.scrollTop < pos
-                && (this.dropdownElement.nativeElement.scrollTop +
-                    this.dropdownElement.nativeElement.clientHeight) > pos;
+            const isVisible =
+                this.dropdownElement.nativeElement.scrollTop < pos &&
+                this.dropdownElement.nativeElement.scrollTop + this.dropdownElement.nativeElement.clientHeight > pos;
             if (!isVisible) {
                 this.dropdownElement.nativeElement.scrollTop = i * LI_HEIGHT;
             }
         }
     }
-
 }

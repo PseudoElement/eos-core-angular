@@ -1,4 +1,4 @@
-<div class="input-param-wrapper input-param-prj-wrapper">
+<div class="param-trace input-param-wrapper input-param-prj-wrapper">
     <eos-param-header
         [title]="titleHeader"
         (submitForm)="submit()"
@@ -8,15 +8,27 @@
         (editForm)="edit()"
     ></eos-param-header>
     <div class="text-area-wrapper">
-        <ng-container *ngFor="let input of inputsData">
-            <eos-dynamic-input
-                [input]="input"
-                [shouldHideTooltipOnBlur]="true"
-                [form]="form"
-                [readonly]="input.readonly"
-                [height]="400"
-            >
-            </eos-dynamic-input>
-        </ng-container>
+        <div class="user_info">
+            <div class="user_info-control">
+                <eos-dynamic-input
+                    [input]="inputsData[0]"
+                    [readonly]="true"
+                    [form]="form"
+                    [hideLabel]="false"
+                    (onClickChoose)="showDepChoose()"
+                ></eos-dynamic-input>
+            </div>
+            <div class="user_info-control">
+                <eos-dynamic-input [input]="inputsData[1]" [readonly]="true" [form]="form"></eos-dynamic-input>
+            </div>
+        </div>
+        <eos-dynamic-input
+            [input]="inputsData[2]"
+            [readonly]="inputsData[2].readonly"
+            [height]="400"
+            [form]="form"
+            [shouldHideTooltipOnBlur]="true"
+        ></eos-dynamic-input>
     </div>
 </div>
+<div *ngIf="isShell" class="shell"></div>
