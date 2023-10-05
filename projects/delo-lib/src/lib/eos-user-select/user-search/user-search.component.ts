@@ -346,7 +346,7 @@ export class UserSearchComponent implements OnInit  {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 0, '_');
         }
         if (this.form.controls['rec.1'].value) {
-            const index = this.form.controls['rec.DELO_WEB_RADIO'].value === 'competitive' ? 1 : 27;
+            const index = this.form.controls['rec.DELO_WEB_RADIO'].value === 'competitive' ? 27 : 1;
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, index, '1');
         } else {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 1, '_');
