@@ -8,23 +8,41 @@
             <div class="pull-right">
                 <a class="btn btn-primary-light"
                     routerLink="{{selfLink}}"
-                    
                     aria-hidden="true"
                     tooltip="Открыть в новом окне"
                     placement="bottom"
                     containerClass="tooltip-info"
+                    container="body"
                     target="_blank"><span class="eos-adm-icon eos-adm-icon-external-link-blue small"></span>
                 </a>
                 <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" container="body"
-                        tooltip="Закрыть" placement="left" containerClass="tooltip-info"><span
+                        tooltip="Закрыть" placement="auto" containerClass="tooltip-info"><span
                             class="eos-adm-icon eos-adm-icon-close-blue small"></span></button>
             </div>
         </div>
     </div>
     <div class="cache-body">
         <div class="cache-button">
-            <span style="margin-right: 20px; cursor: pointer;" (click)="updateInfo()" class="eos-adm-icon eos-adm-icon-process-blue small"></span>
-            <span style="cursor: pointer;" (click)='cacheClear()' class="eos-adm-icon eos-adm-icon-bin-blue small"></span>
+            <span 
+                style="margin-right: 20px; cursor: pointer;"
+                (click)="updateInfo()"
+                class="eos-adm-icon eos-adm-icon-process-blue small"
+                tooltip="Обновить"
+                triggers="hover"
+                containerClass="tooltip-info"
+                placement="bottom"
+                container="body">
+            </span>
+            <span 
+                style="cursor: pointer;"
+                (click)='cacheClear()'
+                class="eos-adm-icon eos-adm-icon-bin-blue small"
+                tooltip="Очистить"
+                triggers="hover"
+                containerClass="tooltip-info"
+                placement="bottom"
+                container="body">
+            </span>
         </div>
         <div class="cache-body-tables">
             <div>
@@ -54,7 +72,6 @@
         </div>
         <br>
     </div>
-    
 </div>
 
 
