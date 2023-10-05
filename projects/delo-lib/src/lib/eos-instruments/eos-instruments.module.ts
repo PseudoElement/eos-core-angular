@@ -6,6 +6,7 @@ import { EosInstrumentsSingleComponent } from './components/eos-instruments-sing
 import { EosInstrumentsListComponent } from './components/eos-instruments-list/eos-instruments-list.component';
 import { ToolsControlCache } from './components/control-cache/control-cache.component';
 import { RouterModule } from '@angular/router';
+import { TooltipModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { RouterModule } from '@angular/router';
     ToolsControlCache ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    TooltipModule.forRoot(),
   ]
 })
 export class EosInstrumentsModule { }

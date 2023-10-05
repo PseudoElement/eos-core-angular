@@ -2,15 +2,15 @@
     position: absolute;
     overflow-x: hidden;
     overflow-y: auto;
-    width: 800px;
+    width: 100%;
     margin-left: -21px;
-    border: 1px solid $border-color-main-theme;
+    border-bottom: 1px solid $border-color-main-theme;
     border-top: none;
     background-color: $primary-color-main-theme;
     .accordion-position-main {
-        width: 783px;
+        width: 100%;
         padding-left: 20px;
-        padding-right: 5px;
+        padding-right: 20px;
     }
     eos-dynamic-input {
         font-size: 13px;

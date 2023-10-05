@@ -76,7 +76,8 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     // ];
     private regExpFolders1 = /[1|2|3|4|5]/;
     private regExpFolders2 = /[7|8|9]/;
-    private regExpFolders3 = /[1|2|3|4|5|6|7|8|9]/;
+    private regExpFolders3 = /[1|2|3|4|5|7|8|9]/;
+    private regExpFolders4 = /[6]/;
     get disabledInAcces() {
         if (this.currentCabinet) {
             return this.regExpFolders1.test(this.currentCabinet.data.FOLDERS_AVAILABLE);
@@ -146,7 +147,13 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
     }
     selectCurentCardSecond($event) {
         if (!this.currentCabinet || $event.key !== this.currentCabinet['key']) {
-            this.currentCabinet = $event
+            this.currentCabinet = $event;
+            /** Для старых записей в которых может оставаться запись В дело удаляем эту галочку так 
+             * как она не отображатеся но участвует в логике чего быть не должно
+             */
+            if (this.regExpFolders4.test(this.currentCabinet.data.FOLDERS_AVAILABLE)) {
+                this.changeFolders('6');
+            }
         }
         this.updateBtn();
     }
@@ -167,7 +174,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
                         item.disable = !Boolean(cabinet);
                         break;
                     case 'main':
-                        item.disable = !Boolean(cabinet) || cabinet['Icons'] !== undefined || !Boolean(cabinet.data['FOLDERS_AVAILABLE']);
+                        item.disable = !Boolean(cabinet) || cabinet['Icons'] !== undefined || !Boolean(cabinet.data['FOLDERS_AVAILABLE'].replace('6', ''));
                         break;
                     case 'copy':
                         item.disable = !Boolean(cabinet);
@@ -271,7 +278,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy,
         if (localStorage.getItem('copyParamsFOLDER_AVAILABLE') !== undefined) {
             const folder = localStorage.getItem('copyParamsFOLDER_AVAILABLE');
             this.currentCabinet.data.FOLDERS_AVAILABLE = folder.split('_')[0];
-            const flag = folder.split('_')[1];
+            const flag = folder.split('_')[1].replace('6', '');
             this.currentCabinet.data.HIDE_INACCESSIBLE = +flag[0];
             this.currentCabinet.data.HIDE_INACCESSIBLE_PRJ = +flag[1];
             this.changes.emit();

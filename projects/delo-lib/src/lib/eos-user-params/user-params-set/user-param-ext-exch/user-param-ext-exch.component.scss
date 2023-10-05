@@ -12,3 +12,9 @@
 .label-sstu-margin {
     margin-bottom: -15px;
 }
+.input-user-ext-exch-wrapper {
+    position: relative;
+    .accordion-position {
+        max-height: calc(100vh - 230px);
+    }
+}
