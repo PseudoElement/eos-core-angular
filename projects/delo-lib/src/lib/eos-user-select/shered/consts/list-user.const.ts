@@ -1,5 +1,9 @@
 import { E_FIELD_TYPE } from '../../../eos-dictionaries/interfaces';
 
+export enum UsersTypeTabs{
+    AllUsers = 'AllUsers',
+    MyUsers = 'MyUsers'
+}
 export const LIST_USER_CABINET = [
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -15,3 +19,14 @@ export const LIST_USER_CABINET = [
         default: 'Все кабинеты'
     },
 ];
+
+export const USERS_TYPE_TO_TECH_ADMIN_TABS = [
+    {
+        text: 'Все',
+        value: UsersTypeTabs.AllUsers
+    },
+    {
+        text: 'Мои пользователи',
+        value: UsersTypeTabs.MyUsers
+    }
+]

@@ -34,7 +34,7 @@ import { AppDeloRoutingModule } from '../app/app-delo-routing.module';
         BtnActionComponent,
         UserSearchComponent,
         EosReportUsersInfoComponent,
-        SettingManagementComponent
+        SettingManagementComponent,
     ],
     entryComponents: [
         CreateUserComponent,

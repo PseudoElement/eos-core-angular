@@ -1,3 +1,5 @@
+import { UsersTypeTabs } from "../consts/list-user.const";
+
 export interface IModesUserSelect {
     key: E_MODES_USER_SELECT;
     title: string;
@@ -24,4 +26,8 @@ export interface IUserCheckSort {
     upDoun: boolean;
     checked: boolean;
 }
+export type IUsersTypeTabsVisibility = {
+    [UsersTypeTabs.AllUsers]: boolean,
+    [UsersTypeTabs.MyUsers]: boolean
+} | null
 export enum SortsList {department, fullDueName, tip, login, surnamePatron}

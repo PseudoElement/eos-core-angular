@@ -1,7 +1,7 @@
 import { AfterContentChecked, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserParamApiSrv } from '../../eos-user-params/shared/services/user-params-api.service';
@@ -32,8 +32,9 @@ import { SearchServices } from '../../eos-user-select/shered/services/search.ser
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { SettingManagementComponent } from './setting-management/setting-management.component';
 import { FormGroup } from '@angular/forms';
-import { LIST_USER_CABINET } from '../../eos-user-select/shered/consts/list-user.const';
+import { LIST_USER_CABINET, USERS_TYPE_TO_TECH_ADMIN_TABS, UsersTypeTabs } from '../../eos-user-select/shered/consts/list-user.const';
 import { InputParamControlService } from '../../eos-user-params/shared/services/input-param-control.service';
+import { IUsersTypeTabsVisibility } from '../../eos-user-select/shered/interfaces/user-select.interface';
 interface TypeBread {
     action: number;
 }
@@ -47,6 +48,8 @@ interface ISDISABLED {
 export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
     @ViewChild('listContent', { static: false }) listContent;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
+    usersTypeTabs = USERS_TYPE_TO_TECH_ADMIN_TABS;
+    activeUsersTypeTab$: BehaviorSubject<UsersTypeTabs> = new BehaviorSubject(UsersTypeTabs.AllUsers);
     currentState: boolean[];
     createUserModal: BsModalRef;
     settingsManagementModal: BsModalRef;
@@ -71,8 +74,21 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     deleteOwnUser: any;
     CabinetOptions = [];
     isDisableObj: ISDISABLED = {}
+    isVisibleUsersTypeTabs: IUsersTypeTabsVisibility = {
+        [UsersTypeTabs.AllUsers]: true,
+        [UsersTypeTabs.MyUsers]: true
+    }
     public inputs: any;
     public form: FormGroup;
+    get UsersTypeTabs(): typeof UsersTypeTabs{
+        return UsersTypeTabs;
+    }
+    get isLimitedTechnologist(): boolean {
+        return this._appContext.limitCardsUser.length > 0;
+    }
+    get availableDuesForTechnologist(): string[] {
+        return this._appContext.limitCardsUser
+    }
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries['USER_CL.Removed'] === 'true') {
             this._apiSrv.sortDelUsers = true;
@@ -176,7 +192,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ngAfterContentChecked() {
         if(this.listUsers) this.checkIsDisabled();
     }
-
     ngOnInit() {
         this.rtUserService.clearHash();
         if (this._storage.getItem('onlyView') !== undefined) {
@@ -257,6 +272,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this._storage.setItem('cabinetFilter', value);
             this.initView(id, value);
         });
+        this._initUsersTypeTabs()
+        this.activeUsersTypeTab$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(() => this.initView())
     }
     updateOptionSelect(depart: string): Promise<boolean> {
         return this._pipeSrv.read<USER_CL>({
@@ -354,17 +375,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         // this.flagScan = null; убираю из-за сканирования
         this.flagChecked = null;
         this.isLoading = true;
-        return this._apiSrv.getUsers(param || '0.', cabinet)
-        .then((data: UserSelectNode[]) => {
-            this.listUsers = this._pagSrv.UsersList;
-            this.flagScan = null;
-            this.isLoading = false;
-            this.countMaxSize = this._pagSrv.countMaxSize;
-            this.rtUserService._updateBtn.next(this.optionsBtn);
-            this.rtUserService.changeSelectedUser(null);
-        }).catch(error => {
-            this._errorSrv.errorHandler(error);
-        });
+        /* Добавляем techDueDeps - если выбран таб Мои Пользователи и нужно фильтровать только доступных для редактирования пользователей*/
+        let techDueDeps = this.activeUsersTypeTab$.value === UsersTypeTabs.MyUsers ? this._getAvailableTecDueDeps() : undefined;
+        return this._apiSrv.getUsers(param || '0.', cabinet, techDueDeps)
+            .then((data: UserSelectNode[]) => {
+                this.listUsers = this._pagSrv.UsersList;
+                this.flagScan = null;
+                this.isLoading = false;
+                this.countMaxSize = this._pagSrv.countMaxSize;
+                this.rtUserService._updateBtn.next(this.optionsBtn);
+                this.rtUserService.changeSelectedUser(null);
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+            });
         // let due;
         // const url = this._router.url.split('/');
         // if (url[url.length - 1] === 'user_param') {
@@ -1148,11 +1171,39 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._pagSrv.resetConfig();
         this.initView(urlUpdate);
     }
-
+    private _initUsersTypeTabs(): void {
+        if(this._appContext.cbBase && this.isLimitedTechnologist){
+            this.setActiveUsersTypeTab(UsersTypeTabs.MyUsers)
+            this.isVisibleUsersTypeTabs = {
+                [UsersTypeTabs.AllUsers]: false,
+                [UsersTypeTabs.MyUsers]: true
+            };
+        }else if(!this._appContext.cbBase && this.isLimitedTechnologist){
+            this.setActiveUsersTypeTab(UsersTypeTabs.MyUsers)
+            this.isVisibleUsersTypeTabs = {
+                [UsersTypeTabs.AllUsers]: true,
+                [UsersTypeTabs.MyUsers]: true
+            }
+        }else{
+            this.setActiveUsersTypeTab(UsersTypeTabs.AllUsers)
+            this.isVisibleUsersTypeTabs = null;
+        }
+    }
+    /**
+     * 
+     * @param activeTab Выбранный таб Мои пользователи / Все
+     * @param onClick Защита от дурака - Используется в html-темплейте, чтобы не спамили запросами нажимая на кнопку, если второй Таб скрыт
+     */
+    setActiveUsersTypeTab(activeTab: UsersTypeTabs,){
+        this.activeUsersTypeTab$.next(activeTab);
+    }
+    private _getAvailableTecDueDeps(): string {
+        const dues = this._appContext.limitCardsUser;
+        const duesToString = dues.join('|');
+        return duesToString;
+    }
     private _createUrlForSop(isn_user) {
         const url = `EraseUser?isn_user=${isn_user}`;
         return url;
     }
-
-
 }

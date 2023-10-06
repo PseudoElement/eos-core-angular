@@ -103,7 +103,7 @@ export class UserParamApiSrv {
             return data;
         });
     }
-    getQueryforDB(dueDep?, cabinet?) {
+    getQueryforDB(dueDep?, cabinet?, techDueDep?: string) {
         let q: any = {};
         let skip, top;
         const ob1 = {};
@@ -142,6 +142,10 @@ export class UserParamApiSrv {
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
                 ob1['ISN_LCLASSIF'] = '1:null';
+                if(techDueDep) { 
+                    ob1['TECH_DUE_DEP'] = techDueDep
+                    ob1['USER_CL.DEP.DEPARTMENT_DUE'] =  techDueDep
+                }
                 q = {
                     USER_CL: PipRX.criteries(ob1),
                     top: `${top}`,
@@ -264,13 +268,13 @@ export class UserParamApiSrv {
 
         // }
     }
-    getUsers(dueDep?: string, cabinet?: string): Promise<any> {
+    getUsers(dueDep?: string, cabinet?: string, techDueDep?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
         let q;
         if (this._storageSrv.getItem('quickSearch')) {
             q = this.getQueryForSearch();
         } else {
-            q = this.getQueryforDB(dueDep, cabinet);
+            q = this.getQueryforDB(dueDep, cabinet, techDueDep);
         }
 
         q._moreJSON = { CanTech: null };
