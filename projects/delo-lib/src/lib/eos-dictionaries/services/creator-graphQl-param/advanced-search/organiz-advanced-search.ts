@@ -2,8 +2,26 @@ import {ResponseProtItem, SearchQueryOrganization } from '../../../interfaces/fe
 import { AbstractAdvancedSearch } from './abstract-advanced-search';
 
 export class OrganizAdvancedSearch extends AbstractAdvancedSearch {
-
-    public organiz(param: ResponseProtItem[], query: SearchQueryOrganization): string {
+    getItemsSort(orderby: string): string {
+        if (orderby.indexOf('CLASSIF_NAME') !== -1) {
+            return 'classifName'
+        }
+        if (orderby.indexOf('NOTE') !== -1) {
+            return 'note';
+        }
+        if (orderby.indexOf('NEW_RECORD') !== -1) {
+            return 'newRecord';
+        }
+        return 'classifName';
+    }
+    getDescriptor(orderby: string) {
+        if(orderby.indexOf('asc') > -1) {
+            return 'Asc'
+        } else {
+            return 'Desc';
+        }
+    }
+    public organiz(param: ResponseProtItem[], query: SearchQueryOrganization, first: number, scip: number, order, showDelete): string {
         const refIsn = this.getSearchParameters(param, 'refIsn');
         const queryParam: string = this.createParamInNumber(refIsn);
         let ISN_HIGH_NODE: string = '';
@@ -20,8 +38,17 @@ export class OrganizAdvancedSearch extends AbstractAdvancedSearch {
             let layerParam = query['LAYER'].split(':')[0];
             LAYER = `, layer: {greaterOrEqual: {value: ${layerParam}}}`;
         }
-
-        return `organizClsPg(first: 1000000, filter: {isnNode: {in: [${queryParam}]}${ISN_HIGH_NODE}${DUE}${LAYER}}) {
+        const after = scip ? '' + (scip - 1) : '-1';
+        let deletedFlagFilter = '';
+        if (!showDelete) {
+            deletedFlagFilter = `, deleted: {equal: { value: 0 }}`;
+        }
+        return `organizClsPg(
+                        first: ${first},
+                        after: "${after}",
+                        orderby: [{${this.getItemsSort(order)}: ${this.getDescriptor(order)}}],
+                        filter: {isnNode: {in: [${queryParam}]}${ISN_HIGH_NODE}${DUE}${LAYER}${deletedFlagFilter}}) {
+                    totalCount
                     items {
                         due
                         isnNode

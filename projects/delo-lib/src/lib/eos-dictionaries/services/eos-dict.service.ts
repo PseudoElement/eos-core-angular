@@ -1556,6 +1556,7 @@ export class EosDictService {
             q = this.getShowAllSubnodesQueryes();
         }
         if (this._srchCriteries) {
+            this._srchCriteries['DELETED'] = this.viewParameters.showDeleted;
             return await dictionary.search(this._srchCriteries, order + ' ' + by, top, skip)
             .then((el) => {
                 return el;

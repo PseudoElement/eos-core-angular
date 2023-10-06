@@ -118,18 +118,20 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
         const query = [];
         const queries = criteries[0];
         if (queries.medo || queries.contact) {
-            query.push(this.searchMedo(queries, {top: limit, orderby: order, skip: skip}, queries['DELETED']));
+            query.push(this.searchMedo(queries, {top: limit, orderby: order, skip: skip}, criteries['DELETED']));
         }
         if (queries.protocol) {
-            query.push(this.searchProto(queries, {top: limit, orderby: order, skip: skip}, queries['DELETED']));
+            query.push(this.searchProto(queries, {top: limit, orderby: order, skip: skip}, criteries['DELETED']));
         }
         if (queries.organiz) {
             const extQuery = this.getCriteriesBranch(queries);
             if (extQuery) {
                 Object.assign(queries.organiz, extQuery);
             }
-            if (!queries['DELETED']) {
+            if (!criteries['DELETED']) {
                 queries.organiz['DELETED'] = 0;
+            } else {
+                delete queries.organiz['DELETED'];
             }
             if (queries.organiz.hasOwnProperty('DOP_REC')) {
                 query.push(this.searchDopRec([queries.organiz], {top: limit, orderby: order, skip: skip}));
@@ -215,6 +217,8 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             }
             if (!flagDeleted) {
                 q['ORGANIZ_CL']['criteries']['DELETED'] = 0;
+            } else {
+                delete q['ORGANIZ_CL']['criteries']['DELETED'];
             }
             flagorganiz = true;
             queryContact = this.apiSrv.read(q);
@@ -287,18 +291,19 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
             return _d;
         });
     }
-
     public async searchProto(queries: SearchQueryOrganization, {top, skip, orderby}, flagDeleted) {
         const protReq: string = this.protParam.prot(queries.protocol, E_DICTIONARY_ID.ORGANIZ);
         const requestProt = await this.graphQl.query(protReq);
         const protItem = requestProt.data.protsPg ? requestProt.data.protsPg.items : [];
         if (protItem.length) {
-            const organizReq = this.organizParam.organiz(protItem, queries);
+            const organizReq = this.organizParam.organiz(protItem, queries, top, skip, orderby, flagDeleted);
             const requestOrganiz = await this.graphQl.query(organizReq);
+            const requestTotal = requestOrganiz?.data?.organizClsPg?.totalCount || 0;
             const organiz = requestOrganiz.data.organizClsPg ? requestOrganiz.data.organizClsPg.items : [];
-
             if (organiz.length) {
-                return this.converter.organizReq(organiz);
+                const ans = this.converter.organizReq(organiz);
+                ans['TotalRecords'] = requestTotal;
+                return ans;
             } else {
                 return [];
             }
