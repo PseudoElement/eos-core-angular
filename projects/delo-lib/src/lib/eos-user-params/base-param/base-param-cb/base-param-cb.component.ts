@@ -1349,20 +1349,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         dueDep = (due.split('|'))[0];
         this._userParamSrv.getDepartmentFromUser([dueDep])
-            .then((data: DEPARTMENT[]) => {
-                if (this.formControls.get('DUE_DEP_NAME').value) {
+            .then(async (data: DEPARTMENT[]) => {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                             this.fillingDep(data);
                             return val;
                         })
                         .catch(err => {
-                            this.formControls.controls['DUE_DEP_NAME'].patchValue('');
                             throw new Error(err);
                         })
-                } else {
-                    this.fillingDep(data);
-                    return Promise.resolve(data[0]);
-                }
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
