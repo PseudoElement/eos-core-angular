@@ -1,6 +1,20 @@
 import { ResponseOrganizationItems} from '../../interfaces/fetch.interface'
 
 export class OrganizConverterFetchRequest {
+    getTermExecType(termExecType: string) {
+        switch (termExecType) {
+            case 'CalendarDays':
+                return 1;
+            case 'WorkingDays':
+                return 2;
+            case 'CalendarDaysPlus':
+                return 3;
+            case 'CalendarDaysMinus':
+                return 4;
+            default:
+                return null;
+        }
+    }
     public organizReq(items: ResponseOrganizationItems[]) {
         const result = [];
         items.forEach(el => {
@@ -44,7 +58,7 @@ export class OrganizConverterFetchRequest {
                         convertItem['TERM_EXEC'] = el['termExec']
                         break;
                     case 'termExecType':
-                        convertItem['TERM_EXEC_TYPE'] = el['termExecType']
+                        convertItem['TERM_EXEC_TYPE'] = typeof(el['termExecType']) === 'string' ? this.getTermExecType(el['termExecType']) : el['termExecType'];
                         break;
                     case 'updDate':
                         convertItem['UPD_DATE'] = el['updDate']

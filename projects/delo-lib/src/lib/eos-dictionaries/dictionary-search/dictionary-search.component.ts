@@ -183,6 +183,9 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     fullSearch() {
+        if (this.searchData.srchMode === 'protocol' && this.noSearchData) {
+            return;
+        }
         this.settings.entity = this.getModelName();
         this.settings.entity_dict = this.dictId;
         this.settings.lastSearch = SEARCHTYPE.full;

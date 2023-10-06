@@ -1556,6 +1556,7 @@ export class EosDictService {
             q = this.getShowAllSubnodesQueryes();
         }
         if (this._srchCriteries) {
+            this._srchCriteries['DELETED'] = this.viewParameters.showDeleted;
             return await dictionary.search(this._srchCriteries, order + ' ' + by, top, skip)
             .then((el) => {
                 return el;
@@ -1940,6 +1941,9 @@ export class EosDictService {
                 this._visibleList$.next(newElem);
                 this.updateMarked(true);
                 this.updateViewParameters({ updatingList: false });
+                if (this._currentMarkInfo.nodes && this._currentMarkInfo.nodes.length === 0) {
+                    this.openNode('');
+                }
                 return;
             } catch (error) {
                 this._visibleListNodes = [];

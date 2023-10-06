@@ -267,7 +267,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.TABLE_HEADER_ABS_RIGHT[0]['style']['max-width'] = curentSetting[this.settingsTable.expandFixedColumnName];
             }
         }
-        this.settingsTable.defaultSettingHeaderName = 'absolute-rights';
+        this.settingsTable.defaultSettingHeaderName = 'absoluteRights';
         this.tabelData.tableHeader = this.updateHeaderTable([...this.TABLE_HEADER_ABS_RIGHT]);
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
@@ -866,9 +866,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._rightDeloService.listRightNew.clear();
     }
     updateHeaderTable(headers: ITableHeader[]): ITableHeader[] {
-        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
-        if (curentSettingStr && JSON.parse(curentSettingStr)['absolute-rights']) {
-            const localSetting = JSON.parse(curentSettingStr)['absolute-rights'];
+        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF + 'absoluteRights');
+        if (curentSettingStr) {
+            const localSetting = JSON.parse(curentSettingStr);
             const newHeader = [];
             localSetting.forEach((oldHeader) => {
                 const findHead = headers.find((head) => { return oldHeader === head.id });
