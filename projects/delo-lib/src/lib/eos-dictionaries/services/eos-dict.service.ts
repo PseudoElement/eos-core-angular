@@ -1941,6 +1941,9 @@ export class EosDictService {
                 this._visibleList$.next(newElem);
                 this.updateMarked(true);
                 this.updateViewParameters({ updatingList: false });
+                if (this._currentMarkInfo.nodes && this._currentMarkInfo.nodes.length === 0) {
+                    this.openNode('');
+                }
                 return;
             } catch (error) {
                 this._visibleListNodes = [];
