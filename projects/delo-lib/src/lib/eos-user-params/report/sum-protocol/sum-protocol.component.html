@@ -131,6 +131,11 @@
                 </div>
             </div>
         </div>
-        <eos-users-info [open]="isOpenUserInfo" [id]="lastUser?.id" (closeModal)="setIsOpenUserInfo(false)"></eos-users-info>
+        <eos-users-info 
+            [open]="isOpenUserInfo"
+            [id]="lastUser?.id" 
+            [isnNow]="isnRefFile" 
+            (closeModal)="setIsOpenUserInfo(false)">
+        </eos-users-info>
     </div>
 </div>
