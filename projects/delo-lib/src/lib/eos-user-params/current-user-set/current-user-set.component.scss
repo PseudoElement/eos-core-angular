@@ -3247,4 +3247,30 @@ bs-dropdown-container {
             }
         }
     }
+    &.current-settings-ext-exch {
+        .usual-border {
+            display: none;
+        }
+        eos-user-params-header {
+            header {
+                .header-wr {
+                    .buttons-wrapper {
+                        .default-btn {
+                            left: 30px !important;
+                        }
+                    }
+                }
+            }
+        }
+        background-color: green !important;
+        .user-param-registration-content-wrapper {
+            margin-left: 20px !important;
+            .accordion-position {
+                width: calc(100vw - 40px);
+            }
+        }
+        .input-user-shablony-wrapper {
+            margin-left: 20px;
+        }
+    }
 }

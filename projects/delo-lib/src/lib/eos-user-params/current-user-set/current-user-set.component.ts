@@ -98,6 +98,8 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
                         break;
                 }
                 this.appMode.hasMode = true;
+            } else if (qParams.tab) {
+                this.appMode.extExchParams = +qParams.tab || 51;
             }
             this._checkTabExistance(qParams);
             this.openingOptionalTab = 0;
@@ -153,9 +155,14 @@ export class CurrentUserSetComponent implements OnInit, OnDestroy {
         }
     }
     toggleTheme() {
+        const objectReturn = {};
         if (this.checkCB) {
-            return { 'current-settings-CB': true };
+             objectReturn['current-settings-CB'] = true;
         }
+        if (this.appMode?.extExchParams) {
+            objectReturn['current-settings-ext-exch'] = true;
+        }
+        return objectReturn;
     }
     DefaultSubmitEmit(updateUser: USER_PARMS[]): any {
         if (updateUser[1] !== undefined) {

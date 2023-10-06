@@ -29,11 +29,18 @@ export interface IParamAccordionList {
 }
 
 export interface IUserSettingsModes {
+    /** открытие через шестерёнку */
     arm?: boolean;
+    /** Открытие из толстяка из пользователей */
     tk?: boolean;
+    /** Отркытие из толстяка из документов */
     tkDoc?: boolean;
+    /** специальный канал для ЦБ называется ARMCBR */
     cbr?: boolean;
+    /** Параметр который говорит что параметр mode был передан */
     hasMode?: boolean;
+    /** Канал на который нужно перейти во Внешнием обмене  */
+    extExchParams?: number;
 }
 
 export interface ISelectedUserSumProtocol{
