@@ -144,8 +144,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
             newHeaderKey.push(header.id);
             newHeader.push(header);
         });
-        const curentSetting = { [this.settings.defaultSettingHeaderName]: newHeaderKey }
-        localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
+        localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF + this.settings.defaultSettingHeaderName, JSON.stringify(newHeaderKey));
         this.tabelData.tableHeader = newHeader;
         this.updateHeader(JSON.parse(JSON.stringify(newHeader)));
         if (this.settings && this.settings.expandFixedColumn) {
@@ -153,7 +152,6 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
         }
     }
     saveSettings(flag): void {
-        const curentSettingStr = localStorage.getItem('' + this._appContext.CurrentUser.ISN_LCLASSIF);
         const newHeaderKey = [];
         const newHeader = [];
         if (flag) {
@@ -166,14 +164,7 @@ export class TabelElementComponent implements OnInit, AfterContentInit {
                 newHeaderKey.push(header.id);
                 newHeader.push(header);
             });
-            if (curentSettingStr) {
-                const curentSetting = JSON.parse(curentSettingStr);
-                curentSetting[this.settings.defaultSettingHeaderName] = newHeaderKey;
-                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
-            } else {
-                const curentSetting = { [this.settings.defaultSettingHeaderName]: newHeaderKey }
-                localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF, JSON.stringify(curentSetting));
-            }
+            localStorage.setItem('' + this._appContext.CurrentUser.ISN_LCLASSIF + this.settings.defaultSettingHeaderName, JSON.stringify(newHeaderKey));
             this.tabelData.tableHeader = newHeader;
             this.updateHeader(JSON.parse(JSON.stringify(newHeader)));
         }
