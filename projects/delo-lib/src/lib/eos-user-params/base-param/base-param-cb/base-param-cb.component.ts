@@ -1301,7 +1301,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.controls, this.formControls);
     }
     showDepChoose() {
-        console.log('showDep')
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         OPEN_CLASSIF_DEPARTMENT['selected'] = '';
@@ -1330,7 +1329,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         OPEN_CLASSIF_DEPARTMENT.search_query = this.formControls.get('DUE_DEP_NAME').value;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
-                console.log('chooseEmpty')
                 this._setDepartment(data);
                 this.checkIsDueDepNameExist(this.dueDepName)
             })
@@ -1357,7 +1355,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                             return val;
                         })
                         .catch(err => {
-                            console.log('catchError')
                             throw new Error(err);
                         })
             })
@@ -1652,7 +1649,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     private _setDueDepName(value) {
-        console.log('_setDueDepname')
         if (value.length < 3) { // нет поиска
             this.controls['DUE_DEP_NAME'].options = [];
             this._idsForModalDictDep = [];
