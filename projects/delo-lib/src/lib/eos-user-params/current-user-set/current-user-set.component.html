@@ -1,6 +1,6 @@
 <div appDragDrop class="current-settings" [ngClass]="toggleTheme()">
     <div class="left">
-        <div  class="params-nav-list">
+        <div  class="params-nav-list" *ngIf="!appMode.extExchParams">
             <ul class="list-group">
                 <ng-container *ngFor="let param of listSettings">
                     <li *ngIf="param.url" class="list-group-item"

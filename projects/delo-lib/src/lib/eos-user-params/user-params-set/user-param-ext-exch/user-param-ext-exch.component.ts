@@ -101,7 +101,40 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
             });
         }
         this.currTabName = this.fieldGroupsForExhcExt[0];
-
+        if (this.appMode.extExchParams) {
+            switch (this.appMode.extExchParams) {
+                case 51:
+                    this.setTab('Эл. почта');
+                    break;
+                case 52:
+                    this.setTab('СЭВ');
+                    break;
+                case 53:
+                    this.setTab('МЭДО');
+                    break;
+                case 54:
+                    this.setTab('ЕПП');
+                    break;
+                case 55:
+                    this.setTab('ССТУ');
+                    break;
+                case 56:
+                    this.setTab('ЛК');
+                    break;
+                case 57:
+                    this.setTab('ЕПВВ');
+                    break;
+                case 58:
+                    this.setTab('СДС');
+                    break;
+                case 59:
+                    this.setTab('АС ПСД');
+                    break;
+                default:
+                    this.setTab('Эл. почта');
+                    break;
+            }
+        }
         if (this.defaultTitle) {
             this.currentUser = this.defaultTitle;
             this.defaultValues = this.defaultUser;
