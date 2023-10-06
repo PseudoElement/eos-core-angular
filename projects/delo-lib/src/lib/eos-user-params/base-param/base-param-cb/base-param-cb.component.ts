@@ -1301,6 +1301,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.cancelValues(this.controls, this.formControls);
     }
     showDepChoose() {
+        console.log('showDep')
         this.isShell = true;
         OPEN_CLASSIF_DEPARTMENT.selectMulty = false;
         OPEN_CLASSIF_DEPARTMENT['selected'] = '';
@@ -1329,6 +1330,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         OPEN_CLASSIF_DEPARTMENT.search_query = this.formControls.get('DUE_DEP_NAME').value;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
+                console.log('chooseEmpty')
                 this._setDepartment(data);
                 this.checkIsDueDepNameExist(this.dueDepName)
             })
@@ -1349,20 +1351,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         dueDep = (due.split('|'))[0];
         this._userParamSrv.getDepartmentFromUser([dueDep])
-            .then((data: DEPARTMENT[]) => {
-                if (this.formControls.get('DUE_DEP_NAME').value) {
+            .then(async (data: DEPARTMENT[]) => {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                             this.fillingDep(data);
                             return val;
                         })
                         .catch(err => {
-                            this.formControls.controls['DUE_DEP_NAME'].patchValue('');
+                            console.log('catchError')
                             throw new Error(err);
                         })
-                } else {
-                    this.fillingDep(data);
-                    return Promise.resolve(data[0]);
-                }
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
@@ -1655,6 +1652,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     private _setDueDepName(value) {
+        console.log('_setDueDepname')
         if (value.length < 3) { // нет поиска
             this.controls['DUE_DEP_NAME'].options = [];
             this._idsForModalDictDep = [];
