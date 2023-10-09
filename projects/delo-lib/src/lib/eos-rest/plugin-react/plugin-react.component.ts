@@ -23,7 +23,7 @@ export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     ngAfterViewInit(): void {
-      Manager.loadPlugins({'target': 'UserSessions', mountPoint: 'user_session_plug_1'}).then(() => {
+      Manager.loadPlugins({targets: ['UserSessions'], mountPoint: 'user_session_plug_1'}).then(() => {
         console.log('loaded userSession');
       });
     }

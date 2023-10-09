@@ -13,7 +13,7 @@ export class AboutSystemsComponent implements AfterViewInit, OnDestroy {
     constructor() {
     }
     ngAfterViewInit(): void {
-      Manager.loadPlugins({'target': 'AboutSystem', mountPoint: 'about_system_plug', scriptsAppendPoint: "scriptAppend"}).then(() => {
+      Manager.loadPlugins({targets: ['AboutSystem'], mountPoint: 'about_system_plug', scriptsAppendPoint: "scriptAppend"}).then(() => {
         console.log('loaded AboutSystemPlugin');
       });
     }

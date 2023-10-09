@@ -62,7 +62,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
         }
     }
     get isOpenDropdown(): boolean{
-        return this.form.enabled && this.currentValue.length >= 3 && this._dropDown.isOpen;
+        return this.form.enabled && this.currentValue.length >= 3 && this._dropDown?.isOpen;
     }
     controlIsValid() {
         return this.control.valid;

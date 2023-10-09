@@ -16,7 +16,7 @@ export class EosAdmToolsService {
   }
 
   loadTaskLists(): IFonLists[] {
-    this.tasksList = Manager.getArray<IFonLists>('eos-admin-tools-tasks');
+    this.tasksList = Manager.data.getArray<IFonLists>('eos-admin-tools-tasks');
     return this.tasksList;
   }
 

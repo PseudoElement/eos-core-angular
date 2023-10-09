@@ -17,7 +17,7 @@ export class FonTasksService {
 
   loadTaskLists(): any {
     try {
-      this.tasksList = Manager.getArray<IFonLists>('eos-admin-fon-tasks');
+      this.tasksList = Manager.data.getArray<IFonLists>('eos-admin-fon-tasks');
     } catch (error) {
       console.log('Ошибка получения getArray', error);
     }
