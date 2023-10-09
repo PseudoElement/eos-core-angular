@@ -48,7 +48,7 @@
                 ></span>
             </div>
 
-            <div [ngStyle]="{ display: form.enabled && currentValue.length >= 3 ? 'block' : 'none' }">
+            <div [ngStyle]="{ display: isOpenDropdown ? 'block' : 'none' }">
                 <ul
                     *dropdownMenu
                     #dropdownElement
