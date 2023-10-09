@@ -15,7 +15,7 @@ export class EosParamLicensingComponent implements AfterViewInit, OnDestroy {
     constructor(private msg: EosMessageService) {}
     ngAfterViewInit(): void {
         try {
-            Manager.loadPlugins({ 'target': 'LicenseSettings' }).then(() => {
+            Manager.loadPlugins({ targets: ['LicenseSettings'] }).then(() => {
             })
         } catch (error) {
             this.msg.addNewMessage({ "title": "Предупреждение", "type": "warning", "msg": error.massage || error })

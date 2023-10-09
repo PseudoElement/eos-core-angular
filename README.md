@@ -41,7 +41,7 @@ enum ETypeFon {
 - метод loadPlugin предназначен для загрузки скрипта в приложение, если плагин это html страница, то нужно просто открыть страницу в новом окне.
 в примере для загрузки плагинов используется  @eos/jsplugins-manager
 ```js
-RPM.loadPlugins({ target: "UserSession", registryFolder: ".." });
+RPM.loadPlugins({ targets: "UserSession", registryFolder: ".." });
 ```
 
 документация по @eos/jsplugins-manager http://tfs:8080/tfs/Collection2020/EOSPlatform/_git/eos-jsplugins-manager
@@ -86,24 +86,28 @@ function render(mountPoint: string) {
 
 
 # Начало работы
+В данной версии использую node16
 1.	Выполнить  npm ci (установка зависимостей)
 
 # Запуск в режиме разработки
 2.	Запуск либы в режиме разработки -  build-lib-watch
 3.	Перенос стилей в сборку либы - bandle-scss
 4.	Копирование ресурсов в сборку либы - copy-assets
+    4.1 Вместо 2 скриптов можно использовать скрипт build-resources
 5.	Запуск тестового проекта, для тестирования либы - watch
 
 # Сборка либы в прод
 1. Выполнить build-lib
 2. Перенос стилей в сборку либы - bandle-scss
 3. Копирование ресурсов в сборку либы - copy-assets
+    3.1 Вместо 2 скриптов можно использовать скрипт build-resources
 
 # Сборка приложения в прод
 1. Выполнить build-lib
 2. Перенос стилей в сборку либы - bandle-scss
 3. Копирование ресурсов в сборку либы - copy-assets
-4. Выполнить npm run build-box
+    3.1 Вместо 2 скриптов можно использовать скрипт build-resources
+4. Выполнить npm run build
 
 
 
