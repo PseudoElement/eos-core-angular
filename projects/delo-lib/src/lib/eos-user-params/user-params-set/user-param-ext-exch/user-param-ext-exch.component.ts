@@ -300,7 +300,11 @@ export class UserParamExtendExchComponent implements OnInit, OnDestroy {
                 this.editFlag = false;
             }
             this._RemasterService.submitEmit.next();
-            notifyOpener()
+            notifyOpener();
+            /** Если открываем отдельный канал то после нажатия записать закрываем окно */
+            if (this.appMode.extExchParams) {
+                window.close();
+            }
             // return this._userSrv.getUserIsn(String(userId)).then(res => {
             // });
         }).catch(error => {
