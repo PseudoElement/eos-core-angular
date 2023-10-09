@@ -183,7 +183,7 @@ export class DictionarySearchComponent implements OnDestroy, OnInit {
     }
 
     fullSearch() {
-        if (this.searchData.srchMode === 'protocol' && this.noSearchData) {
+        if (this.searchData.srchMode === 'protocol' && this.isValidProtocolForm) {
             return;
         }
         this.settings.entity = this.getModelName();

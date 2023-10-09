@@ -85,8 +85,6 @@ export class RemasterAbstractComponent implements OnInit, OnDestroy, AfterViewIn
                 }
             });
         }
-        console.log('node.children.length', this.listForAccordion);
-        
         this.RCSEND = `RCSEND_${this.configChannel.nameEN}`;
         this.MAILRECEIVE = `MAILRECEIVE_${this.configChannel.nameEN}`;
 
