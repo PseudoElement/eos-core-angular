@@ -286,7 +286,7 @@ export class UserParamsService {
                         if (!u.length) {
                             return dep;
                         } else {
-                            mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+                            mess.msg = `Должностное лицо "${u[0].SURNAME_PATRON}" уже ассоциировано с пользователем "${dep.CLASSIF_NAME}".`;
                         }
                     } else {
                         mess.msg = `Выбранное ДЛ ${dep.CLASSIF_NAME} не принадлежит разрешенным Вам подразделениям.`;
@@ -295,7 +295,7 @@ export class UserParamsService {
                     if (!u.length) {
                         return dep;
                     }
-                    mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+                    mess.msg = `Должностное лицо "${u[0].SURNAME_PATRON}" уже ассоциировано с пользователем "${dep.CLASSIF_NAME}".`;
                     if(isn && u[0]['ISN_LCLASSIF'] === this.userContextId) return;
                 }
                 this._msgSrv.addNewMessage(mess);
