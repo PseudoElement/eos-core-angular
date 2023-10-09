@@ -41,7 +41,7 @@ enum ETypeFon {
 - метод loadPlugin предназначен для загрузки скрипта в приложение, если плагин это html страница, то нужно просто открыть страницу в новом окне.
 в примере для загрузки плагинов используется  @eos/jsplugins-manager
 ```js
-RPM.loadPlugins({ targets: "UserSession", registryFolder: ".." });
+RPM.loadPlugins({ targets: ["UserSession"], registryFolder: ".." });
 ```
 
 документация по @eos/jsplugins-manager http://tfs:8080/tfs/Collection2020/EOSPlatform/_git/eos-jsplugins-manager
