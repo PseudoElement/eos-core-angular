@@ -61,6 +61,9 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
             return undefined;
         }
     }
+    get isOpenDropdown(): boolean{
+        return this.form.enabled && this.currentValue.length >= 3 && this._dropDown.isOpen;
+    }
     controlIsValid() {
         return this.control.valid;
     }
@@ -79,7 +82,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
 
     toggleDropdown() {
         if (this.control.value.length >= 3) {
-            // this._dropDown.show();
             this.showDropdown();
             if (this.input.options.length > 1) {
                 this.setFirstFocusedItem();
@@ -90,14 +92,10 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     }
     showDropdown() {
         this._dropDown.show();
-        if (this.dropdownElement && this.dropdownElement.nativeElement)
-            this.dropdownElement.nativeElement.style.display = "block";
     }
 
     hideDropDown() {
         this._dropDown.hide();
-        if (this.dropdownElement && this.dropdownElement.nativeElement)
-            this.dropdownElement.nativeElement.style.display = "none";
     }
 
     getMenuWidthStyle(): any {
@@ -195,7 +193,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
                 this.onEnterSearchEmptyResults.emit();
                 if (isLessThen3Chars && this._dropDown.isOpen) {
                     this.selectAction(null, this.focusedItem);
-                    this.hideDropDown();
+                    // this.hideDropDown();
                 }
         }
     }
@@ -211,7 +209,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
                 this.hideDropDown();
             } else {
                 this.showDropdown();
-                // this._dropDown.show();
             }
         }
     }
