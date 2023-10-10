@@ -41,28 +41,29 @@ export class CardRightSrv {
         private _pipSrv: PipRX,
         private _waitClassifSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
-        private _appCtx: AppContext,
+        private _appCtx: AppContext
     ) {
         this._selectingNode$ = new Subject<any>();
         this._chengeState$ = new Subject<boolean>();
         this._updateFlag$ = new Subject<void>();
     }
     prepareforEdit() {
-        this._userParamsSetSrv.curentUser.USERCARD_List = this._prepareforEdit(this._userParamsSetSrv.curentUser.USERCARD_List);
+        this._userParamsSetSrv.curentUser.USERCARD_List = this._prepareforEdit(
+            this._userParamsSetSrv.curentUser.USERCARD_List
+        );
     }
     getCardList(): Promise<USERCARD[]> {
         const userCardList: USERCARD[] = this._userParamsSetSrv.curentUser.USERCARD_List;
         const str: string[] = userCardList.map((card: USERCARD) => card.DUE);
-        return this._apiSrv.getDepartment(str)
-            .then((deps) => {
-                deps.forEach((dep: DEPARTMENT) => {
-                    this.departments.set(dep.DUE, dep);
-                });
-                return userCardList;
+        return this._apiSrv.getDepartment(str).then((deps) => {
+            deps.forEach((dep: DEPARTMENT) => {
+                this.departments.set(dep.DUE, dep);
             });
+            return userCardList;
+        });
     }
     clearDocGroup() {
-       this._docGroup.clear();
+        this._docGroup.clear();
     }
     setUpdateFlag() {
         this._updateFlag$.next();
@@ -81,15 +82,14 @@ export class CardRightSrv {
         docs.forEach((doc: USER_CARD_DOCGROUP) => {
             listDG.push(doc.DUE);
         });
-        return this._getDocGroupEntity$(listDG)
-            .then(() => {
-                const nodeList: NodeDocsTree[] = [];
-                docs.forEach((userCardDG: USER_CARD_DOCGROUP) => {
-                    const docGroup = this._docGroup.get(userCardDG.DUE);
-                    this._createListNode(nodeList, { docGroup, userCardDG });
-                });
-                return nodeList;
+        return this._getDocGroupEntity$(listDG).then(() => {
+            const nodeList: NodeDocsTree[] = [];
+            docs.forEach((userCardDG: USER_CARD_DOCGROUP) => {
+                const docGroup = this._docGroup.get(userCardDG.DUE);
+                this._createListNode(nodeList, { docGroup, userCardDG });
             });
+            return nodeList;
+        });
     }
     provPrevSubmit() {
         // проверяю есть ли право, и если ни у одного парава нет ALLOWED = 1 то выдавать ошибку и не давать сохранять
@@ -98,7 +98,7 @@ export class CardRightSrv {
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             let countFN = 0;
             let countFNA = 0;
-            card.USER_CARD_DOCGROUP_List.forEach(elem => {
+            card.USER_CARD_DOCGROUP_List.forEach((elem) => {
                 if (elem.FUNC_NUM === 1 && elem._State !== _ES.Deleted) {
                     countFN++;
                     if (elem.ALLOWED === 1) {
@@ -117,7 +117,7 @@ export class CardRightSrv {
             this._msgSrv.addNewMessage({
                 type: 'danger',
                 title: 'Предупреждение',
-                msg: 'Пользователю дано право на регистрацию документов, но нет разрешения ни на одну группу документов!\nУкажите группу документов для регистрации'
+                msg: 'Пользователю дано право на регистрацию документов, но нет разрешения ни на одну группу документов!\nУкажите группу документов для регистрации',
             });
             return false;
         }
@@ -125,7 +125,9 @@ export class CardRightSrv {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение',
-                msg: `Невозможно снять право 'Просмотр поручений'.\n Пользователь имеет доступ в папки 1-3 кабинетов данных картотек: ${this.getNamesDue(viewResol)}`
+                msg: `Невозможно снять право 'Просмотр поручений'.\n Пользователь имеет доступ в папки 1-3 кабинетов данных картотек: ${this.getNamesDue(
+                    viewResol
+                )}`,
             });
             return false;
         }
@@ -134,10 +136,10 @@ export class CardRightSrv {
 
     checkViewResol(card: USERCARD, viewResol: string[]): void {
         if (card.USER_CABINET_List.length && card.FUNCLIST.charAt(16) === '0') {
-            card.USER_CABINET_List.forEach( (cab) => {
+            card.USER_CABINET_List.forEach((cab) => {
                 const fold_av = cab.FOLDERS_AVAILABLE.charAt(0);
                 const duplicate_due = viewResol[viewResol.length - 1] !== cab.DEPARTMENT_DUE;
-                if ((fold_av === '1' || fold_av === '2' || fold_av === '3')  && duplicate_due ) {
+                if ((fold_av === '1' || fold_av === '2' || fold_av === '3') && duplicate_due) {
                     viewResol.push(cab.DEPARTMENT_DUE);
                 }
             });
@@ -146,14 +148,14 @@ export class CardRightSrv {
 
     getNamesDue(viewResol: any[]): string {
         let str = '';
-        viewResol.forEach(due => {
+        viewResol.forEach((due) => {
             str += this.departments.get(due).CARD_NAME + ', ';
         });
         return str.slice(0, -2);
     }
 
     checkAllowedCard(due: string): boolean {
-        return !this._appCtx.limitCardsUser.length || this._appCtx.limitCardsUser.some(_due => _due === due);
+        return !this._appCtx.limitCardsUser.length || this._appCtx.limitCardsUser.some((_due) => _due === due);
     }
     saveChenge$() {
         const chl = [];
@@ -178,7 +180,8 @@ export class CardRightSrv {
                 }
             }
         });
-        return this._pipSrv.batch(chl, '')
+        return this._pipSrv
+            .batch(chl, '')
             .then((d) => {
                 this._userParamsSetSrv.setChangeState({ isChange: false });
                 this.prepareforEdit();
@@ -189,7 +192,7 @@ export class CardRightSrv {
                 this._msgSrv.addNewMessage({
                     type: 'danger',
                     title: 'Ошибка операции',
-                    msg: errMessage
+                    msg: errMessage,
                 });
                 return null;
             });
@@ -225,7 +228,7 @@ export class CardRightSrv {
     newDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
         let flag = true;
-        card.USER_CARD_DOCGROUP_List.forEach(elem => {
+        card.USER_CARD_DOCGROUP_List.forEach((elem) => {
             if (elem.FUNC_NUM === 14) {
                 flag = false;
                 if (card.FUNCLIST[13] === '1') {
@@ -235,13 +238,16 @@ export class CardRightSrv {
         });
         if (flag) {
             dues.forEach((due: string) => {
-                const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
-                    ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                    DUE_CARD: card.DUE,
-                    DUE: due,
-                    FUNC_NUM: 14,
-                    ALLOWED: 1,
-                }, 'USER_CARD_DOCGROUP');
+                const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>(
+                    {
+                        ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                        DUE_CARD: card.DUE,
+                        DUE: due,
+                        FUNC_NUM: 14,
+                        ALLOWED: 1,
+                    },
+                    'USER_CARD_DOCGROUP'
+                );
                 newUserCardDG.push(dg);
             });
         }
@@ -250,22 +256,25 @@ export class CardRightSrv {
     newDateRG(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
         let cardADD = [13, 14, 15, 16];
-        card.USER_CARD_DOCGROUP_List.forEach(elem => {
+        card.USER_CARD_DOCGROUP_List.forEach((elem) => {
             if (elem.FUNC_NUM === 13 || elem.FUNC_NUM === 14 || elem.FUNC_NUM === 15 || elem.FUNC_NUM === 16) {
                 if (card.FUNCLIST[2] === '1') {
                     delete elem._State;
                 }
-                cardADD = cardADD.filter(el => el !== elem.FUNC_NUM);
+                cardADD = cardADD.filter((el) => el !== elem.FUNC_NUM);
             }
         });
         cardADD.forEach((FUNC: number) => {
-            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
-                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                DUE_CARD: card.DUE,
-                DUE: '0.',
-                FUNC_NUM: FUNC,
-                ALLOWED: 1,
-            }, 'USER_CARD_DOCGROUP');
+            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>(
+                {
+                    ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                    DUE_CARD: card.DUE,
+                    DUE: '0.',
+                    FUNC_NUM: FUNC,
+                    ALLOWED: 1,
+                },
+                'USER_CARD_DOCGROUP'
+            );
             newUserCardDG.push(dg);
         });
         return newUserCardDG;
@@ -330,7 +339,9 @@ export class CardRightSrv {
         const userDocGroup: USER_CARD_DOCGROUP[] = [];
         this.deleteAllDoc(card);
         newCopy.forEach((node) => {
-            const index = card.USER_CARD_DOCGROUP_List.findIndex((doc: USER_CARD_DOCGROUP) => doc.DUE === node.DUE && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
+            const index = card.USER_CARD_DOCGROUP_List.findIndex(
+                (doc: USER_CARD_DOCGROUP) => doc.DUE === node.DUE && doc.FUNC_NUM === this.selectedFuncNum.funcNum
+            );
             if (index === -1) {
                 nodes.push(node.DUE);
             } else {
@@ -340,7 +351,9 @@ export class CardRightSrv {
         let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, nodes);
         card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
         card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
-            const index = newCopy.findIndex((node: any) => doc.DUE === node.DUE && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
+            const index = newCopy.findIndex(
+                (node: any) => doc.DUE === node.DUE && doc.FUNC_NUM === this.selectedFuncNum.funcNum
+            );
             if (index !== -1) {
                 if (doc._State === _ES.Deleted) {
                     doc.ALLOWED = newCopy[index].isAllowed ? 1 : 0;
@@ -356,7 +369,10 @@ export class CardRightSrv {
         userDG = userDG.concat(userDocGroup);
         const nodeList: NodeDocsTree[] = [];
         userDG.forEach((userCardDG: USER_CARD_DOCGROUP) => {
-            const docGroup = this._docGroup.get(userCardDG.DUE);
+            let docGroup = this._docGroup.get(userCardDG.DUE);
+            if (!docGroup) {
+                docGroup = newCopy.filter((node) => node.DUE === userCardDG.DUE)[0].data?.docGroup;
+            }
             this._createListNode(nodeList, { docGroup, userCardDG });
         });
         this._checkChenge();
@@ -370,8 +386,10 @@ export class CardRightSrv {
         } else {
             OPEN_CLASSIF_DOCGROUP_CL['skipDeleted'] = false;
         }
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGROUP_CL)
-            .then((str: string) => { // 0.1K9B.|0.1K9D.
+        return this._waitClassifSrv
+            .openClassif(OPEN_CLASSIF_DOCGROUP_CL)
+            .then((str: string) => {
+                // 0.1K9B.|0.1K9D.
                 if (!str) {
                     throw null;
                 }
@@ -383,7 +401,9 @@ export class CardRightSrv {
                 const userDocGroup: USER_CARD_DOCGROUP[] = [];
                 // Проверяем, существуют ли они в списке
                 card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
-                    const index = dues.findIndex((due: string) => doc.DUE === due && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
+                    const index = dues.findIndex(
+                        (due: string) => doc.DUE === due && doc.FUNC_NUM === this.selectedFuncNum.funcNum
+                    );
                     if (index !== -1) {
                         if (doc._State === _ES.Deleted) {
                             delete doc._State;
@@ -399,7 +419,7 @@ export class CardRightSrv {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение',
-                        msg: `Элемент ${msg} не будет добавлен\nтак как он уже существует`
+                        msg: `Элемент ${msg} не будет добавлен\nтак как он уже существует`,
                     });
                 }
                 if (!dues.length && !userDocGroup.length) {
@@ -441,22 +461,33 @@ export class CardRightSrv {
                 this._pipSrv.entityHelper.prepareForEdit(dg);
             });
         });
+        this.clearCopy();
     }
     addFunclist(item: any) {
         if (item['FUNCLIST'].length < 21) {
             item['FUNCLIST'] = item['FUNCLIST'] + '0'.repeat(21 - item['FUNCLIST'].length);
         }
     }
-    private _createListNode(list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
-        list.push(new NodeDocsTree({
-                due: data.docGroup.DUE,
-                label: data.docGroup.CLASSIF_NAME,
-                allowed: !!data.userCardDG.ALLOWED,
-                data
-            },
-            this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true,
-            undefined,
-            data.docGroup.DUE !== '0.' && !!data['docGroup']['DELETED'] ? true : false)
+
+    clearCopy() {
+        this.copyDueCard = '';
+        this.copyFuncNum = undefined;
+        this._copyNodes = [];
+    }
+    private _createListNode(list: NodeDocsTree[], data): void {
+        // {docGroup, userCardDG}
+        list.push(
+            new NodeDocsTree(
+                {
+                    due: data.docGroup.DUE,
+                    label: data.docGroup.CLASSIF_NAME,
+                    allowed: !!data.userCardDG.ALLOWED,
+                    data,
+                },
+                this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true,
+                undefined,
+                data.docGroup.DUE !== '0.' && !!data['docGroup']['DELETED'] ? true : false
+            )
         );
     }
     private _checkChenge() {
@@ -482,13 +513,16 @@ export class CardRightSrv {
     private _createDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
         dues.forEach((due: string) => {
-            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
-                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                DUE_CARD: card.DUE,
-                DUE: due,
-                FUNC_NUM: this.selectedFuncNum.funcNum,
-                ALLOWED: 1,
-            }, 'USER_CARD_DOCGROUP');
+            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>(
+                {
+                    ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                    DUE_CARD: card.DUE,
+                    DUE: due,
+                    FUNC_NUM: this.selectedFuncNum.funcNum,
+                    ALLOWED: 1,
+                },
+                'USER_CARD_DOCGROUP'
+            );
             newUserCardDG.push(dg);
         });
         return newUserCardDG;
@@ -501,12 +535,11 @@ export class CardRightSrv {
             }
         });
         if (queryDue.length) {
-            return this._apiSrv.getDocGroup(queryDue)
-                .then((list: DOCGROUP_CL[]) => {
-                    list.forEach((dg: DOCGROUP_CL) => {
-                        this._docGroup.set(dg.DUE, dg);
-                    });
+            return this._apiSrv.getDocGroup(queryDue).then((list: DOCGROUP_CL[]) => {
+                list.forEach((dg: DOCGROUP_CL) => {
+                    this._docGroup.set(dg.DUE, dg);
                 });
+            });
         }
         return Promise.resolve();
     }
@@ -533,8 +566,8 @@ export class CardRightSrv {
                 method: ent._State,
                 requestUri: `${user}USERCARD_List('${userId} ${ent['DUE']}')`,
                 data: {
-                    FUNCLIST: ent['FUNCLIST']
-                }
+                    FUNCLIST: ent['FUNCLIST'],
+                },
             });
             delete ent._State;
             // this._saveOrigin(ent);
