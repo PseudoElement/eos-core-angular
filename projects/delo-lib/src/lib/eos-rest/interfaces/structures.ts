@@ -1,4 +1,4 @@
-import { IEnt, ILinearCL, IHierCL, IStamp } from './interfaces';
+import { IEnt, ILinearCL, IHierCL, IStamp } from "./interfaces";
 
 // tslint:disable class-name
 
@@ -29,12 +29,12 @@ export interface DELIVERY_CL extends ILinearCL {
      */
     ISN_LCLASSIF: number;
     /**
-    * Вес элемента
-    */
+     * Вес элемента
+     */
     WEIGHT: number;
     /**
-    * Электронная отправка
-    */
+     * Электронная отправка
+     */
     E_SENDING_FLAG: number;
 }
 
@@ -51,8 +51,8 @@ export interface ADDR_CATEGORY_CL extends ILinearCL {
      */
     ISN_LCLASSIF: number;
     /**
-    * Вес
-    */
+     * Вес
+     */
     WEIGHT: number;
 }
 
@@ -69,8 +69,8 @@ export interface EDS_CATEGORY_CL extends ILinearCL {
      */
     ISN_LCLASSIF: number;
     /**
-    * Вес
-    */
+     * Вес
+     */
     WEIGHT: number;
 }
 
@@ -127,7 +127,6 @@ export interface FORMAT_CL extends ILinearCL {
     DEL_COL: number;
     NOTE: string;
     PRIORITET: number;
-
 }
 
 /**
@@ -320,8 +319,8 @@ export interface SEV_PARTICIPANT extends ILinearCL {
      */
     SEV_PARTICIPANT_RULE_List: SEV_PARTICIPANT_RULE[];
     /*
-    * Имя организации
-    */
+     * Имя организации
+     */
     ORGANIZ_CL_NAME: string;
 }
 
@@ -460,7 +459,6 @@ export interface STATUS_REPLY_CL extends ILinearCL {
      */
     WEIGHT: number;
 }
-
 
 /**
  * Группы документов пользователя
@@ -826,16 +824,16 @@ export interface VISA_TYPE_CL extends ILinearCL {
 }
 
 /**
-* Категории доп реквизитов в поиске
-*/
+ * Категории доп реквизитов в поиске
+ */
 export interface AR_CATEGORY extends IHierCL {
     /**
      * Номер уровня
-    */
+     */
     LAYER: number;
     /**
      * Вес элемента
-    */
+     */
     WEIGHT: number;
     /**
      * Вид допреквизитов
@@ -852,28 +850,26 @@ export interface AR_CATEGORY extends IHierCL {
 }
 
 /**
-* Значения доп реквизитов организаций
-*/
+ * Значения доп реквизитов организаций
+ */
 // tslint:disable-next-line:no-empty-interface
-export interface AR_ORGANIZ_VALUE extends IHierCL {
-
-}
+export interface AR_ORGANIZ_VALUE extends IHierCL {}
 
 /**
-* Справочник статусов граждан
-*/
+ * Справочник статусов граждан
+ */
 export interface CITSTATUS_CL extends IHierCL, IStamp {
     /**
      * Номер уровня
-    */
+     */
     LAYER: number;
     /**
      * Вес элемента
-    */
+     */
     WEIGHT: number;
     /**
      * MAX значение кода Дьюи
-    */
+     */
     MAXDUE: string;
     /**
      * Наименование статуса
@@ -881,33 +877,33 @@ export interface CITSTATUS_CL extends IHierCL, IStamp {
     CLASSIF_NAME: string;
     /**
      * Код
-    */
+     */
     CODE: string;
 }
 
 /**
-* Справочник подразделений (ДЛ)
-*/
+ * Справочник подразделений (ДЛ)
+ */
 export interface DEPARTMENT extends IHierCL, IStamp {
     /**
      * Не используется Организация
-    */
+     */
     ISN_ORGANIZ: number;
     /**
      * Номер уровня
-    */
+     */
     LAYER: number;
     /**
      * Вес элемента
-    */
+     */
     WEIGHT: number;
     /**
      * MAX значение кода Дьюи
-    */
+     */
     MAXDUE: string;
     /**
      * Код Дьюи организации
-    */
+     */
     DUE_ORGANIZ: string;
     /**
      * Наименование ДЛ
@@ -971,7 +967,7 @@ export interface DEPARTMENT extends IHierCL, IStamp {
     END_DATE: number;
     /**
      * ISN контакта
-    */
+     */
     ISN_CONTACT: number;
     /**
      * № местн тел
@@ -1018,44 +1014,44 @@ export interface DEPARTMENT extends IHierCL, IStamp {
 }
 
 /**
-* Справочник Группы документов
-*/
+ * Справочник Группы документов
+ */
 export interface DOCGROUP_CL extends IHierCL, IStamp {
     /**
      * Номер уровня
-    */
+     */
     LAYER: number;
     /**
      * Признак нумерации копий
-    */
+     */
     IS_COPYCOUNT: number;
     /**
      * Вес элемента
-    */
+     */
     WEIGHT: number;
     /**
      * MAX значение кода Дьюи
-    */
+     */
     MAXDUE: string;
     /**
      * Наименование группы
-    */
+     */
     CLASSIF_NAME: string;
     /**
      * Полное наименование
-    */
+     */
     FULLNAME: string;
     /**
      * Код
-    */
+     */
     CODE: string;
     /**
      * Вид РК
      */
     REG_DATE_PROTECTED: string;
     /**
-    * Запрещение на редактирование рег. даты
-    */
+     * Запрещение на редактирование рег. даты
+     */
     RC_TYPE: number;
     /**
      * Индекс группы
@@ -1067,11 +1063,11 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
     DOCNUMBER_FLAG: number;
     /**
      * Шаблон номера документа
-    */
+     */
     SHABLON: string;
     /**
      * Требуется ЭП
-    */
+     */
     EDS_FLAG: number;
     /**
      * Требуется шифрование
@@ -1087,11 +1083,11 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
     PRJ_NUM_FLAG: number;
     /**
      * Шаблон номера проекта документа
-    */
+     */
     PRJ_SHABLON: string;
     /**
      * Вес в списке для проектов
-    */
+     */
     PRJ_WEIGHT: number;
     /**
      * Авторегистрация проекта
@@ -1107,7 +1103,7 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
     PRJ_APPLY2_EDS: number;
     /**
      * Применять ЭП для исполнителя проекта
-    */
+     */
     PRJ_APPLY_EXEC_EDS: number;
     /**
      * Удалять РК проекта после регистрации
@@ -1133,7 +1129,6 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
      * флаг Инициативная резолюция
      */
     INITIATIVE_RESOLUTION: number;
-
 
     /**
      * список используемых для этой группы документов дополнительных реквизитов
@@ -1162,8 +1157,8 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
 }
 
 /**
-* Справочник организаций
-*/
+ * Справочник организаций
+ */
 export interface ORGANIZ_CL extends IHierCL, IStamp {
     /**
      * Номер уровня
@@ -1175,15 +1170,15 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
     WEIGHT: number;
     /**
      * MAX значение кода Дьюи
-    */
+     */
     MAXDUE: string;
     /**
      * Поиск наимен организации
-    */
+     */
     CLASSIF_NAME_SEARCH: string;
     /**
      * Наименование организации
-    */
+     */
     CLASSIF_NAME: string;
     /**
      * Полное наименование
@@ -1191,7 +1186,7 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
     FULLNAME: string;
     /**
      * Почтовый индекс
-    */
+     */
     ZIPCODE: string;
     /**
      * Город
@@ -1215,7 +1210,7 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
     OKPO: string;
     /**
      * ИНН
-    */
+     */
     INN: string;
     /**
      * Регион
@@ -1223,11 +1218,11 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
     ISN_REGION: number;
     /**
      * ОКОНХ
-    */
+     */
     OKONH: string;
     /**
      * Юридический Адресс
-    */
+     */
     LAW_ADRESS: string;
     /**
      * Форма Собственности
@@ -1239,7 +1234,7 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
     SERTIFICAT: string;
     /**
      * Категория адресата
-    */
+     */
     ISN_ADDR_CATEGORY: number;
     /**
      * поле для формирования выписок для ЦБ
@@ -1271,13 +1266,11 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
      * список используемых для справочника организаций контактов
      */
     CONTACT_List: CONTACT[];
-
 }
 
-
 /**
-* Справочник Регионов
-*/
+ * Справочник Регионов
+ */
 export interface REGION_CL extends IHierCL {
     /**
      * Номер уровня
@@ -1306,8 +1299,8 @@ export interface REGION_CL extends IHierCL {
 }
 
 /**
-* Справочник рубрик
-*/
+ * Справочник рубрик
+ */
 export interface RUBRIC_CL extends IHierCL, IStamp {
     /**
      * Номер уровня
@@ -1331,18 +1324,17 @@ export interface RUBRIC_CL extends IHierCL, IStamp {
     FULLNAME: string;
     /**
      * Код рубрики_
-    */
+     */
     CODE: string;
     /**
      * Код рубрики
-    */
+     */
     RUBRIC_CODE: string;
-
 }
 
 /**
-* Категории осн реквизитов РК и РКПД в поиске
-*/
+ * Категории осн реквизитов РК и РКПД в поиске
+ */
 export interface SRCH_CATEGORY extends IHierCL {
     /**
      * Номер уровня
@@ -1457,7 +1449,6 @@ export interface AR_DESCRIPT extends IEnt {
     AR_VALUE_LIST_List: AR_VALUE_LIST[];
 }
 
-
 /**
  * Описание доп реквизита в конкретной гр док и его визуализация
  */
@@ -1532,7 +1523,6 @@ export interface AR_DOCGROUP extends IEnt {
     L_UOD: string;
 }
 
-
 /**
  * Допустимые значения полей
  */
@@ -1576,8 +1566,8 @@ export interface BANK_RECVISIT extends IEnt {
      */
     BANK_NAME: string;
     /**
-    * Расчетный счет
-    */
+     * Расчетный счет
+     */
     ACOUNT: string;
     /**
      * Кор счет
@@ -1623,7 +1613,6 @@ export interface CA_CATEGORY extends IEnt {
     ISN_EDS_CATEGORY: number;
 }
 
-
 /**
  * Кабинеты
  */
@@ -1641,17 +1630,15 @@ export interface CABINET extends IEnt {
      */
     CABINET_NAME: string;
     /**
-    * Полное наименование
-    */
+     * Полное наименование
+     */
     FULLNAME: string;
-
 
     /**
      * список используемых для кабинетов папок
      */
     FOLDER_List: FOLDER[];
 }
-
 
 /**
  * Календарь
@@ -2048,7 +2035,6 @@ export interface CUSTOM_STORAGE extends IEnt {
      * Порядковый номер
      */
     ORDERNUM: number;
-
 }
 
 /**
@@ -2463,7 +2449,6 @@ export interface NTFY_SYSTEM_PARAMS extends IEnt {
     SERVICE_NAME: string;
 }
 
-
 /**
  * Параметры пользователей системы оповещений и уведомлений
  */
@@ -2871,7 +2856,6 @@ export interface SEV_PARTICIPANT_RULE extends IEnt {
      * Порядок выбора правила
      */
     ORDERNUM: number;
-
 }
 
 /**
@@ -2892,7 +2876,6 @@ export interface SEV_SYNC_REPORT extends IEnt {
     FILE_SYNC_DATE: number;
 }
 
-
 /**
  * Перечень иерархий в поиске
  */
@@ -2910,7 +2893,6 @@ export interface SRCH_AR_HIER extends IEnt {
      */
     HIER_USAGE: string;
 }
-
 
 /**
  * Описания осн реквизитов РК и РКПД
@@ -3266,7 +3248,6 @@ export interface STTEXT extends IEnt {
      * Вес
      */
     WEIGHT: number;
-
 }
 
 /**
@@ -3365,7 +3346,6 @@ export interface TEMP_RC extends IEnt {
      * список используемых для временной РК файлов
      */
     REF_FILE_List: REF_FILE[];
-
 }
 
 /**
@@ -3546,6 +3526,10 @@ export interface USER_PARMS extends IEnt {
      * значение параметра
      */
     PARM_VALUE: string;
+    /**
+     * isn реального пользователя, может быть -99
+     *  */
+    REAL_ISN_USER_OWNER: number;
 }
 
 /**
@@ -3642,7 +3626,6 @@ export interface DEPARTMENT_REPL extends IEnt {
 
 // NADZOR
 export interface NP_ADDRESS_VID_CL extends ILinearCL {
-
     ISN_LCLASSIF: number;
     CLASSIF_NAME: string;
     NOTE: string;
