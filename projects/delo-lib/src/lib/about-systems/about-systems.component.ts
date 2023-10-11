@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
-import { EosUtils } from '../eos-common/core/utils';
 
 @Component({
   selector: 'lib-about-systems',
@@ -19,7 +18,7 @@ export class AboutSystemsComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-      EosUtils.removeUselessStyles('data-styled')
-      EosUtils.removeUselessStyles('id', 'AboutSystem-style')
+      // EosUtils.removeUselessStyles('data-styled')
+      // EosUtils.removeUselessStyles('id', 'AboutSystem-style')
     }
 }

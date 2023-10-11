@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, /* Router */ } from '@angular/router';
 import { NavParamService } from '../../../app/services/nav-param.service';
 import { EosAdmToolsService } from '../../../eos-instruments/services/EosAdmTools.service';
-import { EosUtils } from '../../../eos-common/core/utils';
 
 
 @Component({
@@ -13,7 +12,7 @@ import { EosUtils } from '../../../eos-common/core/utils';
 export class EosInstrumentsSingleComponent implements OnInit, OnDestroy {
 
   public readonly MOUNT_POINT = 'eos-admin-tools';
-  private readonly _deletedStyleIds = ['printFormPlugin-style', 'manage-reports-style', 'ProcessConstructorPlugin-style'];
+  // private readonly _deletedStyleIds = ['printFormPlugin-style', 'manage-reports-style', 'ProcessConstructorPlugin-style'];
 
   constructor(private route: ActivatedRoute, private router: Router, private _navSrv: NavParamService, private _eosAdmTools: EosAdmToolsService) { }
   ngOnInit() {
@@ -36,8 +35,8 @@ export class EosInstrumentsSingleComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    EosUtils.removeUselessStyles('data-styled')
-    EosUtils.removeUselessStyles('id', 'index.1-style')
-    this._deletedStyleIds.forEach(value => EosUtils.removeUselessStyles('id', value))
+    // EosUtils.removeUselessStyles('data-styled')
+    // EosUtils.removeUselessStyles('id', 'index.1-style')
+    // this._deletedStyleIds.forEach(value => EosUtils.removeUselessStyles('id', value))
   }
 }

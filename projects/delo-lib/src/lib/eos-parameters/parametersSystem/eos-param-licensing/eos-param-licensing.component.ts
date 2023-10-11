@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 import { EosMessageService } from '../../../eos-common/index';
-import { EosUtils } from '../../../eos-common/core/utils';
 
 @Component({
     selector: 'lib-eos-param-licensing',
@@ -22,7 +21,7 @@ export class EosParamLicensingComponent implements AfterViewInit, OnDestroy {
         }
     }
     ngOnDestroy(): void {
-        EosUtils.removeUselessStyles('data-styled')
-        EosUtils.removeUselessStyles('id', 'index.1-style')
+        // EosUtils.removeUselessStyles('data-styled')
+        // EosUtils.removeUselessStyles('id', 'index.1-style')
     }
 }

@@ -1,9 +1,7 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 import { NavParamService } from '../../app/services/nav-param.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
-import { EosUtils } from '../../eos-common/core/utils';
 
 @Component({
     selector: 'eos-plugin-react',
@@ -13,7 +11,7 @@ import { EosUtils } from '../../eos-common/core/utils';
 export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
     scriptsUrl: any;
 
-    constructor( @Inject(DOCUMENT) private document: Document, private _navSrv: NavParamService, private appCtx: AppContext) {
+    constructor(private _navSrv: NavParamService, private appCtx: AppContext) {
       window['uisn'] = this.appCtx.CurrentUser.ISN_LCLASSIF;
     }
 
@@ -29,9 +27,9 @@ export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-      EosUtils.removeUselessStyles('data-styled')
-      EosUtils.removeUselessStyles('id', 'UserSessions-style')
-      const head = this.document.querySelector('head');
-      if (head && /\.App/.test(head.lastChild.textContent)) head.removeChild(head.lastChild);
+      // EosUtils.removeUselessStyles('data-styled')
+      // EosUtils.removeUselessStyles('id', 'UserSessions-style')
+      // const head = this.document.querySelector('head');
+      // if (head && /\.App/.test(head.lastChild.textContent)) head.removeChild(head.lastChild);
     }
 }
