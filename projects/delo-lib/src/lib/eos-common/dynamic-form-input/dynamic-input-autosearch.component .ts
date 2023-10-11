@@ -18,6 +18,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
     @Input() container: string;
     @Input() dropup: boolean;
     @Input() height: number;
+    @Input() isExternalDropdownHandling?: boolean;
     public focusedItem: any;
     @ViewChild("dropdown", { static: false }) private _dropDown: BsDropdownDirective;
     @ViewChild("dropdownElement", { static: true }) private dropdownElement: ElementRef;
@@ -44,7 +45,6 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
             return undefined;
         }
     }
-
     get currentTooltip(): string {
         let optValue;
         const ctrl = this.control;
@@ -137,7 +137,7 @@ export class DynamicInputAutoSearchComponent extends DynamicInputBaseDirective i
                 this.onSelectDropDown.emit(item.value);
             }
         }
-        this.hideDropDown();
+        if(!this.isExternalDropdownHandling) this.hideDropDown();
         if (AppContext.isIE()) {
             // console.log("TCL: DynamicInputSelect2Component -> selectAction -> AppContext.isIE", AppContext.isIE())
             /* IE fix */

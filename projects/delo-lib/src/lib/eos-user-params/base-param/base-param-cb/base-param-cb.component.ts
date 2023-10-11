@@ -654,28 +654,27 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     getCheckAdmSave() {
         return this.formAccess.controls['1-27'].value !== '1' && this.accessInputs['1-27'].value === '1';
     }
-    checkIsDueDepNameExist(dueDepName: string) {
+    async checkIsDueDepNameExist(dueDepName: string) {
         this._isLoadingDueDepNames = true;
         if(this._debounceDueDepName) {
             this._isLoadingDueDepNames = false;
             clearTimeout(this._debounceDueDepName)
         }
         /* Оборачиваю в двойные кавычки и ставлю =, чтобы делать проверку на полное соответствие значения в БД*/
-        this._debounceDueDepName = setTimeout(() => {
-            this._apiSrv.getData<USER_CL[]>({
+        this._debounceDueDepName = setTimeout(async() => {
+            try{const departments = await this._apiSrv.getData<DEPARTMENT>({
                 DEPARTMENT: {
                     criteries: {
                         CLASSIF_NAME: `="${dueDepName.trim()}"`,
                     }
                 }
             })
-                .then(dueDepNames => {
-                    this._isFoundDueDepNamesInDB = dueDepNames.length ? true : false;
-                })
-                .catch(err => new Error('checkIsDueDepNameError: ' + err))
-                .finally(() => {
-                    this._isLoadingDueDepNames = false
-                })
+            this._isFoundDueDepNamesInDB = departments.length ? true : false;
+            }catch(err){
+                throw new Error('checkIsDueDepNameError: ' + err)
+            }finally{
+                this._isLoadingDueDepNames = false
+            }
         }, 300)
     }
     submit(meta?: string): Promise<any> {
@@ -1352,6 +1351,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .then(async (data: DEPARTMENT[]) => {
                     return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                             this.fillingDep(data);
+                            this.controls['DUE_DEP_NAME'].dib.hideDropDown();
                             return val;
                         })
                         .catch(err => {

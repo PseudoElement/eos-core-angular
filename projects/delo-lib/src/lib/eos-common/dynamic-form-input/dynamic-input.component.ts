@@ -50,6 +50,7 @@ export class DynamicInputComponent {
     @Input() placement: string; // используется для даты чтобы можно было указать в какую сторону открывать выпадашку
     @Input() customStyle: DatePickerStyleFixes | undefined; // для передачи кастомных стилей выподающему окну Datepicker
     @Input() shouldHideTooltipOnBlur?: boolean;
+    @Input() isExternalDropdownHandling?: boolean; //Для автопоиска, чтобы выпадающий список закрывался только при вызове метода за пределами input-autosearch компонента
     @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
     @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
     @Output() onInputChange: EventEmitter<Event> = new EventEmitter<Event>();
