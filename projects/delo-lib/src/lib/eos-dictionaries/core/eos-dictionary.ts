@@ -491,9 +491,9 @@ export class EosDictionary {
         const tablelist = updatefields.filter(i => i.dictionaryId)
             .map(i => i.dictionaryId ? <IDictionaryDescriptorRelatedInfo>{ table: i.dictionaryId, order: i.dictionaryOrder } : null);
         const tablesUniq = Array.from(new Set(tablelist));
-        if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER_SEV) !== -1 && this.id !== 'organization') {
+        /* if (Features.cfg.SEV.isIndexesEnable && updatefields.findIndex(f => f.key === ICONS_CONTAINER_SEV) !== -1 && this.id !== 'organization') {
             tablesUniq.push(<IDictionaryDescriptorRelatedInfo>{ table: 'SEV_ASSOCIATION', data: { req: { OBJECT_NAME: this.descriptor.apiInstance } } });
-        }
+        } */
 
         return this.descriptor.getRelatedFields2(tablesUniq, nodes, loadAll)
             .then((related) => {
@@ -518,23 +518,21 @@ export class EosDictionary {
                             });
                         }
                     } else if (Features.cfg.SEV.isIndexesEnable && field.key === ICONS_CONTAINER_SEV && nodes.length) {
-                        if (nodes && nodes.length && related && related['SEV_ASSOCIATION']) {
-                            // this.descriptor.getRelatedSev(node.data.rec)
-                            nodes.forEach(node => {
-                                const id = node.data.rec['DUE'] || ('ISN#' + node.data.rec['ISN_LCLASSIF']);
-                                const sev = related['SEV_ASSOCIATION'].find(s => s['OBJECT_ID'] === id);
-                                if (sev) {
-                                    node.data.sev = sev;
-                                } else if (node.data.sev) {
-                                    delete node.data.sev;
-                                }
-                            });
-
-                        } else if(this.id === E_DICTIONARY_ID.ORGANIZ) {
-                            nodes.forEach(node => {
-                                node.data.sev = node.data.rec.sev;
-                            })
-                        }
+                        nodes.forEach(node => {
+                            node.data.sev = node.data.rec.sev;
+                        })
+                        // if (nodes && nodes.length && related && related['SEV_ASSOCIATION']) {
+                        //     // this.descriptor.getRelatedSev(node.data.rec)
+                        //     nodes.forEach(node => {
+                        //         const id = node.data.rec['DUE'] || ('ISN#' + node.data.rec['ISN_LCLASSIF']);
+                        //         const sev = related['SEV_ASSOCIATION'].find(s => s['OBJECT_ID'] === id);
+                        //         if (sev) {
+                        //             node.data.sev = sev;
+                        //         } else if (node.data.sev) {
+                        //             delete node.data.sev;
+                        //         }
+                        //     });
+                        // }
                     }
                 });
             });
