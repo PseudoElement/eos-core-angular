@@ -94,6 +94,7 @@
 
     <div class="eos-adm-node-list"
         #eosNodeList
+        [ngStyle]="{'max-height': dictionId === 'organization' ? getHeightMax() : undefined}"
         (scroll)="onListScroll($event)">
         <div class="block list"
              [ngStyle]="{'width.%': 100}"
@@ -117,7 +118,7 @@
                         recalcDone"
             >
                 <ng-container *ngIf="dictionId === 'organization'">
-                    <cdk-virtual-scroll-viewport itemSize="32" class="example-viewport" [ngStyle]="{'min-height': getHeight() + 'px'}"> <!-- appendOnly  [ngStyle]="{'height': getHeight() + 'px'}"-->
+                    <cdk-virtual-scroll-viewport itemSize="32" class="example-viewport" [ngStyle]="{'min-height': getHeight()}">
                         <ng-container *cdkVirtualFor="let item of nodes">
                             <eos-node-list-item 
                                 *ngIf="item"

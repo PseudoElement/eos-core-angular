@@ -152,14 +152,23 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
         _dictSrv.sevClearIdentCodesSubscription.pipe(takeUntil(this.ngUnsubscribe)).subscribe(resp => this.isSevClearCodesProgress = resp);
     }
+    getHeightMax() {
+        const height = this.nodes.length * 32;
+        const calcHeight = this._dictSrv.getStoredSearchSettings().lastSearch === 0 ? 428 : 380;
+        if (height < 530) {
+            return undefined;
+        } else {
+            return `calc(100vh - ${calcHeight}px)`;
+        }
+    }
     getHeight() {
         const height = this.nodes.length * 32;
+        const calcHeight = this._dictSrv.getStoredSearchSettings().lastSearch === 0 ? 428 : 380;
         if (height < 530) {
-            return height;
+            return '' + height + 'px';
         } else {
-            return undefined;
+            return `calc(100vh - ${calcHeight}px)`;
         }
-        
     }
     highlightNewNode(): void {
         if (this._store.getItem('newNode')) {
