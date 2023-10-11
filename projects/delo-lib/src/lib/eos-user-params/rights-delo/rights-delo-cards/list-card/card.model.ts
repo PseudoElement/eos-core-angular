@@ -51,7 +51,6 @@ export class CardRight {
         return this._card;
     }
     set limit (v: boolean) {
-        console.log('set limit (v: boolean)', v);
         this._value = v ? 2 : 1;
         this._setValueEntity();
     }
@@ -185,15 +184,14 @@ export class CardRight {
             }
         }
     }
+    /**
+     * 
+     * @deprecated Проверка на операции больше не производится согласно BUG 176364
+     */
     updateFileRk(func_list: string[]) {
         const inListMes = [];
         let mes = '';
-        let add = '';
-        if (func_list[2] === '0') {
-            add = '1';
-        } else {
-            add = '0';
-        }
+        let add = func_list[2] === '0' ? '1' : '0';
         if (func_list[12] === add) {
             inListMes.push('\"Добавлять файлы\"');
         }
@@ -256,9 +254,7 @@ export class CardRight {
                     value[14] = value[this._funcIndex];
                     value[15] = value[this._funcIndex];
                 }
-            } else {
-                this.updateFileRk(value);
-            }
+            } 
         }
         this._card.FUNCLIST = value.join('');
         this._srv.checkChenge();
