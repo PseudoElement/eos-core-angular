@@ -93,6 +93,7 @@
                             [input]="controls['DUE_DEP_NAME']"
                             [form]="formControls"
                             [readonly]="!editMode"
+                            [isExternalDropdownHandling]="true"
                             (onClickChoose)="showDepChoose()"
                             (onEnterSearchEmptyResults)="showDepChooseEmpty()"
                             (onInputChange)="checkIsDueDepNameExist($event)"
