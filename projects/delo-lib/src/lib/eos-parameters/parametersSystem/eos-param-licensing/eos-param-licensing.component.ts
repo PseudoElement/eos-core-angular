@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 import { EosMessageService } from '../../../eos-common/index';
 
@@ -8,7 +8,7 @@ import { EosMessageService } from '../../../eos-common/index';
     styleUrls: ['./eos-param-licensing.component.scss'],
 
 })
-export class EosParamLicensingComponent implements AfterViewInit, OnDestroy {
+export class EosParamLicensingComponent implements AfterViewInit{
 
 
     constructor(private msg: EosMessageService) {}
@@ -20,8 +20,8 @@ export class EosParamLicensingComponent implements AfterViewInit, OnDestroy {
             this.msg.addNewMessage({ "title": "Предупреждение", "type": "warning", "msg": error.massage || error })
         }
     }
-    ngOnDestroy(): void {
+    // ngOnDestroy(): void {
         // EosUtils.removeUselessStyles('data-styled')
         // EosUtils.removeUselessStyles('id', 'index.1-style')
-    }
+    // }
 }

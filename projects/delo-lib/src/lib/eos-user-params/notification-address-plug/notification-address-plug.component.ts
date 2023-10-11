@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 import { EosMessageService } from '../../eos-common/index';
 
@@ -7,7 +7,7 @@ import { EosMessageService } from '../../eos-common/index';
     templateUrl: './notification-address-plug.component.html',
     styleUrls: ['./notification-address-plug.component.scss']
 })
-export class NotificationAddressPlugComponent implements AfterViewInit, OnDestroy {
+export class NotificationAddressPlugComponent implements AfterViewInit {
 
     constructor( private _msg: EosMessageService) { }
 
@@ -20,11 +20,11 @@ export class NotificationAddressPlugComponent implements AfterViewInit, OnDestro
 
     }
 
-    ngOnDestroy(): void {
+    // ngOnDestroy(): void {
         // EosUtils.removeUselessStyles('data-styled')
         // EosUtils.removeUselessStyles('id', 'plugin.1-style')
         // const head = this.document.querySelector('head');
         // if (head && /\.App/.test(head.lastChild.textContent)) head.removeChild(head.lastChild);
-    }
+    // }
 
 }

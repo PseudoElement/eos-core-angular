@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 
 @Component({
@@ -6,7 +6,7 @@ import { Manager } from '@eos/jsplugins-manager';
   templateUrl: './about-systems.component.html',
   styleUrls: ['./about-systems.component.scss']
 })
-export class AboutSystemsComponent implements AfterViewInit, OnDestroy {
+export class AboutSystemsComponent implements AfterViewInit {
     scriptsUrl: any;
 
     constructor() {
@@ -17,8 +17,8 @@ export class AboutSystemsComponent implements AfterViewInit, OnDestroy {
       });
     }
 
-    ngOnDestroy(): void {
+    // ngOnDestroy(): void {
       // EosUtils.removeUselessStyles('data-styled')
       // EosUtils.removeUselessStyles('id', 'AboutSystem-style')
-    }
+    // }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnInit} from '@angular/core';
 import { Manager } from '@eos/jsplugins-manager';
 import { NavParamService } from '../../app/services/nav-param.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
@@ -8,7 +8,7 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
     templateUrl: './plugin-react.component.html',
     styleUrls: ['./plugin-react.component.scss'],
 })
-export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PluginReactComponent implements OnInit, AfterViewInit {
     scriptsUrl: any;
 
     constructor(private _navSrv: NavParamService, private appCtx: AppContext) {
@@ -26,10 +26,10 @@ export class PluginReactComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
 
-    ngOnDestroy(): void {
+    // ngOnDestroy(): void {
       // EosUtils.removeUselessStyles('data-styled')
       // EosUtils.removeUselessStyles('id', 'UserSessions-style')
       // const head = this.document.querySelector('head');
       // if (head && /\.App/.test(head.lastChild.textContent)) head.removeChild(head.lastChild);
-    }
+    // }
 }
