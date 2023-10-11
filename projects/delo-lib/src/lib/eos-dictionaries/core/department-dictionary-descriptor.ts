@@ -10,7 +10,7 @@ import { FieldDescriptor } from './field-descriptor';
 import { RecordDescriptor } from './record-descriptor';
 import { ModeFieldSet } from './record-mode';
 import { PipRX } from '../../eos-rest/services/pipRX.service';
-import { CB_PRINT_INFO } from '../../eos-rest/interfaces/structures';
+import { CB_PRINT_INFO, DEPARTMENT, SEV_ASSOCIATION } from '../../eos-rest/interfaces/structures';
 import { TreeDictionaryDescriptor } from '../../eos-dictionaries/core/tree-dictionary-descriptor';
 import { IImage } from '../../eos-dictionaries/interfaces/image.interface';
 import { IHierCL } from '../../eos-rest';
@@ -221,7 +221,21 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
             // DUE: '0%',
             ISN_HIGH_NODE: record.ISN_NODE + '',
         };
-        return this.getData({ criteries: _children }, 'DUE');
+        const query = [];
+        query.push(this.getData({ criteries: _children }, 'DUE'));
+        query.push(this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({ 'OBJECT_NAME': 'DEPARTMENT' })}));
+        return Promise.all(query)
+        .then(([department, sev]) => {
+            if (sev && sev.length > 0) {
+                department.forEach((org: DEPARTMENT) => {
+                    const index = sev.findIndex((sev_) => sev_.OBJECT_ID === org.DUE);
+                    if (index !== -1) {
+                        org['sev'] = sev[index];
+                    }
+                })
+            }
+            return department;
+        });
     }
 
     getRelated(rec: any, orgDUE: string, refresh: boolean = false): Promise<any> {

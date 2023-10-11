@@ -1,6 +1,6 @@
 import {EosUtils} from '../../eos-common/core/utils';
 import {ALL_ROWS} from '../../eos-rest/core/consts';
-import {PipRX} from '../../eos-rest';
+import {PipRX, SEV_ASSOCIATION} from '../../eos-rest';
 import {IDictionaryDescriptor, IRecordOperationResult} from '../interfaces';
 import {DictionaryDescriptor} from './dictionary-descriptor';
 import {RecordDescriptor} from './record-descriptor';
@@ -40,13 +40,22 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         if (order) {
             req.orderby = order;
         }
-
-        return this.apiSrv
-            .read(req)
-            .then((data: any[]) => {
+        const queryAll = [];
+        queryAll.push(this.apiSrv.read(req));
+        queryAll.push(this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({ 'OBJECT_NAME': 'LINK_CL' })}));
+        return Promise.all(queryAll)
+            .then(([data, sev]) => {
                 this.prepareForEdit(data);
                 const newData = [];
                 data.forEach((rec) => {
+                    if (sev && sev.length > 0) {
+                        data.forEach((link: LINK_CL) => {
+                            const index = sev.findIndex((sev_) => +sev_.OBJECT_ID.split('#')[1] === +link.ISN_LCLASSIF);
+                            if (index !== -1) {
+                                link['sev'] = sev[index];
+                            }
+                        })
+                    }
                     if (rec[ISN_LCLASSIF] <= rec['ISN_PARE_LINK']) {
                         rec['LINK'] = rec['CLASSIF_NAME'];
                         rec['TYPE'] = rec['LINK_TYPE'];
