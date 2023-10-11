@@ -26,7 +26,8 @@ import { RestError } from '../../eos-rest/core/rest-error';
 import { Features } from '../../eos-dictionaries/features/features-current.const';
 import {IConfirmWindow2 } from '../../eos-common/confirm-window/confirm-window2.component';
 import {WARN_ELEMENTS_ARE_RELATED, WARN_ELEMENTS_COPY_DELETE_LOGICK } from '../../eos-dictionaries/consts/confirm.consts';
-import { GraphQLService } from 'eos-dictionaries/services/graphQL.service';
+import { GraphQLService } from '../../eos-dictionaries/services/graphQL.service';
+import { ICONS_CONTAINER_SEV } from '../../eos-dictionaries/consts/dictionaries/_common';
 
 
 export interface IDictionaryDescriptorRelatedInfo {
@@ -183,7 +184,7 @@ export abstract class AbstractDictionaryDescriptor {
         let iconSev = false;
         if (this.record) {
             this.record.fields.forEach((field) => {
-                if (field.key === 'ICONS_TYPE_SEV') {
+                if (field.key === ICONS_CONTAINER_SEV) {
                     iconSev = true;
                 }
             });
@@ -221,6 +222,8 @@ export abstract class AbstractDictionaryDescriptor {
                         });
                         if (index !== -1) {
                             d['sev'] = sev[index];
+                        } else {
+                            d['sev'] = undefined;
                         }
                     })
                 }
@@ -494,12 +497,15 @@ export abstract class AbstractDictionaryDescriptor {
                         }
                     }
                 }
-                if (trec.data && trec.data.req) /* table in table */{
-                    // по ключам пока не умеем загружать.
-                    const sev =  this.apiSrv.read<SEV_ASSOCIATION>({[trec.table]: PipRX.criteries(trec.data.req)});
-                    tablesWReq.push(trec.table);
-                    reqs.push(sev);
-                }
+                /** Запрашиваем SEV только при входе в новую запись дерева или при входе в справочник
+                 * дополнительные запросы не нужны
+                 */
+                // if (trec.data && trec.data.req) /* table in table */{
+                //     // по ключам пока не умеем загружать.
+                //     const sev =  this.apiSrv.read<SEV_ASSOCIATION>({[trec.table]: PipRX.criteries(trec.data.req)});
+                //     tablesWReq.push(trec.table);
+                //     reqs.push(sev);
+                // }
             }
         });
         return Promise.all(reqs)
