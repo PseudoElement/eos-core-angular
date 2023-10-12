@@ -213,17 +213,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(param => {
+                const id = param['nodeId'] || '0.';
                 if (this._apiSrv.configList.shooseTab === 1) {
                     this.isLoading = true;
-                    this.updateOptionSelect(param['nodeId'] || '0.')
+                    this.updateOptionSelect(id)
                     .then(() => {
-                        this.initView(param['nodeId']);
+                        this.initView();
                     })
                     .catch(() => {
-                        this.initView(param['nodeId']);
+                        this.initView(id);
                     });
                 } else {
-                    this.initView(param['nodeId']);
+                    this.initView(id);
                 }
             });
         this._pagSrv.NodeList$
@@ -274,10 +275,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         });
         this._initUsersTypeTabs()
         this.activeUsersTypeTab$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
-            .subscribe(() => this.initView())
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(() => {
+            const id = this._route.params['value'].nodeId || '0.';
+            this.initView(id);
+        });
     }
     updateOptionSelect(depart: string): Promise<boolean> {
         return this._pipeSrv.read<USER_CL>({
