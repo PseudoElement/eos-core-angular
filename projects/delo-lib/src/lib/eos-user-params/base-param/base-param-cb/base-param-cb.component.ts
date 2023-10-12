@@ -1282,6 +1282,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         } else if (this.currentCbFields.length !== 0) {
             str = this.currentCbFields[0].role + ' ...';
         } */
+        const oldRole = this.formControls.get('SELECT_ROLE').value;
         this.controlField[2].value = this.updateFieldCbToSet(this.currentCbFields);
         if (this.currentCbFields.length === 0 /* && this._userParamSrv.hashUserContext['CATEGORY'] */) {
             this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
@@ -1289,6 +1290,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this.controlField.forEach((field) => {
             if (field.key === 'teсhUser') {
                 field.value = false;
+            }
+            if (field.key === 'SELECT_ROLE') {
+                field.value = oldRole;
             }
         });
         // const standartRole: string[] = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'].split(';');
@@ -1317,9 +1321,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             .catch(() => {
                 this.isShell = false;
             })
-            .finally(() =>{
-                setTimeout(() => this.checkIsDueDepNameExist(this.formControls.get('DUE_DEP_NAME').value), 200)
-            })
     }
     showDepChooseEmpty() {
         this.isShell = true;
@@ -1329,14 +1330,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 this._setDepartment(data);
-                this.checkIsDueDepNameExist(this.dueDepName)
             })
             .catch(() => {
                 this.isShell = false;
             })
-            .finally(() => {
-                setTimeout(() => this.checkIsDueDepNameExist(this.formControls.get('DUE_DEP_NAME').value), 200)
-            });
     }
     private _searchDLinSysParamsOrg() {
         this._searchEmpInDep(this.formControls.get('DUE_DEP_NAME').value, this._depDueLinkOrg);
