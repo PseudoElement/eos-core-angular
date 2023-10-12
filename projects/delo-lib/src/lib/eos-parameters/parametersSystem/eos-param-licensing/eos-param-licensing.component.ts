@@ -14,7 +14,9 @@ export class EosParamLicensingComponent implements AfterViewInit{
     constructor(private msg: EosMessageService) {}
     ngAfterViewInit(): void {
         try {
-            Manager.loadPlugins({ targets: ['LicenseSettings'] }).then(() => {
+                Manager.loadPlugins({ targets: ['LicenseSettings'] }).then(() => {
+                const license = Manager.getExposedModule('LicensePlugin');
+                license.render();
             })
         } catch (error) {
             this.msg.addNewMessage({ "title": "Предупреждение", "type": "warning", "msg": error.massage || error })
