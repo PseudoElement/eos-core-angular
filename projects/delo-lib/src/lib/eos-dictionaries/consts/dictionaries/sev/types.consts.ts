@@ -1,10 +1,26 @@
+import { InputBase } from "../../../../eos-common/core/inputs/input-base";
+
 export interface OptionDiscription {
     value: any;
     title: string;
     selected?: boolean;
     iconClass?: any;
 }
-
+interface IAccordion{
+    inputSelect: InputBase<string>;
+    title: string;
+    isOpen: boolean;
+}
+export interface IOutInMessagesAccordion extends IAccordion{
+    inputText: InputBase<string>;
+}
+export interface IEmailChannelAccordion extends IAccordion{
+    additionalInfo: string;
+}
+export interface IFileSystemAccordions{
+    OUTGOING: IOutInMessagesAccordion
+    INCOMING: IOutInMessagesAccordion
+}
 export const ENCRYPTION_TYPE: Array<OptionDiscription> = [{
     value: 0,
     title: 'Нет',

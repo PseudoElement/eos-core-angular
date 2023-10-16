@@ -19,7 +19,7 @@ export class EosBroadcastChannelService {
                     }
                     const channel = result['Channel'];
                     this._data = {};
-                    this._data['SMTP_DELAY'] = +channel['Schedule'][0].$['Delay'];
+                    // this._data['SMTP_DELAY'] = +channel['Schedule'][0].$['Delay'];
                     if (channel['Transport'] && channel['Transport'].length > 0) {
                         const transport = channel['Transport'][0];
                         if (transport['MailParams']) {
@@ -60,7 +60,9 @@ export class EosBroadcastChannelService {
                         } else {
                             const fsParams = transport['FileSystemParams'][0].$;
                             this._data['OUT_FOLDER'] = fsParams['SourceDir'];
+                            this._data['OUT_STORAGE'] = fsParams['SourceStorage'];
                             this._data['IN_FOLDER'] = fsParams['DestDir'];
+                            this._data['OUT_FOLDER'] = fsParams['DestStorage'];
                         }
                     }
                     resolve(this._data);
@@ -73,8 +75,7 @@ export class EosBroadcastChannelService {
     }
 
     public toXml(): string {
-        let result = '<Channel><Schedule Start="automatic" Delay="' +
-            (this._data['SMTP_DELAY'] === null ? '' : this._data['SMTP_DELAY']) + '"/><Transport>';
+        let result = '<Channel><Schedule Start="automatic"/><Transport>';
         if (this._data['CHANNEL_TYPE'] === 'email') {
             result += '<MailParams AuthMethod="' +
                 (this._data['AUTH_METHOD'] === 0 ? 'NONE' : (this._data['AUTH_METHOD'] === 1 ? 'NTLM' : 'LOGIN')) +

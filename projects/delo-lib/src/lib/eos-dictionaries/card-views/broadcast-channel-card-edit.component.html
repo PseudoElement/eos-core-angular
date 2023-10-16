@@ -13,112 +13,159 @@
                        [form]="form"
                        (change)="onChannelTypeChanged()"
                        [readonly]="!editMode" ></eos-dynamic-input>
-    <span *ngIf="isEmail">
-        <div class="tabs-wrapper usual-border border-bottom">
-            <ul class="tabs">
-                <li class="tab-item"
-                    role="presentation"
-                    [ngClass]="{'active': 0 === currTab}"
-                    (click)="setTab(0)">
-                    <span class="tab-title">Исходящая почта</span>
-                </li>
-                <li class="tab-item"
-                    role="presentation"
-                    [ngClass]="{'active': 1 === currTab}"
-                    (click)="setTab(1)">
-                    <span class="tab-title">Входящая почта</span>
-                </li>
-            </ul>
-        </div>
-        <div *ngIf="currTab===0"
-                class="eos-adm-broadcast-channel-tab">
-            <table class="table usual-border border-bottom table-owners">
-                <tr>
-                    <td>
-                        <eos-dynamic-input [input]="inputs['rec.SMTP_EMAIL']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           ></eos-dynamic-input>
-                        <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           ></eos-dynamic-input>
-                        <!-- <span> -->
-                            <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
-                                               [form]="form"
-                                               [disabled]="(+authMethod === 0)"
-                                               [readonly]="!editMode || (+authMethod === 0)"
-                                               ></eos-dynamic-input>
-                        <!-- </span> -->
-                        <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
-                                           [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
-                    </td>
-                    <td>
-                        <eos-dynamic-input [input]="inputs['rec.AUTH_METHOD']"
-                                           [form]="form"
-                                           (change)="onAuthMethodChanged()"
-                                           [readonly]="!editMode"></eos-dynamic-input>
-                        <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
+    <ng-container *ngIf="isEmail">
+        <ng-container *ngIf="!(isLoading$ | async); else loading">
+            <section class="accordion">
+                <ng-container *ngTemplateOutlet="accordion; context: {data: accordionEmailChannel}"></ng-container>
+            </section>
+            <a *ngIf="hasAccessToSystemParams"
+            [routerLink]="'/parameters/email'" 
+            target="_blank" 
+            class="email-router-link">
+            Профили электронной почты
+            </a>
+            <ng-container *ngIf="shouldShowEmailChannelTabs">
+                <div class="tabs-wrapper usual-border border-bottom">
+                    <ul class="tabs">
+                        <li class="tab-item"
+                            role="presentation"
+                            [ngClass]="{'active': 0 === currTab}"
+                            (click)="setTab(0)">
+                            <span class="tab-title">Исходящая почта</span>
+                        </li>
+                        <li class="tab-item"
+                            role="presentation"
+                            [ngClass]="{'active': 1 === currTab}"
+                            (click)="setTab(1)">
+                            <span class="tab-title">Входящая почта</span>
+                        </li>
+                    </ul>
+                </div>
+                <div *ngIf="currTab===0"
+                        class="eos-adm-broadcast-channel-tab">
+                    <table class="table usual-border border-bottom table-owners">
+                        <tr>
+                            <td>
+                                <eos-dynamic-input [input]="inputs['rec.SMTP_EMAIL']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                ></eos-dynamic-input>
+                                <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                ></eos-dynamic-input>
+                                <!-- <span> -->
+                                    <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
+                                                    [form]="form"
+                                                    [disabled]="(+authMethod === 0)"
+                                                    [readonly]="true"
+                                                    ></eos-dynamic-input>
+                                <!-- </span> -->
+                                <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
+                                                [form]="form"
+                                                [readonly]="true"></eos-dynamic-input>
+                            </td>
+                            <td>
+                                <eos-dynamic-input [input]="inputs['rec.AUTH_METHOD']"
+                                                [form]="form"
+                                                (change)="onAuthMethodChanged()"
+                                                [readonly]="true"></eos-dynamic-input>
+                                <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
+                                                [form]="form"
+                                                [readonly]="true"
+        
+                                                ></eos-dynamic-input>
+                                <span>
+                                    <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
+                                                    [form]="form"
+                                                    [disabled]="(+authMethod === 0)"
+                                                    [readonly]="true"
+        
+                                                    ></eos-dynamic-input>
+                                </span>
+                                <eos-dynamic-input [input]="inputs['rec.SMTP_DELAY']"
+                                                [form]="form"
+                                                [readonly]="true"></eos-dynamic-input>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div *ngIf="currTab===1"
+                    class="eos-adm-broadcast-channel-tab">
+                    <table class="table usual-border border-bottom table-owners">
+                        <tr>
+                            <td>
+                                <eos-dynamic-input [input]="inputs['rec.POP3_SERVER']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                ></eos-dynamic-input>
+                                <eos-dynamic-input [input]="inputs['rec.POP3_LOGIN']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                ></eos-dynamic-input>
+                                <eos-dynamic-input [input]="inputs['rec.POP3_ENCRYPTION']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                ></eos-dynamic-input>
+                            </td>
+                            <td>
+                                <eos-dynamic-input [input]="inputs['rec.POP3_PORT']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                style="margin-top: -55px;"></eos-dynamic-input>
+                                <eos-dynamic-input [input]="inputs['rec.POP3_PASSWORD']"
+                                                [form]="form"
+                                                [readonly]="true"
+                                                ></eos-dynamic-input>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
 
-                                           ></eos-dynamic-input>
-                        <span>
-                            <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
-                                               [form]="form"
-                                               [disabled]="(+authMethod === 0)"
-                                               [readonly]="!editMode || (+authMethod === 0)"
+    <ng-container *ngIf="!isEmail">
+        <ng-container *ngIf="!(isLoading$ | async); else loading">
+            <section class="accordion">
+                <ng-container *ngTemplateOutlet="accordion; context: {data: accordionsFileSystem['OUTGOING']}"></ng-container>
+            </section>
+            <section class="accordion">
+                <ng-container *ngTemplateOutlet="accordion; context: {data: accordionsFileSystem['INCOMING']}"></ng-container>
+            </section>
+        </ng-container>
+    </ng-container>
 
-                                               ></eos-dynamic-input>
-                        </span>
-                        <eos-dynamic-input [input]="inputs['rec.SMTP_DELAY']"
-                                           [form]="form"
-                                           [readonly]="!editMode"></eos-dynamic-input>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div *ngIf="currTab===1"
-             class="eos-adm-broadcast-channel-tab">
-            <table class="table usual-border border-bottom table-owners">
-                <tr>
-                    <td>
-                        <eos-dynamic-input [input]="inputs['rec.POP3_SERVER']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           ></eos-dynamic-input>
-                        <eos-dynamic-input [input]="inputs['rec.POP3_LOGIN']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           ></eos-dynamic-input>
-                        <eos-dynamic-input [input]="inputs['rec.POP3_ENCRYPTION']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           ></eos-dynamic-input>
-                    </td>
-                    <td>
-                        <eos-dynamic-input [input]="inputs['rec.POP3_PORT']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           style="margin-top: -55px;"></eos-dynamic-input>
-                        <eos-dynamic-input [input]="inputs['rec.POP3_PASSWORD']"
-                                           [form]="form"
-                                           [readonly]="!editMode"
-                                           ></eos-dynamic-input>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-    </span>
-    <span *ngIf="!isEmail">
-        <eos-dynamic-input [input]="inputs['rec.IN_FOLDER']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.OUT_FOLDER']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
-
-    </span>
 </div>
+
+<ng-template #loading>
+    <div style="text-align: center; width: 100%;">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #accordion let-data="data">
+    <div class="title" (click)="data.isOpen = !data.isOpen">
+        <span>
+            {{data.title}}
+        </span>
+        <span class="eos-adm-icon small" 
+              [ngClass]="{'eos-adm-icon-arrow-v-blue-top': data.isOpen, 'eos-adm-icon-arrow-v-blue-bottom': !data.isOpen}">
+        </span>
+    </div>
+    <div *ngIf="data.isOpen">
+        <!--Select, во вкладке FileSystem селект отображается только в случае наличия опций, во вкладке Email - всегда-->
+        <eos-dynamic-input 
+            *ngIf="(!isEmail && isAnyStorageRegistered) || isEmail" 
+            [input]="data.inputSelect" 
+            [form]="form" 
+            [readonly]="!editMode">
+        </eos-dynamic-input>
+        <div *ngIf="data.additionalInfo" class="accordion-additional-info">
+            <span class="eos-adm-icon small eos-adm-icon-info-grey"></span>
+            <span>{{data.additionalInfo}}</span>
+        </div>
+        <!--Text-->
+        <eos-dynamic-input *ngIf="!isEmail" [input]="data.inputText" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+</ng-template>

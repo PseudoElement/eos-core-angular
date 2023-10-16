@@ -3917,6 +3917,12 @@ export interface LIB_LIBRARY {
     NAME: string;
     DESCRIPTION: string;
 }
+export interface LIB_PARAM{
+    ISN_LIBRARY: number;
+    ISN_LIB_PARAM: number;
+    PARAM_NAME: string;
+    PARAM_VALUE: string;
+}
 
 export interface FILE_CATEGORY_CL extends IEnt, IStamp {
     ISN_LCLASSIF: number;

@@ -1,3 +1,10 @@
+.card-content-wrapper{
+    .email-router-link{
+        display: block;
+        margin: 10px 0;
+        text-align: center;
+    }
+}
 .eos-adm-broadcast-channel-tab {
     margin-bottom: 0;
     padding-top: $grid-gutter-width * 0.5;
@@ -63,6 +70,29 @@
             input[type="checkbox"]+span {
                 margin: 0;
             }
+        }
+    }
+}
+.accordion {
+    .title{
+        font-size: 18px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        color: #646464;
+        border-bottom: 1px solid #E6E6E6;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        cursor: pointer;
+        .eos-adm-icon{
+            margin-right: 4px;
+        }
+    }
+    .accordion-additional-info{
+        display: flex;
+        align-items: center;
+        .eos-adm-icon{
+            margin-right: 3px;
         }
     }
 }
