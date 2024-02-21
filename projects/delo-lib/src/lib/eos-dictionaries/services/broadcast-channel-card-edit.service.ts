@@ -46,9 +46,9 @@ export class BroadcastChannelCardEditService {
       namespace: AppsettingsParams.Email,
       typename: AppsettingsTypename.TCommon,
     });
-    const options = Object.values(profileNames).map(({EmailAccount, ProfileName}) => {
+    const options = Object.entries(profileNames).map(([appSettingsInstance, {EmailAccount, ProfileName}]) => {
       const title = `${ProfileName}${EmailAccount && ` (${EmailAccount})`}`
-      return {value: ProfileName, title}
+      return {value: appSettingsInstance, title}
     }) as OptionDiscription[]
     return options;
    }

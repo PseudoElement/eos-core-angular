@@ -56,13 +56,12 @@ export class EosBroadcastChannelService {
                             this._data['POP3_LOGIN'] = mailParams['Pop3User'];
                             this._data['POP3_PASSWORD'] = mailParams['Pop3Password'];
                             this._data['POP3_ENCRYPTION'] = (mailParams['Pop3Ssl'] === 'true');
-
                         } else {
                             const fsParams = transport['FileSystemParams'][0].$;
-                            this._data['OUT_FOLDER'] = fsParams['SourceDir'];
-                            this._data['OUT_STORAGE'] = fsParams['SourceStorage'];
-                            this._data['IN_FOLDER'] = fsParams['DestDir'];
-                            this._data['OUT_FOLDER'] = fsParams['DestStorage'];
+                            this._data['IN_FOLDER'] = fsParams['SourceDir'];
+                            this._data['IN_STORAGE'] = fsParams['SourceStorage'];
+                            this._data['OUT_FOLDER'] = fsParams['DestDir'];
+                            this._data['OUT_STORAGE'] = fsParams['DestStorage'];
                         }
                     }
                     resolve(this._data);
@@ -75,31 +74,21 @@ export class EosBroadcastChannelService {
     }
 
     public toXml(): string {
-        let result = '<Channel><Schedule Start="automatic"/><Transport>';
         if (this._data['CHANNEL_TYPE'] === 'email') {
-            result += '<MailParams AuthMethod="' +
-                (this._data['AUTH_METHOD'] === 0 ? 'NONE' : (this._data['AUTH_METHOD'] === 1 ? 'NTLM' : 'LOGIN')) +
-                '" SmtpServer="' + (this._data['SMTP_SERVER'] === null ? '' : this._data['SMTP_SERVER']) +
-                '" SmtpPort="' + (this._data['SMTP_PORT'] === null ? '' : this._data['SMTP_PORT']) +
-                '" SmtpUser="' + (this._data['SMTP_LOGIN'] === null ? '' : this._data['SMTP_LOGIN']) +
-                '" SmtpPassword="' + (this._data['SMTP_PASSWORD'] === null ? '' : this._data['SMTP_PASSWORD']) +
-                '" SmtpEmailFrom="' + (this._data['SMTP_EMAIL'] === null ? '' : this._data['SMTP_EMAIL']) +
-                '" SmtpSsl="' +  (this._data['ENCRYPTION_TYPE'] === 0 ? 'NONE' :
-                    (this._data['ENCRYPTION_TYPE'] === 1 ? 'SSL' : 'STARTTLS')
-                ) +
-                '" Pop3Server="' + (this._data['POP3_SERVER'] === null ? '' : this._data['POP3_SERVER']) +
-                '" Pop3Port="' + (this._data['POP3_PORT'] === null ? '' : this._data['POP3_PORT']) +
-                '" Pop3User="' + (this._data['POP3_LOGIN'] === null ? '' : this._data['POP3_LOGIN']) +
-                '" Pop3Password="' + (this._data['POP3_PASSWORD'] === null ? '' : this._data['POP3_PASSWORD']) +
-                '" Pop3Ssl="' + (this._data['POP3_ENCRYPTION'] ? 'true' : 'false')
-                + '"/>';
-
+            return '<Channel><Schedule Start="automatic"/></Channel>'
         } else {
-            result += '<FileSystemParams DestDir="' +
-                this._data['IN_FOLDER'] + '" SourceDir="' + this._data['OUT_FOLDER'] + '" CompressMessage="true"/>';
+            return `<Channel>
+                        <Schedule Start="automatic"/>
+                        <Transport>
+                        <FileSystemParams 
+                            DestStorage="${this._data['OUT_STORAGE']}" 
+                            DestDir="${this._data['OUT_FOLDER']}" 
+                            SourceStorage="${this._data['IN_STORAGE']}" 
+                            SourceDir="${this._data['IN_FOLDER']}" 
+                            CompressMessage="true" />
+                        </Transport>
+                    </Channel>` 
         }
-        result += '</Transport></Channel>';
-        return result;
     }
 
     get params() {

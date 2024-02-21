@@ -28,6 +28,7 @@ export class CreateNodeBroadcastChannelComponent extends CreateNodeComponent {
     }
 
     public create(hide = true) {
+        console.log('create_CreateNodeBroadcastChannel')
         this.upadating = true;
         const data = this.cardEditRef.getNewData();
         this._channelSrv.data = data.rec;

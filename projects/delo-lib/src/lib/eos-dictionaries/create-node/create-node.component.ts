@@ -72,6 +72,7 @@ export class CreateNodeComponent {
      * @param hide indicates whether to close the modal window after or open new one
      */
     public create(hide = true) {
+        console.log('create_create-node')
 
         if (!this.formIsValid) {
             return;

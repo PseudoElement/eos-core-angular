@@ -74,6 +74,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         return this._eosCommonOverride.checkCardElementFroCardEditComponent(this.dictionaryId);
     }
     getNewData(): any {
+        // console.log('getNewData')
         this._setInitialData();
         const newData = EosUtils.deepUpdate(Object.assign({}, this.data), this.newData);
         if (this.dictionaryId === E_DICTIONARY_ID.BROADCAST_CHANNEL) {
@@ -147,6 +148,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
         if ((changes.fieldsDescription || changes.data) && this.fieldsDescription && this.data) {
             this.unsubscribe();
+            console.log('onChanges_channelSrv', this._channelSrv)
             const inputs = this._dataSrv.getInputs(this.fieldsDescription, this.data, this.editMode, this._dictSrv, this._channelSrv);
             const isNode = this.data.rec && this.data.rec.IS_NODE;
             this.form = this._inputCtrlSrv.toFormGroup(inputs, isNode);

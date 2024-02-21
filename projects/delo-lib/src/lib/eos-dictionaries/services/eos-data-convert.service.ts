@@ -53,6 +53,7 @@ export class EosDataConvertService {
         channelSrv?: EosBroadcastChannelService
     ) {
         const inputs: any = {};
+        console.log('getInputs_chanelSrv', channelSrv)
         if (fieldsDescription) {
             Object.keys(fieldsDescription).forEach((_dict) => {
                 let descr = fieldsDescription[_dict];

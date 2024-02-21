@@ -45,7 +45,7 @@ export class CardFromComponent extends CardComponent {
         window.close();
     }
     save(): void {
-
+        console.log('save_card-from')
         if (this.isSaveDisabled()) {
             this._windowInvalidSave();
             return;

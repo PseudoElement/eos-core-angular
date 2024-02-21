@@ -262,7 +262,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     save(): void {
-
+        console.log('save_card');
         if (this.isSaveDisabled()) {
             this._windowInvalidSave();
             return;

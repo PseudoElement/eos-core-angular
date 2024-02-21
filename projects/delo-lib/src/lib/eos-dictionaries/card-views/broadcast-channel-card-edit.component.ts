@@ -87,7 +87,7 @@ export class BroadcastChannelCardEditComponent extends BaseCardEditDirective imp
      * где все контролы заполнялись вручную и не было селекта Профиль Элеткронной Почты(EMAIL_PROFILE)
      */
     get shouldShowEmailChannelTabs(): boolean {
-        return /Delay/.test(this.data.rec['PARAMS']);
+        return /<Transport>/.test(this.data.rec['PARAMS']);
     }
 
 
